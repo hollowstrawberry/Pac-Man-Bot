@@ -32,6 +32,7 @@ namespace PacManBot.Services
 
             await discord.LoginAsync(TokenType.Bot, discordToken); //Login to discord
             await discord.StartAsync(); //Connect to the websocket
+            await discord.SetGameAsync($"{config["prefix"]}help"); //"Playing" message
 
             await commands.AddModulesAsync(Assembly.GetEntryAssembly()); //Load commands and modules into the command service
         }
