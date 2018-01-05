@@ -7,22 +7,27 @@ namespace PacManBot.Modules.PacManModule
 {
     public class Game
     {
-        private const char PlayerChar = 'O', PlayerDeadChar = 'X', GhostChar = 'G', GhostEatableChar = 'E', Pellet = '·', PowerPellet = '●';
-        private static char[] GhostAppearance = { 'S', 'Z', 'P', 'B' };
+        static public List<Game> gameInstances = new List<Game>();
+
+        public const string LeftEmoji = "⬅", UpEmoji = "⬆", DownEmoji = "⬇", RightEmoji = "➡", WaitEmoji = "⏹", RefreshEmoji = "🔃"; //Controls
+        private const char PlayerChar = 'O', GhostChar = 'G', Pellet = '·', PowerPellet = '●'; //Read from map
+        private const char PlayerDeadChar = 'X', GhostEatableChar = 'E'; //Displayed
+        private static char[] GhostAppearance = { 'B', 'P', 'C', 'I' };
+
 
         public ulong channelId;
         public ulong messageId;
-        public char[,] board;
-        public int score = 0;
-        public int pellets = 0;
         public State state = State.Active;
-        public Player player;
-        public List<Ghost> ghosts = new List<Ghost>();
+        private char[,] board;
+        private int score = 0;
+        private int pellets = 0;
+        private Player player;
+        private List<Ghost> ghosts = new List<Ghost>();
 
 
         public enum State { Active, Lose, Win }
 
-        public enum AI { Shadow, Speedy, Pokey, Bashful }
+        public enum AI { Shadow, Speedy, Pokey, Bashful}
 
         public enum Dir { None, Up, Down, Left, Right }
 
@@ -57,7 +62,7 @@ namespace PacManBot.Modules.PacManModule
             }
         }
 
-        public class Player
+        private class Player
         {
             public Pos pos;
             public Dir direction = Dir.None;
@@ -70,7 +75,7 @@ namespace PacManBot.Modules.PacManModule
             }
         }
 
-        public class Ghost
+        private class Ghost
         {
             public Pos pos;
             public Pos target;
@@ -82,6 +87,33 @@ namespace PacManBot.Modules.PacManModule
                 this.pos = pos;
                 this.type = type;
                 origin = pos;
+            }
+
+            public void DecideTarget(Player player)
+            {
+                AI aiType = type;
+                if (aiType == AI.Bashful && new Random().Next(10) == 0) aiType = (AI)new Random().Next(3);
+
+                switch (type)
+                {
+                    case AI.Shadow:
+                        target = player.pos;
+                        break;
+
+                    case AI.Speedy:
+                        target = player.pos + player.direction + player.direction; //Two squares in front
+                        break;
+
+                    case AI.Pokey:
+                        Pos hidingSpot = new Pos(15, 14);
+                        if (target == null || pos == hidingSpot) target = player.pos; //Chases the player after reaching its safe spot
+                        else if (pos / player.pos < 7) target = hidingSpot; //Gets scared when it gets too close
+                        break;
+
+                    default:
+                        target = player.pos;
+                        break;
+                }
             }
         }
 
@@ -173,31 +205,7 @@ namespace PacManBot.Modules.PacManModule
                     continue;
                 }
 
-                AI aiType = ghost.type;
-                if (aiType == AI.Bashful && new Random().Next(10) == 0) aiType = (AI)new Random().Next(3); //Replaces bashful with some other AI randomly
-
-                switch (ghost.type)
-                {
-                    case AI.Shadow:
-                        ghost.target = player.pos;
-                        break;
-
-                    case AI.Speedy:
-                        ghost.target = player.pos + player.direction + player.direction; //Two squares in front
-                        break;
-
-                    case AI.Pokey:
-                        Pos hidingSpot = new Pos(1, 1);
-                        if (ghost.target == null) ghost.target = player.pos;
-                        if (ghost.pos == hidingSpot) ghost.target = player.pos; //Chases the player after reaching its safe spot
-                        else if (ghost.pos / player.pos < 7) ghost.target = hidingSpot; //Gets scared when it gets too close
-                        break;
-
-                    default:
-                        ghost.target = player.pos;
-                        break;
-                }
-
+                ghost.DecideTarget(player);
                 ghost.pos += FindPath(ghost.pos, ghost.target); //Move if possible
 
                 if (player.pos == ghost.pos) //Player collision again
@@ -242,7 +250,6 @@ namespace PacManBot.Modules.PacManModule
                         if (index > 0) index--;
                         else
                         {
-                            Console.WriteLine($"Found ghost at pos x{x} y{y}");
                             return new Pos(x, y);
                         }
                     }
@@ -252,24 +259,32 @@ namespace PacManBot.Modules.PacManModule
             return null;
         }
 
-        private bool NonSolid(Pos pos) => CanMove(pos.x, pos.y);
-        private bool CanMove(int x, int y)
+        private bool NonSolid(Pos pos, bool collideGhosts = false) => NonSolid(pos.x, pos.y, collideGhosts);
+        private bool NonSolid(int x, int y, bool collideGhosts = false)
         {
-            if (y < 0 && CanMove(x, board.GetLength(1) - 1) //Wrapping around
-                || y > board.GetLength(1) - 1 && CanMove(x, 0)
-                || x < 0 && CanMove(board.GetLength(0) - 1, y)
-                || x > board.GetLength(0) - 1 && CanMove(0, y)
+            if (y < 0 && NonSolid(x, board.GetLength(1) - 1) //Wrapping around
+                || y > board.GetLength(1) - 1 && NonSolid(x, 0)
+                || x < 0 && NonSolid(board.GetLength(0) - 1, y)
+                || x > board.GetLength(0) - 1 && NonSolid(0, y)
             ) return true;
+
+            if (collideGhosts)
+            {
+                foreach (Ghost ghost in ghosts)
+                {
+                    if (ghost.pos == new Pos(x, y)) return false;
+                }
+            }
 
             return (board[x, y] == ' ' || board[x, y] == Pellet || board[x, y] == PowerPellet);
         }
 
         private Dir FindPath(Pos pos, Pos target)
         {
-            if      (target.x < pos.x && NonSolid(pos + Dir.Left) ) return Dir.Left;
-            else if (target.x > pos.x && NonSolid(pos + Dir.Right)) return Dir.Right;
-            else if (target.y < pos.y && NonSolid(pos + Dir.Up)   ) return Dir.Up;
-            else if (target.y > pos.y && NonSolid(pos + Dir.Down) ) return Dir.Down;
+            if      (target.x < pos.x && NonSolid(pos + Dir.Left,  true)) return Dir.Left;
+            else if (target.x > pos.x && NonSolid(pos + Dir.Right, true)) return Dir.Right;
+            else if (target.y < pos.y && NonSolid(pos + Dir.Up,    true)) return Dir.Up;
+            else if (target.y > pos.y && NonSolid(pos + Dir.Down,  true)) return Dir.Down;
             else return Dir.None;
         }
 
@@ -292,7 +307,7 @@ namespace PacManBot.Modules.PacManModule
                     }
                 }
             }
-            catch { new Exception("Invalid board"); }
+            catch { throw new Exception("Invalid board"); }
 
             this.board = board;
         }

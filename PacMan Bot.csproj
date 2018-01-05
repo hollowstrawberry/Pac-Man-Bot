@@ -159,12 +159,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Modules\MiscModule.cs" />
+    <Compile Include="Modules\PacManModule\Controls.cs" />
     <Compile Include="Services\CommandHandler.cs" />
     <Compile Include="Modules\PacManModule\PacManModule.cs" />
     <Compile Include="Modules\PacManModule\Game.cs" />
     <Compile Include="Services\LoggingService.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\ReactionHandler.cs" />
     <Compile Include="Services\StartupService.cs" />
   </ItemGroup>
   <ItemGroup>

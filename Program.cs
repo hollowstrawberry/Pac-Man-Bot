@@ -8,6 +8,11 @@ using System.Threading.Tasks;
 using PacManBot.Modules.PacManModule;
 using PacManBot.Services;
 
+
+//Made by Samrux for fun
+//GitHub repo: https://github.com/Samrux/Pac-Man-Bot
+
+
 namespace PacManBot
 {
     public class Program
@@ -29,6 +34,7 @@ namespace PacManBot
                 .AddSingleton(client)
                 .AddSingleton(new CommandService(new CommandServiceConfig{ DefaultRunMode = RunMode.Async, LogLevel = LogSeverity.Verbose }))
                 .AddSingleton<CommandHandler>()
+                .AddSingleton<ReactionHandler>()
                 .AddSingleton<LoggingService>()
                 .AddSingleton<StartupService>()
                 .AddSingleton<Random>()
@@ -39,9 +45,7 @@ namespace PacManBot
             provider.GetRequiredService<LoggingService>(); //Initialize the logging service, startup service, and command handler
             await provider.GetRequiredService<StartupService>().StartAsync();
             provider.GetRequiredService<CommandHandler>();
-
-
-            client.ReactionAdded += (m, c, r) => PacManModule.ReactionAdded(m, c, r, client);
+            provider.GetRequiredService<ReactionHandler>();
 
             await Task.Delay(-1); //Prevent the application from closing
         }
