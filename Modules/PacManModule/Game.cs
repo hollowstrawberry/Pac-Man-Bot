@@ -378,7 +378,7 @@ namespace PacManBot.Modules.PacManModule
                     for (int x = 0; x < width; x++)
                     {
                         board[x, y] = lines[y].ToCharArray()[x];
-                        if (board[x, y] == PelletChar || board[x, y] == PowerPelletChar) pellets++;
+                        if (board[x, y] == PelletChar || board[x, y] == PowerPelletChar || board[x, y] == CornerChar) pellets++;
                     }
                 }
             }
