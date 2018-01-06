@@ -100,6 +100,7 @@ namespace PacManBot.Modules.PacManModule
             }
 
             Array.Sort(score, displayScore);
+            Array.Reverse(displayScore);
 
             string message = "**Scoreboard**";
             for (int i = 0; i < amount; i++)

@@ -243,7 +243,7 @@ namespace PacManBot.Modules.PacManModule
                         }
                         else state = State.Lose;
 
-                        continue;
+                        didAI = true; //Skips AI
                     }
 
                     if (didAI) break;
