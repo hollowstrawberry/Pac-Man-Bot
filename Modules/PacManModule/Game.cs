@@ -88,7 +88,7 @@ namespace PacManBot.Modules.PacManModule
             public Dir dir = Dir.None; //Direction it's facing
             public AiType type; //Ghost behavior type
             public AiMode mode = AiMode.Chase; //Ghost behavior mode
-            public int pauseTime = 0;
+            public int pauseTime = 0; //Time remaining until it can move
 
             public readonly static char[] Appearance = { 'B', 'P', 'C', 'I' };
 
@@ -107,7 +107,7 @@ namespace PacManBot.Modules.PacManModule
                 if (game.player.power > 0) mode = AiMode.Eatable;
                 else
                 {
-                    if (game.timer % 60 > 45) mode = AiMode.Scatter;
+                    if (game.timer % 60 > 45) mode = AiMode.Scatter; //In cycles of 60 ticks, the last 15 ticks will be in scatter mode
                     else mode = AiMode.Chase;
                 }
 
@@ -160,13 +160,13 @@ namespace PacManBot.Modules.PacManModule
                 float distance = 100f;
                 foreach (Dir testDir in allDirs) //Decides the direction that will get it closest to its target
                 {
-                    if (testDir == Opposite(dir) && mode != AiMode.Eatable) continue; //Can't turn 180º
+                    if (testDir == Opposite(dir) && mode != AiMode.Eatable) continue; //Can't turn 180º unless it's in eatable mode
                     if (game.NonSolid(pos + testDir) && Pos.Distance(pos + testDir, target) < distance)
                     {
                         distance = Pos.Distance(target, pos + testDir);
                         newDir = testDir;
                     }
-                    Console.WriteLine($"Target: {target.x},{target.y} / Ghost: {pos.x},{pos.y} / Test Dir: {(pos + testDir).x},{(pos + testDir).y} / Test Dist: {Pos.Distance(pos + testDir, target)}");
+                    //Console.WriteLine($"Target: {target.x},{target.y} / Ghost: {pos.x},{pos.y} / Test Dir: {(pos + testDir).x},{(pos + testDir).y} / Test Dist: {Pos.Distance(pos + testDir, target)}"); //For debugging AI
                 }
 
                 dir = newDir;
@@ -230,30 +230,26 @@ namespace PacManBot.Modules.PacManModule
             //Ghosts
             foreach (Ghost ghost in ghosts)
             {
-                if (player.pos == ghost.pos) //Player collision
+                bool didAI = false;
+                while (true) //Checks player collision before and after AI
                 {
-                    if (player.power > 0)
+                    if (player.pos == ghost.pos)
                     {
-                        ghost.pos = ghost.origin;
-                        ghost.pauseTime = 6;
-                        score += 200;
+                        if (player.power > 0)
+                        {
+                            ghost.pos = ghost.origin;
+                            ghost.pauseTime = 6;
+                            score += 200;
+                        }
+                        else state = State.Lose;
+
+                        continue;
                     }
-                    else state = State.Lose;
 
-                    continue;
-                }
+                    if (didAI) break;
 
-                ghost.AI(this);
-
-                if (player.pos == ghost.pos) //Player collision again
-                {
-                    if (player.power > 0)
-                    {
-                        ghost.pos = ghost.origin;
-                        ghost.pauseTime = 6;
-                        score += 200;
-                    }
-                    else state = State.Lose;
+                    ghost.AI(this);
+                    didAI = true;
                 }
             }
         }

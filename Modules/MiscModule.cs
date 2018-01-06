@@ -81,6 +81,6 @@ namespace PacManBot.Modules
 
         [Command("about"), Summary("About this bot")]
         public async Task SayBotInfo()
-            => await ReplyAsync("🎮 Play a turn-based version of Pac-Man on a Discord chat, with non-spammy reaction-based controls. Designed by Samrux#3980 as a test project to learn the Discord API and other stuff.\nGitHub: https://github.com/Samrux/Pac-Man-Bot \nEmail: samruxb@gmail.com");
+            => await ReplyAsync("🎮 Play a turn-based version of Pac-Man on a Discord chat, with non-spammy reaction-based controls. Designed by Samrux#3980 as a test project to learn the Discord API and other stuff.\nGitHub: <https://github.com/Samrux/Pac-Man-Bot>\nEmail: samruxb@gmail.com");
     }
 }

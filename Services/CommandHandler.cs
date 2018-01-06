@@ -38,8 +38,8 @@ namespace PacManBot.Services
                 {
                     if (!result.ErrorReason.ToString().Contains("Unknown command")) Console.WriteLine($"{DateTime.UtcNow.ToString("hh: mm:ss")} Command {message} by {message.Author.Username}#{message.Author.Discriminator} couldn't be executed. Reason: {result.ErrorReason.ToString()}");
 
-                    if      (result.ErrorReason.Contains("Bot requires guild permission")) await context.Channel.SendMessageAsync($"This bot requires the permission {result.ErrorReason.Split(' ')[result.ErrorReason.Split(' ').Length - 1]}!");
-                    else if (result.ErrorReason.Contains("User requires guild permission")) await context.Channel.SendMessageAsync($"You need to be a moderator to use this command!");
+                    if      (result.ErrorReason.Contains("Bot requires")) await context.Channel.SendMessageAsync($"This bot requires the permission {result.ErrorReason.Split(' ')[result.ErrorReason.Split(' ').Length - 1]}!");
+                    else if (result.ErrorReason.Contains("User requires")) await context.Channel.SendMessageAsync($"You need to be a moderator to use this command!");
                 }
             }
             else

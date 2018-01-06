@@ -94,8 +94,8 @@ namespace PacManBot.Modules.PacManModule
             {
                 string[] splitLine = allScores[i].Split(' '); //Divide into sections
                 for (int j = 0; j < splitLine.Length; j++) splitLine[i].Trim().Trim(' '); //Trim the ends
-
-                displayScore[i - 1] = $"({splitLine[0]}) {splitLine[1]} in {splitLine[2]} turns by user {Context.Client.GetUser(ulong.Parse(splitLine[3])).Username}";
+                var user = Context.Client.GetUser(ulong.Parse(splitLine[3]));
+                displayScore[i - 1] = $"({splitLine[0]}) {splitLine[1]} in {splitLine[2]} turns by user " + (user == null ? "Unknown" : $"{user.Username}#{user.Discriminator}");
                 score[i - 1] = Int32.Parse(splitLine[1].Trim());
             }
 
