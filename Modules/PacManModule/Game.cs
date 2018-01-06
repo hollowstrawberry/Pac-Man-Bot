@@ -9,25 +9,29 @@ namespace PacManBot.Modules.PacManModule
     {
         static public List<Game> gameInstances = new List<Game>();
 
-        public const string LeftEmoji = "⬅", UpEmoji = "⬆", DownEmoji = "⬇", RightEmoji = "➡", WaitEmoji = "⏹", RefreshEmoji = "🔃"; //Controls
-        private const char PlayerChar = 'O', GhostChar = 'G', Pellet = '·', PowerPellet = '●'; //Read from map
+        public const string LeftEmoji = "⬅", UpEmoji = "⬆", DownEmoji = "⬇", RightEmoji = "➡", WaitEmoji = "⏸", RefreshEmoji = "🔃"; //Controls
+        private const char PlayerChar = 'O', GhostChar = 'G', CornerChar = '_', PelletChar = '·', PowerPelletChar = '●'; //Read from map
         private const char PlayerDeadChar = 'X', GhostEatableChar = 'E'; //Displayed
-        private static char[] GhostAppearance = { 'B', 'P', 'C', 'I' };
+        private readonly static Dir[] allDirs = { Dir.Up, Dir.Down, Dir.Left, Dir.Right };
 
 
         public ulong channelId;
-        public ulong messageId;
+        public ulong messageId = 1;
         public State state = State.Active;
         private char[,] board;
         private int score = 0;
         private int pellets = 0;
+        private int timer = 0;
         private Player player;
         private List<Ghost> ghosts = new List<Ghost>();
+        private Random random;
 
 
         public enum State { Active, Lose, Win }
 
-        public enum AI { Shadow, Speedy, Pokey, Bashful}
+        public enum AiType { Shadow, Speedy, Pokey, Bashful}
+
+        public enum AiMode { Chase, Scatter, Eatable }
 
         public enum Dir { None, Up, Down, Left, Right }
 
@@ -47,8 +51,6 @@ namespace PacManBot.Modules.PacManModule
                 return pos1.x == pos2.x && pos1.y == pos2.y;
             }
 
-            public static int operator /(Pos pos1, Pos pos2) => Math.Abs(pos1.x - pos2.x) + Math.Abs(pos1.y - pos2.y); //Distance
-
             public static Pos operator +(Pos pos, Dir dir) //Moves position in the given direction
             {
                 switch (dir)
@@ -60,13 +62,15 @@ namespace PacManBot.Modules.PacManModule
                     default: return pos;
                 }
             }
+
+            public static float Distance(Pos pos1, Pos pos2) => (float)Math.Sqrt(Math.Pow(pos2.x - pos1.x, 2) + Math.Pow(pos2.y - pos1.y, 2));
         }
 
         private class Player
         {
-            public Pos pos;
-            public Dir direction = Dir.None;
-            public int powerMode = 0;
+            public Pos pos; //Position on the board
+            public Dir dir = Dir.None; //Direction it's facing
+            public int power = 0; //Time left of power mode
 
             public Player(Pos pos)
             {
@@ -77,43 +81,97 @@ namespace PacManBot.Modules.PacManModule
 
         private class Ghost
         {
-            public Pos pos;
-            public Pos target;
-            public Pos origin;
-            public AI type;
+            public Pos pos; //Position on the board
+            public Pos target; //Tile it's trying to reach
+            public Pos origin; //Tile it spawns in
+            public Pos corner; //Preferred corner
+            public Dir dir = Dir.None; //Direction it's facing
+            public AiType type; //Ghost behavior type
+            public AiMode mode = AiMode.Chase; //Ghost behavior mode
+            public int pauseTime = 0;
 
-            public Ghost(Pos pos, AI type)
+            public readonly static char[] Appearance = { 'B', 'P', 'C', 'I' };
+
+            public Ghost(Pos pos, AiType type, Pos corner)
             {
                 this.pos = pos;
                 this.type = type;
                 origin = pos;
+                this.corner = corner ?? origin;
+                pauseTime = 6 + 6 * (int)type;
             }
 
-            public void DecideTarget(Player player)
+            public void AI(Game game)
             {
-                AI aiType = type;
-                if (aiType == AI.Bashful && new Random().Next(10) == 0) aiType = (AI)new Random().Next(3);
-
-                switch (type)
+                //Decide mode
+                if (game.player.power > 0) mode = AiMode.Eatable;
+                else
                 {
-                    case AI.Shadow:
-                        target = player.pos;
+                    if (game.timer % 60 > 45) mode = AiMode.Scatter;
+                    else mode = AiMode.Chase;
+                }
+
+                if (pauseTime > 0)
+                {
+                    pauseTime--;
+                    return;
+                }
+
+                //Decide target
+                switch (mode)
+                {
+                    case AiMode.Chase: //Normal
+                        switch(type)
+                        {
+                            case AiType.Shadow:
+                                target = game.player.pos;
+                                break;
+
+                            case AiType.Speedy:
+                                target = game.player.pos + game.player.dir + game.player.dir; //Two squares ahead
+                                break;
+
+                            case AiType.Bashful:
+                                target = game.player.pos + Opposite(game.player.dir) + Opposite(game.player.dir); //Two squares behind
+                                break;
+
+                            case AiType.Pokey:
+                                if (Pos.Distance(pos, game.player.pos) > 8) target = game.player.pos;
+                                else target = corner;
+                                break;
+                        }
                         break;
 
-                    case AI.Speedy:
-                        target = player.pos + player.direction + player.direction; //Two squares in front
+                    case AiMode.Scatter:
+                        target = corner;
                         break;
 
-                    case AI.Pokey:
-                        Pos hidingSpot = new Pos(15, 14);
-                        if (target == null || pos == hidingSpot) target = player.pos; //Chases the player after reaching its safe spot
-                        else if (pos / player.pos < 7) target = hidingSpot; //Gets scared when it gets too close
-                        break;
-
-                    default:
-                        target = player.pos;
+                    case AiMode.Eatable:
+                        for (int i = 0; i < 20; i++)
+                        {
+                            target = pos + (Dir)(game.random.Next(1, 5)); //Random adjacent empty space, 20 attempts
+                            if (game.NonSolid(target)) break;
+                        }
                         break;
                 }
+
+                //Track target
+                Dir newDir = Dir.None;
+                float distance = 100f;
+                foreach (Dir testDir in allDirs) //Decides the direction that will get it closest to its target
+                {
+                    if (testDir == Opposite(dir) && mode != AiMode.Eatable) continue; //Can't turn 180º
+                    if (game.NonSolid(pos + testDir) && Pos.Distance(pos + testDir, target) < distance)
+                    {
+                        distance = Pos.Distance(target, pos + testDir);
+                        newDir = testDir;
+                    }
+                    Console.WriteLine($"Target: {target.x},{target.y} / Ghost: {pos.x},{pos.y} / Test Dir: {(pos + testDir).x},{(pos + testDir).y} / Test Dist: {Pos.Distance(pos + testDir, target)}");
+                }
+
+                dir = newDir;
+                pos += newDir;
+                game.WrapAround(ref pos);
             }
         }
 
@@ -121,6 +179,7 @@ namespace PacManBot.Modules.PacManModule
         public Game(ulong channelId)
         {
             this.channelId = channelId;
+            random = new Random();
 
             GrabBoardFromFile();
 
@@ -133,110 +192,124 @@ namespace PacManBot.Modules.PacManModule
             {
                 Pos ghostPos = FindChar(GhostChar);
                 if (ghostPos == null) continue;
-                ghosts.Add(new Ghost(ghostPos, (AI)i));
+                Pos cornerPos = FindChar(CornerChar);
+                ghosts.Add(new Ghost(ghostPos, (AiType)i, cornerPos));
                 board[ghostPos.x, ghostPos.y] = ' ';
+                board[cornerPos.x, cornerPos.y] = PelletChar;
             }
         }
 
-        public string Display { get
-        {
-            StringBuilder boardString = new StringBuilder(); //The final display
-            char[,] displayBoard = (char[,])board.Clone(); //The temporary display array
-
-
-            foreach (Ghost ghost in ghosts) displayBoard[ghost.pos.x, ghost.pos.y] = player.powerMode > 0 ? GhostEatableChar : GhostAppearance[(int)ghost.type]; //Adds ghosts
-            displayBoard[player.pos.x, player.pos.y] = (state == State.Lose) ? PlayerDeadChar : PlayerChar; //Adds player
-
-            for (int y = 0; y < displayBoard.GetLength(1); y++) //Converts 2d array to string
-            {
-                for (int x = 0; x < displayBoard.GetLength(0); x++)
-                {
-                    boardString.Append(displayBoard[x, y]);
-                }
-                boardString.Append('\n');
-            }
-
-            boardString.Replace("\n", $"  #Score: {score}\n", 0, displayBoard.GetLength(0) + 1);
-            if (player.powerMode > 0) boardString.Replace("\n", $"  #Power: {player.powerMode}\n", boardString.ToString().Split('\n')[0].Length + 1, displayBoard.GetLength(0) + 1);
-
-            switch (state)
-            {
-                case State.Active:
-                    boardString.Insert(0, "```css\n");
-                    break;
-
-                case State.Lose:
-                    boardString.Insert(0, "```diff\n");
-                    boardString.Replace("\n", "\n-"); //All red
-                    break;
-
-                case State.Win:
-                    boardString.Insert(0, "```diff\n");
-                    boardString.Replace("\n", "\n+"); //All green
-                    break;
-            }
-            boardString.Append("\n```");
-
-            return boardString.ToString();
-        }}
-
         public void DoTick(Dir direction)
         {
-            //Player
-            if (direction != Dir.None) player.direction = direction;
-            if (NonSolid(player.pos + direction)) player.pos += direction;
+            timer++;
 
-            if      (player.pos.x < 0) player.pos.x = board.GetLength(0) - 1; //Wrapping around
-            else if (player.pos.x > board.GetLength(0) - 1) player.pos.x = 0;
-            else if (player.pos.y < 0) player.pos.y = board.GetLength(1) - 1;
-            else if (player.pos.y > board.GetLength(1) - 1) player.pos.x = 0;
+            //Player
+            if (direction != Dir.None) player.dir = direction;
+            if (NonSolid(player.pos + direction)) player.pos += direction;
+            WrapAround(ref player.pos);
+
+            //Pellets
+            if (player.power > 0) player.power--;
+
+            if (board[player.pos.x, player.pos.y] == PelletChar)
+            {
+                pellets--;
+                score += 10;
+                board[player.pos.x, player.pos.y] = ' ';
+            }
+            else if (board[player.pos.x, player.pos.y] == PowerPelletChar)
+            {
+                pellets--;
+                player.power += 15;
+                score += 50;
+                board[player.pos.x, player.pos.y] = ' ';
+            }
+
+            if (pellets == 0) state = State.Win;
 
             //Ghosts
             foreach (Ghost ghost in ghosts)
             {
                 if (player.pos == ghost.pos) //Player collision
                 {
-                    if (player.powerMode > 0)
+                    if (player.power > 0)
                     {
                         ghost.pos = ghost.origin;
+                        ghost.pauseTime = 6;
                         score += 200;
                     }
                     else state = State.Lose;
+
                     continue;
                 }
 
-                ghost.DecideTarget(player);
-                ghost.pos += FindPath(ghost.pos, ghost.target); //Move if possible
+                ghost.AI(this);
 
                 if (player.pos == ghost.pos) //Player collision again
                 {
-                    if (player.powerMode > 0)
+                    if (player.power > 0)
                     {
                         ghost.pos = ghost.origin;
+                        ghost.pauseTime = 6;
                         score += 200;
                     }
                     else state = State.Lose;
                 }
             }
+        }
 
-            //Pellets
-            if (player.powerMode > 0) player.powerMode--;
-
-            if (board[player.pos.x, player.pos.y] == Pellet)
+        public string Display
+        {
+            get
             {
-                pellets--;
-                score += 10;
-                board[player.pos.x, player.pos.y] = ' ';
-            }
-            else if (board[player.pos.x, player.pos.y] == PowerPellet)
-            {
-                pellets--;
-                player.powerMode += 15;
-                score += 50;
-                board[player.pos.x, player.pos.y] = ' ';
-            }
+                StringBuilder boardString = new StringBuilder(); //The final display
+                char[,] displayBoard = (char[,])board.Clone(); //The temporary display array
 
-            if (pellets == 0) state = State.Win;
+                //Adds ghost and player
+                foreach (Ghost ghost in ghosts) displayBoard[ghost.pos.x, ghost.pos.y] = (ghost.mode == AiMode.Eatable) ? GhostEatableChar : Ghost.Appearance[(int)ghost.type];
+                displayBoard[player.pos.x, player.pos.y] = (state == State.Lose) ? PlayerDeadChar : PlayerChar;
+
+                //Converts 2d array to string
+                for (int y = 0; y < displayBoard.GetLength(1); y++)
+                {
+                    for (int x = 0; x < displayBoard.GetLength(0); x++)
+                    {
+                        boardString.Append(displayBoard[x, y]);
+                    }
+                    boardString.Append('\n');
+                }
+
+                //Add text to the side
+                string[] info = { $"  #Time: {timer}\n", $"  #Score: {score}\n", $"  #Power: {player.power}\n" };
+                for (int i = 0; i < 3; i++)
+                {
+                    int startIndex = 1 + i * displayBoard.GetLength(0);
+                    for (int j = i; j >= 0; j--) startIndex += info[j].Length;
+                    boardString.Replace("\n", info[i], startIndex, displayBoard.GetLength(0));
+                }
+
+                //Code tags
+                switch (state)
+                {
+                    case State.Active:
+                        boardString.Insert(0, "```css\n");
+                        break;
+
+                    case State.Lose:
+                        boardString.Insert(0, "```diff\n");
+                        boardString.Replace("\n", "\n-"); //All red
+                        break;
+
+                    case State.Win:
+                        boardString.Insert(0, "```diff\n");
+                        boardString.Replace("\n", "\n+"); //All green
+                        break;
+                }
+                boardString.Append("\n```");
+
+
+                return boardString.ToString();
+            }
         }
 
         private Pos FindChar(char c, int index = 0)
@@ -259,35 +332,29 @@ namespace PacManBot.Modules.PacManModule
             return null;
         }
 
-        private bool NonSolid(Pos pos, bool collideGhosts = false) => NonSolid(pos.x, pos.y, collideGhosts);
-        private bool NonSolid(int x, int y, bool collideGhosts = false)
+        private bool NonSolid(int x, int y, bool collideGhosts = false) => NonSolid(new Pos(x, y), collideGhosts);
+        private bool NonSolid(Pos pos, bool collideGhosts = false)
         {
-            if (y < 0 && NonSolid(x, board.GetLength(1) - 1) //Wrapping around
-                || y > board.GetLength(1) - 1 && NonSolid(x, 0)
-                || x < 0 && NonSolid(board.GetLength(0) - 1, y)
-                || x > board.GetLength(0) - 1 && NonSolid(0, y)
-            ) return true;
+            WrapAround(ref pos);
 
             if (collideGhosts)
             {
                 foreach (Ghost ghost in ghosts)
                 {
-                    if (ghost.pos == new Pos(x, y)) return false;
+                    if (ghost.pos == pos) return false;
                 }
             }
 
-            return (board[x, y] == ' ' || board[x, y] == Pellet || board[x, y] == PowerPellet);
+            return (board[pos.x, pos.y] == ' ' || board[pos.x, pos.y] == PelletChar || board[pos.x, pos.y] == PowerPelletChar);
         }
 
-        private Dir FindPath(Pos pos, Pos target)
+        private void WrapAround(ref Pos pos)
         {
-            if      (target.x < pos.x && NonSolid(pos + Dir.Left,  true)) return Dir.Left;
-            else if (target.x > pos.x && NonSolid(pos + Dir.Right, true)) return Dir.Right;
-            else if (target.y < pos.y && NonSolid(pos + Dir.Up,    true)) return Dir.Up;
-            else if (target.y > pos.y && NonSolid(pos + Dir.Down,  true)) return Dir.Down;
-            else return Dir.None;
+            if      (pos.x < 0) pos.x = board.GetLength(0) + pos.x;
+            else if (pos.x > board.GetLength(0) - 1) pos.x -= board.GetLength(0);
+            else if (pos.y < 0) pos.y = board.GetLength(1) + pos.y;
+            else if (pos.y > board.GetLength(1) - 1) pos.y -= board.GetLength(1);
         }
-
 
         private void GrabBoardFromFile(string file = "board.txt")
         {
@@ -303,13 +370,26 @@ namespace PacManBot.Modules.PacManModule
                     for (int x = 0; x < width; x++)
                     {
                         board[x, y] = lines[y].ToCharArray()[x];
-                        if (board[x, y] == Pellet || board[x, y] == PowerPellet) pellets++;
+                        if (board[x, y] == PelletChar || board[x, y] == PowerPelletChar) pellets++;
                     }
                 }
             }
             catch { throw new Exception("Invalid board"); }
 
             this.board = board;
+        }
+
+
+        private static Dir Opposite(Dir dir)
+        {
+            switch (dir)
+            {
+                case Dir.Up: return Dir.Down;
+                case Dir.Down: return Dir.Up;
+                case Dir.Left: return Dir.Right;
+                case Dir.Right: return Dir.Left;
+                default: return Dir.None;
+            }
         }
     }
 }

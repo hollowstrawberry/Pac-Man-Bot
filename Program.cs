@@ -37,7 +37,6 @@ namespace PacManBot
                 .AddSingleton<ReactionHandler>()
                 .AddSingleton<LoggingService>()
                 .AddSingleton<StartupService>()
-                .AddSingleton<Random>()
                 .AddSingleton(customConfig);
 
             var provider = services.BuildServiceProvider(); //Create the service provider

@@ -1,7 +1,7 @@
-﻿using Discord;
-using Discord.Commands;
-using System.Collections.Generic;
+﻿using System;
 using System.Threading.Tasks;
+using Discord;
+using Discord.Commands;
 using static PacManBot.Modules.PacManModule.Game;
 
 namespace PacManBot.Modules.PacManModule
@@ -13,7 +13,7 @@ namespace PacManBot.Modules.PacManModule
         [RequireBotPermission(GuildPermission.AddReactions)]
         public async Task StartGameInstance()
         {
-            foreach (Game game in Game.gameInstances)
+            foreach (Game game in gameInstances)
             {
                 if (Context.Channel.Id == game.channelId) //Finds a game instance corresponding to this channel
                 {
@@ -39,8 +39,8 @@ namespace PacManBot.Modules.PacManModule
             {
                 if (Context.Channel.Id == game.channelId) //Finds a game instance corresponding to this channel
                 {
-                    var oldMsg = await Context.Channel.GetMessageAsync(game.messageId) as IUserMessage;
-                    await oldMsg.DeleteAsync(); //Delete old message
+                    var oldMsg = await Context.Channel.GetMessageAsync(game.messageId);
+                    if (oldMsg != null) await oldMsg.DeleteAsync(); //Delete old message
                     var newMsg = await ReplyAsync(game.Display + "```diff\n+Refreshing game```"); //Send new message
                     game.messageId = newMsg.Id; //Change focus message for this channel
                     await AddControls(newMsg);
@@ -60,27 +60,20 @@ namespace PacManBot.Modules.PacManModule
             {
                 if (Context.Channel.Id == game.channelId)
                 {
-                    var gameMessage = await Context.Channel.GetMessageAsync(game.messageId) as IUserMessage;
-                    await gameMessage.ModifyAsync(m => m.Content = game.Display + "```diff\n-Game has been ended!```"); //Edit message
                     gameInstances.Remove(game);
-                    await gameMessage.RemoveAllReactionsAsync(); //Remove reactions
                     await ReplyAsync("Game ended.");
+
+                    var gameMessage = await Context.Channel.GetMessageAsync(game.messageId) as IUserMessage;
+                    if (gameMessage != null)
+                    {
+                        await gameMessage.ModifyAsync(m => m.Content = game.Display + "```diff\n-Game has been ended!```"); //Edit message
+                        await gameMessage.RemoveAllReactionsAsync(); //Remove reactions
+                    }
                     return;
                 }
             }
 
             await ReplyAsync("There is no active game on this channel!");
-        }
-
-        [Command("clear"), Alias("c"), Summary("Clear all messages from this bot (Moderator)")]
-        [RequireUserPermission(ChannelPermission.ManageMessages)]
-        public async Task ClearGameMessages(int amount = 10)
-        {
-            var messages = await Context.Channel.GetMessagesAsync(amount).Flatten();
-            foreach (IMessage message in messages)
-            {
-                if (message.Author.Id == Context.Client.CurrentUser.Id) await message.DeleteAsync(); //Remove all messages from this bot
-            }
         }
 
 

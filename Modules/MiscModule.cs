@@ -67,5 +67,16 @@ namespace PacManBot.Modules
         [Command("say"), Summary("Make the bot say anything (Moderator)")]
         [RequireUserPermission(GuildPermission.ManageMessages)]
         public Task Say([Remainder]string text) => ReplyAsync(text);
+
+        [Command("clear"), Alias("c"), Summary("Clear messages from this bot (Moderator)")]
+        [RequireUserPermission(ChannelPermission.ManageMessages)]
+        public async Task ClearGameMessages(int amount = 10)
+        {
+            var messages = await Context.Channel.GetMessagesAsync(amount).Flatten();
+            foreach (IMessage message in messages)
+            {
+                if (message.Author.Id == Context.Client.CurrentUser.Id) await message.DeleteAsync(); //Remove all messages from this bot
+            }
+        }
     }
 }
