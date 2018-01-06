@@ -71,7 +71,7 @@ namespace PacManBot.Modules.PacManModule
             public Pos pos; //Position on the board
             public Dir dir = Dir.None; //Direction it's facing
             public int power = 0; //Time left of power mode
-            public int ghostEatMult = 1; //Multiplier to the score of eaten ghosts
+            public int ghostsEaten = 0; //Ghosts eaten during the current power mode
 
             public Player(Pos pos)
             {
@@ -211,7 +211,7 @@ namespace PacManBot.Modules.PacManModule
 
             //Pellets
             if (player.power > 0) player.power--;
-            if (player.power == 0) player.ghostEatMult = 1;
+            if (player.power == 0) player.ghostsEaten = 0;
 
             if (board[player.pos.x, player.pos.y] == PelletChar)
             {
@@ -241,8 +241,8 @@ namespace PacManBot.Modules.PacManModule
                         {
                             ghost.pos = ghost.origin;
                             ghost.pauseTime = 6;
-                            score += 200 * player.ghostEatMult;
-                            player.ghostEatMult++;
+                            score += 200 * (int)Math.Pow(2, player.ghostsEaten);
+                            player.ghostsEaten++;
                         }
                         else state = State.Lose;
 
