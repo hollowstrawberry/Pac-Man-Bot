@@ -77,9 +77,12 @@ namespace PacManBot.Modules.PacManModule
             await ReplyAsync("There is no active game on this channel!");
         }
 
-        [Command("leaderboard"), Alias("score"), Summary("Global list of scores")]
+        [Command("leaderboard"), Alias("scores"), Summary("Global list of scores")]
         public async Task SendTopScores(int amount = 10)
         {
+            if (amount > 100) amount = 100;
+            else if (amount <= 0) amount = 10;
+
             string[] allScores = File.ReadAllLines("scoreboard.txt");
             string[] displayScore = new string[allScores.Length - 1];
             int[] score = new int[allScores.Length - 1];
@@ -95,19 +98,21 @@ namespace PacManBot.Modules.PacManModule
                 string[] splitLine = allScores[i].Split(' '); //Divide into sections
                 for (int j = 0; j < splitLine.Length; j++) splitLine[i].Trim().Trim(' '); //Trim the ends
                 var user = Context.Client.GetUser(ulong.Parse(splitLine[3]));
-                displayScore[i - 1] = $"({splitLine[0]}) {splitLine[1]} in {splitLine[2]} turns by user " + (user == null ? "Unknown" : $"{user.Username}#{user.Discriminator}");
+                displayScore[i - 1] = $"({splitLine[0]}) **{splitLine[1]}** in *{splitLine[2]}* turns by user " + (user == null ? "Unknown" : $"{user.Username}#{user.Discriminator}");
                 score[i - 1] = Int32.Parse(splitLine[1].Trim());
             }
 
             Array.Sort(score, displayScore);
             Array.Reverse(displayScore);
 
-            string message = "**Scoreboard**";
+            string message = "🏆 __**Global Leaderboard**__";
             for (int i = 0; i < amount; i++)
             {
                 if (i >= displayScore.Length) break;
                 message += $"\n{i + 1}. {displayScore[i]}";
             }
+
+            if (message.Length > 2000) message = message.Substring(0, 1999);
 
             await ReplyAsync(message);
         }

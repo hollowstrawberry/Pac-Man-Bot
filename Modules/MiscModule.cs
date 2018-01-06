@@ -60,7 +60,6 @@ namespace PacManBot.Modules
             await ReplyAsync("", false, embed.Build()); //Send the built embed
         }
 
-
         [Command("waka"), Summary("Waka.")]
         public Task Ping() => ReplyAsync("waka");
 
@@ -79,8 +78,11 @@ namespace PacManBot.Modules
             }
         }
 
+        [Command("invite"), Alias("inv"), Summary("Invite this bot to your server")]
+        public async Task SayBotInvite() => await ReplyAsync("Invite this bot into a server you own: <http://bit.ly/pacmanbotdiscord>");
+
         [Command("about"), Summary("About this bot")]
-        public async Task SayBotInfo()
-            => await ReplyAsync("🎮 Play a turn-based version of Pac-Man on a Discord chat, with non-spammy reaction-based controls. Designed by Samrux#3980 as a test project to learn the Discord API and other stuff.\nGitHub: <https://github.com/Samrux/Pac-Man-Bot>\nEmail: samruxb@gmail.com");
+        public async Task SayBotInfo() => await ReplyAsync("🎮 Play a turn-based version of Pac-Man on a Discord chat, with non-spammy reaction-based controls. Designed by Samrux#3980 as a test project to learn the Discord API and other stuff.\nInvite the bot to your server: <http://bit.ly/pacmanbotdiscord>\nGitHub: <https://github.com/Samrux/Pac-Man-Bot>\nEmail: samruxb@gmail.com");
+
     }
 }
