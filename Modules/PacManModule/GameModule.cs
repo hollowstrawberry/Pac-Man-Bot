@@ -3,11 +3,12 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using static PacManBot.Modules.PacManModule.Game;
+using System.IO;
 
 namespace PacManBot.Modules.PacManModule
 {
     [Name("Game")]
-    public class PacManModule : ModuleBase<SocketCommandContext>
+    public class GameModule : ModuleBase<SocketCommandContext>
     {
         [Command("start"), Summary("Start a new game")]
         [RequireBotPermission(GuildPermission.AddReactions)]
@@ -76,6 +77,41 @@ namespace PacManBot.Modules.PacManModule
             await ReplyAsync("There is no active game on this channel!");
         }
 
+        [Command("leaderboard"), Alias("score"), Summary("Global list of scores")]
+        public async Task SendTopScores(int amount = 10)
+        {
+            string[] allScores = File.ReadAllLines("scoreboard.txt");
+            string[] displayScore = new string[allScores.Length - 1];
+            int[] score = new int[allScores.Length - 1];
+
+            if (allScores.Length < 2)
+            {
+                await ReplyAsync("There are no registered scores! Go make one");
+                return;
+            }
+
+            for (int i = 1; i < allScores.Length; i++)
+            {
+                string[] splitLine = allScores[i].Split(' '); //Divide into sections
+                for (int j = 0; j < splitLine.Length; j++) splitLine[i].Trim().Trim(' '); //Trim the ends
+
+                displayScore[i - 1] = $"({splitLine[0]}) {splitLine[1]} in {splitLine[2]} turns by user {Context.Client.GetUser(ulong.Parse(splitLine[3])).Username}";
+                score[i - 1] = Int32.Parse(splitLine[1].Trim());
+            }
+
+            Array.Sort(score, displayScore);
+
+            string message = "**Scoreboard**";
+            for (int i = 0; i < amount; i++)
+            {
+                if (i >= displayScore.Length) break;
+                message += $"\n{i + 1}. {displayScore[i]}";
+            }
+
+            await ReplyAsync(message);
+        }
+
+
 
         public async Task AddControls(IUserMessage message)
         {
@@ -84,7 +120,6 @@ namespace PacManBot.Modules.PacManModule
             await message.AddReactionAsync(new Emoji(DownEmoji));
             await message.AddReactionAsync(new Emoji(RightEmoji));
             await message.AddReactionAsync(new Emoji(WaitEmoji));
-            //await message.AddReactionAsync(new Emoji(RefreshEmoji));
         }
     }
 }

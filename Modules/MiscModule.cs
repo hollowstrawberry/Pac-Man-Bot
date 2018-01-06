@@ -25,33 +25,33 @@ namespace PacManBot.Modules
 
             foreach (var module in service.Modules) //Go through all modules
             {
-                string description = null; //Text under the module title in the embed block
+                string commandList = null; //Text under the module title in the embed block
 
-                foreach (var command in module.Commands) //Go througyh all commands
+                foreach (var command in module.Commands) //Go through all commands
                 {
-                    var result = await command.CheckPreconditionsAsync(Context);
+                    var result = await command.CheckPreconditionsAsync(Context); //Only show commands the user can use
                     if (result.IsSuccess)
                     {
                         for (int i = 0; i < command.Aliases.Count; i++) //Lists command name and aliases
                         {
-                            description += (i > 0 ? ", " : "") + $"**{command.Aliases[i]}**";
+                            commandList += (i > 0 ? ", " : "") + $"**{command.Aliases[i]}**";
                         }
 
                         if (!string.IsNullOrEmpty(command.Summary)) //Adds the command summary
                         {
-                            description += $" - *{command.Summary}*";
+                            commandList += $" - *{command.Summary}*";
                         }
 
-                        description += "\n";
+                        commandList += "\n";
                     }
                 }
 
-                if (!string.IsNullOrWhiteSpace(description))
+                if (!string.IsNullOrWhiteSpace(commandList))
                 {
                     embed.AddField(f =>
                     {
                         f.Name = module.Name;
-                        f.Value = description;
+                        f.Value = commandList;
                         f.IsInline = false;
                     });
                 }
@@ -66,9 +66,9 @@ namespace PacManBot.Modules
 
         [Command("say"), Summary("Make the bot say anything (Moderator)")]
         [RequireUserPermission(GuildPermission.ManageMessages)]
-        public Task Say([Remainder]string text) => ReplyAsync(text);
+        public async Task Say([Remainder]string text) => await ReplyAsync(text);
 
-        [Command("clear"), Alias("c"), Summary("Clear messages from this bot (Moderator)")]
+        [Command("clear"), Alias("c"), Summary("Clear messages from this bot. You can specify an amount (Moderator)")]
         [RequireUserPermission(ChannelPermission.ManageMessages)]
         public async Task ClearGameMessages(int amount = 10)
         {
@@ -78,5 +78,9 @@ namespace PacManBot.Modules
                 if (message.Author.Id == Context.Client.CurrentUser.Id) await message.DeleteAsync(); //Remove all messages from this bot
             }
         }
+
+        [Command("about"), Summary("About this bot")]
+        public async Task SayBotInfo()
+            => await ReplyAsync("🎮 Play a turn-based version of Pac-Man on a Discord chat, with non-spammy reaction-based controls. Designed by Samrux#3980 as a test project to learn the Discord API and other stuff.\nGitHub: https://github.com/Samrux/Pac-Man-Bot \nEmail: samruxb@gmail.com");
     }
 }

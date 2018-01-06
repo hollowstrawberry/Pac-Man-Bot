@@ -18,10 +18,10 @@ namespace PacManBot.Modules.PacManModule
         public ulong channelId;
         public ulong messageId = 1;
         public State state = State.Active;
-        private char[,] board;
-        private int score = 0;
+        public int score = 0;
+        public int timer = 0;
         private int pellets = 0;
-        private int timer = 0;
+        private char[,] board;
         private Player player;
         private List<Ghost> ghosts = new List<Ghost>();
         private Random random;
@@ -280,8 +280,17 @@ namespace PacManBot.Modules.PacManModule
                 }
 
                 //Add text to the side
-                string[] info = { $"  #Time: {timer}\n", $"  #Score: {score}\n", $"  #Power: {player.power}\n" };
-                for (int i = 0; i < 3; i++)
+                string[] info = {
+                    $" │ #Time: {timer}\n",
+                    $" │ #Score: {score}\n",
+                    $" │ #Power: {player.power}\n",
+                    $" │\n",
+                    $" │ {Ghost.Appearance[0]} - \"Blinky\" ({(AiType)0})\n",
+                    $" │ {Ghost.Appearance[1]} - \"Pinky\"  ({(AiType)1})\n",
+                    $" │ {Ghost.Appearance[3]} - \"Inky\"   ({(AiType)3})\n",
+                    $" │ {Ghost.Appearance[2]} - \"Clyde\"  ({(AiType)2})\n"
+                };
+                for (int i = 0; i < info.Length; i++)
                 {
                     int startIndex = 1 + i * displayBoard.GetLength(0);
                     for (int j = i; j >= 0; j--) startIndex += info[j].Length;

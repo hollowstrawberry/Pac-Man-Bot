@@ -1,0 +1,2 @@
+State Score Turns Date Channel User User
+Lose 3740 403 228656614851346432 "Samrux#3980" "2018-01-06T10:07:46.7086756-03:00" "Cat Kingdom/pacman"
