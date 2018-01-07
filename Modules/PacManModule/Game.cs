@@ -96,6 +96,7 @@ namespace PacManBot.Modules.PacManModule
             public int pauseTime = 0; //Time remaining until it can move
 
             public readonly static char[] Appearance = { 'B', 'P', 'I', 'C' };
+            public readonly static int[] SpawnPauseTime = { 0, 3, 15, 35 };
 
             public Ghost(Pos pos, AiType type, Pos corner)
             {
@@ -103,19 +104,14 @@ namespace PacManBot.Modules.PacManModule
                 this.type = type;
                 origin = pos;
                 this.corner = corner ?? origin;
-                switch (type)
-                {
-                    case AiType.Speedy: pauseTime = 3; break;
-                    case AiType.Bashful: pauseTime = 15; break;
-                    case AiType.Pokey: pauseTime = 35; break;
-                }
+                pauseTime = SpawnPauseTime[(int)type];
             }
 
             public void AI(Game game)
             {
                 //Decide mode
                 if (game.player.power == PowerTime) mode = AiMode.Eatable;
-                else if (mode != AiMode.Eatable && (pauseTime > 0 || pos != origin))
+                else if (game.player.power <= 1 || pauseTime > 0 && game.timer > SpawnPauseTime[(int)type])
                 {
                     if (game.timer < 4 * ScatterCycle
                         && (game.timer < 2 * ScatterCycle && game.timer % ScatterCycle < ScatterTime1
