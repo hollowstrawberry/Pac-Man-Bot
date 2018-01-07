@@ -1,7 +1,8 @@
-﻿using Discord;
+﻿using System.IO;
+using System.Threading.Tasks;
+using Discord;
 using Discord.Commands;
 using Microsoft.Extensions.Configuration;
-using System.Threading.Tasks;
 
 namespace PacManBot.Modules
 {
@@ -82,7 +83,6 @@ namespace PacManBot.Modules
         public async Task SayBotInvite() => await ReplyAsync("Invite this bot into a server you own: <http://bit.ly/pacmanbotdiscord>");
 
         [Command("about"), Summary("About this bot")]
-        public async Task SayBotInfo() => await ReplyAsync("🎮 Play a turn-based version of Pac-Man on a Discord chat, with non-spammy reaction-based controls. Designed by Samrux#3980 as a test project to learn the Discord API and other stuff.\nInvite the bot to your server: <http://bit.ly/pacmanbotdiscord>\nGitHub: <https://github.com/Samrux/Pac-Man-Bot>\nEmail: samruxb@gmail.com");
-
+        public async Task SayBotInfo() => await ReplyAsync(File.ReadAllText("about.txt"));
     }
 }

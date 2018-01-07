@@ -98,7 +98,7 @@ namespace PacManBot.Modules.PacManModule
                 string[] splitLine = allScores[i].Split(' '); //Divide into sections
                 for (int j = 0; j < splitLine.Length; j++) splitLine[j].Trim(' '); //Trim the ends
                 var user = Context.Client.GetUser(ulong.Parse(splitLine[3]));
-                displayScore[i - 1] = $"({splitLine[0]}) **{splitLine[1]}** in *{splitLine[2]}* turns by user " + (user == null ? "Unknown" : $"{user.Username}#{user.Discriminator}");
+                displayScore[i - 1] = $"({splitLine[0]}) **{splitLine[1]}** in {splitLine[2]} turns by user " + (user == null ? "Unknown" : $"{user.Username}#{user.Discriminator}");
                 score[i - 1] = Int32.Parse(splitLine[1].Trim());
             }
 
@@ -117,6 +117,8 @@ namespace PacManBot.Modules.PacManModule
             await ReplyAsync(message);
         }
 
+        [Command("tips"), Summary("Learn some secrets that will help you")]
+        public async Task SayTips() => await ReplyAsync(File.ReadAllText("tips.txt"));
 
 
         public async Task AddControls(IUserMessage message)
