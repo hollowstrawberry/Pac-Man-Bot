@@ -10,9 +10,9 @@ namespace PacManBot.Modules.PacManModule
         static public List<Game> gameInstances = new List<Game>();
 
         public const string LeftEmoji = "⬅", UpEmoji = "⬆", DownEmoji = "⬇", RightEmoji = "➡", WaitEmoji = "⏸", RefreshEmoji = "🔃"; //Controls
-        private const char PlayerChar = 'O', GhostChar = 'G', CornerChar = '_', DoorChar = '-', PelletChar = '·', PowerPelletChar = '●'; //Read from map
-        private const char PlayerDeadChar = 'X', GhostEatableChar = 'E'; //Displayed
-        private const int PowerTime = 20, ScatterCycle = 100, ScatterTime1 = 26, ScatterTime2 = 21;
+        private const char CharPlayer = 'O', CharGhost = 'G', CharCorner = '_', CharDoor = '-', CharPellet = '·', CharPowerPellet = '●'; //Read from map
+        private const char CharPlayerDead = 'X', CharGhostFrightened = 'E'; //Displayed
+        private const int PowerTime = 20, ScatterCycle = 100, ScatterTime1 = 30, ScatterTime2 = 20;
         private readonly static Dir[] allDirs = { Dir.Up, Dir.Down, Dir.Left, Dir.Right };
 
 
@@ -30,9 +30,9 @@ namespace PacManBot.Modules.PacManModule
 
         public enum State { Active, Lose, Win }
 
-        public enum AiType { Shadow, Speedy, Bashful, Pokey}
+        public enum AiType { Blinky, Pinky, Inky, Clyde }
 
-        public enum AiMode { Chase, Scatter, Eatable }
+        public enum AiMode { Chase, Scatter, Frightened }
 
         public enum Dir { None, Up, Down, Left, Right }
 
@@ -110,13 +110,13 @@ namespace PacManBot.Modules.PacManModule
             public void AI(Game game)
             {
                 //Decide mode
-                if (game.player.power == PowerTime) mode = AiMode.Eatable;
+                if (game.player.power == PowerTime) mode = AiMode.Frightened;
                 else if (game.player.power <= 1)
                 {
                     if (game.timer < 4 * ScatterCycle
                         && (game.timer < 2 * ScatterCycle && game.timer % ScatterCycle < ScatterTime1
                         || game.timer >= 2 * ScatterCycle && game.timer % ScatterCycle < ScatterTime2)
-                    ) { mode = AiMode.Scatter; } //In cycles of 100 ticks, the first 26 ticks will be in scatter mode, up to 4 times
+                    ) { mode = AiMode.Scatter; }
                     else { mode = AiMode.Chase; }
                 }
 
@@ -132,24 +132,26 @@ namespace PacManBot.Modules.PacManModule
                     case AiMode.Chase: //Normal
                         switch(type)
                         {
-                            case AiType.Shadow:
+                            case AiType.Blinky:
                                 target = game.player.pos;
                                 break;
 
-                            case AiType.Speedy:
+                            case AiType.Pinky:
                                 target = game.player.pos;
                                 for (int i = 0; i < 4; i++) target += game.player.dir; //4 squares ahead
+                                if (game.player.dir == Dir.Up) for (int i = 0; i < 4; i++) target += Dir.Left; //Intentional bug from the original arcade
                                 break;
 
-                            case AiType.Bashful:
+                            case AiType.Inky:
                                 target = game.player.pos;
                                 for (int i = 0; i < 2; i++) target += game.player.dir; //2 squares ahead
+                                if (game.player.dir == Dir.Up) for (int i = 0; i < 2; i++) target += Dir.Left; //Intentional bug from the original arcade
                                 Pos blinky = new Pos(0, 0);
-                                foreach (Ghost ghost in game.ghosts) if (ghost.type == AiType.Shadow) blinky = ghost.pos; //Finds blinky
+                                foreach (Ghost ghost in game.ghosts) if (ghost.type == AiType.Blinky) blinky = ghost.pos; //Finds blinky
                                 target += target - blinky; //Opposite relative direction
                                 break;
 
-                            case AiType.Pokey:
+                            case AiType.Clyde:
                                 if (Pos.Distance(pos, game.player.pos) > 8) target = game.player.pos;
                                 else target = corner; //When close, gets scared
                                 break;
@@ -158,10 +160,10 @@ namespace PacManBot.Modules.PacManModule
 
                     case AiMode.Scatter:
                         target = corner;
-                        if (type == AiType.Shadow && game.timer < 10) target = new Pos(1, 1); //So Blinky and Pinky go together at the start
+                        if (type == AiType.Blinky && game.timer < 10) target = new Pos(0, 0); //So Blinky and Pinky go together at the start
                         break;
 
-                    case AiMode.Eatable:
+                    case AiMode.Frightened:
                         for (int i = 0; i < 20; i++)
                         {
                             target = pos + (Dir)(game.random.Next(1, 5)); //Random adjacent empty space, 20 attempts
@@ -172,7 +174,7 @@ namespace PacManBot.Modules.PacManModule
 
                 //Decide movement
                 Dir newDir = Dir.None;
-                if (game.board[pos.x, pos.y] == DoorChar || game.board[(pos + Dir.Up).x, (pos + Dir.Up).y] == DoorChar)
+                if (game.board[pos.x, pos.y] == CharDoor || game.board[(pos + Dir.Up).x, (pos + Dir.Up).y] == CharDoor)
                 {
                     newDir = Dir.Up; //If it's inside the cage
                 }
@@ -183,7 +185,7 @@ namespace PacManBot.Modules.PacManModule
                     {
                         Pos tile = pos + testDir;
 
-                        if (testDir == Opposite(dir) && mode != AiMode.Eatable &&
+                        if (testDir == Opposite(dir) && mode != AiMode.Frightened &&
                             !(game.timer < 4 * ScatterCycle
                             && (game.timer < 2 * ScatterCycle && game.timer % ScatterCycle == ScatterTime1
                             || game.timer >= 2 * ScatterCycle && game.timer % ScatterCycle == ScatterTime2)
@@ -212,19 +214,19 @@ namespace PacManBot.Modules.PacManModule
 
             GrabBoardFromFile();
 
-            Pos playerPos = FindChar(PlayerChar); //Set player
+            Pos playerPos = FindChar(CharPlayer); //Set player
             if (playerPos == null) playerPos = new Pos(0, 0);
             player = new Player(playerPos);
             board[playerPos.x, playerPos.y] = ' ';
 
             for (int i = 0; i < 4; i++) //Set ghosts
             {
-                Pos ghostPos = FindChar(GhostChar);
+                Pos ghostPos = FindChar(CharGhost);
                 if (ghostPos == null) continue;
-                Pos cornerPos = FindChar(CornerChar, (i + 1) % 2); //Goes in order: Top-Right Top-Left Bottom-Right Bottom-Left
+                Pos cornerPos = FindChar(CharCorner, (i + 1) % 2); //Goes in order: Top-Right Top-Left Bottom-Right Bottom-Left
                 ghosts.Add(new Ghost(ghostPos, (AiType)i, cornerPos));
                 board[ghostPos.x, ghostPos.y] = ' ';
-                board[cornerPos.x, cornerPos.y] = PelletChar;
+                board[cornerPos.x, cornerPos.y] = CharPellet;
             }
         }
 
@@ -238,13 +240,13 @@ namespace PacManBot.Modules.PacManModule
             WrapAround(ref player.pos);
 
             //Pellets
-            if (board[player.pos.x, player.pos.y] == PelletChar)
+            if (board[player.pos.x, player.pos.y] == CharPellet)
             {
                 pellets--;
                 score += 10;
                 board[player.pos.x, player.pos.y] = ' ';
             }
-            else if (board[player.pos.x, player.pos.y] == PowerPelletChar)
+            else if (board[player.pos.x, player.pos.y] == CharPowerPellet)
             {
                 pellets--;
                 player.power += PowerTime;
@@ -294,8 +296,8 @@ namespace PacManBot.Modules.PacManModule
                 char[,] displayBoard = (char[,])board.Clone(); //The temporary display array
 
                 //Adds ghost and player
-                foreach (Ghost ghost in ghosts) displayBoard[ghost.pos.x, ghost.pos.y] = (ghost.mode == AiMode.Eatable) ? GhostEatableChar : Ghost.Appearance[(int)ghost.type];
-                displayBoard[player.pos.x, player.pos.y] = (state == State.Lose) ? PlayerDeadChar : PlayerChar;
+                foreach (Ghost ghost in ghosts) displayBoard[ghost.pos.x, ghost.pos.y] = (ghost.mode == AiMode.Frightened) ? CharGhostFrightened : Ghost.Appearance[(int)ghost.type];
+                displayBoard[player.pos.x, player.pos.y] = (state == State.Lose) ? CharPlayerDead : CharPlayer;
 
                 //Converts 2d array to string
                 for (int y = 0; y < displayBoard.GetLength(1); y++)
@@ -313,10 +315,10 @@ namespace PacManBot.Modules.PacManModule
                     $" │ #Score: {score}\n",
                     $" │ #Power: {player.power}\n",
                     $" │\n",
-                    $" │ {Ghost.Appearance[0]} - \"Blinky\" ({(AiType)0})\n",
-                    $" │ {Ghost.Appearance[1]} - \"Pinky\"  ({(AiType)1})\n",
-                    $" │ {Ghost.Appearance[2]} - \"Inky\"   ({(AiType)2})\n",
-                    $" │ {Ghost.Appearance[3]} - \"Clyde\"  ({(AiType)3})\n"
+                    $" │ {Ghost.Appearance[0]} - {(AiType)0}\n",
+                    $" │ {Ghost.Appearance[1]} - {(AiType)1}\n",
+                    $" │ {Ghost.Appearance[2]} - {(AiType)2}\n",
+                    $" │ {Ghost.Appearance[3]} - {(AiType)3}\n"
                 };
                 for (int i = 0; i < info.Length; i++)
                 {
@@ -334,15 +336,15 @@ namespace PacManBot.Modules.PacManModule
 
                     case State.Lose:
                         boardString.Insert(0, "```diff\n");
-                        boardString.Replace("\n", "\n-"); //All red
+                        boardString.Replace("\n", "\n-", 0, boardString.Length - 1); //All red
                         break;
 
                     case State.Win:
                         boardString.Insert(0, "```diff\n");
-                        boardString.Replace("\n", "\n+"); //All green
+                        boardString.Replace("\n", "\n+", 0, boardString.Length - 1); //All green
                         break;
                 }
-                boardString.Append("\n```");
+                boardString.Append("```");
 
 
                 return boardString.ToString();
@@ -382,7 +384,7 @@ namespace PacManBot.Modules.PacManModule
                 }
             }
 
-            return (board[pos.x, pos.y] == ' ' || board[pos.x, pos.y] == PelletChar || board[pos.x, pos.y] == PowerPelletChar);
+            return (board[pos.x, pos.y] == ' ' || board[pos.x, pos.y] == CharPellet || board[pos.x, pos.y] == CharPowerPellet);
         }
 
         private void WrapAround(ref Pos pos)
@@ -407,7 +409,7 @@ namespace PacManBot.Modules.PacManModule
                     for (int x = 0; x < width; x++)
                     {
                         board[x, y] = lines[y].ToCharArray()[x];
-                        if (board[x, y] == PelletChar || board[x, y] == PowerPelletChar || board[x, y] == CornerChar) pellets++;
+                        if (board[x, y] == CharPellet || board[x, y] == CharPowerPellet || board[x, y] == CharCorner) pellets++;
                     }
                 }
             }

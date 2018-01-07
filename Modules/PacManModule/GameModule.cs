@@ -18,7 +18,7 @@ namespace PacManBot.Modules.PacManModule
             {
                 if (Context.Channel.Id == game.channelId) //Finds a game instance corresponding to this channel
                 {
-                    await ReplyAsync("There is already an ongoing game on this channel!");
+                    await ReplyAsync("There is already an ongoing game on this channel!\nYou could use the **refresh** command to bring it to the bottom of the chat.");
                     return;
                 }
             }
@@ -80,7 +80,7 @@ namespace PacManBot.Modules.PacManModule
         [Command("leaderboard"), Alias("scores"), Summary("Global list of scores")]
         public async Task SendTopScores(int amount = 10)
         {
-            if (amount > 100) amount = 100;
+            if (amount > 30) amount = 30;
             else if (amount <= 0) amount = 10;
 
             string[] allScores = File.ReadAllLines("scoreboard.txt");
@@ -105,7 +105,7 @@ namespace PacManBot.Modules.PacManModule
             Array.Sort(score, displayScore);
             Array.Reverse(displayScore);
 
-            string message = "🏆 __**Global Leaderboard**__";
+            string message = $"🏆 __**Global Leaderboard - *Top {amount}***__";
             for (int i = 0; i < amount; i++)
             {
                 if (i >= displayScore.Length) break;
