@@ -111,7 +111,7 @@ namespace PacManBot.Modules.PacManModule
             {
                 //Decide mode
                 if (game.player.power == PowerTime) mode = AiMode.Eatable;
-                else if (game.player.power <= 1 || pauseTime > 0 && game.timer > SpawnPauseTime[(int)type])
+                else if (game.player.power <= 1)
                 {
                     if (game.timer < 4 * ScatterCycle
                         && (game.timer < 2 * ScatterCycle && game.timer % ScatterCycle < ScatterTime1
@@ -265,6 +265,7 @@ namespace PacManBot.Modules.PacManModule
                         {
                             ghost.pos = ghost.origin;
                             ghost.pauseTime = 6;
+                            ghost.mode = AiMode.Chase;
                             score += 200 * (int)Math.Pow(2, player.ghostsEaten);
                             player.ghostsEaten++;
                         }
