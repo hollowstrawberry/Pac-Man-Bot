@@ -115,7 +115,7 @@ namespace PacManBot.Modules.PacManModule
             {
                 //Decide mode
                 if (game.player.power == PowerTime) mode = AiMode.Eatable;
-                else if (mode != AiMode.Eatable || pauseTime == 0)
+                else if (mode != AiMode.Eatable && (pauseTime > 0 || pos != origin))
                 {
                     if (game.timer < 4 * ScatterCycle
                         && (game.timer < 2 * ScatterCycle && game.timer % ScatterCycle < ScatterTime1
@@ -250,7 +250,7 @@ namespace PacManBot.Modules.PacManModule
             else if (board[player.pos.x, player.pos.y] == PowerPelletChar)
             {
                 pellets--;
-                player.power += PowerTime + 1;
+                player.power += PowerTime;
                 score += 50;
                 board[player.pos.x, player.pos.y] = ' ';
             }
