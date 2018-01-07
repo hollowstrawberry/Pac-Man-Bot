@@ -38,8 +38,11 @@ namespace PacManBot.Modules.PacManModule
                         else
                         {
                             gameInstances.Remove(game);
-                            Console.WriteLine($"{DateTime.UtcNow.ToString("hh:mm:ss")} ({game.state}) Achieved score {game.score} in {game.timer} moves on channel {(message.Author as SocketGuildUser).Guild.Name}/{message.Channel} last controlled by user {user.Username}#{user.Discriminator}");
-                            File.AppendAllText("scoreboard.txt", $"\n{game.state} {game.score} {game.timer} {user.Id} \"{user.Username}#{user.Discriminator}\" \"{DateTime.Now.ToString("o")}\" \"{(message.Author as SocketGuildUser).Guild.Name}/{message.Channel}\"");
+                            if (game.score > 0)
+                            {
+                                Console.WriteLine($"{DateTime.UtcNow.ToString("hh:mm:ss")} ({game.state}) Achieved score {game.score} in {game.timer} moves on channel {(message.Author as SocketGuildUser).Guild.Name}/{message.Channel} last controlled by user {user.Username}#{user.Discriminator}");
+                                File.AppendAllText("scoreboard.txt", $"\n{game.state} {game.score} {game.timer} {user.Id} \"{user.Username}#{user.Discriminator}\" \"{DateTime.Now.ToString("o")}\" \"{(message.Author as SocketGuildUser).Guild.Name}/{message.Channel}\"");
+                            }
                             await message.ModifyAsync(m => m.Content = game.Display + ((game.state == State.Win) ? "```diff\n+You won!```" : "```diff\n-You lost!```"));
                             await message.RemoveAllReactionsAsync();
                         }

@@ -10,7 +10,7 @@ namespace PacManBot.Modules.PacManModule
     [Name("Game")]
     public class GameModule : ModuleBase<SocketCommandContext>
     {
-        [Command("start"), Summary("Start a new game")]
+        [Command("start"), Alias("play"), Summary("Start a new game")]
         [RequireBotPermission(GuildPermission.AddReactions)]
         public async Task StartGameInstance()
         {

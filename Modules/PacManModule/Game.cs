@@ -158,6 +158,7 @@ namespace PacManBot.Modules.PacManModule
 
                     case AiMode.Scatter:
                         target = corner;
+                        if (type == AiType.Shadow && game.timer < 10) target = new Pos(1, 1); //So Blinky and Pinky go together at the start
                         break;
 
                     case AiMode.Eatable:
@@ -264,7 +265,7 @@ namespace PacManBot.Modules.PacManModule
                         if (player.power > 0)
                         {
                             ghost.pos = ghost.origin;
-                            ghost.pauseTime = 6;
+                            ghost.pauseTime = 5;
                             ghost.mode = AiMode.Chase;
                             score += 200 * (int)Math.Pow(2, player.ghostsEaten);
                             player.ghostsEaten++;
