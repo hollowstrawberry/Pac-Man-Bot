@@ -13,7 +13,7 @@ namespace PacManBot.Modules.PacManModule
         private const char CharPlayer = 'O', CharGhost = 'G', CharCorner = '_', CharDoor = '-', CharPellet = '·', CharPowerPellet = '●'; //Read from map
         private const char CharPlayerDead = 'X', CharGhostFrightened = 'E'; //Displayed
         private const int PowerTime = 20, ScatterCycle = 100, ScatterTime1 = 30, ScatterTime2 = 20;
-        private readonly static Dir[] allDirs = { Dir.Up, Dir.Down, Dir.Left, Dir.Right };
+        private readonly static Dir[] allDirs = { Dir.up, Dir.down, Dir.left, Dir.right };
 
 
         public ulong channelId;
@@ -34,7 +34,7 @@ namespace PacManBot.Modules.PacManModule
 
         public enum AiMode { Chase, Scatter, Frightened }
 
-        public enum Dir { None, Up, Down, Left, Right }
+        public enum Dir { none, up, down, left, right }
 
         public class Pos
         {
@@ -59,10 +59,10 @@ namespace PacManBot.Modules.PacManModule
             {
                 switch (dir)
                 {
-                    case Dir.Up:    return new Pos(pos.x, pos.y - 1);
-                    case Dir.Down:  return new Pos(pos.x, pos.y + 1);
-                    case Dir.Left:  return new Pos(pos.x - 1, pos.y);
-                    case Dir.Right: return new Pos(pos.x + 1, pos.y);
+                    case Dir.up:    return new Pos(pos.x, pos.y - 1);
+                    case Dir.down:  return new Pos(pos.x, pos.y + 1);
+                    case Dir.left:  return new Pos(pos.x - 1, pos.y);
+                    case Dir.right: return new Pos(pos.x + 1, pos.y);
                     default: return pos;
                 }
             }
@@ -73,7 +73,7 @@ namespace PacManBot.Modules.PacManModule
         private class Player
         {
             public Pos pos; //Position on the board
-            public Dir dir = Dir.None; //Direction it's facing
+            public Dir dir = Dir.none; //Direction it's facing
             public int power = 0; //Time left of power mode
             public int ghostsEaten = 0; //Ghosts eaten during the current power mode
 
@@ -90,7 +90,7 @@ namespace PacManBot.Modules.PacManModule
             public Pos target; //Tile it's trying to reach
             public Pos origin; //Tile it spawns in
             public Pos corner; //Preferred corner
-            public Dir dir = Dir.None; //Direction it's facing
+            public Dir dir = Dir.none; //Direction it's facing
             public AiType type; //Ghost behavior type
             public AiMode mode = AiMode.Chase; //Ghost behavior mode
             public int pauseTime = 0; //Time remaining until it can move
@@ -113,8 +113,8 @@ namespace PacManBot.Modules.PacManModule
                 if (game.player.power == PowerTime) mode = AiMode.Frightened;
                 else if (game.player.power <= 1)
                 {
-                    if (game.timer < 4 * ScatterCycle
-                        && (game.timer < 2 * ScatterCycle && game.timer % ScatterCycle < ScatterTime1
+                    if (game.timer < 4 * ScatterCycle &&
+                        (game.timer < 2 * ScatterCycle && game.timer % ScatterCycle < ScatterTime1
                         || game.timer >= 2 * ScatterCycle && game.timer % ScatterCycle < ScatterTime2)
                     ) { mode = AiMode.Scatter; }
                     else { mode = AiMode.Chase; }
@@ -139,16 +139,14 @@ namespace PacManBot.Modules.PacManModule
                             case AiType.Pinky:
                                 target = game.player.pos;
                                 for (int i = 0; i < 4; i++) target += game.player.dir; //4 squares ahead
-                                if (game.player.dir == Dir.Up) for (int i = 0; i < 4; i++) target += Dir.Left; //Intentional bug from the original arcade
+                                if (game.player.dir == Dir.up) for (int i = 0; i < 4; i++) target += Dir.left; //Intentional bug from the original arcade
                                 break;
 
                             case AiType.Inky:
                                 target = game.player.pos;
                                 for (int i = 0; i < 2; i++) target += game.player.dir; //2 squares ahead
-                                if (game.player.dir == Dir.Up) for (int i = 0; i < 2; i++) target += Dir.Left; //Intentional bug from the original arcade
-                                Pos blinky = new Pos(0, 0);
-                                foreach (Ghost ghost in game.ghosts) if (ghost.type == AiType.Blinky) blinky = ghost.pos; //Finds blinky
-                                target += target - blinky; //Opposite relative direction
+                                if (game.player.dir == Dir.up) for (int i = 0; i < 2; i++) target += Dir.left; //Intentional bug from the original arcade
+                                target += target - game.ghosts[(int)AiType.Blinky].pos; //Opposite position relative to Blinky
                                 break;
 
                             case AiType.Clyde:
@@ -160,7 +158,7 @@ namespace PacManBot.Modules.PacManModule
 
                     case AiMode.Scatter:
                         target = corner;
-                        if (type == AiType.Blinky && game.timer < 10) target = new Pos(0, 0); //So Blinky and Pinky go together at the start
+                        if (type == AiType.Blinky && game.timer < 5) target = game.ghosts[(int)AiType.Pinky].corner; //So Blinky and Pinky go together at the start
                         break;
 
                     case AiMode.Frightened:
@@ -173,10 +171,10 @@ namespace PacManBot.Modules.PacManModule
                 }
 
                 //Decide movement
-                Dir newDir = Dir.None;
-                if (game.board[pos.x, pos.y] == CharDoor || game.board[(pos + Dir.Up).x, (pos + Dir.Up).y] == CharDoor)
+                Dir newDir = Dir.none;
+                if (game.board[pos.x, pos.y] == CharDoor || game.board[(pos + Dir.up).x, (pos + Dir.up).y] == CharDoor)
                 {
-                    newDir = Dir.Up; //If it's inside the cage
+                    newDir = Dir.up; //If it's inside the cage
                 }
                 else //Track target
                 {
@@ -186,9 +184,9 @@ namespace PacManBot.Modules.PacManModule
                         Pos tile = pos + testDir;
 
                         if (testDir == Opposite(dir) && mode != AiMode.Frightened &&
-                            !(game.timer < 4 * ScatterCycle
-                            && (game.timer < 2 * ScatterCycle && game.timer % ScatterCycle == ScatterTime1
-                            || game.timer >= 2 * ScatterCycle && game.timer % ScatterCycle == ScatterTime2)
+                            !(game.timer < 4 * ScatterCycle &&
+                                (game.timer < 2 * ScatterCycle && game.timer % ScatterCycle == ScatterTime1
+                                || game.timer >= 2 * ScatterCycle && game.timer % ScatterCycle == ScatterTime2)
                         )) { continue; } //Can't turn 180º unless it's in eatable mode or changing modes
 
                         if (game.NonSolid(tile) && Pos.Distance(tile, target) < distance) //Check if it can move to the tile
@@ -235,7 +233,7 @@ namespace PacManBot.Modules.PacManModule
             timer++;
 
             //Player
-            if (direction != Dir.None) player.dir = direction;
+            if (direction != Dir.none) player.dir = direction;
             if (NonSolid(player.pos + direction)) player.pos += direction;
             WrapAround(ref player.pos);
 
@@ -269,6 +267,7 @@ namespace PacManBot.Modules.PacManModule
                             ghost.pos = ghost.origin;
                             ghost.pauseTime = 5;
                             ghost.mode = AiMode.Chase;
+                            ghost.dir = Dir.none;
                             score += 200 * (int)Math.Pow(2, player.ghostsEaten);
                             player.ghostsEaten++;
                         }
@@ -315,11 +314,12 @@ namespace PacManBot.Modules.PacManModule
                     $" │ #Score: {score}\n",
                     $" │ #Power: {player.power}\n",
                     $" │\n",
-                    $" │ {Ghost.Appearance[0]} - {(AiType)0}\n",
-                    $" │ {Ghost.Appearance[1]} - {(AiType)1}\n",
-                    $" │ {Ghost.Appearance[2]} - {(AiType)2}\n",
-                    $" │ {Ghost.Appearance[3]} - {(AiType)3}\n"
+                    $" │ {CharPlayer} - Pac-Man" + (player.dir == Dir.none ? "\n" : $": {player.dir}\n"),
+                    $" │\n",
+                    "", "", "", ""
                 };
+                for (int i = 0; i < 4; i++) info[i + info.Length - 4] = $" │ {Ghost.Appearance[i]} - {(AiType)i}" + (ghosts[i].dir == Dir.none ? "\n" : $": {ghosts[i].dir}\n");
+
                 for (int i = 0; i < info.Length; i++)
                 {
                     int startIndex = 1 + i * displayBoard.GetLength(0);
@@ -423,11 +423,11 @@ namespace PacManBot.Modules.PacManModule
         {
             switch (dir)
             {
-                case Dir.Up: return Dir.Down;
-                case Dir.Down: return Dir.Up;
-                case Dir.Left: return Dir.Right;
-                case Dir.Right: return Dir.Left;
-                default: return Dir.None;
+                case Dir.up: return Dir.down;
+                case Dir.down: return Dir.up;
+                case Dir.left: return Dir.right;
+                case Dir.right: return Dir.left;
+                default: return Dir.none;
             }
         }
     }

@@ -1,4 +1,4 @@
-﻿🎮 Play a turn-based version of Pac-Man on a Discord chat, with non-spammy reaction-based controls. Designed by Samrux#3980 as a test project to learn the Discord API and other stuff.
+﻿🎮 Play Pac-Man on a Discord chat! Featuring turn-based gameplay with reaction controls, the focus is low spam and original arcade game fidelity. Get a spot on the global leaderboard!
 • Invite the bot to your server: <http://bit.ly/pacmanbotdiscord>
 • GitHub: <https://github.com/Samrux/Pac-Man-Bot>
 • Email: samruxb@gmail.com

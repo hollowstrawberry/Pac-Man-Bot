@@ -17,16 +17,16 @@ namespace PacManBot.Modules.PacManModule
             {
                 if (message.Id == game.messageId) //Finds the game corresponding to this channel
                 {
-                    var direction = Dir.None;
+                    var direction = Dir.none;
 
-                    if      (reaction.Emote.ToString() == UpEmoji   ) direction = Dir.Up;
-                    else if (reaction.Emote.ToString() == RightEmoji) direction = Dir.Right;
-                    else if (reaction.Emote.ToString() == DownEmoji ) direction = Dir.Down;
-                    else if (reaction.Emote.ToString() == LeftEmoji ) direction = Dir.Left;
+                    if      (reaction.Emote.ToString() == UpEmoji   ) direction = Dir.up;
+                    else if (reaction.Emote.ToString() == RightEmoji) direction = Dir.right;
+                    else if (reaction.Emote.ToString() == DownEmoji ) direction = Dir.down;
+                    else if (reaction.Emote.ToString() == LeftEmoji ) direction = Dir.left;
 
                     Console.WriteLine($"{DateTime.UtcNow.ToString("hh:mm:ss")} Game Input: {direction} by user {user.Username}#{user.Discriminator} in channel {(message.Author as SocketGuildUser).Guild.Name}/{message.Channel}");
 
-                    if (direction != Dir.None || reaction.Emote.ToString() == WaitEmoji) //Valid reaction input
+                    if (direction != Dir.none || reaction.Emote.ToString() == WaitEmoji) //Valid reaction input
                     {
                         game.DoTick(direction);
 
