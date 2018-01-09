@@ -158,7 +158,7 @@ namespace PacManBot.Modules.PacManModule
 
                     case AiMode.Scatter:
                         target = corner;
-                        if (type == AiType.Blinky && game.timer < 5) target = game.ghosts[(int)AiType.Pinky].corner; //So Blinky and Pinky go together at the start
+                        if (type == AiType.Blinky && game.timer < 10) target = game.ghosts[(int)AiType.Pinky].corner; //So Blinky and Pinky go together at the start
                         break;
 
                     case AiMode.Frightened:

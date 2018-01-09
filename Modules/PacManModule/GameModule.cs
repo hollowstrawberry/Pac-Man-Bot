@@ -10,7 +10,7 @@ namespace PacManBot.Modules.PacManModule
     [Name("Game")]
     public class GameModule : ModuleBase<SocketCommandContext>
     {
-        [Command("start"), Alias("play"), Summary("Start a new game")]
+        [Command("play"), Alias("start"), Summary("Start a new game")]
         [RequireBotPermission(GuildPermission.AddReactions)]
         public async Task StartGameInstance()
         {
@@ -77,44 +77,93 @@ namespace PacManBot.Modules.PacManModule
             await ReplyAsync("There is no active game on this channel!");
         }
 
-        [Command("leaderboard"), Alias("scores"), Summary("Global list of scores")]
-        public async Task SendTopScores(int amount = 10)
+        [Command("leaderboard"), Alias("scores"), Summary("Global list of top scores")]
+        public async Task SendTopScores(int amount = 10) => await SendTopScores(1, amount);
+
+        [Command("leaderboard"), Alias("scores"), Summary("[start] [end] - Global list of top scores")]
+        public async Task SendTopScores(int min, int max)
         {
-            if (amount > 30) amount = 30;
-            else if (amount <= 0) amount = 10;
+            if (min <= 1) min = 1;
+            if (max <= 0) max = 10;
 
-            string[] allScores = File.ReadAllLines("scoreboard.txt");
-            string[] displayScore = new string[allScores.Length - 1];
-            int[] score = new int[allScores.Length - 1];
+            string[] scoreLine = File.ReadAllLines("scoreboard.txt");
+            int scoresAmount = scoreLine.Length - 1;
+            string[] scoreText = new string[scoresAmount];
+            int[] score = new int[scoresAmount];
 
-            if (allScores.Length < 2)
+
+            if (scoreLine.Length < 2)
             {
                 await ReplyAsync("There are no registered scores! Go make one");
                 return;
             }
 
-            for (int i = 1; i < allScores.Length; i++)
+            if (min > scoresAmount)
             {
-                string[] splitLine = allScores[i].Split(' '); //Divide into sections
+                await ReplyAsync("No scores found within the specified range.");
+                return;
+            }
+
+            for (int i = 0; i < scoresAmount; i++) scoreLine[i] = scoreLine[i + 1]; //Shifts it all down to skip the first line
+
+            for (int i = 0; i < scoresAmount; i++)
+            {
+                string[] splitLine = scoreLine[i].Split(' '); //Divide into sections
                 for (int j = 0; j < splitLine.Length; j++) splitLine[j].Trim(' '); //Trim the ends
-                var user = Context.Client.GetUser(ulong.Parse(splitLine[3]));
-                displayScore[i - 1] = $"({splitLine[0]}) **{splitLine[1]}** in {splitLine[2]} turns by user " + (user == null ? "Unknown" : $"{user.Username}#{user.Discriminator}");
-                score[i - 1] = Int32.Parse(splitLine[1].Trim());
+
+                var user = Context.Client.GetUser(ulong.Parse(splitLine[3])); //Third section is the user id
+                scoreText[i] = $"({splitLine[0]}) **{splitLine[1]}** in {splitLine[2]} turns by user " + (user == null ? "Unknown" : $"{user.Username}#{user.Discriminator}");
+                score[i] = Int32.Parse(splitLine[1]);
             }
 
-            Array.Sort(score, displayScore);
-            Array.Reverse(displayScore);
+            Array.Sort(score, scoreText);
+            Array.Reverse(scoreText);
 
-            string message = $"🏆 __**Global Leaderboard - *Top {amount}***__";
-            for (int i = 0; i < amount; i++)
+            string message = $"🏆 __**Global Leaderboard**__";
+            for (int i = min; i < scoresAmount && i <= max && i < min + 20; i++) //Caps at 30
             {
-                if (i >= displayScore.Length) break;
-                message += $"\n{i + 1}. {displayScore[i]}";
+                message += $"\n{i}. {scoreText[i - 1]}";
             }
+
+            if (max - min > 20) message += "\n*Only 20 scores may be displayed at once*";
 
             if (message.Length > 2000) message = message.Substring(0, 1999);
 
             await ReplyAsync(message);
+        }
+
+        [Command("score"), Summary("See your highest score on the leaderboard")]
+        public async Task SendPersonalBest()
+        {
+            string[] scoreLine = File.ReadAllLines("scoreboard.txt");
+            int scoresAmount = scoreLine.Length - 1;
+            int[] score = new int[scoresAmount];
+
+            for (int i = 0; i < scoresAmount; i++)
+            {
+                scoreLine[i] = scoreLine[i + 1]; //Shift it all down skipping the first line
+                score[i] = Int32.Parse(scoreLine[i].Split(' ')[1].Trim());
+            }
+
+            Array.Sort(score, scoreLine);
+            Array.Reverse(scoreLine);
+            Array.Reverse(score);
+
+            int topScore = 0;
+            int topScoreIndex = 0;
+            for (int i = 0; i < scoresAmount; i++)
+            {
+                if (scoreLine[i].Split(' ')[3] == Context.User.Id.ToString() && score[i] > topScore)
+                {
+                    topScore = score[i];
+                    topScoreIndex = i;
+                }
+            }
+
+            string[] splitLine = scoreLine[topScoreIndex].Split(' ');
+            var user = Context.Client.GetUser(ulong.Parse(splitLine[3])); //Third section is the user id
+
+            await ReplyAsync(topScore == 0 ? "You have no scores registered!" : $"{topScoreIndex}. ({splitLine[0]}) **{splitLine[1]}** in {splitLine[2]} turns by user " + (user == null ? "Unknown" : $"{user.Username}#{user.Discriminator}"));
         }
 
         [Command("tips"), Summary("Learn some secrets that will help you")]
