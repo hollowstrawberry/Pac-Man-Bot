@@ -4,6 +4,7 @@ using Discord;
 using Discord.Commands;
 using static PacManBot.Modules.PacManModule.Game;
 using System.IO;
+using Discord.WebSocket;
 
 namespace PacManBot.Modules.PacManModule
 {
@@ -77,14 +78,14 @@ namespace PacManBot.Modules.PacManModule
             await ReplyAsync("There is no active game on this channel!");
         }
 
-        [Command("leaderboard"), Alias("scores"), Summary("Global list of top scores")]
+        [Command("leaderboard"), Alias("l"), Summary("Global list of top scores. You can specify an amount, or a start and end")]
         public async Task SendTopScores(int amount = 10) => await SendTopScores(1, amount);
 
-        [Command("leaderboard"), Alias("scores"), Summary("[start] [end] - Global list of top scores")]
+        [Command("leaderboard"), Alias("l")]
         public async Task SendTopScores(int min, int max)
         {
             if (min <= 1) min = 1;
-            if (max <= 0) max = 10;
+            if (max < min) max = min + 9;
 
             string[] scoreLine = File.ReadAllLines("scoreboard.txt");
             int scoresAmount = scoreLine.Length - 1;
@@ -120,7 +121,7 @@ namespace PacManBot.Modules.PacManModule
             Array.Reverse(scoreText);
 
             string message = $"🏆 __**Global Leaderboard**__";
-            for (int i = min; i < scoresAmount && i <= max && i < min + 20; i++) //Caps at 30
+            for (int i = min; i < scoresAmount && i <= max && i < min + 20; i++) //Caps at 20
             {
                 message += $"\n{i}. {scoreText[i - 1]}";
             }
@@ -132,9 +133,11 @@ namespace PacManBot.Modules.PacManModule
             await ReplyAsync(message);
         }
 
-        [Command("score"), Summary("See your highest score on the leaderboard")]
-        public async Task SendPersonalBest()
+        [Command("score"), Alias("s"), Summary("See your own or another person's place on the leaderboard")]
+        public async Task SendPersonalBest(SocketGuildUser user = null)
         {
+            if (user == null) user = Context.User as SocketGuildUser;
+
             string[] scoreLine = File.ReadAllLines("scoreboard.txt");
             int scoresAmount = scoreLine.Length - 1;
             int[] score = new int[scoresAmount];
@@ -153,7 +156,7 @@ namespace PacManBot.Modules.PacManModule
             int topScoreIndex = 0;
             for (int i = 0; i < scoresAmount; i++)
             {
-                if (scoreLine[i].Split(' ')[3] == Context.User.Id.ToString() && score[i] > topScore)
+                if (scoreLine[i].Split(' ')[3] == user.Id.ToString() && score[i] > topScore)
                 {
                     topScore = score[i];
                     topScoreIndex = i;
@@ -161,8 +164,6 @@ namespace PacManBot.Modules.PacManModule
             }
 
             string[] splitLine = scoreLine[topScoreIndex].Split(' ');
-            var user = Context.Client.GetUser(ulong.Parse(splitLine[3])); //Third section is the user id
-
             await ReplyAsync(topScore == 0 ? "You have no scores registered!" : $"{topScoreIndex}. ({splitLine[0]}) **{splitLine[1]}** in {splitLine[2]} turns by user " + (user == null ? "Unknown" : $"{user.Username}#{user.Discriminator}"));
         }
 

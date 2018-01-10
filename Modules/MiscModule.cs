@@ -1,8 +1,10 @@
 ﻿using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Microsoft.Extensions.Configuration;
+using System.Collections.Generic;
 
 namespace PacManBot.Modules
 {
@@ -24,35 +26,38 @@ namespace PacManBot.Modules
             string prefix = config["prefix"];
             var embed = new EmbedBuilder() { Color = new Color(241, 195, 15) }; //Create a new embed block
 
-            foreach (var module in service.Modules) //Go through all modules
+            var allModules = service.Modules.OrderBy(m => m.Name); //Alphabetically
+
+            foreach (var module in allModules) //Go through all modules
             {
-                string commandList = null; //Text under the module title in the embed block
+                string commandsText = null; //Text under the module title in the embed block
+                List<string> commands = new List<string>(); //Storing the command names so they can't repeat
 
                 foreach (var command in module.Commands) //Go through all commands
                 {
-                    var result = await command.CheckPreconditionsAsync(Context); //Only show commands the user can use
-                    if (result.IsSuccess)
+                    var canUse = await command.CheckPreconditionsAsync(Context); //Only show commands the user can use
+                    if (canUse.IsSuccess && !commands.Contains(command.Name))
                     {
                         for (int i = 0; i < command.Aliases.Count; i++) //Lists command name and aliases
                         {
-                            commandList += (i > 0 ? ", " : "") + $"**{command.Aliases[i]}**";
+                            commandsText += (i > 0 ? ", " : "") + $"**{command.Aliases[i]}**";
                         }
-
                         if (!string.IsNullOrEmpty(command.Summary)) //Adds the command summary
                         {
-                            commandList += $" - *{command.Summary}*";
+                            commandsText += $" - *{command.Summary}*";
                         }
 
-                        commandList += "\n";
+                        commands.Add(command.Name);
+                        commandsText += "\n";
                     }
                 }
 
-                if (!string.IsNullOrWhiteSpace(commandList))
+                if (!string.IsNullOrWhiteSpace(commandsText))
                 {
                     embed.AddField(f =>
                     {
                         f.Name = module.Name;
-                        f.Value = commandList;
+                        f.Value = commandsText;
                         f.IsInline = false;
                     });
                 }
