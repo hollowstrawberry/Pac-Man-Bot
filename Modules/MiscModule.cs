@@ -21,7 +21,7 @@ namespace PacManBot.Modules
         }
 
         [Command("help"), Alias("h"), Summary("List of commands")]
-        public async Task HelpAsync()
+        public async Task HelpAsync([Remainder]string text = "")
         {
             string prefix = config["prefix"];
             var embed = new EmbedBuilder() { Color = new Color(241, 195, 15) }; //Create a new embed block
@@ -73,7 +73,7 @@ namespace PacManBot.Modules
         [RequireUserPermission(GuildPermission.ManageMessages)]
         public async Task Say([Remainder]string text) => await ReplyAsync(text);
 
-        [Command("clear"), Alias("c"), Summary("Clear messages from this bot. You can specify an amount (Moderator)")]
+        [Command("clear"), Alias("c"), Summary("Clear messages from this bot. You can specify amount (Moderator)")]
         [RequireUserPermission(ChannelPermission.ManageMessages)]
         public async Task ClearGameMessages(int amount = 10)
         {

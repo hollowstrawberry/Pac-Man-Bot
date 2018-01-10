@@ -40,3 +40,4 @@ importantInfo.txt
 *.pidb
 *.svclog
 *.scc
+*.dll

@@ -40,6 +40,8 @@ namespace PacManBot.Services
 
                     if      (result.ErrorReason.Contains("Bot requires")) await context.Channel.SendMessageAsync($"This bot requires the permission {result.ErrorReason.Split(' ')[result.ErrorReason.Split(' ').Length - 1]}!");
                     else if (result.ErrorReason.Contains("User requires")) await context.Channel.SendMessageAsync($"You need to be a moderator to use this command!");
+                    else if (result.ErrorReason.Contains("User not found")) await context.Channel.SendMessageAsync($"Can't find the specified user!");
+                    else if (result.ErrorReason.Contains("Failed to parse") || result.ErrorReason.Contains("parameters")) await context.Channel.SendMessageAsync($"Incorrect command parameters!");
                 }
             }
             else

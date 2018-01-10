@@ -15,7 +15,7 @@ namespace PacManBot.Modules.PacManModule
 
             foreach (Game game in gameInstances)
             {
-                if (message.Id == game.messageId) //Finds the game corresponding to this channel
+                if (message.Id == game.messageId && game.state == State.Active) //Finds the game corresponding to this channel
                 {
                     var direction = Dir.none;
 

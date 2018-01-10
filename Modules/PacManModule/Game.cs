@@ -12,19 +12,19 @@ namespace PacManBot.Modules.PacManModule
         public const string LeftEmoji = "⬅", UpEmoji = "⬆", DownEmoji = "⬇", RightEmoji = "➡", WaitEmoji = "⏸", RefreshEmoji = "🔃"; //Controls
         private const char CharPlayer = 'O', CharGhost = 'G', CharCorner = '_', CharDoor = '-', CharPellet = '·', CharPowerPellet = '●'; //Read from map
         private const char CharPlayerDead = 'X', CharGhostFrightened = 'E'; //Displayed
-        private const int PowerTime = 20, ScatterCycle = 100, ScatterTime1 = 30, ScatterTime2 = 20;
-        private readonly static Dir[] allDirs = { Dir.up, Dir.down, Dir.left, Dir.right };
+        private const int PowerTime = 20, ScatterCycle = 100, ScatterTime1 = 30, ScatterTime2 = 20; //Mechanics constants
+        private readonly static Dir[] allDirs = { Dir.up, Dir.left, Dir.down, Dir.right }; //Order of preference when deciding direction
 
 
         public ulong channelId;
-        public ulong messageId = 1;
+        public ulong messageId = 1; //Even if not set, it must be a number above 0
         public State state = State.Active;
         public int score = 0;
         public int timer = 0;
         private int pellets = 0;
         private char[,] board;
         private Player player;
-        private List<Ghost> ghosts = new List<Ghost>();
+        private List<Ghost> ghosts;
         private Random random;
 
 
@@ -111,11 +111,11 @@ namespace PacManBot.Modules.PacManModule
             {
                 //Decide mode
                 if (game.player.power == PowerTime) mode = AiMode.Frightened;
-                else if (game.player.power <= 1)
+                else if (game.player.power <= 1) //Right after the last turn of power or any turn after
                 {
                     if (game.timer < 4 * ScatterCycle &&
-                        (game.timer < 2 * ScatterCycle && game.timer % ScatterCycle < ScatterTime1
-                        || game.timer >= 2 * ScatterCycle && game.timer % ScatterCycle < ScatterTime2)
+                            (game.timer  < 2 * ScatterCycle && game.timer % ScatterCycle < ScatterTime1
+                          || game.timer >= 2 * ScatterCycle && game.timer % ScatterCycle < ScatterTime2)
                     ) { mode = AiMode.Scatter; }
                     else { mode = AiMode.Chase; }
                 }
@@ -138,14 +138,14 @@ namespace PacManBot.Modules.PacManModule
 
                             case AiType.Pinky:
                                 target = game.player.pos;
-                                for (int i = 0; i < 4; i++) target += game.player.dir; //4 squares ahead
-                                if (game.player.dir == Dir.up) for (int i = 0; i < 4; i++) target += Dir.left; //Intentional bug from the original arcade
+                                target += game.player.dir.OfLength(4); //4 squares ahead
+                                if (game.player.dir == Dir.up) target += Dir.left.OfLength(4); //Intentional bug from the original arcade
                                 break;
 
                             case AiType.Inky:
                                 target = game.player.pos;
-                                for (int i = 0; i < 2; i++) target += game.player.dir; //2 squares ahead
-                                if (game.player.dir == Dir.up) for (int i = 0; i < 2; i++) target += Dir.left; //Intentional bug from the original arcade
+                                target += game.player.dir.OfLength(2); //2 squares ahead
+                                if (game.player.dir == Dir.up) target += Dir.left.OfLength(2); //Intentional bug from the original arcade
                                 target += target - game.ghosts[(int)AiType.Blinky].pos; //Opposite position relative to Blinky
                                 break;
 
@@ -183,11 +183,13 @@ namespace PacManBot.Modules.PacManModule
                     {
                         Pos tile = pos + testDir;
 
-                        if (testDir == Opposite(dir) && mode != AiMode.Frightened &&
-                            !(game.timer < 4 * ScatterCycle &&
-                                (game.timer < 2 * ScatterCycle && game.timer % ScatterCycle == ScatterTime1
-                                || game.timer >= 2 * ScatterCycle && game.timer % ScatterCycle == ScatterTime2)
-                        )) { continue; } //Can't turn 180º unless it's in eatable mode or changing modes
+                        if (testDir == dir.Opposite() //Can't turn 180 degrees
+                            && mode != AiMode.Frightened //Unless it's frightened
+                            && !(game.timer < 4 * ScatterCycle && //Or it has just switched modes
+                                    (game.timer  < 2 * ScatterCycle && game.timer % ScatterCycle == ScatterTime1
+                                  || game.timer >= 2 * ScatterCycle && game.timer % ScatterCycle == ScatterTime2)
+                                )
+                        ) { continue; }
 
                         if (game.NonSolid(tile) && Pos.Distance(tile, target) < distance) //Check if it can move to the tile
                         {
@@ -217,6 +219,7 @@ namespace PacManBot.Modules.PacManModule
             player = new Player(playerPos);
             board[playerPos.x, playerPos.y] = ' ';
 
+            ghosts = new List<Ghost>();
             for (int i = 0; i < 4; i++) //Set ghosts
             {
                 Pos ghostPos = FindChar(CharGhost);
@@ -416,19 +419,6 @@ namespace PacManBot.Modules.PacManModule
             catch { throw new Exception("Invalid board"); }
 
             this.board = board;
-        }
-
-
-        private static Dir Opposite(Dir dir)
-        {
-            switch (dir)
-            {
-                case Dir.up: return Dir.down;
-                case Dir.down: return Dir.up;
-                case Dir.left: return Dir.right;
-                case Dir.right: return Dir.left;
-                default: return Dir.none;
-            }
         }
     }
 }

@@ -10,17 +10,14 @@ namespace PacManBot.Services
     class ReactionHandler
     {
         private readonly DiscordSocketClient discord;
-        private readonly CommandService commands;
         private readonly IConfigurationRoot config;
-        private readonly IServiceProvider provider;
 
-        //DiscordSocketClient, CommandService, IConfigurationRoot, and IServiceProvider are injected automatically from the IServiceProvider
-        public ReactionHandler(DiscordSocketClient discord, CommandService commands, IConfigurationRoot config, IServiceProvider provider)
+        //DiscordSocketClient is injected automatically from the IServiceProvider
+        public ReactionHandler(DiscordSocketClient discord)
         {
             this.discord = discord;
-            this.config = config;
 
-            this.discord.ReactionAdded += OnReactionAdded;
+            this.discord.ReactionAdded += OnReactionAdded; //Event
         }
 
         private async Task OnReactionAdded(Cacheable<IUserMessage, ulong> messageData, ISocketMessageChannel channel, SocketReaction reaction)
@@ -30,7 +27,5 @@ namespace PacManBot.Services
 
             await Modules.PacManModule.Controls.OnReactionAdded(messageData.Value, reaction);
         }
-
-
     }
 }

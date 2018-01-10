@@ -1,10 +1,10 @@
-﻿using Discord;
+﻿using System;
+using System.Reflection;
+using System.Threading.Tasks;
+using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Reflection;
-using System.Threading.Tasks;
 
 namespace PacManBot.Services
 {
@@ -14,12 +14,12 @@ namespace PacManBot.Services
         private readonly CommandService commands;
         private readonly IConfigurationRoot config;
 
-        //DiscordSocketClient, CommandService, and IConfigurationRoot are injected automatically from the IServiceProvider
+        //DiscordSocketClient, CommandService and IConfigurationRoot are injected automatically from the IServiceProvider
         public StartupService(DiscordSocketClient discord, CommandService commands, IConfigurationRoot config)
         {
-            this.config = config;
             this.discord = discord;
             this.commands = commands;
+            this.config = config;
         }
 
         public async Task StartAsync()

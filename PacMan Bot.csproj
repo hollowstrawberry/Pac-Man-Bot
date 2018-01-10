@@ -110,6 +110,7 @@
   <ItemGroup>
     <Compile Include="Modules\MiscModule.cs" />
     <Compile Include="Modules\PacManModule\Controls.cs" />
+    <Compile Include="Modules\PacManModule\Utils.cs" />
     <Compile Include="Services\CommandHandler.cs" />
     <Compile Include="Modules\PacManModule\GameModule.cs" />
     <Compile Include="Modules\PacManModule\Game.cs" />

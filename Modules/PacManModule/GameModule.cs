@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
-
 using static PacManBot.Modules.PacManModule.Game;
 
 namespace PacManBot.Modules.PacManModule
@@ -13,7 +12,7 @@ namespace PacManBot.Modules.PacManModule
     [Name("Game")]
     public class GameModule : ModuleBase<SocketCommandContext>
     {
-        [Command("play"), Alias("start"), Summary("Start a new game")]
+        [Command("play"), Alias("p", "start"), Summary("Start a new game on this channel")]
         [RequireBotPermission(GuildPermission.AddReactions)]
         public async Task StartGameInstance()
         {
@@ -80,7 +79,7 @@ namespace PacManBot.Modules.PacManModule
             await ReplyAsync("There is no active game on this channel!");
         }
 
-        [Command("leaderboard"), Alias("l"), Summary("Global list of top scores. You can specify a start and end or amount")]
+        [Command("leaderboard"), Alias("l"), Summary("Global list of top scores. You can specify amount or a start and end")]
         public async Task SendTopScores(int amount = 10) => await SendTopScores(1, amount);
 
         [Command("leaderboard"), Alias("l")]
