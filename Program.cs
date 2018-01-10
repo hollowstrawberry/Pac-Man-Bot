@@ -23,7 +23,7 @@ namespace PacManBot
 
         public async Task MainAsync()
         {
-            var builder = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile("config.json"); //Add the configuration file
+            var builder = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile("bot_config.json"); //Add the configuration file
             customConfig = builder.Build(); //Build the configuration file
 
             var config = new DiscordSocketConfig { LogLevel = LogSeverity.Verbose, MessageCacheSize = 1000 };
