@@ -1,10 +1,12 @@
 ﻿using System;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
-using static PacManBot.Modules.PacManModule.Game;
-using System.IO;
 using Discord.WebSocket;
+
+using static PacManBot.Modules.PacManModule.Game;
 
 namespace PacManBot.Modules.PacManModule
 {
@@ -78,7 +80,7 @@ namespace PacManBot.Modules.PacManModule
             await ReplyAsync("There is no active game on this channel!");
         }
 
-        [Command("leaderboard"), Alias("l"), Summary("Global list of top scores. You can specify an amount, or a start and end")]
+        [Command("leaderboard"), Alias("l"), Summary("Global list of top scores. You can specify a start and end or amount")]
         public async Task SendTopScores(int amount = 10) => await SendTopScores(1, amount);
 
         [Command("leaderboard"), Alias("l")]
@@ -87,13 +89,13 @@ namespace PacManBot.Modules.PacManModule
             if (min <= 1) min = 1;
             if (max < min) max = min + 9;
 
-            string[] scoreLine = File.ReadAllLines("scoreboard.txt");
-            int scoresAmount = scoreLine.Length - 1;
+            string[] scoreLine = File.ReadAllLines("scoreboard.txt").Skip(1).ToArray(); //Skips the first line
+            int scoresAmount = scoreLine.Length;
             string[] scoreText = new string[scoresAmount];
             int[] score = new int[scoresAmount];
 
 
-            if (scoreLine.Length < 2)
+            if (scoreLine.Length < 1)
             {
                 await ReplyAsync("There are no registered scores! Go make one");
                 return;
@@ -105,12 +107,10 @@ namespace PacManBot.Modules.PacManModule
                 return;
             }
 
-            for (int i = 0; i < scoresAmount; i++) scoreLine[i] = scoreLine[i + 1]; //Shifts it all down to skip the first line
-
             for (int i = 0; i < scoresAmount; i++)
             {
                 string[] splitLine = scoreLine[i].Split(' '); //Divide into sections
-                for (int j = 0; j < splitLine.Length; j++) splitLine[j].Trim(' '); //Trim the ends
+                for (int j = 0; j < splitLine.Length; j++) splitLine[j].Trim(); //Trim the ends
 
                 var user = Context.Client.GetUser(ulong.Parse(splitLine[3])); //Third section is the user id
                 scoreText[i] = $"({splitLine[0]}) **{splitLine[1]}** in {splitLine[2]} turns by user " + (user == null ? "Unknown" : $"{user.Username}#{user.Discriminator}");
@@ -143,13 +143,12 @@ namespace PacManBot.Modules.PacManModule
                 sameUser = true;
             }
 
-            string[] scoreLine = File.ReadAllLines("scoreboard.txt");
-            int scoresAmount = scoreLine.Length - 1;
+            string[] scoreLine = File.ReadAllLines("scoreboard.txt").Skip(1).ToArray(); //Skips the first line
+            int scoresAmount = scoreLine.Length;
             int[] score = new int[scoresAmount];
 
             for (int i = 0; i < scoresAmount; i++)
             {
-                scoreLine[i] = scoreLine[i + 1]; //Shift it all down to skip the first line
                 score[i] = Int32.Parse(scoreLine[i].Split(' ')[1].Trim());
             }
 
@@ -169,7 +168,7 @@ namespace PacManBot.Modules.PacManModule
             }
 
             string[] splitLine = scoreLine[topScoreIndex].Split(' ');
-            await ReplyAsync(topScore == 0 ? ((sameUser ? "You don't have" : "The user doesn't have") + " any scores registered!") : $"{topScoreIndex}. ({splitLine[0]}) **{splitLine[1]}** in {splitLine[2]} turns by user " + (user == null ? "Unknown" : $"{user.Username}#{user.Discriminator}"));
+            await ReplyAsync(topScore == 0 ? ((sameUser ? "You don't have" : "The user doesn't have") + " any scores registered!") : $"{topScoreIndex + 1}. ({splitLine[0]}) **{splitLine[1]}** in {splitLine[2]} turns by user " + (user == null ? "Unknown" : $"{user.Username}#{user.Discriminator}"));
         }
 
         [Command("tips"), Summary("Learn some secrets that will help you")]
