@@ -27,12 +27,11 @@ namespace PacManBot.Services
             string discordToken = config["token"]; //Get the discord token from the config file
             if (string.IsNullOrWhiteSpace(discordToken))
             {
-                throw new Exception("Please enter the bot's token into the config.json file");
+                throw new Exception("Please enter the bot's token into the bot_config.json file");
             }
 
             await discord.LoginAsync(TokenType.Bot, discordToken); //Login to discord
             await discord.StartAsync(); //Connect to the websocket
-            await discord.SetGameAsync($"{config["prefix"]}help"); //"Playing" message
 
             await commands.AddModulesAsync(Assembly.GetEntryAssembly()); //Load commands and modules into the command service
         }

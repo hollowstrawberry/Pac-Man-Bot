@@ -14,6 +14,7 @@ packages/
 # Files
 config.json
 packages.config
+App.config
 importantInfo.txt
 
 # Formats
