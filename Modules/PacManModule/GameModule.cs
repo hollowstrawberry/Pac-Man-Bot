@@ -136,7 +136,12 @@ namespace PacManBot.Modules.PacManModule
         [Command("score"), Alias("s"), Summary("See your own or another person's place on the leaderboard")]
         public async Task SendPersonalBest(SocketGuildUser user = null)
         {
-            if (user == null) user = Context.User as SocketGuildUser;
+            bool sameUser = false;
+            if (user == null)
+            {
+                user = Context.User as SocketGuildUser;
+                sameUser = true;
+            }
 
             string[] scoreLine = File.ReadAllLines("scoreboard.txt");
             int scoresAmount = scoreLine.Length - 1;
@@ -144,7 +149,7 @@ namespace PacManBot.Modules.PacManModule
 
             for (int i = 0; i < scoresAmount; i++)
             {
-                scoreLine[i] = scoreLine[i + 1]; //Shift it all down skipping the first line
+                scoreLine[i] = scoreLine[i + 1]; //Shift it all down to skip the first line
                 score[i] = Int32.Parse(scoreLine[i].Split(' ')[1].Trim());
             }
 
@@ -164,7 +169,7 @@ namespace PacManBot.Modules.PacManModule
             }
 
             string[] splitLine = scoreLine[topScoreIndex].Split(' ');
-            await ReplyAsync(topScore == 0 ? "You have no scores registered!" : $"{topScoreIndex}. ({splitLine[0]}) **{splitLine[1]}** in {splitLine[2]} turns by user " + (user == null ? "Unknown" : $"{user.Username}#{user.Discriminator}"));
+            await ReplyAsync(topScore == 0 ? ((sameUser ? "You don't have" : "The user doesn't have") + " any scores registered!") : $"{topScoreIndex}. ({splitLine[0]}) **{splitLine[1]}** in {splitLine[2]} turns by user " + (user == null ? "Unknown" : $"{user.Username}#{user.Discriminator}"));
         }
 
         [Command("tips"), Summary("Learn some secrets that will help you")]
