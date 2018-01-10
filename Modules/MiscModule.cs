@@ -20,6 +20,7 @@ namespace PacManBot.Modules
             this.config = config;
         }
 
+
         [Command("help"), Alias("h"), Summary("List of commands")]
         public async Task HelpAsync([Remainder]string text = "")
         {

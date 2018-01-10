@@ -22,6 +22,7 @@ namespace PacManBot.Services
             this.config = config;
         }
 
+
         public async Task StartAsync()
         {
             string discordToken = config["token"]; //Get the discord token from the config file

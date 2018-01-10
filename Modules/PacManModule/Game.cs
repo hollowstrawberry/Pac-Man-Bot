@@ -10,22 +10,27 @@ namespace PacManBot.Modules.PacManModule
         static public List<Game> gameInstances = new List<Game>();
 
         public const string LeftEmoji = "⬅", UpEmoji = "⬆", DownEmoji = "⬇", RightEmoji = "➡", WaitEmoji = "⏸", RefreshEmoji = "🔃"; //Controls
-        private const char CharPlayer = 'O', CharGhost = 'G', CharCorner = '_', CharDoor = '-', CharPellet = '·', CharPowerPellet = '●'; //Read from map
+        private const char CharPlayer = 'O', CharFruit = '$', CharGhost = 'G', CharCorner = '_', CharDoor = '-', CharPellet = '·', CharPowerPellet = '●'; //Read from map
         private const char CharPlayerDead = 'X', CharGhostFrightened = 'E'; //Displayed
         private const int PowerTime = 20, ScatterCycle = 100, ScatterTime1 = 30, ScatterTime2 = 20; //Mechanics constants
         private readonly static Dir[] allDirs = { Dir.up, Dir.left, Dir.down, Dir.right }; //Order of preference when deciding direction
 
 
-        public ulong channelId;
-        public ulong messageId = 1; //Even if not set, it must be a number above 0
+        public ulong channelId; //Which channel this game is located in
+        public ulong messageId = 1; //The message of the current game to manage controls. Even if not set, it must be a number above 0
         public State state = State.Active;
         public int score = 0;
-        public int timer = 0;
-        private int pellets = 0;
+        public int timer = 0; //How many turns have passed
+        private int pellets;
+        private readonly int maxPellets;
         private char[,] board;
         private Player player;
+        private Fruit fruit;
         private List<Ghost> ghosts;
         private Random random;
+
+        private int FruitTrigger1 => maxPellets - 70; //Amount of pellets remaining needed to spawn fruit
+        private int FruitTrigger2 => maxPellets - 170;
 
 
         public enum State { Active, Lose, Win }
@@ -73,6 +78,7 @@ namespace PacManBot.Modules.PacManModule
         private class Player
         {
             public Pos pos; //Position on the board
+            public Pos origin; //Position it started at
             public Dir dir = Dir.none; //Direction it's facing
             public int power = 0; //Time left of power mode
             public int ghostsEaten = 0; //Ghosts eaten during the current power mode
@@ -81,6 +87,25 @@ namespace PacManBot.Modules.PacManModule
             {
                 if (pos != null) this.pos = pos;
                 else this.pos = new Pos(0, 0);
+                origin = this.pos;
+            }
+        }
+
+        private class Fruit
+        {
+            public int time = 0;
+            public char char1, char2;
+            public int points;
+
+            public static Pos spawnPos; //Where all fruit will spawn
+            public static Pos secondPos => spawnPos + Dir.right; //Second tile which fruit will also occupy
+            public static Fruit[] fruitType; //Stores the fruits that will be available
+
+            public Fruit(char char1, char char2, int points)
+            {
+                this.char1 = char1;
+                this.char2 = char2;
+                this.points = points;
             }
         }
 
@@ -213,17 +238,23 @@ namespace PacManBot.Modules.PacManModule
             random = new Random();
 
             GrabBoardFromFile();
+            maxPellets = pellets;
 
             Pos playerPos = FindChar(CharPlayer); //Set player
             if (playerPos == null) playerPos = new Pos(0, 0);
             player = new Player(playerPos);
             board[playerPos.x, playerPos.y] = ' ';
 
+            Pos fruitPos = FindChar(CharFruit); //Set fruit
+            board[fruitPos.x, fruitPos.y] = ' ';
+            Fruit.spawnPos = fruitPos;
+            Fruit.fruitType = new Fruit[]{ new Fruit('x', 'x', 1000), new Fruit('w', 'w', 2000) };
+
             ghosts = new List<Ghost>();
             for (int i = 0; i < 4; i++) //Set ghosts
             {
                 Pos ghostPos = FindChar(CharGhost);
-                if (ghostPos == null) continue;
+                if (ghostPos == null) break;
                 Pos cornerPos = FindChar(CharCorner, (i + 1) % 2); //Goes in order: Top-Right Top-Left Bottom-Right Bottom-Left
                 ghosts.Add(new Ghost(ghostPos, (AiType)i, cornerPos));
                 board[ghostPos.x, ghostPos.y] = ' ';
@@ -240,22 +271,37 @@ namespace PacManBot.Modules.PacManModule
             if (NonSolid(player.pos + direction)) player.pos += direction;
             WrapAround(ref player.pos);
 
-            //Pellets
-            if (board[player.pos.x, player.pos.y] == CharPellet)
+            //Fruit
+            if (fruit != null && fruit.time > 0)
             {
-                pellets--;
-                score += 10;
-                board[player.pos.x, player.pos.y] = ' ';
-            }
-            else if (board[player.pos.x, player.pos.y] == CharPowerPellet)
-            {
-                pellets--;
-                player.power += PowerTime;
-                score += 50;
-                board[player.pos.x, player.pos.y] = ' ';
+                fruit.time--;
+                if (Fruit.spawnPos == player.pos || Fruit.secondPos == player.pos)
+                {
+                    score += fruit.points;
+                    fruit.time = 0;
+                }
             }
 
-            if (pellets == 0) state = State.Win;
+            //Pellets
+            char tile = board[player.pos.x, player.pos.y];
+            if (tile == CharPellet || tile == CharPowerPellet)
+            {
+                pellets--;
+                if (pellets == FruitTrigger1 || pellets == FruitTrigger2)
+                {
+                    fruit = Fruit.fruitType[(pellets >= FruitTrigger1) ? 0 : 1];
+                    fruit.time = random.Next(25, 30 + 1);
+                }
+                else if (pellets == 0)
+                {
+                    state = State.Win;
+                    return;
+                }
+
+                score += (tile == CharPowerPellet) ? 50 : 10;
+                board[player.pos.x, player.pos.y] = ' ';
+                if (tile == CharPowerPellet) player.power += PowerTime;
+            }
 
             //Ghosts
             foreach (Ghost ghost in ghosts)
@@ -263,7 +309,7 @@ namespace PacManBot.Modules.PacManModule
                 bool didAI = false;
                 while (true) //Checks player collision before and after AI
                 {
-                    if (player.pos == ghost.pos)
+                    if (player.pos == ghost.pos) //Collision
                     {
                         if (player.power > 0)
                         {
@@ -281,7 +327,7 @@ namespace PacManBot.Modules.PacManModule
 
                     if (didAI) break;
 
-                    ghost.AI(this);
+                    ghost.AI(this); //Full ghost behavior
                     didAI = true;
                 }
             }
@@ -297,7 +343,12 @@ namespace PacManBot.Modules.PacManModule
                 StringBuilder boardString = new StringBuilder(); //The final display
                 char[,] displayBoard = (char[,])board.Clone(); //The temporary display array
 
-                //Adds ghost and player
+                //Adds fruit, ghosts and player
+                if (fruit != null && fruit.time > 0)
+                {
+                    displayBoard[Fruit.spawnPos.x, Fruit.spawnPos.y] = fruit.char1;
+                    displayBoard[Fruit.secondPos.x, Fruit.secondPos.y] = fruit.char2;
+                }
                 foreach (Ghost ghost in ghosts) displayBoard[ghost.pos.x, ghost.pos.y] = (ghost.mode == AiMode.Frightened) ? CharGhostFrightened : Ghost.Appearance[(int)ghost.type];
                 displayBoard[player.pos.x, player.pos.y] = (state == State.Lose) ? CharPlayerDead : CharPlayer;
 
@@ -319,9 +370,11 @@ namespace PacManBot.Modules.PacManModule
                     $" │\n",
                     $" │ {CharPlayer} - Pac-Man" + (player.dir == Dir.none ? "\n" : $": {player.dir}\n"),
                     $" │\n",
-                    "", "", "", ""
+                    "", "", "", "", //6-9: ghosts, added right after
+                    ((fruit == null || fruit.time <= 0) ? "\n" : $" │\n"), //Fruit
+                    ((fruit == null || fruit.time <= 0) ? "\n" : $" │ {fruit.char1}{fruit.char2} - Fruit: {fruit.time}\n")
                 };
-                for (int i = 0; i < 4; i++) info[i + info.Length - 4] = $" │ {Ghost.Appearance[i]} - {(AiType)i}" + (ghosts[i].dir == Dir.none ? "\n" : $": {ghosts[i].dir}\n");
+                for (int i = 0; i < 4; i++) info[i + (info.Length - 6)] = $" │ {Ghost.Appearance[i]} - {(AiType)i}" + (ghosts[i].dir == Dir.none ? "\n" : $": {ghosts[i].dir}\n");
 
                 for (int i = 0; i < info.Length; i++)
                 {

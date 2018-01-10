@@ -3,4 +3,4 @@
 • GitHub: <https://github.com/Samrux/Pac-Man-Bot>
 • Email: samruxb@gmail.com
 
-*Made by Samrux#3980*
+*Version 1.0.0 - Made by Samrux#3980*

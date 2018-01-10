@@ -27,6 +27,7 @@ namespace PacManBot.Services
             this.commands.Log += OnLogAsync;
         }
 
+
         private Task OnLogAsync(LogMessage message)
         {
             if (!Directory.Exists(logDirectory)) Directory.CreateDirectory(logDirectory); //Create the log directory if it doesn't exist

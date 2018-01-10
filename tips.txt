@@ -1,4 +1,5 @@
 ﻿• Each eaten ghost during the same power mode yields twice as many points as the last!
+• Eat the fruit that spawns after eating a large amount of pellets for etxra points!
 • Just after starting and 3 more times after, the ghosts scatter instead of chasing the player, for a short rest.
 • The ghosts can't turn 180º unless they're **E**atable or have just switched between chasing and scattering.
 • Blinky chases you, Pinky tries to ambush you, Inky will come to Blinky's aid, and Clyde is kind of scared of you.
