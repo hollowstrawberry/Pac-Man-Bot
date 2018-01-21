@@ -13,8 +13,10 @@ namespace PacManBot.Modules.PacManModule
         private const char CharPlayer = 'O', CharFruit = '$', CharGhost = 'G', CharCorner = '_', CharDoor = '-', CharPellet = '·', CharPowerPellet = '●'; //Read from map
         private const char CharPlayerDead = 'X', CharGhostFrightened = 'E'; //Displayed
         private const int PowerTime = 20, ScatterCycle = 100, ScatterTime1 = 30, ScatterTime2 = 20; //Mechanics constants
-        private readonly static Dir[] allDirs = { Dir.up, Dir.left, Dir.down, Dir.right }; //Order of preference when deciding direction
 
+        private readonly static Dir[] allDirs = { Dir.up, Dir.left, Dir.down, Dir.right }; //Order of preference when deciding direction
+        public readonly static char[] GhostAppearance = { 'B', 'P', 'I', 'C' };
+        public readonly static int[] GhostSpawnPauseTime = { 0, 3, 15, 35 };
 
         public ulong channelId; //Which channel this game is located in
         public ulong messageId = 1; //The message of the current game to manage controls. Even if not set, it must be a number above 0
@@ -99,7 +101,7 @@ namespace PacManBot.Modules.PacManModule
 
             public static Pos spawnPos; //Where all fruit will spawn
             public static Pos secondPos => spawnPos + Dir.right; //Second tile which fruit will also occupy
-            public static Fruit[] fruitType; //Stores the fruits that will be available
+            public static Fruit[] fruitTypes; //Stores the fruits that will be available in this game
 
             public Fruit(char char1, char char2, int points)
             {
@@ -120,16 +122,13 @@ namespace PacManBot.Modules.PacManModule
             public AiMode mode = AiMode.Chase; //Ghost behavior mode
             public int pauseTime = 0; //Time remaining until it can move
 
-            public readonly static char[] Appearance = { 'B', 'P', 'I', 'C' };
-            public readonly static int[] SpawnPauseTime = { 0, 3, 15, 35 };
-
             public Ghost(Pos pos, AiType type, Pos corner)
             {
                 this.pos = pos;
                 this.type = type;
                 origin = pos;
                 this.corner = corner ?? origin;
-                pauseTime = SpawnPauseTime[(int)type];
+                pauseTime = GhostSpawnPauseTime[(int)type];
             }
 
             public void AI(Game game)
@@ -248,7 +247,7 @@ namespace PacManBot.Modules.PacManModule
             Pos fruitPos = FindChar(CharFruit); //Set fruit
             board[fruitPos.x, fruitPos.y] = ' ';
             Fruit.spawnPos = fruitPos;
-            Fruit.fruitType = new Fruit[]{ new Fruit('x', 'x', 1000), new Fruit('w', 'w', 2000) };
+            Fruit.fruitTypes = new Fruit[]{ new Fruit('x', 'x', 1000), new Fruit('w', 'w', 2000) };
 
             ghosts = new List<Ghost>();
             for (int i = 0; i < 4; i++) //Set ghosts
@@ -256,6 +255,7 @@ namespace PacManBot.Modules.PacManModule
                 Pos ghostPos = FindChar(CharGhost);
                 if (ghostPos == null) break;
                 Pos cornerPos = FindChar(CharCorner, (i + 1) % 2); //Goes in order: Top-Right Top-Left Bottom-Right Bottom-Left
+                if (cornerPos == null) cornerPos = ghostPos;
                 ghosts.Add(new Ghost(ghostPos, (AiType)i, cornerPos));
                 board[ghostPos.x, ghostPos.y] = ' ';
                 board[cornerPos.x, cornerPos.y] = CharPellet;
@@ -289,7 +289,7 @@ namespace PacManBot.Modules.PacManModule
                 pellets--;
                 if (pellets == FruitTrigger1 || pellets == FruitTrigger2)
                 {
-                    fruit = Fruit.fruitType[(pellets >= FruitTrigger1) ? 0 : 1];
+                    fruit = Fruit.fruitTypes[(pellets >= FruitTrigger1) ? 0 : 1];
                     fruit.time = random.Next(25, 30 + 1);
                 }
                 else if (pellets == 0)
@@ -349,7 +349,7 @@ namespace PacManBot.Modules.PacManModule
                     displayBoard[Fruit.spawnPos.x, Fruit.spawnPos.y] = fruit.char1;
                     displayBoard[Fruit.secondPos.x, Fruit.secondPos.y] = fruit.char2;
                 }
-                foreach (Ghost ghost in ghosts) displayBoard[ghost.pos.x, ghost.pos.y] = (ghost.mode == AiMode.Frightened) ? CharGhostFrightened : Ghost.Appearance[(int)ghost.type];
+                foreach (Ghost ghost in ghosts) displayBoard[ghost.pos.x, ghost.pos.y] = (ghost.mode == AiMode.Frightened) ? CharGhostFrightened : GhostAppearance[(int)ghost.type];
                 displayBoard[player.pos.x, player.pos.y] = (state == State.Lose) ? CharPlayerDead : CharPlayer;
 
                 //Converts 2d array to string
@@ -374,7 +374,7 @@ namespace PacManBot.Modules.PacManModule
                     ((fruit == null || fruit.time <= 0) ? "\n" : $" │\n"), //Fruit
                     ((fruit == null || fruit.time <= 0) ? "\n" : $" │ {fruit.char1}{fruit.char2} - Fruit: {fruit.time}\n")
                 };
-                for (int i = 0; i < 4; i++) info[i + (info.Length - 6)] = $" │ {Ghost.Appearance[i]} - {(AiType)i}" + (ghosts[i].dir == Dir.none ? "\n" : $": {ghosts[i].dir}\n");
+                for (int i = 0; i < 4; i++) info[i + (info.Length - 6)] = $" │ {GhostAppearance[i]} - {(AiType)i}" + (ghosts[i].dir == Dir.none ? "\n" : $": {ghosts[i].dir}\n");
 
                 for (int i = 0; i < info.Length; i++)
                 {

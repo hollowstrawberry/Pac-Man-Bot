@@ -10,7 +10,7 @@ using PacManBot.Services;
 
 namespace PacManBot.Modules
 {
-    [Name("Misc")]
+    [Name("Other")]
     public class MiscModule : ModuleBase<SocketCommandContext>
     {
         private readonly CommandService service;

@@ -18,11 +18,13 @@ namespace PacManBot.Modules.PacManModule
                 if (message.Id == game.messageId && game.state == State.Active) //Finds the game corresponding to this channel
                 {
                     var direction = Dir.none;
-
-                    if      (reaction.Emote.ToString() == UpEmoji   ) direction = Dir.up;
-                    else if (reaction.Emote.ToString() == RightEmoji) direction = Dir.right;
-                    else if (reaction.Emote.ToString() == DownEmoji ) direction = Dir.down;
-                    else if (reaction.Emote.ToString() == LeftEmoji ) direction = Dir.left;
+                    switch (reaction.Emote.ToString())
+                    {
+                        case UpEmoji: direction = Dir.up; break;
+                        case RightEmoji: direction = Dir.right; break;
+                        case DownEmoji: direction = Dir.down; break;
+                        case LeftEmoji: direction = Dir.left; break;
+                    }
 
                     string channelName = (message.Author as SocketGuildUser != null ? $"{(message.Author as SocketGuildUser).Guild.Name}/" : "") + message.Channel;
 
@@ -35,7 +37,8 @@ namespace PacManBot.Modules.PacManModule
                         if (game.state == State.Active)
                         {
                             await message.ModifyAsync(m => m.Content = game.Display); //Update display
-                            await message.RemoveReactionAsync(reaction.Emote, user);
+                            RequestOptions options = new RequestOptions(); options.Timeout = 5000; //Failsafe, I don't know what could happen
+                            await message.RemoveReactionAsync(reaction.Emote, user, options);
                         }
                         else
                         {
