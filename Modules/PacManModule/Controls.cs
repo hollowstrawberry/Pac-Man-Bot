@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Discord;
+using Discord.Commands;
 using Discord.WebSocket;
 using static PacManBot.Modules.PacManModule.Game;
 using System.IO;
@@ -9,9 +10,10 @@ namespace PacManBot.Modules.PacManModule
 {
     static class Controls
     {
-        public static async Task OnReactionAdded(IUserMessage message, SocketReaction reaction)
+        public static async Task OnReactionAdded(SocketCommandContext context, SocketReaction reaction)
         {
             var user = reaction.User.Value;
+            var message = context.Message;
 
             foreach (Game game in gameInstances)
             {
@@ -37,7 +39,7 @@ namespace PacManBot.Modules.PacManModule
                         if (game.state == State.Active)
                         {
                             await message.ModifyAsync(m => m.Content = game.Display); //Update display
-                            await message.RemoveReactionAsync(reaction.Emote, user, new RequestOptions() { Timeout = 5000 });
+                            if (context.Guild != null && context.Guild.CurrentUser.GuildPermissions.ManageMessages) await message.RemoveReactionAsync(reaction.Emote, context.User);
                         }
                         else
                         {
@@ -47,13 +49,14 @@ namespace PacManBot.Modules.PacManModule
                                 Console.WriteLine($"{DateTime.UtcNow.ToString("hh:mm:ss")} ({game.state}) Achieved score {game.score} in {game.timer} moves on channel {channelName} last controlled by user {user.Username}#{user.Discriminator}");
                                 File.AppendAllText(Program.File_Scoreboard, $"\n{game.state} {game.score} {game.timer} {user.Id} \"{user.Username}#{user.Discriminator}\" \"{DateTime.Now.ToString("o")}\" \"{channelName}\"");
                             }
+
                             await message.ModifyAsync(m => m.Content = game.Display + ((game.state == State.Win) ? "```diff\n+You won!```" : "```diff\n-You lost!```"));
-                            await message.RemoveAllReactionsAsync();
+                            if (context.Guild != null && context.Guild.CurrentUser.GuildPermissions.ManageMessages) await message.RemoveAllReactionsAsync();
                         }
                     }
                     else
                     {
-                        await message.RemoveReactionAsync(reaction.Emote, user);
+                        if (context.Guild != null && context.Guild.CurrentUser.GuildPermissions.ManageMessages) await message.RemoveReactionAsync(reaction.Emote, context.User);
                     }
                 }
             }

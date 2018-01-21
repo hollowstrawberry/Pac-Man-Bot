@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Discord;
+using Discord.Commands;
 using Discord.WebSocket;
 
 namespace PacManBot.Services
@@ -22,7 +23,11 @@ namespace PacManBot.Services
             if (!messageData.HasValue || !reaction.User.IsSpecified) return Task.CompletedTask;
             if (reaction.UserId == discord.CurrentUser.Id) return Task.CompletedTask; //Ignores itself
 
-            Task.Run(async () => { await Modules.PacManModule.Controls.OnReactionAdded(messageData.Value, reaction); }); //Wrapping in a Task.Run prevents the gateway from getting blocked in case something goes wrong
+            Task.Run(async () => //Wrapping in a Task.Run prevents the gateway from getting blocked in case something goes wrong
+            {
+                var context = new SocketCommandContext(discord, messageData.Value as SocketUserMessage);
+                await Modules.PacManModule.Controls.OnReactionAdded(context, reaction);
+            });
             return Task.CompletedTask;
         }
     }

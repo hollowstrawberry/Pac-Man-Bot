@@ -30,16 +30,16 @@ namespace PacManBot.Modules.PacManModule
                 }
             }
 
-            if (Context.Guild == null || !Context.Guild.CurrentUser.GuildPermissions.ManageMessages)
-            {
-                await ReplyAsync("__Manual mode:__ You will need to add then remove your own reactions." + (Context.Guild == null ? "" : "\nGive this bot the permission to Manage Messages to remove reactions automatically."));
-            }
-
             Game newGame = new Game(Context.Channel.Id); //Create a game instance
             gameInstances.Add(newGame);
-
             var gameMessage = await ReplyAsync(newGame.Display + "```diff\n+Starting game```"); //Output the game
             newGame.messageId = gameMessage.Id;
+
+            if (Context.Guild == null || !Context.Guild.CurrentUser.GuildPermissions.ManageMessages)
+            {
+                await ReplyAsync("__Manual mode:__ You will need to remove your own reactions." + (Context.Guild == null ? "" : "\nGive this bot the permission to Manage Messages to remove reactions automatically."));
+            }
+
             await AddControls(gameMessage); //Controls for easy access
             await gameMessage.ModifyAsync(m => m.Content = newGame.Display); //Edit message
         }
@@ -61,6 +61,12 @@ namespace PacManBot.Modules.PacManModule
                     if (oldMsg != null) await oldMsg.DeleteAsync(); //Delete old message
                     var newMsg = await ReplyAsync(game.Display + "```diff\n+Refreshing game```"); //Send new message
                     game.messageId = newMsg.Id; //Change focus message for this channel
+
+                    if (Context.Guild == null || !Context.Guild.CurrentUser.GuildPermissions.ManageMessages)
+                    {
+                        await ReplyAsync("__Manual mode:__ You will need to remove your own reactions." + (Context.Guild == null ? "" : "\nGive this bot the permission to Manage Messages to remove reactions automatically."));
+                    }
+
                     await AddControls(newMsg);
                     await newMsg.ModifyAsync(m => m.Content = game.Display); //Edit message
                     return;
