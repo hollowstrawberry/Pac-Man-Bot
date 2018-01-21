@@ -10,8 +10,6 @@ obj/
 logs/
 packages/
 .vs/
-Pi/
-Portable/
 
 # Files
 config.json
