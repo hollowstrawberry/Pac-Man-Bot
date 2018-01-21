@@ -15,8 +15,8 @@ namespace PacManBot.Modules.PacManModule
         private const int PowerTime = 20, ScatterCycle = 100, ScatterTime1 = 30, ScatterTime2 = 20; //Mechanics constants
 
         private readonly static Dir[] AllDirs = { Dir.up, Dir.left, Dir.down, Dir.right }; //Order of preference when deciding direction
-        public readonly static char[] GhostAppearance = { 'B', 'P', 'I', 'C' };
-        public readonly static int[] GhostSpawnPauseTime = { 0, 3, 15, 35 };
+        private readonly static char[] GhostAppearance = { 'B', 'P', 'I', 'C' };
+        private readonly static int[] GhostSpawnPauseTime = { 0, 3, 15, 35 };
 
         public ulong channelId; //Which channel this game is located in
         public ulong messageId = 1; //The message of the current game to manage controls. Even if not set, it must be a number above 0
@@ -26,10 +26,13 @@ namespace PacManBot.Modules.PacManModule
         private int pellets;
         private readonly int maxPellets;
         private char[,] board;
-        private Player player;
-        private Fruit fruit;
-        private List<Ghost> ghosts;
         private Random random;
+        private Player player;
+        private List<Ghost> ghosts;
+        private Fruit fruit;
+        private Pos FruitSpawnPos; //Where all fruit will spawn
+        private Pos FruitSecondPos => FruitSpawnPos + Dir.right; //Second tile which fruit will also occupy
+        private Fruit[] fruitTypes; //Stores the fruits that will be available in this game
 
         private int FruitTrigger1 => maxPellets - 70; //Amount of pellets remaining needed to spawn fruit
         private int FruitTrigger2 => maxPellets - 170;
@@ -98,10 +101,6 @@ namespace PacManBot.Modules.PacManModule
             public int time = 0;
             public char char1, char2;
             public int points;
-
-            public static Pos spawnPos; //Where all fruit will spawn
-            public static Pos SecondPos => spawnPos + Dir.right; //Second tile which fruit will also occupy
-            public static Fruit[] fruitTypes; //Stores the fruits that will be available in this game
 
             public Fruit(char char1, char char2, int points)
             {
@@ -246,8 +245,8 @@ namespace PacManBot.Modules.PacManModule
 
             Pos fruitPos = FindChar(CharFruit); //Set fruit
             board[fruitPos.x, fruitPos.y] = ' ';
-            Fruit.spawnPos = fruitPos;
-            Fruit.fruitTypes = new Fruit[]{ new Fruit('x', 'x', 1000), new Fruit('w', 'w', 2000) };
+            FruitSpawnPos = fruitPos;
+            fruitTypes = new Fruit[]{ new Fruit('x', 'x', 1000), new Fruit('w', 'w', 2000) };
 
             ghosts = new List<Ghost>();
             for (int i = 0; i < 4; i++) //Set ghosts
@@ -275,7 +274,7 @@ namespace PacManBot.Modules.PacManModule
             if (fruit != null && fruit.time > 0)
             {
                 fruit.time--;
-                if (Fruit.spawnPos == player.pos || Fruit.SecondPos == player.pos)
+                if (FruitSpawnPos == player.pos || FruitSecondPos == player.pos)
                 {
                     score += fruit.points;
                     fruit.time = 0;
@@ -289,7 +288,7 @@ namespace PacManBot.Modules.PacManModule
                 pellets--;
                 if (pellets == FruitTrigger1 || pellets == FruitTrigger2)
                 {
-                    fruit = Fruit.fruitTypes[(pellets >= FruitTrigger1) ? 0 : 1];
+                    fruit = fruitTypes[(pellets >= FruitTrigger1) ? 0 : 1];
                     fruit.time = random.Next(25, 30 + 1);
                 }
                 else if (pellets == 0)
@@ -346,8 +345,8 @@ namespace PacManBot.Modules.PacManModule
                 //Adds fruit, ghosts and player
                 if (fruit != null && fruit.time > 0)
                 {
-                    displayBoard[Fruit.spawnPos.x, Fruit.spawnPos.y] = fruit.char1;
-                    displayBoard[Fruit.SecondPos.x, Fruit.SecondPos.y] = fruit.char2;
+                    displayBoard[FruitSpawnPos.x, FruitSpawnPos.y] = fruit.char1;
+                    displayBoard[FruitSecondPos.x, FruitSecondPos.y] = fruit.char2;
                 }
                 foreach (Ghost ghost in ghosts) displayBoard[ghost.pos.x, ghost.pos.y] = (ghost.mode == AiMode.Frightened) ? CharGhostFrightened : GhostAppearance[(int)ghost.type];
                 displayBoard[player.pos.x, player.pos.y] = (state == State.Lose) ? CharPlayerDead : CharPlayer;

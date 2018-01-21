@@ -13,24 +13,24 @@ namespace PacManBot.Modules
     [Name("Other")]
     public class MiscModule : ModuleBase<SocketCommandContext>
     {
-        private readonly CommandService service;
-        private readonly IConfigurationRoot config;
+        private readonly CommandService _service;
+        private readonly IConfigurationRoot _config;
 
         public MiscModule(CommandService service, IConfigurationRoot config)
         {
-            this.service = service;
-            this.config = config;
+            _service = service;
+            _config = config;
         }
 
 
         [Command("help"), Alias("h"), Summary("List of commands")]
         public async Task HelpAsync([Remainder]string args = "") //Argument is useless for now
         {
-            string prefix = config["prefix"]; //Gets the prefix for the current server or uses the default one if not found
-            if (Context.Guild != null && !CommandHandler.prefixes.TryGetValue(Context.Guild.Id, out prefix)) prefix = config["prefix"];
+            string prefix = _config["prefix"]; //Gets the prefix for the current server or uses the default one if not found
+            if (Context.Guild != null && !CommandHandler.prefixes.TryGetValue(Context.Guild.Id, out prefix)) prefix = _config["prefix"];
 
             var embed = new EmbedBuilder() { Color = new Color(241, 195, 15) }; //Create a new embed block
-            var allModules = service.Modules.OrderBy(m => m.Name); //Alphabetically
+            var allModules = _service.Modules.OrderBy(m => m.Name); //Alphabetically
 
             foreach (var module in allModules) //Go through all modules
             {
@@ -68,7 +68,7 @@ namespace PacManBot.Modules
             }
 
 
-            string text = (prefix == config["prefix"]) ? "" : $"Command prefix for this server: **{prefix}**"; //Specifies the prefix if it's not the default one
+            string text = (prefix == _config["prefix"]) ? "" : $"Command prefix for this server: **{prefix}**"; //Specifies the prefix if it's not the default one
             await ReplyAsync(text, false, embed.Build()); //Send the built embed
         }
 

@@ -12,16 +12,16 @@ namespace PacManBot.Services
 {
     public class StartupService
     {
-        private readonly DiscordSocketClient discord;
-        private readonly CommandService commands;
-        private readonly IConfigurationRoot config;
+        private readonly DiscordSocketClient _client;
+        private readonly CommandService _commands;
+        private readonly IConfigurationRoot _config;
 
         //DiscordSocketClient, CommandService and IConfigurationRoot are injected automatically from the IServiceProvider
-        public StartupService(DiscordSocketClient discord, CommandService commands, IConfigurationRoot config)
+        public StartupService(DiscordSocketClient client, CommandService commands, IConfigurationRoot config)
         {
-            this.discord = discord;
-            this.commands = commands;
-            this.config = config;
+            _client = client;
+            _commands = commands;
+            _config = config;
         }
 
 
@@ -32,9 +32,8 @@ namespace PacManBot.Services
             for (int i = 0; i < line.Length; i++)
             {
                 string[] data = line[i].Split(' '); //Server ID and prefix
-                if (data.Length != 2) continue;
-
-                if (!ulong.TryParse(data[0], out ulong ID)) continue; //Skips non-valid ID numbers
+                if (data.Length != 2) continue; //Skips invalid lines
+                if (!ulong.TryParse(data[0], out ulong ID)) continue; //Gets ID; Skips non-valid ID numbers
                 string prefix = data[1].Trim();
 
                 CommandHandler.prefixes.Add(ID, prefix);
@@ -42,13 +41,13 @@ namespace PacManBot.Services
             Console.WriteLine($"Loaded prefixes from {Program.File_Prefixes}");
 
 
-            string discordToken = config["token"]; //Get the discord token from the config file
+            string discordToken = _config["token"]; //Get the discord token from the config file
             if (string.IsNullOrWhiteSpace(discordToken)) throw new Exception($"Please enter the bot's token into the {Program.File_Config} file");
 
-            await discord.LoginAsync(TokenType.Bot, discordToken); //Login to discord
-            await discord.StartAsync(); //Connect to the websocket
+            await _client.LoginAsync(TokenType.Bot, discordToken); //Login to discord
+            await _client.StartAsync(); //Connect to the websocket
 
-            await commands.AddModulesAsync(Assembly.GetEntryAssembly()); //Load commands and modules into the command service
+            await _commands.AddModulesAsync(Assembly.GetEntryAssembly()); //Load commands and modules into the command service
         }
     }
 }

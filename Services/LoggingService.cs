@@ -9,22 +9,22 @@ namespace PacManBot.Services
 {
     public class LoggingService
     {
-        private readonly DiscordSocketClient discord;
-        private readonly CommandService commands;
+        private readonly DiscordSocketClient _client;
+        private readonly CommandService _commands;
 
         private string logDirectory { get; }
         private string logFile => Path.Combine(logDirectory, $"{DateTime.UtcNow.ToString("yyyy-MM-dd")}.txt");
 
         //DiscordSocketClient and CommandService are injected automatically from the IServiceProvider
-        public LoggingService(DiscordSocketClient discord, CommandService commands)
+        public LoggingService(DiscordSocketClient client, CommandService commands)
         {
             logDirectory = Path.Combine(AppContext.BaseDirectory, "logs");
 
-            this.discord = discord;
-            this.commands = commands;
+            _client = client;
+            _commands = commands;
 
-            this.discord.Log += OnLogAsync;
-            this.commands.Log += OnLogAsync;
+            _client.Log += OnLogAsync;
+            _commands.Log += OnLogAsync;
         }
 
 

@@ -95,7 +95,7 @@ namespace PacManBot.Modules.PacManModule
                     if (await Context.Channel.GetMessageAsync(game.messageId) is IUserMessage gameMessage)
                     {
                         await gameMessage.ModifyAsync(m => m.Content = game.Display + "```diff\n-Game has been ended!```"); //Edit message
-                        await gameMessage.RemoveAllReactionsAsync(); //Remove reactions
+                        if (Context.Guild != null && Context.Guild.CurrentUser.GuildPermissions.ManageMessages) await gameMessage.RemoveAllReactionsAsync(); //Remove reactions
                     }
                     return;
                 }

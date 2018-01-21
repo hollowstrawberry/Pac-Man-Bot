@@ -7,27 +7,32 @@ namespace PacManBot.Services
 {
     class ReactionHandler
     {
-        private readonly DiscordSocketClient discord;
+        private readonly DiscordSocketClient _client;
 
         //DiscordSocketClient is injected automatically from the IServiceProvider
-        public ReactionHandler(DiscordSocketClient discord)
+        public ReactionHandler(DiscordSocketClient client)
         {
-            this.discord = discord;
+            _client = client;
 
-            this.discord.ReactionAdded += OnReactionAdded; //Event
+            _client.ReactionAdded += OnReactionAdded; //Event
         }
 
 
         private Task OnReactionAdded(Cacheable<IUserMessage, ulong> messageData, ISocketMessageChannel channel, SocketReaction reaction)
         {
-            if (!messageData.HasValue || !reaction.User.IsSpecified) return Task.CompletedTask;
-            if (reaction.UserId == discord.CurrentUser.Id) return Task.CompletedTask; //Ignores itself
+            ulong botID = _client.CurrentUser.Id;
 
-            Task.Run(async () => //Wrapping in a Task.Run prevents the gateway from getting blocked in case something goes wrong
-            {
-                var context = new SocketCommandContext(discord, messageData.Value as SocketUserMessage);
-                await Modules.PacManModule.Controls.ExecuteInput(context, reaction);
-            });
+            if (messageData.HasValue && reaction.User.IsSpecified && //Ignores events it can't use
+                messageData.Value.Author.Id == botID && //Only uses reactions to its own messages
+                reaction.UserId != botID //Ignores its own reactions
+            ){
+                Task.Run(async () => //Wrapping in a Task.Run prevents the gateway from getting blocked in case something goes wrong
+                {
+                    var context = new SocketCommandContext(_client, messageData.Value as SocketUserMessage);
+                    await Modules.PacManModule.Controls.ExecuteInput(context, reaction);
+                });
+            }
+
             return Task.CompletedTask;
         }
     }
