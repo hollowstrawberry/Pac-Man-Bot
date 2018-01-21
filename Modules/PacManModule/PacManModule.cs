@@ -10,7 +10,7 @@ using static PacManBot.Modules.PacManModule.Game;
 namespace PacManBot.Modules.PacManModule
 {
     [Name("Game")]
-    public class GameModule : ModuleBase<SocketCommandContext>
+    public class PacManModule : ModuleBase<SocketCommandContext>
     {
         [Command("play"), Alias("p", "start"), Summary("Start a new game on this channel")]
         public async Task StartGameInstance()
@@ -28,6 +28,11 @@ namespace PacManBot.Modules.PacManModule
                     await ReplyAsync("There is already an ongoing game on this channel!\nYou could use the **refresh** command to bring it to the bottom of the chat.");
                     return;
                 }
+            }
+
+            if (Context.Guild == null || !Context.Guild.CurrentUser.GuildPermissions.ManageMessages)
+            {
+                await ReplyAsync("__Manual mode:__ You will need to add then remove your own reactions." + (Context.Guild == null ? "" : "\nGive this bot the permission to Manage Messages to remove reactions automatically."));
             }
 
             Game newGame = new Game(Context.Channel.Id); //Create a game instance
