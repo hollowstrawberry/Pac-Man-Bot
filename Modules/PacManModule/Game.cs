@@ -14,7 +14,7 @@ namespace PacManBot.Modules.PacManModule
         private const char CharPlayerDead = 'X', CharGhostFrightened = 'E'; //Displayed
         private const int PowerTime = 20, ScatterCycle = 100, ScatterTime1 = 30, ScatterTime2 = 20; //Mechanics constants
 
-        private readonly static Dir[] allDirs = { Dir.up, Dir.left, Dir.down, Dir.right }; //Order of preference when deciding direction
+        private readonly static Dir[] AllDirs = { Dir.up, Dir.left, Dir.down, Dir.right }; //Order of preference when deciding direction
         public readonly static char[] GhostAppearance = { 'B', 'P', 'I', 'C' };
         public readonly static int[] GhostSpawnPauseTime = { 0, 3, 15, 35 };
 
@@ -100,7 +100,7 @@ namespace PacManBot.Modules.PacManModule
             public int points;
 
             public static Pos spawnPos; //Where all fruit will spawn
-            public static Pos secondPos => spawnPos + Dir.right; //Second tile which fruit will also occupy
+            public static Pos SecondPos => spawnPos + Dir.right; //Second tile which fruit will also occupy
             public static Fruit[] fruitTypes; //Stores the fruits that will be available in this game
 
             public Fruit(char char1, char char2, int points)
@@ -203,7 +203,7 @@ namespace PacManBot.Modules.PacManModule
                 else //Track target
                 {
                     float distance = 100f;
-                    foreach (Dir testDir in allDirs) //Decides the direction that will get it closest to its target
+                    foreach (Dir testDir in AllDirs) //Decides the direction that will get it closest to its target
                     {
                         Pos tile = pos + testDir;
 
@@ -275,7 +275,7 @@ namespace PacManBot.Modules.PacManModule
             if (fruit != null && fruit.time > 0)
             {
                 fruit.time--;
-                if (Fruit.spawnPos == player.pos || Fruit.secondPos == player.pos)
+                if (Fruit.spawnPos == player.pos || Fruit.SecondPos == player.pos)
                 {
                     score += fruit.points;
                     fruit.time = 0;
@@ -347,7 +347,7 @@ namespace PacManBot.Modules.PacManModule
                 if (fruit != null && fruit.time > 0)
                 {
                     displayBoard[Fruit.spawnPos.x, Fruit.spawnPos.y] = fruit.char1;
-                    displayBoard[Fruit.secondPos.x, Fruit.secondPos.y] = fruit.char2;
+                    displayBoard[Fruit.SecondPos.x, Fruit.SecondPos.y] = fruit.char2;
                 }
                 foreach (Ghost ghost in ghosts) displayBoard[ghost.pos.x, ghost.pos.y] = (ghost.mode == AiMode.Frightened) ? CharGhostFrightened : GhostAppearance[(int)ghost.type];
                 displayBoard[player.pos.x, player.pos.y] = (state == State.Lose) ? CharPlayerDead : CharPlayer;
@@ -374,7 +374,11 @@ namespace PacManBot.Modules.PacManModule
                     ((fruit == null || fruit.time <= 0) ? "\n" : $" │\n"), //Fruit
                     ((fruit == null || fruit.time <= 0) ? "\n" : $" │ {fruit.char1}{fruit.char2} - Fruit: {fruit.time}\n")
                 };
-                for (int i = 0; i < 4; i++) info[i + (info.Length - 6)] = $" │ {GhostAppearance[i]} - {(AiType)i}" + (ghosts[i].dir == Dir.none ? "\n" : $": {ghosts[i].dir}\n");
+                for (int i = 0; i < 4; i++)
+                {
+                    char appearance = (ghosts[i].mode == AiMode.Frightened) ? CharGhostFrightened : GhostAppearance[i];
+                    info[i + (info.Length - 6)] = $" │ {appearance} - {(AiType)i}" + (ghosts[i].dir == Dir.none ? "\n" : $": {ghosts[i].dir}\n");
+                }
 
                 for (int i = 0; i < info.Length; i++)
                 {
@@ -451,9 +455,9 @@ namespace PacManBot.Modules.PacManModule
             else if (pos.y > board.GetLength(1) - 1) pos.y -= board.GetLength(1);
         }
 
-        private void GrabBoardFromFile(string file = "board.txt")
+        private void GrabBoardFromFile()
         {
-            string[] lines = File.ReadAllLines(file, Encoding.UTF8);
+            string[] lines = File.ReadAllLines(Program.File_GameMap, Encoding.UTF8);
             int width = lines[0].Length;
             int height = lines.Length;
 

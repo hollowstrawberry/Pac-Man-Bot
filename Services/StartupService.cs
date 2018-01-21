@@ -28,7 +28,7 @@ namespace PacManBot.Services
         public async Task StartAsync()
         {
             CommandHandler.prefixes = new Dictionary<ulong, string>(); //Load prefixes from file
-            string[] line = File.ReadAllLines("prefixes.txt");
+            string[] line = File.ReadAllLines(Program.File_Prefixes);
             for (int i = 0; i < line.Length; i++)
             {
                 string[] data = line[i].Split(' '); //Server ID and prefix

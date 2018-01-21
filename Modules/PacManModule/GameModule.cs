@@ -102,7 +102,7 @@ namespace PacManBot.Modules.PacManModule
             if (min <= 1) min = 1;
             if (max < min) max = min + 9;
 
-            string[] scoreLine = File.ReadAllLines("scoreboard.txt").Skip(1).ToArray(); //Skips the first line
+            string[] scoreLine = File.ReadAllLines(Program.File_Scoreboard).Skip(1).ToArray(); //Skips the first line
             int scoresAmount = scoreLine.Length;
             string[] scoreText = new string[scoresAmount];
             int[] score = new int[scoresAmount];
@@ -139,7 +139,7 @@ namespace PacManBot.Modules.PacManModule
                 message += $"\n{i}. {scoreText[i - 1]}";
             }
 
-            if (max - min > 20) message += "\n*Only 20 scores may be displayed at once*";
+            if (max - min > 19) message += "\n*Only 20 scores may be displayed at once*";
 
             if (message.Length > 2000) message = message.Substring(0, 1999);
 
@@ -147,16 +147,13 @@ namespace PacManBot.Modules.PacManModule
         }
 
         [Command("score"), Alias("s"), Summary("See your own or another person's place on the leaderboard")]
-        public async Task SendPersonalBest(SocketGuildUser user = null)
+        public async Task SendPersonalBest(SocketGuildUser guildUser = null)
         {
-            bool sameUser = false;
-            if (user == null)
-            {
-                user = Context.User as SocketGuildUser;
-                sameUser = true;
-            }
+            SocketUser user;
+            if (guildUser == null) user = Context.User;
+            else user = guildUser;
 
-            string[] scoreLine = File.ReadAllLines("scoreboard.txt").Skip(1).ToArray(); //Skips the first line
+            string[] scoreLine = File.ReadAllLines(Program.File_Scoreboard).Skip(1).ToArray(); //Skips the first line
             int scoresAmount = scoreLine.Length;
             int[] score = new int[scoresAmount];
 
@@ -181,11 +178,11 @@ namespace PacManBot.Modules.PacManModule
             }
 
             string[] splitLine = scoreLine[topScoreIndex].Split(' ');
-            await ReplyAsync(topScore == 0 ? ((sameUser ? "You don't have" : "The user doesn't have") + " any scores registered!") : $"{topScoreIndex + 1}. ({splitLine[0]}) **{splitLine[1]}** in {splitLine[2]} turns by user " + (user == null ? "Unknown" : $"{user.Username}#{user.Discriminator}"));
+            await ReplyAsync(topScore == 0 ? ((guildUser == null ? "You don't have" : "The user doesn't have") + " any scores registered!") : $"🏆 __**Global Leaderboard**__\n{topScoreIndex + 1}. ({splitLine[0]}) **{splitLine[1]}** in {splitLine[2]} turns by user " + (user == null ? "Unknown" : $"{user.Username}#{user.Discriminator}"));
         }
 
         [Command("tips"), Summary("Learn some secrets that will help you")]
-        public async Task SayTips() => await ReplyAsync(File.ReadAllText("tips.txt"));
+        public async Task SayTips() => await ReplyAsync(File.ReadAllText(Program.FileTips));
 
 
         public async Task AddControls(IUserMessage message)

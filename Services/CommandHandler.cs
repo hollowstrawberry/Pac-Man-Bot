@@ -28,9 +28,9 @@ namespace PacManBot.Services
             this.discord.MessageReceived += (m) => OnMessageReceived(m as SocketUserMessage);
         }
 
-        private async Task OnMessageReceived(SocketUserMessage message)
+        private Task OnMessageReceived(SocketUserMessage message)
         {
-            if (message == null || message.Author.IsBot || prefixes == null) return;
+            if (message == null || message.Author.IsBot || prefixes == null) return Task.CompletedTask;
 
             var context = new SocketCommandContext(discord, message);
 
@@ -40,22 +40,27 @@ namespace PacManBot.Services
             int commandPosition = 0; //Where the command will start
             if (message.HasMentionPrefix(discord.CurrentUser, ref commandPosition) || message.HasStringPrefix($"{prefix} ", ref commandPosition) || message.HasStringPrefix(prefix, ref commandPosition) || context.Channel is IDMChannel)
             {
-                var result = await commands.ExecuteAsync(context, commandPosition, provider); //Try to execute the command
-                if (!result.IsSuccess)
+                Task.Run(async () => //Wrapping in a Task.Run prevents the gateway from getting blocked in case something goes wrong
                 {
-                    if (!result.ErrorReason.ToString().Contains("Unknown command")) Console.WriteLine($"{DateTime.UtcNow.ToString("hh: mm:ss")} Command {message} by {message.Author.Username}#{message.Author.Discriminator} couldn't be executed. Reason: {result.ErrorReason.ToString()}");
+                    var result = await commands.ExecuteAsync(context, commandPosition, provider); //Try to execute the command
+                    if (!result.IsSuccess)
+                    {
+                        if (!result.ErrorReason.ToString().Contains("Unknown command")) Console.WriteLine($"{DateTime.UtcNow.ToString("hh: mm:ss")} Command {message} by {message.Author.Username}#{message.Author.Discriminator} couldn't be executed. Reason: {result.ErrorReason.ToString()}");
 
-                    if      (result.ErrorReason.Contains("Bot requires")) await context.Channel.SendMessageAsync($"This bot requires the permission {result.ErrorReason.Split(' ')[result.ErrorReason.Split(' ').Length - 1]}!");
-                    else if (result.ErrorReason.Contains("User requires")) await context.Channel.SendMessageAsync($"You need the permission {result.ErrorReason.Split(' ')[result.ErrorReason.Split(' ').Length - 1]} to use this command!");
-                    else if (result.ErrorReason.Contains("User not found")) await context.Channel.SendMessageAsync($"Can't find the specified user!");
-                    else if (result.ErrorReason.Contains("Failed to parse") || result.ErrorReason.Contains("parameters")) await context.Channel.SendMessageAsync($"Incorrect command parameters!");
-                }
+                        if (result.ErrorReason.Contains("Bot requires")) await context.Channel.SendMessageAsync($"This bot requires the permission {result.ErrorReason.Split(' ')[result.ErrorReason.Split(' ').Length - 1]}!");
+                        else if (result.ErrorReason.Contains("User requires")) await context.Channel.SendMessageAsync($"You need the permission {result.ErrorReason.Split(' ')[result.ErrorReason.Split(' ').Length - 1]} to use this command!");
+                        else if (result.ErrorReason.Contains("User not found")) await context.Channel.SendMessageAsync($"Can't find the specified user!");
+                        else if (result.ErrorReason.Contains("Failed to parse") || result.ErrorReason.Contains("parameters")) await context.Channel.SendMessageAsync($"Incorrect command parameters!");
+                    }
+                });
             }
 
             else //waka
             {
-                if (message.ToString().ToLower() == "waka") await context.Channel.SendMessageAsync("waka");
+                if (message.ToString().ToLower().StartsWith("waka")) context.Channel.SendMessageAsync("waka");
             }
+
+            return Task.CompletedTask;
         }
     }
 }

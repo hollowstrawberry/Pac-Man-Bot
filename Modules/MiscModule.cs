@@ -94,7 +94,7 @@ namespace PacManBot.Modules
         public async Task SayBotInvite() => await ReplyAsync("Invite this bot into a server you own: <http://bit.ly/pacmanbotdiscord>");
 
         [Command("about"), Summary("About this bot")]
-        public async Task SayBotInfo() => await ReplyAsync(File.ReadAllText("about.txt"));
+        public async Task SayBotInfo() => await ReplyAsync(File.ReadAllText(Program.File_About));
 
 
         [Command("setprefix"), Summary("Set a custom prefix for this server (Admin)")]
@@ -104,7 +104,9 @@ namespace PacManBot.Modules
             if (CommandHandler.prefixes.ContainsKey(Context.Guild.Id)) CommandHandler.prefixes[Context.Guild.Id] = newPrefix;
             else CommandHandler.prefixes.Add(Context.Guild.Id, newPrefix);
 
-            string[] lines = File.ReadAllLines("prefixes.txt");
+
+            string file = Program.File_Prefixes;
+            string[] lines = File.ReadAllLines(file);
 
             int prefixIndex = lines.Length; //After everything else by default
             for (int i = 0; i < lines.Length; i++) if (lines[i].Split(' ')[0] == Context.Guild.Id.ToString()) prefixIndex = i; //Finds if the server already has a custom prefix
@@ -112,12 +114,12 @@ namespace PacManBot.Modules
             string newLine = $"{Context.Guild.Id} {newPrefix}";
             if (prefixIndex == lines.Length)
             {
-                File.AppendAllLines("prefixes.txt", new string[] { newLine });
+                File.AppendAllLines(file, new string[] { newLine });
             }
             else
             {
                 lines[prefixIndex] = newLine;
-                File.WriteAllLines("prefixes.txt", lines);
+                File.WriteAllLines(file, lines);
             }
 
             await ReplyAsync($"Prefix for this server has been successfully set to **{newPrefix}**.");
