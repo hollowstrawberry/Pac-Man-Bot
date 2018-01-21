@@ -97,6 +97,129 @@
         <member name="T:Discord.Audio.Streams.SodiumEncryptStream">
             <summary> Encrypts an RTP frame using libsodium </summary>
         </member>
+        <member name="P:Discord.WebSocket.BaseSocketClient.Latency">
+            <summary> Gets the estimated round-trip latency, in milliseconds, to the gateway server. </summary>
+        </member>
+        <member name="M:Discord.WebSocket.BaseSocketClient.GetApplicationInfoAsync(Discord.RequestOptions)">
+            <inheritdoc />
+        </member>
+        <member name="M:Discord.WebSocket.BaseSocketClient.GetUser(System.UInt64)">
+            <inheritdoc />
+        </member>
+        <member name="M:Discord.WebSocket.BaseSocketClient.GetUser(System.String,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Discord.WebSocket.BaseSocketClient.GetChannel(System.UInt64)">
+            <inheritdoc />
+        </member>
+        <member name="M:Discord.WebSocket.BaseSocketClient.GetGuild(System.UInt64)">
+            <inheritdoc />
+        </member>
+        <member name="M:Discord.WebSocket.BaseSocketClient.GetVoiceRegion(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Discord.WebSocket.BaseSocketClient.StartAsync">
+            <inheritdoc />
+        </member>
+        <member name="M:Discord.WebSocket.BaseSocketClient.StopAsync">
+            <inheritdoc />
+        </member>
+        <member name="M:Discord.WebSocket.BaseSocketClient.CreateGuildAsync(System.String,Discord.IVoiceRegion,System.IO.Stream,Discord.RequestOptions)">
+            <inheritdoc />
+        </member>
+        <member name="M:Discord.WebSocket.BaseSocketClient.GetConnectionsAsync(Discord.RequestOptions)">
+            <inheritdoc />
+        </member>
+        <member name="M:Discord.WebSocket.BaseSocketClient.GetInviteAsync(System.String,Discord.RequestOptions)">
+            <inheritdoc />
+        </member>
+        <member name="E:Discord.WebSocket.BaseSocketClient.ChannelCreated">
+            <summary> Fired when a channel is created. </summary>
+        </member>
+        <member name="E:Discord.WebSocket.BaseSocketClient.ChannelDestroyed">
+            <summary> Fired when a channel is destroyed. </summary>
+        </member>
+        <member name="E:Discord.WebSocket.BaseSocketClient.ChannelUpdated">
+            <summary> Fired when a channel is updated. </summary>
+        </member>
+        <member name="E:Discord.WebSocket.BaseSocketClient.MessageReceived">
+            <summary> Fired when a message is received. </summary>
+        </member>
+        <member name="E:Discord.WebSocket.BaseSocketClient.MessageDeleted">
+            <summary> Fired when a message is deleted. </summary>
+        </member>
+        <member name="E:Discord.WebSocket.BaseSocketClient.MessageUpdated">
+            <summary> Fired when a message is updated. </summary>
+        </member>
+        <member name="E:Discord.WebSocket.BaseSocketClient.ReactionAdded">
+            <summary> Fired when a reaction is added to a message. </summary>
+        </member>
+        <member name="E:Discord.WebSocket.BaseSocketClient.ReactionRemoved">
+            <summary> Fired when a reaction is removed from a message. </summary>
+        </member>
+        <member name="E:Discord.WebSocket.BaseSocketClient.ReactionsCleared">
+            <summary> Fired when all reactions to a message are cleared. </summary>
+        </member>
+        <member name="E:Discord.WebSocket.BaseSocketClient.RoleCreated">
+            <summary> Fired when a role is created. </summary>
+        </member>
+        <member name="E:Discord.WebSocket.BaseSocketClient.RoleDeleted">
+            <summary> Fired when a role is deleted. </summary>
+        </member>
+        <member name="E:Discord.WebSocket.BaseSocketClient.RoleUpdated">
+            <summary> Fired when a role is updated. </summary>
+        </member>
+        <member name="E:Discord.WebSocket.BaseSocketClient.JoinedGuild">
+            <summary> Fired when the connected account joins a guild. </summary>
+        </member>
+        <member name="E:Discord.WebSocket.BaseSocketClient.LeftGuild">
+            <summary> Fired when the connected account leaves a guild. </summary>
+        </member>
+        <member name="E:Discord.WebSocket.BaseSocketClient.GuildAvailable">
+            <summary> Fired when a guild becomes available. </summary>
+        </member>
+        <member name="E:Discord.WebSocket.BaseSocketClient.GuildUnavailable">
+            <summary> Fired when a guild becomes unavailable. </summary>
+        </member>
+        <member name="E:Discord.WebSocket.BaseSocketClient.GuildMembersDownloaded">
+            <summary> Fired when offline guild members are downloaded. </summary>
+        </member>
+        <member name="E:Discord.WebSocket.BaseSocketClient.GuildUpdated">
+            <summary> Fired when a guild is updated. </summary>
+        </member>
+        <member name="E:Discord.WebSocket.BaseSocketClient.UserJoined">
+            <summary> Fired when a user joins a guild. </summary>
+        </member>
+        <member name="E:Discord.WebSocket.BaseSocketClient.UserLeft">
+            <summary> Fired when a user leaves a guild. </summary>
+        </member>
+        <member name="E:Discord.WebSocket.BaseSocketClient.UserBanned">
+            <summary> Fired when a user is banned from a guild. </summary>
+        </member>
+        <member name="E:Discord.WebSocket.BaseSocketClient.UserUnbanned">
+            <summary> Fired when a user is unbanned from a guild. </summary>
+        </member>
+        <member name="E:Discord.WebSocket.BaseSocketClient.UserUpdated">
+            <summary> Fired when a user is updated. </summary>
+        </member>
+        <member name="E:Discord.WebSocket.BaseSocketClient.GuildMemberUpdated">
+            <summary> Fired when a guild member is updated, or a member presence is updated. </summary>
+        </member>
+        <member name="E:Discord.WebSocket.BaseSocketClient.UserVoiceStateUpdated">
+            <summary> Fired when a user joins, leaves, or moves voice channels. </summary>
+        </member>
+        <member name="E:Discord.WebSocket.BaseSocketClient.CurrentUserUpdated">
+            <summary> Fired when the connected account is updated. </summary>
+        </member>
+        <member name="E:Discord.WebSocket.BaseSocketClient.UserIsTyping">
+            <summary> Fired when a user starts typing. </summary>
+        </member>
+        <member name="E:Discord.WebSocket.BaseSocketClient.RecipientAdded">
+            <summary> Fired when a user joins a group channel. </summary>
+        </member>
+        <member name="E:Discord.WebSocket.BaseSocketClient.RecipientRemoved">
+            <summary> Fired when a user is removed from a group channel. </summary>
+        </member>
         <member name="P:Discord.WebSocket.DiscordShardedClient.Latency">
             <summary> Gets the estimated round-trip latency, in milliseconds, to the gateway server. </summary>
         </member>
@@ -118,22 +241,13 @@
         <member name="M:Discord.WebSocket.DiscordShardedClient.StopAsync">
             <inheritdoc />
         </member>
-        <member name="M:Discord.WebSocket.DiscordShardedClient.GetApplicationInfoAsync">
+        <member name="M:Discord.WebSocket.DiscordShardedClient.GetApplicationInfoAsync(Discord.RequestOptions)">
             <inheritdoc />
         </member>
         <member name="M:Discord.WebSocket.DiscordShardedClient.GetGuild(System.UInt64)">
             <inheritdoc />
         </member>
-        <member name="M:Discord.WebSocket.DiscordShardedClient.CreateGuildAsync(System.String,Discord.IVoiceRegion,System.IO.Stream)">
-            <inheritdoc />
-        </member>
         <member name="M:Discord.WebSocket.DiscordShardedClient.GetChannel(System.UInt64)">
-            <inheritdoc />
-        </member>
-        <member name="M:Discord.WebSocket.DiscordShardedClient.GetConnectionsAsync">
-            <inheritdoc />
-        </member>
-        <member name="M:Discord.WebSocket.DiscordShardedClient.GetInviteAsync(System.String)">
             <inheritdoc />
         </member>
         <member name="M:Discord.WebSocket.DiscordShardedClient.GetUser(System.UInt64)">
@@ -145,8 +259,20 @@
         <member name="M:Discord.WebSocket.DiscordShardedClient.GetVoiceRegion(System.String)">
             <inheritdoc />
         </member>
-        <member name="M:Discord.WebSocket.DiscordShardedClient.DownloadUsersAsync(System.Collections.Generic.IEnumerable{Discord.WebSocket.SocketGuild})">
+        <member name="M:Discord.WebSocket.DiscordShardedClient.DownloadUsersAsync(System.Collections.Generic.IEnumerable{Discord.IGuild})">
             <summary> Downloads the users list for the provided guilds, if they don't have a complete list. </summary>
+        </member>
+        <member name="E:Discord.WebSocket.DiscordShardedClient.ShardConnected">
+            <summary> Fired when a shard is connected to the Discord gateway. </summary>
+        </member>
+        <member name="E:Discord.WebSocket.DiscordShardedClient.ShardDisconnected">
+            <summary> Fired when a shard is disconnected from the Discord gateway. </summary>
+        </member>
+        <member name="E:Discord.WebSocket.DiscordShardedClient.ShardReady">
+            <summary> Fired when a guild data for a shard has finished downloading. </summary>
+        </member>
+        <member name="E:Discord.WebSocket.DiscordShardedClient.ShardLatencyUpdated">
+            <summary> Fired when a shard receives a heartbeat from the Discord gateway. </summary>
         </member>
         <member name="P:Discord.WebSocket.DiscordSocketClient.ShardId">
             <summary> Gets the shard of of this client. </summary>
@@ -155,7 +281,7 @@
             <summary> Gets the current connection state of this client. </summary>
         </member>
         <member name="P:Discord.WebSocket.DiscordSocketClient.Latency">
-            <summary> Gets the estimated round-trip latency, in milliseconds, to the gateway server. </summary>
+            <inheritdoc />
         </member>
         <member name="M:Discord.WebSocket.DiscordSocketClient.#ctor">
             <summary> Creates a new REST/WebSocket discord client. </summary>
@@ -163,22 +289,13 @@
         <member name="M:Discord.WebSocket.DiscordSocketClient.#ctor(Discord.WebSocket.DiscordSocketConfig)">
             <summary> Creates a new REST/WebSocket discord client. </summary>
         </member>
-        <member name="M:Discord.WebSocket.DiscordSocketClient.GetApplicationInfoAsync">
+        <member name="M:Discord.WebSocket.DiscordSocketClient.GetApplicationInfoAsync(Discord.RequestOptions)">
             <inheritdoc />
         </member>
         <member name="M:Discord.WebSocket.DiscordSocketClient.GetGuild(System.UInt64)">
             <inheritdoc />
         </member>
-        <member name="M:Discord.WebSocket.DiscordSocketClient.CreateGuildAsync(System.String,Discord.IVoiceRegion,System.IO.Stream)">
-            <inheritdoc />
-        </member>
         <member name="M:Discord.WebSocket.DiscordSocketClient.GetChannel(System.UInt64)">
-            <inheritdoc />
-        </member>
-        <member name="M:Discord.WebSocket.DiscordSocketClient.GetConnectionsAsync">
-            <inheritdoc />
-        </member>
-        <member name="M:Discord.WebSocket.DiscordSocketClient.GetInviteAsync(System.String)">
             <inheritdoc />
         </member>
         <member name="M:Discord.WebSocket.DiscordSocketClient.GetUser(System.UInt64)">
@@ -192,6 +309,18 @@
         </member>
         <member name="M:Discord.WebSocket.DiscordSocketClient.DownloadUsersAsync(System.Collections.Generic.IEnumerable{Discord.IGuild})">
             <summary> Downloads the users list for the provided guilds, if they don't have a complete list. </summary>
+        </member>
+        <member name="E:Discord.WebSocket.DiscordSocketClient.Connected">
+            <summary> Fired when connected to the Discord gateway. </summary>
+        </member>
+        <member name="E:Discord.WebSocket.DiscordSocketClient.Disconnected">
+            <summary> Fired when disconnected to the Discord gateway. </summary>
+        </member>
+        <member name="E:Discord.WebSocket.DiscordSocketClient.Ready">
+            <summary> Fired when guild data has finished downloading. </summary>
+        </member>
+        <member name="E:Discord.WebSocket.DiscordSocketClient.LatencyUpdated">
+            <summary> Fired when a heartbeat is received from the Discord gateway. </summary>
         </member>
         <member name="P:Discord.WebSocket.DiscordSocketConfig.GatewayHost">
             <summary> Gets or sets the websocket host to connect to. If null, the client will use the /gateway endpoint. </summary>
@@ -250,7 +379,7 @@
             <summary> Gets a collection of pinned messages in this channel. </summary>
         </member>
         <member name="P:Discord.WebSocket.SocketGuildUser.Hierarchy">
-            <summary> The position of the user within the role hirearchy. </summary>
+            <summary> The position of the user within the role hierarchy. </summary>
             <remarks> The returned value equal to the position of the highest role the user has, 
             or int.MaxValue if user is the server owner. </remarks>
         </member>

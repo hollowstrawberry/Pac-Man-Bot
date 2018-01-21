@@ -24,7 +24,9 @@ namespace PacManBot.Modules.PacManModule
                     else if (reaction.Emote.ToString() == DownEmoji ) direction = Dir.down;
                     else if (reaction.Emote.ToString() == LeftEmoji ) direction = Dir.left;
 
-                    Console.WriteLine($"{DateTime.UtcNow.ToString("hh:mm:ss")} Game Input: {direction} by user {user.Username}#{user.Discriminator} in channel {(message.Author as SocketGuildUser).Guild.Name}/{message.Channel}");
+                    string channelName = (message.Author as SocketGuildUser != null ? $"{(message.Author as SocketGuildUser).Guild.Name}/" : "") + message.Channel;
+
+                    Console.WriteLine($"{DateTime.UtcNow.ToString("hh:mm:ss")} Game Input: {direction} by user {user.Username}#{user.Discriminator} in channel {channelName}");
 
                     if (direction != Dir.none || reaction.Emote.ToString() == WaitEmoji) //Valid reaction input
                     {
@@ -40,8 +42,8 @@ namespace PacManBot.Modules.PacManModule
                             gameInstances.Remove(game);
                             if (game.score > 0)
                             {
-                                Console.WriteLine($"{DateTime.UtcNow.ToString("hh:mm:ss")} ({game.state}) Achieved score {game.score} in {game.timer} moves on channel {(message.Author as SocketGuildUser).Guild.Name}/{message.Channel} last controlled by user {user.Username}#{user.Discriminator}");
-                                File.AppendAllText("scoreboard.txt", $"\n{game.state} {game.score} {game.timer} {user.Id} \"{user.Username}#{user.Discriminator}\" \"{DateTime.Now.ToString("o")}\" \"{(message.Author as SocketGuildUser).Guild.Name}/{message.Channel}\"");
+                                Console.WriteLine($"{DateTime.UtcNow.ToString("hh:mm:ss")} ({game.state}) Achieved score {game.score} in {game.timer} moves on channel {channelName} last controlled by user {user.Username}#{user.Discriminator}");
+                                File.AppendAllText("scoreboard.txt", $"\n{game.state} {game.score} {game.timer} {user.Id} \"{user.Username}#{user.Discriminator}\" \"{DateTime.Now.ToString("o")}\" \"{channelName}\"");
                             }
                             await message.ModifyAsync(m => m.Content = game.Display + ((game.state == State.Win) ? "```diff\n+You won!```" : "```diff\n-You lost!```"));
                             await message.RemoveAllReactionsAsync();

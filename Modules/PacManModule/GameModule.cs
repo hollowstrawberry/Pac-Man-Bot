@@ -13,9 +13,14 @@ namespace PacManBot.Modules.PacManModule
     public class GameModule : ModuleBase<SocketCommandContext>
     {
         [Command("play"), Alias("p", "start"), Summary("Start a new game on this channel")]
-        [RequireBotPermission(GuildPermission.AddReactions)]
         public async Task StartGameInstance()
         {
+            if (Context.Guild != null && !Context.Guild.CurrentUser.GuildPermissions.AddReactions)
+            {
+                await ReplyAsync("This bot requires the permission to add reactions!");
+                return;
+            }
+
             foreach (Game game in gameInstances)
             {
                 if (Context.Channel.Id == game.channelId) //Finds a game instance corresponding to this channel
@@ -35,9 +40,14 @@ namespace PacManBot.Modules.PacManModule
         }
 
         [Command("refresh"), Alias("r"), Summary("Move the game to the bottom of the chat")]
-        [RequireBotPermission(GuildPermission.AddReactions)]
         public async Task RefreshGameInstance()
         {
+            if (Context.Guild != null && !Context.Guild.CurrentUser.GuildPermissions.AddReactions)
+            {
+                await ReplyAsync("This bot requires the permission to add reactions!");
+                return;
+            }
+
             foreach (Game game in gameInstances)
             {
                 if (Context.Channel.Id == game.channelId) //Finds a game instance corresponding to this channel
@@ -56,9 +66,14 @@ namespace PacManBot.Modules.PacManModule
         }
 
         [Command("end"), Alias("stop"), Summary("End the current game (Moderator)")]
-        [RequireUserPermission(GuildPermission.ManageMessages)]
         public async Task EndGameInstance()
         {
+            if (Context.Guild != null && !Context.Guild.CurrentUser.GuildPermissions.ManageMessages)
+            {
+                await ReplyAsync("You must be a Moderator to use this command!");
+                return;
+            }
+
             foreach (Game game in gameInstances)
             {
                 if (Context.Channel.Id == game.channelId)
@@ -66,8 +81,7 @@ namespace PacManBot.Modules.PacManModule
                     gameInstances.Remove(game);
                     await ReplyAsync("Game ended.");
 
-                    var gameMessage = await Context.Channel.GetMessageAsync(game.messageId) as IUserMessage;
-                    if (gameMessage != null)
+                    if (await Context.Channel.GetMessageAsync(game.messageId) is IUserMessage gameMessage)
                     {
                         await gameMessage.ModifyAsync(m => m.Content = game.Display + "```diff\n-Game has been ended!```"); //Edit message
                         await gameMessage.RemoveAllReactionsAsync(); //Remove reactions

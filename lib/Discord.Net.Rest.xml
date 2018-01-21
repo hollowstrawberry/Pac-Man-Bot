@@ -61,6 +61,9 @@
         <member name="M:Discord.Rest.DiscordRestClient.GetVoiceRegionAsync(System.String,Discord.RequestOptions)">
             <inheritdoc />
         </member>
+        <member name="M:Discord.Rest.DiscordRestClient.GetWebhookAsync(System.UInt64,Discord.RequestOptions)">
+            <inheritdoc />
+        </member>
         <member name="P:Discord.Rest.DiscordRestConfig.RestClientProvider">
             <summary> Gets or sets the provider used to generate new REST connections. </summary>
         </member>

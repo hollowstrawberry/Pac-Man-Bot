@@ -16,7 +16,7 @@ namespace PacManBot.Modules.PacManModule
             }
         }
 
-        public static Pos OfLength(this Dir dir, int num)
+        public static Pos OfLength(this Dir dir, int num) //Converts a direction variable into a position vector
         {
             if (num < 0) num = 0;
             Pos pos = new Pos(0, 0);

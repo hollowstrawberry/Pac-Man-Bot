@@ -16,7 +16,7 @@
         <member name="P:Discord.Commands.PreconditionAttribute.Group">
             <summary>
             Specify a group that this precondition belongs to. Preconditions of the same group require only one
-            of the preconditions to pass in order to be successful (A || B). Specifying <see cref="P:Discord.Commands.PreconditionAttribute.Group"/> = <see cref="!:null"/>
+            of the preconditions to pass in order to be successful (A || B). Specifying <see cref="P:Discord.Commands.PreconditionAttribute.Group"/> = <see langword="null"/>
             or not at all will require *all* preconditions to pass, just like normal (A &amp;&amp; B).
             </summary>
         </member>
@@ -115,17 +115,36 @@
         <member name="M:Discord.Commands.PriorityAttribute.#ctor(System.Int32)">
             <summary> Creates a new <see cref="T:Discord.Commands.PriorityAttribute"/> with the given priority. </summary>
         </member>
+        <member name="M:Discord.Commands.CommandService.AddTypeReader``1(Discord.Commands.TypeReader)">
+            <summary>
+            Adds a custom <see cref="T:Discord.Commands.TypeReader"/> to this <see cref="T:Discord.Commands.CommandService"/> for the supplied object type. 
+            If <typeparamref name="T"/> is a <see cref="T:System.ValueType"/>, a <see cref="T:Discord.Commands.NullableTypeReader`1"/> will also be added.
+            </summary>
+            <typeparam name="T">The object type to be read by the <see cref="T:Discord.Commands.TypeReader"/>.</typeparam>
+            <param name="reader">An instance of the <see cref="T:Discord.Commands.TypeReader"/> to be added.</param>
+        </member>
+        <member name="M:Discord.Commands.CommandService.AddTypeReader(System.Type,Discord.Commands.TypeReader)">
+            <summary>
+            Adds a custom <see cref="T:Discord.Commands.TypeReader"/> to this <see cref="T:Discord.Commands.CommandService"/> for the supplied object type. 
+            If <paramref name="type"/> is a <see cref="T:System.ValueType"/>, a <see cref="T:Discord.Commands.NullableTypeReader`1"/> for the value type will also be added. 
+            </summary>
+            <param name="type">A <see cref="T:System.Type"/> instance for the type to be read.</param>
+            <param name="reader">An instance of the <see cref="T:Discord.Commands.TypeReader"/> to be added.</param>
+        </member>
         <member name="P:Discord.Commands.CommandServiceConfig.DefaultRunMode">
-            <summary> The default RunMode commands should have, if one is not specified on the Command attribute or builder. </summary>
+            <summary> Gets or sets the default RunMode commands should have, if one is not specified on the Command attribute or builder. </summary>
         </member>
         <member name="P:Discord.Commands.CommandServiceConfig.CaseSensitiveCommands">
-            <summary> Should commands be case-sensitive? </summary>
+            <summary> Determines whether commands should be case-sensitive. </summary>
         </member>
         <member name="P:Discord.Commands.CommandServiceConfig.LogLevel">
             <summary> Gets or sets the minimum log level severity that will be sent to the Log event. </summary>
         </member>
         <member name="P:Discord.Commands.CommandServiceConfig.ThrowOnError">
-            <summary> Gets or sets whether RunMode.Sync commands should push exceptions up to the caller. </summary>
+            <summary> Determines whether RunMode.Sync commands should push exceptions up to the caller. </summary>
+        </member>
+        <member name="P:Discord.Commands.CommandServiceConfig.IgnoreExtraArgs">
+            <summary> Determines whether extra parameters should be ignored. </summary>
         </member>
     </members>
 </doc>

@@ -1,10 +1,12 @@
 ﻿using System.IO;
 using System.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Microsoft.Extensions.Configuration;
-using System.Collections.Generic;
+using PacManBot.Services;
+
 
 namespace PacManBot.Modules
 {
@@ -22,11 +24,12 @@ namespace PacManBot.Modules
 
 
         [Command("help"), Alias("h"), Summary("List of commands")]
-        public async Task HelpAsync([Remainder]string text = "")
+        public async Task HelpAsync([Remainder]string args = "") //Argument is useless for now
         {
-            string prefix = config["prefix"];
-            var embed = new EmbedBuilder() { Color = new Color(241, 195, 15) }; //Create a new embed block
+            string prefix = config["prefix"]; //Gets the prefix for the current server or uses the default one if not found
+            if (Context.Guild != null && !CommandHandler.prefixes.TryGetValue(Context.Guild.Id, out prefix)) prefix = config["prefix"];
 
+            var embed = new EmbedBuilder() { Color = new Color(241, 195, 15) }; //Create a new embed block
             var allModules = service.Modules.OrderBy(m => m.Name); //Alphabetically
 
             foreach (var module in allModules) //Go through all modules
@@ -64,21 +67,23 @@ namespace PacManBot.Modules
                 }
             }
 
-            await ReplyAsync("", false, embed.Build()); //Send the built embed
+
+            string text = (prefix == config["prefix"]) ? "" : $"Command prefix for this server: **{prefix}**"; //Specifies the prefix if it's not the default one
+            await ReplyAsync(text, false, embed.Build()); //Send the built embed
         }
 
         [Command("waka"), Summary("Waka.")]
         public Task Ping() => ReplyAsync("waka");
 
         [Command("say"), Summary("Make the bot say anything (Moderator)")]
-        [RequireUserPermission(GuildPermission.ManageMessages)]
+        [RequireUserPermission(ChannelPermission.ManageMessages)]
         public async Task Say([Remainder]string text) => await ReplyAsync(text);
 
         [Command("clear"), Alias("c"), Summary("Clear messages from this bot. You can specify amount (Moderator)")]
         [RequireUserPermission(ChannelPermission.ManageMessages)]
         public async Task ClearGameMessages(int amount = 10)
         {
-            var messages = await Context.Channel.GetMessagesAsync(amount).Flatten();
+            var messages = await Context.Channel.GetMessagesAsync(amount).FlattenAsync();
             foreach (IMessage message in messages)
             {
                 if (message.Author.Id == Context.Client.CurrentUser.Id) await message.DeleteAsync(); //Remove all messages from this bot
@@ -90,5 +95,32 @@ namespace PacManBot.Modules
 
         [Command("about"), Summary("About this bot")]
         public async Task SayBotInfo() => await ReplyAsync(File.ReadAllText("about.txt"));
+
+
+        [Command("setprefix"), Summary("Set a custom prefix for this server (Admin)")]
+        [RequireUserPermission(GuildPermission.Administrator)]
+        public async Task SetServerPrefix(string newPrefix)
+        {
+            if (CommandHandler.prefixes.ContainsKey(Context.Guild.Id)) CommandHandler.prefixes[Context.Guild.Id] = newPrefix;
+            else CommandHandler.prefixes.Add(Context.Guild.Id, newPrefix);
+
+            string[] lines = File.ReadAllLines("prefixes.txt");
+
+            int prefixIndex = lines.Length; //After everything else by default
+            for (int i = 0; i < lines.Length; i++) if (lines[i].Split(' ')[0] == Context.Guild.Id.ToString()) prefixIndex = i; //Finds if the server already has a custom prefix
+
+            string newLine = $"{Context.Guild.Id} {newPrefix}";
+            if (prefixIndex == lines.Length)
+            {
+                File.AppendAllLines("prefixes.txt", new string[] { newLine });
+            }
+            else
+            {
+                lines[prefixIndex] = newLine;
+                File.WriteAllLines("prefixes.txt", lines);
+            }
+
+            await ReplyAsync($"Prefix for this server has been successfully set to **{newPrefix}**.");
+        }
     }
 }

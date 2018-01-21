@@ -41,7 +41,7 @@ namespace PacManBot.Modules.PacManModule
 
         public enum Dir { none, up, down, left, right }
 
-        public class Pos
+        public class Pos //Coordinate in the board
         {
             public int x, y;
             public Pos(int x, int y)
@@ -53,7 +53,7 @@ namespace PacManBot.Modules.PacManModule
             public static bool operator !=(Pos pos1, Pos pos2) => !(pos1 == pos2);
             public static bool operator ==(Pos pos1, Pos pos2)
             {
-                if (ReferenceEquals(pos1, null) || ReferenceEquals(pos2, null)) return ReferenceEquals(pos1, pos2);
+                if (pos1 is null || pos2 is null) return ReferenceEquals(pos1, pos2);
                 return pos1.x == pos2.x && pos1.y == pos2.y;
             }
 
