@@ -26,7 +26,7 @@ namespace PacManBot.Services
             Task.Run(async () => //Wrapping in a Task.Run prevents the gateway from getting blocked in case something goes wrong
             {
                 var context = new SocketCommandContext(discord, messageData.Value as SocketUserMessage);
-                await Modules.PacManModule.Controls.OnReactionAdded(context, reaction);
+                await Modules.PacManModule.Controls.ExecuteInput(context, reaction);
             });
             return Task.CompletedTask;
         }

@@ -160,9 +160,7 @@ namespace PacManBot.Modules.PacManModule
         [Command("score"), Alias("s"), Summary("See your own or another person's place on the leaderboard")]
         public async Task SendPersonalBest(SocketGuildUser guildUser = null)
         {
-            SocketUser user;
-            if (guildUser == null) user = Context.User;
-            else user = guildUser;
+            SocketUser user = guildUser ?? Context.User; //Uses the command caller itself if no user is specified
 
             string[] scoreLine = File.ReadAllLines(Program.File_Scoreboard).Skip(1).ToArray(); //Skips the first line
             int scoresAmount = scoreLine.Length;

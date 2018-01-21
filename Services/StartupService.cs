@@ -39,11 +39,11 @@ namespace PacManBot.Services
 
                 CommandHandler.prefixes.Add(ID, prefix);
             }
-            Console.WriteLine("Loaded prefixes");
+            Console.WriteLine($"Loaded prefixes from {Program.File_Prefixes}");
 
 
             string discordToken = config["token"]; //Get the discord token from the config file
-            if (string.IsNullOrWhiteSpace(discordToken)) throw new Exception("Please enter the bot's token into the bot_config.json file");
+            if (string.IsNullOrWhiteSpace(discordToken)) throw new Exception($"Please enter the bot's token into the {Program.File_Config} file");
 
             await discord.LoginAsync(TokenType.Bot, discordToken); //Login to discord
             await discord.StartAsync(); //Connect to the websocket

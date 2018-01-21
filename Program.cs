@@ -1,7 +1,7 @@
 ﻿using Discord;
+using Discord.Net.Providers;
 using Discord.Commands;
 using Discord.WebSocket;
-using Discord.Net.Providers.WS4Net;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -17,20 +17,20 @@ namespace PacManBot
 {
     public class Program
     {
-        public static readonly string File_Prefixes = "prefixes.txt", File_Scoreboard = "scoreboard.txt", File_GameMap = "board.txt", File_About = "about.txt", FileTips = "tips.txt";
+        public static readonly string File_Config = "config.bot", File_Prefixes = "prefixes.bot", File_Scoreboard = "scoreboard.bot", File_GameMap = "board.bot", File_About = "about.bot", FileTips = "tips.bot";
 
         private DiscordSocketClient client;
-        private IConfigurationRoot bot_config; //bot_config.json file
+        private IConfigurationRoot bot_config;
 
 
         public static void Main(string[] args) => new Program().MainAsync().GetAwaiter().GetResult();
         public async Task MainAsync()
         {
-            var configBuilder = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile("bot_config.json"); //Add the configuration file
+            var configBuilder = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile(File_Config); //Add the configuration file
             bot_config = configBuilder.Build(); //Build the configuration file
 
             //Client and its configuration
-            var config = new DiscordSocketConfig { LogLevel = LogSeverity.Verbose, MessageCacheSize = 1000, WebSocketProvider = WS4NetProvider.Instance };
+            var config = new DiscordSocketConfig { LogLevel = LogSeverity.Verbose, MessageCacheSize = 1000, WebSocketProvider = Discord.Net.Providers.WS4Net.WS4NetProvider.Instance }; //Specify websocketprovider to run properly in Windows 7
             client = new DiscordSocketClient(config);
 
             //Prepare services
