@@ -37,12 +37,7 @@ namespace PacManBot.Modules.PacManModule
                     {
                         game.DoTick(direction);
 
-                        if (game.state == State.Active)
-                        {
-                            await message.ModifyAsync(m => m.Content = game.Display); //Update display
-                            if (guild != null && guild.CurrentUser.GuildPermissions.ManageMessages) await message.RemoveReactionAsync(reaction.Emote, user);
-                        }
-                        else
+                        if (game.state != State.Active)
                         {
                             gameInstances.Remove(game);
                             if (game.score > 0)
@@ -50,14 +45,15 @@ namespace PacManBot.Modules.PacManModule
                                 Console.WriteLine($"{DateTime.UtcNow.ToString("hh:mm:ss")} ({game.state}) Achieved score {game.score} in {game.timer} moves on channel {channelName} last controlled by user {user.Username}#{user.Discriminator}");
                                 File.AppendAllText(Program.File_Scoreboard, $"\n{game.state} {game.score} {game.timer} {user.Id} \"{user.Username}#{user.Discriminator}\" \"{DateTime.Now.ToString("o")}\" \"{channelName}\"");
                             }
-
-                            await message.ModifyAsync(m => m.Content = game.Display + ((game.state == State.Win) ? "```diff\n+You won!```" : "```diff\n-You lost!```"));
-                            if (guild != null && guild.CurrentUser.GuildPermissions.ManageMessages) await message.RemoveAllReactionsAsync();
                         }
+
+                        await message.ModifyAsync(m => m.Content = game.Display); //Update display
                     }
-                    else
+
+                    if (guild != null && guild.CurrentUser.GuildPermissions.ManageMessages) //Can remove reactions
                     {
-                        if (guild != null && guild.CurrentUser.GuildPermissions.ManageMessages) await message.RemoveReactionAsync(reaction.Emote, user);
+                        if (game.state == State.Active) await message.RemoveReactionAsync(reaction.Emote, user);
+                        else await message.RemoveAllReactionsAsync();
                     }
                 }
             }

@@ -10,7 +10,7 @@ namespace PacManBot.Modules.PacManModule
         static public List<Game> gameInstances = new List<Game>();
 
         public const string LeftEmoji = "⬅", UpEmoji = "⬆", DownEmoji = "⬇", RightEmoji = "➡", WaitEmoji = "⏸", RefreshEmoji = "🔃"; //Controls
-        private const char CharPlayer = 'O', CharFruit = '$', CharGhost = 'G', CharCorner = '_', CharDoor = '-', CharPellet = '·', CharPowerPellet = '●'; //Read from map
+        private const char CharPlayer = 'O', CharFruit = '$', CharGhost = 'G', CharDoor = '-', CharPellet = '·', CharPowerPellet = '●'; //Read from map
         private const char CharPlayerDead = 'X', CharGhostFrightened = 'E'; //Displayed
         private const int PowerTime = 20, ScatterCycle = 100, ScatterTime1 = 30, ScatterTime2 = 20; //Mechanics constants
 
@@ -25,7 +25,7 @@ namespace PacManBot.Modules.PacManModule
         public int timer = 0; //How many turns have passed
         private int pellets;
         private readonly int maxPellets;
-        private char[,] board;
+        private char[,] map;
         private Random random;
         private Player player;
         private List<Ghost> ghosts;
@@ -46,7 +46,7 @@ namespace PacManBot.Modules.PacManModule
 
         public enum Dir { none, up, down, left, right }
 
-        public class Pos //Coordinate in the board
+        public class Pos //Coordinate in the map
         {
             public int x, y;
             public Pos(int x, int y)
@@ -82,11 +82,11 @@ namespace PacManBot.Modules.PacManModule
 
         private class Player
         {
-            public Pos pos; //Position on the board
+            public Pos pos; //Position on the map
             public Pos origin; //Position it started at
             public Dir dir = Dir.none; //Direction it's facing
             public int power = 0; //Time left of power mode
-            public int ghostsEaten = 0; //Ghosts eaten during the current power mode
+            public int ghostStreak = 0; //Ghosts eaten during the current power mode
 
             public Player(Pos pos)
             {
@@ -112,7 +112,7 @@ namespace PacManBot.Modules.PacManModule
 
         private class Ghost
         {
-            public Pos pos; //Position on the board
+            public Pos pos; //Position on the map
             public Pos target; //Tile it's trying to reach
             public Pos origin; //Tile it spawns in
             public Pos corner; //Preferred corner
@@ -181,7 +181,7 @@ namespace PacManBot.Modules.PacManModule
 
                     case AiMode.Scatter:
                         target = corner;
-                        if (type == AiType.Blinky && game.timer < 10) target = game.ghosts[(int)AiType.Pinky].corner; //So Blinky and Pinky go together at the start
+                        if (type == AiType.Blinky && game.timer < 10 && game.ghosts.Count > 1) target = game.ghosts[(int)AiType.Pinky].corner; //So Blinky and Pinky go together at the start
                         break;
 
                     case AiMode.Frightened:
@@ -195,7 +195,7 @@ namespace PacManBot.Modules.PacManModule
 
                 //Decide movement
                 Dir newDir = Dir.none;
-                if (game.board[pos.x, pos.y] == CharDoor || game.board[(pos + Dir.up).x, (pos + Dir.up).y] == CharDoor)
+                if (game.map[pos.x, pos.y] == CharDoor || game.map[(pos + Dir.up).x, (pos + Dir.up).y] == CharDoor)
                 {
                     newDir = Dir.up; //If it's inside the cage
                 }
@@ -235,29 +235,28 @@ namespace PacManBot.Modules.PacManModule
             this.channelId = channelId;
             random = new Random();
 
-            GrabBoardFromFile();
+            LoadMapFromFile(Program.File_GameMap);
             maxPellets = pellets;
 
             Pos playerPos = FindChar(CharPlayer); //Set player
             if (playerPos == null) playerPos = new Pos(0, 0);
             player = new Player(playerPos);
-            board[playerPos.x, playerPos.y] = ' ';
+            map[playerPos.x, playerPos.y] = ' ';
 
-            Pos fruitPos = FindChar(CharFruit); //Set fruit
-            board[fruitPos.x, fruitPos.y] = ' ';
+            Pos fruitPos = FindChar(CharFruit); //Set fruit defaults
+            map[fruitPos.x, fruitPos.y] = ' ';
             FruitSpawnPos = fruitPos;
             fruitTypes = new Fruit[]{ new Fruit('x', 'x', 1000), new Fruit('w', 'w', 2000) };
 
-            ghosts = new List<Ghost>();
-            for (int i = 0; i < 4; i++) //Set ghosts
+            ghosts = new List<Ghost>(); //Set ghosts
+            Pos[] ghostCorners = new Pos[] { new Pos(2, -2), new Pos(map.GetLength(0) - 3, -2), new Pos(0, map.GetLength(1)), new Pos(map.GetLength(0) - 1, map.GetLength(1)) }; //Matches original game
+            for (int i = 0; i < 4; i++)
             {
                 Pos ghostPos = FindChar(CharGhost);
                 if (ghostPos == null) break;
-                Pos cornerPos = FindChar(CharCorner, (i + 1) % 2); //Goes in order: Top-Right Top-Left Bottom-Right Bottom-Left
-                if (cornerPos == null) cornerPos = ghostPos;
+                Pos cornerPos = ghostCorners[i % 2 == 0 ? i + 1 : i - 1]; //Goes in order: Top-Right Top-Left Bottom-Right Bottom-Left
                 ghosts.Add(new Ghost(ghostPos, (AiType)i, cornerPos));
-                board[ghostPos.x, ghostPos.y] = ' ';
-                board[cornerPos.x, cornerPos.y] = CharPellet;
+                map[ghostPos.x, ghostPos.y] = ' ';
             }
         }
 
@@ -282,7 +281,7 @@ namespace PacManBot.Modules.PacManModule
             }
 
             //Pellets
-            char tile = board[player.pos.x, player.pos.y];
+            char tile = map[player.pos.x, player.pos.y];
             if (tile == CharPellet || tile == CharPowerPellet)
             {
                 pellets--;
@@ -298,7 +297,7 @@ namespace PacManBot.Modules.PacManModule
                 }
 
                 score += (tile == CharPowerPellet) ? 50 : 10;
-                board[player.pos.x, player.pos.y] = ' ';
+                map[player.pos.x, player.pos.y] = ' ';
                 if (tile == CharPowerPellet) player.power += PowerTime;
             }
 
@@ -316,8 +315,8 @@ namespace PacManBot.Modules.PacManModule
                             ghost.pauseTime = 5;
                             ghost.mode = AiMode.Chase;
                             ghost.dir = Dir.none;
-                            score += 200 * (int)Math.Pow(2, player.ghostsEaten);
-                            player.ghostsEaten++;
+                            score += 200 * (int)Math.Pow(2, player.ghostStreak);
+                            player.ghostStreak++;
                         }
                         else state = State.Lose;
 
@@ -332,91 +331,96 @@ namespace PacManBot.Modules.PacManModule
             }
 
             if (player.power > 0) player.power--;
-            if (player.power == 0) player.ghostsEaten = 0;
+            if (player.power == 0) player.ghostStreak = 0;
         }
 
         public string Display
         {
             get
             {
-                StringBuilder boardString = new StringBuilder(); //The final display
-                char[,] displayBoard = (char[,])board.Clone(); //The temporary display array
+                StringBuilder display = new StringBuilder(); //The final display in string form
+                char[,] displayMap = (char[,])map.Clone(); //The display array to modify
 
                 //Adds fruit, ghosts and player
                 if (fruit != null && fruit.time > 0)
                 {
-                    displayBoard[FruitSpawnPos.x, FruitSpawnPos.y] = fruit.char1;
-                    displayBoard[FruitSecondPos.x, FruitSecondPos.y] = fruit.char2;
+                    displayMap[FruitSpawnPos.x, FruitSpawnPos.y] = fruit.char1;
+                    displayMap[FruitSecondPos.x, FruitSecondPos.y] = fruit.char2;
                 }
-                foreach (Ghost ghost in ghosts) displayBoard[ghost.pos.x, ghost.pos.y] = (ghost.mode == AiMode.Frightened) ? CharGhostFrightened : GhostAppearance[(int)ghost.type];
-                displayBoard[player.pos.x, player.pos.y] = (state == State.Lose) ? CharPlayerDead : CharPlayer;
+                foreach (Ghost ghost in ghosts) displayMap[ghost.pos.x, ghost.pos.y] = (ghost.mode == AiMode.Frightened) ? CharGhostFrightened : GhostAppearance[(int)ghost.type];
+                displayMap[player.pos.x, player.pos.y] = (state == State.Lose) ? CharPlayerDead : CharPlayer;
 
                 //Converts 2d array to string
-                for (int y = 0; y < displayBoard.GetLength(1); y++)
+                for (int y = 0; y < displayMap.GetLength(1); y++)
                 {
-                    for (int x = 0; x < displayBoard.GetLength(0); x++)
+                    for (int x = 0; x < displayMap.GetLength(0); x++)
                     {
-                        boardString.Append(displayBoard[x, y]);
+                        display.Append(displayMap[x, y]);
                     }
-                    boardString.Append('\n');
+                    display.Append('\n');
                 }
 
                 //Add text to the side
-                string[] info = {
-                    $" │ #Time: {timer}\n",
-                    $" │ #Score: {score}\n",
-                    $" │ #Power: {player.power}\n",
-                    $" │\n",
-                    $" │ {CharPlayer} - Pac-Man" + (player.dir == Dir.none ? "\n" : $": {player.dir}\n"),
-                    $" │\n",
-                    "", "", "", "", //6-9: ghosts, added right after
-                    ((fruit == null || fruit.time <= 0) ? "\n" : $" │\n"), //Fruit
-                    ((fruit == null || fruit.time <= 0) ? "\n" : $" │ {fruit.char1}{fruit.char2} - Fruit: {fruit.time}\n")
-                };
-                for (int i = 0; i < 4; i++)
+                string[] info =
                 {
+                    $" ┌",
+                    $" │ #Time: {timer}",
+                    $" │ #Score: {score}",
+                    $" │ {(player.power > 0 ? $"#Power: {player.power}" : "")}",
+                    $" │ ",
+                    $" │ {CharPlayer} - Pac-Man{(player.dir != Dir.none ? $": {player.dir}" : "")}",
+                    $" │ ",
+                    $" │ ", " │ ", " │ ", " │ ", //7-10: ghosts
+                    $" │ ",
+                    $" │ {(fruit != null && fruit.time > 0 ? $"{fruit.char1}{fruit.char2} - Fruit: {fruit.time}" : "")}",
+                    $" └"
+                };
+
+                for (int i = 0; i < 4; i++) //Ghost info
+                {
+                    if (i + 1 > ghosts.Count) continue;
                     char appearance = (ghosts[i].mode == AiMode.Frightened) ? CharGhostFrightened : GhostAppearance[i];
-                    info[i + (info.Length - 6)] = $" │ {appearance} - {(AiType)i}" + (ghosts[i].dir == Dir.none ? "\n" : $": {ghosts[i].dir}\n");
+                    info[i + 7] = $" │ {appearance} - {(AiType)i}{(ghosts[i].dir != Dir.none ? $": {ghosts[i].dir}" : "")}";
                 }
 
-                for (int i = 0; i < info.Length; i++)
+                for (int i = 0; i < info.Length; i++) //Insert info
                 {
-                    int startIndex = 1 + i * displayBoard.GetLength(0);
+                    int startIndex = i + i * displayMap.GetLength(0);
                     for (int j = i; j >= 0; j--) startIndex += info[j].Length;
-                    boardString.Replace("\n", info[i], startIndex, displayBoard.GetLength(0));
+                    display.Replace("\n", $"{info[i]}\n", startIndex, displayMap.GetLength(0));
                 }
 
                 //Code tags
                 switch (state)
                 {
                     case State.Active:
-                        boardString.Insert(0, "```css\n");
+                        display.Insert(0, "```css\n");
                         break;
 
                     case State.Lose:
-                        boardString.Insert(0, "```diff\n");
-                        boardString.Replace("\n", "\n-", 0, boardString.Length - 1); //All red
+                        display.Insert(0, "```diff\n");
+                        display.Replace("\n", "\n-", 0, display.Length - 1); //All red
                         break;
 
                     case State.Win:
-                        boardString.Insert(0, "```diff\n");
-                        boardString.Replace("\n", "\n+", 0, boardString.Length - 1); //All green
+                        display.Insert(0, "```diff\n");
+                        display.Replace("\n", "\n+", 0, display.Length - 1); //All green
                         break;
                 }
-                boardString.Append("```");
+                display.Append("```");
+                if (state != State.Active) display.Append($"```diff\n{(state == State.Win ? "+You won" : "-You lost")}!```");
 
-
-                return boardString.ToString();
+                return display.ToString();
             }
         }
 
         private Pos FindChar(char c, int index = 0)
         {
-            for (int y = 0; y < board.GetLength(1); y++)
+            for (int y = 0; y < map.GetLength(1); y++)
             {
-                for (int x = 0; x < board.GetLength(0); x++)
+                for (int x = 0; x < map.GetLength(0); x++)
                 {
-                    if (board[x, y] == c)
+                    if (map[x, y] == c)
                     {
                         if (index > 0) index--;
                         else
@@ -430,51 +434,42 @@ namespace PacManBot.Modules.PacManModule
             return null;
         }
 
-        private bool NonSolid(int x, int y, bool collideGhosts = false) => NonSolid(new Pos(x, y), collideGhosts);
-        private bool NonSolid(Pos pos, bool collideGhosts = false)
+        private bool NonSolid(int x, int y) => NonSolid(new Pos(x, y));
+        private bool NonSolid(Pos pos)
         {
             WrapAround(ref pos);
-
-            if (collideGhosts)
-            {
-                foreach (Ghost ghost in ghosts)
-                {
-                    if (ghost.pos == pos) return false;
-                }
-            }
-
-            return (board[pos.x, pos.y] == ' ' || board[pos.x, pos.y] == CharPellet || board[pos.x, pos.y] == CharPowerPellet);
+            return (map[pos.x, pos.y] == ' ' || map[pos.x, pos.y] == CharPellet || map[pos.x, pos.y] == CharPowerPellet);
         }
 
         private void WrapAround(ref Pos pos)
         {
-            if      (pos.x < 0) pos.x = board.GetLength(0) + pos.x;
-            else if (pos.x > board.GetLength(0) - 1) pos.x -= board.GetLength(0);
-            else if (pos.y < 0) pos.y = board.GetLength(1) + pos.y;
-            else if (pos.y > board.GetLength(1) - 1) pos.y -= board.GetLength(1);
+            if      (pos.x < 0) pos.x = map.GetLength(0) + pos.x;
+            else if (pos.x > map.GetLength(0) - 1) pos.x -= map.GetLength(0);
+            else if (pos.y < 0) pos.y = map.GetLength(1) + pos.y;
+            else if (pos.y > map.GetLength(1) - 1) pos.y -= map.GetLength(1);
         }
 
-        private void GrabBoardFromFile()
+        private void LoadMapFromFile(string file)
         {
-            string[] lines = File.ReadAllLines(Program.File_GameMap, Encoding.UTF8);
+            string[] lines = File.ReadAllLines(file, Encoding.UTF8);
             int width = lines[0].Length;
             int height = lines.Length;
 
-            char[,] board = new char[width, height];
+            char[,] newMap = new char[width, height];
             try
             {
                 for (int y = 0; y < height; y++)
                 {
                     for (int x = 0; x < width; x++)
                     {
-                        board[x, y] = lines[y].ToCharArray()[x];
-                        if (board[x, y] == CharPellet || board[x, y] == CharPowerPellet || board[x, y] == CharCorner) pellets++;
+                        newMap[x, y] = lines[y].ToCharArray()[x];
+                        if (newMap[x, y] == CharPellet || newMap[x, y] == CharPowerPellet) pellets++;
                     }
                 }
             }
-            catch { throw new Exception("Invalid board"); }
+            catch { throw new Exception($"Invalid map in file {file}"); }
 
-            this.board = board;
+            this.map = newMap;
         }
     }
 }

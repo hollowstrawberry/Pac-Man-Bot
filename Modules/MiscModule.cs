@@ -6,7 +6,7 @@ using Discord;
 using Discord.Commands;
 using Microsoft.Extensions.Configuration;
 using PacManBot.Services;
-
+using System;
 
 namespace PacManBot.Modules
 {
@@ -73,7 +73,11 @@ namespace PacManBot.Modules
         }
 
         [Command("waka"), Summary("Waka.")]
-        public Task Ping() => ReplyAsync("waka");
+        public Task Ping()
+        {
+            Console.WriteLine($"Active games: {PacManModule.Game.gameInstances.Count}"); //No good reason
+            return ReplyAsync("waka");
+        }
 
         [Command("say"), Summary("Make the bot say anything (Moderator)")]
         [RequireUserPermission(ChannelPermission.ManageMessages)]
