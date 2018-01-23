@@ -230,12 +230,16 @@ namespace PacManBot.Modules.PacManModule
         }
 
 
-        public Game(ulong channelId)
+        public Game(ulong channelId, string customMap = null)
         {
             this.channelId = channelId;
             random = new Random();
-
-            LoadMapFromFile(Program.File_GameMap);
+            
+            string[] newMap;
+            if (customMap != null) newMap = customMap.Trim('\n').Trim().Trim('`').Split('\n');
+            else newMap = File.ReadAllLines(Program.File_GameMap);
+            LoadMap(newMap);
+            
             maxPellets = pellets;
 
             Pos playerPos = FindChar(CharPlayer); //Set player
@@ -347,7 +351,10 @@ namespace PacManBot.Modules.PacManModule
                     displayMap[FruitSpawnPos.x, FruitSpawnPos.y] = fruit.char1;
                     displayMap[FruitSecondPos.x, FruitSecondPos.y] = fruit.char2;
                 }
-                foreach (Ghost ghost in ghosts) displayMap[ghost.pos.x, ghost.pos.y] = (ghost.mode == AiMode.Frightened) ? CharGhostFrightened : GhostAppearance[(int)ghost.type];
+                foreach (Ghost ghost in ghosts)
+                {
+                    displayMap[ghost.pos.x, ghost.pos.y] = (ghost.mode == AiMode.Frightened) ? CharGhostFrightened : GhostAppearance[(int)ghost.type];
+                }
                 displayMap[player.pos.x, player.pos.y] = (state == State.Lose) ? CharPlayerDead : CharPlayer;
 
                 //Converts 2d array to string
@@ -387,7 +394,7 @@ namespace PacManBot.Modules.PacManModule
                 {
                     int startIndex = i + i * displayMap.GetLength(0);
                     for (int j = i; j >= 0; j--) startIndex += info[j].Length;
-                    display.Replace("\n", $"{info[i]}\n", startIndex, displayMap.GetLength(0));
+                    display.Replace("\n", $"{info[i]}\n", startIndex, displayMap.GetLength(0) - 1);
                 }
 
                 //Code tags
@@ -449,9 +456,8 @@ namespace PacManBot.Modules.PacManModule
             else if (pos.y > map.GetLength(1) - 1) pos.y -= map.GetLength(1);
         }
 
-        private void LoadMapFromFile(string file)
+        private void LoadMap(string[] lines)
         {
-            string[] lines = File.ReadAllLines(file, Encoding.UTF8);
             int width = lines[0].Length;
             int height = lines.Length;
 
