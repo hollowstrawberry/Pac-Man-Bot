@@ -40,14 +40,14 @@ namespace PacManBot.Modules.PacManModule
                         if (game.state != State.Active)
                         {
                             gameInstances.Remove(game);
-                            if (game.score > 0)
+                            if (game.score > 0 && !game.custom)
                             {
                                 Console.WriteLine($"{DateTime.UtcNow.ToString("hh:mm:ss")} ({game.state}) Achieved score {game.score} in {game.timer} moves on channel {channelName} last controlled by user {user.Username}#{user.Discriminator}");
                                 File.AppendAllText(Program.File_Scoreboard, $"\n{game.state} {game.score} {game.timer} {user.Id} \"{user.Username}#{user.Discriminator}\" \"{DateTime.Now.ToString("o")}\" \"{channelName}\"");
                             }
                         }
 
-                        await message.ModifyAsync(m => m.Content = game.Display); //Update display
+                        await message.ModifyAsync(m => m.Content = game.Display + "```Custom game: Score not registered```".If(game.custom)); //Update display
                     }
 
                     if (guild != null && guild.CurrentUser.GuildPermissions.ManageMessages) //Can remove reactions
