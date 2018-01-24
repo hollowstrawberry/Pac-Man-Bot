@@ -23,5 +23,8 @@ namespace PacManBot.Modules.PacManModule
             for (int i = 0; i < num; i++) pos += dir;
             return pos;
         }
+        
+        public static string If(this string text, bool condition) => condition ? text : "";
+        public static string Unless(this string text, bool condition) => condition ? "" : text;
     }
 }
