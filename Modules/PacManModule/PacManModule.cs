@@ -12,8 +12,8 @@ namespace PacManBot.Modules.PacManModule
     [Name("Game")]
     public class PacManModule : ModuleBase<SocketCommandContext>
     {
-        [Command("play"), Alias("p", "start"), Summary("Start a new game on this channel")]
-        public async Task StartGameInstance()
+        [Command("play"), Alias("p", "start"), Summary("[normal|mobile,m] [(custom map)] **-** Start a new game on this channel")]
+        public async Task StartGameInstance(string arg = "", [Remainder]string customMap = null)
         {
             if (Context.Guild != null && !Context.Guild.CurrentUser.GuildPermissions.AddReactions)
             {
@@ -29,11 +29,21 @@ namespace PacManBot.Modules.PacManModule
                     return;
                 }
             }
-
-            Game newGame = new Game(Context.Channel.Id); //Create a game instance
-            gameInstances.Add(newGame);
-            var gameMessage = await ReplyAsync(newGame.Display + "```diff\n+Starting game```"); //Output the game
-            newGame.messageId = gameMessage.Id;
+            
+            try
+            {
+                Game newGame = new Game(Context.Channel.Id, customMap); //Create a game instance
+                gameInstances.Add(newGame);
+                if (arg.StartsWith("m")) newGame.mobileDisplay = true;
+                var gameMessage = await ReplyAsync(newGame.Display + "```diff\n+Starting game```"); //Output the game
+                newGame.messageId = gameMessage.Id;
+            }
+            catch
+            {
+                string errorMessage = customDisplay != null ? "The custom map is invalid. Maps must have constant width and height and include pac-man." : "There was an error starting the game. Please try again or contact the author of the bot.";
+                await ReplyAsync(errorMessage);
+                return;
+            }
 
             if (Context.Guild == null || !Context.Guild.CurrentUser.GuildPermissions.ManageMessages)
             {
@@ -44,8 +54,8 @@ namespace PacManBot.Modules.PacManModule
             await gameMessage.ModifyAsync(m => m.Content = newGame.Display); //Edit message
         }
 
-        [Command("refresh"), Alias("r"), Summary("Move the game to the bottom of the chat")]
-        public async Task RefreshGameInstance()
+        [Command("refresh"), Alias("r"), Summary("[normal|mobile,m] **-** Move the game to the bottom of the chat")]
+        public async Task RefreshGameInstance(string arg = "")
         {
             if (Context.Guild != null && !Context.Guild.CurrentUser.GuildPermissions.AddReactions)
             {
@@ -59,6 +69,7 @@ namespace PacManBot.Modules.PacManModule
                 {
                     var oldMsg = await Context.Channel.GetMessageAsync(game.messageId);
                     if (oldMsg != null) await oldMsg.DeleteAsync(); //Delete old message
+                    game.mobileDisplay = arg.StartsWith("m");
                     var newMsg = await ReplyAsync(game.Display + "```diff\n+Refreshing game```"); //Send new message
                     game.messageId = newMsg.Id; //Change focus message for this channel
 
