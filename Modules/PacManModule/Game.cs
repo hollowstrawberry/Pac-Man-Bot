@@ -26,6 +26,7 @@ namespace PacManBot.Modules.PacManModule
         public int timer = 0; //How many turns have passed
         private int pellets;
         private readonly int maxPellets;
+        private readonly bool custom = false;
         private char[,] map;
         private Random random;
         private Player player;
@@ -237,8 +238,12 @@ namespace PacManBot.Modules.PacManModule
             random = new Random();
             
             string[] newMap;
-            if (customMap != null) newMap = customMap.Trim('\n').Trim().Trim('`').Split('\n');
-            else newMap = File.ReadAllLines(Program.File_GameMap);
+            if (customMap == null) newMap = File.ReadAllLines(Program.File_GameMap);
+            else
+            {
+                newMap = customMap.Trim('\n').Trim().Trim('`').Split('\n');
+                custom = true;
+            }
             LoadMap(newMap);
             
             maxPellets = pellets;
