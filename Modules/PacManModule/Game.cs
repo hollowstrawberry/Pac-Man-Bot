@@ -19,7 +19,8 @@ namespace PacManBot.Modules.PacManModule
         private readonly static int[] GhostSpawnPauseTime = { 0, 3, 15, 35 };
 
         public ulong channelId; //Which channel this game is located in
-        public ulong messageId = 1; //The message of the current game to manage controls. Even if not set, it must be a number above 0
+        public ulong messageId = 1; //The focus message of the game, for controls to work. Even if not set, it must be a number above 0
+        public bool mobileDisplay = false;
         public State state = State.Active;
         public int score = 0;
         public int timer = 0; //How many turns have passed
@@ -344,6 +345,20 @@ namespace PacManBot.Modules.PacManModule
             {
                 StringBuilder display = new StringBuilder(); //The final display in string form
                 char[,] displayMap = (char[,])map.Clone(); //The display array to modify
+                
+                //Mode with simplified characters so it works better on mobile
+                if (mobileDisplay)
+                {
+                    for (int y = 0; y < map.GetLength(1); y++)
+                    {
+                        for (int x = 0; x < map.GetLength(0); x++)
+                        {
+                            if (!NonSolid(x, y)) displayMap[x, y] = '#';
+                            else if (map[x, y] == CharPellet) displayMap[x, y] = '.';
+                            else if (map[x, y] == CharPowerPellet) displayMap[x, y] = '+';
+                        }
+                    }
+                }
 
                 //Adds fruit, ghosts and player
                 if (fruit != null && fruit.time > 0)
@@ -370,16 +385,16 @@ namespace PacManBot.Modules.PacManModule
                 //Add text to the side
                 string[] info =
                 {
-                    $" ┌",
+                    $" ┌{"<# MOBILE DISPLAY #>".If(mobileDisplay)}",
                     $" │ #Time: {timer}",
                     $" │ #Score: {score}",
-                    $" │ {(player.power > 0 ? $"#Power: {player.power}" : "")}",
+                    $" │ {$"#Power: {player.power}".If(player.power > 0)}",
                     $" │ ",
-                    $" │ {CharPlayer} - Pac-Man{(player.dir != Dir.none ? $": {player.dir}" : "")}",
+                    $" │ {CharPlayer}{" - Pac-Man".Unless(mobileDisplay)}{$": {player.dir}".Unless(player.dir == Dir.None)}",
                     $" │ ",
                     $" │ ", " │ ", " │ ", " │ ", //7-10: ghosts
                     $" │ ",
-                    $" │ {(fruit != null && fruit.time > 0 ? $"{fruit.char1}{fruit.char2} - Fruit: {fruit.time}" : "")}",
+                    $" │ {$"{fruit.char1}{fruit.char2} - Fruit: {fruit.time}".Unless(fruit == null || fruit.time <= 0)}",
                     $" └"
                 };
 
@@ -387,7 +402,7 @@ namespace PacManBot.Modules.PacManModule
                 {
                     if (i + 1 > ghosts.Count) continue;
                     char appearance = (ghosts[i].mode == AiMode.Frightened) ? CharGhostFrightened : GhostAppearance[i];
-                    info[i + 7] = $" │ {appearance} - {(AiType)i}{(ghosts[i].dir != Dir.none ? $": {ghosts[i].dir}" : "")}";
+                    info[i + 7] = $" │ {appearance}{$" - {(AiType)i}".Unless(mobileDisplay)}{$": {ghosts[i].dir}".Unless(ghosts[i].dir == Dir.none)}";
                 }
 
                 for (int i = 0; i < info.Length; i++) //Insert info
@@ -401,7 +416,7 @@ namespace PacManBot.Modules.PacManModule
                 switch (state)
                 {
                     case State.Active:
-                        display.Insert(0, "```css\n");
+                        display.Insert(0, mobileDisplay ? "```\n" "```css\n");
                         break;
 
                     case State.Lose:
