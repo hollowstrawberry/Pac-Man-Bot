@@ -10,13 +10,13 @@ namespace PacManBot.Modules.PacManModule
         static public List<Game> gameInstances = new List<Game>();
 
         public const string LeftEmoji = "⬅", UpEmoji = "⬆", DownEmoji = "⬇", RightEmoji = "➡", WaitEmoji = "⏸", RefreshEmoji = "🔃"; //Controls
-        private const char CharPlayer = 'O', CharFruit = '$', CharGhost = 'G', CharDoor = '-', CharPellet = '·', CharPowerPellet = '●'; //Read from map
+        private const char CharPlayer = 'O', CharFruit = '$', CharGhost = 'G', CharDoor = '-', CharPellet = '·', CharPowerPellet = '●', CharSoftWall = '_', CharSoftWallPellet = '~'; //Read from map
         private const char CharPlayerDead = 'X', CharGhostFrightened = 'E'; //Displayed
         private const int PowerTime = 20, ScatterCycle = 100, ScatterTime1 = 30, ScatterTime2 = 20; //Mechanics constants
-
-        private readonly static Dir[] AllDirs = { Dir.up, Dir.left, Dir.down, Dir.right }; //Order of preference when deciding direction
+        
         private readonly static char[] GhostAppearance = { 'B', 'P', 'I', 'C' };
         private readonly static int[] GhostSpawnPauseTime = { 0, 3, 15, 35 };
+        private readonly static Dir[] AllDirs = { Dir.up, Dir.left, Dir.down, Dir.right }; //Order of preference when deciding direction
 
         public ulong channelId; //Which channel this game is located in
         public ulong messageId = 1; //The focus message of the game, for controls to work. Even if not set, it must be a number above 0
@@ -183,7 +183,6 @@ namespace PacManBot.Modules.PacManModule
 
                     case AiMode.Scatter:
                         target = corner;
-                        if (type == AiType.Blinky && game.timer < 10 && game.ghosts.Count > 1) target = game.ghosts[(int)AiType.Pinky].corner; //So Blinky and Pinky go together at the start
                         break;
 
                     case AiMode.Frightened:
@@ -197,17 +196,23 @@ namespace PacManBot.Modules.PacManModule
 
                 //Decide movement
                 Dir newDir = Dir.none;
-                if (game.map[pos.x, pos.y] == CharDoor || game.map[(pos + Dir.up).x, (pos + Dir.up).y] == CharDoor)
+                
+                if (game.Map(pos) == CharDoor || game.Map(pos + Dir.up) == CharDoor)
                 {
                     newDir = Dir.up; //If it's inside the cage
                 }
+                else if (type == AiType.Blinky && !game.custom && game.timer < 3)
+                {
+                    newDir = Dir.Left; //Blinky starts already facing left
+                }
                 else //Track target
                 {
-                    float distance = 100f;
+                    float distance = 1000f;
                     foreach (Dir testDir in AllDirs) //Decides the direction that will get it closest to its target
                     {
-                        Pos tile = pos + testDir;
-
+                        Pos testPos = pos + testDir;
+                        
+                        if (testDir == Dir.Up && (game.Map(testPos) == CharSoftWall || game.Map(testPos) == CharSoftWallPellet)) continue; //Can't go up these places
                         if (testDir == dir.Opposite() //Can't turn 180 degrees
                             && mode != AiMode.Frightened //Unless it's frightened
                             && !(game.timer < 4 * ScatterCycle && //Or it has just switched modes
@@ -215,11 +220,11 @@ namespace PacManBot.Modules.PacManModule
                                   || game.timer >= 2 * ScatterCycle && game.timer % ScatterCycle == ScatterTime2)
                                 )
                         ) { continue; }
-
-                        if (game.NonSolid(tile) && Pos.Distance(tile, target) < distance) //Check if it can move to the tile
+                        
+                        if (game.NonSolid(testPos) && Pos.Distance(testPos, target) < distance) //Check if it can move to the tile and if this direction is better than the previous
                         {
-                            distance = Pos.Distance(tile, target);
                             newDir = testDir;
+                            distance = Pos.Distance(testPos, target);
                         }
                         //Console.WriteLine($"Target: {target.x},{target.y} / Ghost: {pos.x},{pos.y} / Test Dir: {(pos + testDir).x},{(pos + testDir).y} / Test Dist: {Pos.Distance(pos + testDir, target)}"); //For debugging AI
                     }
@@ -291,8 +296,8 @@ namespace PacManBot.Modules.PacManModule
             }
 
             //Pellets
-            char tile = map[player.pos.x, player.pos.y];
-            if (tile == CharPellet || tile == CharPowerPellet)
+            char tile = Map(player.pos);
+            if (tile == CharPellet || tile == CharPowerPellet || tile == CharSoftWallPellet)
             {
                 pellets--;
                 if (pellets == FruitTrigger1 || pellets == FruitTrigger2)
@@ -307,7 +312,7 @@ namespace PacManBot.Modules.PacManModule
                 }
 
                 score += (tile == CharPowerPellet) ? 50 : 10;
-                map[player.pos.x, player.pos.y] = ' ';
+                map[player.pos.x, player.pos.y] = (tile == CharSoftWallPellet) ? CharSoftWall : ' ';
                 if (tile == CharPowerPellet) player.power += PowerTime;
             }
 
@@ -351,16 +356,19 @@ namespace PacManBot.Modules.PacManModule
                 StringBuilder display = new StringBuilder(); //The final display in string form
                 char[,] displayMap = (char[,])map.Clone(); //The display array to modify
                 
-                //Mode with simplified characters so it works better on mobile
-                if (mobileDisplay)
+                //Scan replacements
+                for (int y = 0; y < map.GetLength(1); y++)
                 {
-                    for (int y = 0; y < map.GetLength(1); y++)
+                    for (int x = 0; x < map.GetLength(0); x++)
                     {
-                        for (int x = 0; x < map.GetLength(0); x++)
+                        if (displayMap[x, y] == CharSoftWall) displayMap[x, y] = ' ';
+                        if (displayMap[x, y] == CharSoftWallPellet) displayMap[x, y] = CharPellet;
+                        
+                        if (mobileDisplay) //Mode with simplified characters so it works better on mobile
                         {
                             if (!NonSolid(x, y)) displayMap[x, y] = '#';
-                            else if (map[x, y] == CharPellet) displayMap[x, y] = '.';
-                            else if (map[x, y] == CharPowerPellet) displayMap[x, y] = '+';
+                            else if (displayMap[x, y] == CharPellet) displayMap[x, y] = '.';
+                            else if (displayMap[x, y] == CharPowerPellet) displayMap[x, y] = '+';
                         }
                     }
                 }
@@ -465,7 +473,13 @@ namespace PacManBot.Modules.PacManModule
         private bool NonSolid(Pos pos)
         {
             WrapAround(ref pos);
-            return (map[pos.x, pos.y] == ' ' || map[pos.x, pos.y] == CharPellet || map[pos.x, pos.y] == CharPowerPellet);
+            return (map[pos.x, pos.y] == ' ' || map[pos.x, pos.y] == CharPellet || map[pos.x, pos.y] == CharPowerPellet || map[pos.x, pos.y] == CharSoftWall || map[pos.x, pos.y] == CharSoftWallPellet);
+        }
+        
+        private char Map(Pos pos)
+        {
+            WrapAround(ref pos);
+            return map[pos.x, pos.y];
         }
 
         private void WrapAround(ref Pos pos)
@@ -489,7 +503,7 @@ namespace PacManBot.Modules.PacManModule
                     for (int x = 0; x < width; x++)
                     {
                         newMap[x, y] = lines[y].ToCharArray()[x];
-                        if (newMap[x, y] == CharPellet || newMap[x, y] == CharPowerPellet) pellets++;
+                        if (newMap[x, y] == CharPellet || newMap[x, y] == CharPowerPellet || newMap[x, y] == CharSoftWallPellet) pellets++;
                     }
                 }
             }
