@@ -73,7 +73,7 @@ namespace PacManBot.Modules
         }
 
         [Command("waka"), Summary("Waka.")]
-        public Task Ping()
+        public Task Ping([Remainder]string args = "") //Useless args
         {
             Console.WriteLine($"Active games: {PacManModule.Game.gameInstances.Count}"); //No good reason
             return ReplyAsync("waka");
@@ -108,25 +108,32 @@ namespace PacManBot.Modules
             if (CommandHandler.prefixes.ContainsKey(Context.Guild.Id)) CommandHandler.prefixes[Context.Guild.Id] = newPrefix;
             else CommandHandler.prefixes.Add(Context.Guild.Id, newPrefix);
 
-
-            string file = Program.File_Prefixes;
-            string[] lines = File.ReadAllLines(file);
-
-            int prefixIndex = lines.Length; //After everything else by default
-            for (int i = 0; i < lines.Length; i++) if (lines[i].Split(' ')[0] == Context.Guild.Id.ToString()) prefixIndex = i; //Finds if the server already has a custom prefix
-
-            string newLine = $"{Context.Guild.Id} {newPrefix}";
-            if (prefixIndex == lines.Length)
+            try
             {
-                File.AppendAllLines(file, new string[] { newLine });
-            }
-            else
-            {
-                lines[prefixIndex] = newLine;
-                File.WriteAllLines(file, lines);
-            }
+                string file = Program.File_Prefixes;
+                string[] lines = File.ReadAllLines(file);
 
-            await ReplyAsync($"Prefix for this server has been successfully set to **{newPrefix}**.");
+                int prefixIndex = lines.Length; //After everything else by default
+                for (int i = 0; i < lines.Length; i++) if (lines[i].Split(' ')[0] == Context.Guild.Id.ToString()) prefixIndex = i; //Finds if the server already has a custom prefix
+
+                string newLine = $"{Context.Guild.Id} {newPrefix}";
+                if (prefixIndex >= lines.Length) //Outside the array
+                {
+                    File.AppendAllLines(file, new string[] { newLine });
+                }
+                else //Existing line
+                {
+                    lines[prefixIndex] = newLine;
+                    File.WriteAllLines(file, lines);
+                }
+
+                await ReplyAsync($"Prefix for this server has been successfully set to **{newPrefix}**.");
+            }
+            catch
+            {
+                await ReplyAsync($"There was a problem storing the prefix on file. It might be reset the next time the bot restarts.");
+                throw new Exception("Couldn't modify prefix on file");
+            }
         }
     }
 }

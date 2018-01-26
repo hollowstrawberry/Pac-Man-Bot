@@ -1,11 +1,10 @@
-﻿using Discord;
-using Discord.Net.Providers;
+﻿using System;
+using System.Threading.Tasks;
+using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Threading.Tasks;
 using PacManBot.Services;
 
 
@@ -37,7 +36,8 @@ namespace PacManBot
             _botConfig = configBuilder.Build(); //Build the configuration file
 
             //Client and its configuration
-            var clientConfig = new DiscordSocketConfig { LogLevel = LogSeverity.Verbose, MessageCacheSize = 1000, WebSocketProvider = Discord.Net.Providers.WS4Net.WS4NetProvider.Instance }; //Specify websocketprovider to run properly in Windows 7
+            if (!Int32.TryParse(_botConfig["messagecachesize"], out int cacheSize)) cacheSize = 100;
+            var clientConfig = new DiscordSocketConfig { LogLevel = LogSeverity.Verbose, MessageCacheSize = cacheSize, /*WebSocketProvider = Discord.Net.Providers.WS4Net.WS4NetProvider.Instance*/ }; //Specify websocketprovider to run properly in Windows 7
             _client = new DiscordSocketClient(clientConfig);
 
             //Prepare services

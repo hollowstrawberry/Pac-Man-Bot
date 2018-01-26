@@ -47,7 +47,7 @@ namespace PacManBot.Modules.PacManModule
                             }
                         }
 
-                        await message.ModifyAsync(m => m.Content = game.Display); //Update display
+                        await message.ModifyAsync(m => m.Content = game.GetDisplay()); //Update display
                     }
 
                     if (guild != null && guild.CurrentUser.GuildPermissions.ManageMessages) //Can remove reactions

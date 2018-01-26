@@ -7,7 +7,7 @@
   "targets": {
     ".NETCoreApp,Version=v2.0": {},
     ".NETCoreApp,Version=v2.0/linux-arm": {
-      "Core_PacManBot/1.0.0": {
+      "PacManBot_DotNetCore/1.0.0": {
         "dependencies": {
           "Discord.Net": "2.0.0-beta-00876",
           "Discord.Net.Commands": "2.0.0-beta-00876",
@@ -21,7 +21,7 @@
           "Microsoft.NETCore.App": "2.0.0"
         },
         "runtime": {
-          "Core_PacManBot.dll": {}
+          "PacManBot_DotNetCore.dll": {}
         }
       },
       "Discord.Net/2.0.0-beta-00876": {
@@ -1372,7 +1372,7 @@
     }
   },
   "libraries": {
-    "Core_PacManBot/1.0.0": {
+    "PacManBot_DotNetCore/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

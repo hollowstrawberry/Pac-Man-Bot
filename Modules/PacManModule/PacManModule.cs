@@ -49,16 +49,16 @@ namespace PacManBot.Modules.PacManModule
 
             gameInstances.Add(newGame);
             if (mobile) newGame.mobileDisplay = true;
-            var gameMessage = await ReplyAsync(newGame.Display + "```diff\n+Starting game```"); //Output the game
+            var gameMessage = await ReplyAsync(newGame.GetDisplay() + "```diff\n+Starting game```"); //Output the game
             newGame.messageId = gameMessage.Id;
 
             if (Context.Guild == null || !Context.Guild.CurrentUser.GuildPermissions.ManageMessages)
             {
-                await ReplyAsync("__Manual mode:__ You will need to remove your own reactions." + (Context.Guild == null ? "" : "\nGive this bot the permission to Manage Messages to remove reactions automatically."));
+                await ReplyAsync("__Manual mode:__ You will need to remove your own reactions. Do one action at a time to prevent buggy behavior." + "\nGive this bot the permission to Manage Messages to remove reactions automatically.".If(Context.Guild != null));
             }
 
             await AddControls(gameMessage); //Controls for easy access
-            await gameMessage.ModifyAsync(m => m.Content = newGame.Display); //Edit message
+            await gameMessage.ModifyAsync(m => m.Content = newGame.GetDisplay()); //Edit message
         }
 
 
@@ -78,7 +78,7 @@ namespace PacManBot.Modules.PacManModule
                     var oldMsg = await Context.Channel.GetMessageAsync(game.messageId);
                     if (oldMsg != null) await oldMsg.DeleteAsync(); //Delete old message
                     game.mobileDisplay = arg.StartsWith("m");
-                    var newMsg = await ReplyAsync(game.Display + "```diff\n+Refreshing game```"); //Send new message
+                    var newMsg = await ReplyAsync(game.GetDisplay() + "```diff\n+Refreshing game```"); //Send new message
                     game.messageId = newMsg.Id; //Change focus message for this channel
 
                     if (Context.Guild == null || !Context.Guild.CurrentUser.GuildPermissions.ManageMessages)
@@ -87,7 +87,7 @@ namespace PacManBot.Modules.PacManModule
                     }
 
                     await AddControls(newMsg);
-                    await newMsg.ModifyAsync(m => m.Content = game.Display); //Edit message
+                    await newMsg.ModifyAsync(m => m.Content = game.GetDisplay()); //Edit message
                     return;
                 }
             }
@@ -113,7 +113,7 @@ namespace PacManBot.Modules.PacManModule
 
                     if (await Context.Channel.GetMessageAsync(game.messageId) is IUserMessage gameMessage)
                     {
-                        await gameMessage.ModifyAsync(m => m.Content = game.Display + "```diff\n-Game has been ended!```"); //Edit message
+                        await gameMessage.ModifyAsync(m => m.Content = game.GetDisplay() + "```diff\n-Game has been ended!```"); //Edit message
                         if (Context.Guild != null && Context.Guild.CurrentUser.GuildPermissions.ManageMessages) await gameMessage.RemoveAllReactionsAsync(); //Remove reactions
                     }
 

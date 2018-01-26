@@ -4,6 +4,16 @@ namespace PacManBot
 {
     public static class Utils
     {
+        //Conditional strings to help with complex text concatenation
+        public static string If(this string text, bool condition) => condition ? text : "";
+        public static string Unless(this string text, bool condition) => condition ? "" : text;
+
+        //2-dimensional array length
+        public static int LengthX<T>(this T[,] array) => array.GetLength(0);
+        public static int LengthY<T>(this T[,] array) => array.GetLength(1);
+
+
+        //Game utilities
         public static Dir Opposite(this Dir dir)
         {
             switch (dir)
@@ -23,8 +33,5 @@ namespace PacManBot
             for (int i = 0; i < num; i++) pos += dir;
             return pos;
         }
-        
-        public static string If(this string text, bool condition) => condition ? text : "";
-        public static string Unless(this string text, bool condition) => condition ? "" : text;
     }
 }

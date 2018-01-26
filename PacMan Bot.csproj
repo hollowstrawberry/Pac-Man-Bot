@@ -31,6 +31,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>3</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <BaseIntermediateOutputPath>.\obj\framework</BaseIntermediateOutputPath>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Discord.Net.Commands">
       <HintPath>..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio\Packages\Discord.Net.Commands.2.0.0-beta-00880\lib\netstandard1.1\Discord.Net.Commands.dll</HintPath>
