@@ -245,7 +245,7 @@ namespace PacManBot.Modules.PacManModule
             if (customMap == null) newMap = File.ReadAllLines(Program.File_GameMap);
             else
             {
-                newMap = customMap.Trim(new char[] { '\n', '`' }).Split('\n');
+                newMap = customMap.Trim(new char[] { '\n', ' ' }).Trim(new char[] { '\n', '`' }).Split('\n');
                 custom = true;
             }
             LoadMap(newMap);
@@ -276,6 +276,8 @@ namespace PacManBot.Modules.PacManModule
 
         public void DoTick(Dir direction)
         {
+            if (state != State.Active) return;
+
             time++;
 
             //Player
@@ -400,9 +402,9 @@ namespace PacManBot.Modules.PacManModule
                     string[] info =
                     {
                         $" ┌{"< MOBILE MODE >".If(mobileDisplay)}",
-                        $" │ #Time: {time}",
-                        $" │ #Score: {score}",
-                        $" │ {$"#Power: {player.power}".If(player.power > 0)}",
+                        $" │ {"#".Unless(mobileDisplay)}Time: {time}",
+                        $" │ {"#".Unless(mobileDisplay)}Score: {score}",
+                        $" │ {$"{"#".Unless(mobileDisplay)}Power: {player.power}".If(player.power > 0)}",
                         $" │ ",
                         $" │ {CharPlayer}{" - Pac-Man".Unless(mobileDisplay)}{$": {player.dir}".Unless(player.dir == Dir.none)}",
                         $" │ ",

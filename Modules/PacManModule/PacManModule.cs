@@ -12,9 +12,17 @@ namespace PacManBot.Modules.PacManModule
     [Name("Game")]
     public class PacManModule : ModuleBase<SocketCommandContext>
     {
-        [Command("play"), Alias("p"), Summary("[normal/mobile,m] [custom map] **-** Start a new game on this channel")]
-        public async Task StartGameInstance(string arg = "", [Remainder]string customMap = null)
+        [Command("play"), Alias("p"), Summary("[normal/mobile,m] \\`\\`\\`custom map\\`\\`\\` **-** Start a new game on this channel")]
+        public async Task StartGameInstance([Remainder]string args = "")
         {
+            bool mobile = args.StartsWith("m");
+            string customMap = null;
+            if (args.Contains("```"))
+            {
+                string[] splice = args.Split(new string[] { "```" }, StringSplitOptions.None);
+                customMap = splice[1];
+            }
+
             if (Context.Guild != null && !Context.Guild.CurrentUser.GuildPermissions.AddReactions)
             {
                 await ReplyAsync("This bot requires the permission to add reactions!");
@@ -40,7 +48,7 @@ namespace PacManBot.Modules.PacManModule
             }
 
             gameInstances.Add(newGame);
-            if (arg.StartsWith("m")) newGame.mobileDisplay = true;
+            if (mobile) newGame.mobileDisplay = true;
             var gameMessage = await ReplyAsync(newGame.Display + "```diff\n+Starting game```"); //Output the game
             newGame.messageId = gameMessage.Id;
 
