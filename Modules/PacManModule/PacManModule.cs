@@ -12,7 +12,7 @@ namespace PacManBot.Modules.PacManModule
     [Name("Game")]
     public class PacManModule : ModuleBase<SocketCommandContext>
     {
-        [Command("play"), Alias("p", "start"), Summary("[normal|mobile,m] [(custom map)] **-** Start a new game on this channel")]
+        [Command("play"), Alias("p"), Summary("[normal/mobile,m] [custom map] **-** Start a new game on this channel")]
         public async Task StartGameInstance(string arg = "", [Remainder]string customMap = null)
         {
             if (Context.Guild != null && !Context.Guild.CurrentUser.GuildPermissions.AddReactions)
@@ -29,21 +29,22 @@ namespace PacManBot.Modules.PacManModule
                     return;
                 }
             }
-            
-            try
-            {
-                Game newGame = new Game(Context.Channel.Id, customMap); //Create a game instance
-                gameInstances.Add(newGame);
-                if (arg.StartsWith("m")) newGame.mobileDisplay = true;
-                var gameMessage = await ReplyAsync(newGame.Display + "```diff\n+Starting game```"); //Output the game
-                newGame.messageId = gameMessage.Id;
-            }
+
+            Game newGame;
+            try { newGame = new Game(Context.Channel.Id, customMap); } //Create a game instance
             catch
             {
-                string errorMessage = customDisplay != null ? "The custom map is invalid. Maps must have constant width and height and include pac-man." : "There was an error starting the game. Please try again or contact the author of the bot.";
+                string errorMessage = customMap != null ? "The custom map is invalid. Use the **custom** command for help." : "There was an error starting the game. Please try again or contact the author of the bot.";
                 await ReplyAsync(errorMessage);
-                return;
+                throw new Exception("Failed to create game");
             }
+
+            gameInstances.Add(newGame);
+            if (arg.StartsWith("m")) newGame.mobileDisplay = true;
+
+            IUserMessage gameMessage = await ReplyAsync(newGame.Display + "```diff\n+Starting game```"); //Output the game
+            newGame.messageId = gameMessage.Id;
+
 
             if (Context.Guild == null || !Context.Guild.CurrentUser.GuildPermissions.ManageMessages)
             {
@@ -54,7 +55,8 @@ namespace PacManBot.Modules.PacManModule
             await gameMessage.ModifyAsync(m => m.Content = newGame.Display); //Edit message
         }
 
-        [Command("refresh"), Alias("r"), Summary("[normal|mobile,m] **-** Move the game to the bottom of the chat")]
+
+        [Command("refresh"), Alias("r"), Summary("[normal/mobile,m] **-** Move the game to the bottom of the chat")]
         public async Task RefreshGameInstance(string arg = "")
         {
             if (Context.Guild != null && !Context.Guild.CurrentUser.GuildPermissions.AddReactions)
@@ -87,19 +89,19 @@ namespace PacManBot.Modules.PacManModule
             await ReplyAsync("There is no active game on this channel!");
         }
 
-        [Command("end"), Alias("stop"), Summary("End the current game (Moderator)")]
+        [Command("end"), Alias("stop"), Summary("End the current game")]
         public async Task EndGameInstance()
         {
-            if (Context.Guild != null && !Context.Guild.CurrentUser.GuildPermissions.ManageMessages)
-            {
-                await ReplyAsync("You must be a Moderator to use this command!");
-                return;
-            }
-
             foreach (Game game in gameInstances)
             {
                 if (Context.Channel.Id == game.channelId)
                 {
+                    if (!game.custom && Context.Guild != null && (Context.User as SocketGuildUser).GuildPermissions.ManageMessages)
+                    {
+                        await ReplyAsync("Only a Moderator can end non-custom games!");
+                        return;
+                    }
+
                     gameInstances.Remove(game);
                     await ReplyAsync("Game ended.");
 
@@ -108,6 +110,7 @@ namespace PacManBot.Modules.PacManModule
                         await gameMessage.ModifyAsync(m => m.Content = game.Display + "```diff\n-Game has been ended!```"); //Edit message
                         if (Context.Guild != null && Context.Guild.CurrentUser.GuildPermissions.ManageMessages) await gameMessage.RemoveAllReactionsAsync(); //Remove reactions
                     }
+
                     return;
                 }
             }
@@ -201,8 +204,11 @@ namespace PacManBot.Modules.PacManModule
             await ReplyAsync(topScore == 0 ? ((guildUser == null ? "You don't have" : "The user doesn't have") + " any scores registered!") : $"🏆 __**Global Leaderboard**__\n{topScoreIndex + 1}. ({splitLine[0]}) **{splitLine[1]}** in {splitLine[2]} turns by user " + (user == null ? "Unknown" : $"{user.Username}#{user.Discriminator}"));
         }
 
-        [Command("tips"), Summary("Learn some secrets that will help you")]
+        [Command("tips"), Summary("Read some secrets that will help you")]
         public async Task SayTips() => await ReplyAsync(File.ReadAllText(Program.FileTips));
+
+        [Command("custom"), Summary("Learn how custom maps work")]
+        public async Task SayCustomMapHelp() => await ReplyAsync(File.ReadAllText(Program.FileCustomMapHelp));
 
 
         public async Task AddControls(IUserMessage message)

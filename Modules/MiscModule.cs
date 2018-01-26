@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -6,7 +7,6 @@ using Discord;
 using Discord.Commands;
 using Microsoft.Extensions.Configuration;
 using PacManBot.Services;
-using System;
 
 namespace PacManBot.Modules
 {
@@ -48,7 +48,7 @@ namespace PacManBot.Modules
                         }
                         if (!string.IsNullOrEmpty(command.Summary)) //Adds the command summary
                         {
-                            commandsText += $" - *{command.Summary}*";
+                            commandsText += $" {"- ".Unless(command.Summary.Contains("**-**"))}*{command.Summary}*";
                         }
 
                         commands.Add(command.Name);
@@ -68,7 +68,7 @@ namespace PacManBot.Modules
             }
 
 
-            string text = (prefix == _config["prefix"]) ? "" : $"Command prefix for this server: **{prefix}**"; //Specifies the prefix if it's not the default one
+            string text = $"Command prefix for this server: **{prefix}**".Unless(prefix == _config["prefix"]); //Specifies the prefix if it's not the default one
             await ReplyAsync(text, false, embed.Build()); //Send the built embed
         }
 

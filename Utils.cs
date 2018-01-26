@@ -1,6 +1,6 @@
 ﻿using static PacManBot.Modules.PacManModule.Game;
 
-namespace PacManBot.Modules.PacManModule
+namespace PacManBot
 {
     public static class Utils
     {

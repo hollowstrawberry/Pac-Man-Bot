@@ -139,7 +139,7 @@
   <ItemGroup>
     <Compile Include="Modules\MiscModule.cs" />
     <Compile Include="Modules\PacManModule\Controls.cs" />
-    <Compile Include="Modules\PacManModule\Utils.cs" />
+    <Compile Include="Utils.cs" />
     <Compile Include="Services\CommandHandler.cs" />
     <Compile Include="Modules\PacManModule\PacManModule.cs" />
     <Compile Include="Modules\PacManModule\Game.cs" />
@@ -154,7 +154,7 @@
     <None Include="bin\config.bot" />
     <None Include="bin\prefixes.bot" />
     <None Include="bin\scoreboard.bot" />
-    <None Include="bin\board.bot" />
+    <None Include="bin\map.bot" />
     <None Include="bin\about.bot" />
     <None Include="bin\tips.bot" />
   </ItemGroup>

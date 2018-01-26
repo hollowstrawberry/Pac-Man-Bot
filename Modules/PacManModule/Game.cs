@@ -20,21 +20,21 @@ namespace PacManBot.Modules.PacManModule
 
         public ulong channelId; //Which channel this game is located in
         public ulong messageId = 1; //The focus message of the game, for controls to work. Even if not set, it must be a number above 0
-        public bool mobileDisplay = false;
         public State state = State.Active;
+        public bool mobileDisplay = false;
+        public readonly bool custom = false;
         public int score = 0;
-        public int timer = 0; //How many turns have passed
+        public int time = 0; //How many turns have passed
         private int pellets;
         private readonly int maxPellets;
-        private readonly bool custom = false;
         private char[,] map;
-        private Random random;
         private Player player;
         private List<Ghost> ghosts;
         private Fruit fruit;
         private Pos FruitSpawnPos; //Where all fruit will spawn
         private Pos FruitSecondPos => FruitSpawnPos + Dir.right; //Second tile which fruit will also occupy
-        private Fruit[] fruitTypes; //Stores the fruits that will be available in this game
+        private readonly Fruit[] fruitTypes; //Stores the fruits that will be available in this game
+        private readonly Random random;
 
         private int FruitTrigger1 => maxPellets - 70; //Amount of pellets remaining needed to spawn fruit
         private int FruitTrigger2 => maxPellets - 170;
@@ -92,8 +92,7 @@ namespace PacManBot.Modules.PacManModule
 
             public Player(Pos pos)
             {
-                if (pos != null) this.pos = pos;
-                else this.pos = new Pos(0, 0);
+                this.pos = pos ?? new Pos(0, 0);
                 origin = this.pos;
             }
         }
@@ -138,9 +137,9 @@ namespace PacManBot.Modules.PacManModule
                 if (game.player.power == PowerTime) mode = AiMode.Frightened;
                 else if (game.player.power <= 1) //Right after the last turn of power or any turn after
                 {
-                    if (game.timer < 4 * ScatterCycle &&
-                            (game.timer  < 2 * ScatterCycle && game.timer % ScatterCycle < ScatterTime1
-                          || game.timer >= 2 * ScatterCycle && game.timer % ScatterCycle < ScatterTime2)
+                    if (game.time < 4 * ScatterCycle &&
+                            (game.time  < 2 * ScatterCycle && game.time % ScatterCycle < ScatterTime1
+                          || game.time >= 2 * ScatterCycle && game.time % ScatterCycle < ScatterTime2)
                     ) { mode = AiMode.Scatter; }
                     else { mode = AiMode.Chase; }
                 }
@@ -201,9 +200,9 @@ namespace PacManBot.Modules.PacManModule
                 {
                     newDir = Dir.up; //If it's inside the cage
                 }
-                else if (type == AiType.Blinky && !game.custom && game.timer < 3)
+                else if (type == AiType.Blinky && !game.custom && game.time < 4)
                 {
-                    newDir = Dir.Left; //Blinky starts already facing left
+                    newDir = Dir.left; //Blinky starts already facing left
                 }
                 else //Track target
                 {
@@ -212,12 +211,12 @@ namespace PacManBot.Modules.PacManModule
                     {
                         Pos testPos = pos + testDir;
                         
-                        if (testDir == Dir.Up && (game.Map(testPos) == CharSoftWall || game.Map(testPos) == CharSoftWallPellet)) continue; //Can't go up these places
+                        if (testDir == Dir.up && (game.Map(testPos) == CharSoftWall || game.Map(testPos) == CharSoftWallPellet)) continue; //Can't go up these places
                         if (testDir == dir.Opposite() //Can't turn 180 degrees
                             && mode != AiMode.Frightened //Unless it's frightened
-                            && !(game.timer < 4 * ScatterCycle && //Or it has just switched modes
-                                    (game.timer  < 2 * ScatterCycle && game.timer % ScatterCycle == ScatterTime1
-                                  || game.timer >= 2 * ScatterCycle && game.timer % ScatterCycle == ScatterTime2)
+                            && !(game.time < 4 * ScatterCycle && //Or it has just switched modes
+                                    (game.time  < 2 * ScatterCycle && game.time % ScatterCycle == ScatterTime1
+                                  || game.time >= 2 * ScatterCycle && game.time % ScatterCycle == ScatterTime2)
                                 )
                         ) { continue; }
                         
@@ -226,7 +225,7 @@ namespace PacManBot.Modules.PacManModule
                             newDir = testDir;
                             distance = Pos.Distance(testPos, target);
                         }
-                        //Console.WriteLine($"Target: {target.x},{target.y} / Ghost: {pos.x},{pos.y} / Test Dir: {(pos + testDir).x},{(pos + testDir).y} / Test Dist: {Pos.Distance(pos + testDir, target)}"); //For debugging AI
+                        Console.WriteLine($"Target: {target.x},{target.y} / Ghost: {pos.x},{pos.y} / Test Dir: {(pos + testDir).x},{(pos + testDir).y} / Test Dist: {Pos.Distance(pos + testDir, target)}"); //For debugging AI
                     }
                 }
 
@@ -246,7 +245,7 @@ namespace PacManBot.Modules.PacManModule
             if (customMap == null) newMap = File.ReadAllLines(Program.File_GameMap);
             else
             {
-                newMap = customMap.Trim('\n').Trim().Trim('`').Split('\n');
+                newMap = customMap.Trim(new char[] { '\n', '`' }).Split('\n');
                 custom = true;
             }
             LoadMap(newMap);
@@ -254,17 +253,17 @@ namespace PacManBot.Modules.PacManModule
             maxPellets = pellets;
 
             Pos playerPos = FindChar(CharPlayer); //Set player
-            if (playerPos == null) playerPos = new Pos(0, 0);
             player = new Player(playerPos);
-            map[playerPos.x, playerPos.y] = ' ';
+            if (playerPos != null) map[playerPos.x, playerPos.y] = ' ';
 
             Pos fruitPos = FindChar(CharFruit); //Set fruit defaults
-            map[fruitPos.x, fruitPos.y] = ' ';
             FruitSpawnPos = fruitPos;
+            if (fruitPos != null) map[fruitPos.x, fruitPos.y] = ' ';
             fruitTypes = new Fruit[]{ new Fruit('x', 'x', 1000), new Fruit('w', 'w', 2000) };
+            fruit = fruitTypes[0];
 
             ghosts = new List<Ghost>(); //Set ghosts
-            Pos[] ghostCorners = new Pos[] { new Pos(2, -2), new Pos(map.GetLength(0) - 3, -2), new Pos(0, map.GetLength(1)), new Pos(map.GetLength(0) - 1, map.GetLength(1)) }; //Matches original game
+            Pos[] ghostCorners = new Pos[] { new Pos(2, -3), new Pos(map.GetLength(0) - 3, -3), new Pos(0, map.GetLength(1)), new Pos(map.GetLength(0) - 1, map.GetLength(1)) }; //Matches original game
             for (int i = 0; i < 4; i++)
             {
                 Pos ghostPos = FindChar(CharGhost);
@@ -277,7 +276,7 @@ namespace PacManBot.Modules.PacManModule
 
         public void DoTick(Dir direction)
         {
-            timer++;
+            time++;
 
             //Player
             if (direction != Dir.none) player.dir = direction;
@@ -285,7 +284,7 @@ namespace PacManBot.Modules.PacManModule
             WrapAround(ref player.pos);
 
             //Fruit
-            if (fruit != null && fruit.time > 0)
+            if (fruit.time > 0)
             {
                 fruit.time--;
                 if (FruitSpawnPos == player.pos || FruitSecondPos == player.pos)
@@ -300,7 +299,7 @@ namespace PacManBot.Modules.PacManModule
             if (tile == CharPellet || tile == CharPowerPellet || tile == CharSoftWallPellet)
             {
                 pellets--;
-                if (pellets == FruitTrigger1 || pellets == FruitTrigger2)
+                if ((pellets == FruitTrigger1 || pellets == FruitTrigger2) && FruitSpawnPos != null)
                 {
                     fruit = fruitTypes[(pellets >= FruitTrigger1) ? 0 : 1];
                     fruit.time = random.Next(25, 30 + 1);
@@ -349,9 +348,9 @@ namespace PacManBot.Modules.PacManModule
             if (player.power == 0) player.ghostStreak = 0;
         }
 
-        public string Display
+        public string Display {get
         {
-            get
+            try
             {
                 StringBuilder display = new StringBuilder(); //The final display in string form
                 char[,] displayMap = (char[,])map.Clone(); //The display array to modify
@@ -366,15 +365,15 @@ namespace PacManBot.Modules.PacManModule
                         
                         if (mobileDisplay) //Mode with simplified characters so it works better on mobile
                         {
-                            if (!NonSolid(x, y)) displayMap[x, y] = '#';
-                            else if (displayMap[x, y] == CharPellet) displayMap[x, y] = '.';
-                            else if (displayMap[x, y] == CharPowerPellet) displayMap[x, y] = '+';
+                            if (!NonSolid(x, y) && displayMap[x, y] != CharDoor) displayMap[x, y] = '#'; //Walls
+                            else if (displayMap[x, y] == CharPellet) displayMap[x, y] = '.'; //Pellets
+                            else if (displayMap[x, y] == CharPowerPellet) displayMap[x, y] = 'o'; //Power pellets
                         }
                     }
                 }
 
                 //Adds fruit, ghosts and player
-                if (fruit != null && fruit.time > 0)
+                if (fruit.time > 0)
                 {
                     displayMap[FruitSpawnPos.x, FruitSpawnPos.y] = fruit.char1;
                     displayMap[FruitSecondPos.x, FruitSecondPos.y] = fruit.char2;
@@ -398,16 +397,16 @@ namespace PacManBot.Modules.PacManModule
                 //Add text to the side
                 string[] info =
                 {
-                    $" ┌{"<# MOBILE DISPLAY #>".If(mobileDisplay)}",
-                    $" │ #Time: {timer}",
+                    $" ┌{"< MOBILE MODE >".If(mobileDisplay)}",
+                    $" │ #Time: {time}",
                     $" │ #Score: {score}",
                     $" │ {$"#Power: {player.power}".If(player.power > 0)}",
                     $" │ ",
-                    $" │ {CharPlayer}{" - Pac-Man".Unless(mobileDisplay)}{$": {player.dir}".Unless(player.dir == Dir.None)}",
+                    $" │ {CharPlayer}{" - Pac-Man".Unless(mobileDisplay)}{$": {player.dir}".Unless(player.dir == Dir.none)}",
                     $" │ ",
                     $" │ ", " │ ", " │ ", " │ ", //7-10: ghosts
                     $" │ ",
-                    $" │ {$"{fruit.char1}{fruit.char2} - Fruit: {fruit.time}".Unless(fruit == null || fruit.time <= 0)}",
+                    $" │ {($"{fruit.char1}{fruit.char2}{" - Fruit".Unless(mobileDisplay)}: {fruit.time}").If(fruit.time > 0)}",
                     $" └"
                 };
 
@@ -418,18 +417,18 @@ namespace PacManBot.Modules.PacManModule
                     info[i + 7] = $" │ {appearance}{$" - {(AiType)i}".Unless(mobileDisplay)}{$": {ghosts[i].dir}".Unless(ghosts[i].dir == Dir.none)}";
                 }
 
-                for (int i = 0; i < info.Length; i++) //Insert info
+                for (int i = 0; i < info.Length && i < map.GetLength(1) - 1; i++) //Insert info
                 {
-                    int startIndex = i + i * displayMap.GetLength(0);
-                    for (int j = i; j >= 0; j--) startIndex += info[j].Length;
-                    display.Replace("\n", $"{info[i]}\n", startIndex, displayMap.GetLength(0) - 1);
+                    int startIndex = i * displayMap.GetLength(0); //Skips a certain amount of lines
+                    for (int j = i; j >= 0; j--) startIndex += info[j].Length + 1; //Takes into account the added line length of previous info
+                    try { display.Replace("\n", $"{info[i]}\n", startIndex, displayMap.GetLength(0) - 1); } catch { } //Inserts the info
                 }
 
                 //Code tags
                 switch (state)
                 {
                     case State.Active:
-                        display.Insert(0, mobileDisplay ? "```\n" "```css\n");
+                        display.Insert(0, mobileDisplay ? "```\n" : "```css\n");
                         break;
 
                     case State.Lose:
@@ -443,11 +442,21 @@ namespace PacManBot.Modules.PacManModule
                         break;
                 }
                 display.Append("```");
-                if (state != State.Active) display.Append($"```diff\n{(state == State.Win ? "+You won" : "-You lost")}!```");
+
+                if (state != State.Active || custom)
+                {
+                    display.Append("```diff");
+                    if (state == State.Win) display.Append("\n+You won!");
+                    else if (state == State.Lose) display.Append("\n+You lost!");
+                    if (custom) display.Append("\n*** Custom game: Score won't be registered. ***");
+                    display.Append("```");
+                }
 
                 return display.ToString();
             }
-        }
+            
+            catch { return "```There was an error displaying the game. If you're using a custom map, make sure it's valid. If this problem persists please contact the author of the bot.```"; }
+        }}
 
         private Pos FindChar(char c, int index = 0)
         {
@@ -498,18 +507,28 @@ namespace PacManBot.Modules.PacManModule
             char[,] newMap = new char[width, height];
             try
             {
+                bool hasEmptySpace = false;
+
                 for (int y = 0; y < height; y++)
                 {
                     for (int x = 0; x < width; x++)
                     {
                         newMap[x, y] = lines[y].ToCharArray()[x];
-                        if (newMap[x, y] == CharPellet || newMap[x, y] == CharPowerPellet || newMap[x, y] == CharSoftWallPellet) pellets++;
+                        if (newMap[x, y] == ' ') hasEmptySpace = true;
+                        if (newMap[x, y] == CharPellet || newMap[x, y] == CharPowerPellet || newMap[x, y] == CharSoftWallPellet)
+                        {
+                            pellets++;
+                            hasEmptySpace = true;
+                        }
                     }
                 }
-            }
-            catch { throw new Exception($"Invalid map in file {file}"); }
 
-            this.map = newMap;
+                if (!hasEmptySpace) throw new Exception("Map is completely solid");
+
+            }
+            catch { throw new Exception("Invalid map"); }
+
+            map = newMap;
         }
     }
 }
