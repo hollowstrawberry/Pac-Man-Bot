@@ -41,10 +41,8 @@ namespace PacManBot.Modules.PacManModule
 
             gameInstances.Add(newGame);
             if (arg.StartsWith("m")) newGame.mobileDisplay = true;
-
-            IUserMessage gameMessage = await ReplyAsync(newGame.Display + "```diff\n+Starting game```"); //Output the game
+            var gameMessage = await ReplyAsync(newGame.Display + "```diff\n+Starting game```"); //Output the game
             newGame.messageId = gameMessage.Id;
-
 
             if (Context.Guild == null || !Context.Guild.CurrentUser.GuildPermissions.ManageMessages)
             {
@@ -96,7 +94,7 @@ namespace PacManBot.Modules.PacManModule
             {
                 if (Context.Channel.Id == game.channelId)
                 {
-                    if (!game.custom && Context.Guild != null && (Context.User as SocketGuildUser).GuildPermissions.ManageMessages)
+                    if (!game.custom && Context.Guild != null && !(Context.User as SocketGuildUser).GuildPermissions.ManageMessages)
                     {
                         await ReplyAsync("Only a Moderator can end non-custom games!");
                         return;
@@ -205,10 +203,10 @@ namespace PacManBot.Modules.PacManModule
         }
 
         [Command("tips"), Summary("Read some secrets that will help you")]
-        public async Task SayTips() => await ReplyAsync(File.ReadAllText(Program.FileTips));
+        public async Task SayTips() => await ReplyAsync(File.ReadAllText(Program.File_Tips));
 
         [Command("custom"), Summary("Learn how custom maps work")]
-        public async Task SayCustomMapHelp() => await ReplyAsync(File.ReadAllText(Program.FileCustomMapHelp));
+        public async Task SayCustomMapHelp() => await ReplyAsync(File.ReadAllText(Program.File_CustomMapHelp));
 
 
         public async Task AddControls(IUserMessage message)

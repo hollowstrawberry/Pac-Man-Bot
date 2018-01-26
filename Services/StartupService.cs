@@ -27,6 +27,19 @@ namespace PacManBot.Services
 
         public async Task StartAsync()
         {
+            if (!File.Exists(Program.File_Config)) throw new Exception($"Missing {Program.File_Config}: Bot can't run.");
+            if (!File.Exists(Program.File_GameMap)) throw new Exception($"Missing {Program.File_GameMap}: Bot can't run.");
+
+            string[] secondaryFiles = new string[] { Program.File_Prefixes, Program.File_Scoreboard, Program.File_About, Program.File_Tips, Program.File_CustomMapHelp };
+            for (int i = 0; i < secondaryFiles.Length; i++)
+            {
+                if (!File.Exists(secondaryFiles[i]))
+                {
+                    File.Create(secondaryFiles[i]);
+                    Console.WriteLine($"Created missing file {secondaryFiles[i]}");
+                }
+            }
+
             CommandHandler.prefixes = new Dictionary<ulong, string>(); //Load prefixes from file
             string[] line = File.ReadAllLines(Program.File_Prefixes);
             for (int i = 0; i < line.Length; i++)

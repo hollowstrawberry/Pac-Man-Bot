@@ -157,6 +157,7 @@
     <None Include="bin\map.bot" />
     <None Include="bin\about.bot" />
     <None Include="bin\tips.bot" />
+    <None Include="bin\custommaphelp.bot" />
   </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent>ROBOCOPY "C:\Users\Samrux\Google Drive\C#\PacManBot\bin\ " "C:\Users\Samrux\Google Drive\C#\PacManBot\bin\lib\ " *.xml *.dll /IS /MOV

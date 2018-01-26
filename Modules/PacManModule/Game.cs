@@ -225,7 +225,7 @@ namespace PacManBot.Modules.PacManModule
                             newDir = testDir;
                             distance = Pos.Distance(testPos, target);
                         }
-                        Console.WriteLine($"Target: {target.x},{target.y} / Ghost: {pos.x},{pos.y} / Test Dir: {(pos + testDir).x},{(pos + testDir).y} / Test Dist: {Pos.Distance(pos + testDir, target)}"); //For debugging AI
+                        //Console.WriteLine($"Target: {target.x},{target.y} / Ghost: {pos.x},{pos.y} / Test Dir: {(pos + testDir).x},{(pos + testDir).y} / Test Dist: {Pos.Distance(pos + testDir, target)}"); //For debugging AI
                     }
                 }
 
@@ -348,115 +348,120 @@ namespace PacManBot.Modules.PacManModule
             if (player.power == 0) player.ghostStreak = 0;
         }
 
-        public string Display {get
+        public string Display
         {
-            try
+            get
             {
-                StringBuilder display = new StringBuilder(); //The final display in string form
-                char[,] displayMap = (char[,])map.Clone(); //The display array to modify
-                
-                //Scan replacements
-                for (int y = 0; y < map.GetLength(1); y++)
+                try
                 {
-                    for (int x = 0; x < map.GetLength(0); x++)
+                    StringBuilder display = new StringBuilder(); //The final display in string form
+                    char[,] displayMap = (char[,])map.Clone(); //The display array to modify
+                
+                    //Scan replacements
+                    for (int y = 0; y < map.GetLength(1); y++)
                     {
-                        if (displayMap[x, y] == CharSoftWall) displayMap[x, y] = ' ';
-                        if (displayMap[x, y] == CharSoftWallPellet) displayMap[x, y] = CharPellet;
-                        
-                        if (mobileDisplay) //Mode with simplified characters so it works better on mobile
+                        for (int x = 0; x < map.GetLength(0); x++)
                         {
-                            if (!NonSolid(x, y) && displayMap[x, y] != CharDoor) displayMap[x, y] = '#'; //Walls
-                            else if (displayMap[x, y] == CharPellet) displayMap[x, y] = '.'; //Pellets
-                            else if (displayMap[x, y] == CharPowerPellet) displayMap[x, y] = 'o'; //Power pellets
+                            if (displayMap[x, y] == CharSoftWall) displayMap[x, y] = ' ';
+                            if (displayMap[x, y] == CharSoftWallPellet) displayMap[x, y] = CharPellet;
+                        
+                            if (mobileDisplay) //Mode with simplified characters so it works better on mobile
+                            {
+                                if (!NonSolid(x, y) && displayMap[x, y] != CharDoor) displayMap[x, y] = '#'; //Walls
+                                else if (displayMap[x, y] == CharPellet) displayMap[x, y] = '.'; //Pellets
+                                else if (displayMap[x, y] == CharPowerPellet) displayMap[x, y] = 'o'; //Power pellets
+                            }
                         }
                     }
-                }
 
-                //Adds fruit, ghosts and player
-                if (fruit.time > 0)
-                {
-                    displayMap[FruitSpawnPos.x, FruitSpawnPos.y] = fruit.char1;
-                    displayMap[FruitSecondPos.x, FruitSecondPos.y] = fruit.char2;
-                }
-                foreach (Ghost ghost in ghosts)
-                {
-                    displayMap[ghost.pos.x, ghost.pos.y] = (ghost.mode == AiMode.Frightened) ? CharGhostFrightened : GhostAppearance[(int)ghost.type];
-                }
-                displayMap[player.pos.x, player.pos.y] = (state == State.Lose) ? CharPlayerDead : CharPlayer;
-
-                //Converts 2d array to string
-                for (int y = 0; y < displayMap.GetLength(1); y++)
-                {
-                    for (int x = 0; x < displayMap.GetLength(0); x++)
+                    //Adds fruit, ghosts and player
+                    if (fruit.time > 0)
                     {
-                        display.Append(displayMap[x, y]);
+                        displayMap[FruitSpawnPos.x, FruitSpawnPos.y] = fruit.char1;
+                        displayMap[FruitSecondPos.x, FruitSecondPos.y] = fruit.char2;
                     }
-                    display.Append('\n');
-                }
+                    foreach (Ghost ghost in ghosts)
+                    {
+                        displayMap[ghost.pos.x, ghost.pos.y] = (ghost.mode == AiMode.Frightened) ? CharGhostFrightened : GhostAppearance[(int)ghost.type];
+                    }
+                    displayMap[player.pos.x, player.pos.y] = (state == State.Lose) ? CharPlayerDead : CharPlayer;
 
-                //Add text to the side
-                string[] info =
-                {
-                    $" ┌{"< MOBILE MODE >".If(mobileDisplay)}",
-                    $" │ #Time: {time}",
-                    $" │ #Score: {score}",
-                    $" │ {$"#Power: {player.power}".If(player.power > 0)}",
-                    $" │ ",
-                    $" │ {CharPlayer}{" - Pac-Man".Unless(mobileDisplay)}{$": {player.dir}".Unless(player.dir == Dir.none)}",
-                    $" │ ",
-                    $" │ ", " │ ", " │ ", " │ ", //7-10: ghosts
-                    $" │ ",
-                    $" │ {($"{fruit.char1}{fruit.char2}{" - Fruit".Unless(mobileDisplay)}: {fruit.time}").If(fruit.time > 0)}",
-                    $" └"
-                };
+                    //Converts 2d array to string
+                    for (int y = 0; y < displayMap.GetLength(1); y++)
+                    {
+                        for (int x = 0; x < displayMap.GetLength(0); x++)
+                        {
+                            display.Append(displayMap[x, y]);
+                        }
+                        display.Append('\n');
+                    }
 
-                for (int i = 0; i < 4; i++) //Ghost info
-                {
-                    if (i + 1 > ghosts.Count) continue;
-                    char appearance = (ghosts[i].mode == AiMode.Frightened) ? CharGhostFrightened : GhostAppearance[i];
-                    info[i + 7] = $" │ {appearance}{$" - {(AiType)i}".Unless(mobileDisplay)}{$": {ghosts[i].dir}".Unless(ghosts[i].dir == Dir.none)}";
-                }
+                    //Add text to the side
+                    string[] info =
+                    {
+                        $" ┌{"< MOBILE MODE >".If(mobileDisplay)}",
+                        $" │ #Time: {time}",
+                        $" │ #Score: {score}",
+                        $" │ {$"#Power: {player.power}".If(player.power > 0)}",
+                        $" │ ",
+                        $" │ {CharPlayer}{" - Pac-Man".Unless(mobileDisplay)}{$": {player.dir}".Unless(player.dir == Dir.none)}",
+                        $" │ ",
+                        $" │ ", " │ ", " │ ", " │ ", //7-10: ghosts
+                        $" │ ",
+                        $" │ {($"{fruit.char1}{fruit.char2}{" - Fruit".Unless(mobileDisplay)}: {fruit.time}").If(fruit.time > 0)}",
+                        $" └"
+                    };
 
-                for (int i = 0; i < info.Length && i < map.GetLength(1) - 1; i++) //Insert info
-                {
-                    int startIndex = i * displayMap.GetLength(0); //Skips a certain amount of lines
-                    for (int j = i; j >= 0; j--) startIndex += info[j].Length + 1; //Takes into account the added line length of previous info
-                    try { display.Replace("\n", $"{info[i]}\n", startIndex, displayMap.GetLength(0) - 1); } catch { } //Inserts the info
-                }
+                    for (int i = 0; i < 4; i++) //Ghost info
+                    {
+                        if (i + 1 > ghosts.Count) continue;
+                        char appearance = (ghosts[i].mode == AiMode.Frightened) ? CharGhostFrightened : GhostAppearance[i];
+                        info[i + 7] = $" │ {appearance}{$" - {(AiType)i}".Unless(mobileDisplay)}{$": {ghosts[i].dir}".Unless(ghosts[i].dir == Dir.none)}";
+                    }
 
-                //Code tags
-                switch (state)
-                {
-                    case State.Active:
-                        display.Insert(0, mobileDisplay ? "```\n" : "```css\n");
-                        break;
+                    for (int i = 0; i < info.Length && i < map.GetLength(1); i++) //Insert info
+                    {
+                        int insertIndex = (i + 1) * displayMap.GetLength(0); //Skips a certain amount of lines
+                        for (int j = i - 1; j >= 0; j--) insertIndex += info[j].Length + 1; //Takes into account the added line length of previous info
+                        display.Insert(insertIndex, info[i]);
+                    }
 
-                    case State.Lose:
-                        display.Insert(0, "```diff\n");
-                        display.Replace("\n", "\n-", 0, display.Length - 1); //All red
-                        break;
+                    //Code tags
+                    switch (state)
+                    {
+                        case State.Active:
+                            display.Insert(0, mobileDisplay ? "```\n" : "```css\n");
+                            break;
 
-                    case State.Win:
-                        display.Insert(0, "```diff\n");
-                        display.Replace("\n", "\n+", 0, display.Length - 1); //All green
-                        break;
-                }
-                display.Append("```");
+                        case State.Lose:
+                            display.Insert(0, "```diff\n");
+                            display.Replace("\n", "\n-", 0, display.Length - 1); //All red
+                            break;
 
-                if (state != State.Active || custom)
-                {
-                    display.Append("```diff");
-                    if (state == State.Win) display.Append("\n+You won!");
-                    else if (state == State.Lose) display.Append("\n+You lost!");
-                    if (custom) display.Append("\n*** Custom game: Score won't be registered. ***");
+                        case State.Win:
+                            display.Insert(0, "```diff\n");
+                            display.Replace("\n", "\n+", 0, display.Length - 1); //All green
+                            break;
+                    }
                     display.Append("```");
-                }
 
-                return display.ToString();
+                    if (state != State.Active || custom)
+                    {
+                        display.Append("```diff");
+                        if (state == State.Win) display.Append("\n+You won!");
+                        else if (state == State.Lose) display.Append("\n+You lost!");
+                        if (custom) display.Append("\n*** Custom game: Score won't be registered. ***");
+                        display.Append("```");
+                    }
+
+                    return display.ToString();
+                }
+                catch
+                {
+                    return "```There was an error displaying the game. If you're using a custom map, make sure it's valid. If this problem persists, please contact the author of the bot.```";
+                }
             }
-            
-            catch { return "```There was an error displaying the game. If you're using a custom map, make sure it's valid. If this problem persists please contact the author of the bot.```"; }
-        }}
+        }
 
         private Pos FindChar(char c, int index = 0)
         {
@@ -482,7 +487,7 @@ namespace PacManBot.Modules.PacManModule
         private bool NonSolid(Pos pos)
         {
             WrapAround(ref pos);
-            return (map[pos.x, pos.y] == ' ' || map[pos.x, pos.y] == CharPellet || map[pos.x, pos.y] == CharPowerPellet || map[pos.x, pos.y] == CharSoftWall || map[pos.x, pos.y] == CharSoftWallPellet);
+            return (Map(pos) == ' ' || Map(pos) == CharPellet || Map(pos) == CharPowerPellet || Map(pos) == CharSoftWall || Map(pos) == CharSoftWallPellet);
         }
         
         private char Map(Pos pos)

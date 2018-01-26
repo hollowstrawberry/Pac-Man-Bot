@@ -17,7 +17,14 @@ namespace PacManBot
 {
     public class Program
     {
-        public static readonly string File_Config = "config.bot", File_Prefixes = "prefixes.bot", File_Scoreboard = "scoreboard.bot", File_GameMap = "map.bot", File_About = "about.bot", FileTips = "tips.bot", FileCustomMapHelp = "custommaphelp.bot";
+        public static readonly string
+            File_Config = "config.bot",
+            File_Prefixes = "prefixes.bot",
+            File_Scoreboard = "scoreboard.bot",
+            File_GameMap = "map.bot",
+            File_About = "about.bot",
+            File_Tips = "tips.bot",
+            File_CustomMapHelp = "custommaphelp.bot";
 
         private DiscordSocketClient _client;
         private IConfigurationRoot _botConfig;
