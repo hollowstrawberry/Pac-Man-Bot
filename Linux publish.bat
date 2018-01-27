@@ -1,4 +1,5 @@
-dotnet publish PacManBot_DotNetCore.csproj --runtime linux-arm --output ".\bin\linux-arm" --configuration Release --self-contained 
-robocopy ".\bin\ " ".\bin\linux-arm\ " *.bot /IS
+set RUNTIME=linux-x64
+dotnet publish PacManBot_DotNetCore.csproj --runtime %RUNTIME% --output ".\bin\%RUNTIME%" --configuration Release --self-contained 
+robocopy ".\bin\ " ".\bin\%RUNTIME%\ " *.bot /IS
 rmdir "bin\Release" /s /q
 pause

@@ -212,14 +212,8 @@ namespace PacManBot.Modules.PacManModule
                         Pos testPos = pos + testDir;
                         
                         if (testDir == Dir.up && (game.Map(testPos) == CharSoftWall || game.Map(testPos) == CharSoftWallPellet)) continue; //Can't go up these places
-                        if (testDir == dir.Opposite() //Can't turn 180 degrees
-                            && mode != AiMode.Frightened //Unless it's frightened
-                            && !(game.time < 4 * ScatterCycle && //Or it has just switched modes
-                                    (game.time  < 2 * ScatterCycle && game.time % ScatterCycle == ScatterTime1
-                                  || game.time >= 2 * ScatterCycle && game.time % ScatterCycle == ScatterTime2)
-                                )
-                        ) { continue; }
-                        
+                        if (testDir == dir.Opposite() && mode != AiMode.Frightened && !JustChangedMode(game.time)) continue; //Can't turn 180 degrees except on special situations
+
                         if (game.NonSolid(testPos) && Pos.Distance(testPos, target) < distance) //Check if it can move to the tile and if this direction is better than the previous
                         {
                             newDir = testDir;
@@ -236,11 +230,18 @@ namespace PacManBot.Modules.PacManModule
 
             public void DecideMode(int time)
             {
-                if (time < 4 * ScatterCycle && //In set cycles, a set number of turns is spent in scatter mode, up to 4 times
-                        (time < 2 * ScatterCycle && time % ScatterCycle < ScatterTime1
-                        || time >= 2 * ScatterCycle && time % ScatterCycle < ScatterTime2)
+                if (time < 4 * ScatterCycle  //In set cycles, a set number of turns is spent in scatter mode, up to 4 times
+                    && (time < 2 * ScatterCycle && time % ScatterCycle < ScatterTime1
+                    || time >= 2 * ScatterCycle && time % ScatterCycle < ScatterTime2)
                 ) { mode = AiMode.Scatter; }
                 else { mode = AiMode.Chase; }
+            }
+
+            private bool JustChangedMode(int time)
+            {
+                for (int i = 0; i < 2; i++) if (time == i * ScatterCycle || time == i * ScatterCycle + ScatterTime1) return true;
+                for (int i = 2; i < 4; i++) if (time == i * ScatterCycle || time == i * ScatterCycle + ScatterTime2) return true;
+                return false;
             }
         }
 

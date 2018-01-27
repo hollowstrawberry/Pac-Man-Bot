@@ -7,8 +7,10 @@
 
 # Folders
 obj/
+host/
 bin/logs/
 bin/linux-arm/logs/
+bin/linux-x64/logs/
 .vs/
 
 # Files

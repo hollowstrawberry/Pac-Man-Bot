@@ -1,0 +1,17 @@
+﻿You can play using your own custom maps!
+To start a custom game, use the command **play \`\`\`map\`\`\`** or **play mobile \`\`\`map\`\`\`**
+
+**__Guidelines__**
+**1.** Maps must have constant width on all lines.
+**2.** Maps must have some space to move through.
+**3.** All but the following special characters are walls:
+ `O`: Pac-Man
+ `G`: Ghosts, up to 4
+ `-`: Ghost box door
+ `·●`: Pellets
+ `$`: Fruit (left tile)
+ `_`: Ghosts can't move here from below
+ `~`: Same as `_`, but with a pellet
+ 
+Original game map: <https://github.com/Samrux/Pac-Man-Bot/blob/master/bin/map.bot>
+Custom map examples: <https://github.com/Samrux/Pac-Man-Bot/blob/master/bin/Example%20custom%20maps.txt>
