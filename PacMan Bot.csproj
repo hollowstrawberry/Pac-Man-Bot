@@ -32,36 +32,31 @@
     <WarningLevel>3</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <BaseIntermediateOutputPath>.\obj\framework</BaseIntermediateOutputPath>
+    <BaseIntermediateOutputPath>.\obj\standard</BaseIntermediateOutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Discord.Net.Commands">
-      <HintPath>..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio\Packages\Discord.Net.Commands.2.0.0-beta-00880\lib\netstandard1.1\Discord.Net.Commands.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Discord.Net.Commands, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio\Packages\Discord.Net.Commands.2.0.0-beta-00881\lib\netstandard1.1\Discord.Net.Commands.dll</HintPath>
     </Reference>
-    <Reference Include="Discord.Net.Core">
-      <HintPath>..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio\Packages\Discord.Net.Core.2.0.0-beta-00880\lib\net45\Discord.Net.Core.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Discord.Net.Core, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio\Packages\Discord.Net.Core.2.0.0-beta-00881\lib\net45\Discord.Net.Core.dll</HintPath>
     </Reference>
     <Reference Include="Discord.Net.Providers.WS4Net">
       <HintPath>..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio\Packages\Discord.Net.Providers.WS4Net.2.0.0-beta-00880\lib\netstandard1.3\Discord.Net.Providers.WS4Net.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Discord.Net.Rest">
-      <HintPath>..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio\Packages\Discord.Net.Rest.2.0.0-beta-00880\lib\net45\Discord.Net.Rest.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Discord.Net.Rest, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio\Packages\Discord.Net.Rest.2.0.0-beta-00881\lib\net45\Discord.Net.Rest.dll</HintPath>
     </Reference>
     <Reference Include="Discord.Net.Rpc">
       <HintPath>..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio\Packages\Discord.Net.Rpc.2.0.0-beta-00860\lib\net45\Discord.Net.Rpc.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Discord.Net.Webhook">
-      <HintPath>..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio\Packages\Discord.Net.Webhook.2.0.0-beta-00880\lib\netstandard1.1\Discord.Net.Webhook.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Discord.Net.Webhook, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio\Packages\Discord.Net.Webhook.2.0.0-beta-00881\lib\netstandard1.1\Discord.Net.Webhook.dll</HintPath>
     </Reference>
-    <Reference Include="Discord.Net.WebSocket">
-      <HintPath>..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio\Packages\Discord.Net.WebSocket.2.0.0-beta-00880\lib\net45\Discord.Net.WebSocket.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Discord.Net.WebSocket, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio\Packages\Discord.Net.WebSocket.2.0.0-beta-00881\lib\net45\Discord.Net.WebSocket.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Extensions.Configuration, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>C:\Program Files (x86)\Microsoft Visual Studio\Packages\Microsoft.Extensions.Configuration.2.0.0\lib\netstandard2.0\Microsoft.Extensions.Configuration.dll</HintPath>
@@ -161,6 +156,7 @@
     <None Include="bin\about.bot" />
     <None Include="bin\tips.bot" />
     <None Include="bin\custommaphelp.bot" />
+    <None Include="packages.config" />
   </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent>ROBOCOPY "C:\Users\Samrux\Google Drive\C#\PacManBot\bin\ " "C:\Users\Samrux\Google Drive\C#\PacManBot\bin\lib\ " *.xml *.dll /IS /MOV
