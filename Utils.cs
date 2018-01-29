@@ -1,4 +1,7 @@
-﻿using static PacManBot.Modules.PacManModule.Game;
+﻿using Discord;
+using Discord.Commands;
+using Discord.WebSocket;
+using static PacManBot.Modules.PacManModule.Game;
 
 namespace PacManBot
 {
@@ -13,7 +16,17 @@ namespace PacManBot
         public static int LengthY<T>(this T[,] array) => array.GetLength(1);
 
 
+
+        //Discord utilities
+
+        public static bool BotHasChannelPermission(this SocketCommandContext context, ChannelPermission permission)
+        {
+            return context.Guild != null && context.Guild.CurrentUser.GetPermissions(context.Channel as IGuildChannel).Has(permission);
+        }
+
+
         //Game utilities
+
         public static Dir Opposite(this Dir dir)
         {
             switch (dir)

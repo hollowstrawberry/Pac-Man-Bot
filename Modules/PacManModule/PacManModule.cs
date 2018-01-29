@@ -23,7 +23,7 @@ namespace PacManBot.Modules.PacManModule
                 customMap = splice[1];
             }
 
-            if (Context.Guild != null && !Context.Guild.CurrentUser.GuildPermissions.AddReactions)
+            if (Context.Guild != null && !Context.BotHasChannelPermission(ChannelPermission.AddReactions))
             {
                 await ReplyAsync("This bot requires the permission to add reactions!");
                 return;
@@ -52,9 +52,9 @@ namespace PacManBot.Modules.PacManModule
             var gameMessage = await ReplyAsync(newGame.GetDisplay() + "```diff\n+Starting game```"); //Output the game
             newGame.messageId = gameMessage.Id;
 
-            if (Context.Guild == null || !Context.Guild.CurrentUser.GuildPermissions.ManageMessages)
+            if (!Context.BotHasChannelPermission(ChannelPermission.ManageMessages))
             {
-                await ReplyAsync("__Manual mode:__ You will need to remove your own reactions. Do one action at a time to prevent buggy behavior." + "\nGive this bot the permission to Manage Messages to remove reactions automatically.".If(Context.Guild != null));
+                await ReplyAsync("__Manual mode:__ Both adding and removing reactions count as input. Do one action at a time to prevent buggy behavior." + "\nGive this bot the permission to Manage Messages to remove reactions automatically.".If(Context.Guild != null));
             }
 
             await AddControls(gameMessage); //Controls for easy access
@@ -65,7 +65,7 @@ namespace PacManBot.Modules.PacManModule
         [Command("refresh"), Alias("r"), Summary("[normal/mobile,m] **-** Move the game to the bottom of the chat")]
         public async Task RefreshGameInstance(string arg = "")
         {
-            if (Context.Guild != null && !Context.Guild.CurrentUser.GuildPermissions.AddReactions)
+            if (Context.Guild != null && !Context.BotHasChannelPermission(ChannelPermission.AddReactions))
             {
                 await ReplyAsync("This bot requires the permission to add reactions!");
                 return;
@@ -81,7 +81,7 @@ namespace PacManBot.Modules.PacManModule
                     var newMsg = await ReplyAsync(game.GetDisplay() + "```diff\n+Refreshing game```"); //Send new message
                     game.messageId = newMsg.Id; //Change focus message for this channel
 
-                    if (Context.Guild == null || !Context.Guild.CurrentUser.GuildPermissions.ManageMessages)
+                    if (!Context.BotHasChannelPermission(ChannelPermission.ManageMessages))
                     {
                         await ReplyAsync("__Manual mode:__ You will need to remove your own reactions." + (Context.Guild == null ? "" : "\nGive this bot the permission to Manage Messages to remove reactions automatically."));
                     }

@@ -135,17 +135,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Modules\MiscModule.cs" />
-    <Compile Include="Modules\PacManModule\Controls.cs" />
-    <Compile Include="Utils.cs" />
-    <Compile Include="Services\CommandHandler.cs" />
-    <Compile Include="Modules\PacManModule\PacManModule.cs" />
-    <Compile Include="Modules\PacManModule\Game.cs" />
-    <Compile Include="Services\LoggingService.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\ReactionHandler.cs" />
-    <Compile Include="Services\StartupService.cs" />
+    <Compile Include=".\**\*.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -159,7 +149,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <PropertyGroup>
-    <PostBuildEvent>ROBOCOPY "C:\Users\Samrux\Google Drive\C#\PacManBot\bin\ " "C:\Users\Samrux\Google Drive\C#\PacManBot\bin\lib\ " *.xml *.dll /IS /MOV
+    <PostBuildEvent>ROBOCOPY "C:\Users\Samuel\Google Drive\C#\PacManBot\bin " "C:\Users\Samuel\Google Drive\C#\PacManBot\bin " *.xml *.dll /IS /MOV
 if %25errorlevel%25 leq 4 exit 0 else exit %25errorlevel%25</PostBuildEvent>
   </PropertyGroup>
   <ItemGroup />

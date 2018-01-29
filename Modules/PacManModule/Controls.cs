@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using static PacManBot.Modules.PacManModule.Game;
@@ -10,8 +11,10 @@ namespace PacManBot.Modules.PacManModule
 {
     static class Controls
     {
-        public static async Task ExecuteInput(SocketCommandContext context, SocketReaction reaction)
+        public static async Task ExecuteInput(SocketCommandContext context, SocketReaction reaction, bool removed = false)
         {
+            if (removed && context.BotHasChannelPermission(ChannelPermission.ManageMessages)) return; //Removing reactions only counts if they're not automatically removed
+
             var user = reaction.User.Value;
             var message = context.Message;
             var guild = context.Guild;
@@ -50,9 +53,12 @@ namespace PacManBot.Modules.PacManModule
                         await message.ModifyAsync(m => m.Content = game.GetDisplay()); //Update display
                     }
 
-                    if (guild != null && guild.CurrentUser.GuildPermissions.ManageMessages) //Can remove reactions
+                    if (context.BotHasChannelPermission(ChannelPermission.ManageMessages)) //Can remove reactions
                     {
-                        if (game.state == State.Active) await message.RemoveReactionAsync(reaction.Emote, user);
+                        if (game.state == State.Active)
+                        {
+                            if (!removed) await message.RemoveReactionAsync(reaction.Emote, user);
+                        }
                         else await message.RemoveAllReactionsAsync();
                     }
                 }
