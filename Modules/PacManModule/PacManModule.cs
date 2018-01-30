@@ -12,6 +12,10 @@ namespace PacManBot.Modules.PacManModule
     [Name("Game")]
     public class PacManModule : ModuleBase<SocketCommandContext>
     {
+        private const string NeedReactionPermMessage = "This bot requires the permission to add reactions!";
+        private string ManualModeMessage => "__Manual mode:__ Both adding and removing reactions count as input. Do one action at a time to prevent buggy behavior." + "\nGive this bot the permission to Manage Messages to remove reactions automatically.".If(Context.Guild != null);
+
+
         [Command("play"), Alias("p"), Summary("[normal/mobile,m] \\`\\`\\`custom map\\`\\`\\` **-** Start a new game on this channel")]
         public async Task StartGameInstance([Remainder]string args = "")
         {
@@ -25,7 +29,7 @@ namespace PacManBot.Modules.PacManModule
 
             if (Context.Guild != null && !Context.BotHasChannelPermission(ChannelPermission.AddReactions))
             {
-                await ReplyAsync("This bot requires the permission to add reactions!");
+                await ReplyAsync(NeedReactionPermMessage);
                 return;
             }
 
@@ -54,7 +58,7 @@ namespace PacManBot.Modules.PacManModule
 
             if (!Context.BotHasChannelPermission(ChannelPermission.ManageMessages))
             {
-                await ReplyAsync("__Manual mode:__ Both adding and removing reactions count as input. Do one action at a time to prevent buggy behavior." + "\nGive this bot the permission to Manage Messages to remove reactions automatically.".If(Context.Guild != null));
+                await ReplyAsync(ManualModeMessage);
             }
 
             await AddControls(gameMessage); //Controls for easy access
@@ -67,7 +71,7 @@ namespace PacManBot.Modules.PacManModule
         {
             if (Context.Guild != null && !Context.BotHasChannelPermission(ChannelPermission.AddReactions))
             {
-                await ReplyAsync("This bot requires the permission to add reactions!");
+                await ReplyAsync(NeedReactionPermMessage);
                 return;
             }
 
@@ -83,7 +87,7 @@ namespace PacManBot.Modules.PacManModule
 
                     if (!Context.BotHasChannelPermission(ChannelPermission.ManageMessages))
                     {
-                        await ReplyAsync("__Manual mode:__ You will need to remove your own reactions." + (Context.Guild == null ? "" : "\nGive this bot the permission to Manage Messages to remove reactions automatically."));
+                        await ReplyAsync(ManualModeMessage);
                     }
 
                     await AddControls(newMsg);
