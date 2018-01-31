@@ -7,6 +7,9 @@ using Discord;
 using Discord.Commands;
 using Microsoft.Extensions.Configuration;
 using PacManBot.Services;
+using System.Diagnostics;
+using System.Threading;
+using Discord.WebSocket;
 
 namespace PacManBot.Modules
 {
@@ -72,11 +75,14 @@ namespace PacManBot.Modules
             await ReplyAsync(text, false, embed.Build()); //Send the built embed
         }
 
-        [Command("waka"), Summary("Waka.")]
-        public Task Ping([Remainder]string args = "") //Useless args
+        [Command("waka"), Alias("ping"), Summary("Waka.")]
+        public async Task Ping([Remainder]string args = "") //Useless args
         {
-            Console.WriteLine($"Active games: {PacManModule.Game.gameInstances.Count}"); //No good reason
-            return ReplyAsync("waka");
+            var stopwatch = Stopwatch.StartNew();
+            var message = await ReplyAsync("Waka");
+            stopwatch.Stop();
+
+            await message.ModifyAsync(m => m.Content = $"Waka in {(int)stopwatch.Elapsed.TotalMilliseconds}ms | {Context.Client.Guilds.Count} guilds | {PacManModule.Game.gameInstances.Count} active games\n");
         }
 
         [Command("say"), Summary("Make the bot say anything (Moderator)")]

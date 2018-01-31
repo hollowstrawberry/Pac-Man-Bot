@@ -34,29 +34,55 @@
   <PropertyGroup>
     <BaseIntermediateOutputPath>.\obj\standard</BaseIntermediateOutputPath>
   </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>ROBOCOPY "%USERPROFILE%\Google Drive\C#\PacManBot\bin " "%USERPROFILE%\Google Drive\C#\PacManBot\bin " *.xml *.dll /IS /MOV
+if %25errorlevel%25 leq 4 exit 0 else exit %25errorlevel%25</PostBuildEvent>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include=".\Modules\MiscModule.cs" />
+    <Compile Include=".\Modules\PacManModule\Controls.cs" />
+    <Compile Include=".\Modules\PacManModule\Game.cs" />
+    <Compile Include=".\Modules\PacManModule\PacManModule.cs" />
+    <Compile Include=".\Program.cs" />
+    <Compile Include=".\Properties\AssemblyInfo.cs" />
+    <Compile Include=".\Services\CommandHandler.cs" />
+    <Compile Include=".\Services\LoggingService.cs" />
+    <Compile Include=".\Services\ReactionHandler.cs" />
+    <Compile Include=".\Services\StartupService.cs" />
+    <Compile Include=".\Utils.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".\App.config" />
+    <None Include=".\bin\PacMan Bot.exe.config" />
+    <None Include=".\obj\standard\Debug\PacMan Bot.exe.config" />
+    <None Include=".\obj\standard\Release\PacMan Bot.exe.config" />
+    <None Include=".\packages.config" />
+    <None Include=".\PacMan Bot.exe.config" />
+    <None Include=".\**\*.bot" />
+  </ItemGroup>
   <ItemGroup>
     <Reference Include="Discord.Net.Commands, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio\Packages\Discord.Net.Commands.2.0.0-beta-00881\lib\netstandard1.1\Discord.Net.Commands.dll</HintPath>
+      <HintPath>C:\Program Files (x86)\Microsoft Visual Studio\Packages\Discord.Net.Commands.2.0.0-beta-00881\lib\netstandard1.1\Discord.Net.Commands.dll</HintPath>
     </Reference>
     <Reference Include="Discord.Net.Core, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio\Packages\Discord.Net.Core.2.0.0-beta-00881\lib\net45\Discord.Net.Core.dll</HintPath>
+      <HintPath>C:\Program Files (x86)\Microsoft Visual Studio\Packages\Discord.Net.Core.2.0.0-beta-00881\lib\net45\Discord.Net.Core.dll</HintPath>
     </Reference>
     <Reference Include="Discord.Net.Providers.WS4Net">
-      <HintPath>..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio\Packages\Discord.Net.Providers.WS4Net.2.0.0-beta-00880\lib\netstandard1.3\Discord.Net.Providers.WS4Net.dll</HintPath>
+      <HintPath>C:\Program Files (x86)\Microsoft Visual Studio\Packages\Discord.Net.Providers.WS4Net.2.0.0-beta-00880\lib\netstandard1.3\Discord.Net.Providers.WS4Net.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Discord.Net.Rest, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio\Packages\Discord.Net.Rest.2.0.0-beta-00881\lib\net45\Discord.Net.Rest.dll</HintPath>
+      <HintPath>C:\Program Files (x86)\Microsoft Visual Studio\Packages\Discord.Net.Rest.2.0.0-beta-00881\lib\net45\Discord.Net.Rest.dll</HintPath>
     </Reference>
     <Reference Include="Discord.Net.Rpc">
-      <HintPath>..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio\Packages\Discord.Net.Rpc.2.0.0-beta-00860\lib\net45\Discord.Net.Rpc.dll</HintPath>
+      <HintPath>C:\Program Files (x86)\Microsoft Visual Studio\Packages\Discord.Net.Rpc.2.0.0-beta-00860\lib\net45\Discord.Net.Rpc.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Discord.Net.Webhook, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio\Packages\Discord.Net.Webhook.2.0.0-beta-00881\lib\netstandard1.1\Discord.Net.Webhook.dll</HintPath>
+      <HintPath>C:\Program Files (x86)\Microsoft Visual Studio\Packages\Discord.Net.Webhook.2.0.0-beta-00881\lib\netstandard1.1\Discord.Net.Webhook.dll</HintPath>
     </Reference>
     <Reference Include="Discord.Net.WebSocket, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio\Packages\Discord.Net.WebSocket.2.0.0-beta-00881\lib\net45\Discord.Net.WebSocket.dll</HintPath>
+      <HintPath>C:\Program Files (x86)\Microsoft Visual Studio\Packages\Discord.Net.WebSocket.2.0.0-beta-00881\lib\net45\Discord.Net.WebSocket.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Extensions.Configuration, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>C:\Program Files (x86)\Microsoft Visual Studio\Packages\Microsoft.Extensions.Configuration.2.0.0\lib\netstandard2.0\Microsoft.Extensions.Configuration.dll</HintPath>
@@ -92,7 +118,7 @@
       <HintPath>C:\Program Files (x86)\Microsoft Visual Studio\Packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="SuperSocket.ClientEngine, Version=0.8.0.13, Culture=neutral, PublicKeyToken=ee9af13f57f00acc, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio\Packages\SuperSocket.ClientEngine.Core.0.8.0.13\lib\net45\SuperSocket.ClientEngine.dll</HintPath>
+      <HintPath>C:\Program Files (x86)\Microsoft Visual Studio\Packages\SuperSocket.ClientEngine.Core.0.8.0.13\lib\net45\SuperSocket.ClientEngine.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Collections.Immutable, Version=1.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -100,7 +126,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Collections.Specialized, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio\Packages\System.Collections.Specialized.4.3.0\lib\net46\System.Collections.Specialized.dll</HintPath>
+      <HintPath>C:\Program Files (x86)\Microsoft Visual Studio\Packages\System.Collections.Specialized.4.3.0\lib\net46\System.Collections.Specialized.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.ComponentModel.Composition" />
@@ -114,11 +140,11 @@
     <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Net.Http, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System.Net.NameResolution, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio\Packages\System.Net.NameResolution.4.3.0\lib\net46\System.Net.NameResolution.dll</HintPath>
+      <HintPath>C:\Program Files (x86)\Microsoft Visual Studio\Packages\System.Net.NameResolution.4.3.0\lib\net46\System.Net.NameResolution.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Net.Security, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio\Packages\System.Net.Security.4.3.0\lib\net46\System.Net.Security.dll</HintPath>
+      <HintPath>C:\Program Files (x86)\Microsoft Visual Studio\Packages\System.Net.Security.4.3.0\lib\net46\System.Net.Security.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Numerics" />
@@ -131,27 +157,9 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="WebSocket4Net, Version=0.15.0.9, Culture=neutral, PublicKeyToken=eb4e154b696bf72a, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio\Packages\WebSocket4Net.0.15.0\lib\net45\WebSocket4Net.dll</HintPath>
+      <HintPath>C:\Program Files (x86)\Microsoft Visual Studio\Packages\WebSocket4Net.0.15.0\lib\net45\WebSocket4Net.dll</HintPath>
     </Reference>
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include=".\**\*.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-    <None Include="bin\config.bot" />
-    <None Include="bin\prefixes.bot" />
-    <None Include="bin\scoreboard.bot" />
-    <None Include="bin\map.bot" />
-    <None Include="bin\about.bot" />
-    <None Include="bin\tips.bot" />
-    <None Include="bin\custommaphelp.bot" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <PropertyGroup>
-    <PostBuildEvent>ROBOCOPY "C:\Users\Samuel\Google Drive\C#\PacManBot\bin " "C:\Users\Samuel\Google Drive\C#\PacManBot\bin " *.xml *.dll /IS /MOV
-if %25errorlevel%25 leq 4 exit 0 else exit %25errorlevel%25</PostBuildEvent>
-  </PropertyGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -472,6 +472,8 @@ namespace PacManBot.Modules.PacManModule
                     display.Append("```");
                 }
 
+                if (Program.DEBUG) display.Insert(0, "Bot is currently being tested for new features or bugfixes. It will return to normal soon.");
+
                 return display.ToString();
             }
             catch

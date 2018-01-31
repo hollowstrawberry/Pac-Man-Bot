@@ -16,6 +16,8 @@ namespace PacManBot
 {
     public class Program
     {
+        public const bool DEBUG = false;
+
         public static readonly string
             File_Config        = "config.bot",
             File_Prefixes      = "prefixes.bot",
