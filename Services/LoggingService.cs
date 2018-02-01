@@ -1,9 +1,9 @@
-﻿using Discord;
-using Discord.Commands;
-using Discord.WebSocket;
-using System;
+﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using Discord;
+using Discord.Commands;
+using Discord.WebSocket;
 
 namespace PacManBot.Services
 {
@@ -23,22 +23,23 @@ namespace PacManBot.Services
             _client = client;
             _commands = commands;
 
-            _client.Log += OnLogAsync;
-            _commands.Log += OnLogAsync;
+            _client.Log += Log;
+            _commands.Log += Log;
         }
 
 
-        private Task OnLogAsync(LogMessage message)
+        public Task Log(LogMessage message)
         {
             if (!Directory.Exists(logDirectory)) Directory.CreateDirectory(logDirectory); //Create the log directory if it doesn't exist
             if (!File.Exists(logFile)) File.Create(logFile).Dispose(); //Create today's log file if it doesn't exist
 
             string logText = $"{DateTime.UtcNow.ToString("hh:mm:ss")} [{message.Severity}] {message.Source}: {message.Exception?.ToString() ?? message.Message}";
-            File.AppendAllText(logFile, logText + "\n"); //Write the log text to a file
-
+            File.AppendAllText(logFile, $"{logText}\n"); //Write the log text to a file
 
             if (message.Severity.ToString() == "Verbose" && message.Source == "Rest") return Task.CompletedTask;
             else return Console.Out.WriteLineAsync(logText); //Write the log text to the console
         }
+        public Task Log(LogSeverity severity, string message) => Log(new LogMessage(severity, "Bot", message));
+        public Task Log(LogSeverity severity, string source, string message) => Log(new LogMessage(severity, source, message));
     }
 }

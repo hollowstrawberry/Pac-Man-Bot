@@ -5,13 +5,24 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using PacManBot.Services;
+using PacManBot.Constants;
 using static PacManBot.Modules.PacManModule.Game;
 
 namespace PacManBot.Modules.PacManModule
 {
-    [Name("Game")]
+    [Name("🎮Game")]
     public class PacManModule : ModuleBase<SocketCommandContext>
     {
+        private readonly LoggingService _logger;
+
+        PacManModule(LoggingService logger)
+        {
+            _logger = logger;
+        }
+
+
+
         private const string NeedReactionPermMessage = "This bot requires the permission to add reactions!";
         private string ManualModeMessage => "__Manual mode:__ Both adding and removing reactions count as input. Do one action at a time to prevent buggy behavior." + "\nGive this bot the permission to Manage Messages to remove reactions automatically.".If(Context.Guild != null);
 
@@ -19,6 +30,7 @@ namespace PacManBot.Modules.PacManModule
         [Command("play"), Alias("p"), Summary("[normal/mobile,m] \\`\\`\\`custom map\\`\\`\\` **-** Start a new game on this channel")]
         public async Task StartGameInstance([Remainder]string args = "")
         {
+            
             bool mobile = args.StartsWith("m");
             string customMap = null;
             if (args.Contains("```"))
@@ -137,7 +149,7 @@ namespace PacManBot.Modules.PacManModule
             if (min <= 1) min = 1;
             if (max < min) max = min + 9;
 
-            string[] scoreLine = File.ReadAllLines(Program.File_Scoreboard).Skip(1).ToArray(); //Skips the first line
+            string[] scoreLine = File.ReadAllLines(BotFile.Scoreboard).Skip(1).ToArray(); //Skips the first line
             int scoresAmount = scoreLine.Length;
             string[] scoreText = new string[scoresAmount];
             int[] score = new int[scoresAmount];
@@ -186,7 +198,7 @@ namespace PacManBot.Modules.PacManModule
         {
             SocketUser user = guildUser ?? Context.User; //Uses the command caller itself if no user is specified
 
-            string[] scoreLine = File.ReadAllLines(Program.File_Scoreboard).Skip(1).ToArray(); //Skips the first line
+            string[] scoreLine = File.ReadAllLines(BotFile.Scoreboard).Skip(1).ToArray(); //Skips the first line
             int scoresAmount = scoreLine.Length;
             int[] score = new int[scoresAmount];
 
@@ -215,10 +227,10 @@ namespace PacManBot.Modules.PacManModule
         }
 
         [Command("tips"), Summary("Read some secrets that will help you")]
-        public async Task SayTips() => await ReplyAsync(File.ReadAllText(Program.File_Tips));
+        public async Task SayTips() => await ReplyAsync(File.ReadAllText(BotFile.Tips));
 
         [Command("custom"), Summary("Learn how custom maps work")]
-        public async Task SayCustomMapHelp() => await ReplyAsync(File.ReadAllText(Program.File_CustomMapHelp));
+        public async Task SayCustomMapHelp() => await ReplyAsync(File.ReadAllText(BotFile.CustomMapHelp));
 
 
         public async Task AddControls(IUserMessage message)

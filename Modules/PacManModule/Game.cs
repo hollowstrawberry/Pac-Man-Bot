@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using PacManBot.Constants;
 
 namespace PacManBot.Modules.PacManModule
 {
@@ -10,10 +11,30 @@ namespace PacManBot.Modules.PacManModule
         static public List<Game> gameInstances = new List<Game>();
 
         //Constants
-        public const string LeftEmoji = "⬅", UpEmoji = "⬆", DownEmoji = "⬇", RightEmoji = "➡", WaitEmoji = "⏸", RefreshEmoji = "🔃"; //Controls
-        private const char CharPlayer = 'O', CharFruit = '$', CharGhost = 'G', CharDoor = '-', CharPellet = '·', CharPowerPellet = '●', CharSoftWall = '_', CharSoftWallPellet = '~'; //Read from map
-        private const char CharPlayerDead = 'X', CharGhostFrightened = 'E'; //Displayed
-        private const int PowerTime = 20, ScatterCycle = 100, ScatterTime1 = 30, ScatterTime2 = 20; //Mechanics constants
+        public const string //Controls
+            LeftEmoji = "⬅",
+            UpEmoji = "⬆",
+            DownEmoji = "⬇",
+            RightEmoji = "➡",
+            WaitEmoji = "⏸",
+            RefreshEmoji = "🔃";
+        private const char //Read from map
+            CharPlayer = 'O',
+            CharFruit = '$',
+            CharGhost = 'G',
+            CharDoor = '-',
+            CharPellet = '·',
+            CharPowerPellet = '●',
+            CharSoftWall = '_',
+            CharSoftWallPellet = '~';
+        private const char //Displayed
+            CharPlayerDead = 'X',
+            CharGhostFrightened = 'E';
+        private const int //Mechanics constants
+            PowerTime = 20,
+            ScatterCycle = 100,
+            ScatterTime1 = 30,
+            ScatterTime2 = 20;
         
         private readonly static char[] GhostAppearance = { 'B', 'P', 'I', 'C' };
         private readonly static int[] GhostSpawnPauseTime = { 0, 3, 15, 35 };
@@ -254,7 +275,7 @@ namespace PacManBot.Modules.PacManModule
             random = new Random();
             
             string[] newMap;
-            if (customMap == null) newMap = File.ReadAllLines(Program.File_GameMap);
+            if (customMap == null) newMap = File.ReadAllLines(BotFile.GameMap);
             else
             {
                 newMap = customMap.Trim(new char[] { '\n', ' ' }).Trim(new char[] { '\n', '`' }).Split('\n');
@@ -471,8 +492,6 @@ namespace PacManBot.Modules.PacManModule
                     if (custom) display.Append("\n*** Custom game: Score won't be registered. ***");
                     display.Append("```");
                 }
-
-                if (Program.DEBUG) display.Insert(0, "Bot is currently being tested for new features or bugfixes. It will return to normal soon.");
 
                 return display.ToString();
             }

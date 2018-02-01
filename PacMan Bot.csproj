@@ -50,6 +50,7 @@ if %25errorlevel%25 leq 4 exit 0 else exit %25errorlevel%25</PostBuildEvent>
     <Compile Include=".\Services\ReactionHandler.cs" />
     <Compile Include=".\Services\StartupService.cs" />
     <Compile Include=".\Utils.cs" />
+    <Compile Include="Constants.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".\App.config" />

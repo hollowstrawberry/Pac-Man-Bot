@@ -1,11 +1,15 @@
 ﻿using System;
+using System.IO;
+using System.Net;
 using System.Threading.Tasks;
+using System.Net.Http;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PacManBot.Services;
+using PacManBot.Constants;
 
 
 //Made by Samrux for fun
@@ -16,25 +20,14 @@ namespace PacManBot
 {
     public class Program
     {
-        public const bool DEBUG = false;
-
-        public static readonly string
-            File_Config        = "config.bot",
-            File_Prefixes      = "prefixes.bot",
-            File_Scoreboard    = "scoreboard.bot",
-            File_GameMap       = "map.bot",
-            File_About         = "about.bot",
-            File_Tips          = "tips.bot",
-            File_CustomMapHelp = "custommaphelp.bot";
-
         private DiscordSocketClient _client;
+        private LoggingService _logger;
         private IConfigurationRoot _botConfig;
-
 
         public static void Main(string[] args) => new Program().MainAsync().GetAwaiter().GetResult();
         public async Task MainAsync()
         {
-            var configBuilder = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile(File_Config); //Add the configuration file
+            var configBuilder = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile(BotFile.Config); //Add the configuration file
             _botConfig = configBuilder.Build(); //Build the configuration file
 
             //Client and its configuration
@@ -55,7 +48,7 @@ namespace PacManBot
             var provider = services.BuildServiceProvider();
 
             //Initialize services
-            provider.GetRequiredService<LoggingService>();
+            _logger = provider.GetRequiredService<LoggingService>();
             await provider.GetRequiredService<StartupService>().StartAsync();
             provider.GetRequiredService<CommandHandler>();
             provider.GetRequiredService<ReactionHandler>();
@@ -69,11 +62,33 @@ namespace PacManBot
             await Task.Delay(-1); //Prevent the application from closing
         }
 
-        public async Task UpdatePlaying()
+        private async Task UpdatePlaying()
         {
             int guilds = _client.Guilds.Count;
             await _client.SetGameAsync($"{_botConfig["prefix"]}help | {guilds} guilds");
-            Console.WriteLine($"Updated guilds: {guilds}");
+            await _logger.Log(LogSeverity.Info, $"Updated guilds: {guilds}");
+            if (!string.IsNullOrEmpty(_botConfig["httptoken"])) await UpdateServerGuildCount(guilds);
+        }
+
+        private Task UpdateServerGuildCount(int count)
+        {
+            var request = (HttpWebRequest)WebRequest.Create($"https://bots.discord.pw/api/bots/{_client.CurrentUser.Id}/stats");
+            request.ContentType = "application/json";
+            request.Method = "POST";
+            request.Headers.Add("Authorization", _botConfig["httptoken"]);
+
+            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+            {
+                streamWriter.Write($"{{\n\"server_count\": {count}\n}}");
+                streamWriter.Flush();
+                streamWriter.Close();
+            }
+
+            var response = (HttpWebResponse)request.GetResponse();
+            using (var streamReader = new StreamReader(response.GetResponseStream()))
+            {
+                return _logger.Log(LogSeverity.Verbose, $"Sent server count to server. Response: {streamReader.ReadToEnd()}");
+            }
         }
     }
 }
