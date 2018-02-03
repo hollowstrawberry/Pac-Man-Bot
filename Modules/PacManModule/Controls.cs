@@ -14,7 +14,7 @@ namespace PacManBot.Modules.PacManModule
     {
         public static async Task ExecuteInput(SocketCommandContext context, SocketReaction reaction, bool removed, LoggingService logger)
         {
-            if (removed && context.BotHasChannelPermission(ChannelPermission.ManageMessages)) return; //Removing reactions only counts if they're not automatically removed
+            if (removed && context.BotHas(ChannelPermission.ManageMessages)) return; //Removing reactions only counts if they're not automatically removed
 
             var user = reaction.User.Value;
             var message = context.Message;
@@ -52,9 +52,15 @@ namespace PacManBot.Modules.PacManModule
                         }
 
                         await message.ModifyAsync(m => m.Content = game.GetDisplay()); //Update display
+
+                        if (game.state != State.Active) //Failsafe to bug where the display doesn't update in order if there are multiple inputs at once
+                        {
+                            await Task.Delay(2000);
+                            await message.ModifyAsync(m => m.Content = game.GetDisplay());
+                        }
                     }
 
-                    if (context.BotHasChannelPermission(ChannelPermission.ManageMessages)) //Can remove reactions
+                    if (context.BotHas(ChannelPermission.ManageMessages)) //Can remove reactions
                     {
                         if (game.state == State.Active)
                         {

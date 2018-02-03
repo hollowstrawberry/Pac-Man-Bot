@@ -27,7 +27,7 @@ namespace PacManBot.Modules.PacManModule
         private string ManualModeMessage => "__Manual mode:__ Both adding and removing reactions count as input. Do one action at a time to prevent buggy behavior." + "\nGive this bot the permission to Manage Messages to remove reactions automatically.".If(Context.Guild != null);
 
 
-        [Command("play"), Alias("p"), Summary("[normal/mobile,m] \\`\\`\\`custom map\\`\\`\\` **-** Start a new game on this channel")]
+        [Command("play"), Alias("p"), Summary("**[**mobile,m**]** **[**\\`\\`\\`custom map\\`\\`\\`**]** **-** Start a new game on this channel")]
         public async Task StartGameInstance([Remainder]string args = "")
         {
             
@@ -39,7 +39,7 @@ namespace PacManBot.Modules.PacManModule
                 customMap = splice[1];
             }
 
-            if (Context.Guild != null && !Context.BotHasChannelPermission(ChannelPermission.AddReactions))
+            if (Context.Guild != null && !Context.BotHas(ChannelPermission.AddReactions))
             {
                 await ReplyAsync(NeedReactionPermMessage);
                 return;
@@ -68,7 +68,7 @@ namespace PacManBot.Modules.PacManModule
             var gameMessage = await ReplyAsync(newGame.GetDisplay() + "```diff\n+Starting game```"); //Output the game
             newGame.messageId = gameMessage.Id;
 
-            if (!Context.BotHasChannelPermission(ChannelPermission.ManageMessages))
+            if (!Context.BotHas(ChannelPermission.ManageMessages))
             {
                 await ReplyAsync(ManualModeMessage);
             }
@@ -78,10 +78,10 @@ namespace PacManBot.Modules.PacManModule
         }
 
 
-        [Command("refresh"), Alias("r"), Summary("[normal/mobile,m] **-** Move the game to the bottom of the chat")]
+        [Command("refresh"), Alias("r"), Summary("**[**mobile,m**]** **-** Move the game to the bottom of the chat")]
         public async Task RefreshGameInstance(string arg = "")
         {
-            if (Context.Guild != null && !Context.BotHasChannelPermission(ChannelPermission.AddReactions))
+            if (Context.Guild != null && !Context.BotHas(ChannelPermission.AddReactions))
             {
                 await ReplyAsync(NeedReactionPermMessage);
                 return;
@@ -97,7 +97,7 @@ namespace PacManBot.Modules.PacManModule
                     var newMsg = await ReplyAsync(game.GetDisplay() + "```diff\n+Refreshing game```"); //Send new message
                     game.messageId = newMsg.Id; //Change focus message for this channel
 
-                    if (!Context.BotHasChannelPermission(ChannelPermission.ManageMessages))
+                    if (!Context.BotHas(ChannelPermission.ManageMessages))
                     {
                         await ReplyAsync(ManualModeMessage);
                     }
@@ -149,7 +149,7 @@ namespace PacManBot.Modules.PacManModule
             if (min <= 1) min = 1;
             if (max < min) max = min + 9;
 
-            string[] scoreLine = File.ReadAllLines(BotFile.Scoreboard).Skip(1).ToArray(); //Skips the first line
+            string[] scoreLine = File.ReadAllLines(BotFile.Scoreboard).Skip(1).Where(s => !string.IsNullOrWhiteSpace(s)).ToArray(); //Skips the first line and empty lines
             int scoresAmount = scoreLine.Length;
             string[] scoreText = new string[scoresAmount];
             int[] score = new int[scoresAmount];
@@ -186,7 +186,8 @@ namespace PacManBot.Modules.PacManModule
                 message += $"\n{i}. {scoreText[i - 1]}";
             }
 
-            if (max - min > 19) message += "\n*Only 20 scores may be displayed at once*";
+            if (max >= scoresAmount) message += "\n*No more scores could be found*";
+            else if (max - min > 19) message += "\n*Only 20 scores may be displayed at once*";
 
             if (message.Length > 2000) message = message.Substring(0, 1999);
 

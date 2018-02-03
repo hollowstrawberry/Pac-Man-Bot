@@ -13,7 +13,7 @@ namespace PacManBot.Services
         private readonly CommandService _commands;
 
         private string logDirectory { get; }
-        private string logFile => Path.Combine(logDirectory, $"{DateTime.UtcNow.ToString("yyyy-MM-dd")}.txt");
+        private string logFile => Path.Combine(logDirectory, $"{DateTime.Now.ToString("yyyy-MM-dd")}.txt");
 
         //DiscordSocketClient and CommandService are injected automatically from the IServiceProvider
         public LoggingService(DiscordSocketClient client, CommandService commands)
@@ -33,7 +33,7 @@ namespace PacManBot.Services
             if (!Directory.Exists(logDirectory)) Directory.CreateDirectory(logDirectory); //Create the log directory if it doesn't exist
             if (!File.Exists(logFile)) File.Create(logFile).Dispose(); //Create today's log file if it doesn't exist
 
-            string logText = $"{DateTime.UtcNow.ToString("hh:mm:ss")} [{message.Severity}] {message.Source}: {message.Exception?.ToString() ?? message.Message}";
+            string logText = $"{DateTime.Now.ToString("hh:mm:ss")} [{message.Severity}] {message.Source}: {message.Exception?.ToString() ?? message.Message}";
             File.AppendAllText(logFile, $"{logText}\n"); //Write the log text to a file
 
             if (message.Severity.ToString() == "Verbose" && message.Source == "Rest") return Task.CompletedTask;

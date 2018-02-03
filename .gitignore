@@ -20,6 +20,7 @@ App.config
 importantInfo.txt
 
 # Formats
+*.zip
 *.obj
 *.sln
 *.tmp

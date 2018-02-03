@@ -87,7 +87,7 @@ namespace PacManBot
             var response = (HttpWebResponse)request.GetResponse();
             using (var streamReader = new StreamReader(response.GetResponseStream()))
             {
-                return _logger.Log(LogSeverity.Verbose, $"Sent server count to server. Response: {streamReader.ReadToEnd()}");
+                return _logger.Log(LogSeverity.Verbose, $"Sent server count to server. {streamReader.ReadToEnd()}");
             }
         }
     }

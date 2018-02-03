@@ -19,7 +19,7 @@ namespace PacManBot
 
         //Discord utilities
 
-        public static bool BotHasChannelPermission(this SocketCommandContext context, ChannelPermission permission)
+        public static bool BotHas(this SocketCommandContext context, ChannelPermission permission)
         {
             return context.Guild != null && context.Guild.CurrentUser.GetPermissions(context.Channel as IGuildChannel).Has(permission);
         }

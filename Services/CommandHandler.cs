@@ -54,6 +54,7 @@ namespace PacManBot.Services
                         else if (result.ErrorReason.Contains("User requires")) await context.Channel.SendMessageAsync(context.Guild == null ? "You need to be in a guild to use this command!" : $"You need the permission {result.ErrorReason.Split(' ')[result.ErrorReason.Split(' ').Length - 1]} to use this command!");
                         else if (result.ErrorReason.Contains("User not found")) await context.Channel.SendMessageAsync($"Can't find the specified user!");
                         else if (result.ErrorReason.Contains("Failed to parse") || result.ErrorReason.Contains("parameters")) await context.Channel.SendMessageAsync($"Incorrect command parameters!");
+                        else if (result.ErrorReason.Contains("must be used in a guild")) await context.Channel.SendMessageAsync($"You need to be in a guild to use this command!");
                     }
                 });
             }
