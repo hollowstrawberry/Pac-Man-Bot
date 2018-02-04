@@ -16,12 +16,16 @@ namespace PacManBot
         public static int LengthY<T>(this T[,] array) => array.GetLength(1);
 
 
-
         //Discord utilities
 
         public static bool BotHas(this SocketCommandContext context, ChannelPermission permission)
         {
             return context.Guild != null && context.Guild.CurrentUser.GetPermissions(context.Channel as IGuildChannel).Has(permission);
+        }
+
+        public static bool UserHas(this SocketCommandContext context, ChannelPermission permission)
+        {
+            return context.Guild != null && context.Guild.GetUser(context.User.Id).GetPermissions(context.Channel as IGuildChannel).Has(permission);
         }
 
 

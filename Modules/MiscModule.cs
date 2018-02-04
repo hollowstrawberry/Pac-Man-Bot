@@ -26,7 +26,6 @@ namespace PacManBot.Modules
             _config = config;
         }
 
-
         [Command("help"), Alias("h"), Summary("List of commands")]
         public async Task HelpAsync([Remainder]string args = "") //Argument is useless for now
         {
@@ -35,9 +34,6 @@ namespace PacManBot.Modules
                 await ReplyAsync("To show a fancy new help block, this bot requires the permission to Embed Links!");
                 return;
             }
-
-            string prefix = _config["prefix"];
-            if (Context.Guild != null && !CommandHandler.prefixes.TryGetValue(Context.Guild.Id, out prefix)) prefix = _config["prefix"];
 
             var embed = new EmbedBuilder() { Color = new Color(241, 195, 15) }; //Create a new embed block
             embed.Title = $"{CustomEmoji.PacMan} **__List of commands__**";
@@ -57,7 +53,7 @@ namespace PacManBot.Modules
                         {
                             commandsText += $"{", ".If(i > 0)}**{command.Aliases[i]}**";
                         }
-                        if (!string.IsNullOrEmpty(command.Summary)) //Adds the command summary
+                        if (!string.IsNullOrWhiteSpace(command.Summary)) //Adds the command summary
                         {
                             commandsText += $" {"- ".Unless(command.Summary.Contains("**-**"))}*{command.Summary}*";
                         }
@@ -78,14 +74,32 @@ namespace PacManBot.Modules
                 }
             }
 
-            string text = $"Command prefix for this server: '{prefix}'".Unless(prefix == _config["prefix"]); //Specifies the prefix if it's not the default one
+            string text = $"You can use the **{CommandHandler.ServerPrefix(Context.Guild) ?? _config["prefix"]}about** command for more info.";
+            if (Context.Guild == null) text += "\nYou can also use commands without any prefix in a DM.";
             await ReplyAsync(text, false, embed.Build()); //Send the built embed
         }
 
-        [Command("about"), Summary("About this bot")]
-        public async Task SayBotInfo() => await ReplyAsync(File.ReadAllText(BotFile.About));
+        [Command("about"), Alias("info"), Summary("About this bot")]
+        public async Task SayBotInfo()
+        {
+            if (Context.Guild != null && !Context.BotHas(ChannelPermission.EmbedLinks))
+            {
+                await ReplyAsync("To show a fancy new help block, this bot requires the permission to Embed Links!");
+                return;
+            }
 
-        [Command("waka"), Alias("ping"), Summary("Waka.")]
+            var embed = new EmbedBuilder() { Color = new Color(241, 195, 15) };
+            embed.AddField("Server count", $"{Context.Client.Guilds.Count}", true);
+            embed.AddField("Active games", $"{PacManModule.Game.gameInstances.Count}", true);
+            embed.AddField("Latency", $"{Context.Client.Latency}ms", true);
+            embed.AddField("Author", $"Samrux#3980", true);
+            embed.AddField("Version", $"v2.4", true);
+            embed.AddField("Prefix", CommandHandler.ServerPrefix(Context.Guild) ?? _config["prefix"], true);
+
+            await ReplyAsync(File.ReadAllText(BotFile.About), false, embed.Build());
+        }
+
+        [Command("waka"), Alias("ping"), Summary("Waka waka waka")]
         public async Task Ping([Remainder]string args = "") //Useless args
         {
             var stopwatch = Stopwatch.StartNew();
@@ -111,10 +125,19 @@ namespace PacManBot.Modules
         }
 
         [Command("prefix"), Summary("Show the current prefix for this server")]
-        public async Task GetServerPrefix([Remainder]string args="") //Useless args
+        public async Task GetServerPrefix([Remainder]string args = "") //Useless args
         {
-            if (!CommandHandler.prefixes.TryGetValue(Context.Guild.Id, out string prefix)) prefix = _config["prefix"];
-            await ReplyAsync($"Prefix for this server is set to '{prefix}' {"(the default)".If(prefix == _config["prefix"])}.\nIt can be changed with the command **setprefix**.");
+            string reply;
+            if (Context.Guild == null)
+            {
+                reply = "You can use commands without any prefix in a DM with me!";
+            }
+            else
+            {
+                string prefix = CommandHandler.ServerPrefix(Context.Guild.Id) ?? _config["prefix"];
+                reply = $"Prefix for this server is set to '{prefix}'{" (the default)".If(prefix == _config["prefix"])}. It can be changed with the command **setprefix**.";
+            }
+            await ReplyAsync(reply);
         }
 
         [Command("setprefix"), Summary("Set a custom prefix for this server (Admin)")]
@@ -153,7 +176,23 @@ namespace PacManBot.Modules
             }
         }
 
+        [Command("feedback"), Alias("bug"), Summary("Send the bot's developer a message")]
+        public async Task SendFeedback([Remainder]string message)
+        {
+            try
+            {
+                File.AppendAllText(BotFile.FeedbackLog, $"\n\n[{Context.User.Username}#{Context.User.Discriminator}:] {message}");
+                await ReplyAsync($"{CustomEmoji.Check} Message sent");
+            }
+            catch { await ReplyAsync("Oops, I didn't catch that. Please try again."); }
+        }
+
         [Command("invite"), Alias("inv"), Summary("Invite this bot to your server")]
-        public async Task SayBotInvite() => await ReplyAsync("Invite this bot into a server you own: <http://bit.ly/discordpacmanbot>");
+        public async Task SayBotInvite()
+        {
+            var embed = new EmbedBuilder() { Title = "Bot invite link", Color = new Color(241, 195, 15), ThumbnailUrl = Context.Client.CurrentUser.GetAvatarUrl(ImageFormat.Auto, 128)};
+            embed.AddField($"➡ {File.ReadAllText(BotFile.Invite)}", "*Thanks for inviting Pac-Man Bot!*", false);
+            await ReplyAsync("", false, embed.Build());
+        }
     }
 }

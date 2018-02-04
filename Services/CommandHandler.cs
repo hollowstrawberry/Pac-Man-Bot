@@ -70,5 +70,13 @@ namespace PacManBot.Services
 
             return Task.CompletedTask;
         }
+
+        public static string ServerPrefix(SocketGuild guild) => guild == null ? null : ServerPrefix(guild.Id);
+        public static string ServerPrefix(ulong serverId)
+        {
+            string prefix = null;
+            if (prefixes.ContainsKey(serverId)) prefix = prefixes[serverId];
+            return prefix;
+        }
     }
 }

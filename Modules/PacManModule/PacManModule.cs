@@ -22,7 +22,6 @@ namespace PacManBot.Modules.PacManModule
         }
 
 
-
         private const string NeedReactionPermMessage = "This bot requires the permission to add reactions!";
         private string ManualModeMessage => "__Manual mode:__ Both adding and removing reactions count as input. Do one action at a time to prevent buggy behavior." + "\nGive this bot the permission to Manage Messages to remove reactions automatically.".If(Context.Guild != null);
 
@@ -30,7 +29,8 @@ namespace PacManBot.Modules.PacManModule
         [Command("play"), Alias("p"), Summary("**[**mobile,m**]** **[**\\`\\`\\`custom map\\`\\`\\`**]** **-** Start a new game on this channel")]
         public async Task StartGameInstance([Remainder]string args = "")
         {
-            
+            if (Context.Guild != null && !Context.BotHas(ChannelPermission.SendMessages)) return;
+
             bool mobile = args.StartsWith("m");
             string customMap = null;
             if (args.Contains("```"))
@@ -55,10 +55,10 @@ namespace PacManBot.Modules.PacManModule
             }
 
             Game newGame;
-            try { newGame = new Game(Context.Channel.Id, customMap); } //Create a game instance
+            try { newGame = new Game(Context.Channel.Id, Context.User.Id, customMap); } //Create a game instance
             catch
             {
-                string errorMessage = customMap != null ? "The custom map is invalid. Use the **custom** command for help." : "There was an error starting the game. Please try again or contact the author of the bot.";
+                string errorMessage = customMap != null ? "The custom map is probably invalid. Use the **custom** command for help." : "There was an error starting the game. Please try again or contact the author of the bot.";
                 await ReplyAsync(errorMessage);
                 throw new Exception("Failed to create game");
             }
@@ -76,7 +76,6 @@ namespace PacManBot.Modules.PacManModule
             await AddControls(gameMessage); //Controls for easy access
             await gameMessage.ModifyAsync(m => m.Content = newGame.GetDisplay()); //Edit message
         }
-
 
         [Command("refresh"), Alias("r"), Summary("**[**mobile,m**]** **-** Move the game to the bottom of the chat")]
         public async Task RefreshGameInstance(string arg = "")
@@ -111,27 +110,25 @@ namespace PacManBot.Modules.PacManModule
             await ReplyAsync("There is no active game on this channel!");
         }
 
-        [Command("end"), Alias("stop"), Summary("End the current game")]
+        [Command("end"), Alias("stop"), Summary("End a game you started. Always usable by moderators")]
         public async Task EndGameInstance()
         {
             foreach (Game game in gameInstances)
             {
                 if (Context.Channel.Id == game.channelId)
                 {
-                    if (!game.custom && Context.Guild != null && !(Context.User as SocketGuildUser).GuildPermissions.ManageMessages)
+                    if (game.ownerId == Context.User.Id || Context.Guild != null && Context.UserHas(ChannelPermission.ManageMessages))
                     {
-                        await ReplyAsync("Only a Moderator can end non-custom games!");
-                        return;
-                    }
+                        gameInstances.Remove(game);
+                        await ReplyAsync("Game ended.");
 
-                    gameInstances.Remove(game);
-                    await ReplyAsync("Game ended.");
-
-                    if (await Context.Channel.GetMessageAsync(game.messageId) is IUserMessage gameMessage)
-                    {
-                        await gameMessage.ModifyAsync(m => m.Content = game.GetDisplay() + "```diff\n-Game has been ended!```"); //Edit message
-                        if (Context.Guild != null && Context.Guild.CurrentUser.GuildPermissions.ManageMessages) await gameMessage.RemoveAllReactionsAsync(); //Remove reactions
+                        if (await Context.Channel.GetMessageAsync(game.messageId) is IUserMessage gameMessage)
+                        {
+                            await gameMessage.ModifyAsync(m => m.Content = game.GetDisplay() + "```diff\n-Game has been ended!```"); //Edit message
+                            if (Context.Guild != null && Context.Guild.CurrentUser.GuildPermissions.ManageMessages) await gameMessage.RemoveAllReactionsAsync(); //Remove reactions
+                        }
                     }
+                    else await ReplyAsync("You can't end this game because you didn't start it!");
 
                     return;
                 }
@@ -140,10 +137,10 @@ namespace PacManBot.Modules.PacManModule
             await ReplyAsync("There is no active game on this channel!");
         }
 
-        [Command("leaderboard"), Alias("l"), Summary("Global list of top scores. You can specify amount or a start and end")]
+        [Command("leaderboard"), Alias("L"), Summary("**[[**start**]** end**]** **-** Global list of top scores")]
         public async Task SendTopScores(int amount = 10) => await SendTopScores(1, amount);
 
-        [Command("leaderboard"), Alias("l")]
+        [Command("leaderboard"), Alias("L")]
         public async Task SendTopScores(int min, int max)
         {
             if (min <= 1) min = 1;
@@ -194,7 +191,7 @@ namespace PacManBot.Modules.PacManModule
             await ReplyAsync(message);
         }
 
-        [Command("score"), Alias("s"), Summary("See your own or another person's place on the leaderboard")]
+        [Command("score"), Alias("s"), Summary("**[**user**]** **-** See your own or another person's place on the leaderboard")]
         public async Task SendPersonalBest(SocketGuildUser guildUser = null)
         {
             SocketUser user = guildUser ?? Context.User; //Uses the command caller itself if no user is specified

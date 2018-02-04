@@ -35,7 +35,7 @@
     <BaseIntermediateOutputPath>.\obj\standard</BaseIntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>ROBOCOPY "%USERPROFILE%\Google Drive\C#\PacManBot\bin " "%USERPROFILE%\Google Drive\C#\PacManBot\bin " *.xml *.dll /IS /MOV
+    <PostBuildEvent>ROBOCOPY "%25USERPROFILE%25\Google Drive\C#\PacManBot\bin " "%25USERPROFILE%25\Google Drive\C#\PacManBot\bin\lib " *.xml *.dll /IS /MOV
 if %25errorlevel%25 leq 4 exit 0 else exit %25errorlevel%25</PostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
@@ -55,8 +55,6 @@ if %25errorlevel%25 leq 4 exit 0 else exit %25errorlevel%25</PostBuildEvent>
   <ItemGroup>
     <None Include=".\App.config" />
     <None Include=".\bin\PacMan Bot.exe.config" />
-    <None Include=".\obj\standard\Debug\PacMan Bot.exe.config" />
-    <None Include=".\obj\standard\Release\PacMan Bot.exe.config" />
     <None Include=".\packages.config" />
     <None Include=".\PacMan Bot.exe.config" />
     <None Include=".\**\*.bot" />

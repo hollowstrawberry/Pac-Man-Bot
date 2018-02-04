@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Net;
+using System.Diagnostics;
 using System.Threading.Tasks;
-using System.Net.Http;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
@@ -54,20 +54,24 @@ namespace PacManBot
             provider.GetRequiredService<ReactionHandler>();
 
             //Events
-            _client.Ready += async () => await UpdatePlaying(); //Updates playing message when ready or when changing guild count
-            _client.JoinedGuild += async (arg) => await UpdatePlaying();
-            _client.LeftGuild += async (arg) => await UpdatePlaying();
+            _client.Ready += async () => await UpdateGuildCount(); //Updates playing message when ready or when changing guild count
+            _client.JoinedGuild += async (arg) => await UpdateGuildCount();
+            _client.LeftGuild += async (arg) => await UpdateGuildCount();
 
 
             await Task.Delay(-1); //Prevent the application from closing
         }
 
-        private async Task UpdatePlaying()
+        private async Task UpdateGuildCount()
         {
             int guilds = _client.Guilds.Count;
             await _client.SetGameAsync($"{_botConfig["prefix"]}help | {guilds} guilds");
-            await _logger.Log(LogSeverity.Info, $"Updated guilds: {guilds}");
-            if (!string.IsNullOrEmpty(_botConfig["httptoken"])) await UpdateServerGuildCount(guilds);
+            await _logger.Log(LogSeverity.Info, $"Guild count is now {guilds}");
+
+            if (!string.IsNullOrWhiteSpace(_botConfig["httptoken"]))
+            {
+                await UpdateServerGuildCount(guilds);
+            }
         }
 
         private Task UpdateServerGuildCount(int count)
@@ -77,18 +81,18 @@ namespace PacManBot
             request.Method = "POST";
             request.Headers.Add("Authorization", _botConfig["httptoken"]);
 
-            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+            using (var writer = new StreamWriter(request.GetRequestStream()))
             {
-                streamWriter.Write($"{{\n\"server_count\": {count}\n}}");
-                streamWriter.Flush();
-                streamWriter.Close();
+                writer.Write($"{{\n\"server_count\": {count}\n}}");
             }
 
-            var response = (HttpWebResponse)request.GetResponse();
-            using (var streamReader = new StreamReader(response.GetResponseStream()))
+            string response;
+            using (var reader = new StreamReader(((HttpWebResponse)request.GetResponse()).GetResponseStream()))
             {
-                return _logger.Log(LogSeverity.Verbose, $"Sent server count to server. {streamReader.ReadToEnd()}");
+                response = reader.ReadToEnd();
             }
+
+            return _logger.Log(LogSeverity.Verbose, $"Sent server count to server. {(string.IsNullOrWhiteSpace(response) ? "Successful." : $"Response:\n{response}")}");
         }
     }
 }

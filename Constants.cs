@@ -9,7 +9,10 @@
             GameMap = "map.bot",
             About = "about.bot",
             Tips = "tips.bot",
-            CustomMapHelp = "custommaphelp.bot";
+            CustomMapHelp = "custommaphelp.bot",
+            Invite = "invite.bot",
+            FeedbackLog = "logs/feedback.txt",
+            CustomMapLog = "logs/custom.txt";
     }
 
     static class CustomEmoji

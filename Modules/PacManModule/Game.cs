@@ -42,6 +42,7 @@ namespace PacManBot.Modules.PacManModule
 
         //Fields
         public readonly ulong channelId; //Which channel this game is located in
+        public readonly ulong ownerId; //Which user started this game
         public readonly bool custom = false;
         public ulong messageId = 1; //The focus message of the game, for controls to work. Even if not set, it must be a number above 0
         public State state = State.Active;
@@ -269,9 +270,10 @@ namespace PacManBot.Modules.PacManModule
 
         //Game methods
 
-        public Game(ulong channelId, string customMap = null)
+        public Game(ulong channelId, ulong ownerId, string customMap = null)
         {
             this.channelId = channelId;
+            this.ownerId = ownerId;
             random = new Random();
             
             string[] newMap;
@@ -573,7 +575,7 @@ namespace PacManBot.Modules.PacManModule
 
             map = newMap;
 
-            if (custom) File.AppendAllLines("logs/custom.txt", lines);
+            if (custom) File.AppendAllLines(BotFile.CustomMapLog, lines);
         }
     }
 }

@@ -33,13 +33,13 @@ namespace PacManBot.Services
             if (!File.Exists(BotFile.Config)) throw new Exception($"Missing {BotFile.Config}: Bot can't run.");
             if (!File.Exists(BotFile.GameMap)) throw new Exception($"Missing {BotFile.GameMap}: Bot can't run.");
 
-            string[] secondaryFiles = new string[] { BotFile.Prefixes, BotFile.Scoreboard, BotFile.About, BotFile.Tips, BotFile.CustomMapHelp };
+            string[] secondaryFiles = new string[] { BotFile.Prefixes, BotFile.Scoreboard, BotFile.About, BotFile.Tips, BotFile.CustomMapHelp, BotFile.Invite };
             for (int i = 0; i < secondaryFiles.Length; i++)
             {
                 if (!File.Exists(secondaryFiles[i]))
                 {
-                    File.Create(secondaryFiles[i]);
-                    await _logger.Log(LogSeverity.Info, $"Created missing file {secondaryFiles[i]}");
+                    File.Create(secondaryFiles[i]).Dispose();
+                    await _logger.Log(LogSeverity.Warning, $"Created missing file {secondaryFiles[i]}");
                 }
             }
 
