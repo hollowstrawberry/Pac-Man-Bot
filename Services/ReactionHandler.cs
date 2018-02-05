@@ -1,22 +1,24 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.IO;
+using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using PacManBot.Constants;
+using static PacManBot.Modules.PacMan.Game;
 
 namespace PacManBot.Services
 {
     class ReactionHandler
     {
         private readonly DiscordSocketClient _client;
+        private readonly StorageService _storage;
         private readonly LoggingService _logger;
 
-        const bool Added = false;
-        const bool Removed = true;
-
-        //DiscordSocketClient is injected automatically from the IServiceProvider
-        public ReactionHandler(DiscordSocketClient client, LoggingService logger)
+        public ReactionHandler(DiscordSocketClient client, StorageService storage, LoggingService logger)
         {
             _client = client;
+            _storage = storage;
             _logger = logger;
 
             _client.ReactionAdded += OnReactionAdded; //Events
@@ -25,28 +27,79 @@ namespace PacManBot.Services
 
 
         private Task OnReactionAdded(Cacheable<IUserMessage, ulong> messageData, ISocketMessageChannel channel, SocketReaction reaction)
-            => OnReaction(messageData, channel, reaction, Added);
+            => OnReaction(messageData, channel, reaction, false);
 
         private Task OnReactionRemoved(Cacheable<IUserMessage, ulong> messageData, ISocketMessageChannel channel, SocketReaction reaction)
-            => OnReaction(messageData, channel, reaction, Removed);
+            => OnReaction(messageData, channel, reaction, true);
 
         private Task OnReaction(Cacheable<IUserMessage, ulong> messageData, ISocketMessageChannel channel, SocketReaction reaction, bool removed)
         {
-            ulong botID = _client.CurrentUser.Id;
-
-            if (messageData.HasValue && reaction.User.IsSpecified && //Ignores events it can't use
-                messageData.Value.Author.Id == botID && //Only uses reactions to its own messages
-                reaction.UserId != botID //Ignores its own reactions
-            )
+            Task.Run(async () =>
             {
-                Task.Run(async () => //Wrapping in a Task.Run prevents the gateway from getting blocked in case something goes wrong
-                {
-                    var context = new SocketCommandContext(_client, messageData.Value as SocketUserMessage);
-                    await Modules.PacManModule.Controls.ExecuteInput(context, reaction, removed, _logger);
-                });
-            }
+                if (!messageData.HasValue || !reaction.User.IsSpecified) return;
 
+                ulong botID = _client.CurrentUser.Id;
+                if (messageData.Value.Author.Id == botID && reaction.UserId != botID)
+                {
+                    SocketCommandContext context = new SocketCommandContext(_client, messageData.Value as SocketUserMessage);
+                    await GameInput(context, reaction, removed);
+                }
+            });
+           
             return Task.CompletedTask;
+        }
+
+
+        private async Task GameInput(SocketCommandContext context, SocketReaction reaction, bool removed)
+        {
+            if (removed && context.BotHas(ChannelPermission.ManageMessages)) return; //Removing reactions only counts if they're not automatically removed
+
+            foreach (Modules.PacMan.Game game in _storage.gameInstances)
+            {
+                if (context.Message.Id == game.messageId && game.state == State.Active) //Finds the game corresponding to this channel
+                {
+                    string emote = reaction.Emote.ToString();
+                    string channelName = context.FullChannelName();
+                    var user = reaction.User.Value as SocketUser;
+                    var message = context.Message;
+
+                    if (gameInput.ContainsKey(emote)) //Valid input
+                    {
+                        if (gameInput.ContainsKey(emote)) //Valid reaction input
+                        {
+                            await _logger.Log(LogSeverity.Verbose, "Game", $"Input \"{gameInput[emote]}\" by user {user.FullName()} in channel {channelName}");
+                            game.DoTick(gameInput[emote]);
+
+                            if (game.state != State.Active)
+                            {
+                                _storage.gameInstances.Remove(game);
+                                if (game.score > 0 && !game.custom)
+                                {
+                                    File.AppendAllText(BotFile.Scoreboard, $"\n{game.state} {game.score} {game.time} {user.Id} \"{user.Username}#{user.Discriminator}\" \"{DateTime.Now.ToString("o")}\" \"{channelName}\"");
+                                    await _logger.Log(LogSeverity.Verbose, "Game", $"({game.state}) Achieved score {game.score} in {game.time} moves in channel {channelName} last controlled by user {user.FullName()}");
+                                }
+                            }
+
+                            await message.ModifyAsync(m => m.Content = game.GetDisplay()); //Update display
+
+                            if (game.state != State.Active) //Failsafe to bug where the display doesn't update in order if there are multiple inputs at once
+                            {
+                                await Task.Delay(2000);
+                                await message.ModifyAsync(m => m.Content = game.GetDisplay());
+                            }
+                        }
+                    }
+
+                    if (context.BotHas(ChannelPermission.ManageMessages)) //Can remove reactions
+                    {
+                        if (game.state == State.Active)
+                        {
+                            if (!removed) await message.RemoveReactionAsync(reaction.Emote, user);
+                        }
+                        else await message.RemoveAllReactionsAsync();
+                    }
+                }
+            }
         }
     }
 }

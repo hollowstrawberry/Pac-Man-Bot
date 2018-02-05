@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
-using Microsoft.Extensions.Configuration;
 using PacManBot.Services;
 using PacManBot.Constants;
 
@@ -17,16 +16,16 @@ namespace PacManBot.Modules
     {
         private readonly CommandService _commands;
         private readonly LoggingService _logger;
-        private readonly IConfigurationRoot _config;
+        private readonly StorageService _storage;
 
-        public MiscModule(CommandService service, LoggingService logger, IConfigurationRoot config)
+        public MiscModule(CommandService commands, LoggingService logger, StorageService storage)
         {
-            _commands = service;
+            _commands = commands;
             _logger = logger;
-            _config = config;
+            _storage = storage;
         }
 
-        [Command("help"), Alias("h"), Summary("List of commands")]
+        [Command("help"), Alias("h", "commands"), Summary("List of commands")]
         public async Task HelpAsync([Remainder]string args = "") //Argument is useless for now
         {
             if (Context.Guild != null && !Context.BotHas(ChannelPermission.EmbedLinks))
@@ -35,8 +34,14 @@ namespace PacManBot.Modules
                 return;
             }
 
-            var embed = new EmbedBuilder() { Color = new Color(241, 195, 15) }; //Create a new embed block
-            embed.Title = $"{CustomEmoji.PacMan} **__List of commands__**";
+            string prefix = _storage.GetPrefix(Context.Guild).If(Context.Guild != null);
+
+            var embed = new EmbedBuilder()
+            {
+                Title = $"{CustomEmojis.PacMan} __**Bot Commands**__",
+                Description = $"Prefix for this server is '{prefix}'\n".Unless(prefix == "") + $"You can use the **{prefix}about** command for more information" + "\nNo prefix is necessary in a DM!".If(Context.Guild == null),
+                Color = new Color(241, 195, 15)
+            };
 
             var allModules = _commands.Modules.OrderBy(m => m.Name); //Alphabetically
             foreach (var module in allModules) //Go through all modules
@@ -55,7 +60,7 @@ namespace PacManBot.Modules
                         }
                         if (!string.IsNullOrWhiteSpace(command.Summary)) //Adds the command summary
                         {
-                            commandsText += $" {"- ".Unless(command.Summary.Contains("**-**"))}*{command.Summary}*";
+                            commandsText += $" {command.Remarks} — *{command.Summary}*";
                         }
 
                         commands.Add(command.Name);
@@ -63,23 +68,14 @@ namespace PacManBot.Modules
                     }
                 }
 
-                if (!string.IsNullOrWhiteSpace(commandsText))
-                {
-                    embed.AddField(f =>
-                    {
-                        f.Name = $"{module.Name}";
-                        f.Value = commandsText;
-                        f.IsInline = false;
-                    });
-                }
+                if (!string.IsNullOrWhiteSpace(commandsText)) embed.AddField($"{module.Name}", commandsText, false);
             }
 
-            string text = $"You can use the **{CommandHandler.ServerPrefix(Context.Guild) ?? _config["prefix"]}about** command for more info.";
-            if (Context.Guild == null) text += "\nYou can also use commands without any prefix in a DM.";
+            string text = "";
             await ReplyAsync(text, false, embed.Build()); //Send the built embed
         }
 
-        [Command("about"), Alias("info"), Summary("About this bot")]
+        [Command("about"), Alias("a", "info"), Summary("About this bot")]
         public async Task SayBotInfo()
         {
             if (Context.Guild != null && !Context.BotHas(ChannelPermission.EmbedLinks))
@@ -88,32 +84,39 @@ namespace PacManBot.Modules
                 return;
             }
 
-            var embed = new EmbedBuilder() { Color = new Color(241, 195, 15) };
+            var embed = new EmbedBuilder()
+            {
+                Title = $"{CustomEmojis.PacMan} __**Pac-Man Bot**__",
+                Description = File.ReadAllText(BotFile.About).Replace("{prefix}", _storage.GetPrefixOrEmpty(Context.Guild)),
+                 Color = new Color(241, 195, 15)
+            };
             embed.AddField("Server count", $"{Context.Client.Guilds.Count}", true);
-            embed.AddField("Active games", $"{PacManModule.Game.gameInstances.Count}", true);
+            embed.AddField("Active games", $"{_storage.gameInstances.Count}", true);
             embed.AddField("Latency", $"{Context.Client.Latency}ms", true);
             embed.AddField("Author", $"Samrux#3980", true);
-            embed.AddField("Version", $"v2.4", true);
-            embed.AddField("Prefix", CommandHandler.ServerPrefix(Context.Guild) ?? _config["prefix"], true);
+            embed.AddField("Version", $"v2.5", true);
+            embed.AddField("Library", "Discord.Net 2.0 (C#)", true);
+            embed.AddField($"{CustomEmojis.Discord} Bot invite link", $"[Click here]({File.ReadAllText(BotFile.InviteLink)} \"{File.ReadAllText(BotFile.InviteLink)}\")", true);
+            embed.AddField($"{CustomEmojis.GitHub} Source code", $"[Click here](https://github.com/Samrux/Pac-Man-Bot \"https://github.com/Samrux/Pac-Man-Bot\")", true);
 
-            await ReplyAsync(File.ReadAllText(BotFile.About), false, embed.Build());
+            await ReplyAsync("", false, embed.Build());
         }
 
         [Command("waka"), Alias("ping"), Summary("Waka waka waka")]
         public async Task Ping([Remainder]string args = "") //Useless args
         {
             var stopwatch = Stopwatch.StartNew();
-            var message = await ReplyAsync($"{CustomEmoji.Loading} Waka");
+            var message = await ReplyAsync($"{CustomEmojis.Loading} Waka");
             stopwatch.Stop();
 
-            await message.ModifyAsync(m => m.Content = $"{CustomEmoji.PacMan} Waka in {(int)stopwatch.Elapsed.TotalMilliseconds}ms | {Context.Client.Guilds.Count} guilds | {PacManModule.Game.gameInstances.Count} active games\n");
+            await message.ModifyAsync(m => m.Content = $"{CustomEmojis.PacMan} Waka in {(int)stopwatch.Elapsed.TotalMilliseconds}ms | {Context.Client.Guilds.Count} guilds | {_storage.gameInstances.Count} active games\n");
         }
 
-        [Command("say"), Summary("Make the bot say anything (Moderator)")]
+        [Command("say"), Remarks("message"), Summary("Make the bot say anything (Moderator)")]
         [RequireUserPermission(ChannelPermission.ManageMessages)]
         public async Task Say([Remainder]string text) => await ReplyAsync(text);
 
-        [Command("clear"), Alias("c"), Summary("**[**amount**]** **-** Clear messages from this bot (Moderator)")]
+        [Command("clear"), Alias("c"), Remarks("[amount]"), Summary("Clear messages from this bot (Moderator)")]
         [RequireUserPermission(ChannelPermission.ManageMessages)]
         public async Task ClearGameMessages(int amount = 10)
         {
@@ -134,18 +137,18 @@ namespace PacManBot.Modules
             }
             else
             {
-                string prefix = CommandHandler.ServerPrefix(Context.Guild.Id) ?? _config["prefix"];
-                reply = $"Prefix for this server is set to '{prefix}'{" (the default)".If(prefix == _config["prefix"])}. It can be changed with the command **setprefix**.";
+                string prefix = _storage.GetPrefix(Context.Guild.Id);
+                reply = $"Prefix for this server is set to '{prefix}'{" (the default)".If(prefix == _storage.defaultPrefix)}. It can be changed with the command **setprefix**.";
             }
             await ReplyAsync(reply);
         }
 
-        [Command("setprefix"), Summary("Set a custom prefix for this server (Admin)")]
+        [Command("setprefix"), Remarks("prefix"), Summary("Set a custom prefix for this server (Admin)")]
         [RequireUserPermission(GuildPermission.Administrator)]
         public async Task SetServerPrefix(string newPrefix)
         {
-            if (CommandHandler.prefixes.ContainsKey(Context.Guild.Id)) CommandHandler.prefixes[Context.Guild.Id] = newPrefix;
-            else CommandHandler.prefixes.Add(Context.Guild.Id, newPrefix);
+            if (_storage.prefixes.ContainsKey(Context.Guild.Id)) _storage.prefixes[Context.Guild.Id] = newPrefix;
+            else _storage.prefixes.Add(Context.Guild.Id, newPrefix);
 
             try
             {
@@ -166,23 +169,24 @@ namespace PacManBot.Modules
                     File.WriteAllLines(file, lines);
                 }
 
-                await ReplyAsync($"{CustomEmoji.Check} Prefix for this server has been successfully set to '{newPrefix}'.");
+                await ReplyAsync($"{CustomEmojis.Check} Prefix for this server has been successfully set to '{newPrefix}'.");
                 await _logger.Log(LogSeverity.Verbose, $"Prefix for server {Context.Guild.Name} set to {newPrefix}");
             }
             catch
             {
-                await ReplyAsync($"{CustomEmoji.Cross} There was a problem storing the prefix on file. It might be reset the next time the bot restarts. Please try again or, if the problem persists, contact the bot author.");
+                string prefix = _storage.GetPrefixOrEmpty(Context.Guild);
+                await ReplyAsync($"{CustomEmojis.Cross} There was a problem storing the prefix on file. It might be reset the next time the bot restarts. Please try again or, if the problem persists, contact the bot author using **{prefix}feedback**.");
                 throw new Exception("Couldn't modify prefix on file");
             }
         }
 
-        [Command("feedback"), Alias("bug"), Summary("Send the bot's developer a message")]
+        [Command("feedback"), Alias("suggestion", "bug"), Remarks("message"), Summary("Send a message to the bot's developer")]
         public async Task SendFeedback([Remainder]string message)
         {
             try
             {
-                File.AppendAllText(BotFile.FeedbackLog, $"\n\n[{Context.User.Username}#{Context.User.Discriminator}:] {message}");
-                await ReplyAsync($"{CustomEmoji.Check} Message sent");
+                File.AppendAllText(BotFile.FeedbackLog, $"[{Context.User.FullName()}:] {message}\n\n");
+                await ReplyAsync($"{CustomEmojis.Check} Message sent. Thank you!");
             }
             catch { await ReplyAsync("Oops, I didn't catch that. Please try again."); }
         }
@@ -190,8 +194,14 @@ namespace PacManBot.Modules
         [Command("invite"), Alias("inv"), Summary("Invite this bot to your server")]
         public async Task SayBotInvite()
         {
-            var embed = new EmbedBuilder() { Title = "Bot invite link", Color = new Color(241, 195, 15), ThumbnailUrl = Context.Client.CurrentUser.GetAvatarUrl(ImageFormat.Auto, 128)};
-            embed.AddField($"➡ {File.ReadAllText(BotFile.Invite)}", "*Thanks for inviting Pac-Man Bot!*", false);
+            string link = File.ReadAllText(BotFile.InviteLink);
+            var embed = new EmbedBuilder()
+            {
+                Title = "Bot invite link",
+                Color = new Color(241, 195, 15),
+                ThumbnailUrl = Context.Client.CurrentUser.GetAvatarUrl(ImageFormat.Auto, 128)
+            };
+            embed.AddField($"➡ <{link}>", "*Thanks for inviting Pac-Man Bot!*", false);
             await ReplyAsync("", false, embed.Build());
         }
     }

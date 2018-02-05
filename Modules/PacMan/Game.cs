@@ -2,22 +2,25 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using Discord.WebSocket;
 using PacManBot.Constants;
+using PacManBot.Services;
 
-namespace PacManBot.Modules.PacManModule
+namespace PacManBot.Modules.PacMan
 {
     public class Game
     {
-        static public List<Game> gameInstances = new List<Game>();
+        static public Dictionary<string, GameInput> gameInput = new Dictionary<string, GameInput>()
+        {
+            { Emojis.Info, GameInput.Help },
+            { Emojis.Left, GameInput.Left },
+            { Emojis.Up, GameInput.Up },
+            { Emojis.Down, GameInput.Down },
+            { Emojis.Right, GameInput.Right },
+            { Emojis.Pause, GameInput.Wait }
+        };
 
         //Constants
-        public const string //Controls
-            LeftEmoji = "⬅",
-            UpEmoji = "⬆",
-            DownEmoji = "⬇",
-            RightEmoji = "➡",
-            WaitEmoji = "⏸",
-            RefreshEmoji = "🔃";
         private const char //Read from map
             CharPlayer = 'O',
             CharFruit = '$',
@@ -50,9 +53,12 @@ namespace PacManBot.Modules.PacManModule
         public int score = 0;
         public int time = 0; //How many turns have passed
 
+        private readonly DiscordSocketClient client;
+        private readonly StorageService storage;
         private readonly Random random;
         private readonly Fruit[] fruitTypes; //Stores the fruits that will be available in this game
         private readonly int maxPellets;
+        private GameInput lastInput;
         private int pellets; //Pellets remaining
         private int oldScore = 0; //Score obtained last turn
         private char[,] map;
@@ -70,7 +76,9 @@ namespace PacManBot.Modules.PacManModule
         //Game data types
         public enum State { Active, Lose, Win }
 
-        public enum Dir { none, up, down, left, right }
+        public enum GameInput { None, Left, Up, Down, Right, Wait, Refresh, Help }
+
+        public enum Dir { none, left, up, down, right }
 
         public enum AiType { Blinky, Pinky, Inky, Clyde }
 
@@ -270,8 +278,10 @@ namespace PacManBot.Modules.PacManModule
 
         //Game methods
 
-        public Game(ulong channelId, ulong ownerId, string customMap = null)
+        public Game(ulong channelId, ulong ownerId, string customMap, DiscordSocketClient client, StorageService storage)
         {
+            this.client = client;
+            this.storage = storage;
             this.channelId = channelId;
             this.ownerId = ownerId;
             random = new Random();
@@ -309,17 +319,29 @@ namespace PacManBot.Modules.PacManModule
             }
         }
 
-        public void DoTick(Dir direction)
+        public void DoTick(GameInput input)
         {
             if (state != State.Active) return; //Failsafe
+
+            if (input == GameInput.Help || lastInput == GameInput.Help) //Does nothing
+            {
+                lastInput = (lastInput == GameInput.Help) ? GameInput.None : input;
+                return;
+            }
+
+            lastInput = input;
 
             time++;
             oldScore = score;
 
             //Player
-            if (direction != Dir.none) player.dir = direction;
-            if (NonSolid(player.pos + direction)) player.pos += direction;
-            WrapAround(ref player.pos);
+            Dir newDir = (int)input < 5 ? (Dir)input : Dir.none;
+            if (newDir != Dir.none)
+            {
+                player.dir = newDir;
+                if (NonSolid(player.pos + newDir)) player.pos += newDir;
+                WrapAround(ref player.pos);
+            }
 
             //Fruit
             if (fruit.timer > 0)
@@ -393,6 +415,13 @@ namespace PacManBot.Modules.PacManModule
 
         public string GetDisplay()
         {
+            if (lastInput == GameInput.Help)
+            {
+                var guildChannel = client.GetChannel(channelId) as SocketGuildChannel;
+                var guild = guildChannel == null ? null : guildChannel.Guild;
+                return File.ReadAllText(BotFile.GameHelp).Replace("{prefix}", storage.GetPrefixOrEmpty(guild));
+            }
+
             try
             {
                 StringBuilder display = new StringBuilder(); //The final display in string form
@@ -499,7 +528,7 @@ namespace PacManBot.Modules.PacManModule
             }
             catch
             {
-                return "```There was an error displaying the game. If you're using a custom map, make sure it's valid. If this problem persists, please contact the author of the bot.```";
+                return $"```There was an error displaying the game. {"Make sure your custom map is valid. ".If(custom)}If this problem persists, please contact the author of the bot.```";
             }
         }
 

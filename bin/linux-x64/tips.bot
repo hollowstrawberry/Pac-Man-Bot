@@ -1,8 +1,16 @@
-﻿• Each eaten ghost during the same power mode yields twice as many points as the last!
-• Eat the fruit that spawns after eating a large amount of pellets for etxra points!
-• Just after starting and 3 more times after, the ghosts scatter instead of chasing the player, for a short rest.
-• The ghosts can't turn 180º unless they're **E**atable or have just switched between chasing and scattering.
-• Blinky chases you, Pinky tries to ambush you, Inky will come to Blinky's aid, and Clyde is kind of scared of you.
-• Ghosts will not go up from below the T-intersections located right above the ghost cage and starting area.
+﻿```css
+@ 'Welcome to Pac-Man Bot!'
 
-🔢 For exact details, you can see the code yourself on <http://github.com/Samrux/Pac-Man-Bot>
+The game is played in turns, using the emoji reactions as controls. The arrows will move Pac-Man and change his direction, and the pause symbol will skip a turn. You must avoid the ghosts and collect all the pellets to win. Try and get a high score!
+You can use the '{prefix}refresh' or '{prefix}refresh mobile' commands to move this game message to the bottom of the chat. Using 'end' will end the game.
+
+For more information, use the '{prefix}help' and '{prefix}about' commands.
+
+;Here are some more #tips:
+• Each eaten ghost during the same power mode yields twice as many points as the last!
+• Eat the fruit that spawns after eating a large amount of pellets for extra points!
+• Blinky chases you, Pinky tries to ambush you, Inky will follow Blinky's lead, and Clyde is kind of shy. 4 times during the game they will scatter and stop chasing you.
+• The ghosts can't turn 180º unless they're Eatable or switching between chasing/scattering.
+
+@ 'Add any reaction to return to the game'
+```

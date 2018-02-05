@@ -1,7 +1,7 @@
 ﻿using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
-using static PacManBot.Modules.PacManModule.Game;
+using static PacManBot.Modules.PacMan.Game;
 
 namespace PacManBot
 {
@@ -26,6 +26,16 @@ namespace PacManBot
         public static bool UserHas(this SocketCommandContext context, ChannelPermission permission)
         {
             return context.Guild != null && context.Guild.GetUser(context.User.Id).GetPermissions(context.Channel as IGuildChannel).Has(permission);
+        }
+
+        public static string FullChannelName(this SocketCommandContext context)
+        {
+            return (context.Guild != null ? $"{context.Guild.Name}/" : "") + context.Channel.Name;
+        }
+
+        public static string FullName(this SocketUser user)
+        {
+            return $"{user.Username}#{user.Discriminator}";
         }
 
 

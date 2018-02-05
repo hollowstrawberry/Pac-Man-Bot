@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Net;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
@@ -42,6 +41,7 @@ namespace PacManBot
                 .AddSingleton<CommandHandler>()
                 .AddSingleton<ReactionHandler>()
                 .AddSingleton<LoggingService>()
+                .AddSingleton<StorageService>()
                 .AddSingleton<StartupService>()
                 .AddSingleton(_botConfig);
 
@@ -49,6 +49,7 @@ namespace PacManBot
 
             //Initialize services
             _logger = provider.GetRequiredService<LoggingService>();
+            provider.GetRequiredService<StorageService>();
             await provider.GetRequiredService<StartupService>().StartAsync();
             provider.GetRequiredService<CommandHandler>();
             provider.GetRequiredService<ReactionHandler>();

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
@@ -33,7 +32,7 @@ namespace PacManBot.Services
             if (!File.Exists(BotFile.Config)) throw new Exception($"Missing {BotFile.Config}: Bot can't run.");
             if (!File.Exists(BotFile.GameMap)) throw new Exception($"Missing {BotFile.GameMap}: Bot can't run.");
 
-            string[] secondaryFiles = new string[] { BotFile.Prefixes, BotFile.Scoreboard, BotFile.About, BotFile.Tips, BotFile.CustomMapHelp, BotFile.Invite };
+            string[] secondaryFiles = new string[] { BotFile.Prefixes, BotFile.Scoreboard, BotFile.About, BotFile.GameHelp, BotFile.CustomMapHelp, BotFile.InviteLink };
             for (int i = 0; i < secondaryFiles.Length; i++)
             {
                 if (!File.Exists(secondaryFiles[i]))
@@ -42,19 +41,6 @@ namespace PacManBot.Services
                     await _logger.Log(LogSeverity.Warning, $"Created missing file {secondaryFiles[i]}");
                 }
             }
-
-            CommandHandler.prefixes = new Dictionary<ulong, string>(); //Load prefixes from file
-            string[] line = File.ReadAllLines(BotFile.Prefixes);
-            for (int i = 0; i < line.Length; i++)
-            {
-                string[] data = line[i].Split(' '); //Server ID and prefix
-                if (data.Length != 2) continue; //Skips invalid lines
-                if (!ulong.TryParse(data[0], out ulong ID)) continue; //Gets ID; Skips non-valid ID numbers
-                string prefix = data[1].Trim();
-
-                CommandHandler.prefixes.Add(ID, prefix);
-            }
-            await _logger.Log(LogSeverity.Info, $"Loaded prefixes from {BotFile.Prefixes}");
 
 
             string discordToken = _config["token"]; //Get the discord token from the config file
