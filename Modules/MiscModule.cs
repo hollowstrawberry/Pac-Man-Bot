@@ -4,6 +4,7 @@ using System.Linq;
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.Scripting;
 using Discord;
 using Discord.Commands;
 using PacManBot.Services;
@@ -14,15 +15,17 @@ namespace PacManBot.Modules
     [Name("📁Other")]
     public class MiscModule : ModuleBase<SocketCommandContext>
     {
-        private readonly CommandService _commands;
-        private readonly LoggingService _logger;
-        private readonly StorageService _storage;
+        private readonly CommandService commands;
+        private readonly LoggingService logger;
+        private readonly StorageService storage;
+        private readonly ScriptingService scripting;
 
-        public MiscModule(CommandService commands, LoggingService logger, StorageService storage)
+        public MiscModule(CommandService commands, LoggingService logger, StorageService storage, ScriptingService script)
         {
-            _commands = commands;
-            _logger = logger;
-            _storage = storage;
+            this.commands = commands;
+            this.logger = logger;
+            this.storage = storage;
+            this.scripting = script;
         }
 
         [Command("help"), Alias("h", "commands"), Summary("List of commands")]
@@ -34,7 +37,7 @@ namespace PacManBot.Modules
                 return;
             }
 
-            string prefix = _storage.GetPrefix(Context.Guild).If(Context.Guild != null);
+            string prefix = storage.GetPrefix(Context.Guild).If(Context.Guild != null);
 
             var embed = new EmbedBuilder()
             {
@@ -43,7 +46,7 @@ namespace PacManBot.Modules
                 Color = new Color(241, 195, 15)
             };
 
-            var allModules = _commands.Modules.OrderBy(m => m.Name); //Alphabetically
+            var allModules = commands.Modules.OrderBy(m => m.Name); //Alphabetically
             foreach (var module in allModules) //Go through all modules
             {
                 string commandsText = null; //Text under the module title in the embed block
@@ -87,11 +90,11 @@ namespace PacManBot.Modules
             var embed = new EmbedBuilder()
             {
                 Title = $"{CustomEmojis.PacMan} __**Pac-Man Bot**__",
-                Description = File.ReadAllText(BotFile.About).Replace("{prefix}", _storage.GetPrefixOrEmpty(Context.Guild)),
+                Description = File.ReadAllText(BotFile.About).Replace("{prefix}", storage.GetPrefixOrEmpty(Context.Guild)),
                  Color = new Color(241, 195, 15)
             };
             embed.AddField("Server count", $"{Context.Client.Guilds.Count}", true);
-            embed.AddField("Active games", $"{_storage.gameInstances.Count}", true);
+            embed.AddField("Active games", $"{storage.gameInstances.Count}", true);
             embed.AddField("Latency", $"{Context.Client.Latency}ms", true);
             embed.AddField("Author", $"Samrux#3980", true);
             embed.AddField("Version", $"v2.5", true);
@@ -109,7 +112,7 @@ namespace PacManBot.Modules
             var message = await ReplyAsync($"{CustomEmojis.Loading} Waka");
             stopwatch.Stop();
 
-            await message.ModifyAsync(m => m.Content = $"{CustomEmojis.PacMan} Waka in {(int)stopwatch.Elapsed.TotalMilliseconds}ms | {Context.Client.Guilds.Count} guilds | {_storage.gameInstances.Count} active games\n");
+            await message.ModifyAsync(m => m.Content = $"{CustomEmojis.PacMan} Waka in {(int)stopwatch.Elapsed.TotalMilliseconds}ms | {Context.Client.Guilds.Count} guilds | {storage.gameInstances.Count} active games\n");
         }
 
         [Command("say"), Remarks("message"), Summary("Make the bot say anything (Moderator)")]
@@ -137,8 +140,8 @@ namespace PacManBot.Modules
             }
             else
             {
-                string prefix = _storage.GetPrefix(Context.Guild.Id);
-                reply = $"Prefix for this server is set to '{prefix}'{" (the default)".If(prefix == _storage.defaultPrefix)}. It can be changed with the command **setprefix**.";
+                string prefix = storage.GetPrefix(Context.Guild.Id);
+                reply = $"Prefix for this server is set to '{prefix}'{" (the default)".If(prefix == storage.defaultPrefix)}. It can be changed with the command **setprefix**.";
             }
             await ReplyAsync(reply);
         }
@@ -147,8 +150,8 @@ namespace PacManBot.Modules
         [RequireUserPermission(GuildPermission.Administrator)]
         public async Task SetServerPrefix(string newPrefix)
         {
-            if (_storage.prefixes.ContainsKey(Context.Guild.Id)) _storage.prefixes[Context.Guild.Id] = newPrefix;
-            else _storage.prefixes.Add(Context.Guild.Id, newPrefix);
+            if (storage.prefixes.ContainsKey(Context.Guild.Id)) storage.prefixes[Context.Guild.Id] = newPrefix;
+            else storage.prefixes.Add(Context.Guild.Id, newPrefix);
 
             try
             {
@@ -170,11 +173,11 @@ namespace PacManBot.Modules
                 }
 
                 await ReplyAsync($"{CustomEmojis.Check} Prefix for this server has been successfully set to '{newPrefix}'.");
-                await _logger.Log(LogSeverity.Verbose, $"Prefix for server {Context.Guild.Name} set to {newPrefix}");
+                await logger.Log(LogSeverity.Verbose, $"Prefix for server {Context.Guild.Name} set to {newPrefix}");
             }
             catch
             {
-                string prefix = _storage.GetPrefixOrEmpty(Context.Guild);
+                string prefix = storage.GetPrefixOrEmpty(Context.Guild);
                 await ReplyAsync($"{CustomEmojis.Cross} There was a problem storing the prefix on file. It might be reset the next time the bot restarts. Please try again or, if the problem persists, contact the bot author using **{prefix}feedback**.");
                 throw new Exception("Couldn't modify prefix on file");
             }
@@ -203,6 +206,22 @@ namespace PacManBot.Modules
             };
             embed.AddField($"➡ <{link}>", "*Thanks for inviting Pac-Man Bot!*", false);
             await ReplyAsync("", false, embed.Build());
+        }
+
+
+        [Command("eval"), Alias("run"), Summary("Run code, super dangerous do not try at home")]
+        [RequireOwner]
+        public async Task Run([Remainder]string code)
+        {
+            try {
+                scripting.Eval(code, Context);
+                await Context.Message.AddReactionAsync(new Emoji("👍"));
+            }
+            catch (CompilationErrorException e)
+            {
+                await ReplyAsync($"```{e.Message}```");
+                await logger.Log(LogSeverity.Debug, $"{e}");
+            }
         }
     }
 }

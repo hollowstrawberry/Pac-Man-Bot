@@ -12,18 +12,18 @@ namespace PacManBot.Services
 {
     public class StartupService
     {
-        private readonly DiscordSocketClient _client;
-        private readonly CommandService _commands;
-        private readonly LoggingService _logger;
-        private readonly IConfigurationRoot _config;
+        private readonly DiscordSocketClient client;
+        private readonly CommandService commands;
+        private readonly LoggingService logger;
+        private readonly IConfigurationRoot config;
 
         //DiscordSocketClient, CommandService and IConfigurationRoot are injected automatically from the IServiceProvider
         public StartupService(DiscordSocketClient client, CommandService commands, LoggingService logger, IConfigurationRoot config)
         {
-            _client = client;
-            _commands = commands;
-            _logger = logger;
-            _config = config;
+            this.client = client;
+            this.commands = commands;
+            this.logger = logger;
+            this.config = config;
         }
 
 
@@ -38,18 +38,18 @@ namespace PacManBot.Services
                 if (!File.Exists(secondaryFiles[i]))
                 {
                     File.Create(secondaryFiles[i]).Dispose();
-                    await _logger.Log(LogSeverity.Warning, $"Created missing file {secondaryFiles[i]}");
+                    await logger.Log(LogSeverity.Warning, $"Created missing file {secondaryFiles[i]}");
                 }
             }
 
 
-            string discordToken = _config["token"]; //Get the discord token from the config file
+            string discordToken = config["token"]; //Get the discord token from the config file
             if (string.IsNullOrWhiteSpace(discordToken)) throw new Exception($"Please enter the bot's token into the {BotFile.Config} file");
 
-            await _client.LoginAsync(TokenType.Bot, discordToken); //Login to discord
-            await _client.StartAsync(); //Connect to the websocket
+            await client.LoginAsync(TokenType.Bot, discordToken); //Login to discord
+            await client.StartAsync(); //Connect to the websocket
 
-            await _commands.AddModulesAsync(Assembly.GetEntryAssembly()); //Load commands and modules into the command service
+            await commands.AddModulesAsync(Assembly.GetEntryAssembly()); //Load commands and modules into the command service
         }
     }
 }

@@ -9,8 +9,8 @@ namespace PacManBot.Services
 {
     public class LoggingService
     {
-        private readonly DiscordSocketClient _client;
-        private readonly CommandService _commands;
+        private readonly DiscordSocketClient client;
+        private readonly CommandService commands;
 
         private string logDirectory { get; }
         private string logFile => Path.Combine(logDirectory, $"{DateTime.Now.ToString("yyyy-MM-dd")}.txt");
@@ -20,11 +20,11 @@ namespace PacManBot.Services
         {
             logDirectory = Path.Combine(AppContext.BaseDirectory, "logs");
 
-            _client = client;
-            _commands = commands;
+            this.client = client;
+            this.commands = commands;
 
-            _client.Log += Log;
-            _commands.Log += Log;
+            this.client.Log += Log;
+            this.commands.Log += Log;
         }
 
 

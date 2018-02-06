@@ -14,13 +14,13 @@ namespace PacManBot.Modules.PacMan
     [Name("🎮Game")]
     public class PacManModule : ModuleBase<SocketCommandContext>
     {
-        private readonly LoggingService _logger;
-        private readonly StorageService _storage;
+        private readonly LoggingService logger;
+        private readonly StorageService storage;
 
         public PacManModule(LoggingService logger, StorageService storage)
         {
-            _logger = logger;
-            _storage = storage;
+            this.logger = logger;
+            this.storage = storage;
         }
 
 
@@ -33,7 +33,7 @@ namespace PacManBot.Modules.PacMan
         {
             if (Context.Guild != null && !Context.BotHas(ChannelPermission.SendMessages)) return;
 
-            string prefix = _storage.GetPrefixOrEmpty(Context.Guild);
+            string prefix = storage.GetPrefixOrEmpty(Context.Guild);
 
             bool mobile = args.StartsWith("m");
             string customMap = null;
@@ -49,7 +49,7 @@ namespace PacManBot.Modules.PacMan
                 return;
             }
 
-            foreach (Game game in _storage.gameInstances)
+            foreach (Game game in storage.gameInstances)
             {
                 if (Context.Channel.Id == game.channelId) //Finds a game instance corresponding to this channel
                 {
@@ -59,7 +59,7 @@ namespace PacManBot.Modules.PacMan
             }
 
             Game newGame;
-            try { newGame = new Game(Context.Channel.Id, Context.User.Id, customMap, Context.Client, _storage); } //Create a game instance
+            try { newGame = new Game(Context.Channel.Id, Context.User.Id, customMap, Context.Client, storage); } //Create a game instance
             catch
             {
                 string errorMessage = customMap != null ? $"The custom map appears to be invalid. Use the **{prefix}custom** command for help." : $"There was an error starting the game. Please try again or contact the author of the bot using **{prefix}feedback**";
@@ -67,7 +67,7 @@ namespace PacManBot.Modules.PacMan
                 throw new Exception("Failed to create game");
             }
 
-            _storage.gameInstances.Add(newGame);
+            storage.gameInstances.Add(newGame);
             if (mobile) newGame.mobileDisplay = true;
             var gameMessage = await ReplyAsync(newGame.GetDisplay() + "```diff\n+Starting game```"); //Output the game
             newGame.messageId = gameMessage.Id;
@@ -90,7 +90,7 @@ namespace PacManBot.Modules.PacMan
                 return;
             }
 
-            foreach (Game game in _storage.gameInstances)
+            foreach (Game game in storage.gameInstances)
             {
                 if (Context.Channel.Id == game.channelId) //Finds a game instance corresponding to this channel
                 {
@@ -117,13 +117,13 @@ namespace PacManBot.Modules.PacMan
         [Command("end"), Alias("stop"), Summary("End a game you started. Always usable by moderators")]
         public async Task EndGameInstance()
         {
-            foreach (Game game in _storage.gameInstances)
+            foreach (Game game in storage.gameInstances)
             {
                 if (Context.Channel.Id == game.channelId)
                 {
                     if (game.ownerId == Context.User.Id || Context.Guild != null && Context.UserHas(ChannelPermission.ManageMessages))
                     {
-                        _storage.gameInstances.Remove(game);
+                        storage.gameInstances.Remove(game);
                         await ReplyAsync("Game ended.");
 
                         if (await Context.Channel.GetMessageAsync(game.messageId) is IUserMessage gameMessage)
@@ -235,16 +235,16 @@ namespace PacManBot.Modules.PacMan
         public async Task AddControls(IUserMessage message)
         {
             int index = -1;
-            for (int i = 0; i < _storage.gameInstances.Count; i++)
+            for (int i = 0; i < storage.gameInstances.Count; i++)
             {
-                if (_storage.gameInstances[i].messageId == message.Id) index = i;
+                if (storage.gameInstances[i].messageId == message.Id) index = i;
             }
 
             if (index < 0) return;
 
             foreach (string input in gameInput.Keys)
             {
-                if (_storage.gameInstances[index].state == State.Active) await message.AddReactionAsync(new Discord.Emoji(input));
+                if (storage.gameInstances[index].state == State.Active) await message.AddReactionAsync(new Discord.Emoji(input));
             }
         }
     }

@@ -9,7 +9,7 @@ namespace PacManBot.Services
 {
     public class StorageService
     {
-        private readonly LoggingService _logger;
+        private readonly LoggingService logger;
 
         public readonly string defaultPrefix;
         public Dictionary<ulong, string> prefixes;
@@ -17,7 +17,7 @@ namespace PacManBot.Services
 
         public StorageService(LoggingService logger, IConfigurationRoot config)
         {
-            _logger = logger;
+            this.logger = logger;
 
             defaultPrefix = config["prefix"];
             prefixes = new Dictionary<ulong, string>();
@@ -35,7 +35,7 @@ namespace PacManBot.Services
                 prefixes.Add(ID, prefix);
             }
 
-            _logger.Log(Discord.LogSeverity.Info, $"Loaded prefixes from {BotFile.Prefixes}");
+            this.logger.Log(Discord.LogSeverity.Info, $"Loaded prefixes from {BotFile.Prefixes}");
         }
 
 

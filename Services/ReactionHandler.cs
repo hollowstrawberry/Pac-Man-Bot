@@ -11,18 +11,18 @@ namespace PacManBot.Services
 {
     class ReactionHandler
     {
-        private readonly DiscordSocketClient _client;
-        private readonly StorageService _storage;
-        private readonly LoggingService _logger;
+        private readonly DiscordSocketClient client;
+        private readonly StorageService storage;
+        private readonly LoggingService logger;
 
         public ReactionHandler(DiscordSocketClient client, StorageService storage, LoggingService logger)
         {
-            _client = client;
-            _storage = storage;
-            _logger = logger;
+            this.client = client;
+            this.storage = storage;
+            this.logger = logger;
 
-            _client.ReactionAdded += OnReactionAdded; //Events
-            _client.ReactionRemoved += OnReactionRemoved;
+            this.client.ReactionAdded += OnReactionAdded; //Events
+            this.client.ReactionRemoved += OnReactionRemoved;
         }
 
 
@@ -38,10 +38,10 @@ namespace PacManBot.Services
             {
                 if (!messageData.HasValue || !reaction.User.IsSpecified) return;
 
-                ulong botID = _client.CurrentUser.Id;
+                ulong botID = client.CurrentUser.Id;
                 if (messageData.Value.Author.Id == botID && reaction.UserId != botID)
                 {
-                    SocketCommandContext context = new SocketCommandContext(_client, messageData.Value as SocketUserMessage);
+                    SocketCommandContext context = new SocketCommandContext(client, messageData.Value as SocketUserMessage);
                     await GameInput(context, reaction, removed);
                 }
             });
@@ -54,7 +54,7 @@ namespace PacManBot.Services
         {
             if (removed && context.BotHas(ChannelPermission.ManageMessages)) return; //Removing reactions only counts if they're not automatically removed
 
-            foreach (Modules.PacMan.Game game in _storage.gameInstances)
+            foreach (Modules.PacMan.Game game in storage.gameInstances)
             {
                 if (context.Message.Id == game.messageId && game.state == State.Active) //Finds the game corresponding to this channel
                 {
@@ -67,16 +67,16 @@ namespace PacManBot.Services
                     {
                         if (gameInput.ContainsKey(emote)) //Valid reaction input
                         {
-                            await _logger.Log(LogSeverity.Verbose, "Game", $"Input \"{gameInput[emote]}\" by user {user.FullName()} in channel {channelName}");
+                            await logger.Log(LogSeverity.Verbose, "Game", $"Input \"{gameInput[emote]}\" by user {user.FullName()} in channel {channelName}");
                             game.DoTick(gameInput[emote]);
 
                             if (game.state != State.Active)
                             {
-                                _storage.gameInstances.Remove(game);
+                                storage.gameInstances.Remove(game);
                                 if (game.score > 0 && !game.custom)
                                 {
                                     File.AppendAllText(BotFile.Scoreboard, $"\n{game.state} {game.score} {game.time} {user.Id} \"{user.Username}#{user.Discriminator}\" \"{DateTime.Now.ToString("o")}\" \"{channelName}\"");
-                                    await _logger.Log(LogSeverity.Verbose, "Game", $"({game.state}) Achieved score {game.score} in {game.time} moves in channel {channelName} last controlled by user {user.FullName()}");
+                                    await logger.Log(LogSeverity.Verbose, "Game", $"({game.state}) Achieved score {game.score} in {game.time} moves in channel {channelName} last controlled by user {user.FullName()}");
                                 }
                             }
 

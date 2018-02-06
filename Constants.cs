@@ -1,6 +1,6 @@
 ﻿namespace PacManBot.Constants
 {
-    static class BotFile
+    public static class BotFile
     {
         public const string
             Config = "config.bot",
@@ -15,7 +15,7 @@
             CustomMapLog = "logs/custom.txt";
     }
 
-    static class Emojis
+    public static class Emojis
     {
         public const string
             Left = "⬅",
@@ -27,7 +27,7 @@
             Info = "ℹ";
     }
 
-    static class CustomEmojis
+    public static class CustomEmojis
     {
         public const string
             PacMan = "<a:pacman:409803570544902144>",
