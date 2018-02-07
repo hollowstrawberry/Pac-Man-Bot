@@ -23,7 +23,7 @@ namespace PacManBot.Modules
             this.scripting = scripting;
         }
 
-        [Command("run"), Alias("eval"), Summary("Run code, super dangerous do not try at home")]
+        [Command("run"), Alias("eval"), Summary("Run code, super dangerous do not try at home.")]
         public async Task Run([Remainder]string code)
         {
             try
@@ -34,7 +34,7 @@ namespace PacManBot.Modules
             }
             catch (Exception exception)
             {
-                await ReplyAsync($"```{exception.Message}```");
+                await ReplyAsync($"```cs\n{exception.Message}```");
                 await logger.Log(LogSeverity.Debug, $"{exception}");
                 await Context.Message.AddReactionAsync(CustomEmojis.Cross.ToEmote());
             }
@@ -44,7 +44,7 @@ namespace PacManBot.Modules
             }
         }
 
-        [Command("feedbackreply"), Summary("I could do this with eval but it's easier like this")]
+        [Command("feedbackreply"), Summary("This is how Samrux replies to feedback.")]
         public async Task ReplyFeedback(ulong id, [Remainder]string message)
         {
             try

@@ -3,8 +3,9 @@
 
 The game is played in turns, using the emoji reactions as controls. The arrows will move Pac-Man and change his direction, and the pause symbol will skip a turn. You must avoid the ghosts and collect all the pellets to win. Try and get a high score!
 You can use the '{prefix}refresh' or '{prefix}refresh mobile' commands to move this game message to the bottom of the chat. Using 'end' will end the game.
+Also, sorry about the ocassional lag - It is the Discord rate-limit.
 
-For more information, use the '{prefix}help' and '{prefix}about' commands.
+For more information about the bot, use the '{prefix}help' and '{prefix}about' commands.
 
 ;Here are some more #tips:
 • Each eaten ghost during the same power mode yields twice as many points as the last!

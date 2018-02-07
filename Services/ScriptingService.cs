@@ -43,12 +43,9 @@ namespace PacManBot.Services
             code = code.Trim(' ', '`', '\n');
             if (code.StartsWith("cs\n")) code = code.Remove(0, 3); //C# code block in Discord
 
-            if (!code.EndsWith(";") && !code.EndsWith("}")) //Treats the last expression as a result to send in chat
+            if (!code.Contains(";")) //Treats a single expression as a result to send in chat
             {
-                string previousExpressions = "";
-                string lastExpression = (code.LastIndexOf(';') > code.LastIndexOf('}') ? code.Split(';') : code.Split('}')).Last().Trim(' ', '\n');
-                if (code.Contains(";") || code.Contains("}")) previousExpressions = code.Remove(code.LastIndexOf(lastExpression)); //All but the last expression
-                code = previousExpressions + "ReplyAsync($\"{" + lastExpression + "}\");";
+                code = "ReplyAsync($\"{" + code + "}\");";
             }
 
             await logger.Log(LogSeverity.Debug, $"Evaluating code \"{code}\" in channel {context.FullChannelName()}");
@@ -56,9 +53,13 @@ namespace PacManBot.Services
             Script<object> script = CSharpScript.Create(code + baseCode, scriptOptions, typeof(ScriptArgs));
             ScriptArgs scriptArgs = new ScriptArgs(context, storage, logger);
             script.Compile();
-            script.RunAsync(scriptArgs).Dispose(); //I had to realize I needed to dispose or otherwise it hogs memory like holy shit
+            await script.RunAsync(scriptArgs);
 
             await logger.Log(LogSeverity.Debug, $"Successfully executed code");
+
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            GC.Collect();
         }
     }
 

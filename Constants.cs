@@ -8,7 +8,7 @@
             Scoreboard = "scoreboard.bot",
             GameMap = "map.bot",
             About = "about.bot",
-            GameHelp = "tips.bot",
+            GameHelp = "gamehelp.bot",
             CustomMapHelp = "custommaphelp.bot",
             InviteLink = "invite.bot",
             FeedbackLog = "logs/feedback.txt",

@@ -1,4 +1,5 @@
-﻿using Discord;
+﻿using System;
+using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using static PacManBot.Modules.PacMan.PacManGame;
@@ -7,6 +8,8 @@ namespace PacManBot
 {
     public static class Utils
     {
+        //General utilities
+
         //Conditional strings to help with complex text concatenation
         public static string If(this string text, bool condition) => condition ? text : "";
         public static string Unless(this string text, bool condition) => condition ? "" : text;
@@ -14,6 +17,12 @@ namespace PacManBot
         //2-dimensional array length
         public static int LengthX<T>(this T[,] array) => array.GetLength(0);
         public static int LengthY<T>(this T[,] array) => array.GetLength(1);
+
+        //Shorthand
+        public static string[] Split(this string text, string separator)
+        {
+            return text.Split(new string[] { separator }, StringSplitOptions.None);
+        }
 
 
         //Discord utilities
@@ -38,10 +47,25 @@ namespace PacManBot
             return $"{user.Username}#{user.Discriminator}";
         }
 
+        public static bool CheckHasEmbedPermission(this SocketCommandContext context)
+        {
+            if (context.Guild != null && !context.BotHas(ChannelPermission.EmbedLinks))
+            {
+                context.Channel.SendMessageAsync("To show a fancy new information block, this bot requires the permission to Embed Links!");
+                return false;
+            }
+            return true;
+        }
+
         public static Emote ToEmote(this string text)
         {
             if (!Emote.TryParse(text, out Emote emote)) return null;
             return emote;
+        }
+
+        public static Emoji ToEmoji(this string unicode)
+        {
+            return new Emoji(unicode);
         }
 
 

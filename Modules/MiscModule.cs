@@ -9,6 +9,7 @@ using Discord;
 using Discord.Commands;
 using PacManBot.Services;
 using PacManBot.Constants;
+using Discord.WebSocket;
 
 namespace PacManBot.Modules
 {
@@ -26,84 +27,126 @@ namespace PacManBot.Modules
             this.storage = storage;
         }
 
-        [Command("help"), Alias("h", "commands"), Summary("List of commands")]
-        public async Task HelpAsync([Remainder]string args = "") //Argument is useless for now
+
+        [Command("about"), Alias("a", "info"), Remarks("— *About this bot*")]
+        [Summary("Shows relevant information, data and links about Pac-Man Bot.")]
+        public async Task SayBotInfo([Remainder]string args = "")
         {
-            if (Context.Guild != null && !Context.BotHas(ChannelPermission.EmbedLinks))
+            if (!Context.CheckHasEmbedPermission()) return;
+
+            string[] file = File.ReadAllText(BotFile.About).Split("{links}");
+            string description = file[0].Replace("{prefix}", storage.GetPrefixOrEmpty(Context.Guild));
+            string[] links = file[1].Split('\n').Where(s => !string.IsNullOrWhiteSpace(s.Trim(' ', '\n'))).ToArray();
+
+            var embed = new EmbedBuilder()
             {
-                await ReplyAsync("To show a fancy new help block, this bot requires the permission to Embed Links!");
+                Title = $"{CustomEmojis.PacMan} __**Pac-Man Bot**__",
+                Description = description,
+                Color = new Color(241, 195, 15)
+            };
+            embed.AddField("Server count", $"{Context.Client.Guilds.Count}", true);
+            embed.AddField("Active games", $"{storage.gameInstances.Count}", true);
+            embed.AddField("Latency", $"{Context.Client.Latency}ms", true);
+            embed.AddField("Author", $"Samrux#3980", true);
+            embed.AddField("Version", $"v2.7", true);
+            embed.AddField("Library", "Discord.Net 2.0 (C#)", true);
+
+            for (int i = 0; i < links.Length; i++)
+            {
+                embed.AddField(links[i].Split('|')[0], $"[Click here]({links[i].Split('|')[1]} \"{links[i].Split('|')[1]}\")", true);
+            }
+
+            await ReplyAsync("", false, embed.Build());
+        }
+
+        [Command("help"), Alias("h", "commands"), Remarks("[command] — *List of commands or help about a command*")]
+        [Summary("Show a complete list of commands you can use. You can specify a command to see detailed help about that command.")]
+        public async Task SendCommandHelp(string commandName) //With argument
+        {
+            if (!Context.CheckHasEmbedPermission()) return;
+
+            string prefix = storage.GetPrefix(Context.Guild).If(Context.Guild != null);
+
+            CommandInfo command;
+            try { command = commands.Commands.First(c => c.Aliases.Contains(commandName)); }
+            catch
+            {
+                await ReplyAsync($"Can't find a command with that name. Use **{prefix}help** for a list of commands.");
                 return;
             }
+
+            var embed = new EmbedBuilder()
+            {
+                Title = $"{CustomEmojis.PacMan} __Command__: {prefix}{command.Name}",
+                Color = new Color(241, 195, 15)
+            };
+
+            string parameters = string.IsNullOrWhiteSpace(command.Remarks) ? "" : command.Remarks.Split('—')[0].Trim();
+            if (!string.IsNullOrWhiteSpace(parameters))
+            {
+                embed.AddField("Parameters", parameters, true);
+            }
+            if (command.Aliases.Count > 1)
+            {
+                string aliasList = "";
+                for (int i = 1; i < command.Aliases.Count; i++) aliasList += $"{", ".If(i > 1)}{prefix}{command.Aliases[i]}";
+                embed.AddField("Aliases", aliasList, true);
+            }
+            if (!string.IsNullOrWhiteSpace(command.Summary))
+            {
+                string summary = command.Summary.Replace("{prefix}", prefix);
+                if (!string.IsNullOrWhiteSpace(parameters) && parameters.Contains("[")) summary += "\n\n*Parameters in [brackets] are optional.*";
+                embed.AddField("Summary", summary, false);
+            }
+
+            await ReplyAsync("", false, embed.Build()); //Send the built embed
+        }
+
+        [Command("help"), Alias("h", "commands")]
+        public async Task SendAllHelp() //Without arguments
+        {
+            if (!Context.CheckHasEmbedPermission()) return;
 
             string prefix = storage.GetPrefix(Context.Guild).If(Context.Guild != null);
 
             var embed = new EmbedBuilder()
             {
                 Title = $"{CustomEmojis.PacMan} __**Bot Commands**__",
-                Description = $"Prefix for this server is '{prefix}'\n".Unless(prefix == "") + $"You can use the **{prefix}about** command for more information" + "\nNo prefix is necessary in a DM!".If(Context.Guild == null),
+                Description = (Context.Guild == null ? "No prefix is needed in a DM!" : $"Prefix for this server is '{prefix}'") + $"\nYou can do **{prefix}help command** for more information about a command.\n*Aliases are listed with commas. Parameters with [brackets] are optional.*",
                 Color = new Color(241, 195, 15)
             };
 
             var allModules = commands.Modules.OrderBy(m => m.Name); //Alphabetically
             foreach (var module in allModules.Where(m => !m.Preconditions.Contains(new RequireOwnerAttribute()))) //Go through all modules except dev modules
             {
-                string commandsText = null; //Text under the module title in the embed block
-                List<string> commands = new List<string>(); //Storing the command names so they can't repeat
+                string moduleText = null; //Text under the module title in the embed block
+                List<string> oldCommands = new List<string>(); //Storing the command names so they can't repeat
 
                 foreach (var command in module.Commands) //Go through all commands
                 {
                     var canUse = await command.CheckPreconditionsAsync(Context); //Only show commands the user can use
-                    if (canUse.IsSuccess && !commands.Contains(command.Name))
+                    if (canUse.IsSuccess && !oldCommands.Contains(command.Name))
                     {
                         for (int i = 0; i < command.Aliases.Count; i++) //Lists command name and aliases
                         {
-                            commandsText += $"{", ".If(i > 0)}**{command.Aliases[i]}**";
-                        }
-                        if (!string.IsNullOrWhiteSpace(command.Summary)) //Adds the command summary
-                        {
-                            commandsText += $" {command.Remarks} — *{command.Summary}*";
+                            moduleText += $"{", ".If(i > 0)}**{command.Aliases[i]}**";
                         }
 
-                        commands.Add(command.Name);
-                        commandsText += "\n";
+                        if (!string.IsNullOrWhiteSpace(command.Remarks)) moduleText += $" {command.Remarks}"; //Short description
+                        moduleText += "\n";
+
+                        oldCommands.Add(command.Name);
                     }
                 }
 
-                if (!string.IsNullOrWhiteSpace(commandsText)) embed.AddField($"{module.Name}", commandsText, false);
+                if (!string.IsNullOrWhiteSpace(moduleText)) embed.AddField($"{module.Name}", moduleText, false);
             }
 
-            string text = "";
-            await ReplyAsync(text, false, embed.Build()); //Send the built embed
+            await ReplyAsync("", false, embed.Build()); //Send the built embed
         }
 
-        [Command("about"), Alias("a", "info"), Summary("About this bot")]
-        public async Task SayBotInfo()
-        {
-            if (Context.Guild != null && !Context.BotHas(ChannelPermission.EmbedLinks))
-            {
-                await ReplyAsync("To show a fancy new help block, this bot requires the permission to Embed Links!");
-                return;
-            }
-
-            var embed = new EmbedBuilder()
-            {
-                Title = $"{CustomEmojis.PacMan} __**Pac-Man Bot**__",
-                Description = File.ReadAllText(BotFile.About).Replace("{prefix}", storage.GetPrefixOrEmpty(Context.Guild)),
-                 Color = new Color(241, 195, 15)
-            };
-            embed.AddField("Server count", $"{Context.Client.Guilds.Count}", true);
-            embed.AddField("Active games", $"{storage.gameInstances.Count}", true);
-            embed.AddField("Latency", $"{Context.Client.Latency}ms", true);
-            embed.AddField("Author", $"Samrux#3980", true);
-            embed.AddField("Version", $"v2.6", true);
-            embed.AddField("Library", "Discord.Net 2.0 (C#)", true);
-            embed.AddField($"{CustomEmojis.Discord} Bot invite link", $"[Click here]({File.ReadAllText(BotFile.InviteLink)} \"{File.ReadAllText(BotFile.InviteLink)}\")", true);
-            embed.AddField($"{CustomEmojis.GitHub} Source code", $"[Click here](https://github.com/Samrux/Pac-Man-Bot \"https://github.com/Samrux/Pac-Man-Bot\")", true);
-
-            await ReplyAsync("", false, embed.Build());
-        }
-
-        [Command("waka"), Alias("ping"), Summary("Waka waka waka")]
+        [Command("waka"), Alias("ping"), Remarks("— *Waka waka waka*")]
+        [Summary("Tests the ping (server reaction time in milliseconds) and shows other quick stats about the bot at the current moment.\nDid you know the bot responds every time you say \"waka\" in chat? Shhh, it's a secret.")]
         public async Task Ping([Remainder]string args = "") //Useless args
         {
             var stopwatch = Stopwatch.StartNew();
@@ -113,11 +156,13 @@ namespace PacManBot.Modules
             await message.ModifyAsync(m => m.Content = $"{CustomEmojis.PacMan} Waka in {(int)stopwatch.Elapsed.TotalMilliseconds}ms | {Context.Client.Guilds.Count} guilds | {storage.gameInstances.Count} active games\n");
         }
 
-        [Command("say"), Remarks("message"), Summary("Make the bot say anything (Moderator)")]
+        [Command("say"), Remarks ("message — *Make the bot say anything (Moderator)*")]
+        [Summary("Repeats back the message provided. Only users with the Manage Messages permission can use this command.")]
         [RequireUserPermission(ChannelPermission.ManageMessages)]
         public async Task Say([Remainder]string text) => await ReplyAsync(text);
 
-        [Command("clear"), Alias("c"), Remarks("[amount]"), Summary("Clear messages from this bot (Moderator)")]
+        [Command("clear"), Alias("c"), Remarks("[amount] — *Clear messages from this bot (Moderator)*")]
+        [Summary("Clears all messages sent by *this bot only*, checking up to the amount of messages provided, or 10 messages by default. Only users with the Manage Messages permission can use this command.")]
         [RequireUserPermission(ChannelPermission.ManageMessages)]
         public async Task ClearGameMessages(int amount = 10)
         {
@@ -128,7 +173,8 @@ namespace PacManBot.Modules
             }
         }
 
-        [Command("prefix"), Summary("Show the current prefix for this server")]
+        [Command("prefix"), Remarks("— *Show the current prefix for this server*")]
+        [Summary("Reminds you of this bot's prefix for this server. Tip: The prefix is already here in this help block.\nYou can use the **{prefix}setprefix prefix** command to set a prefix if you're an Administrator.")]
         public async Task GetServerPrefix([Remainder]string args = "") //Useless args
         {
             string reply;
@@ -144,10 +190,17 @@ namespace PacManBot.Modules
             await ReplyAsync(reply);
         }
 
-        [Command("setprefix"), Remarks("prefix"), Summary("Set a custom prefix for this server (Admin)")]
+        [Command("setprefix"), Remarks("prefix — *Set a custom prefix for this server (Admin)*")]
+        [Summary("Change the custom prefix for this server. Only server Administrators can use this command.\nPrefixes can't contain \\*.")]
         [RequireUserPermission(GuildPermission.Administrator)]
         public async Task SetServerPrefix(string newPrefix)
         {
+            if (newPrefix.Contains("*"))
+            {
+                await ReplyAsync("Prefixes can't contain \\*.");
+                return;
+            }
+
             if (storage.prefixes.ContainsKey(Context.Guild.Id)) storage.prefixes[Context.Guild.Id] = newPrefix;
             else storage.prefixes.Add(Context.Guild.Id, newPrefix);
 
@@ -181,20 +234,25 @@ namespace PacManBot.Modules
             }
         }
 
-        [Command("feedback"), Alias("suggestion", "bug"), Remarks("message"), Summary("Send a message to the bot's developer")]
+        [Command("feedback"), Alias("suggestion", "bug"), Remarks("message — *Send a message to the bot's developer*")]
+        [Summary("Whatever text you write after this command will be sent directly to the bot's developer. You may receive an answer through the bot in a DM.")]
         public async Task SendFeedback([Remainder]string message)
         {
             try
             {
                 File.AppendAllText(BotFile.FeedbackLog, $"[{Context.User.FullName()} {Context.User.Id}] {message}\n\n");
                 await ReplyAsync($"{CustomEmojis.Check} Message sent. Thank you!");
+                await (await Context.Client.GetApplicationInfoAsync()).Owner.SendMessageAsync($"```diff\n+Feedback received: {Context.User.FullName()} {Context.User.Id}```\n{message}");
             }
             catch { await ReplyAsync("Oops, I didn't catch that. Please try again."); }
         }
 
-        [Command("invite"), Alias("inv"), Summary("Invite this bot to your server")]
-        public async Task SayBotInvite()
+        [Command("invite"), Alias("inv"), Remarks("— *Invite this bot to your server*")]
+        [Summary("Shows a fancy embed block with the bot's invite link. I'd show it right now too, since you're already here, but I really want you to see that fancy embed.")]
+        public async Task SayBotInvite([Remainder]string args = "") //Useless args
         {
+            if (!Context.CheckHasEmbedPermission()) return;
+
             string link = File.ReadAllText(BotFile.InviteLink);
             var embed = new EmbedBuilder()
             {

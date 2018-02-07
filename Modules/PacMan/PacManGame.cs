@@ -290,7 +290,7 @@ namespace PacManBot.Modules.PacMan
             if (customMap == null) newMap = File.ReadAllLines(BotFile.GameMap);
             else
             {
-                newMap = customMap.Trim(new char[] { '\n', ' ' }).Trim(new char[] { '\n', '`' }).Split('\n');
+                newMap = customMap.Split('\n');
                 custom = true;
             }
             LoadMap(newMap);
