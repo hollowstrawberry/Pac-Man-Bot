@@ -5,7 +5,7 @@ using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using PacManBot.Constants;
-using static PacManBot.Modules.PacMan.Game;
+using static PacManBot.Modules.PacMan.PacManGame;
 
 namespace PacManBot.Services
 {
@@ -54,7 +54,7 @@ namespace PacManBot.Services
         {
             if (removed && context.BotHas(ChannelPermission.ManageMessages)) return; //Removing reactions only counts if they're not automatically removed
 
-            foreach (Modules.PacMan.Game game in storage.gameInstances)
+            foreach (Modules.PacMan.PacManGame game in storage.gameInstances)
             {
                 if (context.Message.Id == game.messageId && game.state == State.Active) //Finds the game corresponding to this channel
                 {

@@ -18,14 +18,12 @@ namespace PacManBot.Modules
         private readonly CommandService commands;
         private readonly LoggingService logger;
         private readonly StorageService storage;
-        private readonly ScriptingService scripting;
 
-        public MiscModule(CommandService commands, LoggingService logger, StorageService storage, ScriptingService script)
+        public MiscModule(CommandService commands, LoggingService logger, StorageService storage)
         {
             this.commands = commands;
             this.logger = logger;
             this.storage = storage;
-            this.scripting = script;
         }
 
         [Command("help"), Alias("h", "commands"), Summary("List of commands")]
@@ -47,7 +45,7 @@ namespace PacManBot.Modules
             };
 
             var allModules = commands.Modules.OrderBy(m => m.Name); //Alphabetically
-            foreach (var module in allModules) //Go through all modules
+            foreach (var module in allModules.Where(m => !m.Preconditions.Contains(new RequireOwnerAttribute()))) //Go through all modules except dev modules
             {
                 string commandsText = null; //Text under the module title in the embed block
                 List<string> commands = new List<string>(); //Storing the command names so they can't repeat
@@ -97,7 +95,7 @@ namespace PacManBot.Modules
             embed.AddField("Active games", $"{storage.gameInstances.Count}", true);
             embed.AddField("Latency", $"{Context.Client.Latency}ms", true);
             embed.AddField("Author", $"Samrux#3980", true);
-            embed.AddField("Version", $"v2.5", true);
+            embed.AddField("Version", $"v2.6", true);
             embed.AddField("Library", "Discord.Net 2.0 (C#)", true);
             embed.AddField($"{CustomEmojis.Discord} Bot invite link", $"[Click here]({File.ReadAllText(BotFile.InviteLink)} \"{File.ReadAllText(BotFile.InviteLink)}\")", true);
             embed.AddField($"{CustomEmojis.GitHub} Source code", $"[Click here](https://github.com/Samrux/Pac-Man-Bot \"https://github.com/Samrux/Pac-Man-Bot\")", true);
@@ -188,7 +186,7 @@ namespace PacManBot.Modules
         {
             try
             {
-                File.AppendAllText(BotFile.FeedbackLog, $"[{Context.User.FullName()}:] {message}\n\n");
+                File.AppendAllText(BotFile.FeedbackLog, $"[{Context.User.FullName()} {Context.User.Id}] {message}\n\n");
                 await ReplyAsync($"{CustomEmojis.Check} Message sent. Thank you!");
             }
             catch { await ReplyAsync("Oops, I didn't catch that. Please try again."); }
@@ -206,22 +204,6 @@ namespace PacManBot.Modules
             };
             embed.AddField($"➡ <{link}>", "*Thanks for inviting Pac-Man Bot!*", false);
             await ReplyAsync("", false, embed.Build());
-        }
-
-
-        [Command("eval"), Alias("run"), Summary("Run code, super dangerous do not try at home")]
-        [RequireOwner]
-        public async Task Run([Remainder]string code)
-        {
-            try {
-                scripting.Eval(code, Context);
-                await Context.Message.AddReactionAsync(new Emoji("👍"));
-            }
-            catch (CompilationErrorException e)
-            {
-                await ReplyAsync($"```{e.Message}```");
-                await logger.Log(LogSeverity.Debug, $"{e}");
-            }
         }
     }
 }

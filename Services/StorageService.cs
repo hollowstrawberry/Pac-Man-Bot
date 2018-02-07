@@ -13,7 +13,7 @@ namespace PacManBot.Services
 
         public readonly string defaultPrefix;
         public Dictionary<ulong, string> prefixes;
-        public List<Game> gameInstances;
+        public List<PacManGame> gameInstances;
 
         public StorageService(LoggingService logger, IConfigurationRoot config)
         {
@@ -21,7 +21,7 @@ namespace PacManBot.Services
 
             defaultPrefix = config["prefix"];
             prefixes = new Dictionary<ulong, string>();
-            gameInstances = new List<Game>();
+            gameInstances = new List<PacManGame>();
 
             //Load prefixes from file
             string[] line = File.ReadAllLines(BotFile.Prefixes);

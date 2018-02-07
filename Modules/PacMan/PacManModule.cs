@@ -7,7 +7,7 @@ using Discord.Commands;
 using Discord.WebSocket;
 using PacManBot.Services;
 using PacManBot.Constants;
-using static PacManBot.Modules.PacMan.Game;
+using static PacManBot.Modules.PacMan.PacManGame;
 
 namespace PacManBot.Modules.PacMan
 {
@@ -49,7 +49,7 @@ namespace PacManBot.Modules.PacMan
                 return;
             }
 
-            foreach (Game game in storage.gameInstances)
+            foreach (PacManGame game in storage.gameInstances)
             {
                 if (Context.Channel.Id == game.channelId) //Finds a game instance corresponding to this channel
                 {
@@ -58,8 +58,8 @@ namespace PacManBot.Modules.PacMan
                 }
             }
 
-            Game newGame;
-            try { newGame = new Game(Context.Channel.Id, Context.User.Id, customMap, Context.Client, storage); } //Create a game instance
+            PacManGame newGame;
+            try { newGame = new PacManGame(Context.Channel.Id, Context.User.Id, customMap, Context.Client, storage); } //Create a game instance
             catch
             {
                 string errorMessage = customMap != null ? $"The custom map appears to be invalid. Use the **{prefix}custom** command for help." : $"There was an error starting the game. Please try again or contact the author of the bot using **{prefix}feedback**";
@@ -90,7 +90,7 @@ namespace PacManBot.Modules.PacMan
                 return;
             }
 
-            foreach (Game game in storage.gameInstances)
+            foreach (PacManGame game in storage.gameInstances)
             {
                 if (Context.Channel.Id == game.channelId) //Finds a game instance corresponding to this channel
                 {
@@ -117,7 +117,7 @@ namespace PacManBot.Modules.PacMan
         [Command("end"), Alias("stop"), Summary("End a game you started. Always usable by moderators")]
         public async Task EndGameInstance()
         {
-            foreach (Game game in storage.gameInstances)
+            foreach (PacManGame game in storage.gameInstances)
             {
                 if (Context.Channel.Id == game.channelId)
                 {

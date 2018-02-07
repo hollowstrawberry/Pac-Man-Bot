@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Discord;
 using Discord.Rest;
 using Discord.WebSocket;
@@ -22,14 +24,9 @@ namespace PacManBot.Services
 
             scriptOptions = ScriptOptions.Default
                 .WithImports(
-                    "System",
-                    "System.Threading.Tasks",
-                    "Discord", "Discord.WebSocket",
-                    "Discord.Commands",
-                    "PacManBot",
-                    "PacManBot.Services",
-                    "PacManBot.Constants",
-                    "PacManBot.Modules"
+                    "System", "System.IO", "System.Threading.Tasks", "System.Collections.Generic", "System.Linq",
+                    "Discord", "Discord.WebSocket", "Discord.Commands",
+                    "PacManBot", "PacManBot.Services", "PacManBot.Constants", "PacManBot.Modules", "PacManBot.Modules.PacMan"
                 )
                 .WithReferences(
                     typeof(SocketCommandContext).Assembly,
@@ -39,7 +36,7 @@ namespace PacManBot.Services
                 );
         }
 
-        public void Eval(string code, SocketCommandContext context)
+        public async Task Eval(string code, SocketCommandContext context)
         {
             string baseCode = "\nTask ReplyAsync(string msg) => Context.Channel.SendMessageAsync(msg);";
 
@@ -49,21 +46,22 @@ namespace PacManBot.Services
             if (!code.EndsWith(";") && !code.EndsWith("}")) //Treats the last expression as a result to send in chat
             {
                 string previousExpressions = "";
-                string lastExpression = (code.LastIndexOf(';') > code.LastIndexOf('}') ? code.Split(';'): code.Split('}')).Last().Trim(' ', '\n');
+                string lastExpression = (code.LastIndexOf(';') > code.LastIndexOf('}') ? code.Split(';') : code.Split('}')).Last().Trim(' ', '\n');
                 if (code.Contains(";") || code.Contains("}")) previousExpressions = code.Remove(code.LastIndexOf(lastExpression)); //All but the last expression
                 code = previousExpressions + "ReplyAsync($\"{" + lastExpression + "}\");";
             }
 
-            logger.Log(LogSeverity.Debug, $"Evaluating code \"{code}\" in channel {context.FullChannelName()}");
+            await logger.Log(LogSeverity.Debug, $"Evaluating code \"{code}\" in channel {context.FullChannelName()}");
 
             Script<object> script = CSharpScript.Create(code + baseCode, scriptOptions, typeof(ScriptArgs));
             ScriptArgs scriptArgs = new ScriptArgs(context, storage, logger);
             script.Compile();
-            script.RunAsync(scriptArgs).Wait();
+            script.RunAsync(scriptArgs).Dispose(); //I had to realize I needed to dispose or otherwise it hogs memory like holy shit
 
-            logger.Log(LogSeverity.Debug, $"Successfully executed code");
+            await logger.Log(LogSeverity.Debug, $"Successfully executed code");
         }
     }
+
 
     public class ScriptArgs : EventArgs
     {

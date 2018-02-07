@@ -1,7 +1,7 @@
 ﻿using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
-using static PacManBot.Modules.PacMan.Game;
+using static PacManBot.Modules.PacMan.PacManGame;
 
 namespace PacManBot
 {
@@ -36,6 +36,12 @@ namespace PacManBot
         public static string FullName(this SocketUser user)
         {
             return $"{user.Username}#{user.Discriminator}";
+        }
+
+        public static Emote ToEmote(this string text)
+        {
+            if (!Emote.TryParse(text, out Emote emote)) return null;
+            return emote;
         }
 
 
