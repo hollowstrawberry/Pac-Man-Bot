@@ -38,28 +38,39 @@ namespace PacManBot.Services
 
         public async Task Eval(string code, SocketCommandContext context)
         {
-            string baseCode = "\nTask ReplyAsync(string msg) => Context.Channel.SendMessageAsync(msg);";
-
-            code = code.Trim(' ', '`', '\n');
-            if (code.StartsWith("cs\n")) code = code.Remove(0, 3); //C# code block in Discord
-
-            if (!code.Contains(";")) //Treats a single expression as a result to send in chat
+            try
             {
-                code = "ReplyAsync($\"{" + code + "}\");";
+                string baseCode = "\nTask ReplyAsync(string msg) => Context.Channel.SendMessageAsync(msg);";
+
+                code = code.Trim(' ', '`', '\n');
+                if (code.StartsWith("cs\n")) code = code.Remove(0, 3); //C# code block in Discord
+
+                if (!code.Contains(";")) //Treats a single expression as a result to send in chat
+                {
+                    code = "ReplyAsync($\"{" + code + "}\");";
+                }
+
+                await logger.Log(LogSeverity.Debug, $"Evaluating code \"{code}\" in channel {context.FullChannelName()}");
+
+                Script<object> script = CSharpScript.Create(code + baseCode, scriptOptions, typeof(ScriptArgs));
+                ScriptArgs scriptArgs = new ScriptArgs(context, storage, logger);
+                script.Compile();
+                await script.RunAsync(scriptArgs);
+
+                await logger.Log(LogSeverity.Debug, $"Successfully executed code");
+
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+                GC.Collect();
             }
+            catch (Exception e)
+            {
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+                GC.Collect();
 
-            await logger.Log(LogSeverity.Debug, $"Evaluating code \"{code}\" in channel {context.FullChannelName()}");
-
-            Script<object> script = CSharpScript.Create(code + baseCode, scriptOptions, typeof(ScriptArgs));
-            ScriptArgs scriptArgs = new ScriptArgs(context, storage, logger);
-            script.Compile();
-            await script.RunAsync(scriptArgs);
-
-            await logger.Log(LogSeverity.Debug, $"Successfully executed code");
-
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-            GC.Collect();
+                throw e;
+            }
         }
     }
 

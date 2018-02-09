@@ -73,7 +73,28 @@ if %25errorlevel%25 leq 4 exit 0 else exit %25errorlevel%25</PostBuildEvent>
     <None Include=".\bin\PacMan Bot.exe.config" />
     <None Include=".\packages.config" />
     <None Include=".\PacMan Bot.exe.config" />
-    <None Include=".\**\*.bot" />
+    <None Include=".\bin\about.bot" />
+    <None Include=".\bin\config.bot" />
+    <None Include=".\bin\custommaphelp.bot" />
+    <None Include=".\bin\gamehelp.bot" />
+    <None Include=".\bin\invite.bot" />
+    <None Include=".\bin\linux-arm\about.bot" />
+    <None Include=".\bin\linux-arm\custommaphelp.bot" />
+    <None Include=".\bin\linux-arm\invite.bot" />
+    <None Include=".\bin\linux-arm\map.bot" />
+    <None Include=".\bin\linux-arm\prefixes.bot" />
+    <None Include=".\bin\linux-arm\scoreboard.bot" />
+    <None Include=".\bin\linux-arm\tips.bot" />
+    <None Include=".\bin\linux-x64\about.bot" />
+    <None Include=".\bin\linux-x64\custommaphelp.bot" />
+    <None Include=".\bin\linux-x64\invite.bot" />
+    <None Include=".\bin\linux-x64\map.bot" />
+    <None Include=".\bin\linux-x64\prefixes.bot" />
+    <None Include=".\bin\linux-x64\scoreboard.bot" />
+    <None Include=".\bin\linux-x64\tips.bot" />
+    <None Include=".\bin\map.bot" />
+    <None Include=".\bin\prefixes.bot" />
+    <None Include=".\bin\scoreboard.bot" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Discord.Net.Commands, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
