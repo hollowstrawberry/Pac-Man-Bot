@@ -17,6 +17,7 @@ namespace PacManBot.Services
         public readonly string defaultPrefix;
         public Dictionary<ulong, string> prefixes;
         public List<PacManGame> gameInstances;
+        public string wakaExclude = "";
 
         public StorageService(DiscordSocketClient client, LoggingService logger, IConfigurationRoot config)
         {
@@ -24,6 +25,7 @@ namespace PacManBot.Services
             this.logger = logger;
 
             defaultPrefix = config["prefix"];
+            wakaExclude = File.Exists(BotFile.WakaExclude) ? File.ReadAllText(BotFile.WakaExclude) : "";
             LoadPrefixes();
             LoadGames();
         }
@@ -66,26 +68,34 @@ namespace PacManBot.Services
         {
             gameInstances = new List<PacManGame>();
 
-            string[] files = Directory.GetFiles(PacManGame.Folder);
-            for (int i = 0; i < files.Length; i++)
+            if (Directory.Exists(PacManGame.Folder))
             {
-                try
+                string[] files = Directory.GetFiles(PacManGame.Folder);
+                for (int i = 0; i < files.Length; i++)
                 {
-                    if (ulong.TryParse(files[i].Replace(PacManGame.Folder, "").Replace(PacManGame.Extension, ""), out ulong channelId))
+                    try
                     {
-                        PacManGame game = new PacManGame(channelId, 1, null, client, this);
-                        game.LoadFromFile();
-                        gameInstances.Add(game);
+                        if (ulong.TryParse(files[i].Replace(PacManGame.Folder, "").Replace(PacManGame.Extension, ""), out ulong channelId))
+                        {
+                            PacManGame game = new PacManGame(channelId, 1, null, client, this, logger);
+                            game.LoadFromFile();
+                            gameInstances.Add(game);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        logger.Log(LogSeverity.Error, $"{e}");
+                        continue;
                     }
                 }
-                catch (Exception e)
-                {
-                    logger.Log(LogSeverity.Error, $"{e}");
-                    continue;
-                }
-            }
 
-            logger.Log(LogSeverity.Info, $"Loaded {gameInstances.Count} games from previous session.");
+                logger.Log(LogSeverity.Info, $"Loaded {gameInstances.Count} games from previous session.");
+            }
+            else
+            {
+                Directory.CreateDirectory(PacManGame.Folder);
+                logger.Log(LogSeverity.Warning, $"Created missing directory \"{PacManGame.Folder}\"");
+            }
         }
     }
 }

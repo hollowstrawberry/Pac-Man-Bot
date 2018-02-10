@@ -46,7 +46,7 @@ namespace PacManBot.Modules
             embed.AddField("Active games", $"{storage.gameInstances.Count}", true);
             embed.AddField("Latency", $"{Context.Client.Latency}ms", true);
             embed.AddField("Author", $"Samrux#3980", true);
-            embed.AddField("Version", $"v2.8", true);
+            embed.AddField("Version", $"v2.9", true);
             embed.AddField("Library", "Discord.Net 2.0 (C#)", true);
 
             for (int i = 0; i < links.Length; i++)
@@ -154,23 +154,6 @@ namespace PacManBot.Modules
             await message.ModifyAsync(m => m.Content = $"{CustomEmojis.PacMan} Waka in {(int)stopwatch.Elapsed.TotalMilliseconds}ms | {Context.Client.Guilds.Count} guilds | {storage.gameInstances.Count} active games\n");
         }
 
-        [Command("say"), Remarks ("message — *Make the bot say anything (Moderator)*")]
-        [Summary("Repeats back the message provided. Only users with the Manage Messages permission can use this command.")]
-        [RequireUserPermission(ChannelPermission.ManageMessages)]
-        public async Task Say([Remainder]string text) => await ReplyAsync(text);
-
-        [Command("clear"), Alias("c"), Remarks("[amount] — *Clear messages from this bot (Moderator)*")]
-        [Summary("Clears all messages sent by *this bot only*, checking up to the amount of messages provided, or 10 messages by default. Only users with the Manage Messages permission can use this command.")]
-        [RequireUserPermission(ChannelPermission.ManageMessages)]
-        public async Task ClearGameMessages(int amount = 10)
-        {
-            var messages = await Context.Channel.GetMessagesAsync(amount).FlattenAsync();
-            foreach (IMessage message in messages)
-            {
-                if (message.Author.Id == Context.Client.CurrentUser.Id) await message.DeleteAsync(); //Remove all messages from this bot
-            }
-        }
-
         [Command("prefix"), Remarks("— *Show the current prefix for this server*")]
         [Summary("Reminds you of this bot's prefix for this server. Tip: The prefix is already here in this help block.\nYou can use the **{prefix}setprefix prefix** command to set a prefix if you're an Administrator.")]
         public async Task GetServerPrefix([Remainder]string args = "") //Useless args
@@ -186,50 +169,6 @@ namespace PacManBot.Modules
                 reply = $"Prefix for this server is set to '{prefix}'{" (the default)".If(prefix == storage.defaultPrefix)}. It can be changed with the command **setprefix**.";
             }
             await ReplyAsync(reply);
-        }
-
-        [Command("setprefix"), Remarks("prefix — *Set a custom prefix for this server (Admin)*")]
-        [Summary("Change the custom prefix for this server. Only server Administrators can use this command.\nPrefixes can't contain \\*.")]
-        [RequireUserPermission(GuildPermission.Administrator)]
-        public async Task SetServerPrefix(string newPrefix)
-        {
-            if (newPrefix.Contains("*"))
-            {
-                await ReplyAsync("Prefixes can't contain \\*.");
-                return;
-            }
-
-            if (storage.prefixes.ContainsKey(Context.Guild.Id)) storage.prefixes[Context.Guild.Id] = newPrefix;
-            else storage.prefixes.Add(Context.Guild.Id, newPrefix);
-
-            try
-            {
-                string file = BotFile.Prefixes;
-                string[] lines = File.ReadAllLines(file);
-
-                int prefixIndex = lines.Length; //After everything else by default
-                for (int i = 0; i < lines.Length; i++) if (lines[i].Split(' ')[0] == Context.Guild.Id.ToString()) prefixIndex = i; //Finds if the server already has a custom prefix
-
-                string newLine = $"{Context.Guild.Id} {newPrefix}";
-                if (prefixIndex >= lines.Length) //Outside the array
-                {
-                    File.AppendAllLines(file, new string[] { newLine });
-                }
-                else //Existing line
-                {
-                    lines[prefixIndex] = newLine;
-                    File.WriteAllLines(file, lines);
-                }
-
-                await ReplyAsync($"{CustomEmojis.Check} Prefix for this server has been successfully set to '{newPrefix}'.");
-                await logger.Log(LogSeverity.Verbose, $"Prefix for server {Context.Guild.Name} set to {newPrefix}");
-            }
-            catch
-            {
-                string prefix = storage.GetPrefixOrEmpty(Context.Guild);
-                await ReplyAsync($"{CustomEmojis.Cross} There was a problem storing the prefix on file. It might be reset the next time the bot restarts. Please try again or, if the problem persists, contact the bot author using **{prefix}feedback**.");
-                throw new Exception("Couldn't modify prefix on file");
-            }
         }
 
         [Command("feedback"), Alias("suggestion", "bug"), Remarks("message — *Send a message to the bot's developer*")]

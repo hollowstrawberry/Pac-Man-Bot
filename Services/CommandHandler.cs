@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
@@ -13,6 +14,7 @@ namespace PacManBot.Services
         private readonly StorageService storage;
         private readonly LoggingService logger;
         private readonly IServiceProvider provider;
+        public readonly Regex waka = new Regex(@"^(waka\s*)+$", RegexOptions.IgnoreCase);
 
         public CommandHandler(DiscordSocketClient client, CommandService commands, StorageService storage, LoggingService logger, IServiceProvider provider)
         {
@@ -56,7 +58,7 @@ namespace PacManBot.Services
 
                 else //waka
                 {
-                    if (message.ToString().ToLower().StartsWith("waka"))
+                    if (waka.IsMatch(message.ToString()) && !storage.wakaExclude.Contains($"{context.Guild.Id}"))
                     {
                         await context.Channel.SendMessageAsync("waka");
                         await logger.Log(LogSeverity.Verbose, $"Waka at {(message.Author as SocketGuildUser != null ? $"{(message.Author as SocketGuildUser).Guild.Name}/" : "")}message.Channel");

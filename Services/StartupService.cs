@@ -32,7 +32,7 @@ namespace PacManBot.Services
             if (!File.Exists(BotFile.Config)) throw new Exception($"Missing {BotFile.Config}: Bot can't run.");
             if (!File.Exists(BotFile.GameMap)) throw new Exception($"Missing {BotFile.GameMap}: Bot can't run.");
 
-            string[] secondaryFiles = new string[] { BotFile.Prefixes, BotFile.Scoreboard, BotFile.About, BotFile.GameHelp, BotFile.CustomMapHelp, BotFile.InviteLink };
+            string[] secondaryFiles = new string[] { BotFile.Prefixes, BotFile.Scoreboard, BotFile.About, BotFile.GameHelp, BotFile.CustomMapHelp, BotFile.InviteLink, BotFile.WakaExclude };
             for (int i = 0; i < secondaryFiles.Length; i++)
             {
                 if (!File.Exists(secondaryFiles[i]))
@@ -40,12 +40,6 @@ namespace PacManBot.Services
                     File.Create(secondaryFiles[i]).Dispose();
                     await logger.Log(LogSeverity.Warning, $"Created missing file \"{secondaryFiles[i]}\"");
                 }
-            }
-
-            if (!Directory.Exists(Modules.PacMan.PacManGame.Folder))
-            {
-                Directory.CreateDirectory(Modules.PacMan.PacManGame.Folder);
-                await logger.Log(LogSeverity.Warning, $"Created missing directory \"{Modules.PacMan.PacManGame.Folder}\"");
             }
 
 

@@ -11,6 +11,7 @@
             GameHelp = "gamehelp.bot",
             CustomMapHelp = "custommaphelp.bot",
             InviteLink = "invite.bot",
+            WakaExclude = "wakaexclude.bot",
             FeedbackLog = "logs/feedback.txt",
             CustomMapLog = "logs/custom.txt";
     }
@@ -35,6 +36,7 @@
             GitHub = "<:github:409803419717599234>",
             Loading = "<a:loading:410612084527595520>",
             Check = "<:check:410612082929565696>",
-            Cross = "<:cross:410612082988285952>";
+            Cross = "<:cross:410612082988285952>",
+            Staff = "<:staff:412019879772815361>";
     }
 }

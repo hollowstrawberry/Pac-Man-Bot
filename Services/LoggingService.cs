@@ -12,14 +12,12 @@ namespace PacManBot.Services
         private readonly DiscordSocketClient client;
         private readonly CommandService commands;
 
-        private string logDirectory { get; }
-        private string logFile => Path.Combine(logDirectory, $"{DateTime.Now.ToString("yyyy-MM-dd")}.txt");
+        public const string LogDirectory = "logs/";
+        private string LogFile => $"{LogDirectory}{DateTime.Now.ToString("yyyy-MM-dd")}.txt";
 
         //DiscordSocketClient and CommandService are injected automatically from the IServiceProvider
         public LoggingService(DiscordSocketClient client, CommandService commands)
         {
-            logDirectory = Path.Combine(AppContext.BaseDirectory, "logs");
-
             this.client = client;
             this.commands = commands;
 
@@ -30,11 +28,11 @@ namespace PacManBot.Services
 
         public Task Log(LogMessage message)
         {
-            if (!Directory.Exists(logDirectory)) Directory.CreateDirectory(logDirectory); //Create the log directory if it doesn't exist
-            if (!File.Exists(logFile)) File.Create(logFile).Dispose(); //Create today's log file if it doesn't exist
+            if (!Directory.Exists(LogDirectory)) Directory.CreateDirectory(LogDirectory); //Create the log directory if it doesn't exist
+            if (!File.Exists(LogFile)) File.Create(LogFile).Dispose(); //Create today's log file if it doesn't exist
 
             string logText = $"{DateTime.Now.ToString("hh:mm:ss")} [{message.Severity}] {message.Source}: {message.Exception?.ToString() ?? message.Message}";
-            File.AppendAllText(logFile, $"{logText}\n"); //Write the log text to a file
+            File.AppendAllText(LogFile, $"{logText}\n"); //Write the log text to a file
 
             if (message.Severity.ToString() == "Verbose" && message.Source == "Rest") return Task.CompletedTask;
             else return Console.Out.WriteLineAsync(logText); //Write the log text to the console

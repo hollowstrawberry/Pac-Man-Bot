@@ -55,6 +55,7 @@ if %25errorlevel%25 leq 4 exit 0 else exit %25errorlevel%25</PostBuildEvent>
   <ItemGroup>
     <Compile Include=".\Modules\MiscModule.cs" />
     <Compile Include="Modules\DevModule.cs" />
+    <Compile Include="Modules\ModModule.cs" />
     <Compile Include="Modules\PacMan\PacManGame.cs" />
     <Compile Include="Modules\PacMan\PacManModule.cs" />
     <Compile Include=".\Program.cs" />

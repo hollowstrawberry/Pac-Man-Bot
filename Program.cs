@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
@@ -59,11 +61,34 @@ namespace PacManBot
 
             //Events
             client.Ready += async () => await UpdateGuildCount(); //Updates playing message when ready or when changing guild count
-            client.JoinedGuild += async (arg) => await UpdateGuildCount();
-            client.LeftGuild += async (arg) => await UpdateGuildCount();
+            client.JoinedGuild += OnJoinedGuild;
+            client.LeftGuild += OnLeftGuild;
 
 
             await Task.Delay(-1); //Prevent the application from closing
+        }
+
+
+        private async Task OnLeftGuild(SocketGuild arg)
+        {
+            await UpdateGuildCount();
+        }
+
+        private async Task OnJoinedGuild(SocketGuild arg)
+        {
+            await UpdateGuildCount();
+
+            List<ulong> guildIds = client.Guilds.Select(g => g.Id).ToList();
+            for (int i = 0; i < storage.gameInstances.Count; i++)
+            {
+                var guildChannel = client.GetChannel(storage.gameInstances[i].channelId) as SocketGuildChannel;
+                if (guildChannel != null && !guildIds.Contains(guildChannel.Guild.Id))
+                {
+                    await logger.Log(LogSeverity.Verbose, $"Removing game at {storage.gameInstances[i].channelId}");
+                    if (File.Exists(storage.gameInstances[i].GameFile)) File.Delete(storage.gameInstances[i].GameFile);
+                    storage.gameInstances.RemoveAt(i);
+                }
+            }
         }
 
         private async Task UpdateGuildCount()

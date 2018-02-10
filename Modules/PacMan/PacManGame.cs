@@ -5,6 +5,7 @@ using System.Text;
 using Discord.WebSocket;
 using PacManBot.Constants;
 using PacManBot.Services;
+using Discord;
 
 namespace PacManBot.Modules.PacMan
 {
@@ -61,6 +62,7 @@ namespace PacManBot.Modules.PacMan
 
         private readonly DiscordSocketClient client;
         private readonly StorageService storage;
+        private readonly LoggingService logger;
         private readonly Random random;
         private int maxPellets;
         private GameInput lastInput = GameInput.None;
@@ -272,10 +274,11 @@ namespace PacManBot.Modules.PacMan
 
         //Game methods
 
-        public PacManGame(ulong channelId, ulong ownerId, string customMap, DiscordSocketClient client, StorageService storage)
+        public PacManGame(ulong channelId, ulong ownerId, string customMap, DiscordSocketClient client, StorageService storage, LoggingService logger)
         {
             this.client = client;
             this.storage = storage;
+            this.logger = logger;
             this.channelId = channelId;
             this.ownerId = ownerId;
             random = new Random();
@@ -656,6 +659,7 @@ namespace PacManBot.Modules.PacMan
                 fileText.AppendLine($"{{ghost{i}pause}}" + $"{ghosts[i].pauseTime}\n");
             }
 
+            if (!File.Exists(GameFile)) logger.Log(LogSeverity.Verbose, $"Creating file {GameFile}");
             File.WriteAllText(GameFile, fileText.ToString());
         }
 

@@ -36,15 +36,15 @@ namespace PacManBot.Modules.PacMan
 
             string prefix = storage.GetPrefixOrEmpty(Context.Guild);
 
-            string[] splice = args.Split("```");
+            string[] argSplice = args.Split("```");
             IUserMessage tempMessage = null;
 
             bool mobile = false;
-            if (splice[0].StartsWith("m")) mobile = true;
-            else if (!string.IsNullOrWhiteSpace(splice[0])) tempMessage = await ReplyAsync($"Unknown game argument \"{splice[0]}\".");
+            if (argSplice[0].StartsWith("m")) mobile = true;
+            else if (!string.IsNullOrWhiteSpace(argSplice[0])) tempMessage = await ReplyAsync($"Unknown game argument \"{argSplice[0]}\".");
 
             string customMap = null;
-            if (args.Contains("```")) customMap = splice[1].Trim('\n', '`');
+            if (args.Contains("```")) customMap = argSplice[1].Trim('\n', '`');
 
             if (Context.Guild != null && !Context.BotHas(ChannelPermission.AddReactions))
             {
@@ -62,7 +62,7 @@ namespace PacManBot.Modules.PacMan
             }
 
             PacManGame newGame;
-            try { newGame = new PacManGame(Context.Channel.Id, Context.User.Id, customMap, Context.Client, storage); } //Create a game instance
+            try { newGame = new PacManGame(Context.Channel.Id, Context.User.Id, customMap, Context.Client, storage, logger); } //Create a game instance
             catch
             {
                 string errorMessage = customMap != null ? $"The custom map appears to be invalid. Use the **{prefix}custom** command for help." : $"There was an error starting the game. Please try again or contact the author of the bot using **{prefix}feedback**";
