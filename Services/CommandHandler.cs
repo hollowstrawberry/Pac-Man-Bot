@@ -24,19 +24,20 @@ namespace PacManBot.Services
             this.logger = logger;
             this.provider = provider;
 
-            this.client.MessageReceived += (m) => OnMessageReceived(m as SocketUserMessage);
+            this.client.MessageReceived += OnMessageReceived;
         }
 
-        private Task OnMessageReceived(SocketUserMessage message)
+        private Task OnMessageReceived(SocketMessage genericMessage)
         {
             Task.Run(async () => //Wrapping in a Task.Run prevents the gateway from getting blocked in case something goes wrong
             {
-                if (message == null || message.Author.IsBot || storage.prefixes == null) return;
+                var message = genericMessage as SocketUserMessage;
+                if (message == null || message.Author.IsBot) return;
 
                 var context = new SocketCommandContext(client, message);
                 string prefix = storage.GetPrefix(context.Guild);
+                int commandPosition = 0;
 
-                int commandPosition = 0; //Where the command will start
                 if (message.HasMentionPrefix(client.CurrentUser, ref commandPosition) || message.HasStringPrefix($"{prefix} ", ref commandPosition) || message.HasStringPrefix(prefix, ref commandPosition) || context.Channel is IDMChannel)
                 {
                     var result = await commands.ExecuteAsync(context, commandPosition, provider); //Try to execute the command
@@ -61,7 +62,7 @@ namespace PacManBot.Services
                     if (waka.IsMatch(message.ToString()) && !storage.wakaExclude.Contains($"{context.Guild.Id}"))
                     {
                         await context.Channel.SendMessageAsync("waka");
-                        await logger.Log(LogSeverity.Verbose, $"Waka at {(message.Author as SocketGuildUser != null ? $"{(message.Author as SocketGuildUser).Guild.Name}/" : "")}message.Channel");
+                        await logger.Log(LogSeverity.Verbose, $"Waka at {context.FullChannelName()}");
                     }
                 }
             });
