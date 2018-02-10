@@ -135,6 +135,7 @@ namespace PacManBot.Modules.PacMan
                 {
                     if (game.ownerId == Context.User.Id || Context.Guild != null && Context.UserHas(ChannelPermission.ManageMessages))
                     {
+                        if (File.Exists(game.GameFile)) File.Delete(game.GameFile);
                         storage.gameInstances.Remove(game);
                         await ReplyAsync("Game ended.");
 

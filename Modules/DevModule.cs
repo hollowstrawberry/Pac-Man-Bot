@@ -4,7 +4,7 @@ using Discord;
 using Discord.Commands;
 using PacManBot.Services;
 using PacManBot.Constants;
-using Discord.WebSocket;
+using PacManBot.Modules.PacMan;
 
 namespace PacManBot.Modules
 {
@@ -23,8 +23,8 @@ namespace PacManBot.Modules
             this.scripting = scripting;
         }
 
-        [Command("run"), Alias("eval"), Summary("Run code, super dangerous do not try at home.")]
-        public async Task Run([Remainder]string code)
+        [Command("run"), Alias("eval", "runasync", "evalasync"), Summary("Run code, super dangerous do not try at home. Developers only.")]
+        public async Task ScriptEval([Remainder]string code)
         {
             try
             {
@@ -35,7 +35,7 @@ namespace PacManBot.Modules
             catch (Exception exception)
             {
                 await ReplyAsync($"```cs\n{exception.Message}```");
-                await logger.Log(LogSeverity.Debug, $"{exception}");
+                await logger.Log(LogSeverity.Warning, $"{exception}");
                 await Context.Message.AddReactionAsync(CustomEmojis.Cross.ToEmote());
             }
             finally
@@ -52,11 +52,22 @@ namespace PacManBot.Modules
                 await Context.Client.GetUser(id).SendMessageAsync("```diff\n+The following message was sent in response to your recent feedback.\n-To reply to this message, use the 'feedback' command again.```\n" + message);
                 await Context.Message.AddReactionAsync(CustomEmojis.Check.ToEmote());
             }
-            catch (Exception e) {
+            catch (Exception e)
+            {
                 await logger.Log(LogSeverity.Verbose, $"{e}");
                 await ReplyAsync($"```{e.Message}```");
                 await Context.Message.AddReactionAsync(CustomEmojis.Cross.ToEmote());
             }
+        }
+
+        [Command("garbagecollect"), Alias("gc"), Summary("The garbage truck is here")]
+        public async Task DoGarbageCollect()
+        {
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            GC.Collect();
+
+            await Context.Message.AddReactionAsync(CustomEmojis.Check.ToEmote());
         }
     }
 }

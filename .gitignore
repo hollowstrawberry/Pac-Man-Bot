@@ -6,12 +6,11 @@
 *.userprefs
 
 # Folders
+.vs/
 obj/
 host/
 bin/logs/
-bin/linux-arm/logs/
-bin/linux-x64/logs/
-.vs/
+bin/games/
 
 # Files
 config.json

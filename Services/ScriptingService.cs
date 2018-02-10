@@ -40,19 +40,19 @@ namespace PacManBot.Services
         {
             try
             {
-                string baseCode = "\nTask ReplyAsync(string msg) => Context.Channel.SendMessageAsync(msg);";
+                string postCode = "\nTask ReplyAsync(string msg) => Context.Channel.SendMessageAsync(msg);";
 
                 code = code.Trim(' ', '`', '\n');
                 if (code.StartsWith("cs\n")) code = code.Remove(0, 3); //C# code block in Discord
 
-                if (!code.Contains(";")) //Treats a single expression as a result to send in chat
+                if (!code.Contains(";")) //Treats a single expression as a message to send in chat
                 {
-                    code = "ReplyAsync($\"{" + code + "}\");";
+                    code = "await ReplyAsync($\"{" + code + "}\");";
                 }
 
                 await logger.Log(LogSeverity.Debug, $"Evaluating code \"{code}\" in channel {context.FullChannelName()}");
 
-                Script<object> script = CSharpScript.Create(code + baseCode, scriptOptions, typeof(ScriptArgs));
+                Script<object> script = CSharpScript.Create(code + postCode, scriptOptions, typeof(ScriptArgs));
                 ScriptArgs scriptArgs = new ScriptArgs(context, storage, logger);
                 script.Compile();
                 await script.RunAsync(scriptArgs);

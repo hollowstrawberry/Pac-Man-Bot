@@ -4,12 +4,10 @@ using System.Linq;
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.CodeAnalysis.Scripting;
 using Discord;
 using Discord.Commands;
 using PacManBot.Services;
 using PacManBot.Constants;
-using Discord.WebSocket;
 
 namespace PacManBot.Modules
 {
@@ -30,7 +28,7 @@ namespace PacManBot.Modules
 
         [Command("about"), Alias("a", "info"), Remarks("— *About this bot*")]
         [Summary("Shows relevant information, data and links about Pac-Man Bot.")]
-        public async Task SayBotInfo([Remainder]string args = "")
+        public async Task SayBotInfo()
         {
             if (!Context.CheckHasEmbedPermission()) return;
 
@@ -48,7 +46,7 @@ namespace PacManBot.Modules
             embed.AddField("Active games", $"{storage.gameInstances.Count}", true);
             embed.AddField("Latency", $"{Context.Client.Latency}ms", true);
             embed.AddField("Author", $"Samrux#3980", true);
-            embed.AddField("Version", $"v2.7", true);
+            embed.AddField("Version", $"v2.8", true);
             embed.AddField("Library", "Discord.Net 2.0 (C#)", true);
 
             for (int i = 0; i < links.Length; i++)

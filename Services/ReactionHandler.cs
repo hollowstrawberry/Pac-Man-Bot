@@ -34,7 +34,7 @@ namespace PacManBot.Services
 
         private Task OnReaction(Cacheable<IUserMessage, ulong> messageData, ISocketMessageChannel channel, SocketReaction reaction, bool removed)
         {
-            Task.Run(async () =>
+            Task.Run(async () => //Wrapping in a Task.Run prevents the gateway from getting blocked in case something goes wrong
             {
                 if (!messageData.HasValue || !reaction.User.IsSpecified) return;
 
@@ -84,7 +84,7 @@ namespace PacManBot.Services
 
                             if (game.state != State.Active) //Failsafe to bug where the display doesn't update in order if there are multiple inputs at once
                             {
-                                await Task.Delay(2000);
+                                await Task.Delay(3100);
                                 await message.ModifyAsync(m => m.Content = game.GetDisplay());
                             }
                         }

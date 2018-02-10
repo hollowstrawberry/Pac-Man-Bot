@@ -38,8 +38,14 @@ namespace PacManBot.Services
                 if (!File.Exists(secondaryFiles[i]))
                 {
                     File.Create(secondaryFiles[i]).Dispose();
-                    await logger.Log(LogSeverity.Warning, $"Created missing file {secondaryFiles[i]}");
+                    await logger.Log(LogSeverity.Warning, $"Created missing file \"{secondaryFiles[i]}\"");
                 }
+            }
+
+            if (!Directory.Exists(Modules.PacMan.PacManGame.Folder))
+            {
+                Directory.CreateDirectory(Modules.PacMan.PacManGame.Folder);
+                await logger.Log(LogSeverity.Warning, $"Created missing directory \"{Modules.PacMan.PacManGame.Folder}\"");
             }
 
 

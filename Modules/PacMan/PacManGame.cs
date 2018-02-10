@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
+using System.Collections.Generic;
 using System.Text;
 using Discord.WebSocket;
 using PacManBot.Constants;
@@ -10,7 +10,7 @@ namespace PacManBot.Modules.PacMan
 {
     public class PacManGame
     {
-        static public Dictionary<string, GameInput> gameInput = new Dictionary<string, GameInput>()
+        static public Dictionary<string, GameInput> gameInput = new Dictionary<string, GameInput>() //Reaction controls
         {
             { Emojis.Info, GameInput.Help },
             { Emojis.Left, GameInput.Left },
@@ -30,23 +30,29 @@ namespace PacManBot.Modules.PacMan
             CharPowerPellet = '●',
             CharSoftWall = '_',
             CharSoftWallPellet = '~';
+
         private const char //Displayed
             CharPlayerDead = 'X',
             CharGhostFrightened = 'E';
-        private const int //Mechanics constants
+
+        private const int //Mechanics
             PowerTime = 20,
             ScatterCycle = 100,
             ScatterTime1 = 30,
             ScatterTime2 = 20;
-        
+
+        public const string Folder = "games/";
+        public const string Extension = ".game";
+        public string GameFile => $"{Folder}{channelId}{Extension}";
+
         private readonly static char[] GhostAppearance = { 'B', 'P', 'I', 'C' };
         private readonly static int[] GhostSpawnPauseTime = { 0, 3, 15, 35 };
         private readonly static Dir[] AllDirs = { Dir.up, Dir.left, Dir.down, Dir.right }; //Order of preference when deciding direction
 
         //Fields
         public readonly ulong channelId; //Which channel this game is located in
-        public readonly ulong ownerId; //Which user started this game
-        public readonly bool custom = false;
+        public ulong ownerId; //Which user started this game
+        public bool custom = false;
         public ulong messageId = 1; //The focus message of the game, for controls to work. Even if not set, it must be a number above 0
         public State state = State.Active;
         public bool mobileDisplay = false;
@@ -56,21 +62,22 @@ namespace PacManBot.Modules.PacMan
         private readonly DiscordSocketClient client;
         private readonly StorageService storage;
         private readonly Random random;
-        private readonly Fruit[] fruitTypes; //Stores the fruits that will be available in this game
-        private readonly int maxPellets;
-        private GameInput lastInput;
+        private int maxPellets;
+        private GameInput lastInput = GameInput.None;
         private int pellets; //Pellets remaining
         private int oldScore = 0; //Score obtained last turn
         private char[,] map;
         private Player player;
         private List<Ghost> ghosts;
-        private Fruit fruit;
 
         //Fruit
-        private readonly Pos fruitSpawnPos; //Where all fruit will spawn
+        private int fruitTimer = 0;
+        private Pos fruitSpawnPos; //Where all fruit will spawn
         private Pos FruitSecondPos => fruitSpawnPos + Dir.right; //Second tile which fruit will also occupy
         private int FruitTrigger1 => maxPellets - 70; //Amount of pellets remaining needed to spawn fruit
         private int FruitTrigger2 => maxPellets - 170;
+        private int FruitScore => (pellets > FruitTrigger2) ? 1000 : 2000;
+        private char FruitChar => (pellets > FruitTrigger2) ? 'x' : 'w';
 
 
         //Game data types
@@ -109,9 +116,9 @@ namespace PacManBot.Modules.PacMan
             {
                 switch (dir)
                 {
-                    case Dir.up:    return new Pos(pos.x, pos.y - 1);
-                    case Dir.down:  return new Pos(pos.x, pos.y + 1);
-                    case Dir.left:  return new Pos(pos.x - 1, pos.y);
+                    case Dir.up: return new Pos(pos.x, pos.y - 1);
+                    case Dir.down: return new Pos(pos.x, pos.y + 1);
+                    case Dir.left: return new Pos(pos.x - 1, pos.y);
                     case Dir.right: return new Pos(pos.x + 1, pos.y);
                     default: return pos;
                 }
@@ -135,26 +142,11 @@ namespace PacManBot.Modules.PacMan
             }
         }
 
-        private class Fruit
-        {
-            public int timer = 0;
-            public readonly char char1, char2;
-            public readonly int points;
-
-            public Fruit(char char1, char char2, int points)
-            {
-                this.char1 = char1;
-                this.char2 = char2;
-                this.points = points;
-            }
-        }
-
         private class Ghost
         {
             public readonly Pos origin; //Tile it spawns in
             public readonly Pos corner; //Preferred corner
             public Pos pos; //Position on the map
-            public Pos target; //Tile it's trying to reach
             public Dir dir = Dir.none; //Direction it's facing
             public AiType type; //Ghost behavior type
             public AiMode mode; //Ghost behavior mode
@@ -180,11 +172,13 @@ namespace PacManBot.Modules.PacMan
                     return;
                 }
 
-                //Decide target
+                //Decide target: tile it's trying to reach
+                Pos target = new Pos(0,0);
+
                 switch (mode)
                 {
                     case AiMode.Chase: //Normal
-                        switch(type)
+                        switch (type)
                         {
                             case AiType.Blinky:
                                 target = game.player.pos;
@@ -225,7 +219,7 @@ namespace PacManBot.Modules.PacMan
 
                 //Decide movement
                 Dir newDir = Dir.none;
-                
+
                 if (game.Map(pos) == CharDoor || game.Map(pos + Dir.up) == CharDoor)
                 {
                     newDir = Dir.up; //If it's inside the cage
@@ -240,7 +234,7 @@ namespace PacManBot.Modules.PacMan
                     foreach (Dir testDir in AllDirs) //Decides the direction that will get it closest to its target
                     {
                         Pos testPos = pos + testDir;
-                        
+
                         if (testDir == Dir.up && (game.Map(testPos) == CharSoftWall || game.Map(testPos) == CharSoftWallPellet)) continue; //Can't go up these places
                         if (testDir == dir.Opposite() && mode != AiMode.Frightened && !JustChangedMode(game.time)) continue; //Can't turn 180 degrees except on special situations
 
@@ -285,7 +279,7 @@ namespace PacManBot.Modules.PacMan
             this.channelId = channelId;
             this.ownerId = ownerId;
             random = new Random();
-            
+
             string[] newMap;
             if (customMap == null) newMap = File.ReadAllLines(BotFile.GameMap);
             else
@@ -294,7 +288,7 @@ namespace PacManBot.Modules.PacMan
                 custom = true;
             }
             LoadMap(newMap);
-            
+
             maxPellets = pellets;
 
             Pos playerPos = FindChar(CharPlayer); //Set player
@@ -302,10 +296,8 @@ namespace PacManBot.Modules.PacMan
             if (playerPos != null) map[playerPos.x, playerPos.y] = ' ';
 
             Pos fruitPos = FindChar(CharFruit); //Set fruit defaults
-            fruitSpawnPos = fruitPos;
+            fruitSpawnPos = fruitPos ?? new Pos(-1, -1);
             if (fruitPos != null) map[fruitPos.x, fruitPos.y] = ' ';
-            fruitTypes = new Fruit[]{ new Fruit('x', 'x', 1000), new Fruit('w', 'w', 2000) };
-            fruit = fruitTypes[0];
 
             ghosts = new List<Ghost>(); //Set ghosts
             Pos[] ghostCorners = new Pos[] { new Pos(2, -3), new Pos(map.LengthX() - 3, -3), new Pos(0, map.LengthY()), new Pos(map.LengthX() - 1, map.LengthY()) }; //Matches original game
@@ -344,13 +336,16 @@ namespace PacManBot.Modules.PacMan
             }
 
             //Fruit
-            if (fruit.timer > 0)
+            if (fruitTimer > 0)
             {
-                fruit.timer--;
                 if (fruitSpawnPos == player.pos || FruitSecondPos == player.pos)
                 {
-                    score += fruit.points;
-                    fruit.timer = 0;
+                    score += FruitScore;
+                    fruitTimer = 0;
+                }
+                else
+                {
+                    fruitTimer--;
                 }
             }
 
@@ -359,10 +354,9 @@ namespace PacManBot.Modules.PacMan
             if (tile == CharPellet || tile == CharPowerPellet || tile == CharSoftWallPellet)
             {
                 pellets--;
-                if ((pellets == FruitTrigger1 || pellets == FruitTrigger2) && fruitSpawnPos != null)
+                if ((pellets == FruitTrigger1 || pellets == FruitTrigger2) && fruitSpawnPos.x >= 0)
                 {
-                    fruit = fruitTypes[(pellets >= FruitTrigger1) ? 0 : 1];
-                    fruit.timer = random.Next(25, 30 + 1);
+                    fruitTimer = random.Next(25, 30 + 1);
                 }
 
                 score += (tile == CharPowerPellet) ? 50 : 10;
@@ -376,7 +370,6 @@ namespace PacManBot.Modules.PacMan
                 if (pellets == 0)
                 {
                     state = State.Win;
-                    return;
                 }
             }
 
@@ -402,7 +395,7 @@ namespace PacManBot.Modules.PacMan
                         didAI = true; //Skips AI after collision
                     }
 
-                    if (didAI) break; //Doesn't run AI twice
+                    if (didAI || state != State.Active) break; //Doesn't run AI twice, or if the user already won
 
                     ghost.AI(this); //Full ghost behavior
                     didAI = true;
@@ -411,6 +404,9 @@ namespace PacManBot.Modules.PacMan
 
             if (player.power > 0) player.power--;
             if (player.power == 0) player.ghostStreak = 0;
+
+            if (state == State.Active) SaveToFile(); //Backup more than anything, takes very little time
+            else if (File.Exists(GameFile)) File.Delete(GameFile);
         }
 
         public string GetDisplay()
@@ -426,7 +422,7 @@ namespace PacManBot.Modules.PacMan
             {
                 StringBuilder display = new StringBuilder(); //The final display in string form
                 char[,] displayMap = (char[,])map.Clone(); //The display array to modify
-                
+
                 //Scan replacements
                 for (int y = 0; y < map.LengthY(); y++)
                 {
@@ -434,7 +430,7 @@ namespace PacManBot.Modules.PacMan
                     {
                         if (displayMap[x, y] == CharSoftWall) displayMap[x, y] = ' ';
                         else if (displayMap[x, y] == CharSoftWallPellet) displayMap[x, y] = CharPellet;
-                        
+
                         if (mobileDisplay) //Mode with simplified characters
                         {
                             if (!NonSolid(x, y) && displayMap[x, y] != CharDoor) displayMap[x, y] = '#'; //Walls
@@ -445,10 +441,10 @@ namespace PacManBot.Modules.PacMan
                 }
 
                 //Adds fruit, ghosts and player
-                if (fruit.timer > 0)
+                if (fruitTimer > 0)
                 {
-                    displayMap[fruitSpawnPos.x, fruitSpawnPos.y] = fruit.char1;
-                    displayMap[FruitSecondPos.x, FruitSecondPos.y] = fruit.char2;
+                    displayMap[fruitSpawnPos.x, fruitSpawnPos.y] = FruitChar;
+                    displayMap[FruitSecondPos.x, FruitSecondPos.y] = FruitChar;
                 }
                 foreach (Ghost ghost in ghosts)
                 {
@@ -478,7 +474,7 @@ namespace PacManBot.Modules.PacMan
                     $" │ ",
                     $" │ ", " │ ", " │ ", " │ ", //7-10: ghosts
                     $" │ ",
-                    $" │ {($"{fruit.char1}{fruit.char2}{" - Fruit".If(!mobileDisplay)}: {fruit.timer}").If(fruit.timer > 0)}",
+                    $" │ {($"{FruitChar}{FruitChar}{" - Fruit".If(!mobileDisplay)}: {fruitTimer}").If(fruitTimer > 0)}",
                     $" └ {$"+{score - oldScore}".If(mobileDisplay && score - oldScore != 0)}"
                 };
 
@@ -528,7 +524,9 @@ namespace PacManBot.Modules.PacMan
             }
             catch
             {
-                return $"```There was an error displaying the game. {"Make sure your custom map is valid. ".If(custom)}If this problem persists, please contact the author of the bot.```";
+                var guildChannel = client.GetChannel(channelId) as SocketGuildChannel;
+                var guild = guildChannel == null ? null : guildChannel.Guild;
+                return $"```There was an error displaying the game. {"Make sure your custom map is valid. ".If(custom)}If this problem persists, please contact the author of the bot using the **{storage.GetPrefixOrEmpty(guild)}feedback** command.```";
             }
         }
 
@@ -558,7 +556,7 @@ namespace PacManBot.Modules.PacMan
             WrapAround(ref pos);
             return (Map(pos) == ' ' || Map(pos) == CharPellet || Map(pos) == CharPowerPellet || Map(pos) == CharSoftWall || Map(pos) == CharSoftWallPellet);
         }
-        
+
         private char Map(Pos pos) //Returns the character at the specified pos
         {
             WrapAround(ref pos);
@@ -581,6 +579,8 @@ namespace PacManBot.Modules.PacMan
             char[,] newMap = new char[width, height];
             try
             {
+                pellets = 0;
+
                 bool hasEmptySpace = false;
 
                 for (int y = 0; y < height; y++)
@@ -605,6 +605,118 @@ namespace PacManBot.Modules.PacMan
             map = newMap;
 
             if (custom) File.AppendAllLines(BotFile.CustomMapLog, lines);
+        }
+
+
+
+        public void SaveToFile()
+        {
+            StringBuilder fileText = new StringBuilder();
+
+            fileText.AppendLine("{map}");
+            for (int y = 0; y < map.LengthY(); y++)
+            {
+                for (int x = 0; x < map.LengthX(); x++)
+                {
+                    fileText.Append(map[x, y]);
+                }
+                fileText.Append('\n');
+            }
+            fileText.AppendLine("{map}\n");
+
+            fileText.AppendLine("{custom}" + $"{custom}");
+            fileText.AppendLine("{owner}" + $"{ownerId}");
+            fileText.AppendLine("{score}" + $"{score}");
+            fileText.AppendLine("{time}" + $"{time}");
+            fileText.AppendLine("{pellets}" + $"{pellets}");
+            fileText.AppendLine("{maxpellets}" + $"{maxPellets}\n");
+
+            fileText.AppendLine("{fruittime}" + $"{fruitTimer}");
+            fileText.AppendLine("{fruitx}" + $"{fruitSpawnPos.x}");
+            fileText.AppendLine("{fruity}" + $"{fruitSpawnPos.y}\n");
+
+            fileText.AppendLine("{playeroriginx}" + $"{player.origin.x}");
+            fileText.AppendLine("{playeroriginy}" + $"{player.origin.y}");
+            fileText.AppendLine("{playerposx}" + $"{player.pos.x}");
+            fileText.AppendLine("{playerposy}" + $"{player.pos.y}");
+            fileText.AppendLine("{playerdir}" + $"{(int)player.dir}");
+            fileText.AppendLine("{playerpower}" + $"{player.power}");
+            fileText.AppendLine("{playerghoststreak}" + $"{player.ghostStreak}\n");
+
+            for (int i = 0; i < ghosts.Count; i++)
+            {
+                fileText.AppendLine($"{{ghost{i}originx}}" + $"{ghosts[i].origin.x}");
+                fileText.AppendLine($"{{ghost{i}originy}}" + $"{ghosts[i].origin.y}");
+                fileText.AppendLine($"{{ghost{i}cornerx}}" + $"{ghosts[i].corner.x}");
+                fileText.AppendLine($"{{ghost{i}cornery}}" + $"{ghosts[i].corner.y}");
+                fileText.AppendLine($"{{ghost{i}posx}}" + $"{ghosts[i].pos.x}");
+                fileText.AppendLine($"{{ghost{i}posy}}" + $"{ghosts[i].pos.y}");
+                fileText.AppendLine($"{{ghost{i}dir}}" + $"{(int)ghosts[i].dir}");
+                fileText.AppendLine($"{{ghost{i}mode}}" + $"{(int)ghosts[i].mode}");
+                fileText.AppendLine($"{{ghost{i}pause}}" + $"{ghosts[i].pauseTime}\n");
+            }
+
+            File.WriteAllText(GameFile, fileText.ToString());
+        }
+
+        public void LoadFromFile()
+        {
+            string fileText = File.ReadAllText(GameFile);
+
+            LoadMap(FindValue(fileText, "{map}", true).Split('\n'));
+
+            custom = bool.Parse(FindValue(fileText, "{custom}"));
+            ownerId = ulong.Parse(FindValue(fileText, "{owner}"));
+            score = int.Parse(FindValue(fileText, "{score}"));
+            time = int.Parse(FindValue(fileText, "{time}"));
+            pellets = int.Parse(FindValue(fileText, "{pellets}"));
+            maxPellets = int.Parse(FindValue(fileText, "{maxpellets}"));
+
+            fruitTimer = int.Parse(FindValue(fileText, "{fruittime}"));
+            fruitSpawnPos = new Pos(int.Parse(FindValue(fileText, "{fruitx}")), int.Parse(FindValue(fileText, "{fruity}")));
+
+            player = new Player(new Pos(int.Parse(FindValue(fileText, "{playeroriginx}")), int.Parse(FindValue(fileText, "{playeroriginy}"))));
+            player.pos = new Pos(int.Parse(FindValue(fileText, "{playerposx}")), int.Parse(FindValue(fileText, "{playerposy}")));
+            player.dir = (Dir)int.Parse(FindValue(fileText, "{playerdir}"));
+            player.power = int.Parse(FindValue(fileText, "{playerpower}"));
+            player.ghostStreak = int.Parse(FindValue(fileText, "{playerghoststreak}"));
+
+            ghosts.Clear();
+            for (int i = 0; i < 4; i++)
+            {
+                if (fileText.Contains($"ghost{i}"))
+                {
+                    Ghost ghost = new Ghost
+                    (
+                        new Pos(int.Parse(FindValue(fileText, $"{{ghost{i}originx}}")), int.Parse(FindValue(fileText, $"{{ghost{i}originy}}"))),
+                        (AiType)i,
+                        new Pos(int.Parse(FindValue(fileText, $"{{ghost{i}cornerx}}")), int.Parse(FindValue(fileText, $"{{ghost{i}cornery}}")))
+                    );
+                    ghost.pos = new Pos(int.Parse(FindValue(fileText, $"{{ghost{i}posx}}")), int.Parse(FindValue(fileText, $"{{ghost{i}posy}}")));
+                    ghost.dir = (Dir)int.Parse(FindValue(fileText, $"{{ghost{i}dir}}"));
+                    ghost.mode = (AiMode)int.Parse(FindValue(fileText, $"{{ghost{i}mode}}"));
+                    ghost.pauseTime = int.Parse(FindValue(fileText, $"{{ghost{i}pause}}"));
+
+                    ghosts.Add(ghost);
+                }
+                else break;
+            }
+        }
+
+        public static string FindValue(string text, string key, bool multiline = false)
+        {
+            int keyIndex = text.IndexOf(key); //Key start index
+            int valIndex = keyIndex + key.Length; //Value start index
+
+            int endIndex;
+            if (multiline)
+            {
+                valIndex++;
+                endIndex = text.IndexOf(key, valIndex) - 1;
+            }
+            else endIndex = text.IndexOf("\n", valIndex);
+
+            return text.Substring(valIndex, endIndex - valIndex).Trim('\n');
         }
     }
 }
