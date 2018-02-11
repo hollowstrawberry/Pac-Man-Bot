@@ -69,20 +69,19 @@ namespace PacManBot
         }
 
 
-        private async Task OnLeftGuild(SocketGuild arg)
+        private async Task OnJoinedGuild(SocketGuild guild)
         {
             await UpdateGuildCount();
         }
 
-        private async Task OnJoinedGuild(SocketGuild arg)
+        private async Task OnLeftGuild(SocketGuild guild)
         {
             await UpdateGuildCount();
 
-            List<ulong> guildIds = client.Guilds.Select(g => g.Id).ToList();
             for (int i = 0; i < storage.gameInstances.Count; i++)
             {
                 var guildChannel = client.GetChannel(storage.gameInstances[i].channelId) as SocketGuildChannel;
-                if (guildChannel != null && !guildIds.Contains(guildChannel.Guild.Id))
+                if (guildChannel != null && guildChannel.Guild.Id == guild.Id)
                 {
                     await logger.Log(LogSeverity.Verbose, $"Removing game at {storage.gameInstances[i].channelId}");
                     if (File.Exists(storage.gameInstances[i].GameFile)) File.Delete(storage.gameInstances[i].GameFile);
