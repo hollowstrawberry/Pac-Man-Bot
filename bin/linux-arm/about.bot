@@ -1,8 +1,0 @@
-Play Pac-Man on a Discord chat! Featuring turn-based gameplay with reaction controls, the focus is low spam and original arcade game fidelity. You can play in a server with friends or in a DM with the bot.
-🎮 To begin, use the command **{prefix}play** or **{prefix}play mobile**
-🏆 Get a spot on the global **{prefix}leaderboard**!
-` `
-{links}
-<:discord:409811304103149569> Bot invite|https://discordapp.com/oauth2/authorize?client_id=398127484983443468&scope=bot&permissions=355392
-<:github:409803419717599234> Source code|https://github.com/Samrux/Pac-Man-Bot
-<:botTag:230105988211015680> Bot page|https://bots.discord.pw/bots/398127484983443468

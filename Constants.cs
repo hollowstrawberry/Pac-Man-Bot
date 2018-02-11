@@ -6,11 +6,7 @@
             Config = "config.bot",
             Prefixes = "prefixes.bot",
             Scoreboard = "scoreboard.bot",
-            GameMap = "map.bot",
-            About = "about.bot",
-            GameHelp = "gamehelp.bot",
-            CustomMapHelp = "custommaphelp.bot",
-            InviteLink = "invite.bot",
+            Contents = "contents.bot",
             WakaExclude = "wakaexclude.bot",
             FeedbackLog = "logs/feedback.txt",
             CustomMapLog = "logs/custom.txt";

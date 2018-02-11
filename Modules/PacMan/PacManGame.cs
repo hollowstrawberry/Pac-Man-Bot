@@ -284,7 +284,7 @@ namespace PacManBot.Modules.PacMan
             random = new Random();
 
             string[] newMap;
-            if (customMap == null) newMap = File.ReadAllLines(BotFile.GameMap);
+            if (customMap == null) newMap = File.ReadAllText(BotFile.Contents).FindValue("map").Split('\n');
             else
             {
                 newMap = customMap.Split('\n');
@@ -418,7 +418,7 @@ namespace PacManBot.Modules.PacMan
             {
                 var guildChannel = client.GetChannel(channelId) as SocketGuildChannel;
                 var guild = guildChannel == null ? null : guildChannel.Guild;
-                return File.ReadAllText(BotFile.GameHelp).Replace("{prefix}", storage.GetPrefixOrEmpty(guild));
+                return File.ReadAllText(BotFile.Contents).FindValue("gamehelp").Replace("{prefix}", storage.GetPrefixOrEmpty(guild));
             }
 
             try
@@ -529,7 +529,7 @@ namespace PacManBot.Modules.PacMan
             {
                 var guildChannel = client.GetChannel(channelId) as SocketGuildChannel;
                 var guild = guildChannel == null ? null : guildChannel.Guild;
-                return $"```There was an error displaying the game. {"Make sure your custom map is valid. ".If(custom)}If this problem persists, please contact the author of the bot using the **{storage.GetPrefixOrEmpty(guild)}feedback** command.```";
+                return $"```There was an error displaying the game. {"Make sure your custom map is valid. ".If(custom)}If this problem persists, please contact the author of the bot using the {storage.GetPrefixOrEmpty(guild)}feedback command.```";
             }
         }
 
@@ -667,23 +667,23 @@ namespace PacManBot.Modules.PacMan
         {
             string fileText = File.ReadAllText(GameFile);
 
-            LoadMap(FindValue(fileText, "{map}", true).Split('\n'));
+            LoadMap(fileText.FindValue("map").Split('\n'));
 
-            custom = bool.Parse(FindValue(fileText, "{custom}"));
-            ownerId = ulong.Parse(FindValue(fileText, "{owner}"));
-            score = int.Parse(FindValue(fileText, "{score}"));
-            time = int.Parse(FindValue(fileText, "{time}"));
-            pellets = int.Parse(FindValue(fileText, "{pellets}"));
-            maxPellets = int.Parse(FindValue(fileText, "{maxpellets}"));
+            custom = fileText.FindValue<bool>("custom");
+            ownerId = fileText.FindValue<ulong>("owner");
+            score = fileText.FindValue<int>("score");
+            time = fileText.FindValue<int>("time");
+            pellets = fileText.FindValue<int>("pellets");
+            maxPellets = fileText.FindValue<int>("maxpellets");
 
-            fruitTimer = int.Parse(FindValue(fileText, "{fruittime}"));
-            fruitSpawnPos = new Pos(int.Parse(FindValue(fileText, "{fruitx}")), int.Parse(FindValue(fileText, "{fruity}")));
+            fruitTimer = fileText.FindValue<int>("fruittime");
+            fruitSpawnPos = new Pos(fileText.FindValue<int>("fruitx"), fileText.FindValue<int>("fruity"));
 
-            player = new Player(new Pos(int.Parse(FindValue(fileText, "{playeroriginx}")), int.Parse(FindValue(fileText, "{playeroriginy}"))));
-            player.pos = new Pos(int.Parse(FindValue(fileText, "{playerposx}")), int.Parse(FindValue(fileText, "{playerposy}")));
-            player.dir = (Dir)int.Parse(FindValue(fileText, "{playerdir}"));
-            player.power = int.Parse(FindValue(fileText, "{playerpower}"));
-            player.ghostStreak = int.Parse(FindValue(fileText, "{playerghoststreak}"));
+            player = new Player(new Pos(fileText.FindValue<int>("playeroriginx"), fileText.FindValue<int>("playeroriginy")));
+            player.pos = new Pos(fileText.FindValue<int>("playerposx"), fileText.FindValue<int>("playerposy"));
+            player.dir = (Dir)fileText.FindValue<int>("playerdir");
+            player.power = fileText.FindValue<int>("playerpower");
+            player.ghostStreak = fileText.FindValue<int>("playerghoststreak");
 
             ghosts.Clear();
             for (int i = 0; i < 4; i++)
@@ -692,35 +692,19 @@ namespace PacManBot.Modules.PacMan
                 {
                     Ghost ghost = new Ghost
                     (
-                        new Pos(int.Parse(FindValue(fileText, $"{{ghost{i}originx}}")), int.Parse(FindValue(fileText, $"{{ghost{i}originy}}"))),
+                        new Pos(fileText.FindValue<int>($"ghost{i}originx"), fileText.FindValue<int>($"ghost{i}originy")),
                         (AiType)i,
-                        new Pos(int.Parse(FindValue(fileText, $"{{ghost{i}cornerx}}")), int.Parse(FindValue(fileText, $"{{ghost{i}cornery}}")))
+                        new Pos(fileText.FindValue<int>($"ghost{i}cornerx"), fileText.FindValue<int>($"ghost{i}cornery"))
                     );
-                    ghost.pos = new Pos(int.Parse(FindValue(fileText, $"{{ghost{i}posx}}")), int.Parse(FindValue(fileText, $"{{ghost{i}posy}}")));
-                    ghost.dir = (Dir)int.Parse(FindValue(fileText, $"{{ghost{i}dir}}"));
-                    ghost.mode = (AiMode)int.Parse(FindValue(fileText, $"{{ghost{i}mode}}"));
-                    ghost.pauseTime = int.Parse(FindValue(fileText, $"{{ghost{i}pause}}"));
+                    ghost.pos = new Pos(fileText.FindValue<int>($"ghost{i}posx"), fileText.FindValue<int>($"ghost{i}posy"));
+                    ghost.dir = (Dir)fileText.FindValue<int>($"ghost{i}dir");
+                    ghost.mode = (AiMode)fileText.FindValue<int>($"ghost{i}mode");
+                    ghost.pauseTime = fileText.FindValue<int>($"ghost{i}pause");
 
                     ghosts.Add(ghost);
                 }
                 else break;
             }
-        }
-
-        public static string FindValue(string text, string key, bool multiline = false)
-        {
-            int keyIndex = text.IndexOf(key); //Key start index
-            int valIndex = keyIndex + key.Length; //Value start index
-
-            int endIndex;
-            if (multiline)
-            {
-                valIndex++;
-                endIndex = text.IndexOf(key, valIndex) - 1;
-            }
-            else endIndex = text.IndexOf("\n", valIndex);
-
-            return text.Substring(valIndex, endIndex - valIndex).Trim('\n');
         }
     }
 }

@@ -8,6 +8,7 @@
 # Folders
 .vs/
 obj/
+src/
 host/
 bin/logs/
 bin/games/
@@ -25,3 +26,4 @@ importantInfo.txt
 *.tmp
 *.tmp_proj
 *.scc
+.leu

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
@@ -89,6 +90,40 @@ namespace PacManBot
             Pos pos = new Pos(0, 0);
             for (int i = 0; i < num; i++) pos += dir;
             return pos;
+        }
+
+
+        //Bot utility
+
+        public static string FindValue(this string text, string key)
+        {
+            return FindValue<string>(text, key);
+        }
+        public static T FindValue<T>(this string text, string key) where T : IConvertible
+        {
+            if (!Regex.IsMatch(key, @"^\{.*\}$")) key = $"{{{key}}}"; //Adds curly brackets
+
+            int keyIndex = text.IndexOf(key); //Key start location
+            int valIndex = keyIndex + key.Length; //Value start location
+
+            int endIndex; //Value end location
+            if (Regex.IsMatch(text, @"(" + Regex.Escape(key) + @"[\S\s]*){2}")) //More than one key instance: multiline
+            {
+                endIndex = text.IndexOf(key, valIndex);
+            }
+            else endIndex = text.IndexOf("\n", valIndex);
+            if (endIndex < 0) endIndex = text.Length;
+
+            string stringValue = keyIndex < 0 ? null : text.Substring(valIndex, endIndex - valIndex).Trim('\n', '\r');
+
+            try
+            {
+                return (T)Convert.ChangeType(stringValue, typeof(T));
+            }
+            catch (InvalidCastException)
+            {
+                return default(T);
+            }
         }
     }
 }

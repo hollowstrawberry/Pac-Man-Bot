@@ -5,6 +5,7 @@ using Discord.Commands;
 using PacManBot.Services;
 using PacManBot.Constants;
 using PacManBot.Modules.PacMan;
+using System.IO;
 
 namespace PacManBot.Modules
 {
@@ -23,7 +24,7 @@ namespace PacManBot.Modules
             this.scripting = scripting;
         }
 
-        [Command("run"), Alias("eval", "runasync", "evalasync"), Summary("Run code, super dangerous do not try at home. Developers only.")]
+        [Command("run"), Alias("eval", "runasync", "evalasync"), Remarks("code —"), Summary("Run code, super dangerous do not try at home. Developer only.")]
         public async Task ScriptEval([Remainder]string code)
         {
             try
@@ -44,7 +45,7 @@ namespace PacManBot.Modules
             }
         }
 
-        [Command("feedbackreply"), Summary("This is how Samrux replies to feedback.")]
+        [Command("feedbackreply"), Remarks("userId message —"), Summary("This is how Samrux replies to feedback. Developer only.")]
         public async Task ReplyFeedback(ulong id, [Remainder]string message)
         {
             try
@@ -60,7 +61,7 @@ namespace PacManBot.Modules
             }
         }
 
-        [Command("garbagecollect"), Alias("gc"), Summary("The garbage truck is here")]
+        [Command("garbagecollect"), Alias("gc"), Summary("Clears unused memory if possible. Developer only.")]
         public async Task DoGarbageCollect()
         {
             GC.Collect();
@@ -68,6 +69,22 @@ namespace PacManBot.Modules
             GC.Collect();
 
             await Context.Message.AddReactionAsync(CustomEmojis.Check.ToEmote());
+        }
+
+        [Command("file"), Alias("readfile"), Remarks("startpoint endpoint filename —"), Summary("Sends the contents of a file in the bot's host location. Developer only.")]
+        public async Task ReadFile(int start, int end, [Remainder]string file)
+        {
+            try
+            {
+                string fileText = File.ReadAllText(file);
+                string message = $"```{"cs".If(file.Contains(".cs"))}\n{fileText.Substring(start, Math.Min(end, fileText.Length) - start - 11).Replace("```", "`​``")}```";
+                await ReplyAsync(message);
+            }
+            catch (Exception e)
+            {
+                await logger.Log(LogSeverity.Debug, $"{e}");
+                await ReplyAsync($"```{e.Message}```");
+            }
         }
     }
 }

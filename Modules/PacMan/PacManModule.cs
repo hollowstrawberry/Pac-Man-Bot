@@ -255,9 +255,9 @@ namespace PacManBot.Modules.PacMan
         {
             if (!Context.CheckHasEmbedPermission()) return;
 
-            string[] file = File.ReadAllText(BotFile.CustomMapHelp).Split("{links}");
-            string message = file[0].Replace("{prefix}", storage.GetPrefixOrEmpty(Context.Guild));
-            string[] links = file[1].Split('\n').Where(s => !string.IsNullOrWhiteSpace(s.Trim(' ', '\n'))).ToArray();
+            string fileText = File.ReadAllText(BotFile.Contents);
+            string message = fileText.FindValue("customhelp").Replace("{prefix}", storage.GetPrefixOrEmpty(Context.Guild));
+            string[] links = fileText.FindValue("customlinks").Split('\n').Where(s => s.Contains("|")).ToArray();
 
             var embed = new EmbedBuilder() { Color = new Color(241, 195, 15) };
             for (int i = 0; i < links.Length; i++)

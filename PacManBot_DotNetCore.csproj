@@ -15,14 +15,17 @@
   <ItemGroup>
     <Compile Remove="host\**" />
     <Compile Remove="logs\**" />
+    <Compile Remove="src\**" />
     <Compile Remove="_Screenshots\**" />
     <Compile Remove="Properties\**" />
     <EmbeddedResource Remove="host\**" />
     <EmbeddedResource Remove="logs\**" />
+    <EmbeddedResource Remove="src\**" />
     <EmbeddedResource Remove="_Screenshots\**" />
     <EmbeddedResource Remove="Properties\**" />
     <None Remove="host\**" />
     <None Remove="logs\**" />
+    <None Remove="src\**" />
     <None Remove="_Screenshots\**" />
     <None Remove="Properties\**" />
   </ItemGroup>
@@ -30,6 +33,7 @@
   <ItemGroup>
     <None Remove=".gitattributes" />
     <None Remove=".gitignore" />
+    <None Remove=".leu" />
     <None Remove="App.config" />
     <None Remove="Core_publish.bat" />
     <None Remove="Icon.ico" />

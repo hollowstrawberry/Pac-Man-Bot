@@ -29,22 +29,25 @@ namespace PacManBot.Services
 
         public async Task StartAsync()
         {
-            if (!File.Exists(BotFile.Config)) throw new Exception($"Missing {BotFile.Config}: Bot can't run.");
-            if (!File.Exists(BotFile.GameMap)) throw new Exception($"Missing {BotFile.GameMap}: Bot can't run.");
-
-            string[] secondaryFiles = new string[] { BotFile.Prefixes, BotFile.Scoreboard, BotFile.About, BotFile.GameHelp, BotFile.CustomMapHelp, BotFile.InviteLink, BotFile.WakaExclude };
-            for (int i = 0; i < secondaryFiles.Length; i++)
+            string[] essentialFile = new string[] { BotFile.Config, BotFile.Contents };
+            for (int i = 0; i < essentialFile.Length; i++)
             {
-                if (!File.Exists(secondaryFiles[i]))
+                if (!File.Exists(essentialFile[i])) throw new Exception($"Missing {essentialFile[i]}: Bot can't run.");
+            }
+
+            string[] secondaryFile = new string[] { BotFile.Prefixes, BotFile.Scoreboard, BotFile.WakaExclude };
+            for (int i = 0; i < secondaryFile.Length; i++)
+            {
+                if (!File.Exists(secondaryFile[i]))
                 {
-                    File.Create(secondaryFiles[i]).Dispose();
-                    await logger.Log(LogSeverity.Warning, $"Created missing file \"{secondaryFiles[i]}\"");
+                    File.Create(secondaryFile[i]).Dispose();
+                    await logger.Log(LogSeverity.Warning, $"Created missing file \"{secondaryFile[i]}\"");
                 }
             }
 
 
             string discordToken = config["token"]; //Get the discord token from the config file
-            if (string.IsNullOrWhiteSpace(discordToken)) throw new Exception($"Please enter the bot's token into the {BotFile.Config} file");
+            if (string.IsNullOrWhiteSpace(discordToken)) throw new Exception($"Missing bot token in {BotFile.Config}");
 
             await client.LoginAsync(TokenType.Bot, discordToken); //Login to discord
             await client.StartAsync(); //Connect to the websocket

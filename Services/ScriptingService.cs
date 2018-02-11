@@ -24,7 +24,7 @@ namespace PacManBot.Services
 
             scriptOptions = ScriptOptions.Default
                 .WithImports(
-                    "System", "System.IO", "System.Threading.Tasks", "System.Collections.Generic", "System.Linq",
+                    "System", "System.IO", "System.Threading.Tasks", "System.Collections.Generic", "System.Linq", "System.Text.RegularExpressions",
                     "Discord", "Discord.WebSocket", "Discord.Commands",
                     "PacManBot", "PacManBot.Services", "PacManBot.Constants", "PacManBot.Modules", "PacManBot.Modules.PacMan"
                 )

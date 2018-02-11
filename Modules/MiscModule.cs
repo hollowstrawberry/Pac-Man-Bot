@@ -32,9 +32,9 @@ namespace PacManBot.Modules
         {
             if (!Context.CheckHasEmbedPermission()) return;
 
-            string[] file = File.ReadAllText(BotFile.About).Split("{links}");
-            string description = file[0].Replace("{prefix}", storage.GetPrefixOrEmpty(Context.Guild));
-            string[] links = file[1].Split('\n').Where(s => !string.IsNullOrWhiteSpace(s.Trim(' ', '\n'))).ToArray();
+            string fileText = File.ReadAllText(BotFile.Contents);
+            string description = fileText.FindValue("about").Replace("{prefix}", storage.GetPrefixOrEmpty(Context.Guild));
+            string[] fields = fileText.FindValue("aboutfields").Split('\n').Where(s => s.Contains("|")).ToArray();
 
             var embed = new EmbedBuilder()
             {
@@ -45,13 +45,11 @@ namespace PacManBot.Modules
             embed.AddField("Server count", $"{Context.Client.Guilds.Count}", true);
             embed.AddField("Active games", $"{storage.gameInstances.Count}", true);
             embed.AddField("Latency", $"{Context.Client.Latency}ms", true);
-            embed.AddField("Author", $"Samrux#3980", true);
-            embed.AddField("Version", $"v2.9", true);
-            embed.AddField("Library", "Discord.Net 2.0 (C#)", true);
 
-            for (int i = 0; i < links.Length; i++)
+            for (int i = 0; i < fields.Length; i++)
             {
-                embed.AddField(links[i].Split('|')[0], $"[Click here]({links[i].Split('|')[1]} \"{links[i].Split('|')[1]}\")", true);
+                string[] splice = fields[i].Split('|');
+                embed.AddField(splice[0], splice[1], true);
             }
 
             await ReplyAsync("", false, embed.Build());
@@ -190,7 +188,7 @@ namespace PacManBot.Modules
         {
             if (!Context.CheckHasEmbedPermission()) return;
 
-            string link = File.ReadAllText(BotFile.InviteLink);
+            string link = File.ReadAllText(BotFile.Contents).FindValue("invite");
             var embed = new EmbedBuilder()
             {
                 Title = "Bot invite link",

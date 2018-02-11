@@ -10,6 +10,21 @@
     <AssemblyName>PacMan Bot</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -34,8 +49,11 @@
     <BaseIntermediateOutputPath>.\obj\standard</BaseIntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>ROBOCOPY "%25USERPROFILE%25\Google Drive\C#\PacManBot\bin " "%25USERPROFILE%25\Google Drive\C#\PacManBot\bin\lib " *.xml *.dll /IS /MOV
-if %25errorlevel%25 leq 4 exit 0 else exit %25errorlevel%25</PostBuildEvent>
+    <PostBuildEvent>rmdir app.publish /s /q
+del "PacMan Bot.application" /q
+ROBOCOPY "%25USERPROFILE%25\Google Drive\C#\PacManBot\bin " "%25USERPROFILE%25\Google Drive\C#\PacManBot\bin\lib " *.xml *.dll /IS /MOV
+cd ..
+LinuxPublish.bat</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>8D875EE88D1EC28226927AF9A681C412D7B3D964</ManifestCertificateThumbprint>
@@ -71,17 +89,12 @@ if %25errorlevel%25 leq 4 exit 0 else exit %25errorlevel%25</PostBuildEvent>
   </ItemGroup>
   <ItemGroup>
     <None Include=".\App.config" />
-    <None Include=".\bin\PacMan Bot.exe.config" />
     <None Include=".\packages.config" />
     <None Include=".\PacMan Bot.exe.config" />
-    <None Include=".\bin\about.bot" />
     <None Include=".\bin\config.bot" />
-    <None Include=".\bin\custommaphelp.bot" />
-    <None Include=".\bin\gamehelp.bot" />
-    <None Include=".\bin\invite.bot" />
-    <None Include=".\bin\map.bot" />
     <None Include=".\bin\prefixes.bot" />
     <None Include=".\bin\scoreboard.bot" />
+    <None Include="bin\contents.bot" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Discord.Net.Commands, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
