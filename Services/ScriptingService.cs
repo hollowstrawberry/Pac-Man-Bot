@@ -51,12 +51,7 @@ namespace PacManBot.Services
                 }
 
                 await logger.Log(LogSeverity.Debug, $"Evaluating code \"{code}\" in channel {context.FullChannelName()}");
-
-                Script<object> script = CSharpScript.Create(code + postCode, scriptOptions, typeof(ScriptArgs));
-                ScriptArgs scriptArgs = new ScriptArgs(context, storage, logger);
-                script.Compile();
-                await script.RunAsync(scriptArgs);
-
+                await CSharpScript.EvaluateAsync(code + postCode, scriptOptions, new ScriptArgs(context, storage, logger));
                 await logger.Log(LogSeverity.Debug, $"Successfully executed code");
 
                 GC.Collect();
