@@ -14,7 +14,7 @@ namespace PacManBot.Services
         private readonly StorageService storage;
         private readonly LoggingService logger;
         private readonly IServiceProvider provider;
-        public readonly Regex waka = new Regex(@"^(waka[\W]*)+$", RegexOptions.IgnoreCase);
+        public readonly Regex waka = new Regex(@"^(w+a+k+a+[\W]*)+$", RegexOptions.IgnoreCase);
 
         public CommandHandler(DiscordSocketClient client, CommandService commands, StorageService storage, LoggingService logger, IServiceProvider provider)
         {

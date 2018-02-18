@@ -11,18 +11,25 @@ namespace PacManBot
     {
         //General utilities
 
-        //Conditional strings to help with complex text concatenation
-        public static string If(this string text, bool condition) => condition ? text : "";
-        public static string Unless(this string text, bool condition) => condition ? "" : text;
-
         //2-dimensional array length
         public static int LengthX<T>(this T[,] array) => array.GetLength(0);
         public static int LengthY<T>(this T[,] array) => array.GetLength(1);
 
-        //Shorthand
-        public static string[] Split(this string text, string separator)
+
+        //Strings
+
+        //Conditional strings to help with complex text concatenation
+        public static string If(this string text, bool condition) => condition ? text : "";
+        public static string Unless(this string text, bool condition) => condition ? "" : text;
+
+        public static string[] Split(this string text, string separator) //Shorthand
         {
             return text.Split(new string[] { separator }, StringSplitOptions.None);
+        }
+
+        public static string Truncate(this string text, int maxLength)
+        {
+            return text.Substring(0, Math.Min(maxLength, text.Length));
         }
 
 

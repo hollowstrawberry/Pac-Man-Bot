@@ -6,6 +6,7 @@ using PacManBot.Services;
 using PacManBot.Constants;
 using PacManBot.Modules.PacMan;
 using System.IO;
+using System.Linq;
 
 namespace PacManBot.Modules
 {
@@ -85,6 +86,12 @@ namespace PacManBot.Modules
                 await logger.Log(LogSeverity.Debug, $"{e}");
                 await ReplyAsync($"```{e.Message}```");
             }
+        }
+
+        [Command("getguilds"), Summary("Gets a list of guilds and member counts where this bot is in. Developer only.")]
+        public async Task GetGuildMembers()
+        {
+            await ReplyAsync(string.Join("\n", Context.Client.Guilds.OrderByDescending(g => g.MemberCount).Select(g => $"{g.Name}: {g.MemberCount}")).Truncate(2000));
         }
     }
 }
