@@ -54,7 +54,8 @@ del "PacMan Bot.application" /q
 cd ..
 LinuxPublish.bat
 cd bin
-ROBOCOPY "%25USERPROFILE%25\Google Drive\C#\PacManBot\bin " "%25USERPROFILE%25\Google Drive\C#\PacManBot\bin\lib " *.xml *.dll /IS /MOV</PostBuildEvent>
+ROBOCOPY "%25USERPROFILE%25\Google Drive\C#\PacManBot\bin " "%25USERPROFILE%25\Google Drive\C#\PacManBot\bin\lib " *.xml *.dll /IS /MOV
+if %2525errorlevel%2525 leq 4 exit 0 else exit %2525errorlevel%2525</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>8D875EE88D1EC28226927AF9A681C412D7B3D964</ManifestCertificateThumbprint>

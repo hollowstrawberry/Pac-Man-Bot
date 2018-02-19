@@ -582,14 +582,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="PacMan Bot.exe" size="119248">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="PacMan Bot.exe" size="120272">
       <assemblyIdentity name="PacMan Bot" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>/YmI7E2FWafJS5YXvTTqwxMNfzUksIFcMSIC1e7pA8I=</dsig:DigestValue>
+        <dsig:DigestValue>lmIPWeHEA8Z7EXNbn61PAd/CozjmEazLEW0ayEwMTmk=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

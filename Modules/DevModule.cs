@@ -73,13 +73,11 @@ namespace PacManBot.Modules
         }
 
         [Command("file"), Alias("readfile"), Remarks("startpoint endpoint filename —"), Summary("Sends the contents of a file in the bot's host location. Developer only.")]
-        public async Task ReadFile(int start, int end, [Remainder]string file)
+        public async Task ReadFile(int start, int length, [Remainder]string file)
         {
             try
             {
-                string fileText = File.ReadAllText(file);
-                string message = $"```{"cs".If(file.Contains(".cs"))}\n{fileText.Substring(start, Math.Min(end, fileText.Length) - start - 11).Replace("```", "`​``")}```";
-                await ReplyAsync(message);
+                await ReplyAsync($"```{"cs".If(file.Contains(".cs"))}\n{File.ReadAllText(file).Replace("```", "`​``").Substring(start).Truncate(length)}".Truncate(1997) + "```");
             }
             catch (Exception e)
             {
@@ -87,6 +85,10 @@ namespace PacManBot.Modules
                 await ReplyAsync($"```{e.Message}```");
             }
         }
+        [Command("file"), Alias("readfile")]
+        public async Task ReadFile(int start, [Remainder]string file) => await ReadFile(start, 2000, file);
+        [Command("file"), Alias("readfile")]
+        public async Task ReadFile([Remainder]string file) => await ReadFile(0, 2000, file);
 
         [Command("getguilds"), Summary("Gets a list of guilds and member counts where this bot is in. Developer only.")]
         public async Task GetGuildMembers()
