@@ -1,8 +1,8 @@
-set RUNTIME=linux-x64
-dotnet publish PacManBot_DotNetCore.csproj --runtime %RUNTIME% --output ".\bin\%RUNTIME%" --configuration Release --self-contained 
-robocopy ".\bin\ " ".\bin\%RUNTIME%\ " *.bot /IS /XF config.bot
+::set RUNTIME=linux-arm
+::dotnet publish PacManBot_DotNetCore.csproj --runtime %RUNTIME% --output ".\bin\%RUNTIME%" --configuration Release
+::robocopy ".\bin\ " ".\bin\%RUNTIME%\ " *.bot /IS /XF config.bot
 
-set RUNTIME=linux-arm
+set RUNTIME=linux-x64
 dotnet publish PacManBot_DotNetCore.csproj --runtime %RUNTIME% --output ".\bin\%RUNTIME%" --configuration Release --self-contained 
 robocopy ".\bin\ " ".\bin\%RUNTIME%\ " *.bot /IS /XF config.bot
 
