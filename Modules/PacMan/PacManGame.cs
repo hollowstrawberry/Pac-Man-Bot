@@ -54,7 +54,7 @@ namespace PacManBot.Modules.PacMan
         public readonly ulong channelId; //Which channel this game is located in
         public ulong ownerId; //Which user started this game
         public bool custom = false;
-        public ulong messageId = 1; //The focus message of the game, for controls to work. Even if not set, it must be a number above 0
+        public ulong messageId = 1; //The focus message of the game, for controls to work. Even if not set, it must be a number above 0 or else a call to get the message object will hang
         public State state = State.Active;
         public bool mobileDisplay = false;
         public int score = 0;
