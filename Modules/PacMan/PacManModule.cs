@@ -36,22 +36,6 @@ namespace PacManBot.Modules.PacMan
 
             string prefix = storage.GetPrefixOrEmpty(Context.Guild);
 
-            string[] argSplice = args.Split("```");
-            IUserMessage tempMessage = null;
-
-            bool mobile = false;
-            if (argSplice[0].StartsWith("m")) mobile = true;
-            else if (!string.IsNullOrWhiteSpace(argSplice[0])) tempMessage = await ReplyAsync($"Unknown game argument \"{argSplice[0]}\".");
-
-            string customMap = null;
-            if (args.Contains("```")) customMap = argSplice[1].Trim('\n', '`');
-
-            if (Context.Guild != null && !Context.BotHas(ChannelPermission.AddReactions))
-            {
-                await ReplyAsync(NeedReactionPermMessage);
-                return;
-            }
-
             foreach (PacManGame game in storage.gameInstances)
             {
                 if (Context.Channel.Id == game.channelId) //Finds a game instance corresponding to this channel
@@ -61,6 +45,23 @@ namespace PacManBot.Modules.PacMan
                 }
             }
 
+            if (Context.Guild != null && !Context.BotHas(ChannelPermission.AddReactions))
+            {
+                await ReplyAsync(NeedReactionPermMessage);
+                return;
+            }
+
+
+            string[] argSplice = args.Split("```");
+            string preMessage = "";
+
+            bool mobile = false;
+            if (argSplice[0].StartsWith("m")) mobile = true;
+            else if (!string.IsNullOrWhiteSpace(argSplice[0])) preMessage = $"Unknown game argument \"{argSplice[0]}\".";
+
+            string customMap = null;
+            if (args.Contains("```")) customMap = argSplice[1].Trim('\n', '`');
+
             PacManGame newGame;
             try
             {
@@ -69,7 +70,7 @@ namespace PacManBot.Modules.PacMan
             catch (InvalidMapException e)
             {
                 await logger.Log(LogSeverity.Debug, "Game", $"{e}");
-                await ReplyAsync($"The provided custom map is invalid: {e.Message}.\nUse the **{prefix}custom** command for more info.");
+                await ReplyAsync($"The provided map is invalid: {e.Message}.\n{"Use the **{prefix}custom** command for more info.".If(customMap != null)}");
                 return;
             }
             catch (Exception e)
@@ -82,7 +83,7 @@ namespace PacManBot.Modules.PacMan
             storage.gameInstances.Add(newGame);
  
             if (mobile) newGame.mobileDisplay = true;
-            var gameMessage = await ReplyAsync(newGame.GetDisplay() + "```diff\n+Starting game```"); //Output the game
+            var gameMessage = await ReplyAsync(preMessage + newGame.GetDisplay() + "```diff\n+Starting game```"); //Output the game
             newGame.messageId = gameMessage.Id;
 
             if (!Context.BotHas(ChannelPermission.ManageMessages))
@@ -91,15 +92,9 @@ namespace PacManBot.Modules.PacMan
             }
 
             await AddControls(gameMessage); //Controls for easy access
-            await gameMessage.ModifyAsync(m => m.Content = newGame.GetDisplay()); //Edit message
-        
-
-            if (tempMessage != null)
-            {
-                await Task.Delay(3000);
-                await tempMessage.DeleteAsync();
-            }
+            await gameMessage.ModifyAsync(m => m.Content = newGame.GetDisplay()); //Restore display to normal
         }
+
 
         [Command("refresh"), Alias("r"), Remarks("[mobile/m] — *Move the game to the bottom of the chat*")]
         [Summary("If there is already an active game on this channel, using this command moves the game message to the bottom of the chat, and deletes the old one.\nThis is useful if the game message has been lost in a sea of other messages or if you encounter a problem with reactions.\nAdding \"mobile\" or \"m\" after the command will refresh the game in *Mobile Mode*, which uses simple characters that will work in phones. Refreshing again will return it to normal.")]
@@ -135,6 +130,7 @@ namespace PacManBot.Modules.PacMan
             await ReplyAsync("There is no active game on this channel!");
         }
 
+
         [Command("end"), Alias("stop"), Remarks("— *End a game you started. Always usable by moderators*")]
         [Summary("Ends the current game on this channel, but only if the person using the command started the game or if they have the Manage Messages permission.")]
         public async Task EndGameInstance()
@@ -163,6 +159,7 @@ namespace PacManBot.Modules.PacMan
 
             await ReplyAsync("There is no active game on this channel!");
         }
+
 
         [Command("leaderboard"), Alias("l"), Remarks("[[start] end] — *Global list of top scores. You can enter a range*")]
         [Summary("This command will display a list of scores in the *Global Leaderboard* of all servers.\nIt goes from 1 to 10 by default, but you can specify an end and start point for any range of scores.")]
@@ -225,6 +222,7 @@ namespace PacManBot.Modules.PacMan
             await ReplyAsync(message);
         }
 
+
         [Command("score"), Alias("s"), Remarks("[user] — *See your own or another user's place on the leaderboard*")]
         [Summary("See your own highest score in the *Global Leaderboard* of all servers. You can specify a user in your guild using their name, mention or ID to see their score instead.")]
         public async Task SendPersonalBest(SocketGuildUser guildUser = null)
@@ -259,11 +257,12 @@ namespace PacManBot.Modules.PacMan
             await ReplyAsync(topScore == 0 ? ((guildUser == null ? "You don't have" : "The user doesn't have") + " any scores registered!") : $"🏆 __**Global Leaderboard**__\n{topScoreIndex + 1}. ({splitLine[0]}) **{splitLine[1]}** in {splitLine[2]} turns by user " + (user == null ? "Unknown" : $"{user.Username}#{user.Discriminator}"));
         }
 
+
         [Command("custom"), Remarks("— *Learn how custom maps work*")]
         [Summary("Using this command will display detailed help about the custom maps that you can design and play yourself!")]
         public async Task SayCustomMapHelp()
         {
-            if (!Context.CanSendEmbeds()) return;
+            if (!Context.CheckCanSendEmbeds()) return;
 
             string fileText = File.ReadAllText(BotFile.Contents);
             string message = fileText.FindValue("customhelp").Replace("{prefix}", storage.GetPrefixOrEmpty(Context.Guild));
@@ -276,6 +275,7 @@ namespace PacManBot.Modules.PacMan
             }
             await ReplyAsync(message, false, embed.Build());
         }
+
 
 
         public async Task AddControls(IUserMessage message)

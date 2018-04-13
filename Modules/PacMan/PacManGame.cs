@@ -9,17 +9,72 @@ using Discord;
 
 namespace PacManBot.Modules.PacMan
 {
+    public class InvalidMapException : Exception
+    {
+        public InvalidMapException() { }
+        public InvalidMapException(string message) : base(message) { }
+        public InvalidMapException(string message, Exception inner) : base(message, inner) { }
+    }
+
+
     public class PacManGame
     {
-        static public Dictionary<string, GameInput> gameInput = new Dictionary<string, GameInput>() //Reaction controls
+        //Constants
+
+        static public readonly Dictionary<string, GameInput> gameInput = new Dictionary<string, GameInput>() //Reaction controls
         {
-            { Emojis.Info, GameInput.Help },
-            { Emojis.Left, GameInput.Left },
-            { Emojis.Up, GameInput.Up },
-            { Emojis.Down, GameInput.Down },
+            { Emojis.Info,  GameInput.Help  },
+            { Emojis.Left,  GameInput.Left  },
+            { Emojis.Up,    GameInput.Up    },
+            { Emojis.Down,  GameInput.Down  },
             { Emojis.Right, GameInput.Right },
-            { Emojis.Pause, GameInput.Wait }
+            { Emojis.Pause, GameInput.Wait  }
         };
+
+        private const int PowerTime = 20, ScatterCycle = 100, ScatterTime1 = 30, ScatterTime2 = 20;
+
+        private const char CharPlayer = 'O', CharFruit = '$', CharGhost = 'G', CharSoftWall = '_', CharSoftWallPellet = '~'; // Read from map
+        private const char CharDoor = '-', CharPellet = '·', CharPowerPellet = '●', CharPlayerDead = 'X', CharGhostFrightened = 'E'; // Displayed
+
+        private readonly static char[] GhostAppearance = { 'B', 'P', 'I', 'C' }; // Matches aiType enum
+        private readonly static int[] GhostSpawnPauseTime = { 0, 3, 15, 35 };
+        private readonly static Dir[] AllDirs = { Dir.up, Dir.left, Dir.down, Dir.right }; // Order of preference when deciding direction
+
+        public const string Folder = "games/";
+        public const string Extension = ".game";
+
+
+
+        // Fields
+ 
+        public readonly ulong channelId; //Which channel this game is located in
+
+        public ulong ownerId; //Which user started this game
+        public bool custom = false;
+        public ulong messageId = 1; //The focus message of the game, for controls to work. Even if not set, it must be a number above 0 or else a call to get the message object will hang
+        public State state = State.Active;
+        public bool mobileDisplay = false;
+        public int score = 0;
+        public int time = 0; //How many turns have passed
+ 
+        private int maxPellets;
+        private GameInput lastInput = GameInput.None;
+        private int pellets; //Pellets remaining
+        private int oldScore = 0; //Score obtained last turn
+        private char[,] map;
+        private Player player;
+        private List<Ghost> ghosts;
+        private int fruitTimer = 0;
+        private Pos fruitSpawnPos; //Where all fruit will spawn
+
+        private readonly DiscordSocketClient client;
+        private readonly StorageService storage;
+        private readonly LoggingService logger;
+        private readonly Random random;
+
+
+
+        // Properties
 
         public SocketGuild Guild
         {
@@ -30,62 +85,8 @@ namespace PacManBot.Modules.PacMan
             }
         }
 
-
-        //Constants
-        private const char //Read from map
-            CharPlayer = 'O',
-            CharFruit = '$',
-            CharGhost = 'G',
-            CharDoor = '-',
-            CharPellet = '·',
-            CharPowerPellet = '●',
-            CharSoftWall = '_',
-            CharSoftWallPellet = '~';
-
-        private const char //Displayed
-            CharPlayerDead = 'X',
-            CharGhostFrightened = 'E';
-
-        private const int //Mechanics
-            PowerTime = 20,
-            ScatterCycle = 100,
-            ScatterTime1 = 30,
-            ScatterTime2 = 20;
-
-        public const string Folder = "games/";
-        public const string Extension = ".game";
         public string GameFile => $"{Folder}{channelId}{Extension}";
 
-        private readonly static char[] GhostAppearance = { 'B', 'P', 'I', 'C' };
-        private readonly static int[] GhostSpawnPauseTime = { 0, 3, 15, 35 };
-        private readonly static Dir[] AllDirs = { Dir.up, Dir.left, Dir.down, Dir.right }; //Order of preference when deciding direction
-
-
-        //Fields
-        public readonly ulong channelId; //Which channel this game is located in
-        public ulong ownerId; //Which user started this game
-        public bool custom = false;
-        public ulong messageId = 1; //The focus message of the game, for controls to work. Even if not set, it must be a number above 0 or else a call to get the message object will hang
-        public State state = State.Active;
-        public bool mobileDisplay = false;
-        public int score = 0;
-        public int time = 0; //How many turns have passed
-
-        private readonly DiscordSocketClient client;
-        private readonly StorageService storage;
-        private readonly LoggingService logger;
-        private readonly Random random;
-        private int maxPellets;
-        private GameInput lastInput = GameInput.None;
-        private int pellets; //Pellets remaining
-        private int oldScore = 0; //Score obtained last turn
-        private char[,] map;
-        private Player player;
-        private List<Ghost> ghosts;
-
-        //Fruit
-        private int fruitTimer = 0;
-        private Pos fruitSpawnPos; //Where all fruit will spawn
         private Pos FruitSecondPos => fruitSpawnPos + Dir.right; //Second tile which fruit will also occupy
         private int FruitTrigger1 => maxPellets - 70; //Amount of pellets remaining needed to spawn fruit
         private int FruitTrigger2 => maxPellets - 170;
@@ -93,7 +94,9 @@ namespace PacManBot.Modules.PacMan
         private char FruitChar => (pellets > FruitTrigger2) ? 'x' : 'w';
 
 
+
         //Game data types
+
         public enum State { Active, Lose, Win }
 
         public enum GameInput { None, Left, Up, Down, Right, Wait, Refresh, Help }
@@ -105,7 +108,9 @@ namespace PacManBot.Modules.PacMan
         public enum AiMode { Chase, Scatter, Frightened }
 
 
-        //Game objects
+
+        // Game objects
+
         public class Pos //Coordinate in the map
         {
             public int x, y;
@@ -140,6 +145,7 @@ namespace PacManBot.Modules.PacMan
             public static float Distance(Pos pos1, Pos pos2) => (float)Math.Sqrt(Math.Pow(pos2.x - pos1.x, 2) + Math.Pow(pos2.y - pos1.y, 2));
         }
 
+
         private class Player
         {
             public readonly Pos origin; //Position it started at
@@ -154,6 +160,7 @@ namespace PacManBot.Modules.PacMan
                 origin = this.pos;
             }
         }
+
 
         private class Ghost
         {
@@ -283,7 +290,9 @@ namespace PacManBot.Modules.PacMan
         }
 
 
-        //Game methods
+
+
+        // Game methods
 
         public PacManGame(ulong channelId, ulong ownerId, string customMap, DiscordSocketClient client, StorageService storage, LoggingService logger)
         {
@@ -725,13 +734,5 @@ namespace PacManBot.Modules.PacMan
                 else break;
             }
         }
-    }
-
-
-    class InvalidMapException : Exception
-    {
-        public InvalidMapException(){}
-        public InvalidMapException(string message) : base(message) {}
-        public InvalidMapException(string message, Exception inner) : base(message, inner){}
     }
 }

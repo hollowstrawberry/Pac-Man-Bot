@@ -15,6 +15,7 @@ namespace PacManBot.Services
         private readonly StorageService storage;
         private readonly LoggingService logger;
 
+
         public ReactionHandler(DiscordSocketClient client, StorageService storage, LoggingService logger)
         {
             this.client = client;
@@ -29,8 +30,10 @@ namespace PacManBot.Services
         private Task OnReactionAdded(Cacheable<IUserMessage, ulong> messageData, ISocketMessageChannel channel, SocketReaction reaction)
             => OnReaction(messageData, channel, reaction, false);
 
+
         private Task OnReactionRemoved(Cacheable<IUserMessage, ulong> messageData, ISocketMessageChannel channel, SocketReaction reaction)
             => OnReaction(messageData, channel, reaction, true);
+
 
         private Task OnReaction(Cacheable<IUserMessage, ulong> messageData, ISocketMessageChannel channel, SocketReaction reaction, bool removed)
         {

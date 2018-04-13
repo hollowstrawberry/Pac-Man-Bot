@@ -12,6 +12,7 @@
             CustomMapLog = "logs/custom.txt";
     }
 
+
     public static class Emojis
     {
         public const string
@@ -23,6 +24,7 @@
             Reset = "🔃",
             Info = "ℹ";
     }
+
 
     public static class CustomEmojis
     {

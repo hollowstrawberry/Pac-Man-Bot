@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,6 +16,7 @@ namespace PacManBot.Services
         private readonly ScriptOptions scriptOptions;
         private readonly StorageService storage;
         private readonly LoggingService logger;
+
 
         public ScriptingService(StorageService storage, LoggingService logger)
         {
@@ -35,6 +36,7 @@ namespace PacManBot.Services
                     typeof(RestUserMessage).Assembly
                 );
         }
+
 
         public async Task Eval(string code, SocketCommandContext context)
         {
@@ -62,6 +64,7 @@ namespace PacManBot.Services
             }
         }
     }
+
 
 
     public class ScriptArgs : EventArgs

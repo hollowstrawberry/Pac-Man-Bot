@@ -19,6 +19,7 @@ namespace PacManBot.Services
         public List<PacManGame> gameInstances;
         public string wakaExclude = "";
 
+
         public StorageService(DiscordSocketClient client, LoggingService logger, IConfigurationRoot config)
         {
             this.client = client;
@@ -40,10 +41,12 @@ namespace PacManBot.Services
             return (guild == null) ? defaultPrefix : GetPrefix(guild.Id);
         }
 
+
         public string GetPrefixOrEmpty(SocketGuild guild)
         {
             return (guild == null) ? "" : GetPrefix(guild.Id);
         }
+
 
 
         private void LoadPrefixes()
@@ -63,6 +66,7 @@ namespace PacManBot.Services
 
             logger.Log(LogSeverity.Info, $"Loaded prefixes from {BotFile.Prefixes}");
         }
+
 
         private void LoadGames()
         {

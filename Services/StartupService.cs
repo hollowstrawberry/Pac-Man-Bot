@@ -17,7 +17,7 @@ namespace PacManBot.Services
         private readonly LoggingService logger;
         private readonly IConfigurationRoot config;
 
-        //DiscordSocketClient, CommandService and IConfigurationRoot are injected automatically from the IServiceProvider
+
         public StartupService(DiscordSocketClient client, CommandService commands, LoggingService logger, IConfigurationRoot config)
         {
             this.client = client;

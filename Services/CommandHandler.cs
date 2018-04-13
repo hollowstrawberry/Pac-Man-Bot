@@ -16,6 +16,7 @@ namespace PacManBot.Services
         private readonly IServiceProvider provider;
         public readonly Regex waka = new Regex(@"^(w+a+k+a+\W*)+$", RegexOptions.IgnoreCase);
 
+
         public CommandHandler(DiscordSocketClient client, CommandService commands, StorageService storage, LoggingService logger, IServiceProvider provider)
         {
             this.client = client;
@@ -26,6 +27,7 @@ namespace PacManBot.Services
 
             this.client.MessageReceived += OnMessageReceived;
         }
+
 
         private Task OnMessageReceived(SocketMessage genericMessage)
         {

@@ -14,6 +14,7 @@ namespace PacManBot.Modules
         private readonly LoggingService logger;
         private readonly StorageService storage;
 
+
         public ModModule(LoggingService logger, StorageService storage)
         {
             this.logger = logger;
@@ -26,6 +27,7 @@ namespace PacManBot.Modules
         [RequireUserPermission(ChannelPermission.ManageMessages)]
         public async Task Say([Remainder]string text) => await ReplyAsync(text);
 
+
         [Command("clear"), Alias("c"), Remarks("[amount] — *Clear messages from this bot*")]
         [Summary("Clears all messages sent by *this bot only*, checking up to the amount of messages provided, or 10 messages by default. Only users with the Manage Messages permission can use this command.")]
         [RequireUserPermission(ChannelPermission.ManageMessages)]
@@ -37,6 +39,7 @@ namespace PacManBot.Modules
                 if (message.Author.Id == Context.Client.CurrentUser.Id) await message.DeleteAsync(); //Remove all messages from this bot
             }
         }
+
 
         [Command("setprefix"), Remarks("prefix — *Set a custom prefix for this server (Admin)*")]
         [Summary("Change the custom prefix for this server. Only server Administrators can use this command.\nPrefixes can't contain \\*.")]
@@ -82,6 +85,7 @@ namespace PacManBot.Modules
                 throw new Exception("Couldn't modify prefix on file");
             }
         }
+
 
         [Command("togglewaka"), Remarks("— *Toggle \"waka\" autoresponse from the bot*")]
         [Summary("The bot normally responds every time a message contains purely multiples of \"waka\", unless it's turned off server-wide using this command. Requires the user to be a Moderator.")]

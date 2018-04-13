@@ -18,6 +18,7 @@ namespace PacManBot.Modules
         private readonly LoggingService logger;
         private readonly StorageService storage;
 
+
         public MiscModule(CommandService commands, LoggingService logger, StorageService storage)
         {
             this.commands = commands;
@@ -30,7 +31,7 @@ namespace PacManBot.Modules
         [Summary("Shows relevant information, data and links about Pac-Man Bot.")]
         public async Task SayBotInfo()
         {
-            if (!Context.CanSendEmbeds()) return;
+            if (!Context.CheckCanSendEmbeds()) return;
 
             string fileText = File.ReadAllText(BotFile.Contents);
             string description = fileText.FindValue("about").Replace("{prefix}", storage.GetPrefixOrEmpty(Context.Guild));
@@ -55,11 +56,12 @@ namespace PacManBot.Modules
             await ReplyAsync("", false, embed.Build());
         }
 
+
         [Command("help"), Alias("h", "commands"), Remarks("[command] — *List of commands or help about a command*")]
         [Summary("Show a complete list of commands you can use. You can specify a command to see detailed help about that command.")]
         public async Task SendCommandHelp(string commandName) //With argument
         {
-            if (!Context.CanSendEmbeds()) return;
+            if (!Context.CheckCanSendEmbeds()) return;
 
             string prefix = storage.GetPrefix(Context.Guild).If(Context.Guild != null);
 
@@ -97,10 +99,11 @@ namespace PacManBot.Modules
             await ReplyAsync("", false, embed.Build()); //Send the built embed
         }
 
+
         [Command("help"), Alias("h", "commands")]
         public async Task SendAllHelp() //Without arguments
         {
-            if (!Context.CanSendEmbeds()) return;
+            if (!Context.CheckCanSendEmbeds()) return;
 
             string prefix = storage.GetPrefix(Context.Guild).If(Context.Guild != null);
 
@@ -140,6 +143,7 @@ namespace PacManBot.Modules
             await ReplyAsync("", false, embed.Build()); //Send the built embed
         }
 
+
         [Command("waka"), Alias("ping"), Remarks("— *Waka waka waka*")]
         [Summary("Tests the ping (server reaction time in milliseconds) and shows other quick stats about the bot at the current moment.\nDid you know the bot responds every time you say \"waka\" in chat? Shhh, it's a secret.")]
         public async Task Ping([Remainder]string args = "") //Useless args
@@ -150,6 +154,7 @@ namespace PacManBot.Modules
 
             await message.ModifyAsync(m => m.Content = $"{CustomEmojis.PacMan} Waka in {(int)stopwatch.Elapsed.TotalMilliseconds}ms | {Context.Client.Guilds.Count} guilds | {storage.gameInstances.Count} active games\n");
         }
+
 
         [Command("prefix"), Remarks("— *Show the current prefix for this server*")]
         [Summary("Reminds you of this bot's prefix for this server. Tip: The prefix is already here in this help block.\nYou can use the **{prefix}setprefix prefix** command to set a prefix if you're an Administrator.")]
@@ -168,6 +173,7 @@ namespace PacManBot.Modules
             await ReplyAsync(reply);
         }
 
+
         [Command("feedback"), Alias("suggestion", "bug"), Remarks("message — *Send a message to the bot's developer*")]
         [Summary("Whatever text you write after this command will be sent directly to the bot's developer. You may receive an answer through the bot in a DM.")]
         public async Task SendFeedback([Remainder]string message)
@@ -185,11 +191,12 @@ namespace PacManBot.Modules
             }
         }
 
+
         [Command("invite"), Alias("inv"), Remarks("— *Invite this bot to your server*")]
         [Summary("Shows a fancy embed block with the bot's invite link. I'd show it right now too, since you're already here, but I really want you to see that fancy embed.")]
         public async Task SayBotInvite([Remainder]string args = "") //Useless args
         {
-            if (!Context.CanSendEmbeds()) return;
+            if (!Context.CheckCanSendEmbeds()) return;
 
             string link = File.ReadAllText(BotFile.Contents).FindValue("invite");
             var embed = new EmbedBuilder()

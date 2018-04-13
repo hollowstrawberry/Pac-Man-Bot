@@ -26,7 +26,9 @@ namespace PacManBot
         private StorageService storage;
         private IConfigurationRoot botConfig;
 
+
         public static void Main(string[] args) => new Program().MainAsync().GetAwaiter().GetResult();
+
         public async Task MainAsync()
         {
             var configBuilder = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile(BotFile.Config); //Add the configuration file
@@ -74,6 +76,7 @@ namespace PacManBot
             await UpdateGuildCount();
         }
 
+
         private async Task OnLeftGuild(SocketGuild guild)
         {
             await UpdateGuildCount();
@@ -90,6 +93,7 @@ namespace PacManBot
             }
         }
 
+
         private async Task UpdateGuildCount()
         {
             int guilds = client.Guilds.Count;
@@ -101,6 +105,7 @@ namespace PacManBot
                 await UpdateServerGuildCount(guilds);
             }
         }
+
 
         private Task UpdateServerGuildCount(int count)
         {
