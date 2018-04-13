@@ -21,6 +21,16 @@ namespace PacManBot.Modules.PacMan
             { Emojis.Pause, GameInput.Wait }
         };
 
+        public SocketGuild Guild
+        {
+            get
+            {
+                var guildChannel = client.GetChannel(channelId) as SocketGuildChannel;
+                return (guildChannel == null) ? null : guildChannel.Guild;
+            }
+        }
+
+
         //Constants
         private const char //Read from map
             CharPlayer = 'O',
@@ -49,6 +59,7 @@ namespace PacManBot.Modules.PacMan
         private readonly static char[] GhostAppearance = { 'B', 'P', 'I', 'C' };
         private readonly static int[] GhostSpawnPauseTime = { 0, 3, 15, 35 };
         private readonly static Dir[] AllDirs = { Dir.up, Dir.left, Dir.down, Dir.right }; //Order of preference when deciding direction
+
 
         //Fields
         public readonly ulong channelId; //Which channel this game is located in
@@ -314,6 +325,7 @@ namespace PacManBot.Modules.PacMan
             }
         }
 
+
         public void DoTick(GameInput input)
         {
             if (state != State.Active) return; //Failsafe
@@ -412,13 +424,12 @@ namespace PacManBot.Modules.PacMan
             else if (File.Exists(GameFile)) File.Delete(GameFile);
         }
 
+
         public string GetDisplay()
         {
             if (lastInput == GameInput.Help)
             {
-                var guildChannel = client.GetChannel(channelId) as SocketGuildChannel;
-                var guild = guildChannel == null ? null : guildChannel.Guild;
-                return File.ReadAllText(BotFile.Contents).FindValue("gamehelp").Replace("{prefix}", storage.GetPrefixOrEmpty(guild));
+                return File.ReadAllText(BotFile.Contents).FindValue("gamehelp").Replace("{prefix}", storage.GetPrefixOrEmpty(Guild));
             }
 
             try
@@ -528,11 +539,10 @@ namespace PacManBot.Modules.PacMan
             catch (Exception e)
             {
                 logger.Log(LogSeverity.Debug, "Game", $"{e}");
-                var guildChannel = client.GetChannel(channelId) as SocketGuildChannel;
-                var guild = guildChannel == null ? null : guildChannel.Guild;
-                return $"```There was an error displaying the game. {"Make sure your custom map is valid. ".If(custom)}If this problem persists, please contact the author of the bot using the {storage.GetPrefixOrEmpty(guild)}feedback command.```";
+                return $"```There was an error displaying the game. {"Make sure your custom map is valid. ".If(custom)}If this problem persists, please contact the author of the bot using the {storage.GetPrefixOrEmpty(Guild)}feedback command.```";
             }
         }
+
 
         private Pos FindChar(char c, int index = 0) //Finds the specified character instance in the map
         {
@@ -554,6 +564,7 @@ namespace PacManBot.Modules.PacMan
             return null;
         }
 
+
         private bool NonSolid(int x, int y) => NonSolid(new Pos(x, y));
         private bool NonSolid(Pos pos) //Defines which tiles in the map entities can move through
         {
@@ -561,11 +572,13 @@ namespace PacManBot.Modules.PacMan
             return (Map(pos) == ' ' || Map(pos) == CharPellet || Map(pos) == CharPowerPellet || Map(pos) == CharSoftWall || Map(pos) == CharSoftWallPellet);
         }
 
+
         private char Map(Pos pos) //Returns the character at the specified pos
         {
             WrapAround(ref pos);
             return map[pos.x, pos.y];
         }
+
 
         private void WrapAround(ref Pos pos) //Wraps the position from one side of the map to the other if it's out of bounds
         {
@@ -574,6 +587,7 @@ namespace PacManBot.Modules.PacMan
             if (pos.y < 0) pos.y = map.LengthY() + pos.y;
             else if (pos.y > map.LengthY() - 1) pos.y -= map.LengthY();
         }
+
 
         private void LoadMap(string[] lines)
         {
@@ -667,6 +681,7 @@ namespace PacManBot.Modules.PacMan
             File.WriteAllText(GameFile, fileText.ToString());
         }
 
+
         public void LoadFromFile()
         {
             string fileText = File.ReadAllText(GameFile);
@@ -711,6 +726,7 @@ namespace PacManBot.Modules.PacMan
             }
         }
     }
+
 
     class InvalidMapException : Exception
     {
