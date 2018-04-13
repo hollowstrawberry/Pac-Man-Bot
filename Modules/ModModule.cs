@@ -74,8 +74,9 @@ namespace PacManBot.Modules
                 await ReplyAsync($"{CustomEmojis.Check} Prefix for this server has been successfully set to '{newPrefix}'.");
                 await logger.Log(LogSeverity.Verbose, $"Prefix for server {Context.Guild.Name} set to {newPrefix}");
             }
-            catch
+            catch (Exception e)
             {
+                await logger.Log(LogSeverity.Error, $"{e}");
                 string prefix = storage.GetPrefixOrEmpty(Context.Guild);
                 await ReplyAsync($"{CustomEmojis.Cross} There was a problem storing the prefix on file. It might be reset the next time the bot restarts. Please try again or, if the problem persists, contact the bot author using **{prefix}feedback**.");
                 throw new Exception("Couldn't modify prefix on file");

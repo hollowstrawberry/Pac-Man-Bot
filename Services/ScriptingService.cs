@@ -53,18 +53,12 @@ namespace PacManBot.Services
                 await logger.Log(LogSeverity.Debug, $"Evaluating code \"{code}\" in channel {context.FullChannelName()}");
                 await CSharpScript.EvaluateAsync(code + postCode, scriptOptions, new ScriptArgs(context, storage, logger));
                 await logger.Log(LogSeverity.Debug, $"Successfully executed code");
-
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
-                GC.Collect();
             }
-            catch (Exception e)
+            finally
             {
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
                 GC.Collect();
-
-                throw e;
             }
         }
     }

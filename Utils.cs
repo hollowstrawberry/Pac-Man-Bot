@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text.RegularExpressions;
 using Discord;
 using Discord.Commands;
@@ -55,7 +55,7 @@ namespace PacManBot
             return $"{user.Username}#{user.Discriminator}";
         }
 
-        public static bool CheckHasEmbedPermission(this SocketCommandContext context)
+        public static bool CanSendEmbeds(this SocketCommandContext context)
         {
             if (context.Guild != null && !context.BotHas(ChannelPermission.EmbedLinks))
             {
@@ -108,24 +108,25 @@ namespace PacManBot
         }
         public static T FindValue<T>(this string text, string key) where T : IConvertible
         {
-            if (!Regex.IsMatch(key, @"^\{.*\}$")) key = $"{{{key}}}"; //Adds curly brackets
+            string value = null;
+
+            if (key[0] != '{') key = $"{{{key}}}"; //Adds curly brackets
 
             int keyIndex = text.IndexOf(key); //Key start location
-            int valIndex = keyIndex + key.Length; //Value start location
-
-            int endIndex; //Value end location
-            if (Regex.IsMatch(text, @"(" + Regex.Escape(key) + @"[\S\s]*){2}")) //More than one key instance: multiline
+            if (keyIndex > -1)
             {
-                endIndex = text.IndexOf(key, valIndex);
-            }
-            else endIndex = text.IndexOf("\n", valIndex);
-            if (endIndex < 0) endIndex = text.Length;
+                int valIndex = keyIndex + key.Length; //Value start location
 
-            string stringValue = keyIndex < 0 ? null : text.Substring(valIndex, endIndex - valIndex).Trim('\n', '\r');
+                int nextKeyIndex = text.IndexOf(key, valIndex);
+                int endIndex = nextKeyIndex > -1 ? nextKeyIndex : text.IndexOf('\n', valIndex); // Stops at either a newline or the second instance of the key
+                if (endIndex < 0) endIndex = text.Length;
+
+                value = text.Substring(valIndex, endIndex - valIndex).Trim('\n', '\r');
+            }
 
             try
             {
-                return (T)Convert.ChangeType(stringValue, typeof(T));
+                return (T)Convert.ChangeType(value, typeof(T));
             }
             catch (InvalidCastException)
             {

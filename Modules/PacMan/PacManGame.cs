@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Text;
@@ -525,8 +525,9 @@ namespace PacManBot.Modules.PacMan
 
                 return display.ToString();
             }
-            catch
+            catch (Exception e)
             {
+                logger.Log(LogSeverity.Debug, "Game", $"{e}");
                 var guildChannel = client.GetChannel(channelId) as SocketGuildChannel;
                 var guild = guildChannel == null ? null : guildChannel.Guild;
                 return $"```There was an error displaying the game. {"Make sure your custom map is valid. ".If(custom)}If this problem persists, please contact the author of the bot using the {storage.GetPrefixOrEmpty(guild)}feedback command.```";
@@ -600,10 +601,13 @@ namespace PacManBot.Modules.PacMan
                     }
                 }
 
-                if (!hasEmptySpace) throw new Exception("Map is completely solid");
+                if (!hasEmptySpace) throw new InvalidMapException("Map is completely solid");
 
             }
-            catch { throw new Exception("Invalid map"); }
+            catch (IndexOutOfRangeException)
+            {
+                throw new InvalidMapException("Map width not constant");
+            }
 
             map = newMap;
 
@@ -706,5 +710,12 @@ namespace PacManBot.Modules.PacMan
                 else break;
             }
         }
+    }
+
+    class InvalidMapException : Exception
+    {
+        public InvalidMapException(){}
+        public InvalidMapException(string message) : base(message) {}
+        public InvalidMapException(string message, Exception inner) : base(message, inner){}
     }
 }

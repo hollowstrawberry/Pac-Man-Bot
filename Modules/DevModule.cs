@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
@@ -34,10 +34,10 @@ namespace PacManBot.Modules
                 await scripting.Eval(code, Context);
                 await Context.Message.AddReactionAsync(CustomEmojis.Check.ToEmote());
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                await ReplyAsync($"```cs\n{exception.Message}```");
-                await logger.Log(LogSeverity.Warning, $"{exception}");
+                await ReplyAsync($"```cs\n{e.Message}```");
+                await logger.Log(LogSeverity.Warning, $"{e}");
                 await Context.Message.AddReactionAsync(CustomEmojis.Cross.ToEmote());
             }
             finally

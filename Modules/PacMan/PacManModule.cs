@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -62,15 +62,25 @@ namespace PacManBot.Modules.PacMan
             }
 
             PacManGame newGame;
-            try { newGame = new PacManGame(Context.Channel.Id, Context.User.Id, customMap, Context.Client, storage, logger); } //Create a game instance
-            catch
+            try
             {
-                string errorMessage = customMap != null ? $"The custom map appears to be invalid. Use the **{prefix}custom** command for help." : $"There was an error starting the game. Please try again or contact the author of the bot using **{prefix}feedback**";
-                await ReplyAsync(errorMessage);
-                throw new Exception("Failed to create game");
+                newGame = new PacManGame(Context.Channel.Id, Context.User.Id, customMap, Context.Client, storage, logger);
+            }
+            catch (InvalidMapException e)
+            {
+                await logger.Log(LogSeverity.Debug, "Game", $"{e}");
+                await ReplyAsync($"The provided custom map is invalid: {e.Message}.\nUse the **{prefix}custom** command for more info.");
+                return;
+            }
+            catch (Exception e)
+            {
+                await logger.Log(LogSeverity.Error, "Game", $"{e}");
+                await ReplyAsync($"There was an error starting the game. Please try again or contact the author of the bot using **{prefix}feedback**");
+                return;
             }
 
             storage.gameInstances.Add(newGame);
+ 
             if (mobile) newGame.mobileDisplay = true;
             var gameMessage = await ReplyAsync(newGame.GetDisplay() + "```diff\n+Starting game```"); //Output the game
             newGame.messageId = gameMessage.Id;
@@ -253,7 +263,7 @@ namespace PacManBot.Modules.PacMan
         [Summary("Using this command will display detailed help about the custom maps that you can design and play yourself!")]
         public async Task SayCustomMapHelp()
         {
-            if (!Context.CheckHasEmbedPermission()) return;
+            if (!Context.CanSendEmbeds()) return;
 
             string fileText = File.ReadAllText(BotFile.Contents);
             string message = fileText.FindValue("customhelp").Replace("{prefix}", storage.GetPrefixOrEmpty(Context.Guild));

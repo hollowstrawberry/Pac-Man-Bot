@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Diagnostics;
@@ -30,7 +30,7 @@ namespace PacManBot.Modules
         [Summary("Shows relevant information, data and links about Pac-Man Bot.")]
         public async Task SayBotInfo()
         {
-            if (!Context.CheckHasEmbedPermission()) return;
+            if (!Context.CanSendEmbeds()) return;
 
             string fileText = File.ReadAllText(BotFile.Contents);
             string description = fileText.FindValue("about").Replace("{prefix}", storage.GetPrefixOrEmpty(Context.Guild));
@@ -59,13 +59,12 @@ namespace PacManBot.Modules
         [Summary("Show a complete list of commands you can use. You can specify a command to see detailed help about that command.")]
         public async Task SendCommandHelp(string commandName) //With argument
         {
-            if (!Context.CheckHasEmbedPermission()) return;
+            if (!Context.CanSendEmbeds()) return;
 
             string prefix = storage.GetPrefix(Context.Guild).If(Context.Guild != null);
 
-            CommandInfo command;
-            try { command = commands.Commands.First(c => c.Aliases.Contains(commandName)); }
-            catch
+            CommandInfo command = commands.Commands.FirstOrDefault(c => c.Aliases.Contains(commandName));
+            if (command == null)
             {
                 await ReplyAsync($"Can't find a command with that name. Use **{prefix}help** for a list of commands.");
                 return;
@@ -101,7 +100,7 @@ namespace PacManBot.Modules
         [Command("help"), Alias("h", "commands")]
         public async Task SendAllHelp() //Without arguments
         {
-            if (!Context.CheckHasEmbedPermission()) return;
+            if (!Context.CanSendEmbeds()) return;
 
             string prefix = storage.GetPrefix(Context.Guild).If(Context.Guild != null);
 
@@ -179,14 +178,18 @@ namespace PacManBot.Modules
                 await ReplyAsync($"{CustomEmojis.Check} Message sent. Thank you!");
                 await (await Context.Client.GetApplicationInfoAsync()).Owner.SendMessageAsync($"```diff\n+Feedback received: {Context.User.FullName()} {Context.User.Id}```\n{message}");
             }
-            catch { await ReplyAsync("Oops, I didn't catch that. Please try again."); }
+            catch (Exception e)
+            {
+                await logger.Log(LogSeverity.Error, $"{e}");
+                await ReplyAsync("Oops, I didn't catch that. Please try again.");
+            }
         }
 
         [Command("invite"), Alias("inv"), Remarks("— *Invite this bot to your server*")]
         [Summary("Shows a fancy embed block with the bot's invite link. I'd show it right now too, since you're already here, but I really want you to see that fancy embed.")]
         public async Task SayBotInvite([Remainder]string args = "") //Useless args
         {
-            if (!Context.CheckHasEmbedPermission()) return;
+            if (!Context.CanSendEmbeds()) return;
 
             string link = File.ReadAllText(BotFile.Contents).FindValue("invite");
             var embed = new EmbedBuilder()

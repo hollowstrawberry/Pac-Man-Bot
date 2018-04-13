@@ -92,7 +92,6 @@ if %2525errorlevel%2525 leq 4 exit 0 else exit %2525errorlevel%2525</PostBuildEv
   <ItemGroup>
     <None Include=".\App.config" />
     <None Include=".\packages.config" />
-    <None Include=".\PacMan Bot.exe.config" />
     <None Include=".\bin\config.bot" />
     <None Include=".\bin\prefixes.bot" />
     <None Include=".\bin\scoreboard.bot" />
