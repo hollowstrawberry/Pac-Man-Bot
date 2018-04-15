@@ -8,16 +8,12 @@
 # Folders
 .vs/
 obj/
-src/
 host/
 bin/logs/
 bin/games/
 
 # Files
-config.json
-packages.config
-App.config
-importantInfo.txt
+**/config.bot
 
 # Formats
 *.zip
