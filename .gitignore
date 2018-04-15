@@ -8,8 +8,8 @@
 # Folders
 .vs/
 obj/
-bin/logs/
-bin/games/
+bin/**/logs/*
+bin/**/games/*
 
 # Files
 **/config.bot
