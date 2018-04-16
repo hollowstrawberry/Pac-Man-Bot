@@ -1,8 +1,6 @@
-﻿using System;
-using System.Linq;
-using System.Collections.Generic;
+using System;
 using System.IO;
-using System.Net;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
@@ -11,6 +9,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PacManBot.Services;
 using PacManBot.Constants;
+using System.Net.Http;
+using System.Net.Http.Headers;
 
 
 //Made by Samrux for fun
@@ -25,6 +25,8 @@ namespace PacManBot
         private LoggingService logger;
         private StorageService storage;
         private IConfigurationRoot botConfig;
+
+        private Stopwatch serverguildcounttimer = null;
 
 
         public static void Main(string[] args) => new Program().MainAsync().GetAwaiter().GetResult();
@@ -97,35 +99,31 @@ namespace PacManBot
         private async Task UpdateGuildCount()
         {
             int guilds = client.Guilds.Count;
+
             await client.SetGameAsync($"{botConfig["prefix"]}help | {guilds} guilds");
             await logger.Log(LogSeverity.Info, $"Guild count is now {guilds}");
 
-            if (!string.IsNullOrWhiteSpace(botConfig["httptoken"]))
+            // Update server guild count
+            if (serverguildcounttimer == null || serverguildcounttimer.Elapsed.TotalMinutes >= 15.0)
             {
-                await UpdateServerGuildCount(guilds);
+                string[] website = { $"bots.discord.pw",
+                                     $"discordbots.org" };
+
+                for (int i = 0; i < 2; i++)
+                {
+                    if (string.IsNullOrWhiteSpace(botConfig[$"httptoken{i}"])) continue;
+
+                    string requesturi = "https://" + website[i] + $"/api/bots/{client.CurrentUser.Id}/stats";
+                    var webclient = new HttpClient();
+                    var content = new StringContent($"{{\"server_count\": {guilds}}}", System.Text.Encoding.UTF8, "application/json");
+                    webclient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(botConfig[$"httptoken{i}"]);
+                    var response = await webclient.PostAsync(requesturi, content);
+
+                    await logger.Log(LogSeverity.Verbose, $"Sent guild count to {website[i]}. {(response.IsSuccessStatusCode ? "Success" : $"Response:\n{response}")}");
+                }
+
+                serverguildcounttimer = Stopwatch.StartNew();
             }
-        }
-
-
-        private Task UpdateServerGuildCount(int count)
-        {
-            var request = (HttpWebRequest)WebRequest.Create($"https://bots.discord.pw/api/bots/{client.CurrentUser.Id}/stats");
-            request.ContentType = "application/json";
-            request.Method = "POST";
-            request.Headers.Add("Authorization", botConfig["httptoken"]);
-
-            using (var writer = new StreamWriter(request.GetRequestStream()))
-            {
-                writer.Write($"{{\n\"server_count\": {count}\n}}");
-            }
-
-            string response;
-            using (var reader = new StreamReader(((HttpWebResponse)request.GetResponse()).GetResponseStream()))
-            {
-                response = reader.ReadToEnd();
-            }
-
-            return logger.Log(LogSeverity.Verbose, $"Sent server count to server. {(string.IsNullOrWhiteSpace(response) ? "Successful." : $"Response:\n{response}")}");
         }
     }
 }
