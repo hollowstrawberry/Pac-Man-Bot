@@ -27,7 +27,7 @@ namespace PacManBot.Modules
         }
 
 
-        [Command("run"), Alias("eval", "runasync", "evalasync"), Remarks("code —"), Summary("Run code, super dangerous do not try at home. Developer only.")]
+        [Command("run"), Alias("eval", "runasync", "evalasync"), Remarks("<code> —"), Summary("Run code, super dangerous do not try at home. Developer only.")]
         public async Task ScriptEval([Remainder]string code)
         {
             try
@@ -49,7 +49,7 @@ namespace PacManBot.Modules
         }
 
 
-        [Command("feedbackreply"), Remarks("userId message —"), Summary("This is how Samrux replies to feedback. Developer only.")]
+        [Command("feedbackreply"), Remarks("<userId> <message> —"), Summary("This is how Samrux replies to feedback. Developer only.")]
         public async Task ReplyFeedback(ulong id, [Remainder]string message)
         {
             try
@@ -77,7 +77,7 @@ namespace PacManBot.Modules
         }
 
 
-        [Command("file"), Alias("readfile"), Remarks("startpoint endpoint filename —"), Summary("Sends the contents of a file in the bot's host location. Developer only.")]
+        [Command("file"), Alias("readfile"), Remarks("[startpoint] [endpoint] <filename> —"), Summary("Sends the contents of a file in the bot's host location. Developer only.")]
         public async Task ReadFile(int start, int length, [Remainder]string file)
         {
             try

@@ -110,7 +110,7 @@ namespace PacManBot.Modules
             var embed = new EmbedBuilder()
             {
                 Title = $"{CustomEmojis.PacMan} __**Bot Commands**__",
-                Description = (Context.Guild == null ? "No prefix is needed in a DM!" : $"Prefix for this server is '{prefix}'") + $"\nYou can do **{prefix}help command** for more information about a command.\n*Aliases are listed with commas. Parameters with [brackets] are optional.*",
+                Description = (Context.Guild == null ? "No prefix is needed in a DM!" : $"Prefix for this server is '{prefix}'") + $"\nYou can do **{prefix}help command** for more information about a command.\n*Aliases are listed with commas. Parameters in [] are optional.*",
                 Color = new Color(241, 195, 15)
             };
 
@@ -174,7 +174,7 @@ namespace PacManBot.Modules
         }
 
 
-        [Command("feedback"), Alias("suggestion", "bug"), Remarks("message — *Send a message to the bot's developer*")]
+        [Command("feedback"), Alias("suggestion", "bug"), Remarks("<message> — *Send a message to the bot's developer*")]
         [Summary("Whatever text you write after this command will be sent directly to the bot's developer. You may receive an answer through the bot in a DM.")]
         public async Task SendFeedback([Remainder]string message)
         {

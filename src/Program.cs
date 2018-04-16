@@ -64,12 +64,21 @@ namespace PacManBot
             provider.GetRequiredService<ScriptingService>();
 
             //Events
-            client.Ready += async () => await UpdateGuildCount(); //Updates playing message when ready or when changing guild count
+            client.Ready += OnReady;
             client.JoinedGuild += OnJoinedGuild;
             client.LeftGuild += OnLeftGuild;
+            client.ChannelDestroyed += OnChannelDestroyed;
 
 
             await Task.Delay(-1); //Prevent the application from closing
+        }
+
+
+        //Events
+
+        private async Task OnReady()
+        {
+            await UpdateGuildCount();
         }
 
 
@@ -83,17 +92,22 @@ namespace PacManBot
         {
             await UpdateGuildCount();
 
-            for (int i = 0; i < storage.gameInstances.Count; i++)
+            for (int i = 0; i < storage.gameInstances.Count; i++) //Removes leftover games in the guild we left
             {
-                var guildChannel = client.GetChannel(storage.gameInstances[i].channelId) as SocketGuildChannel;
-                if (guildChannel != null && guildChannel.Guild.Id == guild.Id)
-                {
-                    await logger.Log(LogSeverity.Verbose, $"Removing game at {storage.gameInstances[i].channelId}");
-                    if (File.Exists(storage.gameInstances[i].GameFile)) File.Delete(storage.gameInstances[i].GameFile);
-                    storage.gameInstances.RemoveAt(i);
-                }
+                if (storage.gameInstances[i].Guild?.Id == guild.Id) storage.DeleteGame(i);
             }
         }
+
+
+        private Task OnChannelDestroyed(SocketChannel channel)
+        {
+            for (int i = 0; i < storage.gameInstances.Count; i++) //Removes a leftover game in that channel
+            {
+                if (storage.gameInstances[i].channelId == channel.Id) storage.DeleteGame(i);
+            }
+            return Task.CompletedTask;
+        }
+
 
 
         private async Task UpdateGuildCount()
@@ -103,7 +117,7 @@ namespace PacManBot
             await client.SetGameAsync($"{botConfig["prefix"]}help | {guilds} guilds");
             await logger.Log(LogSeverity.Info, $"Guild count is now {guilds}");
 
-            // Update server guild count
+            // Update online guild count
             if (serverguildcounttimer == null || serverguildcounttimer.Elapsed.TotalMinutes >= 15.0)
             {
                 string[] website = { $"bots.discord.pw",

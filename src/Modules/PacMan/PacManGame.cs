@@ -76,15 +76,7 @@ namespace PacManBot.Modules.PacMan
 
         // Properties
 
-        public SocketGuild Guild
-        {
-            get
-            {
-                var guildChannel = client.GetChannel(channelId) as SocketGuildChannel;
-                return (guildChannel == null) ? null : guildChannel.Guild;
-            }
-        }
-
+        public SocketGuild Guild => (client.GetChannel(channelId) as SocketGuildChannel)?.Guild;
         public string GameFile => $"{Folder}{channelId}{Extension}";
 
         private Pos FruitSecondPos => fruitSpawnPos + Dir.right; //Second tile which fruit will also occupy

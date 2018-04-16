@@ -8,8 +8,9 @@
 # Folders
 .vs/
 obj/
-bin/**/logs/*
-bin/**/games/*
+bin/**/logs/
+bin/**/games/
+bin/netcoreapp2.0/
 
 # Files
 **/config.bot

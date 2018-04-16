@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
@@ -45,6 +45,15 @@ namespace PacManBot.Services
         public string GetPrefixOrEmpty(SocketGuild guild)
         {
             return (guild == null) ? "" : GetPrefix(guild.Id);
+        }
+
+
+
+        public void DeleteGame(int i)
+        {
+            logger.Log(LogSeverity.Verbose, $"Removing game at {gameInstances[i].channelId}");
+            if (File.Exists(gameInstances[i].GameFile)) File.Delete(gameInstances[i].GameFile);
+            gameInstances.RemoveAt(i);
         }
 
 

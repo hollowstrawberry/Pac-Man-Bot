@@ -22,7 +22,7 @@ namespace PacManBot.Modules
         }
 
 
-        [Command("say"), Remarks("message — *Make the bot say anything*")]
+        [Command("say"), Remarks("<message> — *Make the bot say anything*")]
         [Summary("Repeats back the message provided. Only users with the Manage Messages permission can use this command.")]
         [RequireUserPermission(ChannelPermission.ManageMessages)]
         public async Task Say([Remainder]string text) => await ReplyAsync(text);
@@ -41,7 +41,7 @@ namespace PacManBot.Modules
         }
 
 
-        [Command("setprefix"), Remarks("prefix — *Set a custom prefix for this server (Admin)*")]
+        [Command("setprefix"), Remarks("<prefix> — *Set a custom prefix for this server (Admin)*")]
         [Summary("Change the custom prefix for this server. Only server Administrators can use this command.\nPrefixes can't contain \\*.")]
         [RequireUserPermission(GuildPermission.Administrator)]
         public async Task SetServerPrefix(string newPrefix)
