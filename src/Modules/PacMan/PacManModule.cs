@@ -12,7 +12,6 @@ using static PacManBot.Modules.PacMan.PacManGame;
 namespace PacManBot.Modules.PacMan
 {
     [Name("🎮Game")]
-    [RequireBotPermission(ChannelPermission.SendMessages)]
     public class PacManModule : ModuleBase<SocketCommandContext>
     {
         private readonly LoggingService logger;
@@ -161,7 +160,7 @@ namespace PacManBot.Modules.PacMan
         }
 
 
-        [Command("leaderboard"), Alias("l"), Remarks("[[start] end] — *Global list of top scores. You can enter a range*")]
+        [Command("leaderboard"), Alias("l"), Remarks("[start] [end] — *Global list of top scores. You can enter a range*")]
         [Summary("This command will display a list of scores in the *Global Leaderboard* of all servers.\nIt goes from 1 to 10 by default, but you can specify an end and start point for any range of scores.")]
         public async Task SendTopScores(string amount = "10") => await SendTopScores("1", amount);
 
@@ -260,10 +259,9 @@ namespace PacManBot.Modules.PacMan
 
         [Command("custom"), Remarks("— *Learn how custom maps work*")]
         [Summary("Using this command will display detailed help about the custom maps that you can design and play yourself!")]
+        [RequireBotPermission(ChannelPermission.EmbedLinks)]
         public async Task SayCustomMapHelp()
         {
-            if (!Context.CheckCanSendEmbeds()) return;
-
             string fileText = File.ReadAllText(BotFile.Contents);
             string message = fileText.FindValue("customhelp").Replace("{prefix}", storage.GetPrefixOrEmpty(Context.Guild));
             string[] links = fileText.FindValue("customlinks").Split('\n').Where(s => s.Contains("|")).ToArray();

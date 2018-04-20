@@ -38,6 +38,8 @@ namespace PacManBot.Services
                 if (message == null || message.Author.IsBot) return;
 
                 var context = new SocketCommandContext(client, message);
+                if (context.Channel is SocketGuildChannel && !context.BotHas(ChannelPermission.SendMessages)) return;
+
                 string prefix = storage.GetPrefix(context.Guild);
                 int commandPosition = 0;
 

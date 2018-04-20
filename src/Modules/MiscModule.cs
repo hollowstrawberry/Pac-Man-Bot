@@ -29,10 +29,9 @@ namespace PacManBot.Modules
 
         [Command("about"), Alias("a", "info"), Remarks("— *About this bot*")]
         [Summary("Shows relevant information, data and links about Pac-Man Bot.")]
+        [RequireBotPermission(ChannelPermission.EmbedLinks)]
         public async Task SayBotInfo()
         {
-            if (!Context.CheckCanSendEmbeds()) return;
-
             string fileText = File.ReadAllText(BotFile.Contents);
             string description = fileText.FindValue("about").Replace("{prefix}", storage.GetPrefixOrEmpty(Context.Guild));
             string[] fields = fileText.FindValue("aboutfields").Split('\n').Where(s => s.Contains("|")).ToArray();
@@ -59,10 +58,9 @@ namespace PacManBot.Modules
 
         [Command("help"), Alias("h", "commands"), Remarks("[command] — *List of commands or help about a command*")]
         [Summary("Show a complete list of commands you can use. You can specify a command to see detailed help about that command.")]
+        [RequireBotPermission(ChannelPermission.EmbedLinks)]
         public async Task SendCommandHelp(string commandName) //With argument
         {
-            if (!Context.CheckCanSendEmbeds()) return;
-
             string prefix = storage.GetPrefix(Context.Guild).If(Context.Guild != null);
 
             CommandInfo command = commands.Commands.FirstOrDefault(c => c.Aliases.Contains(commandName));
@@ -101,10 +99,9 @@ namespace PacManBot.Modules
 
 
         [Command("help"), Alias("h", "commands")]
+        [RequireBotPermission(ChannelPermission.EmbedLinks)]
         public async Task SendAllHelp() //Without arguments
         {
-            if (!Context.CheckCanSendEmbeds()) return;
-
             string prefix = storage.GetPrefix(Context.Guild).If(Context.Guild != null);
 
             var embed = new EmbedBuilder()
@@ -194,10 +191,9 @@ namespace PacManBot.Modules
 
         [Command("invite"), Alias("inv"), Remarks("— *Invite this bot to your server*")]
         [Summary("Shows a fancy embed block with the bot's invite link. I'd show it right now too, since you're already here, but I really want you to see that fancy embed.")]
+        [RequireBotPermission(ChannelPermission.EmbedLinks)]
         public async Task SayBotInvite([Remainder]string args = "") //Useless args
         {
-            if (!Context.CheckCanSendEmbeds()) return;
-
             string link = File.ReadAllText(BotFile.Contents).FindValue("invite");
             var embed = new EmbedBuilder()
             {

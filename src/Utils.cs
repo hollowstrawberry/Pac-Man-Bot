@@ -55,16 +55,6 @@ namespace PacManBot
             return $"{user.Username}#{user.Discriminator}";
         }
 
-        public static bool CheckCanSendEmbeds(this SocketCommandContext context)
-        {
-            if (context.Guild != null && !context.BotHas(ChannelPermission.EmbedLinks))
-            {
-                context.Channel.SendMessageAsync("To show a fancy new information block, this bot requires the permission to Embed Links!");
-                return false;
-            }
-            return true;
-        }
-
         public static Emote ToEmote(this string text)
         {
             if (!Emote.TryParse(text, out Emote emote)) return null;

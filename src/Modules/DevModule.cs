@@ -12,7 +12,7 @@ namespace PacManBot.Modules
 {
     [Name("Developer")]
     [RequireOwner]
-    [RequireBotPermission(ChannelPermission.SendMessages | ChannelPermission.AddReactions)]
+    [RequireBotPermission(ChannelPermission.AddReactions)]
     public class DevModule : ModuleBase<SocketCommandContext>
     {
         private readonly LoggingService logger;

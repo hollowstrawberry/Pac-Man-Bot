@@ -9,7 +9,6 @@ using PacManBot.Constants;
 namespace PacManBot.Modules
 {
     [Name("<:staff:412019879772815361>Mod")]
-    [RequireBotPermission(ChannelPermission.SendMessages)]
     public class ModModule : ModuleBase<SocketCommandContext>
     {
         private readonly LoggingService logger;
