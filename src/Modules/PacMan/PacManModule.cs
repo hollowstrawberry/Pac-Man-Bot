@@ -12,6 +12,7 @@ using static PacManBot.Modules.PacMan.PacManGame;
 namespace PacManBot.Modules.PacMan
 {
     [Name("🎮Game")]
+    [RequireBotPermission(ChannelPermission.SendMessages)]
     public class PacManModule : ModuleBase<SocketCommandContext>
     {
         private readonly LoggingService logger;
@@ -24,12 +25,12 @@ namespace PacManBot.Modules.PacMan
         }
 
 
-        private const string NeedReactionPermMessage = "This bot requires the permission to add reactions!";
         private string ManualModeMessage => "__Manual mode:__ Both adding and removing reactions count as input. Do one action at a time to prevent buggy behavior." + "\nGive this bot the permission to Manage Messages to remove reactions automatically.".If(Context.Guild != null);
 
 
         [Command("play"), Alias("p"), Remarks("[mobile/m] [\\`\\`\\`custom map\\`\\`\\`] — *Start a new game on this channel*")]
         [Summary("Starts a new game, unless there is already an active game on this channel.\nAdding \"mobile\" or \"m\" after the command will begin the game in *Mobile Mode*, which uses simple characters that will work in phones. (To change back to normal mode, use the **{prefix}refresh** command.)\nIf you add a valid customized map between \\`\\`\\`triple backticks\\`\\`\\`, it will start a custom game using that map instead. For more information about custom games, use the **{prefix}custom** command.")]
+        [RequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.AddReactions)]
         public async Task StartGameInstance([Remainder]string args = "")
         {
             if (Context.Guild != null && !Context.BotHas(ChannelPermission.SendMessages)) return;
@@ -43,12 +44,6 @@ namespace PacManBot.Modules.PacMan
                     await ReplyAsync($"There is already an ongoing game on this channel!\nYou could use the **{prefix}refresh** command to bring it to the bottom of the chat.");
                     return;
                 }
-            }
-
-            if (Context.Guild != null && !Context.BotHas(ChannelPermission.AddReactions))
-            {
-                await ReplyAsync(NeedReactionPermMessage);
-                return;
             }
 
 
@@ -91,27 +86,27 @@ namespace PacManBot.Modules.PacMan
                 await ReplyAsync(ManualModeMessage);
             }
 
-            await AddControls(gameMessage); //Controls for easy access
-            await gameMessage.ModifyAsync(m => m.Content = newGame.GetDisplay()); //Restore display to normal
+            try
+            {
+                await AddControls(gameMessage); //Controls for easy access
+                await gameMessage.ModifyAsync(m => m.Content = newGame.GetDisplay()); //Restore display to normal
+            }
+            catch (Discord.Net.HttpException) {;} // Message not found (deleted at some point)
         }
 
 
         [Command("refresh"), Alias("r"), Remarks("[mobile/m] — *Move the game to the bottom of the chat*")]
         [Summary("If there is already an active game on this channel, using this command moves the game message to the bottom of the chat, and deletes the old one.\nThis is useful if the game message has been lost in a sea of other messages or if you encounter a problem with reactions.\nAdding \"mobile\" or \"m\" after the command will refresh the game in *Mobile Mode*, which uses simple characters that will work in phones. Refreshing again will return it to normal.")]
+        [RequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.AddReactions)]
         public async Task RefreshGameInstance(string arg = "")
         {
-            if (Context.Guild != null && !Context.BotHas(ChannelPermission.AddReactions))
-            {
-                await ReplyAsync(NeedReactionPermMessage);
-                return;
-            }
-
             foreach (PacManGame game in storage.gameInstances)
             {
                 if (Context.Channel.Id == game.channelId) //Finds a game instance corresponding to this channel
                 {
                     var oldMsg = await Context.Channel.GetMessageAsync(game.messageId);
                     if (oldMsg != null) await oldMsg.DeleteAsync(); //Delete old message
+
                     game.mobileDisplay = arg.StartsWith("m");
                     var newMsg = await ReplyAsync(game.GetDisplay() + "```diff\n+Refreshing game```"); //Send new message
                     game.messageId = newMsg.Id; //Change focus message for this channel
@@ -121,8 +116,13 @@ namespace PacManBot.Modules.PacMan
                         await ReplyAsync(ManualModeMessage);
                     }
 
-                    await AddControls(newMsg);
-                    await newMsg.ModifyAsync(m => m.Content = game.GetDisplay()); //Edit message
+                    try
+                    {
+                        await AddControls(newMsg);
+                        await newMsg.ModifyAsync(m => m.Content = game.GetDisplay()); //Edit message
+                    }
+                    catch (Discord.Net.HttpException) {;} // Not found (deleted at some point)
+
                     return;
                 }
             }

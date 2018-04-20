@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using Discord;
@@ -22,7 +22,8 @@ namespace PacManBot.Services
             this.storage = storage;
             this.logger = logger;
 
-            this.client.ReactionAdded += OnReactionAdded; //Events
+            // Events
+            this.client.ReactionAdded += OnReactionAdded;
             this.client.ReactionRemoved += OnReactionRemoved;
         }
 
@@ -37,7 +38,7 @@ namespace PacManBot.Services
 
         private Task OnReaction(Cacheable<IUserMessage, ulong> messageData, ISocketMessageChannel channel, SocketReaction reaction, bool removed)
         {
-            Task.Run(async () => //Wrapping in a Task.Run prevents the gateway from getting blocked in case something goes wrong
+            Task.Run(async () => // Wrapping in a Task.Run prevents the gateway from getting blocked
             {
                 if (!messageData.HasValue || !reaction.User.IsSpecified) return;
 
@@ -48,7 +49,6 @@ namespace PacManBot.Services
                     await GameInput(context, reaction, removed);
                 }
             });
-           
             return Task.CompletedTask;
         }
 

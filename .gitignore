@@ -16,6 +16,7 @@ bin/netcoreapp2.0/
 **/config.bot
 
 # Formats
+*.lnk
 *.zip
 *.obj
 *.sln

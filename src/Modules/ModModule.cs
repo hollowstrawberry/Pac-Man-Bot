@@ -9,6 +9,7 @@ using PacManBot.Constants;
 namespace PacManBot.Modules
 {
     [Name("<:staff:412019879772815361>Mod")]
+    [RequireBotPermission(ChannelPermission.SendMessages)]
     public class ModModule : ModuleBase<SocketCommandContext>
     {
         private readonly LoggingService logger;
@@ -30,7 +31,7 @@ namespace PacManBot.Modules
 
         [Command("clear"), Alias("c"), Remarks("[amount] — *Clear messages from this bot*")]
         [Summary("Clears all messages sent by *this bot only*, checking up to the amount of messages provided, or 10 messages by default. Only users with the Manage Messages permission can use this command.")]
-        [RequireUserPermission(ChannelPermission.ManageMessages)]
+        [RequireUserPermission(ChannelPermission.ManageMessages), RequireBotPermission(ChannelPermission.ReadMessageHistory)]
         public async Task ClearGameMessages(int amount = 10)
         {
             var messages = await Context.Channel.GetMessagesAsync(amount).FlattenAsync();
