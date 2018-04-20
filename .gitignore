@@ -13,7 +13,10 @@ bin/**/games/
 bin/netcoreapp2.0/
 
 # Files
-**/config.bot
+bin/*/**/config.bot
+**/prefixes.bot
+**/scoreboard.bot
+**/wakaexclude.bot
 
 # Formats
 *.lnk

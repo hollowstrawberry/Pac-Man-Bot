@@ -169,6 +169,7 @@ namespace PacManBot.Modules.PacMan
         {
             if (!int.TryParse(smin, out int min) | !int.TryParse(smax, out int max))
             {
+                // So like people weren't understanding how to use this command so I had to handle it myself to tell them
                 await ReplyAsync("You must enter one or two whole numbers!");
                 return;
             }
@@ -224,10 +225,13 @@ namespace PacManBot.Modules.PacMan
 
         [Command("score"), Alias("s"), Remarks("[user] — *See your own or another user's place on the leaderboard*")]
         [Summary("See your own highest score in the *Global Leaderboard* of all servers. You can specify a user in your guild using their name, mention or ID to see their score instead.")]
-        public async Task SendPersonalBest(SocketGuildUser guildUser = null)
-        {
-            SocketUser user = guildUser ?? Context.User; //Uses the command caller itself if no user is specified
+        public async Task SendPersonalBest(SocketGuildUser guildUser = null) => await _SendPersonalBest(guildUser ?? Context.User);
 
+        [Command("score"), Alias("s")]
+        public async Task SendPersonalBest(ulong userId) => await _SendPersonalBest(Context.Client.GetUser(userId));
+
+        public async Task _SendPersonalBest(SocketUser user)
+        {
             string[] scoreLine = File.ReadAllLines(BotFile.Scoreboard).Skip(1).ToArray(); //Skips the first line
             int scoresAmount = scoreLine.Length;
             int[] score = new int[scoresAmount];
@@ -253,7 +257,7 @@ namespace PacManBot.Modules.PacMan
             }
 
             string[] splitLine = scoreLine[topScoreIndex].Split(' ');
-            await ReplyAsync(topScore == 0 ? ((guildUser == null ? "You don't have" : "The user doesn't have") + " any scores registered!") : $"🏆 __**Global Leaderboard**__\n{topScoreIndex + 1}. ({splitLine[0]}) **{splitLine[1]}** in {splitLine[2]} turns by user " + (user == null ? "Unknown" : $"{user.Username}#{user.Discriminator}"));
+            await ReplyAsync(topScore == 0 ? ((user == null ? "You don't have" : "The user doesn't have") + " any scores registered!") : $"🏆 __**Global Leaderboard**__\n{topScoreIndex + 1}. ({splitLine[0]}) **{splitLine[1]}** in {splitLine[2]} turns by user " + (user == null ? "Unknown" : $"{user.Username}#{user.Discriminator}"));
         }
 
 

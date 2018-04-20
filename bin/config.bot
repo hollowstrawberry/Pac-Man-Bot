@@ -1,6 +1,5 @@
 {
   "prefix": "<",
   "token": "",
-  "httptoken": "",
-  "messagecachesize": "50"
+  "messagecachesize": "100"
 }
