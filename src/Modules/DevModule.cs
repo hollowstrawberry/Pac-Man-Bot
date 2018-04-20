@@ -40,7 +40,7 @@ namespace PacManBot.Modules
             catch (Exception e)
             {
                 await ReplyAsync($"```cs\n{e.Message}```");
-                await logger.Log(LogSeverity.Warning, $"{e}");
+                await logger.Log(LogSeverity.Debug, "Eval", $"{e.Message}");
                 await Context.Message.AddReactionAsync(CustomEmojis.Cross.ToEmote());
             }
             finally
@@ -60,7 +60,7 @@ namespace PacManBot.Modules
             }
             catch (Exception e)
             {
-                await logger.Log(LogSeverity.Verbose, $"{e}");
+                await logger.Log(LogSeverity.Debug, $"{e.Message}");
                 await ReplyAsync($"```{e.Message}```");
                 await Context.Message.AddReactionAsync(CustomEmojis.Cross.ToEmote());
             }
@@ -87,7 +87,7 @@ namespace PacManBot.Modules
             }
             catch (Exception e)
             {
-                await logger.Log(LogSeverity.Debug, $"{e}");
+                await logger.Log(LogSeverity.Debug, $"{e.Message}");
                 await ReplyAsync($"```{e.Message}```");
             }
         }

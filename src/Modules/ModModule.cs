@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using Discord;
@@ -75,7 +75,7 @@ namespace PacManBot.Modules
                 }
 
                 await ReplyAsync($"{CustomEmojis.Check} Prefix for this server has been successfully set to '{newPrefix}'.");
-                await logger.Log(LogSeverity.Verbose, $"Prefix for server {Context.Guild.Name} set to {newPrefix}");
+                await logger.Log(LogSeverity.Info, $"Prefix for server {Context.Guild.Name} set to {newPrefix}");
             }
             catch (Exception e)
             {

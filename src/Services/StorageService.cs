@@ -51,7 +51,7 @@ namespace PacManBot.Services
 
         public void DeleteGame(int i)
         {
-            logger.Log(LogSeverity.Verbose, $"Removing game at {gameInstances[i].channelId}");
+            logger.Log(LogSeverity.Info, $"Removing game at {gameInstances[i].channelId}");
             if (File.Exists(gameInstances[i].GameFile)) File.Delete(gameInstances[i].GameFile);
             gameInstances.RemoveAt(i);
         }

@@ -52,9 +52,9 @@ namespace PacManBot.Services
                     code = "await ReplyAsync($\"{" + code + "}\");";
                 }
 
-                await logger.Log(LogSeverity.Debug, $"Evaluating code \"{code}\" in channel {context.FullChannelName()}");
+                await logger.Log(LogSeverity.Info, $"Evaluating code \"{code}\" in channel {context.FullChannelName()}");
                 await CSharpScript.EvaluateAsync(code + postCode, scriptOptions, new ScriptArgs(context, storage, logger));
-                await logger.Log(LogSeverity.Debug, $"Successfully executed code");
+                await logger.Log(LogSeverity.Info, $"Successfully executed code");
             }
             finally
             {

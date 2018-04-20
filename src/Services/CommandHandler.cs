@@ -49,7 +49,7 @@ namespace PacManBot.Services
                     if (!result.IsSuccess)
                     {
                         string error = result.ErrorReason;
-                        if (!error.Contains("Unknown command")) await logger.Log(LogSeverity.Error, $"Command {message} by {message.Author.FullName()} in channel {context.FullChannelName()} couldn't be executed. {error}");
+                        if (!error.Contains("Unknown command")) await logger.Log(LogSeverity.Verbose, $"Command {message} by {message.Author.FullName()} in channel {context.FullChannelName()} couldn't be executed. {error}");
 
                         string help = $"Please use **{storage.GetPrefixOrEmpty(context.Guild)}help [command name]** or try again.";
 

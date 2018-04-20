@@ -225,12 +225,10 @@ namespace PacManBot.Modules.PacMan
 
         [Command("score"), Alias("s"), Remarks("[user] — *See your own or another user's place on the leaderboard*")]
         [Summary("See your own highest score in the *Global Leaderboard* of all servers. You can specify a user in your guild using their name, mention or ID to see their score instead.")]
-        public async Task SendPersonalBest(SocketGuildUser guildUser = null) => await _SendPersonalBest(guildUser ?? Context.User);
+        public async Task SendPersonalBest(SocketGuildUser guildUser = null) => await SendPersonalBest((guildUser ?? Context.User).Id);
 
         [Command("score"), Alias("s")]
-        public async Task SendPersonalBest(ulong userId) => await _SendPersonalBest(Context.Client.GetUser(userId));
-
-        public async Task _SendPersonalBest(SocketUser user)
+        public async Task SendPersonalBest(ulong userId)
         {
             string[] scoreLine = File.ReadAllLines(BotFile.Scoreboard).Skip(1).ToArray(); //Skips the first line
             int scoresAmount = scoreLine.Length;
@@ -249,7 +247,7 @@ namespace PacManBot.Modules.PacMan
             int topScoreIndex = 0;
             for (int i = 0; i < scoresAmount; i++)
             {
-                if (scoreLine[i].Split(' ')[3] == user.Id.ToString() && score[i] > topScore)
+                if (scoreLine[i].Split(' ')[3] == userId.ToString() && score[i] > topScore)
                 {
                     topScore = score[i];
                     topScoreIndex = i;
@@ -257,7 +255,8 @@ namespace PacManBot.Modules.PacMan
             }
 
             string[] splitLine = scoreLine[topScoreIndex].Split(' ');
-            await ReplyAsync(topScore == 0 ? ((user == null ? "You don't have" : "The user doesn't have") + " any scores registered!") : $"🏆 __**Global Leaderboard**__\n{topScoreIndex + 1}. ({splitLine[0]}) **{splitLine[1]}** in {splitLine[2]} turns by user " + (user == null ? "Unknown" : $"{user.Username}#{user.Discriminator}"));
+            var user = Context.Client.GetUser(userId);
+            await ReplyAsync(topScore == 0 ? "No scores registered!" : $"🏆 __**Global Leaderboard**__\n{topScoreIndex + 1}. ({splitLine[0]}) **{splitLine[1]}** in {splitLine[2]} turns by user " + (user == null ? "Unknown" : user.FullName()));
         }
 
 
