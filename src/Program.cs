@@ -27,7 +27,7 @@ namespace PacManBot
         private StorageService storage;
         private IConfigurationRoot botConfig;
 
-        private CancellationTokenSource cancelBotRestart = null;
+        private CancellationTokenSource cancelReconnectTimeout = null;
         private Stopwatch guildCountTimer = null;
 
 
@@ -82,13 +82,13 @@ namespace PacManBot
         
         private Task OnConnected()
         {
-            if (cancelBotRestart != null)
+            if (cancelReconnectTimeout != null)
             {
-                cancelBotRestart.Cancel();
+                cancelReconnectTimeout.Cancel();
                 logger.Log(LogSeverity.Info, "Client reconnected. Timeout cancelled.");
             }
 
-            cancelBotRestart = new CancellationTokenSource();
+            cancelReconnectTimeout = new CancellationTokenSource();
 
             return Task.CompletedTask;
         }
@@ -97,11 +97,11 @@ namespace PacManBot
         private Task OnDisconnected(Exception e)
         {
             logger.Log(LogSeverity.Info, "Client disconnected. Starting reconnection timeout...");
-            Task.Delay(TimeSpan.FromSeconds(30), cancelBotRestart.Token).ContinueWith(_ =>
+            Task.Delay(TimeSpan.FromSeconds(30), cancelReconnectTimeout.Token).ContinueWith(_ =>
             {
                 if (client.ConnectionState != ConnectionState.Connected)
                 {
-                    logger.Log(LogSeverity.Critical, "Timeout expired. Shutting down...");
+                    logger.Log(LogSeverity.Critical, "Reconnection timeout expired. Shutting down...");
                     Environment.Exit(1);
                 }
             });
