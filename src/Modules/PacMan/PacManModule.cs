@@ -8,6 +8,7 @@ using Discord.WebSocket;
 using PacManBot.Services;
 using PacManBot.Constants;
 using static PacManBot.Modules.PacMan.GameInstance;
+using System.Text;
 
 namespace PacManBot.Modules.PacMan
 {
@@ -199,17 +200,33 @@ namespace PacManBot.Modules.PacMan
 
             storage.SortScores();
 
-            string message = $"🏆 __**Global Leaderboard**__";
+            var embed = new EmbedBuilder()
+            {
+                Title = $"🏆 __**Global Leaderboard**__ 🏆",
+                Description = max >= scoresAmount ? "*No more scores could be found*" : max - min > 19 ? "*Only 20 scores may be displayed at once*" : "",
+                Color = new Color(241, 195, 15)
+            };
+
+            string results = "", users = "";
 
             for (int i = min; i < scoresAmount && i <= max && i < min + 20; i++) //Caps at 20
             {
-                message += $"\n{storage.scoreEntries[i - 1].ToString(Context.Client, i)}"; // Arrays start at 0
+                ScoreEntry entry = storage.scoreEntries[i - 1];
+
+                // Fancy formatting
+                string result = $"`{i}. {" ".If(i.ToString().Length < max.ToString().Length)}"
+                              + $"({entry.state}) {" ".If(entry.state == State.Win)}"
+                              + $"{" ".If(entry.score.ToString().Length < storage.scoreEntries[min - 1].score.ToString().Length)}{entry.score} points "
+                              + $"in {entry.turns} turns";
+                result += new string(' ', 40 - result.Length) + "-`\n";
+
+                results += result;
+                users += $"`{entry.GetUsername(Context.Client)}`\n";
             }
+            embed.AddField("Result", results, true);
+            embed.AddField("User", users, true);
 
-            if (max >= scoresAmount) message += "\n*No more scores could be found*";
-            else if (max - min > 19) message += "\n*Only 20 scores may be displayed at once*";
-
-            await ReplyAsync(message.Truncate(2000));
+            await ReplyAsync("", false, embed.Build());
         }
 
 
@@ -226,7 +243,13 @@ namespace PacManBot.Modules.PacMan
             {
                 if (storage.scoreEntries[i].userId == userId)
                 {
-                    await ReplyAsync($"🏆 __**Global Leaderboard**__\n{storage.scoreEntries[i].ToString(Context.Client, i+1)}");
+                    var embed = new EmbedBuilder()
+                    {
+                        Title = $"🏆 __**Global Leaderboard**__ 🏆",
+                        Description = storage.scoreEntries[i].ToString(Context.Client, i + 1),
+                        Color = new Color(241, 195, 15)
+                    };
+                    await ReplyAsync("", false, embed.Build());
                     return;
                 }
             }

@@ -33,7 +33,7 @@ namespace PacManBot.Modules.PacMan
 
         public string ToString(DiscordSocketClient client, int position)
         {
-            return $"{position}. ({state}) **{score}** in {turns} turns by user {GetUsername(client)}";
+            return $"{position}. ({state}) {score} points in {turns} turns by user {GetUsername(client)}";
         }
 
         public string GetUsername(DiscordSocketClient client)

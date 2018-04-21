@@ -65,10 +65,10 @@ namespace PacManBot.Services
                 else
                 {
                     prefixes[guildId] = prefix;
-                    replace = Regex.Escape($"{guildId} {prefix}");
+                    replace = $"{guildId} {Regex.Escape(prefix)}";
                 }
 
-                File.WriteAllText(BotFile.Prefixes, Regex.Replace(File.ReadAllText(BotFile.Prefixes), $@"{guildId} .*", replace));
+                File.WriteAllText(BotFile.Prefixes, Regex.Replace(File.ReadAllText(BotFile.Prefixes), $@"{guildId}.*", replace));
             }
             else if (prefix != defaultPrefix)
             {
