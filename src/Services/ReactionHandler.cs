@@ -5,7 +5,7 @@ using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using PacManBot.Constants;
-using static PacManBot.Modules.PacMan.PacManGame;
+using PacManBot.Modules.PacMan;
 
 namespace PacManBot.Services
 {
@@ -57,35 +57,34 @@ namespace PacManBot.Services
         {
             if (removed && context.BotHas(ChannelPermission.ManageMessages)) return; //Removing reactions only counts if they're not automatically removed
 
-            foreach (Modules.PacMan.PacManGame game in storage.gameInstances)
+            foreach (GameInstance game in storage.gameInstances)
             {
-                if (context.Message.Id == game.messageId && game.state == State.Active) //Finds the game corresponding to this channel
+                if (context.Message.Id == game.messageId && game.state == GameInstance.State.Active) //Finds the game corresponding to this channel
                 {
                     string emote = reaction.Emote.ToString();
                     string channelName = context.FullChannelName();
                     var user = reaction.User.Value as SocketUser;
                     var message = context.Message;
 
-                    if (gameInput.ContainsKey(emote)) //Valid input
+                    if (GameInstance.GameInputs.ContainsKey(emote)) //Valid input
                     {
-                        if (gameInput.ContainsKey(emote)) //Valid reaction input
+                        if (GameInstance.GameInputs.ContainsKey(emote)) //Valid reaction input
                         {
-                            await logger.Log(LogSeverity.Verbose, "Game", $"Input \"{gameInput[emote]}\" by user {user.FullName()} in channel {channelName}");
-                            game.DoTick(gameInput[emote]);
+                            await logger.Log(LogSeverity.Verbose, "Game", $"Input \"{GameInstance.GameInputs[emote]}\" by user {user.FullName()} in channel {channelName}");
+                            game.DoTick(GameInstance.GameInputs[emote]);
 
-                            if (game.state != State.Active)
+                            if (game.state != GameInstance.State.Active)
                             {
                                 storage.gameInstances.Remove(game);
                                 if (game.score > 0 && !game.custom)
                                 {
-                                    File.AppendAllText(BotFile.Scoreboard, $"\n{game.state} {game.score} {game.time} {user.Id} \"{user.Username}#{user.Discriminator}\" \"{DateTime.Now.ToString("o")}\" \"{channelName}\"");
-                                    await logger.Log(LogSeverity.Verbose, "Game", $"({game.state}) Achieved score {game.score} in {game.time} moves in channel {channelName} last controlled by user {user.FullName()}");
+                                    storage.AddScore(new ScoreEntry(game.state, game.score, game.time, user.Id, user.FullName(), DateTime.Now.ToString("o"), channelName));
                                 }
                             }
 
                             await message.ModifyAsync(m => m.Content = game.GetDisplay()); //Update display
 
-                            if (game.state != State.Active) //Failsafe to bug where the display doesn't update in order if there are multiple inputs at once
+                            if (game.state != GameInstance.State.Active) //Failsafe to bug where the display doesn't update in order if there are multiple inputs at once
                             {
                                 await Task.Delay(3100);
                                 await message.ModifyAsync(m => m.Content = game.GetDisplay());
@@ -95,7 +94,7 @@ namespace PacManBot.Services
 
                     if (context.BotHas(ChannelPermission.ManageMessages)) //Can remove reactions
                     {
-                        if (game.state == State.Active)
+                        if (game.state == GameInstance.State.Active)
                         {
                             if (!removed) await message.RemoveReactionAsync(reaction.Emote, user);
                         }

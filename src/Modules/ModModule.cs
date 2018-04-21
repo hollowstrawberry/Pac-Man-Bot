@@ -15,6 +15,9 @@ namespace PacManBot.Modules
         private readonly StorageService storage;
 
 
+        string ErrorMessage => $"Please try again or, if the problem persists, contact the bot author using **{storage.GetPrefixOrEmpty(Context.Guild)}feedback**.";
+
+
         public ModModule(LoggingService logger, StorageService storage)
         {
             this.logger = logger;
@@ -25,7 +28,7 @@ namespace PacManBot.Modules
         [Command("say"), Remarks("<message> — *Make the bot say anything*")]
         [Summary("Repeats back the message provided. Only users with the Manage Messages permission can use this command.")]
         [RequireUserPermission(ChannelPermission.ManageMessages)]
-        public async Task Say([Remainder]string text) => await ReplyAsync(text);
+        public async Task Say([Remainder]string text) => await ReplyAsync(text.SanitizeMentions());
 
 
         [Command("clear"), Alias("c"), Remarks("[amount] — *Clear messages from this bot*")]
@@ -42,7 +45,7 @@ namespace PacManBot.Modules
                 }
                 catch (Discord.Net.HttpException e)
                 {
-                    await logger.Log(LogSeverity.Warning, $"At message {message.Id} in {Context.FullChannelName()}: {e.Message}");
+                    await logger.Log(LogSeverity.Warning, $"Couldn't delete message {message.Id} in {Context.FullChannelName()} ({Context.Channel.Id}): {e.Message}");
                 }
             }
         }
@@ -53,42 +56,22 @@ namespace PacManBot.Modules
         [RequireUserPermission(GuildPermission.Administrator)]
         public async Task SetServerPrefix(string newPrefix)
         {
-            if (newPrefix.Contains("*"))
+            if (newPrefix.ContainsAny("*", "_", "~", "`", "\\"))
             {
-                await ReplyAsync("Prefixes can't contain \\*.");
+                await ReplyAsync($"{CustomEmojis.Cross} The prefix can't contain markdown special characters: *_~\\`\\\\");
                 return;
             }
 
-            if (storage.prefixes.ContainsKey(Context.Guild.Id)) storage.prefixes[Context.Guild.Id] = newPrefix;
-            else storage.prefixes.Add(Context.Guild.Id, newPrefix);
-
             try
             {
-                string file = BotFile.Prefixes;
-                string[] lines = File.ReadAllLines(file);
-
-                int prefixIndex = lines.Length; //After everything else by default
-                for (int i = 0; i < lines.Length; i++) if (lines[i].Split(' ')[0] == Context.Guild.Id.ToString()) prefixIndex = i; //Finds if the server already has a custom prefix
-
-                string newLine = $"{Context.Guild.Id} {newPrefix}";
-                if (prefixIndex >= lines.Length) //Outside the array
-                {
-                    File.AppendAllLines(file, new string[] { newLine });
-                }
-                else //Existing line
-                {
-                    lines[prefixIndex] = newLine;
-                    File.WriteAllLines(file, lines);
-                }
-
+                storage.SetPrefix(Context.Guild.Id, newPrefix);
                 await ReplyAsync($"{CustomEmojis.Check} Prefix for this server has been successfully set to '{newPrefix}'.");
-                await logger.Log(LogSeverity.Info, $"Prefix for server {Context.Guild.Name} set to {newPrefix}");
+                await logger.Log(LogSeverity.Info, $"Prefix for server {Context.Guild.Id} set to {newPrefix}");
             }
             catch (Exception e)
             {
                 await logger.Log(LogSeverity.Error, $"{e}");
-                string prefix = storage.GetPrefixOrEmpty(Context.Guild);
-                await ReplyAsync($"{CustomEmojis.Cross} There was a problem storing the prefix on file. It might be reset the next time the bot restarts. Please try again or, if the problem persists, contact the bot author using **{prefix}feedback**.");
+                await ReplyAsync($"{CustomEmojis.Cross} There was a problem setting the prefix. {ErrorMessage}");
             }
         }
 
@@ -98,21 +81,16 @@ namespace PacManBot.Modules
         [RequireUserPermission(GuildPermission.ManageMessages)]
         public async Task ToggleWakaResponse()
         {
-            string wakafile = File.ReadAllText(BotFile.WakaExclude);
-            bool nowaka = wakafile.Contains($"{Context.Guild.Id}");
-            if (nowaka)
+            try
             {
-                string newwakafile = wakafile.Replace($"{Context.Guild.Id} ", "");
-                storage.wakaExclude = newwakafile;
-                File.WriteAllText(BotFile.WakaExclude, newwakafile);
+                bool nowaka = storage.ToggleWaka(Context.Guild.Id);
+                await ReplyAsync($"{CustomEmojis.Check} \"Waka\" responses turned **{(nowaka ? "on" : "off")}** in this server.");
             }
-            else
+            catch (Exception e)
             {
-                storage.wakaExclude += $"{Context.Guild.Id} ";
-                File.AppendAllText(BotFile.WakaExclude, $"{Context.Guild.Id} ");
+                await logger.Log(LogSeverity.Error, $"{e}");
+                await ReplyAsync($"{CustomEmojis.Cross} Oops, something went wrong. {ErrorMessage}");
             }
-
-            await ReplyAsync($"\"Waka\" responses turned **{(nowaka ? "on" : "off")}** in this server.");
         }
     }
 }

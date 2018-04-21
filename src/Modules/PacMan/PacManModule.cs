@@ -7,7 +7,7 @@ using Discord.Commands;
 using Discord.WebSocket;
 using PacManBot.Services;
 using PacManBot.Constants;
-using static PacManBot.Modules.PacMan.PacManGame;
+using static PacManBot.Modules.PacMan.GameInstance;
 
 namespace PacManBot.Modules.PacMan
 {
@@ -36,7 +36,7 @@ namespace PacManBot.Modules.PacMan
 
             string prefix = storage.GetPrefixOrEmpty(Context.Guild);
 
-            foreach (PacManGame game in storage.gameInstances)
+            foreach (GameInstance game in storage.gameInstances)
             {
                 if (Context.Channel.Id == game.channelId) //Finds a game instance corresponding to this channel
                 {
@@ -56,10 +56,10 @@ namespace PacManBot.Modules.PacMan
             string customMap = null;
             if (args.Contains("```")) customMap = argSplice[1].Trim('\n', '`');
 
-            PacManGame newGame;
+            GameInstance newGame;
             try
             {
-                newGame = new PacManGame(Context.Channel.Id, Context.User.Id, customMap, Context.Client, storage, logger);
+                newGame = new GameInstance(Context.Channel.Id, Context.User.Id, customMap, Context.Client, storage, logger);
             }
             catch (InvalidMapException e)
             {
@@ -100,7 +100,7 @@ namespace PacManBot.Modules.PacMan
         [RequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.AddReactions)]
         public async Task RefreshGameInstance(string arg = "")
         {
-            foreach (PacManGame game in storage.gameInstances)
+            foreach (GameInstance game in storage.gameInstances)
             {
                 if (Context.Channel.Id == game.channelId) //Finds a game instance corresponding to this channel
                 {
@@ -135,7 +135,7 @@ namespace PacManBot.Modules.PacMan
         [Summary("Ends the current game on this channel, but only if the person using the command started the game or if they have the Manage Messages permission.")]
         public async Task EndGameInstance()
         {
-            foreach (PacManGame game in storage.gameInstances)
+            foreach (GameInstance game in storage.gameInstances)
             {
                 if (Context.Channel.Id == game.channelId)
                 {
@@ -181,53 +181,35 @@ namespace PacManBot.Modules.PacMan
                 await ReplyAsync("You must enter one or two whole numbers!");
                 return;
             }
-
-            if (min <= 1) min = 1;
+            if (min < 1) min = 1;
             if (max < min) max = min + 9;
 
-            string[] scoreLine = File.ReadAllLines(BotFile.Scoreboard).Skip(1).Where(s => !string.IsNullOrWhiteSpace(s)).ToArray(); //Skips the first line and empty lines
-            int scoresAmount = scoreLine.Length;
-            string[] scoreText = new string[scoresAmount];
-            int[] score = new int[scoresAmount];
+            int scoresAmount = storage.scoreEntries.Count;
 
-
-            if (scoreLine.Length < 1)
+            if (scoresAmount < 1)
             {
                 await ReplyAsync("There are no registered scores! Go make one");
                 return;
             }
-
             if (min > scoresAmount)
             {
                 await ReplyAsync("No scores found within the specified range.");
                 return;
             }
 
-            for (int i = 0; i < scoresAmount; i++)
-            {
-                string[] splitLine = scoreLine[i].Split(' '); //Divide into sections
-                for (int j = 0; j < splitLine.Length; j++) splitLine[j].Trim(); //Trim the ends
-
-                var user = Context.Client.GetUser(ulong.Parse(splitLine[3])); //Third section is the user id
-                scoreText[i] = $"({splitLine[0]}) **{splitLine[1]}** in {splitLine[2]} turns by user " + (user == null ? "Unknown" : $"{user.Username}#{user.Discriminator}");
-                score[i] = Int32.Parse(splitLine[1]);
-            }
-
-            Array.Sort(score, scoreText);
-            Array.Reverse(scoreText);
+            storage.SortScores();
 
             string message = $"🏆 __**Global Leaderboard**__";
+
             for (int i = min; i < scoresAmount && i <= max && i < min + 20; i++) //Caps at 20
             {
-                message += $"\n{i}. {scoreText[i - 1]}";
+                message += $"\n{storage.scoreEntries[i - 1].ToString(Context.Client, i)}"; // Arrays start at 0
             }
 
             if (max >= scoresAmount) message += "\n*No more scores could be found*";
             else if (max - min > 19) message += "\n*Only 20 scores may be displayed at once*";
 
-            if (message.Length > 2000) message = message.Substring(0, 1999);
-
-            await ReplyAsync(message);
+            await ReplyAsync(message.Truncate(2000));
         }
 
 
@@ -238,33 +220,18 @@ namespace PacManBot.Modules.PacMan
         [Command("score"), Alias("s", "sc")]
         public async Task SendPersonalBest(ulong userId)
         {
-            string[] scoreLine = File.ReadAllLines(BotFile.Scoreboard).Skip(1).ToArray(); //Skips the first line
-            int scoresAmount = scoreLine.Length;
-            int[] score = new int[scoresAmount];
+            storage.SortScores();
 
-            for (int i = 0; i < scoresAmount; i++)
+            for (int i = 0; i < storage.scoreEntries.Count; i++)
             {
-                score[i] = Int32.Parse(scoreLine[i].Split(' ')[1].Trim());
-            }
-
-            Array.Sort(score, scoreLine);
-            Array.Reverse(scoreLine);
-            Array.Reverse(score);
-
-            int topScore = 0;
-            int topScoreIndex = 0;
-            for (int i = 0; i < scoresAmount; i++)
-            {
-                if (scoreLine[i].Split(' ')[3] == userId.ToString() && score[i] > topScore)
+                if (storage.scoreEntries[i].userId == userId)
                 {
-                    topScore = score[i];
-                    topScoreIndex = i;
+                    await ReplyAsync($"🏆 __**Global Leaderboard**__\n{storage.scoreEntries[i].ToString(Context.Client, i+1)}");
+                    return;
                 }
             }
 
-            string[] splitLine = scoreLine[topScoreIndex].Split(' ');
-            var user = Context.Client.GetUser(userId);
-            await ReplyAsync(topScore == 0 ? "No scores registered!" : $"🏆 __**Global Leaderboard**__\n{topScoreIndex + 1}. ({splitLine[0]}) **{splitLine[1]}** in {splitLine[2]} turns by user " + (user == null ? "Unknown" : user.FullName()));
+            await ReplyAsync("No scores registered for this user!");
         }
 
 
@@ -289,7 +256,7 @@ namespace PacManBot.Modules.PacMan
 
         public async Task AddControls(IUserMessage message)
         {
-            foreach (string input in gameInput.Keys)
+            foreach (string input in GameInputs.Keys)
             {
                 try
                 {

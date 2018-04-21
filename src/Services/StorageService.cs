@@ -1,6 +1,8 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using Microsoft.Extensions.Configuration;
 using Discord;
 using Discord.WebSocket;
@@ -16,7 +18,8 @@ namespace PacManBot.Services
 
         public readonly string defaultPrefix;
         public Dictionary<ulong, string> prefixes;
-        public List<PacManGame> gameInstances;
+        public List<GameInstance> gameInstances;
+        public List<ScoreEntry> scoreEntries;
         public string wakaExclude = "";
 
 
@@ -26,8 +29,9 @@ namespace PacManBot.Services
             this.logger = logger;
 
             defaultPrefix = config["prefix"];
-            wakaExclude = File.Exists(BotFile.WakaExclude) ? File.ReadAllText(BotFile.WakaExclude) : "";
+            LoadWakaExclude();
             LoadPrefixes();
+            LoadScoreboard();
             LoadGames();
         }
 
@@ -48,6 +52,49 @@ namespace PacManBot.Services
         }
 
 
+        public void SetPrefix(ulong guildId, string prefix)
+        {
+            if (prefixes.ContainsKey(guildId))
+            {
+                string replace = "";
+
+                if (prefix == defaultPrefix)
+                {
+                    prefixes.Remove(guildId);
+                }
+                else
+                {
+                    prefixes[guildId] = prefix;
+                    replace = Regex.Escape($"{guildId} {prefix}");
+                }
+
+                File.WriteAllText(BotFile.Prefixes, Regex.Replace(File.ReadAllText(BotFile.Prefixes), $@"{guildId} .*", replace));
+            }
+            else if (prefix != defaultPrefix)
+            {
+                prefixes.Add(guildId, prefix);
+                File.AppendAllText(BotFile.Prefixes, $"\n{guildId} {prefix}");
+            }
+        }
+
+
+        public bool ToggleWaka(ulong guildId)
+        {
+            bool nowaka = wakaExclude.Contains($"{guildId}");
+            if (nowaka)
+            {
+                wakaExclude = wakaExclude.Replace($"{guildId} ", "");
+                File.WriteAllText(BotFile.WakaExclude, wakaExclude);
+            }
+            else
+            {
+                wakaExclude += $"{guildId} ";
+                File.AppendAllText(BotFile.WakaExclude, $"{guildId} ");
+            }
+
+            return nowaka;
+        }
+
 
         public void DeleteGame(int i)
         {
@@ -57,57 +104,124 @@ namespace PacManBot.Services
         }
 
 
+        public void AddScore(ScoreEntry entry)
+        {
+            string scoreString = $"{entry.state} {entry.score} {entry.turns} {entry.userId} \"{entry.username.Replace("\"", "")}\" \"{entry.date}\" \"{entry.channel.Replace("\"", "")}\"";
+            File.AppendAllText(BotFile.Scoreboard, $"\n{scoreString}");
+            scoreEntries.Add(entry);
+            logger.Log(LogSeverity.Verbose, $"New scoreboard entry: {scoreString}");
+        }
+
+
+        public void SortScores()
+        {
+            //scoreEntries.Sort((a, b) => b.score.CompareTo(a.score));
+            scoreEntries = scoreEntries.OrderByDescending(x => x.score).ToList();
+        }
+
+
+
+        private void LoadWakaExclude()
+        {
+            wakaExclude = File.Exists(BotFile.WakaExclude) ? File.ReadAllText(BotFile.WakaExclude) : "";
+        }
+
+
+        private void LoadScoreboard()
+        {
+            scoreEntries = new List<ScoreEntry>();
+            uint fail = 0;
+
+            string[] lines = File.ReadAllLines(BotFile.Scoreboard);
+            for (int i = 0; i < lines.Length; i++)
+            {
+                if (lines[i].StartsWith('#')) continue;
+
+                //Deconstruct line
+                var splice = new List<string>(lines[i].Split(' ', 5)); // state, score, turns, userId, (rest)
+                if (splice.Count == 5)
+                {
+                    splice.AddRange(splice[4].Split('"').Where(x => !string.IsNullOrWhiteSpace(x))); // username, date, guild
+                    splice.RemoveAt(4);
+                }
+
+                if (splice.Count == 7
+                    && Enum.TryParse(splice[0], out GameInstance.State state)
+                    && int.TryParse(splice[1], out int score)
+                    && int.TryParse(splice[2], out int turns)
+                    && ulong.TryParse(splice[3], out ulong userId))
+                {
+                    scoreEntries.Add(new ScoreEntry(state, score, turns, userId, splice[4], splice[5], splice[6]));
+                }
+                else
+                {
+                    logger.Log(LogSeverity.Error, $"Invalid entry in {BotFile.Scoreboard} at line {i}");
+                    fail++;
+                }
+            }
+
+            SortScores();
+            logger.Log(LogSeverity.Info, $"Loaded {scoreEntries.Count} scoreboard entries from {BotFile.Scoreboard}{$" with {fail} errors".If(fail > 0)}.");
+        }
+
 
         private void LoadPrefixes()
         {
-            prefixes = new Dictionary<ulong, string>(); 
+            prefixes = new Dictionary<ulong, string>();
+            uint fail = 0;
 
-            string[] line = File.ReadAllLines(BotFile.Prefixes);
-            for (int i = 0; i < line.Length; i++)
+            string[] lines = File.ReadAllLines(BotFile.Prefixes);
+            for (int i = 0; i < lines.Length; i++)
             {
-                string[] data = line[i].Split(' '); //Server ID and prefix
-                if (data.Length != 2) continue; //Skips invalid lines
-                if (!ulong.TryParse(data[0], out ulong ID)) continue; //Gets ID; Skips non-valid ID numbers
-                string prefix = data[1].Trim();
+                if (lines[i].StartsWith('#')) continue;
+                string[] data = lines[i].Split(' '); // Splits into guild ID and prefix
 
-                prefixes.Add(ID, prefix);
+                if (data.Length == 2 && ulong.TryParse(data[0], out ulong ID))
+                {
+                    string prefix = data[1];
+                    prefixes.Add(ID, prefix);
+                }
+                else
+                {
+                    logger.Log(LogSeverity.Error, $"Invalid entry in {BotFile.Prefixes} at line {i}");
+                    fail++;
+                }
             }
 
-            logger.Log(LogSeverity.Info, $"Loaded prefixes from {BotFile.Prefixes}");
+            logger.Log(LogSeverity.Info, $"Loaded {prefixes.Count} custom prefixes from {BotFile.Prefixes}{$" with {fail} errors".If(fail > 0)}.");
         }
 
 
         private void LoadGames()
         {
-            gameInstances = new List<PacManGame>();
-
-            if (Directory.Exists(PacManGame.Folder))
+            if (Directory.Exists(GameInstance.Folder))
             {
-                string[] files = Directory.GetFiles(PacManGame.Folder);
+                gameInstances = new List<GameInstance>();
+                uint fail = 0;
+
+                string[] files = Directory.GetFiles(GameInstance.Folder);
                 for (int i = 0; i < files.Length; i++)
                 {
                     try
                     {
-                        if (ulong.TryParse(files[i].Replace(PacManGame.Folder, "").Replace(PacManGame.Extension, ""), out ulong channelId))
-                        {
-                            PacManGame game = new PacManGame(channelId, 1, null, client, this, logger);
-                            game.LoadFromFile();
-                            gameInstances.Add(game);
-                        }
+                        ulong channelId = ulong.Parse(files[i].Replace(GameInstance.Folder, "").Replace(GameInstance.Extension, ""));
+                        GameInstance game = new GameInstance(channelId, 1, null, client, this, logger);
+                        game.LoadFromFile();
+                        gameInstances.Add(game);
                     }
                     catch (Exception e)
                     {
-                        logger.Log(LogSeverity.Error, $"{e}");
-                        continue;
+                        logger.Log(LogSeverity.Error, $"Couldn't load game {files[i]}: {e.Message}");
+                        fail++;
                     }
                 }
 
-                logger.Log(LogSeverity.Info, $"Loaded {gameInstances.Count} games from previous session.");
+                logger.Log(LogSeverity.Info, $"Loaded {gameInstances.Count} games from previous session{$" with {fail} errors".If(fail > 0)}.");
             }
             else
             {
-                Directory.CreateDirectory(PacManGame.Folder);
-                logger.Log(LogSeverity.Warning, $"Created missing directory \"{PacManGame.Folder}\"");
+                Directory.CreateDirectory(GameInstance.Folder);
+                logger.Log(LogSeverity.Warning, $"Created missing directory \"{GameInstance.Folder}\"");
             }
         }
     }

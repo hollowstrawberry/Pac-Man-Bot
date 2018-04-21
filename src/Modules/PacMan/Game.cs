@@ -6,6 +6,7 @@ using Discord.WebSocket;
 using PacManBot.Constants;
 using PacManBot.Services;
 using Discord;
+using System.Text.RegularExpressions;
 
 namespace PacManBot.Modules.PacMan
 {
@@ -17,11 +18,44 @@ namespace PacManBot.Modules.PacMan
     }
 
 
-    public class PacManGame
+    public class ScoreEntry
+    {
+        public ScoreEntry(GameInstance.State state, int score, int turns, ulong userId, string username=null, string date=null, string channel=null)
+        {
+            this.state = state;
+            this.score = score;
+            this.turns = turns;
+            this.userId = userId;
+            this.username = username;
+            this.date = date;
+            this.channel = channel;
+        }
+
+        public string ToString(DiscordSocketClient client, int position)
+        {
+            return $"{position}. ({state}) **{score}** in {turns} turns by user {GetUsername(client)}";
+        }
+
+        public string GetUsername(DiscordSocketClient client)
+        {
+            return (client.GetUser(userId)?.FullName() ?? username ?? "Unknown").SanitizeMarkdown().SanitizeMentions();
+        }
+
+        public GameInstance.State state;
+        public int score;
+        public int turns;
+        public ulong userId;
+        public string username;
+        public string date;
+        public string channel;
+    }
+
+
+    public class GameInstance
     {
         //Constants
 
-        static public readonly Dictionary<string, GameInput> gameInput = new Dictionary<string, GameInput>() //Reaction controls
+        static public readonly Dictionary<string, GameInput> GameInputs = new Dictionary<string, GameInput>() //Reaction controls
         {
             { Emojis.Info,  GameInput.Help  },
             { Emojis.Left,  GameInput.Left  },
@@ -173,7 +207,7 @@ namespace PacManBot.Modules.PacMan
                 pauseTime = GhostSpawnPauseTime[(int)type];
             }
 
-            public void AI(PacManGame game)
+            public void AI(GameInstance game)
             {
                 //Decide mode
                 if (game.player.power <= 1) DecideMode(game.time); //Doesn't change mode while the player is in power mode
@@ -286,7 +320,7 @@ namespace PacManBot.Modules.PacMan
 
         // Game methods
 
-        public PacManGame(ulong channelId, ulong ownerId, string customMap, DiscordSocketClient client, StorageService storage, LoggingService logger)
+        public GameInstance(ulong channelId, ulong ownerId, string customMap, DiscordSocketClient client, StorageService storage, LoggingService logger)
         {
             this.client = client;
             this.storage = storage;

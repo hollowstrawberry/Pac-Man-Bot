@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
-using static PacManBot.Modules.PacMan.PacManGame;
+using static PacManBot.Modules.PacMan.GameInstance;
 
 namespace PacManBot
 {
@@ -28,12 +28,31 @@ namespace PacManBot
             return text.Split(new string[] { separator }, StringSplitOptions.None);
         }
 
+        public static bool ContainsAny(this string text, params string[] matches)
+        {
+            foreach(string match in matches)
+            {
+                if (text.Contains(match)) return true;
+            }
+            return false;
+        }
+
         //Conditional strings to help with complex text concatenation
         public static string If(this string text, bool condition) => condition ? text : "";
         public static string Unless(this string text, bool condition) => condition ? "" : text;
 
 
         //Discord utilities
+
+        public static string SanitizeMentions(this string text)
+        {
+            return text.Replace("@", "@​"); // Zero-width space
+        }
+
+        public static string SanitizeMarkdown(this string text)
+        {
+            return Regex.Replace(text, @"([\\*_`~])", "\\$1");
+        }
 
         public static bool BotHas(this SocketCommandContext context, ChannelPermission permission)
         {
