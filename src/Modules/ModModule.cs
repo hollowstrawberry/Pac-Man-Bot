@@ -36,7 +36,14 @@ namespace PacManBot.Modules
             var messages = await Context.Channel.GetMessagesAsync(amount).FlattenAsync();
             foreach (IMessage message in messages)
             {
-                if (message.Author.Id == Context.Client.CurrentUser.Id) await message.DeleteAsync(); //Remove all messages from this bot
+                try
+                {
+                    if (message.Author.Id == Context.Client.CurrentUser.Id) await message.DeleteAsync(); //Remove all messages from this bot
+                }
+                catch (Discord.Net.HttpException e)
+                {
+                    await logger.Log(LogSeverity.Warning, $"At message {message.Id} in {Context.FullChannelName()}: {e.Message}");
+                }
             }
         }
 
@@ -82,7 +89,6 @@ namespace PacManBot.Modules
                 await logger.Log(LogSeverity.Error, $"{e}");
                 string prefix = storage.GetPrefixOrEmpty(Context.Guild);
                 await ReplyAsync($"{CustomEmojis.Cross} There was a problem storing the prefix on file. It might be reset the next time the bot restarts. Please try again or, if the problem persists, contact the bot author using **{prefix}feedback**.");
-                throw new Exception("Couldn't modify prefix on file");
             }
         }
 

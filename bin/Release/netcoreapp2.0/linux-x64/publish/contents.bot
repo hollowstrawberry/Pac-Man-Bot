@@ -85,6 +85,6 @@ To start a custom game, send **{prefix}play \`\`\`map\`\`\`** or **{prefix}play 
  `~`: Same as `_`, but with a pellet
 {customhelp}
 {customlinks}
-Original game map|https://github.com/Samrux/Pac-Man-Bot/blob/master/bin/map.bot
-Custom map examples|https://github.com/Samrux/Pac-Man-Bot/blob/master/bin/Example%20custom%20maps.txt
+Original game map|https://github.com/Samrux/Pac-Man-Bot/blob/master/bin/contents.bot
+Custom map examples|https://github.com/Samrux/Pac-Man-Bot/blob/master/Example%20custom%20maps.txt
 {customlinks}

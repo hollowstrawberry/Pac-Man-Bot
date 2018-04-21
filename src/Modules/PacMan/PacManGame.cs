@@ -685,7 +685,7 @@ namespace PacManBot.Modules.PacMan
 
         public void LoadFromFile()
         {
-            string fileText = File.ReadAllText(GameFile);
+            string fileText = File.ReadAllText(GameFile).Replace("\r", "");
 
             LoadMap(fileText.FindValue("map").Split('\n'));
 

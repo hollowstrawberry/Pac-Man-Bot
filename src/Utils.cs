@@ -111,7 +111,7 @@ namespace PacManBot
                 int endIndex = nextKeyIndex > -1 ? nextKeyIndex : text.IndexOf('\n', valIndex); // Stops at either a newline or the second instance of the key
                 if (endIndex < 0) endIndex = text.Length;
 
-                value = text.Substring(valIndex, endIndex - valIndex).Trim('\n', '\r');
+                value = text.Substring(valIndex, endIndex - valIndex).Trim('\n');
             }
 
             try

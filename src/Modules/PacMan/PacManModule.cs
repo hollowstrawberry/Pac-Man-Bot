@@ -63,8 +63,9 @@ namespace PacManBot.Modules.PacMan
             }
             catch (InvalidMapException e)
             {
-                await logger.Log(LogSeverity.Debug, "Game", $"{e}");
-                await ReplyAsync($"The provided map is invalid: {e.Message}.\n{"Use the **{prefix}custom** command for more info.".If(customMap != null)}");
+                if (customMap == null) await logger.Log(LogSeverity.Error, "Game", $"{e}");
+                else await logger.Log(LogSeverity.Debug, "Game", $"Failed to create custom game: {e.Message}");
+                await ReplyAsync($"The provided map is invalid: {e.Message}.{$"\nUse the **{prefix}custom** command for more info.".If(customMap != null)}");
                 return;
             }
             catch (Exception e)
@@ -144,10 +145,17 @@ namespace PacManBot.Modules.PacMan
                         storage.gameInstances.Remove(game);
                         await ReplyAsync("Game ended.");
 
-                        if (await Context.Channel.GetMessageAsync(game.messageId) is IUserMessage gameMessage)
+                        try
                         {
-                            if (Context.Guild != null) await gameMessage.DeleteAsync(); //So as to not leave spam in guild channels
-                            else await gameMessage.ModifyAsync(m => m.Content = game.GetDisplay() + "```diff\n-Game has been ended!```"); //Edit message
+                            if (await Context.Channel.GetMessageAsync(game.messageId) is IUserMessage gameMessage)
+                            {
+                                if (Context.Guild != null) await gameMessage.DeleteAsync(); //So as to not leave spam in guild channels
+                                else await gameMessage.ModifyAsync(m => m.Content = game.GetDisplay() + "```diff\n-Game has been ended!```"); //Edit message
+                            }
+                        }
+                        catch (Discord.Net.HttpException e)
+                        {
+                            await logger.Log(LogSeverity.Warning, $"Failed to grab game message from removed game in {Context.Channel.Id}: {e.Message}");
                         }
                     }
                     else await ReplyAsync("You can't end this game because you didn't start it!");
@@ -160,11 +168,11 @@ namespace PacManBot.Modules.PacMan
         }
 
 
-        [Command("leaderboard"), Alias("l"), Remarks("[start] [end] — *Global list of top scores. You can enter a range*")]
+        [Command("leaderboard"), Alias("l", "lb"), Remarks("[start] [end] — *Global list of top scores. You can enter a range*")]
         [Summary("This command will display a list of scores in the *Global Leaderboard* of all servers.\nIt goes from 1 to 10 by default, but you can specify an end and start point for any range of scores.")]
         public async Task SendTopScores(string amount = "10") => await SendTopScores("1", amount);
 
-        [Command("leaderboard"), Alias("l")]
+        [Command("leaderboard"), Alias("l", "lb")]
         public async Task SendTopScores(string smin, string smax)
         {
             if (!int.TryParse(smin, out int min) | !int.TryParse(smax, out int max))
@@ -223,11 +231,11 @@ namespace PacManBot.Modules.PacMan
         }
 
 
-        [Command("score"), Alias("s"), Remarks("[user] — *See your own or another user's place on the leaderboard*")]
+        [Command("score"), Alias("s", "sc"), Remarks("[user] — *See your own or another user's place on the leaderboard*")]
         [Summary("See your own highest score in the *Global Leaderboard* of all servers. You can specify a user in your guild using their name, mention or ID to see their score instead.")]
         public async Task SendPersonalBest(SocketGuildUser guildUser = null) => await SendPersonalBest((guildUser ?? Context.User).Id);
 
-        [Command("score"), Alias("s")]
+        [Command("score"), Alias("s", "sc")]
         public async Task SendPersonalBest(ulong userId)
         {
             string[] scoreLine = File.ReadAllLines(BotFile.Scoreboard).Skip(1).ToArray(); //Skips the first line
@@ -283,7 +291,14 @@ namespace PacManBot.Modules.PacMan
         {
             foreach (string input in gameInput.Keys)
             {
-                await message.AddReactionAsync(input.ToEmoji());
+                try
+                {
+                    await message.AddReactionAsync(input.ToEmoji());
+                }
+                catch (Discord.Net.RateLimitedException e)
+                {
+                    await logger.Log(LogSeverity.Warning, $"At message {message.Id} in {Context.FullChannelName()}: {e.Message}");
+                }
             }
         }
     }
