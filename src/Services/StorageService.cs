@@ -56,7 +56,7 @@ namespace PacManBot.Services
         {
             if (prefixes.ContainsKey(guildId))
             {
-                string replace = "";
+                string replace = "\n";
 
                 if (prefix == defaultPrefix)
                 {
@@ -65,15 +65,15 @@ namespace PacManBot.Services
                 else
                 {
                     prefixes[guildId] = prefix;
-                    replace = $"{guildId} {Regex.Escape(prefix)}";
+                    replace = $"{guildId} {Regex.Escape(prefix)}\n";
                 }
 
-                File.WriteAllText(BotFile.Prefixes, Regex.Replace(File.ReadAllText(BotFile.Prefixes), $@"{guildId}.*", replace));
+                File.WriteAllText(BotFile.Prefixes, Regex.Replace(File.ReadAllText(BotFile.Prefixes), $@"{guildId}.*\n", replace));
             }
             else if (prefix != defaultPrefix)
             {
                 prefixes.Add(guildId, prefix);
-                File.AppendAllText(BotFile.Prefixes, $"\n{guildId} {prefix}");
+                File.AppendAllText(BotFile.Prefixes, $"{guildId} {prefix}\n");
             }
         }
 
@@ -173,7 +173,7 @@ namespace PacManBot.Services
             string[] lines = File.ReadAllLines(BotFile.Prefixes);
             for (int i = 0; i < lines.Length; i++)
             {
-                if (lines[i].StartsWith('#')) continue;
+                if (lines[i].StartsWith('#') || string.IsNullOrWhiteSpace(lines[i])) continue;
                 string[] data = lines[i].Split(' '); // Splits into guild ID and prefix
 
                 if (data.Length == 2 && ulong.TryParse(data[0], out ulong ID))
