@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.Configuration;
 using Discord;
@@ -34,6 +35,8 @@ namespace PacManBot.Services
             LoadScoreboard();
             LoadGames();
         }
+
+
 
 
         public string GetPrefix(ulong serverId)
@@ -98,70 +101,41 @@ namespace PacManBot.Services
 
         public void DeleteGame(int i)
         {
-            logger.Log(LogSeverity.Info, $"Removing game at {gameInstances[i].channelId}");
-            if (File.Exists(gameInstances[i].GameFile)) File.Delete(gameInstances[i].GameFile);
-            gameInstances.RemoveAt(i);
+            if (i < gameInstances.Count())
+            {
+                logger.Log(LogSeverity.Verbose, LogSource.Storage, $"Removing game at {gameInstances[i].channelId}");
+                if (File.Exists(gameInstances[i].GameFile)) File.Delete(gameInstances[i].GameFile);
+                gameInstances.RemoveAt(i);
+            }
+            else
+            {
+                logger.Log(LogSeverity.Error, LogSource.Storage, $"Trying to delete game at index {i}: Not found.");
+            }
+        }
+        public void DeleteGame(GameInstance game)
+        {
+            if (gameInstances.Contains(game)) DeleteGame(gameInstances.IndexOf(game));
+            else logger.Log(LogSeverity.Error, LogSource.Storage, $"Trying to delete game: Not found.");
         }
 
 
         public void AddScore(ScoreEntry entry)
         {
-            string scoreString = $"{entry.state} {entry.score} {entry.turns} {entry.userId} \"{entry.username.Replace("\"", "")}\" \"{entry.date}\" \"{entry.channel.Replace("\"", "")}\"";
+            string scoreString = entry.ToString();
+            logger.Log(LogSeverity.Verbose, LogSource.Storage, $"New scoreboard entry: {scoreString}");
             File.AppendAllText(BotFile.Scoreboard, $"\n{scoreString}");
-            scoreEntries.Add(entry);
-            logger.Log(LogSeverity.Verbose, $"New scoreboard entry: {scoreString}");
+
+            int index = scoreEntries.BinarySearch(entry, ScoreEntry.Comparer);
+            if (index < 0) index = ~index;
+            scoreEntries.Insert(index, entry);
         }
 
-
-        public void SortScores()
-        {
-            //scoreEntries.Sort((a, b) => b.score.CompareTo(a.score));
-            scoreEntries = scoreEntries.OrderByDescending(x => x.score).ToList();
-        }
 
 
 
         private void LoadWakaExclude()
         {
             wakaExclude = File.Exists(BotFile.WakaExclude) ? File.ReadAllText(BotFile.WakaExclude) : "";
-        }
-
-
-        private void LoadScoreboard()
-        {
-            scoreEntries = new List<ScoreEntry>();
-            uint fail = 0;
-
-            string[] lines = File.ReadAllLines(BotFile.Scoreboard);
-            for (int i = 0; i < lines.Length; i++)
-            {
-                if (lines[i].StartsWith('#')) continue;
-
-                //Deconstruct line
-                var splice = new List<string>(lines[i].Split(' ', 5)); // state, score, turns, userId, (rest)
-                if (splice.Count == 5)
-                {
-                    splice.AddRange(splice[4].Split('"').Where(x => !string.IsNullOrWhiteSpace(x))); // username, date, guild
-                    splice.RemoveAt(4);
-                }
-
-                if (splice.Count == 7
-                    && Enum.TryParse(splice[0], out GameInstance.State state)
-                    && int.TryParse(splice[1], out int score)
-                    && int.TryParse(splice[2], out int turns)
-                    && ulong.TryParse(splice[3], out ulong userId))
-                {
-                    scoreEntries.Add(new ScoreEntry(state, score, turns, userId, splice[4], splice[5], splice[6]));
-                }
-                else
-                {
-                    logger.Log(LogSeverity.Error, $"Invalid entry in {BotFile.Scoreboard} at line {i}");
-                    fail++;
-                }
-            }
-
-            SortScores();
-            logger.Log(LogSeverity.Info, $"Loaded {scoreEntries.Count} scoreboard entries from {BotFile.Scoreboard}{$" with {fail} errors".If(fail > 0)}.");
         }
 
 
@@ -183,12 +157,38 @@ namespace PacManBot.Services
                 }
                 else
                 {
-                    logger.Log(LogSeverity.Error, $"Invalid entry in {BotFile.Prefixes} at line {i}");
+                    logger.Log(LogSeverity.Error, LogSource.Storage, $"Invalid entry in {BotFile.Prefixes} at line {i}");
                     fail++;
                 }
             }
 
-            logger.Log(LogSeverity.Info, $"Loaded {prefixes.Count} custom prefixes from {BotFile.Prefixes}{$" with {fail} errors".If(fail > 0)}.");
+            logger.Log(LogSeverity.Info, LogSource.Storage, $"Loaded {prefixes.Count} custom prefixes from {BotFile.Prefixes}{$" with {fail} errors".If(fail > 0)}.");
+        }
+
+
+        private void LoadScoreboard()
+        {
+            scoreEntries = new List<ScoreEntry>();
+            uint fail = 0;
+
+            string[] lines = File.ReadAllLines(BotFile.Scoreboard);
+            for (int i = 0; i < lines.Length; i++)
+            {
+                if (lines[i].StartsWith('#')) continue;
+
+                if (ScoreEntry.TryParse(lines[i], out ScoreEntry newEntry))
+                {
+                    scoreEntries.Add(newEntry);
+                }
+                else
+                {
+                    logger.Log(LogSeverity.Error, LogSource.Storage, $"Invalid entry in {BotFile.Scoreboard} at line {i}");
+                    fail++;
+                }
+            }
+
+            scoreEntries.Sort(ScoreEntry.Comparer); // The list will stay sorted as new elements will be added in sorted position
+            logger.Log(LogSeverity.Info, LogSource.Storage, $"Loaded {scoreEntries.Count} scoreboard entries from {BotFile.Scoreboard}{$" with {fail} errors".If(fail > 0)}.");
         }
 
 
@@ -207,11 +207,12 @@ namespace PacManBot.Services
                         ulong channelId = ulong.Parse(files[i].Replace(GameInstance.Folder, "").Replace(GameInstance.Extension, ""));
                         GameInstance game = new GameInstance(channelId, 1, null, client, this, logger);
                         game.LoadFromFile();
+
                         gameInstances.Add(game);
                     }
                     catch (Exception e)
                     {
-                        logger.Log(LogSeverity.Error, $"Couldn't load game {files[i]}: {e.Message}");
+                        logger.Log(LogSeverity.Error, LogSource.Storage, $"Couldn't load game {files[i]}: {e.Message}");
                         fail++;
                     }
                 }
@@ -221,7 +222,7 @@ namespace PacManBot.Services
             else
             {
                 Directory.CreateDirectory(GameInstance.Folder);
-                logger.Log(LogSeverity.Warning, $"Created missing directory \"{GameInstance.Folder}\"");
+                logger.Log(LogSeverity.Warning, LogSource.Storage, $"Created missing directory \"{GameInstance.Folder}\"");
             }
         }
     }

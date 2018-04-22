@@ -1,4 +1,4 @@
-﻿namespace PacManBot.Constants
+namespace PacManBot.Constants
 {
     public static class BotFile
     {
@@ -10,6 +10,15 @@
             WakaExclude = "wakaexclude.bot",
             FeedbackLog = "logs/feedback.txt",
             CustomMapLog = "logs/custom.txt";
+    }
+
+
+    public static class LogSource
+    {
+        public const string
+            Bot = "Bot",
+            Game = "Game",
+            Storage = "Storage";
     }
 
 

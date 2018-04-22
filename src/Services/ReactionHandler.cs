@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
@@ -62,7 +61,6 @@ namespace PacManBot.Services
                 if (context.Message.Id == game.messageId && game.state == GameInstance.State.Active) //Finds the game corresponding to this channel
                 {
                     string emote = reaction.Emote.ToString();
-                    string channelName = context.FullChannelName();
                     var user = reaction.User.Value as SocketUser;
                     var message = context.Message;
 
@@ -70,16 +68,17 @@ namespace PacManBot.Services
                     {
                         if (GameInstance.GameInputs.ContainsKey(emote)) //Valid reaction input
                         {
-                            await logger.Log(LogSeverity.Verbose, "Game", $"Input \"{GameInstance.GameInputs[emote]}\" by user {user.FullName()} in channel {channelName}");
+                            string strInput = GameInstance.GameInputs[emote].ToString();
+                            await logger.Log(LogSeverity.Verbose, LogSource.Game, $"Input {strInput}{new string(' ', 5 - strInput.Length)} by user {user.FullName()} in channel {context.FullChannelName()}");
                             game.DoTick(GameInstance.GameInputs[emote]);
 
                             if (game.state != GameInstance.State.Active)
                             {
-                                storage.gameInstances.Remove(game);
                                 if (game.score > 0 && !game.custom)
                                 {
-                                    storage.AddScore(new ScoreEntry(game.state, game.score, game.time, user.Id, user.FullName(), DateTime.Now.ToString("o"), channelName));
+                                    storage.AddScore(new ScoreEntry(game.state, game.score, game.time, user.Id, user.FullName(), DateTime.Now, (context.Guild != null ? $"{context.Guild.Name}/" : "") + context.Channel.Name));
                                 }
+                                storage.DeleteGame(game);
                             }
 
                             await message.ModifyAsync(m => m.Content = game.GetDisplay()); //Update display

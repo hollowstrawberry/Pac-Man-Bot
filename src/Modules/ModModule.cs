@@ -1,10 +1,10 @@
 using System;
-using System.IO;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using PacManBot.Services;
 using PacManBot.Constants;
+
 
 namespace PacManBot.Modules
 {
@@ -45,7 +45,7 @@ namespace PacManBot.Modules
                 }
                 catch (Discord.Net.HttpException e)
                 {
-                    await logger.Log(LogSeverity.Warning, $"Couldn't delete message {message.Id} in {Context.FullChannelName()} ({Context.Channel.Id}): {e.Message}");
+                    await logger.Log(LogSeverity.Warning, $"Couldn't delete message {message.Id} in {Context.FullChannelName()}: {e.Message}");
                 }
             }
         }

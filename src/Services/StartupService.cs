@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -7,6 +7,7 @@ using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.Extensions.Configuration;
 using PacManBot.Constants;
+
 
 namespace PacManBot.Services
 {

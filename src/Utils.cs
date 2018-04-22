@@ -9,14 +9,15 @@ namespace PacManBot
 {
     public static class Utils
     {
-        //General utilities
+        // General utilities
 
         //2-dimensional array length
         public static int LengthX<T>(this T[,] array) => array.GetLength(0);
         public static int LengthY<T>(this T[,] array) => array.GetLength(1);
 
 
-        //Strings
+
+        // Strings
 
         public static string Truncate(this string text, int maxLength)
         {
@@ -42,7 +43,8 @@ namespace PacManBot
         public static string Unless(this string text, bool condition) => condition ? "" : text;
 
 
-        //Discord utilities
+
+        // Discord utilities
 
         public static string SanitizeMentions(this string text)
         {
@@ -54,6 +56,7 @@ namespace PacManBot
             return Regex.Replace(text, @"([\\*_`~])", "\\$1");
         }
 
+
         public static bool BotHas(this SocketCommandContext context, ChannelPermission permission)
         {
             return context.Guild != null && context.Guild.CurrentUser.GetPermissions(context.Channel as IGuildChannel).Has(permission);
@@ -64,15 +67,17 @@ namespace PacManBot
             return context.Guild != null && context.Guild.GetUser(context.User.Id).GetPermissions(context.Channel as IGuildChannel).Has(permission);
         }
 
+
         public static string FullChannelName(this SocketCommandContext context)
         {
-            return (context.Guild != null ? $"{context.Guild.Name}/" : "") + context.Channel.Name;
+            return $"{(context.Guild != null ? $"{context.Guild.Name}/" : "")}{context.Channel.Name} ({context.Channel.Id})";
         }
 
         public static string FullName(this SocketUser user)
         {
             return $"{user.Username}#{user.Discriminator}";
         }
+
 
         public static Emote ToEmote(this string text)
         {
@@ -86,7 +91,8 @@ namespace PacManBot
         }
 
 
-        //Game utilities
+
+        // Game utilities
 
         public static Dir Opposite(this Dir dir)
         {
@@ -109,7 +115,8 @@ namespace PacManBot
         }
 
 
-        //Bot utility
+
+        // Bot utility
 
         public static string FindValue(this string text, string key)
         {

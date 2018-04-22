@@ -8,7 +8,7 @@ using Discord.WebSocket;
 using PacManBot.Services;
 using PacManBot.Constants;
 using static PacManBot.Modules.PacMan.GameInstance;
-using System.Text;
+
 
 namespace PacManBot.Modules.PacMan
 {
@@ -18,14 +18,14 @@ namespace PacManBot.Modules.PacMan
         private readonly LoggingService logger;
         private readonly StorageService storage;
 
+        private const int MaxDisplayedScores = 20;
+        private string ManualModeMessage => "__Manual mode:__ Both adding and removing reactions count as input. Do one action at a time to prevent buggy behavior." + "\nGive this bot the permission to Manage Messages to remove reactions automatically.".If(Context.Guild != null);
+
         public PacManModule(LoggingService logger, StorageService storage)
         {
             this.logger = logger;
             this.storage = storage;
         }
-
-
-        private string ManualModeMessage => "__Manual mode:__ Both adding and removing reactions count as input. Do one action at a time to prevent buggy behavior." + "\nGive this bot the permission to Manage Messages to remove reactions automatically.".If(Context.Guild != null);
 
 
         [Command("play"), Alias("p"), Remarks("[mobile/m] [\\`\\`\\`custom map\\`\\`\\`] — *Start a new game on this channel*")]
@@ -64,14 +64,14 @@ namespace PacManBot.Modules.PacMan
             }
             catch (InvalidMapException e)
             {
-                if (customMap == null) await logger.Log(LogSeverity.Error, "Game", $"{e}");
-                else await logger.Log(LogSeverity.Debug, "Game", $"Failed to create custom game: {e.Message}");
+                if (customMap == null) await logger.Log(LogSeverity.Error, LogSource.Game, $"{e}");
+                else await logger.Log(LogSeverity.Debug, LogSource.Game, $"Failed to create custom game: {e.Message}");
                 await ReplyAsync($"The provided map is invalid: {e.Message}.{$"\nUse the **{prefix}custom** command for more info.".If(customMap != null)}");
                 return;
             }
             catch (Exception e)
             {
-                await logger.Log(LogSeverity.Error, "Game", $"{e}");
+                await logger.Log(LogSeverity.Error, LogSource.Game, $"{e}");
                 await ReplyAsync($"There was an error starting the game. Please try again or contact the author of the bot using **{prefix}feedback**");
                 return;
             }
@@ -192,24 +192,23 @@ namespace PacManBot.Modules.PacMan
                 await ReplyAsync("There are no registered scores! Go make one");
                 return;
             }
+
             if (min > scoresAmount)
             {
                 await ReplyAsync("No scores found within the specified range.");
                 return;
             }
 
-            storage.SortScores();
-
             var embed = new EmbedBuilder()
             {
                 Title = $"🏆 __**Global Leaderboard**__ 🏆",
-                Description = max >= scoresAmount ? "*No more scores could be found*" : max - min > 19 ? "*Only 20 scores may be displayed at once*" : "",
+                Description = max - min >= MaxDisplayedScores ? $"*Only {MaxDisplayedScores} scores may be displayed at once*" : max >= scoresAmount ? "*No more scores could be found*" : "",
                 Color = new Color(241, 195, 15)
             };
 
             string results = "", users = "";
 
-            for (int i = min; i < scoresAmount && i <= max && i < min + 20; i++) //Caps at 20
+            for (int i = min; i < scoresAmount && i <= max && i < min + MaxDisplayedScores; i++) //Caps at 20
             {
                 ScoreEntry entry = storage.scoreEntries[i - 1];
 
@@ -218,7 +217,7 @@ namespace PacManBot.Modules.PacMan
                               + $"({entry.state}) {" ".If(entry.state == State.Win)}"
                               + $"{" ".If(entry.score.ToString().Length < storage.scoreEntries[min - 1].score.ToString().Length)}{entry.score} points "
                               + $"in {entry.turns} turns";
-                result += new string(' ', 40 - result.Length) + "-`\n";
+                result += new string(' ', Math.Max(39 - result.Length, 0)) + "-`\n";
 
                 results += result;
                 users += $"`{entry.GetUsername(Context.Client)}`\n";
@@ -237,8 +236,6 @@ namespace PacManBot.Modules.PacMan
         [Command("score"), Alias("s", "sc")]
         public async Task SendPersonalBest(ulong userId)
         {
-            storage.SortScores();
-
             for (int i = 0; i < storage.scoreEntries.Count; i++)
             {
                 if (storage.scoreEntries[i].userId == userId)
@@ -246,7 +243,7 @@ namespace PacManBot.Modules.PacMan
                     var embed = new EmbedBuilder()
                     {
                         Title = $"🏆 __**Global Leaderboard**__ 🏆",
-                        Description = storage.scoreEntries[i].ToStringSimple(Context.Client, i + 1),
+                        Description = storage.scoreEntries[i].ToStringSimpleScoreboard(Context.Client, i + 1),
                         Color = new Color(241, 195, 15)
                     };
                     await ReplyAsync("", false, embed.Build());

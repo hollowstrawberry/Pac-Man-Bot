@@ -1,9 +1,11 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using PacManBot.Constants;
+
 
 namespace PacManBot.Services
 {
@@ -38,7 +40,7 @@ namespace PacManBot.Services
             if (message.Severity.ToString() == "Verbose" && message.Source == "Rest") return Task.CompletedTask;
             else return Console.Out.WriteLineAsync(logText); //Write the log text to the console
         }
-        public Task Log(LogSeverity severity, string message) => Log(new LogMessage(severity, "Bot", message));
+        public Task Log(LogSeverity severity, string message) => Log(new LogMessage(severity, LogSource.Bot, message));
         public Task Log(LogSeverity severity, string source, string message) => Log(new LogMessage(severity, source, message));
     }
 }

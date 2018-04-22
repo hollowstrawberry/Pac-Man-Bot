@@ -1,13 +1,11 @@
 using System;
-using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Rest;
-using Discord.WebSocket;
 using Discord.Commands;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
+
 
 namespace PacManBot.Services
 {
@@ -27,7 +25,7 @@ namespace PacManBot.Services
                 .WithImports(
                     "System", "System.IO", "System.Threading.Tasks", "System.Collections.Generic", "System.Linq", "System.Text.RegularExpressions",
                     "Discord", "Discord.WebSocket", "Discord.Commands",
-                    "PacManBot", "PacManBot.Services", "PacManBot.Constants", "PacManBot.Modules", "PacManBot.Modules.PacMan"
+                    "PacManBot", "PacManBot.Services", "PacManBot.Constants", "PacManBot.Utils", "PacManBot.Modules", "PacManBot.Modules.PacMan"
                 )
                 .WithReferences(
                     typeof(SocketCommandContext).Assembly,

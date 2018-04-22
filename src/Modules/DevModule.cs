@@ -4,9 +4,9 @@ using Discord;
 using Discord.Commands;
 using PacManBot.Services;
 using PacManBot.Constants;
-using PacManBot.Modules.PacMan;
 using System.IO;
 using System.Linq;
+
 
 namespace PacManBot.Modules
 {

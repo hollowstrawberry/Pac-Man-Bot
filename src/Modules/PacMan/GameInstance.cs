@@ -6,7 +6,7 @@ using Discord.WebSocket;
 using PacManBot.Constants;
 using PacManBot.Services;
 using Discord;
-using System.Text.RegularExpressions;
+
 
 namespace PacManBot.Modules.PacMan
 {
@@ -15,39 +15,6 @@ namespace PacManBot.Modules.PacMan
         public InvalidMapException() { }
         public InvalidMapException(string message) : base(message) { }
         public InvalidMapException(string message, Exception inner) : base(message, inner) { }
-    }
-
-
-    public class ScoreEntry
-    {
-        public ScoreEntry(GameInstance.State state, int score, int turns, ulong userId, string username=null, string date=null, string channel=null)
-        {
-            this.state = state;
-            this.score = score;
-            this.turns = turns;
-            this.userId = userId;
-            this.username = username;
-            this.date = date;
-            this.channel = channel;
-        }
-
-        public string ToStringSimple(DiscordSocketClient client, int position)
-        {
-            return $"{position}. ({state}) {score} points in {turns} turns by user {GetUsername(client).SanitizeMarkdown().SanitizeMentions()}";
-        }
-
-        public string GetUsername(DiscordSocketClient client)
-        {
-            return client.GetUser(userId)?.FullName() ?? username ?? "Unknown";
-        }
-
-        public GameInstance.State state;
-        public int score;
-        public int turns;
-        public ulong userId;
-        public string username;
-        public string date;
-        public string channel;
     }
 
 
@@ -456,7 +423,6 @@ namespace PacManBot.Modules.PacMan
             if (player.power == 0) player.ghostStreak = 0;
 
             if (state == State.Active) SaveToFile(); //Backup more than anything, takes very little time
-            else if (File.Exists(GameFile)) File.Delete(GameFile);
         }
 
 
@@ -573,7 +539,7 @@ namespace PacManBot.Modules.PacMan
             }
             catch (Exception e)
             {
-                logger.Log(LogSeverity.Debug, "Game", $"{e}");
+                logger.Log(LogSeverity.Debug, LogSource.Game, $"{e}");
                 return $"```There was an error displaying the game. {"Make sure your custom map is valid. ".If(custom)}If this problem persists, please contact the author of the bot using the {storage.GetPrefixOrEmpty(Guild)}feedback command.```";
             }
         }
@@ -733,11 +699,13 @@ namespace PacManBot.Modules.PacMan
             fruitTimer = fileText.FindValue<int>("fruittime");
             fruitSpawnPos = new Pos(fileText.FindValue<int>("fruitx"), fileText.FindValue<int>("fruity"));
 
-            player = new Player(new Pos(fileText.FindValue<int>("playeroriginx"), fileText.FindValue<int>("playeroriginy")));
-            player.pos = new Pos(fileText.FindValue<int>("playerposx"), fileText.FindValue<int>("playerposy"));
-            player.dir = (Dir)fileText.FindValue<int>("playerdir");
-            player.power = fileText.FindValue<int>("playerpower");
-            player.ghostStreak = fileText.FindValue<int>("playerghoststreak");
+            player = new Player(new Pos(fileText.FindValue<int>("playeroriginx"), fileText.FindValue<int>("playeroriginy")))
+            {
+                pos = new Pos(fileText.FindValue<int>("playerposx"), fileText.FindValue<int>("playerposy")),
+                dir = (Dir)fileText.FindValue<int>("playerdir"),
+                power = fileText.FindValue<int>("playerpower"),
+                ghostStreak = fileText.FindValue<int>("playerghoststreak")
+            };
 
             ghosts.Clear();
             for (int i = 0; i < 4; i++)
@@ -749,11 +717,12 @@ namespace PacManBot.Modules.PacMan
                         new Pos(fileText.FindValue<int>($"ghost{i}originx"), fileText.FindValue<int>($"ghost{i}originy")),
                         (AiType)i,
                         new Pos(fileText.FindValue<int>($"ghost{i}cornerx"), fileText.FindValue<int>($"ghost{i}cornery"))
-                    );
-                    ghost.pos = new Pos(fileText.FindValue<int>($"ghost{i}posx"), fileText.FindValue<int>($"ghost{i}posy"));
-                    ghost.dir = (Dir)fileText.FindValue<int>($"ghost{i}dir");
-                    ghost.mode = (AiMode)fileText.FindValue<int>($"ghost{i}mode");
-                    ghost.pauseTime = fileText.FindValue<int>($"ghost{i}pause");
+                    ){
+                        pos = new Pos(fileText.FindValue<int>($"ghost{i}posx"), fileText.FindValue<int>($"ghost{i}posy")),
+                        dir = (Dir)fileText.FindValue<int>($"ghost{i}dir"),
+                        mode = (AiMode)fileText.FindValue<int>($"ghost{i}mode"),
+                        pauseTime = fileText.FindValue<int>($"ghost{i}pause")
+                    };
 
                     ghosts.Add(ghost);
                 }
