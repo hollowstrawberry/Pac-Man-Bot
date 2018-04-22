@@ -31,14 +31,14 @@ namespace PacManBot.Modules.PacMan
             this.channel = channel;
         }
 
-        public string ToString(DiscordSocketClient client, int position)
+        public string ToStringSimple(DiscordSocketClient client, int position)
         {
-            return $"{position}. ({state}) {score} points in {turns} turns by user {GetUsername(client)}";
+            return $"{position}. ({state}) {score} points in {turns} turns by user {GetUsername(client).SanitizeMarkdown().SanitizeMentions()}";
         }
 
         public string GetUsername(DiscordSocketClient client)
         {
-            return (client.GetUser(userId)?.FullName() ?? username ?? "Unknown").SanitizeMarkdown().SanitizeMentions();
+            return client.GetUser(userId)?.FullName() ?? username ?? "Unknown";
         }
 
         public GameInstance.State state;

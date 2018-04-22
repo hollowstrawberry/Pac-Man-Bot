@@ -246,7 +246,7 @@ namespace PacManBot.Modules.PacMan
                     var embed = new EmbedBuilder()
                     {
                         Title = $"🏆 __**Global Leaderboard**__ 🏆",
-                        Description = storage.scoreEntries[i].ToString(Context.Client, i + 1),
+                        Description = storage.scoreEntries[i].ToStringSimple(Context.Client, i + 1),
                         Color = new Color(241, 195, 15)
                     };
                     await ReplyAsync("", false, embed.Build());

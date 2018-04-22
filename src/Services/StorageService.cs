@@ -56,7 +56,7 @@ namespace PacManBot.Services
         {
             if (prefixes.ContainsKey(guildId))
             {
-                string replace = "\n";
+                string replace = "";
 
                 if (prefix == defaultPrefix)
                 {
