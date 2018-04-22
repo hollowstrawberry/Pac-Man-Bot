@@ -44,7 +44,7 @@ namespace PacManBot.Modules
                 Color = new Color(241, 195, 15)
             };
             embed.AddField("Server count", $"{Context.Client.Guilds.Count}", true);
-            embed.AddField("Active games", $"{storage.gameInstances.Count}", true);
+            embed.AddField("Active games", $"{storage.GameInstances.Count}", true);
             embed.AddField("Latency", $"{Context.Client.Latency}ms", true);
 
             for (int i = 0; i < fields.Length; i++)
@@ -150,7 +150,7 @@ namespace PacManBot.Modules
             var message = await ReplyAsync($"{CustomEmojis.Loading} Waka");
             stopwatch.Stop();
 
-            await message.ModifyAsync(m => m.Content = $"{CustomEmojis.PacMan} Waka in {(int)stopwatch.Elapsed.TotalMilliseconds}ms | {Context.Client.Guilds.Count} guilds | {storage.gameInstances.Count} active games\n");
+            await message.ModifyAsync(m => m.Content = $"{CustomEmojis.PacMan} Waka in {(int)stopwatch.Elapsed.TotalMilliseconds}ms | {Context.Client.Guilds.Count} guilds | {storage.GameInstances.Count} active games\n");
         }
 
 
@@ -166,7 +166,7 @@ namespace PacManBot.Modules
             else
             {
                 string prefix = storage.GetPrefix(Context.Guild.Id);
-                reply = $"Prefix for this server is set to '{prefix}'{" (the default)".If(prefix == storage.defaultPrefix)}. It can be changed with the command **setprefix**.";
+                reply = $"Prefix for this server is set to '{prefix}'{" (the default)".If(prefix == storage.DefaultPrefix)}. It can be changed with the command **setprefix**.";
             }
             await ReplyAsync(reply);
         }

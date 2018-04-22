@@ -37,7 +37,7 @@ namespace PacManBot.Modules.PacMan
 
             string prefix = storage.GetPrefixOrEmpty(Context.Guild);
 
-            foreach (GameInstance game in storage.gameInstances)
+            foreach (GameInstance game in storage.GameInstances)
             {
                 if (Context.Channel.Id == game.channelId) //Finds a game instance corresponding to this channel
                 {
@@ -76,7 +76,7 @@ namespace PacManBot.Modules.PacMan
                 return;
             }
 
-            storage.gameInstances.Add(newGame);
+            storage.GameInstances.Add(newGame);
  
             if (mobile) newGame.mobileDisplay = true;
             var gameMessage = await ReplyAsync(preMessage + newGame.GetDisplay() + "```diff\n+Starting game```"); //Output the game
@@ -101,7 +101,7 @@ namespace PacManBot.Modules.PacMan
         [RequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.AddReactions)]
         public async Task RefreshGameInstance(string arg = "")
         {
-            foreach (GameInstance game in storage.gameInstances)
+            foreach (GameInstance game in storage.GameInstances)
             {
                 if (Context.Channel.Id == game.channelId) //Finds a game instance corresponding to this channel
                 {
@@ -136,14 +136,14 @@ namespace PacManBot.Modules.PacMan
         [Summary("Ends the current game on this channel, but only if the person using the command started the game or if they have the Manage Messages permission.")]
         public async Task EndGameInstance()
         {
-            foreach (GameInstance game in storage.gameInstances)
+            foreach (GameInstance game in storage.GameInstances)
             {
                 if (Context.Channel.Id == game.channelId)
                 {
                     if (game.ownerId == Context.User.Id || Context.Guild != null && Context.UserHas(ChannelPermission.ManageMessages))
                     {
                         if (File.Exists(game.GameFile)) File.Delete(game.GameFile);
-                        storage.gameInstances.Remove(game);
+                        storage.GameInstances.Remove(game);
                         await ReplyAsync("Game ended.");
 
                         try
@@ -185,7 +185,7 @@ namespace PacManBot.Modules.PacMan
             if (min < 1) min = 1;
             if (max < min) max = min + 9;
 
-            int scoresAmount = storage.scoreEntries.Count;
+            int scoresAmount = storage.ScoreEntries.Count;
 
             if (scoresAmount < 1)
             {
@@ -210,12 +210,12 @@ namespace PacManBot.Modules.PacMan
 
             for (int i = min; i < scoresAmount && i <= max && i < min + MaxDisplayedScores; i++) //Caps at 20
             {
-                ScoreEntry entry = storage.scoreEntries[i - 1];
+                ScoreEntry entry = storage.ScoreEntries[i - 1];
 
                 // Fancy formatting
                 string result = $"`{i}. {" ".If(i.ToString().Length < max.ToString().Length)}"
                               + $"({entry.state}) {" ".If(entry.state == State.Win)}"
-                              + $"{" ".If(entry.score.ToString().Length < storage.scoreEntries[min - 1].score.ToString().Length)}{entry.score} points "
+                              + $"{" ".If(entry.score.ToString().Length < storage.ScoreEntries[min - 1].score.ToString().Length)}{entry.score} points "
                               + $"in {entry.turns} turns";
                 result += new string(' ', Math.Max(39 - result.Length, 0)) + "-`\n";
 
@@ -236,14 +236,14 @@ namespace PacManBot.Modules.PacMan
         [Command("score"), Alias("s", "sc")]
         public async Task SendPersonalBest(ulong userId)
         {
-            for (int i = 0; i < storage.scoreEntries.Count; i++)
+            for (int i = 0; i < storage.ScoreEntries.Count; i++)
             {
-                if (storage.scoreEntries[i].userId == userId)
+                if (storage.ScoreEntries[i].userId == userId)
                 {
                     var embed = new EmbedBuilder()
                     {
                         Title = $"🏆 __**Global Leaderboard**__ 🏆",
-                        Description = storage.scoreEntries[i].ToStringSimpleScoreboard(Context.Client, i + 1),
+                        Description = storage.ScoreEntries[i].ToStringSimpleScoreboard(Context.Client, i + 1),
                         Color = new Color(241, 195, 15)
                     };
                     await ReplyAsync("", false, embed.Build());

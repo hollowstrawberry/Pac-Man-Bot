@@ -127,9 +127,9 @@ namespace PacManBot
         {
             UpdateGuildCount();
 
-            for (int i = 0; i < storage.gameInstances.Count; i++) //Removes leftover games in the guild we left
+            for (int i = 0; i < storage.GameInstances.Count; i++) //Removes leftover games in the guild we left
             {
-                if (storage.gameInstances[i].Guild?.Id == guild.Id) storage.DeleteGame(i);
+                if (storage.GameInstances[i].Guild?.Id == guild.Id) storage.DeleteGame(i);
             }
             return Task.CompletedTask;
         }
@@ -137,9 +137,9 @@ namespace PacManBot
 
         private Task OnChannelDestroyed(SocketChannel channel)
         {
-            for (int i = 0; i < storage.gameInstances.Count; i++) //Removes a leftover game in that channel
+            for (int i = 0; i < storage.GameInstances.Count; i++) //Removes a leftover game in that channel
             {
-                if (storage.gameInstances[i].channelId == channel.Id) storage.DeleteGame(i);
+                if (storage.GameInstances[i].channelId == channel.Id) storage.DeleteGame(i);
             }
             return Task.CompletedTask;
         }

@@ -56,7 +56,7 @@ namespace PacManBot.Services
         {
             if (removed && context.BotHas(ChannelPermission.ManageMessages)) return; //Removing reactions only counts if they're not automatically removed
 
-            foreach (GameInstance game in storage.gameInstances)
+            foreach (GameInstance game in storage.GameInstances)
             {
                 if (context.Message.Id == game.messageId && game.state == GameInstance.State.Active) //Finds the game corresponding to this channel
                 {
@@ -70,6 +70,7 @@ namespace PacManBot.Services
                         {
                             string strInput = GameInstance.GameInputs[emote].ToString();
                             await logger.Log(LogSeverity.Verbose, LogSource.Game, $"Input {strInput}{new string(' ', 5 - strInput.Length)} by user {user.FullName()} in channel {context.FullChannelName()}");
+
                             game.DoTick(GameInstance.GameInputs[emote]);
 
                             if (game.state != GameInstance.State.Active)
