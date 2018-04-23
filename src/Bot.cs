@@ -20,7 +20,7 @@ using System.Threading;
 
 namespace PacManBot
 {
-    public class Program
+    public class Bot
     {
         private DiscordSocketClient client;
         private LoggingService logger;
@@ -31,7 +31,7 @@ namespace PacManBot
         private Stopwatch guildCountTimer = null;
 
 
-        public static void Main(string[] args) => new Program().MainAsync().GetAwaiter().GetResult();
+        public static void Main(string[] args) => new Bot().MainAsync().GetAwaiter().GetResult();
 
         public async Task MainAsync()
         {
