@@ -33,9 +33,8 @@ namespace PacManBot.Modules
         [RequireBotPermission(ChannelPermission.EmbedLinks)]
         public async Task SayBotInfo()
         {
-            string fileText = File.ReadAllText(BotFile.Contents);
-            string description = fileText.FindValue("about").Replace("{prefix}", storage.GetPrefixOrEmpty(Context.Guild));
-            string[] fields = fileText.FindValue("aboutfields").Split('\n').Where(s => s.Contains("|")).ToArray();
+            string description = storage.BotContent["about"].Replace("{prefix}", storage.GetPrefixOrEmpty(Context.Guild));
+            string[] fields = storage.BotContent["aboutfields"].Split('\n').Where(s => s.Contains("|")).ToArray();
 
             var embed = new EmbedBuilder()
             {
@@ -195,14 +194,13 @@ namespace PacManBot.Modules
         [RequireBotPermission(ChannelPermission.EmbedLinks)]
         public async Task SayBotInvite([Remainder]string args = "") //Useless args
         {
-            string link = File.ReadAllText(BotFile.Contents).FindValue("invite");
             var embed = new EmbedBuilder()
             {
                 Title = "Bot invite link",
                 Color = new Color(241, 195, 15),
                 ThumbnailUrl = Context.Client.CurrentUser.GetAvatarUrl(ImageFormat.Auto, 128)
             };
-            embed.AddField($"➡ <{link}>", "*Thanks for inviting Pac-Man Bot!*", false);
+            embed.AddField($"➡ <{storage.BotContent["link"]}>", "*Thanks for inviting Pac-Man Bot!*", false);
             await ReplyAsync("", false, embed.Build());
         }
     }

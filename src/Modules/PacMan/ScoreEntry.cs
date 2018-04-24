@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Discord.WebSocket;
-using PacManBot.Constants;
 
 
 namespace PacManBot.Modules.PacMan

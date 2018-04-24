@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Discord;
@@ -142,8 +141,7 @@ namespace PacManBot.Modules.PacMan
                 {
                     if (game.ownerId == Context.User.Id || Context.Guild != null && Context.UserHas(ChannelPermission.ManageMessages))
                     {
-                        if (File.Exists(game.GameFile)) File.Delete(game.GameFile);
-                        storage.GameInstances.Remove(game);
+                        storage.DeleteGame(game);
                         await ReplyAsync("Game ended.");
 
                         try
@@ -208,9 +206,9 @@ namespace PacManBot.Modules.PacMan
 
             string results = "", users = "";
 
-            for (int i = min; i < scoresAmount && i <= max && i < min + MaxDisplayedScores; i++) //Caps at 20
+            for (int i = min; i < scoresAmount && i <= max && i < min + MaxDisplayedScores; i++)
             {
-                ScoreEntry entry = storage.ScoreEntries[i - 1];
+                ScoreEntry entry = storage.ScoreEntries[i - 1]; // The list is always kept sorted so we just go by index
 
                 // Fancy formatting
                 string result = $"`{i}. {" ".If(i.ToString().Length < max.ToString().Length)}"
@@ -238,7 +236,7 @@ namespace PacManBot.Modules.PacMan
         {
             for (int i = 0; i < storage.ScoreEntries.Count; i++)
             {
-                if (storage.ScoreEntries[i].userId == userId)
+                if (storage.ScoreEntries[i].userId == userId) // The list is always kept sorted so the first match is the highest score
                 {
                     var embed = new EmbedBuilder()
                     {
@@ -260,9 +258,8 @@ namespace PacManBot.Modules.PacMan
         [RequireBotPermission(ChannelPermission.EmbedLinks)]
         public async Task SayCustomMapHelp()
         {
-            string fileText = File.ReadAllText(BotFile.Contents);
-            string message = fileText.FindValue("customhelp").Replace("{prefix}", storage.GetPrefixOrEmpty(Context.Guild));
-            string[] links = fileText.FindValue("customlinks").Split('\n').Where(s => s.Contains("|")).ToArray();
+            string message = storage.BotContent["customhelp"].Replace("{prefix}", storage.GetPrefixOrEmpty(Context.Guild));
+            string[] links = storage.BotContent["customlinks"].Split('\n').Where(s => s.Contains("|")).ToArray();
 
             var embed = new EmbedBuilder() { Color = new Color(241, 195, 15) };
             for (int i = 0; i < links.Length; i++)

@@ -5,6 +5,7 @@ using Discord.Commands;
 using Discord.WebSocket;
 using static PacManBot.Modules.PacMan.GameInstance;
 
+
 namespace PacManBot
 {
     public static class Utils
@@ -34,6 +35,14 @@ namespace PacManBot
             foreach(string match in matches)
             {
                 if (text.Contains(match)) return true;
+            }
+            return false;
+        }
+        public static bool ContainsAny(this string text, params char[] matches)
+        {
+            foreach (char match in matches)
+            {
+                if (text.Contains(match.ToString())) return true;
             }
             return false;
         }

@@ -2,13 +2,14 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.Configuration;
 using Discord;
 using Discord.WebSocket;
 using PacManBot.Constants;
 using PacManBot.Modules.PacMan;
+using Newtonsoft.Json;
+
 
 namespace PacManBot.Services
 {
@@ -17,6 +18,8 @@ namespace PacManBot.Services
         private readonly DiscordSocketClient client;
         private readonly LoggingService logger;
 
+        
+        public IConfigurationRoot BotContent { get; private set; }
         public string DefaultPrefix { get; }
         public Dictionary<ulong, string> Prefixes { get; private set; }
         public List<GameInstance> GameInstances { get; private set; }
@@ -30,12 +33,12 @@ namespace PacManBot.Services
             this.logger = logger;
 
             DefaultPrefix = config["prefix"];
+            LoadBotContent();
             LoadWakaExclude();
             LoadPrefixes();
             LoadScoreboard();
             LoadGames();
         }
-
 
 
 
@@ -127,10 +130,16 @@ namespace PacManBot.Services
 
             int index = ScoreEntries.BinarySearch(entry, ScoreEntry.Comparer);
             if (index < 0) index = ~index;
-            ScoreEntries.Insert(index, entry);
+            ScoreEntries.Insert(index, entry); //Adds entry in sorted position
         }
 
 
+
+
+        public void LoadBotContent()
+        {
+            BotContent = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile(BotFile.Contents).Build();
+        }
 
 
         private void LoadWakaExclude()
@@ -194,25 +203,36 @@ namespace PacManBot.Services
 
         private void LoadGames()
         {
+            GameInstances = new List<GameInstance>();
+
             if (Directory.Exists(GameInstance.Folder))
             {
-                GameInstances = new List<GameInstance>();
                 uint fail = 0;
 
-                string[] files = Directory.GetFiles(GameInstance.Folder);
-                for (int i = 0; i < files.Length; i++)
+                string[] akjsd = Directory.GetFiles(GameInstance.Folder);
+                foreach (string file in Directory.GetFiles(GameInstance.Folder))
                 {
                     try
                     {
-                        ulong channelId = ulong.Parse(files[i].Replace(GameInstance.Folder, "").Replace(GameInstance.Extension, ""));
-                        GameInstance game = new GameInstance(channelId, 1, null, client, this, logger);
-                        game.LoadFromFile();
-
-                        GameInstances.Add(game);
+                        if (file.EndsWith(".game"))
+                        {
+                            ulong channelId = ulong.Parse(file.Replace("games\\", "").Replace(".game", ""));
+                            GameInstance game = new GameInstance(channelId, 1, null, client, this, logger);
+                            game.LoadFromFile();
+                            game.SaveToFile();
+                            File.Delete(file);
+                            GameInstances.Add(game);
+                        }
+                        else if (file.EndsWith(GameInstance.Extension))
+                        {
+                            var game =JsonConvert.DeserializeObject<GameInstance>(File.ReadAllText(file));
+                            game.SetServices(client, this, logger);
+                            GameInstances.Add(game);
+                        }
                     }
                     catch (Exception e)
                     {
-                        logger.Log(LogSeverity.Error, LogSource.Storage, $"Couldn't load game {files[i]}: {e.Message}");
+                        logger.Log(LogSeverity.Error, LogSource.Storage, $"Couldn't load game at {file}: {e.Message}");
                         fail++;
                     }
                 }

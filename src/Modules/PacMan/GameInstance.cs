@@ -6,6 +6,9 @@ using Discord.WebSocket;
 using PacManBot.Constants;
 using PacManBot.Services;
 using Discord;
+using Newtonsoft.Json;
+using System.Runtime.Serialization;
+using System.Linq;
 
 
 namespace PacManBot.Modules.PacMan
@@ -18,6 +21,7 @@ namespace PacManBot.Modules.PacMan
     }
 
 
+    [DataContract]
     public class GameInstance
     {
         //Constants
@@ -41,50 +45,88 @@ namespace PacManBot.Modules.PacMan
         private readonly static int[] GhostSpawnPauseTime = { 0, 3, 15, 35 };
         private readonly static Dir[] AllDirs = { Dir.up, Dir.left, Dir.down, Dir.right }; // Order of preference when deciding direction
 
-        public const string Folder = "games/";
-        public const string Extension = ".game";
+        public const string Folder = "games";
+        public const string Extension = "json";
 
 
 
         // Fields
- 
-        public readonly ulong channelId; //Which channel this game is located in
 
-        public ulong ownerId; //Which user started this game
-        public bool custom = false;
-        public ulong messageId = 1; //The focus message of the game, for controls to work. Even if not set, it must be a number above 0 or else a call to get the message object will hang
-        public State state = State.Active;
-        public bool mobileDisplay = false;
-        public int score = 0;
-        public int time = 0; //How many turns have passed
- 
-        private int maxPellets;
-        private GameInput lastInput = GameInput.None;
-        private int pellets; //Pellets remaining
-        private int oldScore = 0; //Score obtained last turn
-        private char[,] map;
-        private Player player;
-        private List<Ghost> ghosts;
-        private int fruitTimer = 0;
-        private Pos fruitSpawnPos; //Where all fruit will spawn
+        private DiscordSocketClient client;
+        private StorageService storage;
+        private LoggingService logger;
+        private Random random;
 
-        private readonly DiscordSocketClient client;
-        private readonly StorageService storage;
-        private readonly LoggingService logger;
-        private readonly Random random;
+        [DataMember] public bool custom = false;
+        [DataMember] public readonly ulong channelId; //Which channel this game is located in
+        [DataMember] public ulong ownerId; //Which user started this game
+        [DataMember] public ulong messageId = 1; //The focus message of the game, for controls to work. Even if not set, it must be a number above 0 or else a call to get the message object will throw an error
+        [DataMember] public int score = 0;
+        [DataMember] public int time = 0; //How many turns have passed
+        [DataMember] public State state = State.Active;
+        [DataMember] public bool mobileDisplay = false;
+
+        [IgnoreDataMember] private char[,] map;
+        [DataMember] private int maxPellets;
+        [DataMember] private int pellets; //Pellets remaining
+        [DataMember] private int oldScore = 0; //Score obtained last turn
+        [DataMember] private Player player;
+        [DataMember] private List<Ghost> ghosts;
+        [DataMember] private int fruitTimer = 0;
+        [DataMember] private Pos fruitSpawnPos; //Where all fruit will spawn
+        [DataMember] private GameInput lastInput = GameInput.None;
 
 
 
         // Properties
 
+        [DataMember] private string FullMap //Converts map between char[,] and string
+        {
+            set
+            {
+                if (!value.ContainsAny(' ', CharSoftWall, CharPellet, CharPowerPellet, CharSoftWallPellet))
+                {
+                    throw new InvalidMapException("Map is completely solid");
+                }
+
+                string[] lines = value.Split('\n');
+                int width = lines[0].Length, height = lines.Length;
+                map = new char[width,height];
+                
+                for (int y = 0; y < height; y++)
+                {
+                    if (lines[y].Length != width) throw new InvalidMapException("Map width not constant");
+                    for (int x = 0; x < width; x++)
+                    {
+                        map[x, y] = lines[y][x];
+                    }
+                }
+            }
+
+            get
+            {
+                var stringMap = new StringBuilder();
+                for (int y = 0; y < map.LengthY(); y++)
+                {
+                    if (y > 0) stringMap.Append('\n');
+                    for (int x = 0; x < map.LengthX(); x++)
+                    {
+                        stringMap.Append(map[x, y]);
+                    }
+                }
+                return stringMap.ToString();
+            }
+        }
+
         public SocketGuild Guild => (client.GetChannel(channelId) as SocketGuildChannel)?.Guild;
-        public string GameFile => $"{Folder}{channelId}{Extension}";
+        public string GameFile => $"{Folder}/{channelId}.{Extension}";
 
         private Pos FruitSecondPos => fruitSpawnPos + Dir.right; //Second tile which fruit will also occupy
         private int FruitTrigger1 => maxPellets - 70; //Amount of pellets remaining needed to spawn fruit
         private int FruitTrigger2 => maxPellets - 170;
         private int FruitScore => (pellets > FruitTrigger2) ? 1000 : 2000;
         private char FruitChar => (pellets > FruitTrigger2) ? 'x' : 'w';
+
 
 
 
@@ -233,7 +275,7 @@ namespace PacManBot.Modules.PacMan
                 //Decide movement
                 Dir newDir = Dir.none;
 
-                if (game.Map(pos) == CharDoor || game.Map(pos + Dir.up) == CharDoor)
+                if (game.MapAt(pos) == CharDoor || game.MapAt(pos + Dir.up) == CharDoor)
                 {
                     newDir = Dir.up; //If it's inside the cage
                 }
@@ -248,7 +290,7 @@ namespace PacManBot.Modules.PacMan
                     {
                         Pos testPos = pos + testDir;
 
-                        if (testDir == Dir.up && (game.Map(testPos) == CharSoftWall || game.Map(testPos) == CharSoftWallPellet)) continue; //Can't go up these places
+                        if (testDir == Dir.up && (game.MapAt(testPos) == CharSoftWall || game.MapAt(testPos) == CharSoftWallPellet)) continue; //Can't go up these places
                         if (testDir == dir.Opposite() && mode != AiMode.Frightened && !JustChangedMode(game.time)) continue; //Can't turn 180 degrees except on special situations
 
                         if (game.NonSolid(testPos) && Pos.Distance(testPos, target) < distance) //Check if it can move to the tile and if this direction is better than the previous
@@ -287,7 +329,7 @@ namespace PacManBot.Modules.PacMan
 
         // Game methods
 
-        public GameInstance(ulong channelId, ulong ownerId, string customMap, DiscordSocketClient client, StorageService storage, LoggingService logger)
+        public GameInstance(ulong channelId, ulong ownerId, string newMap, DiscordSocketClient client, StorageService storage, LoggingService logger)
         {
             this.client = client;
             this.storage = storage;
@@ -296,35 +338,39 @@ namespace PacManBot.Modules.PacMan
             this.ownerId = ownerId;
             random = new Random();
 
-            string[] newMap;
-            if (customMap == null) newMap = File.ReadAllText(BotFile.Contents).FindValue("map").Split('\n');
-            else
-            {
-                newMap = customMap.Split('\n');
-                custom = true;
-            }
-            LoadMap(newMap);
+            // Map
+            if (newMap == null) newMap = storage?.BotContent["map"] ?? " ";
+            else custom = true;
 
-            maxPellets = pellets;
+            FullMap = newMap; //Converts string into char[,]
 
-            Pos playerPos = FindChar(CharPlayer); //Set player
-            player = new Player(playerPos);
-            if (playerPos != null) map[playerPos.x, playerPos.y] = ' ';
+            maxPellets = newMap.Count(c => c == CharPellet || c == CharPowerPellet || c == CharSoftWallPellet);
+            pellets = maxPellets;
 
-            Pos fruitPos = FindChar(CharFruit); //Set fruit defaults
-            fruitSpawnPos = fruitPos ?? new Pos(-1, -1);
-            if (fruitPos != null) map[fruitPos.x, fruitPos.y] = ' ';
+            // Game objects
+            player = new Player(FindChar(CharPlayer));
+            SetMapAt(player.pos, ' ');
 
-            ghosts = new List<Ghost>(); //Set ghosts
-            Pos[] ghostCorners = new Pos[] { new Pos(2, -3), new Pos(map.LengthX() - 3, -3), new Pos(0, map.LengthY()), new Pos(map.LengthX() - 1, map.LengthY()) }; //Matches original game
+            fruitSpawnPos = FindChar(CharFruit) ?? new Pos(-1, -1);
+            if (fruitSpawnPos.x >= 0) SetMapAt(fruitSpawnPos, ' ');
+
+            ghosts = new List<Ghost>();
+            Pos[] ghostCorners = new Pos[] { //Matches original game
+                new Pos(map.LengthX() - 3, -3),
+                new Pos(2, -3),
+                new Pos(map.LengthX() - 1, map.LengthY()),
+                new Pos(0, map.LengthY())
+            };
             for (int i = 0; i < 4; i++)
             {
                 Pos ghostPos = FindChar(CharGhost);
                 if (ghostPos == null) break;
-                Pos cornerPos = ghostCorners[i % 2 == 0 ? i + 1 : i - 1]; //Goes in order: Top-Right Top-Left Bottom-Right Bottom-Left
-                ghosts.Add(new Ghost(ghostPos, (AiType)i, cornerPos));
+                ghosts.Add(new Ghost(ghostPos, (AiType)i, ghostCorners[i]));
                 map[ghostPos.x, ghostPos.y] = ' ';
             }
+
+
+            if (custom) File.AppendAllText(BotFile.CustomMapLog, newMap);
         }
 
 
@@ -367,7 +413,7 @@ namespace PacManBot.Modules.PacMan
             }
 
             //Pellet collision
-            char tile = Map(player.pos);
+            char tile = MapAt(player.pos);
             if (tile == CharPellet || tile == CharPowerPellet || tile == CharSoftWallPellet)
             {
                 pellets--;
@@ -430,7 +476,7 @@ namespace PacManBot.Modules.PacMan
         {
             if (lastInput == GameInput.Help)
             {
-                return File.ReadAllText(BotFile.Contents).FindValue("gamehelp").Replace("{prefix}", storage.GetPrefixOrEmpty(Guild));
+                return storage.BotContent["gamehelp"].Replace("{prefix}", storage.GetPrefixOrEmpty(Guild));
             }
 
             try
@@ -570,14 +616,21 @@ namespace PacManBot.Modules.PacMan
         private bool NonSolid(Pos pos) //Defines which tiles in the map entities can move through
         {
             WrapAround(ref pos);
-            return (Map(pos) == ' ' || Map(pos) == CharPellet || Map(pos) == CharPowerPellet || Map(pos) == CharSoftWall || Map(pos) == CharSoftWallPellet);
+            return (MapAt(pos) == ' ' || MapAt(pos) == CharPellet || MapAt(pos) == CharPowerPellet || MapAt(pos) == CharSoftWall || MapAt(pos) == CharSoftWallPellet);
         }
 
 
-        private char Map(Pos pos) //Returns the character at the specified pos
+        private char MapAt(Pos pos) //Returns the character at the specified pos
         {
             WrapAround(ref pos);
             return map[pos.x, pos.y];
+        }
+
+
+        private void SetMapAt(Pos pos, char ch)
+        {
+            WrapAround(ref pos);
+            map[pos.x, pos.y] = ch;
         }
 
 
@@ -590,104 +643,26 @@ namespace PacManBot.Modules.PacMan
         }
 
 
-        private void LoadMap(string[] lines)
-        {
-            int width = lines[0].Length;
-            int height = lines.Length;
-
-            char[,] newMap = new char[width, height];
-            try
-            {
-                pellets = 0;
-
-                bool hasEmptySpace = false;
-
-                for (int y = 0; y < height; y++)
-                {
-                    for (int x = 0; x < width; x++)
-                    {
-                        newMap[x, y] = lines[y].ToCharArray()[x];
-                        if (newMap[x, y] == ' ') hasEmptySpace = true;
-                        if (newMap[x, y] == CharPellet || newMap[x, y] == CharPowerPellet || newMap[x, y] == CharSoftWallPellet)
-                        {
-                            pellets++;
-                            hasEmptySpace = true;
-                        }
-                    }
-                }
-
-                if (!hasEmptySpace) throw new InvalidMapException("Map is completely solid");
-
-            }
-            catch (IndexOutOfRangeException)
-            {
-                throw new InvalidMapException("Map width not constant");
-            }
-
-            map = newMap;
-
-            if (custom) File.AppendAllLines(BotFile.CustomMapLog, lines);
-        }
-
-
-
         public void SaveToFile()
         {
-            StringBuilder fileText = new StringBuilder();
+            File.WriteAllText(GameFile, JsonConvert.SerializeObject(this));
+        }
 
-            fileText.AppendLine("{map}");
-            for (int y = 0; y < map.LengthY(); y++)
-            {
-                for (int x = 0; x < map.LengthX(); x++)
-                {
-                    fileText.Append(map[x, y]);
-                }
-                fileText.Append('\n');
-            }
-            fileText.AppendLine("{map}\n");
-
-            fileText.AppendLine("{custom}" + $"{custom}");
-            fileText.AppendLine("{owner}" + $"{ownerId}");
-            fileText.AppendLine("{score}" + $"{score}");
-            fileText.AppendLine("{time}" + $"{time}");
-            fileText.AppendLine("{pellets}" + $"{pellets}");
-            fileText.AppendLine("{maxpellets}" + $"{maxPellets}\n");
-
-            fileText.AppendLine("{fruittime}" + $"{fruitTimer}");
-            fileText.AppendLine("{fruitx}" + $"{fruitSpawnPos.x}");
-            fileText.AppendLine("{fruity}" + $"{fruitSpawnPos.y}\n");
-
-            fileText.AppendLine("{playeroriginx}" + $"{player.origin.x}");
-            fileText.AppendLine("{playeroriginy}" + $"{player.origin.y}");
-            fileText.AppendLine("{playerposx}" + $"{player.pos.x}");
-            fileText.AppendLine("{playerposy}" + $"{player.pos.y}");
-            fileText.AppendLine("{playerdir}" + $"{(int)player.dir}");
-            fileText.AppendLine("{playerpower}" + $"{player.power}");
-            fileText.AppendLine("{playerghoststreak}" + $"{player.ghostStreak}\n");
-
-            for (int i = 0; i < ghosts.Count; i++)
-            {
-                fileText.AppendLine($"{{ghost{i}originx}}" + $"{ghosts[i].origin.x}");
-                fileText.AppendLine($"{{ghost{i}originy}}" + $"{ghosts[i].origin.y}");
-                fileText.AppendLine($"{{ghost{i}cornerx}}" + $"{ghosts[i].corner.x}");
-                fileText.AppendLine($"{{ghost{i}cornery}}" + $"{ghosts[i].corner.y}");
-                fileText.AppendLine($"{{ghost{i}posx}}" + $"{ghosts[i].pos.x}");
-                fileText.AppendLine($"{{ghost{i}posy}}" + $"{ghosts[i].pos.y}");
-                fileText.AppendLine($"{{ghost{i}dir}}" + $"{(int)ghosts[i].dir}");
-                fileText.AppendLine($"{{ghost{i}mode}}" + $"{(int)ghosts[i].mode}");
-                fileText.AppendLine($"{{ghost{i}pause}}" + $"{ghosts[i].pauseTime}\n");
-            }
-
-            if (!File.Exists(GameFile)) logger.Log(LogSeverity.Verbose, $"Creating file {GameFile}");
-            File.WriteAllText(GameFile, fileText.ToString());
+        
+        public void SetServices(DiscordSocketClient client, StorageService storage, LoggingService logger)
+        {
+            this.client = client;
+            this.storage = storage;
+            this.logger = logger;
+            random = new Random();
         }
 
 
         public void LoadFromFile()
         {
-            string fileText = File.ReadAllText(GameFile).Replace("\r", "");
+            string fileText = File.ReadAllText($"games\\{channelId}.game").Replace("\r", "");
 
-            LoadMap(fileText.FindValue("map").Split('\n'));
+            FullMap = fileText.FindValue("map"); //Converts string into char[,]
 
             custom = fileText.FindValue<bool>("custom");
             ownerId = fileText.FindValue<ulong>("owner");
