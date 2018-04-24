@@ -45,7 +45,7 @@ namespace PacManBot.Modules.PacMan
         private readonly static int[] GhostSpawnPauseTime = { 0, 3, 15, 35 };
         private readonly static Dir[] AllDirs = { Dir.up, Dir.left, Dir.down, Dir.right }; // Order of preference when deciding direction
 
-        public const string Folder = "games";
+        public const string Folder = "games/";
         public const string Extension = "json";
 
 
@@ -119,7 +119,7 @@ namespace PacManBot.Modules.PacMan
         }
 
         public SocketGuild Guild => (client.GetChannel(channelId) as SocketGuildChannel)?.Guild;
-        public string GameFile => $"{Folder}/{channelId}.{Extension}";
+        public string GameFile => $"{Folder}{channelId}.{Extension}";
 
         private Pos FruitSecondPos => fruitSpawnPos + Dir.right; //Second tile which fruit will also occupy
         private int FruitTrigger1 => maxPellets - 70; //Amount of pellets remaining needed to spawn fruit
@@ -655,54 +655,6 @@ namespace PacManBot.Modules.PacMan
             this.storage = storage;
             this.logger = logger;
             random = new Random();
-        }
-
-
-        public void LoadFromFile()
-        {
-            string fileText = File.ReadAllText($"games\\{channelId}.game").Replace("\r", "");
-
-            FullMap = fileText.FindValue("map"); //Converts string into char[,]
-
-            custom = fileText.FindValue<bool>("custom");
-            ownerId = fileText.FindValue<ulong>("owner");
-            score = fileText.FindValue<int>("score");
-            time = fileText.FindValue<int>("time");
-            pellets = fileText.FindValue<int>("pellets");
-            maxPellets = fileText.FindValue<int>("maxpellets");
-
-            fruitTimer = fileText.FindValue<int>("fruittime");
-            fruitSpawnPos = new Pos(fileText.FindValue<int>("fruitx"), fileText.FindValue<int>("fruity"));
-
-            player = new Player(new Pos(fileText.FindValue<int>("playeroriginx"), fileText.FindValue<int>("playeroriginy")))
-            {
-                pos = new Pos(fileText.FindValue<int>("playerposx"), fileText.FindValue<int>("playerposy")),
-                dir = (Dir)fileText.FindValue<int>("playerdir"),
-                power = fileText.FindValue<int>("playerpower"),
-                ghostStreak = fileText.FindValue<int>("playerghoststreak")
-            };
-
-            ghosts.Clear();
-            for (int i = 0; i < 4; i++)
-            {
-                if (fileText.Contains($"ghost{i}"))
-                {
-                    Ghost ghost = new Ghost
-                    (
-                        new Pos(fileText.FindValue<int>($"ghost{i}originx"), fileText.FindValue<int>($"ghost{i}originy")),
-                        (AiType)i,
-                        new Pos(fileText.FindValue<int>($"ghost{i}cornerx"), fileText.FindValue<int>($"ghost{i}cornery"))
-                    ){
-                        pos = new Pos(fileText.FindValue<int>($"ghost{i}posx"), fileText.FindValue<int>($"ghost{i}posy")),
-                        dir = (Dir)fileText.FindValue<int>($"ghost{i}dir"),
-                        mode = (AiMode)fileText.FindValue<int>($"ghost{i}mode"),
-                        pauseTime = fileText.FindValue<int>($"ghost{i}pause")
-                    };
-
-                    ghosts.Add(ghost);
-                }
-                else break;
-            }
         }
     }
 }

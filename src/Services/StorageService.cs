@@ -209,31 +209,21 @@ namespace PacManBot.Services
             {
                 uint fail = 0;
 
-                string[] akjsd = Directory.GetFiles(GameInstance.Folder);
                 foreach (string file in Directory.GetFiles(GameInstance.Folder))
                 {
-                    try
+                    if (file.EndsWith(GameInstance.Extension))
                     {
-                        if (file.EndsWith(".game"))
+                        try
                         {
-                            ulong channelId = ulong.Parse(file.Replace("games\\", "").Replace(".game", ""));
-                            GameInstance game = new GameInstance(channelId, 1, null, client, this, logger);
-                            game.LoadFromFile();
-                            game.SaveToFile();
-                            File.Delete(file);
-                            GameInstances.Add(game);
-                        }
-                        else if (file.EndsWith(GameInstance.Extension))
-                        {
-                            var game =JsonConvert.DeserializeObject<GameInstance>(File.ReadAllText(file));
+                            var game = JsonConvert.DeserializeObject<GameInstance>(File.ReadAllText(file));
                             game.SetServices(client, this, logger);
                             GameInstances.Add(game);
                         }
-                    }
-                    catch (Exception e)
-                    {
-                        logger.Log(LogSeverity.Error, LogSource.Storage, $"Couldn't load game at {file}: {e.Message}");
-                        fail++;
+                        catch (Exception e)
+                        {
+                            logger.Log(LogSeverity.Error, LogSource.Storage, $"Couldn't load game at {file}: {e.Message}");
+                            fail++;
+                        }
                     }
                 }
 

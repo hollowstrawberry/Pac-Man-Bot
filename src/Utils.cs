@@ -122,41 +122,5 @@ namespace PacManBot
             for (int i = 0; i < num; i++) pos += dir;
             return pos;
         }
-
-
-
-        // Bot utility
-
-        public static string FindValue(this string text, string key)
-        {
-            return FindValue<string>(text, key);
-        }
-        public static T FindValue<T>(this string text, string key) where T : IConvertible
-        {
-            string value = null;
-
-            if (key[0] != '{') key = $"{{{key}}}"; //Adds curly brackets
-
-            int keyIndex = text.IndexOf(key); //Key start location
-            if (keyIndex > -1)
-            {
-                int valIndex = keyIndex + key.Length; //Value start location
-
-                int nextKeyIndex = text.IndexOf(key, valIndex);
-                int endIndex = nextKeyIndex > -1 ? nextKeyIndex : text.IndexOf('\n', valIndex); // Stops at either a newline or the second instance of the key
-                if (endIndex < 0) endIndex = text.Length;
-
-                value = text.Substring(valIndex, endIndex - valIndex).Trim('\n');
-            }
-
-            try
-            {
-                return (T)Convert.ChangeType(value, typeof(T));
-            }
-            catch (InvalidCastException)
-            {
-                return default(T);
-            }
-        }
     }
 }
