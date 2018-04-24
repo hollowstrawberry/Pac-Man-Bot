@@ -7,7 +7,8 @@ using Discord.WebSocket;
 using PacManBot.Services;
 using PacManBot.Constants;
 using static PacManBot.Modules.PacMan.GameInstance;
-
+using System.Collections.Generic;
+using System.Text;
 
 namespace PacManBot.Modules.PacMan
 {
@@ -20,11 +21,19 @@ namespace PacManBot.Modules.PacMan
         private const int MaxDisplayedScores = 20;
         private string ManualModeMessage => "__Manual mode:__ Both adding and removing reactions count as input. Do one action at a time to prevent buggy behavior." + "\nGive this bot the permission to Manage Messages to remove reactions automatically.".If(Context.Guild != null);
 
+        public enum TimePeriod // Argument to leaderboard command, parsable from string
+        {
+            all, month, week, day,
+            a = all, m = month, w = week, d = day
+        }
+
+
         public PacManModule(LoggingService logger, StorageService storage)
         {
             this.logger = logger;
             this.storage = storage;
         }
+
 
 
         [Command("play"), Alias("p"), Remarks("[mobile/m] [\\`\\`\\`custom map\\`\\`\\`] — *Start a new game on this channel*")]
@@ -167,61 +176,73 @@ namespace PacManBot.Modules.PacMan
         }
 
 
-        [Command("leaderboard"), Alias("l", "lb"), Remarks("[start] [end] — *Global list of top scores. You can enter a range*")]
-        [Summary("This command will display a list of scores in the *Global Leaderboard* of all servers.\nIt goes from 1 to 10 by default, but you can specify an end and start point for any range of scores.")]
-        public async Task SendTopScores(string amount = "10") => await SendTopScores("1", amount);
+        [Command("leaderboard"), Alias("l", "lb"), Remarks("[all/month/week/day] [number] [number] — *Displays scores from the Global Leaderboard, in a given range from a given period*")]
+        [Summary("This command will display a list of scores in the *Global Leaderboard* of all servers.\nYou can specify a time period (all/month/day/week), as well as a start point and an end point for a range of scores to show. Only 20 scores may be displayed at once.")]
+        public async Task SendTopScores(int min = 10, int max = -1) => await SendTopScores(TimePeriod.all, min, max);
 
         [Command("leaderboard"), Alias("l", "lb")]
-        public async Task SendTopScores(string smin, string smax)
+        public async Task SendTopScores(TimePeriod time, int min = 10, int max = -1)
         {
-            if (!int.TryParse(smin, out int min) | !int.TryParse(smax, out int max))
+            if (min < 1) min = 1; //Foolproofing
+            if (max < 0 && min <= MaxDisplayedScores) //Takes the first number as the max
             {
-                // So like people weren't understanding how to use this command so I had to handle it myself to tell them
-                await ReplyAsync("You must enter one or two whole numbers!");
+                max = min;
+                min = 1;
+            }
+            else if (max < min) max = min + 9;
+
+            List<ScoreEntry> scores;
+            var currentDate = DateTime.Now;
+            switch (time)
+            {
+                case TimePeriod.day:   scores = storage.ScoreEntries.Where(s => (currentDate - s.date).TotalHours <= 24.0).ToList(); break;
+                case TimePeriod.week:  scores = storage.ScoreEntries.Where(s => (currentDate - s.date).TotalDays <= 7.0).ToList(); break;
+                case TimePeriod.month: scores = storage.ScoreEntries.Where(s => (currentDate - s.date).TotalDays <= 30.0).ToList(); break;
+                case TimePeriod.all:   scores = storage.ScoreEntries; break;
+
+                default:
+                    await ReplyAsync("Unknown time period specified");
+                    return;
+            }
+
+            int scoreAmount = scores.Count();
+
+            if (scoreAmount < 1)
+            {
+                await ReplyAsync("There are no registered scores within this period!");
                 return;
             }
-            if (min < 1) min = 1;
-            if (max < min) max = min + 9;
 
-            int scoresAmount = storage.ScoreEntries.Count;
-
-            if (scoresAmount < 1)
-            {
-                await ReplyAsync("There are no registered scores! Go make one");
-                return;
-            }
-
-            if (min > scoresAmount)
+            if (min > scoreAmount)
             {
                 await ReplyAsync("No scores found within the specified range.");
                 return;
             }
 
-            var embed = new EmbedBuilder()
-            {
-                Title = $"🏆 __**Global Leaderboard**__ 🏆",
-                Description = max - min >= MaxDisplayedScores ? $"*Only {MaxDisplayedScores} scores may be displayed at once*" : max >= scoresAmount ? "*No more scores could be found*" : "",
-                Color = new Color(241, 195, 15)
-            };
+            var content = new StringBuilder();
+            content.Append($"Displaying best scores {(time == TimePeriod.all ? "of all time" : time == TimePeriod.month ? "in the last 30 days" : time == TimePeriod.week ? "in the last 7 days" : $"in the last 24 hours")}\nᅠ\n");
 
-            string results = "", users = "";
-
-            for (int i = min; i < scoresAmount && i <= max && i < min + MaxDisplayedScores; i++)
+            for (int i = min; i < scoreAmount && i <= max && i < min + MaxDisplayedScores; i++)
             {
-                ScoreEntry entry = storage.ScoreEntries[i - 1]; // The list is always kept sorted so we just go by index
+                ScoreEntry entry = scores[i - 1]; // The list is always kept sorted so we just go by index
 
                 // Fancy formatting
                 string result = $"`{i}. {" ".If(i.ToString().Length < max.ToString().Length)}"
                               + $"({entry.state}) {" ".If(entry.state == State.Win)}"
                               + $"{" ".If(entry.score.ToString().Length < storage.ScoreEntries[min - 1].score.ToString().Length)}{entry.score} points "
                               + $"in {entry.turns} turns";
-                result += new string(' ', Math.Max(39 - result.Length, 0)) + "-`\n";
 
-                results += result;
-                users += $"`{entry.GetUsername(Context.Client)}`\n";
+                content.Append(result + new string(' ', Math.Max(38 - result.Length, 0)) + $"- {entry.GetUsername(Context.Client)}`\n");
             }
-            embed.AddField("Result", results, true);
-            embed.AddField("User", users, true);
+
+            content.Append(max - min >= MaxDisplayedScores ? $"*Only {MaxDisplayedScores} scores may be displayed at once*" : max >= scoreAmount ? "*No more scores could be found*" : "");
+
+            var embed = new EmbedBuilder()
+            {
+                Title = $"🏆 __**Global Leaderboard**__ 🏆",
+                Description = content.ToString(),
+                Color = new Color(241, 195, 15)
+            };
 
             await ReplyAsync("", false, embed.Build());
         }
@@ -281,7 +302,7 @@ namespace PacManBot.Modules.PacMan
                 }
                 catch (Discord.Net.RateLimitedException e)
                 {
-                    await logger.Log(LogSeverity.Warning, $"At message {message.Id} in {Context.FullChannelName()}: {e.Message}");
+                    await logger.Log(LogSeverity.Warning, $"Ratelimit adding controls to message {message.Id} in {Context.FullChannelName()}");
                 }
             }
         }
