@@ -6,7 +6,6 @@ using Discord.Commands;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
 
-
 namespace PacManBot.Services
 {
     public class ScriptingService // Thanks to oatmeal and amibu

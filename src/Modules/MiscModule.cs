@@ -9,7 +9,6 @@ using Discord.Commands;
 using PacManBot.Services;
 using PacManBot.Constants;
 
-
 namespace PacManBot.Modules
 {
     [Name("📁Other")]
@@ -38,7 +37,7 @@ namespace PacManBot.Modules
 
             var embed = new EmbedBuilder()
             {
-                Title = $"{CustomEmojis.PacMan} __**Pac-Man Bot**__",
+                Title = $"{CustomEmoji.PacMan} __**Pac-Man Bot**__",
                 Description = description,
                 Color = new Color(241, 195, 15)
             };
@@ -72,7 +71,7 @@ namespace PacManBot.Modules
 
             var embed = new EmbedBuilder()
             {
-                Title = $"{CustomEmojis.PacMan} __Command__: {prefix}{command.Name}",
+                Title = $"{CustomEmoji.PacMan} __Command__: {prefix}{command.Name}",
                 Color = new Color(241, 195, 15)
             };
 
@@ -106,8 +105,9 @@ namespace PacManBot.Modules
 
             var embed = new EmbedBuilder()
             {
-                Title = $"{CustomEmojis.PacMan} __**Bot Commands**__",
-                Description = (Context.Guild == null ? "No prefix is needed in a DM!" : $"Prefix for this server is '{prefix}'") + $"\nYou can do **{prefix}help command** for more information about a command.\n*Aliases are listed with commas. Parameters in [] are optional.*",
+                Title = $"{CustomEmoji.PacMan} __**Bot Commands**__",
+                Description = (Context.Guild == null ? "No prefix is needed in a DM!" : $"Prefix for this server is '{prefix}'")
+                            + $"\nYou can do **{prefix}help command** for more information about a command.\n*Aliases are listed with commas. Parameters in [] are optional.*",
                 Color = new Color(241, 195, 15)
             };
 
@@ -146,10 +146,10 @@ namespace PacManBot.Modules
         public async Task Ping([Remainder]string args = "") //Useless args
         {
             var stopwatch = Stopwatch.StartNew();
-            var message = await ReplyAsync($"{CustomEmojis.Loading} Waka");
+            var message = await ReplyAsync($"{CustomEmoji.Loading} Waka");
             stopwatch.Stop();
 
-            await message.ModifyAsync(m => m.Content = $"{CustomEmojis.PacMan} Waka in {(int)stopwatch.Elapsed.TotalMilliseconds}ms | {Context.Client.Guilds.Count} guilds | {storage.GameInstances.Count} active games\n");
+            await message.ModifyAsync(m => m.Content = $"{CustomEmoji.PacMan} Waka in {(int)stopwatch.Elapsed.TotalMilliseconds}ms | {Context.Client.Guilds.Count} guilds | {storage.GameInstances.Count} active games\n");
         }
 
 
@@ -178,7 +178,7 @@ namespace PacManBot.Modules
             try
             {
                 File.AppendAllText(BotFile.FeedbackLog, $"[{Context.User.FullName()} {Context.User.Id}] {message}\n\n");
-                await ReplyAsync($"{CustomEmojis.Check} Message sent. Thank you!");
+                await ReplyAsync($"{CustomEmoji.Check} Message sent. Thank you!");
                 await (await Context.Client.GetApplicationInfoAsync()).Owner.SendMessageAsync($"```diff\n+Feedback received: {Context.User.FullName()} {Context.User.Id}```\n{message}");
             }
             catch (Exception e)

@@ -6,7 +6,6 @@ using Discord.WebSocket;
 using PacManBot.Constants;
 using PacManBot.Modules.PacMan;
 
-
 namespace PacManBot.Services
 {
     class ReactionHandler
@@ -61,7 +60,7 @@ namespace PacManBot.Services
             {
                 if (context.Message.Id == game.messageId && game.state == GameInstance.State.Active) //Finds the game corresponding to this channel
                 {
-                    string emote = reaction.Emote.ToString();
+                    IEmote emote = reaction.Emote;
                     var user = reaction.User.Value as SocketUser;
                     var message = context.Message;
 

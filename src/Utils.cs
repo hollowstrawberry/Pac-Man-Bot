@@ -5,7 +5,6 @@ using Discord.Commands;
 using Discord.WebSocket;
 using static PacManBot.Modules.PacMan.GameInstance;
 
-
 namespace PacManBot
 {
     public static class Utils

@@ -1,15 +1,13 @@
 using System;
 using System.IO;
-using System.Collections.Generic;
 using System.Text;
+using System.Linq;
+using System.Collections.Generic;
+using System.Runtime.Serialization;
+using Discord;
 using Discord.WebSocket;
 using PacManBot.Constants;
 using PacManBot.Services;
-using Discord;
-using Newtonsoft.Json;
-using System.Runtime.Serialization;
-using System.Linq;
-
 
 namespace PacManBot.Modules.PacMan
 {
@@ -26,14 +24,14 @@ namespace PacManBot.Modules.PacMan
     {
         //Constants
 
-        static public readonly Dictionary<string, GameInput> GameInputs = new Dictionary<string, GameInput>() //Reaction controls
+        static public readonly Dictionary<IEmote, GameInput> GameInputs = new Dictionary<IEmote, GameInput>() //Reaction controls
         {
-            { Emojis.Info,  GameInput.Help  },
-            { Emojis.Left,  GameInput.Left  },
-            { Emojis.Up,    GameInput.Up    },
-            { Emojis.Down,  GameInput.Down  },
-            { Emojis.Right, GameInput.Right },
-            { Emojis.Pause, GameInput.Wait  }
+            { "⬅".ToEmoji(), GameInput.Left },
+            { "⬆".ToEmoji(), GameInput.Up },
+            { "⬇".ToEmoji(), GameInput.Down },
+            { "➡".ToEmoji(), GameInput.Right },
+            { CustomEmoji.Help, GameInput.Help },
+            { CustomEmoji.Wait, GameInput.Wait }
         };
 
         private const int PowerTime = 20, ScatterCycle = 100, ScatterTime1 = 30, ScatterTime2 = 20;
@@ -46,7 +44,7 @@ namespace PacManBot.Modules.PacMan
         private readonly static Dir[] AllDirs = { Dir.up, Dir.left, Dir.down, Dir.right }; // Order of preference when deciding direction
 
         public const string Folder = "games/";
-        public const string Extension = "json";
+        public const string Extension = ".json";
 
 
 
@@ -119,7 +117,7 @@ namespace PacManBot.Modules.PacMan
         }
 
         public SocketGuild Guild => (client.GetChannel(channelId) as SocketGuildChannel)?.Guild;
-        public string GameFile => $"{Folder}{channelId}.{Extension}";
+        public string GameFile => $"{Folder}{channelId}{Extension}";
 
         private Pos FruitSecondPos => fruitSpawnPos + Dir.right; //Second tile which fruit will also occupy
         private int FruitTrigger1 => maxPellets - 70; //Amount of pellets remaining needed to spawn fruit
@@ -329,6 +327,8 @@ namespace PacManBot.Modules.PacMan
 
         // Game methods
 
+        private GameInstance() { } // For JSON to use
+
         public GameInstance(ulong channelId, ulong ownerId, string newMap, DiscordSocketClient client, StorageService storage, LoggingService logger)
         {
             this.client = client;
@@ -339,7 +339,7 @@ namespace PacManBot.Modules.PacMan
             random = new Random();
 
             // Map
-            if (newMap == null) newMap = storage?.BotContent["map"] ?? " ";
+            if (newMap == null) newMap = storage.BotContent["map"];
             else custom = true;
 
             FullMap = newMap; //Converts string into char[,]
@@ -369,7 +369,7 @@ namespace PacManBot.Modules.PacMan
                 map[ghostPos.x, ghostPos.y] = ' ';
             }
 
-
+            storage.StoreGame(this);
             if (custom) File.AppendAllText(BotFile.CustomMapLog, newMap);
         }
 
@@ -468,11 +468,15 @@ namespace PacManBot.Modules.PacMan
             if (player.power > 0) player.power--;
             if (player.power == 0) player.ghostStreak = 0;
 
-            if (state == State.Active) SaveToFile(); //Backup more than anything, takes very little time
+
+            if (state == State.Active)
+            {
+                storage.StoreGame(this); // Backup
+            }
         }
 
 
-        public string GetDisplay()
+        public string GetDisplay(bool showHelp = true)
         {
             if (lastInput == GameInput.Help)
             {
@@ -526,31 +530,37 @@ namespace PacManBot.Modules.PacMan
                 //Add text to the side
                 string[] info = //Info panel
                 {
-                    $" ┌{"< MOBILE MODE >".If(mobileDisplay)}",
-                    $" │ {"#".If(!mobileDisplay)}Time: {time}",
-                    $" │ {"#".If(!mobileDisplay)}Score: {score}{$" +{score - oldScore}".If(!mobileDisplay && score - oldScore != 0)}",
-                    $" │ {$"{"#".If(!mobileDisplay)}Power: {player.power}".If(player.power > 0)}",
-                    $" │ ",
-                    $" │ {CharPlayer}{" - Pac-Man".If(!mobileDisplay)}{$": {player.dir}".If(player.dir != Dir.none)}",
-                    $" │ ",
-                    $" │ ", " │ ", " │ ", " │ ", //7-10: ghosts
-                    $" │ ",
-                    $" │ {($"{FruitChar}{FruitChar}{" - Fruit".If(!mobileDisplay)}: {fruitTimer}").If(fruitTimer > 0)}",
-                    $" └ {$"+{score - oldScore}".If(mobileDisplay && score - oldScore != 0)}"
+                    $"┌{"───< Mobile Mode >───┐".If(mobileDisplay)}",
+                    $"│ {"#".If(!mobileDisplay)}Time: {time}",
+                    $"│ {"#".If(!mobileDisplay)}Score: {score}{$" +{score - oldScore}".If(score - oldScore != 0)}",
+                    $"│ {$"{"#".If(!mobileDisplay)}Power: {player.power}".If(player.power > 0)}",
+                    $"│ ",
+                    $"│ {CharPlayer} - Pac-Man{$": {player.dir}".If(player.dir != Dir.none)}",
+                    $"│ ",
+                    $"│ ", " │ ", " │ ", " │ ", //7-10: ghosts
+                    $"│ ",
+                    $"│ {($"{FruitChar}{FruitChar} - Fruit: {fruitTimer}").If(fruitTimer > 0)}",
+                    $"└"
                 };
 
-                for (int i = 0; i < 4; i++) //Ghost info
+                for (int i = 0; i < ghosts.Count; i++) //Ghost info
                 {
-                    if (i + 1 > ghosts.Count) continue;
                     char appearance = (ghosts[i].mode == AiMode.Frightened) ? CharGhostFrightened : GhostAppearance[i];
-                    info[i + 7] = $" │ {appearance}{$" - {(AiType)i}".If(!mobileDisplay)}{$": {ghosts[i].dir}".If(ghosts[i].dir != Dir.none)}";
+                    info[i + 7] = $"│ {appearance} - {(AiType)i}{$": {ghosts[i].dir}".If(ghosts[i].dir != Dir.none)}";
                 }
 
-                for (int i = 0; i < info.Length && i < map.LengthY(); i++) //Insert info
+                if (mobileDisplay)
                 {
-                    int insertIndex = (i + 1) * displayMap.LengthX(); //Skips ahead a certain amount of lines
-                    for (int j = i - 1; j >= 0; j--) insertIndex += info[j].Length + 1; //Takes into account the added line length of previous info
-                    display.Insert(insertIndex, info[i]);
+                    display.Insert(0, string.Join('\n', info) + "\n\n");
+                }
+                else
+                {
+                    for (int i = 0; i < info.Length && i < map.LengthY(); i++) //Insert info
+                    {
+                        int insertIndex = (i + 1) * displayMap.LengthX(); //Skips ahead a certain amount of lines
+                        for (int j = i - 1; j >= 0; j--) insertIndex += info[j].Length + 2; //Takes into account the added line length of previous info
+                        display.Insert(insertIndex, $" {info[i]}");
+                    }
                 }
 
                 //Code tags
@@ -581,12 +591,18 @@ namespace PacManBot.Modules.PacMan
                     display.Append("```");
                 }
 
+                if (showHelp && state == State.Active && time < 5)
+                {
+                    display.Append($"\n(Confused? React with {CustomEmoji.Help} for help)");
+                }
+
                 return display.ToString();
             }
             catch (Exception e)
             {
-                logger.Log(LogSeverity.Debug, LogSource.Game, $"{e}");
-                return $"```There was an error displaying the game. {"Make sure your custom map is valid. ".If(custom)}If this problem persists, please contact the author of the bot using the {storage.GetPrefixOrEmpty(Guild)}feedback command.```";
+                logger.Log(LogSeverity.Error, LogSource.Game, $"{e}");
+                return $"```There was an error displaying the game. {"Make sure your custom map is valid. ".If(custom)}" +
+                       $"If this problem persists, please contact the author of the bot using the {storage.GetPrefixOrEmpty(Guild)}feedback command.```";
             }
         }
 
@@ -640,12 +656,6 @@ namespace PacManBot.Modules.PacMan
             else if (pos.x > map.LengthX() - 1) pos.x -= map.LengthX();
             if (pos.y < 0) pos.y = map.LengthY() + pos.y;
             else if (pos.y > map.LengthY() - 1) pos.y -= map.LengthY();
-        }
-
-
-        public void SaveToFile()
-        {
-            File.WriteAllText(GameFile, JsonConvert.SerializeObject(this));
         }
 
         

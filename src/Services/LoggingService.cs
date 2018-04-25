@@ -6,7 +6,6 @@ using Discord.Commands;
 using Discord.WebSocket;
 using PacManBot.Constants;
 
-
 namespace PacManBot.Services
 {
     public class LoggingService

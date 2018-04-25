@@ -1,12 +1,11 @@
 using System;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using PacManBot.Services;
 using PacManBot.Constants;
-using System.IO;
-using System.Linq;
-
 
 namespace PacManBot.Modules
 {
@@ -33,19 +32,19 @@ namespace PacManBot.Modules
         {
             try
             {
-                await Context.Message.AddReactionAsync(CustomEmojis.Loading.ToEmote());
+                await Context.Message.AddReactionAsync(CustomEmoji.Loading);
                 await scripting.Eval(code, Context);
-                await Context.Message.AddReactionAsync(CustomEmojis.Check.ToEmote());
+                await Context.Message.AddReactionAsync(CustomEmoji.Check);
             }
             catch (Exception e)
             {
                 await ReplyAsync($"```cs\n{e.Message}```");
                 await logger.Log(LogSeverity.Debug, "Eval", $"{e.Message}");
-                await Context.Message.AddReactionAsync(CustomEmojis.Cross.ToEmote());
+                await Context.Message.AddReactionAsync(CustomEmoji.Cross);
             }
             finally
             {
-                await Context.Message.RemoveReactionAsync(CustomEmojis.Loading.ToEmote(), Context.Client.CurrentUser);
+                await Context.Message.RemoveReactionAsync(CustomEmoji.Loading, Context.Client.CurrentUser);
             }
         }
 
@@ -55,14 +54,15 @@ namespace PacManBot.Modules
         {
             try
             {
-                await Context.Client.GetUser(id).SendMessageAsync("```diff\n+The following message was sent in response to your recent feedback.\n-To reply to this message, use the 'feedback' command again.```\n" + message);
-                await Context.Message.AddReactionAsync(CustomEmojis.Check.ToEmote());
+                await Context.Client.GetUser(id).SendMessageAsync("```diff\n+The following message was sent in response to your recent feedback." +
+                                                                  "\n-To reply to this message, use the 'feedback' command again.```\n" + message);
+                await Context.Message.AddReactionAsync(CustomEmoji.Check);
             }
             catch (Exception e)
             {
                 await logger.Log(LogSeverity.Debug, $"{e.Message}");
                 await ReplyAsync($"```{e.Message}```");
-                await Context.Message.AddReactionAsync(CustomEmojis.Cross.ToEmote());
+                await Context.Message.AddReactionAsync(CustomEmoji.Cross);
             }
         }
 
@@ -74,7 +74,7 @@ namespace PacManBot.Modules
             GC.WaitForPendingFinalizers();
             GC.Collect();
 
-            await Context.Message.AddReactionAsync(CustomEmojis.Check.ToEmote());
+            await Context.Message.AddReactionAsync(CustomEmoji.Check);
         }
 
 

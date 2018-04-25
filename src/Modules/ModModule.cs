@@ -5,7 +5,6 @@ using Discord.Commands;
 using PacManBot.Services;
 using PacManBot.Constants;
 
-
 namespace PacManBot.Modules
 {
     [Name("<:staff:412019879772815361>Mod")]
@@ -58,20 +57,20 @@ namespace PacManBot.Modules
         {
             if (newPrefix.ContainsAny("*", "_", "~", "`", "\\"))
             {
-                await ReplyAsync($"{CustomEmojis.Cross} The prefix can't contain markdown special characters: *_~\\`\\\\");
+                await ReplyAsync($"{CustomEmoji.Cross} The prefix can't contain markdown special characters: *_~\\`\\\\");
                 return;
             }
 
             try
             {
                 storage.SetPrefix(Context.Guild.Id, newPrefix);
-                await ReplyAsync($"{CustomEmojis.Check} Prefix for this server has been successfully set to '{newPrefix}'.");
+                await ReplyAsync($"{CustomEmoji.Check} Prefix for this server has been successfully set to '{newPrefix}'.");
                 await logger.Log(LogSeverity.Info, $"Prefix for server {Context.Guild.Id} set to {newPrefix}");
             }
             catch (Exception e)
             {
                 await logger.Log(LogSeverity.Error, $"{e}");
-                await ReplyAsync($"{CustomEmojis.Cross} There was a problem setting the prefix. {ErrorMessage}");
+                await ReplyAsync($"{CustomEmoji.Cross} There was a problem setting the prefix. {ErrorMessage}");
             }
         }
 
@@ -84,12 +83,12 @@ namespace PacManBot.Modules
             try
             {
                 bool nowaka = storage.ToggleWaka(Context.Guild.Id);
-                await ReplyAsync($"{CustomEmojis.Check} \"Waka\" responses turned **{(nowaka ? "on" : "off")}** in this server.");
+                await ReplyAsync($"{CustomEmoji.Check} \"Waka\" responses turned **{(nowaka ? "on" : "off")}** in this server.");
             }
             catch (Exception e)
             {
                 await logger.Log(LogSeverity.Error, $"{e}");
-                await ReplyAsync($"{CustomEmojis.Cross} Oops, something went wrong. {ErrorMessage}");
+                await ReplyAsync($"{CustomEmoji.Cross} Oops, something went wrong. {ErrorMessage}");
             }
         }
     }

@@ -8,7 +8,6 @@ using Discord.WebSocket;
 using Microsoft.Extensions.Configuration;
 using PacManBot.Constants;
 
-
 namespace PacManBot.Services
 {
     public class StartupService

@@ -5,7 +5,6 @@ using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 
-
 namespace PacManBot.Services
 {
     public class CommandHandler

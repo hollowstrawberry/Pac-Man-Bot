@@ -1,15 +1,15 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Collections.Generic;
+using System.Text;
 using System.Text.RegularExpressions;
+using System.Collections.Generic;
+using Newtonsoft.Json;
 using Microsoft.Extensions.Configuration;
 using Discord;
 using Discord.WebSocket;
 using PacManBot.Constants;
 using PacManBot.Modules.PacMan;
-using Newtonsoft.Json;
-
 
 namespace PacManBot.Services
 {
@@ -18,13 +18,19 @@ namespace PacManBot.Services
         private readonly DiscordSocketClient client;
         private readonly LoggingService logger;
 
-        
+        private JsonSerializerSettings GameJsonSettings = new JsonSerializerSettings
+        {
+            ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor
+        };
+
         public IConfigurationRoot BotContent { get; private set; }
         public string DefaultPrefix { get; }
         public Dictionary<ulong, string> Prefixes { get; private set; }
         public List<GameInstance> GameInstances { get; private set; }
         public List<ScoreEntry> ScoreEntries { get; private set; }
         public string WakaExclude { get; private set; }
+
+
 
 
         public StorageService(DiscordSocketClient client, LoggingService logger, IConfigurationRoot config)
@@ -122,6 +128,12 @@ namespace PacManBot.Services
         }
 
 
+        public void StoreGame(GameInstance game)
+        {
+            File.WriteAllText(game.GameFile, JsonConvert.SerializeObject(game), Encoding.UTF8);
+        }
+
+
         public void AddScore(ScoreEntry entry)
         {
             string scoreString = entry.ToString();
@@ -215,7 +227,7 @@ namespace PacManBot.Services
                     {
                         try
                         {
-                            var game = JsonConvert.DeserializeObject<GameInstance>(File.ReadAllText(file));
+                            var game = JsonConvert.DeserializeObject<GameInstance>(File.ReadAllText(file), GameJsonSettings);
                             game.SetServices(client, this, logger);
                             GameInstances.Add(game);
                         }

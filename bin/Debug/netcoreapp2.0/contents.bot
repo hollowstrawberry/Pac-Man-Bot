@@ -42,7 +42,7 @@
 
 "aboutfields":
 "Author|Samrux#3980
-Version|v2.10.1
+Version|v2.11.1
 Library|Discord.Net 2.0 (C#)
 <:discord:409811304103149569> Bot invite|[Click here](https://discordapp.com/oauth2/authorize?client_id=398127484983443468&scope=bot&permissions=355392 \"https://discordapp.com/oauth2/authorize?client_id=398127484983443468&scope=bot&permissions=355392\")
 <:staff:412019879772815361> Pac-Man server|[Click here](https://discord.gg/hGHnfda \"https://discord.gg/hGHnfda\")
@@ -53,8 +53,8 @@ Library|Discord.Net 2.0 (C#)
 "```css
 @ 'Welcome to Pac-Man Bot!'
 
-The game is played in turns, using the emoji reactions as controls. The arrows will move Pac-Man and change his direction, and the pause symbol will skip a turn. You must avoid the ghosts and collect all the pellets to win. Try and get a high score!
-You can use the '{prefix}refresh' or '{prefix}refresh mobile' commands to move this game message to the bottom of the chat. Using '{prefix}end' will end the game.
+The game is played in turns, using the emoji reactions as controls. The arrows will move Pac-Man and change his direction, and the wait symbol will skip a turn. You must avoid the ghosts and collect all the pellets to win. Try and get a high score!
+You can use the '{prefix}refresh' or '{prefix}refresh mobile' commands to move this game message to the bottom of the chat and change display modes. Using '{prefix}end' will end the game.
 Also, sorry about the ocassional lag - It is the Discord rate-limit.
 
 For more information about the bot, use the '{prefix}help' and '{prefix}about' commands.
@@ -81,8 +81,8 @@ To start a custom game, send **{prefix}play \\`\\`\\`map\\`\\`\\`** or **{prefix
  `-`: Ghost box door
  `·●`: Pellets
  `$`: Fruit (left tile)
- `_`: Ghosts can't move here from below
- `~`: Same as `_`, but with a pellet",
+ `~`: A pellet, but ghosts can't move here from below
+ `_`: Empty, but ghosts can't move here from below",
 
 "customlinks":
 "Original game map|https://github.com/Samrux/Pac-Man-Bot/blob/master/bin/contents.bot

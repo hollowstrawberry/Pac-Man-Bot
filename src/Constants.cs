@@ -1,3 +1,5 @@
+using Discord;
+
 namespace PacManBot.Constants
 {
     public static class BotFile
@@ -22,28 +24,17 @@ namespace PacManBot.Constants
     }
 
 
-    public static class Emojis
+    public static class CustomEmoji
     {
-        public const string
-            Left = "⬅",
-            Up = "⬆",
-            Down = "⬇",
-            Right = "➡",
-            Pause = "⏸",
-            Reset = "🔃",
-            Info = "ℹ";
-    }
-
-
-    public static class CustomEmojis
-    {
-        public const string
-            PacMan = "<a:pacman:409803570544902144>",
-            Discord = "<:discord:409811304103149569>",
-            GitHub = "<:github:409803419717599234>",
-            Loading = "<a:loading:410612084527595520>",
-            Check = "<:check:410612082929565696>",
-            Cross = "<:cross:410612082988285952>",
-            Staff = "<:staff:412019879772815361>";
+        public static readonly IEmote
+            PacMan = "<a:pacman:409803570544902144>".ToEmote(),
+            Discord = "<:discord:409811304103149569>".ToEmote(),
+            GitHub = "<:github:409803419717599234>".ToEmote(),
+            Loading = "<a:loading:410612084527595520>".ToEmote(),
+            Check = "<:check:410612082929565696>".ToEmote(),
+            Cross = "<:cross:410612082988285952>".ToEmote(),
+            Staff = "<:staff:412019879772815361>".ToEmote(),
+            Help = "<:help:438481218674229248>".ToEmote(),
+            Wait = "<:wait:438480194991554561>".ToEmote();
     }
 }
