@@ -53,7 +53,7 @@ namespace PacManBot.Modules.PacMan
         private DiscordSocketClient client;
         private StorageService storage;
         private LoggingService logger;
-        private Random random;
+        private Random random = new Random();
 
         [DataMember] public bool custom = false;
         [DataMember] public readonly ulong channelId; //Which channel this game is located in
@@ -336,7 +336,6 @@ namespace PacManBot.Modules.PacMan
             this.logger = logger;
             this.channelId = channelId;
             this.ownerId = ownerId;
-            random = new Random();
 
             // Map
             if (newMap == null) newMap = storage.BotContent["map"];
@@ -664,7 +663,6 @@ namespace PacManBot.Modules.PacMan
             this.client = client;
             this.storage = storage;
             this.logger = logger;
-            random = new Random();
         }
     }
 }

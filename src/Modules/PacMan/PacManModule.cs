@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
@@ -21,12 +20,6 @@ namespace PacManBot.Modules.PacMan
         private const int MaxDisplayedScores = 20;
         private string ManualModeMessage => "__Manual mode:__ Both adding and removing reactions count as input. Do one action at a time to prevent buggy behavior." +
                                             "\nGive this bot the permission to Manage Messages to remove reactions automatically.".If(Context.Guild != null);
-
-        public enum TimePeriod // Argument to leaderboard command, parsable from string
-        {
-            all, month, week, day,
-            a = all, m = month, w = week, d = day
-        }
 
 
         public PacManModule(LoggingService logger, StorageService storage)
@@ -90,7 +83,7 @@ namespace PacManBot.Modules.PacMan
             storage.GameInstances.Add(newGame);
  
             if (mobile) newGame.mobileDisplay = true;
-            var gameMessage = await ReplyAsync(preMessage + newGame.GetDisplay(false) + "```diff\n+Starting game```"); //Output the game
+            var gameMessage = await ReplyAsync(preMessage + newGame.GetDisplay(showHelp: false) + "```diff\n+Starting game```"); //Output the game
             newGame.messageId = gameMessage.Id;
 
             if (!Context.BotHas(ChannelPermission.ManageMessages))
@@ -122,7 +115,7 @@ namespace PacManBot.Modules.PacMan
                     if (oldMsg != null) await oldMsg.DeleteAsync(); //Delete old message
 
                     game.mobileDisplay = arg.StartsWith("m");
-                    var newMsg = await ReplyAsync(game.GetDisplay(false) + "```diff\n+Refreshing game```"); //Send new message
+                    var newMsg = await ReplyAsync(game.GetDisplay(showHelp: false) + "```diff\n+Refreshing game```"); //Send new message
                     game.messageId = newMsg.Id; //Change focus message for this channel
 
                     if (!Context.BotHas(ChannelPermission.ManageMessages))
@@ -184,54 +177,48 @@ namespace PacManBot.Modules.PacMan
         [Command("leaderboard"), Alias("lb", "l"), Remarks("[all/month/week/day] [number] [number] — *Displays scores from the Global Leaderboard, in a given range from a given period*")]
         [Summary("By default, displays the top 10 scores of all time from the Global Leaderboard of all servers.\nYou can specify a time period to display scores from (all/month/week/day)." +
                  "\nYou can also specify a range of scores between two positive numbers.\nIf given just one number, it will be taken as the start point if >20, or as the end point otherwise.")]
-        public async Task SendTopScores(int min = 10, int? max = null) => await SendTopScores(TimePeriod.all, min, max);
+        public async Task SendTopScores(int min = 10, int? max = null) => await SendTopScores(Utils.TimePeriod.all, min, max);
 
         [Command("leaderboard"), Alias("lb", "l")]
-        public async Task SendTopScores(TimePeriod time, int min = 10, int? max = null)
+        public async Task SendTopScores(Utils.TimePeriod time, int min = 10, int? max = null)
         {
             if (min < 1 || max < 1 || max < min)
             {
                 await ReplyAsync($"Invalid range of scores. Try **{storage.GetPrefixOrEmpty(Context.Guild)}help lb** for more info.");
                 return;
             }
-            if (max == null && min <= MaxDisplayedScores) //Takes a single number as the max if greater than the limit
+            if (max == null) 
             {
-                max = min;
-                min = 1;
+                if (min <= MaxDisplayedScores) //Takes a single number as the max if less than the limit
+                {
+                    max = min;
+                    min = 1;
+                }
+                else max = min + 9;
             }
 
-            var scores = new List<ScoreEntry>();
-            var currentDate = DateTime.Now;
-            switch (time)
-            {
-                case TimePeriod.day:   scores = storage.ScoreEntries.Where(s => (currentDate - s.date).TotalHours <= 24.0).ToList(); break;
-                case TimePeriod.week:  scores = storage.ScoreEntries.Where(s => (currentDate - s.date).TotalDays <= 7.0).ToList(); break;
-                case TimePeriod.month: scores = storage.ScoreEntries.Where(s => (currentDate - s.date).TotalDays <= 30.0).ToList(); break;
-                case TimePeriod.all:   scores = storage.ScoreEntries; break;
-            }
+            var scores = storage.GetScores(time);
 
-            int scoreAmount = scores.Count();
-
-            if (scoreAmount < 1)
+            if (scores.Count < 1)
             {
                 await ReplyAsync("There are no registered scores within this period!");
                 return;
             }
 
-            if (min > scoreAmount)
+            if (min > scores.Count)
             {
                 await ReplyAsync("No scores found within the specified range.");
                 return;
             }
 
             var content = new StringBuilder();
-            content.Append($"Displaying best scores {(time == TimePeriod.all ? "of all time" : time == TimePeriod.month ? "in the last 30 days" : time == TimePeriod.week ? "in the last 7 days" : $"in the last 24 hours")}\nᅠ\n");
+            content.Append($"Displaying best scores {Utils.ScorePeriodString(time)}\nᅠ\n");
 
-            for (int i = min; i < scoreAmount && i <= max && i < min + MaxDisplayedScores; i++)
+            for (int i = min; i < scores.Count && i <= max && i < min + MaxDisplayedScores; i++)
             {
                 ScoreEntry entry = scores[i - 1]; // The list is always kept sorted so we just go by index
 
-                //Alings elements
+                //Aligns elements
                 string result = $"`{i}. {" ".If(i.ToString().Length < max.ToString().Length)}"
                               + $"({entry.state}) {" ".If(entry.state == State.Win)}"
                               + $"{" ".If(entry.score.ToString().Length < storage.ScoreEntries[min - 1].score.ToString().Length)}{entry.score} points "
@@ -240,7 +227,9 @@ namespace PacManBot.Modules.PacMan
                 content.Append(result + new string(' ', Math.Max(38 - result.Length, 0)) + $"- {entry.GetUsername(Context.Client)}`\n");
             }
 
-            content.Append(max - min >= MaxDisplayedScores ? $"*Only {MaxDisplayedScores} scores may be displayed at once*" : max >= scoreAmount ? "*No more scores could be found*" : "");
+            content.Append(max - min >= MaxDisplayedScores && max < scores.Count ? $"*Only {MaxDisplayedScores} scores may be displayed at once*"
+                                                                                  : max >= scores.Count ? "*No more scores could be found*" : "");
+
 
             var embed = new EmbedBuilder()
             {
@@ -253,22 +242,30 @@ namespace PacManBot.Modules.PacMan
         }
 
 
-        [Command("score"), Alias("sc", "s"), Remarks("[user] — *See your own or another user's place on the leaderboard*")]
+        [Command("score"), Alias("sc", "s"), Remarks("[all/month/week/day] [user] — *See your own or another user's place on the Global Leaderboard, in a given period*")]
         [Summary("See your own highest score of all time in the *Global Leaderboard* of all servers. " +
-                 "You can specify a user in your guild using their name, mention or ID to see their score instead.")]
-        public async Task SendPersonalBest(SocketGuildUser guildUser = null) => await SendPersonalBest((guildUser ?? Context.User).Id);
+                 "You can specify a user in your guild using their name, mention or ID to see their score instead." +
+                 "\nYou can also specify a time period to display scores from (all/month/week/day).")]
+        public async Task SendPersonalBest(SocketGuildUser guildUser = null) => await SendPersonalBest(Utils.TimePeriod.all, (guildUser ?? Context.User).Id);
 
         [Command("score"), Alias("sc", "s")]
-        public async Task SendPersonalBest(ulong userId)
+        public async Task SendPersonalBest(Utils.TimePeriod time, SocketGuildUser guildUser = null) => await SendPersonalBest(time, (guildUser ?? Context.User).Id);
+
+        [Command("score"), Alias("sc", "s")]
+        public async Task SendPersonalBest(ulong userId) => await SendPersonalBest(Utils.TimePeriod.all, userId);
+
+        [Command("score"), Alias("sc", "s")]
+        public async Task SendPersonalBest(Utils.TimePeriod time, ulong userId)
         {
-            for (int i = 0; i < storage.ScoreEntries.Count; i++)
+            var scores = storage.GetScores(time);
+            for (int i = 0; i < scores.Count; i++)
             {
-                if (storage.ScoreEntries[i].userId == userId) // The list is always kept sorted so the first match is the highest score
+                if (scores[i].userId == userId) // The list is always kept sorted so the first match is the highest score
                 {
                     var embed = new EmbedBuilder()
                     {
                         Title = $"🏆 __**Global Leaderboard**__ 🏆",
-                        Description = storage.ScoreEntries[i].ToStringSimpleScoreboard(Context.Client, i + 1),
+                        Description = $"Highest score {Utils.ScorePeriodString(time)}:\n{scores[i].ToStringSimpleScoreboard(Context.Client, i + 1)}",
                         Color = new Color(241, 195, 15)
                     };
                     await ReplyAsync("", false, embed.Build());
@@ -276,7 +273,7 @@ namespace PacManBot.Modules.PacMan
                 }
             }
 
-            await ReplyAsync("No scores registered for this user!");
+            await ReplyAsync(time == Utils.TimePeriod.all ? "No scores registered for this user!" : "No scores registered during that time!");
         }
 
 

@@ -134,6 +134,15 @@ namespace PacManBot.Services
         }
 
 
+        public List<ScoreEntry> GetScores(Utils.TimePeriod period)
+        {
+            if (period == Utils.TimePeriod.all) return ScoreEntries;
+
+            var date = DateTime.Now;
+            return ScoreEntries.Where(s => (date - s.date).TotalHours <= (int)period).ToList();
+        }
+
+
         public void AddScore(ScoreEntry entry)
         {
             string scoreString = entry.ToString();

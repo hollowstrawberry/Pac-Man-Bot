@@ -110,21 +110,21 @@ namespace PacManBot
 
         private Task OnReady()
         {
-            UpdateGuildCount();
+            Task.Run(async () => await UpdateGuildCount());
             return Task.CompletedTask;
         }
 
 
         private Task OnJoinedGuild(SocketGuild guild)
         {
-            UpdateGuildCount();
+            Task.Run(async () => await UpdateGuildCount());
             return Task.CompletedTask;
         }
 
 
         private Task OnLeftGuild(SocketGuild guild)
         {
-            UpdateGuildCount();
+            Task.Run(async () => await UpdateGuildCount());
 
             for (int i = 0; i < storage.GameInstances.Count; i++) //Removes leftover games in the guild we left
             {
@@ -145,40 +145,35 @@ namespace PacManBot
 
 
 
-        private Task UpdateGuildCount()
+        private async Task UpdateGuildCount()
         {
-            Task.Run(async () => // Wrapping in a Task.Run prevents the gateway from getting blocked
+            int guilds = client.Guilds.Count;
+            await logger.Log(LogSeverity.Info, $"Guild count is now {guilds}");
+
+            // Update online guild count
+            if (guildCountTimer == null || guildCountTimer.Elapsed.TotalMinutes >= 15.0)
             {
-                int guilds = client.Guilds.Count;
-                await logger.Log(LogSeverity.Info, $"Guild count is now {guilds}");
-
-                // Update online guild count
-                if (guildCountTimer == null || guildCountTimer.Elapsed.TotalMinutes >= 15.0)
-                {
-                    await client.SetGameAsync($"{botConfig["prefix"]}help | {guilds} guilds");
+                await client.SetGameAsync($"{botConfig["prefix"]}help | {guilds} guilds");
 
 
-                    string[] website = { $"bots.discord.pw",
+                string[] website = { $"bots.discord.pw",
                                      $"discordbots.org" };
 
-                    for (int i = 0; i < website.Length; i++)
-                    {
-                        if (string.IsNullOrWhiteSpace(botConfig[$"httptoken{i}"])) continue;
+                for (int i = 0; i < website.Length; i++)
+                {
+                    if (string.IsNullOrWhiteSpace(botConfig[$"httptoken{i}"])) continue;
 
-                        string requesturi = "https://" + website[i] + $"/api/bots/{client.CurrentUser.Id}/stats";
-                        var webclient = new HttpClient();
-                        var content = new StringContent($"{{\"server_count\": {guilds}}}", System.Text.Encoding.UTF8, "application/json");
-                        webclient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(botConfig[$"httptoken{i}"]);
-                        var response = await webclient.PostAsync(requesturi, content);
+                    string requesturi = "https://" + website[i] + $"/api/bots/{client.CurrentUser.Id}/stats";
+                    var webclient = new HttpClient();
+                    var content = new StringContent($"{{\"server_count\": {guilds}}}", System.Text.Encoding.UTF8, "application/json");
+                    webclient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(botConfig[$"httptoken{i}"]);
+                    var response = await webclient.PostAsync(requesturi, content);
 
-                        await logger.Log(LogSeverity.Verbose, $"Sent guild count to {website[i]} - {(response.IsSuccessStatusCode ? "Success" : $"Response:\n{response}")}");
-                    }
-
-                    guildCountTimer = Stopwatch.StartNew();
+                    await logger.Log(LogSeverity.Verbose, $"Sent guild count to {website[i]} - {(response.IsSuccessStatusCode ? "Success" : $"Response:\n{response}")}");
                 }
-            });
 
-            return Task.CompletedTask;
+                guildCountTimer = Stopwatch.StartNew();
+            }
         }
     }
 }

@@ -11,6 +11,23 @@ namespace PacManBot
     {
         // General utilities
 
+        public enum TimePeriod
+        {
+            all = -1,
+            month = 24 * 30,
+            week = 24 * 7,
+            day = 24,
+            a = all, m = month, w = week, d = day //To be parsed from a string
+        }
+
+        public static string ScorePeriodString(TimePeriod period)
+        {
+            if (period == TimePeriod.month) return "of the last 30 days";
+            else if (period == TimePeriod.week) return "of the last 7 days";
+            else if (period == TimePeriod.week) return "of the last 24 hours";
+            else return "of all time";
+        }
+
         //2-dimensional array length
         public static int LengthX<T>(this T[,] array) => array.GetLength(0);
         public static int LengthY<T>(this T[,] array) => array.GetLength(1);
@@ -64,6 +81,11 @@ namespace PacManBot
             return Regex.Replace(text, @"([\\*_`~])", "\\$1");
         }
 
+
+        public static bool BotHas(this IChannel channel, ChannelPermission permission)
+        {
+            return channel is IGuildChannel gchannel && gchannel.Guild != null && gchannel.Guild.GetCurrentUserAsync().Result.GetPermissions(gchannel).Has(permission);
+        }
 
         public static bool BotHas(this SocketCommandContext context, ChannelPermission permission)
         {
