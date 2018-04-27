@@ -19,7 +19,7 @@ namespace PacManBot.Modules.PacMan
     }
 
 
-    [DataContract]
+    [DataContract] // Serializable to store in JSON
     public class GameInstance
     {
         //Constants

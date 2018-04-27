@@ -22,9 +22,16 @@ namespace PacManBot.Services
             this.logger = logger;
 
             // Events
-            this.client.ReactionAdded += async (m, c, r) => await OnReaction(m, c, r, false);
-            this.client.ReactionRemoved += async (m, c, r) => await OnReaction(m, c, r, true);
+            this.client.ReactionAdded += _OnReactionAdded;
+            this.client.ReactionRemoved += _OnReactionRemoved;
         }
+
+
+        private Task _OnReactionAdded(Cacheable<IUserMessage, ulong> m, ISocketMessageChannel c, SocketReaction r)
+            => Task.Run(async () => await OnReaction(m, c, r, false)); //Prevents the gateway from getting blocked
+
+        private Task _OnReactionRemoved(Cacheable<IUserMessage, ulong> m, ISocketMessageChannel c, SocketReaction r)
+            => Task.Run(async () => await OnReaction(m, c, r, true));
 
 
         private async Task OnReaction(Cacheable<IUserMessage, ulong> messageData, ISocketMessageChannel channel, SocketReaction reaction, bool removed)
@@ -35,7 +42,9 @@ namespace PacManBot.Services
             {
                 if (reaction.MessageId == game.messageId)
                 {
-                    await GameInput(game, await messageData.GetOrDownloadAsync(), reaction, removed);
+                    var message = await messageData.GetOrDownloadAsync();
+                    if (message != null) await GameInput(game, message, reaction, removed);
+                    else await logger.Log(LogSeverity.Warning, $"Couldn't grab game message {game.messageId} on channel {game.channelId}");
                     return;
                 }
             }

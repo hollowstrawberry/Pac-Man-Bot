@@ -104,33 +104,31 @@ namespace PacManBot
                     Environment.Exit(1);
                 }
             });
+
             return Task.CompletedTask;
         }
 
 
         private Task OnReady()
         {
-            Task.Run(async () => await UpdateGuildCount());
-            return Task.CompletedTask;
+            return Task.Run(async () => await UpdateGuildCount());
         }
 
 
         private Task OnJoinedGuild(SocketGuild guild)
         {
-            Task.Run(async () => await UpdateGuildCount());
-            return Task.CompletedTask;
+            return Task.Run(async () => await UpdateGuildCount());
         }
 
 
         private Task OnLeftGuild(SocketGuild guild)
         {
-            Task.Run(async () => await UpdateGuildCount());
-
             for (int i = 0; i < storage.GameInstances.Count; i++) //Removes leftover games in the guild we left
             {
                 if (storage.GameInstances[i].Guild?.Id == guild.Id) storage.DeleteGame(i);
             }
-            return Task.CompletedTask;
+
+            return Task.Run(async () => await UpdateGuildCount());
         }
 
 
@@ -140,6 +138,7 @@ namespace PacManBot
             {
                 if (storage.GameInstances[i].channelId == channel.Id) storage.DeleteGame(i);
             }
+
             return Task.CompletedTask;
         }
 

@@ -22,13 +22,14 @@ namespace PacManBot
 
         public static string ScorePeriodString(TimePeriod period)
         {
-            if (period == TimePeriod.month) return "of the last 30 days";
-            else if (period == TimePeriod.week) return "of the last 7 days";
-            else if (period == TimePeriod.week) return "of the last 24 hours";
+            if (period == TimePeriod.month) return "in the last 30 days";
+            else if (period == TimePeriod.week) return "in the last 7 days";
+            else if (period == TimePeriod.day) return "in the last 24 hours";
             else return "of all time";
         }
 
-        //2-dimensional array length
+        public static T Last<T>(this T[] array) => array[array.Length - 1];
+
         public static int LengthX<T>(this T[,] array) => array.GetLength(0);
         public static int LengthY<T>(this T[,] array) => array.GetLength(1);
 
