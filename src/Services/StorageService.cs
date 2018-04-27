@@ -33,12 +33,12 @@ namespace PacManBot.Services
 
 
 
-        public StorageService(DiscordSocketClient client, LoggingService logger, IConfigurationRoot config)
+        public StorageService(DiscordSocketClient client, LoggingService logger, BotConfig config)
         {
             this.client = client;
             this.logger = logger;
 
-            DefaultPrefix = config["prefix"];
+            DefaultPrefix = config.defaultPrefix;
             LoadBotContent();
             LoadWakaExclude();
             LoadPrefixes();

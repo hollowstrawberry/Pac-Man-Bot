@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
@@ -7,10 +8,10 @@ using System.Diagnostics;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PacManBot.Services;
 using PacManBot.Constants;
+using Newtonsoft.Json;
 
 
 //Made by Samrux for fun
@@ -19,12 +20,22 @@ using PacManBot.Constants;
 
 namespace PacManBot
 {
+    public class BotConfig
+    {
+        public string defaultPrefix;
+        public string discordToken;
+        public string[] httpToken;
+        public int messageCacheSize;
+        public LogSeverity clientLogLevel;
+        public LogSeverity commandLogLevel;
+    }
+
     public class Bot
     {
         private DiscordSocketClient client;
         private LoggingService logger;
         private StorageService storage;
-        private IConfigurationRoot botConfig;
+        private BotConfig botConfig;
 
         private CancellationTokenSource cancelReconnectTimeout = null;
         private Stopwatch guildCountTimer = null;
@@ -32,20 +43,21 @@ namespace PacManBot
 
         public static void Main(string[] args) => new Bot().MainAsync().GetAwaiter().GetResult();
 
+
         public async Task MainAsync()
         {
-            var configBuilder = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile(BotFile.Config); //Add the configuration file
-            botConfig = configBuilder.Build(); //Build the configuration file
+            if (!File.Exists(BotFile.Config)) throw new Exception($"Configuration file {BotFile.Config} is missing.");
 
-            //Client and its configuration
-            if (!Int32.TryParse(botConfig["messagecachesize"], out int cacheSize)) cacheSize = 100;
-            var clientConfig = new DiscordSocketConfig { LogLevel = LogSeverity.Verbose, MessageCacheSize = cacheSize, /*WebSocketProvider = Discord.Net.Providers.WS4Net.WS4NetProvider.Instance*/ }; //Specify websocketprovider to run properly in Windows 7
+            botConfig = JsonConvert.DeserializeObject<BotConfig>(File.ReadAllText(BotFile.Config));
+            var clientConfig = new DiscordSocketConfig { LogLevel = botConfig.clientLogLevel, MessageCacheSize = botConfig.messageCacheSize};
+            var commandConfig = new CommandServiceConfig { DefaultRunMode = RunMode.Async, LogLevel = botConfig.commandLogLevel };
+
             client = new DiscordSocketClient(clientConfig);
 
             //Prepare services
             var services = new ServiceCollection()
                 .AddSingleton(client)
-                .AddSingleton(new CommandService(new CommandServiceConfig{ DefaultRunMode = RunMode.Async, LogLevel = LogSeverity.Verbose }))
+                .AddSingleton(new CommandService(commandConfig))
                 .AddSingleton<CommandHandler>()
                 .AddSingleton<ReactionHandler>()
                 .AddSingleton<ScriptingService>()
@@ -111,14 +123,14 @@ namespace PacManBot
 
         private Task OnReady()
         {
-            Task.Run(async () => await UpdateGuildCount());
+            Task.Run(async () => await UpdateGuildCountAsync());
             return Task.CompletedTask;
         }
 
 
         private Task OnJoinedGuild(SocketGuild guild)
         {
-            Task.Run(async () => await UpdateGuildCount());
+            Task.Run(async () => await UpdateGuildCountAsync());
             return Task.CompletedTask;
         }
 
@@ -130,7 +142,7 @@ namespace PacManBot
                 if (storage.GameInstances[i].Guild?.Id == guild.Id) storage.DeleteGame(i);
             }
 
-            Task.Run(async () => await UpdateGuildCount());
+            Task.Run(async () => await UpdateGuildCountAsync());
             return Task.CompletedTask;
         }
 
@@ -147,7 +159,7 @@ namespace PacManBot
 
 
 
-        private async Task UpdateGuildCount()
+        private async Task UpdateGuildCountAsync()
         {
             int guilds = client.Guilds.Count;
             await logger.Log(LogSeverity.Info, $"Guild count is now {guilds}");
@@ -155,20 +167,20 @@ namespace PacManBot
             // Update online guild count
             if (guildCountTimer == null || guildCountTimer.Elapsed.TotalMinutes >= 15.0)
             {
-                await client.SetGameAsync($"{botConfig["prefix"]}help | {guilds} guilds");
+                await client.SetGameAsync($"{botConfig.defaultPrefix}help | {guilds} guilds");
 
 
                 string[] website = { $"bots.discord.pw",
                                      $"discordbots.org" };
 
-                for (int i = 0; i < website.Length; i++)
+                for (int i = 0; i < website.Length && i < botConfig.httpToken.Length; i++)
                 {
-                    if (string.IsNullOrWhiteSpace(botConfig[$"httptoken{i}"])) continue;
+                    if (string.IsNullOrWhiteSpace(botConfig.httpToken[i])) continue;
 
                     string requesturi = "https://" + website[i] + $"/api/bots/{client.CurrentUser.Id}/stats";
                     var webclient = new HttpClient();
                     var content = new StringContent($"{{\"server_count\": {guilds}}}", System.Text.Encoding.UTF8, "application/json");
-                    webclient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(botConfig[$"httptoken{i}"]);
+                    webclient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(botConfig.httpToken[i]);
                     var response = await webclient.PostAsync(requesturi, content);
 
                     await logger.Log(LogSeverity.Verbose, $"Sent guild count to {website[i]} - {(response.IsSuccessStatusCode ? "Success" : $"Response:\n{response}")}");

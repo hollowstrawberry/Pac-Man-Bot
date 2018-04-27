@@ -17,7 +17,6 @@ namespace PacManBot.Services
         private string LogFile => $"{LogDirectory}{DateTime.Now.ToString("yyyy-MM-dd")}.txt";
 
 
-        //DiscordSocketClient and CommandService are injected automatically from the IServiceProvider
         public LoggingService(DiscordSocketClient client, CommandService commands)
         {
             this.client = client;

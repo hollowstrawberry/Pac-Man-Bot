@@ -1,5 +1,13 @@
 {
-  "prefix": "<",
-  "token": "",
-  "messagecachesize": "100"
+  "defaultPrefix": "<",
+
+  "clientLogLevel": "Verbose",
+  "commandLogLevel": "Verbose",
+  "messageCacheSize": 100,
+
+  "discordToken": "",
+  "httpToken": [
+    "",
+    ""
+  ]
 }

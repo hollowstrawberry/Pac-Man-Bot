@@ -32,7 +32,7 @@ namespace PacManBot.Services
 
         private Task OnMessageReceived(SocketMessage m)
         {
-            Task.Run(async () => await OnMessageReceived(m)); //Prevents the gateway from getting blocked
+            Task.Run(async () => await OnMessageReceivedAsync(m));  // Prevents the gateway task from getting blocked
             return Task.CompletedTask;
         }
 

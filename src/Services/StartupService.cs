@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
-using Microsoft.Extensions.Configuration;
 using PacManBot.Constants;
 
 namespace PacManBot.Services
@@ -15,10 +14,10 @@ namespace PacManBot.Services
         private readonly DiscordSocketClient client;
         private readonly CommandService commands;
         private readonly LoggingService logger;
-        private readonly IConfigurationRoot config;
+        private readonly BotConfig config;
 
 
-        public StartupService(DiscordSocketClient client, CommandService commands, LoggingService logger, IConfigurationRoot config)
+        public StartupService(DiscordSocketClient client, CommandService commands, LoggingService logger, BotConfig config)
         {
             this.client = client;
             this.commands = commands;
@@ -46,7 +45,7 @@ namespace PacManBot.Services
             }
 
 
-            string discordToken = config["token"]; //Get the discord token from the config file
+            string discordToken = config.discordToken; //Get the discord token from the config file
             if (string.IsNullOrWhiteSpace(discordToken)) throw new Exception($"Missing bot token in {BotFile.Config}");
 
             await client.LoginAsync(TokenType.Bot, discordToken); //Login to discord
