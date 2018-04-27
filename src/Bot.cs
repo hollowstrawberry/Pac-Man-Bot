@@ -111,13 +111,15 @@ namespace PacManBot
 
         private Task OnReady()
         {
-            return Task.Run(async () => await UpdateGuildCount());
+            Task.Run(async () => await UpdateGuildCount());
+            return Task.CompletedTask;
         }
 
 
         private Task OnJoinedGuild(SocketGuild guild)
         {
-            return Task.Run(async () => await UpdateGuildCount());
+            Task.Run(async () => await UpdateGuildCount());
+            return Task.CompletedTask;
         }
 
 
@@ -128,7 +130,8 @@ namespace PacManBot
                 if (storage.GameInstances[i].Guild?.Id == guild.Id) storage.DeleteGame(i);
             }
 
-            return Task.Run(async () => await UpdateGuildCount());
+            Task.Run(async () => await UpdateGuildCount());
+            return Task.CompletedTask;
         }
 
 

@@ -22,19 +22,25 @@ namespace PacManBot.Services
             this.logger = logger;
 
             // Events
-            this.client.ReactionAdded += _OnReactionAdded;
-            this.client.ReactionRemoved += _OnReactionRemoved;
+            this.client.ReactionAdded += OnReactionAdded;
+            this.client.ReactionRemoved += OnReactionRemoved;
         }
 
 
-        private Task _OnReactionAdded(Cacheable<IUserMessage, ulong> m, ISocketMessageChannel c, SocketReaction r)
-            => Task.Run(async () => await OnReaction(m, c, r, false)); //Prevents the gateway from getting blocked
+        private Task OnReactionAdded(Cacheable<IUserMessage, ulong> m, ISocketMessageChannel c, SocketReaction r)
+        {
+            Task.Run(async () => await OnReactionAsync(m, c, r, removed: false));
+            return Task.CompletedTask;
+        }
 
-        private Task _OnReactionRemoved(Cacheable<IUserMessage, ulong> m, ISocketMessageChannel c, SocketReaction r)
-            => Task.Run(async () => await OnReaction(m, c, r, true));
+        private Task OnReactionRemoved(Cacheable<IUserMessage, ulong> m, ISocketMessageChannel c, SocketReaction r)
+        {
+            Task.Run(async () => await OnReactionAsync(m, c, r, removed: true));
+            return Task.CompletedTask;
+        }
 
 
-        private async Task OnReaction(Cacheable<IUserMessage, ulong> messageData, ISocketMessageChannel channel, SocketReaction reaction, bool removed)
+        private async Task OnReactionAsync(Cacheable<IUserMessage, ulong> messageData, ISocketMessageChannel channel, SocketReaction reaction, bool removed)
         {
             if (!reaction.User.IsSpecified || reaction.UserId == client.CurrentUser.Id) return;
 

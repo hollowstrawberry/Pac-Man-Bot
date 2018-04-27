@@ -26,15 +26,18 @@ namespace PacManBot.Services
             this.logger = logger;
             this.provider = provider;
 
-            this.client.MessageReceived += _OnMessageReceived;
+            this.client.MessageReceived += OnMessageReceived;
         }
 
 
-        private Task _OnMessageReceived(SocketMessage m)
-            => Task.Run(async () => await OnMessageReceived(m)); //Prevents the gateway from getting blocked
+        private Task OnMessageReceived(SocketMessage m)
+        {
+            Task.Run(async () => await OnMessageReceived(m)); //Prevents the gateway from getting blocked
+            return Task.CompletedTask;
+        }
 
 
-        private async Task OnMessageReceived(SocketMessage genericMessage)
+        private async Task OnMessageReceivedAsync(SocketMessage genericMessage)
         {
             var message = genericMessage as SocketUserMessage;
             if (message == null || message.Author.IsBot) return;
