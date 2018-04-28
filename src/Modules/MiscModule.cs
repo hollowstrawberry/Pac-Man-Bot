@@ -207,31 +207,23 @@ namespace PacManBot.Modules
 
 
 
-        [Command("dance"), Alias("blob", "party"), Remarks(CommandRemark.Hidden + "[number]")]
-        [Summary("Dance. Takes a number which can be either an amount of emotes or a message ID to react to. Giving 0 causes it to react to the command.")]
+        [Command("party"), Alias("blob", "dance"), Remarks(CommandRemark.Hidden + "[number]")]
+        [Summary("Takes a number which can be either an amount of emotes or a message ID to react to. Giving 0 causes it to react to the command.")]
         public async Task BlobDanceFast(ulong num = 1)
         {
-            try
+            if (num < 1) await Context.Message.AddReactionAsync(CustomEmoji.Dance);
+            else if (num <= 50) await ReplyAsync($"{CustomEmoji.Dance}".Multiply((int)num));
+            else
             {
-                if (num < 1) await Context.Message.AddReactionAsync(CustomEmoji.Dance);
-                else if (num <= 20) await ReplyAsync($"{CustomEmoji.Dance}".Multiply((int)num));
-                else
-                {
-                    var message = await Context.Channel.GetMessageAsync(num) as IUserMessage;
-                    await message.AddReactionAsync(CustomEmoji.Dance);
-                }
-            }
-            catch (Exception e) // ¯\_(ツ)_/¯
-            {
-                await Context.Message.AddReactionAsync(CustomEmoji.Cross);
-                await logger.Log(LogSeverity.Debug, $"Couldn't party in {Context.Channel.FullName()}: {e.Message}");
+                if (await Context.Channel.GetMessageAsync(num) is IUserMessage message) await message.AddReactionAsync(CustomEmoji.Dance);
+                else await Context.Message.AddReactionAsync(CustomEmoji.Cross);
             }
         }
 
 
-        [Command("spamdance"), Alias("spamblob", "spamparty"), Remarks(CommandRemark.Hidden + "[amount]"), Summary("Usable by the owner")]
+        [Command("spamparty"), Alias("spamblob", "spamdance"), Remarks(CommandRemark.Hidden + "[amount]"), Summary("Usable by the owner for spam")]
         [RequireOwner]
-        public async Task SpamDance(int amount = 10)
+        public async Task SpamDance(int amount = 5)
         {
             foreach (IUserMessage message in Context.Channel.GetCachedMessages(amount))
             {
