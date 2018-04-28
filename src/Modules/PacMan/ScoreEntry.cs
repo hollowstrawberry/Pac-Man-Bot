@@ -32,7 +32,7 @@ namespace PacManBot.Modules.PacMan
 
         public string GetUsername(DiscordSocketClient client)
         {
-            return client.GetUser(userId)?.FullName() ?? username ?? "Unknown";
+            return client.GetUser(userId)?.NameandNum() ?? username ?? "Unknown";
         }
 
 

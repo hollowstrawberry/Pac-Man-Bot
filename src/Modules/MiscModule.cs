@@ -115,13 +115,13 @@ namespace PacManBot.Modules
             foreach (var module in allModules.Where(m => !m.Preconditions.Contains(new RequireOwnerAttribute()))) //Go through all modules except dev modules
             {
                 string moduleText = null; //Text under the module title in the embed block
-                List<string> oldCommands = new List<string>(); //Storing the command names so they can't repeat
+                List<string> previousCommands = new List<string>(); //Storing the command names so they can't repeat
 
                 foreach (var command in module.Commands) //Go through all commands
                 {
-                    var canUse = await command.CheckPreconditionsAsync(Context); //Only show commands the user can use
-                    if (canUse.IsSuccess && !oldCommands.Contains(command.Name))
-                    {
+                    if (!command.IsHidden() && !previousCommands.Contains(command.Name)
+                        && (await command.CheckPreconditionsAsync(Context)).IsSuccess //Only shows commands which can be executed
+                    ){
                         for (int i = 0; i < command.Aliases.Count; i++) //Lists command name and aliases
                         {
                             moduleText += $"{", ".If(i > 0)}**{command.Aliases[i]}**";
@@ -130,7 +130,7 @@ namespace PacManBot.Modules
                         if (!string.IsNullOrWhiteSpace(command.Remarks)) moduleText += $" {command.Remarks}"; //Short description
                         moduleText += "\n";
 
-                        oldCommands.Add(command.Name);
+                        previousCommands.Add(command.Name);
                     }
                 }
 
@@ -177,9 +177,9 @@ namespace PacManBot.Modules
         {
             try
             {
-                File.AppendAllText(BotFile.FeedbackLog, $"[{Context.User.FullName()} {Context.User.Id}] {message}\n\n");
+                File.AppendAllText(BotFile.FeedbackLog, $"[{Context.User.FullName()}] {message}\n\n");
                 await ReplyAsync($"{CustomEmoji.Check} Message sent. Thank you!");
-                await (await Context.Client.GetApplicationInfoAsync()).Owner.SendMessageAsync($"```diff\n+Feedback received: {Context.User.FullName()} {Context.User.Id}```\n{message}");
+                await (await Context.Client.GetApplicationInfoAsync()).Owner.SendMessageAsync($"```diff\n+Feedback received: {Context.User.FullName()}```\n{message}");
             }
             catch (Exception e)
             {
@@ -202,6 +202,41 @@ namespace PacManBot.Modules
             };
             embed.AddField($"➡ <{storage.BotContent["link"]}>", "*Thanks for inviting Pac-Man Bot!*", false);
             await ReplyAsync("", false, embed.Build());
+        }
+
+
+
+
+        [Command("dance"), Alias("blob", "party", "blobdance", "blobparty"), Remarks(CommandRemark.Hidden)]
+        [Summary("Dance. Takes a number which can be either an amount of emotes or a message ID to react to. Giving 0 causes it to react to the command.")]
+        public async Task BlobDanceFast(ulong num = 1)
+        {
+            try
+            {
+                if (num < 1) await Context.Message.AddReactionAsync(CustomEmoji.Dance);
+                else if (num <= 20) await ReplyAsync($"{CustomEmoji.Dance}".Multiply((int)num));
+                else
+                {
+                    var message = await Context.Channel.GetMessageAsync(num) as IUserMessage;
+                    await message.AddReactionAsync(CustomEmoji.Dance);
+                }
+            }
+            catch (Exception e) // ¯\_(ツ)_/¯
+            {
+                await Context.Message.AddReactionAsync(CustomEmoji.Cross);
+                await logger.Log(LogSeverity.Debug, $"Couldn't party in {Context.Channel.FullName()}: {e.Message}");
+            }
+        }
+
+
+        [Command("spamdance"), Alias("spamparty", "spamblob"), Remarks(CommandRemark.Hidden), Summary("Please don't")]
+        [RequireOwner]
+        public async Task SpamDance(int amount = 10)
+        {
+            foreach (IUserMessage message in Context.Channel.GetCachedMessages(amount))
+            {
+                await message.AddReactionAsync(CustomEmoji.Dance);
+            }
         }
     }
 }

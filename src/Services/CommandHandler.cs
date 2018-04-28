@@ -54,7 +54,7 @@ namespace PacManBot.Services
                 if (!result.IsSuccess)
                 {
                     string error = result.ErrorReason;
-                    if (!error.Contains("Unknown command")) await logger.Log(LogSeverity.Verbose, $"Command {message} by {message.Author.FullName()} in channel {context.FullChannelName()} couldn't be executed. {error}");
+                    if (!error.Contains("Unknown command")) await logger.Log(LogSeverity.Verbose, $"Command {message} by {message.Author.FullName()} in channel {context.Channel.FullName()} couldn't be executed. {error}");
 
                     string reply = GetCommandErrorReply(error, context.Guild);
 
@@ -70,7 +70,7 @@ namespace PacManBot.Services
                 if (waka.IsMatch(message.ToString()) && !storage.WakaExclude.Contains($"{context.Guild.Id}") && context.BotHas(ChannelPermission.SendMessages))
                 {
                     await context.Channel.SendMessageAsync("waka");
-                    await logger.Log(LogSeverity.Verbose, $"Waka at {context.FullChannelName()}");
+                    await logger.Log(LogSeverity.Verbose, $"Waka at {context.Channel.FullName()}");
                 }
             }
         }

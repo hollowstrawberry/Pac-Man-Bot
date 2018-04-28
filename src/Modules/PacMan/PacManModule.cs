@@ -198,7 +198,7 @@ namespace PacManBot.Modules.PacMan
             }
 
             var scores = storage.GetScores(time);
-
+            
             if (scores.Count < 1)
             {
                 await ReplyAsync("There are no registered scores within this period!");
@@ -305,7 +305,7 @@ namespace PacManBot.Modules.PacMan
                 }
                 catch (Discord.Net.RateLimitedException)
                 {
-                    await logger.Log(LogSeverity.Warning, $"Ratelimit adding controls to message {message.Id} in {Context.FullChannelName()}");
+                    await logger.Log(LogSeverity.Warning, $"Ratelimit adding controls to message {message.Id} in {Context.Channel.FullName()}");
                 }
             }
         }

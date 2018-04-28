@@ -1,15 +1,15 @@
 using System;
+using System.Text;
 using System.Text.RegularExpressions;
 using Discord;
 using Discord.Commands;
-using Discord.WebSocket;
+using PacManBot.Constants;
 using static PacManBot.Modules.PacMan.GameInstance;
 
 namespace PacManBot
 {
     public static class Utils
     {
-        // General utilities
 
         public enum TimePeriod
         {
@@ -20,6 +20,7 @@ namespace PacManBot
             a = all, m = month, w = week, d = day //To be parsed from a string
         }
 
+
         public static string ScorePeriodString(TimePeriod period)
         {
             if (period == TimePeriod.month) return "in the last 30 days";
@@ -28,6 +29,11 @@ namespace PacManBot
             else return "of all time";
         }
 
+
+
+
+        // Arrays
+
         public static T Last<T>(this T[] array) => array[array.Length - 1];
 
         public static int LengthX<T>(this T[,] array) => array.GetLength(0);
@@ -35,17 +41,34 @@ namespace PacManBot
 
 
 
-        // Strings
+
+        /* ===== Strings ===== */
+
+
+        public static string If(this string text, bool condition) => condition ? text : ""; //Helps with complex text concatenation
+
 
         public static string Truncate(this string text, int maxLength)
         {
             return text.Substring(0, Math.Min(maxLength, text.Length));
         }
 
+
         public static string[] Split(this string text, string separator) //Shorthand
         {
             return text.Split(new string[] { separator }, StringSplitOptions.None);
         }
+
+
+        public static string Multiply(this string value, int amount)
+        {
+            if (amount == 1) return value;
+
+            StringBuilder sb = new StringBuilder(amount * value.Length);
+            for (int i = 0; i < amount; i++) sb.Append(value);
+            return sb.ToString();
+        }
+
 
         public static bool ContainsAny(this string text, params string[] matches)
         {
@@ -55,6 +78,7 @@ namespace PacManBot
             }
             return false;
         }
+
         public static bool ContainsAny(this string text, params char[] matches)
         {
             foreach (char match in matches)
@@ -64,28 +88,29 @@ namespace PacManBot
             return false;
         }
 
-        //Conditional strings to help with complex text concatenation
-        public static string If(this string text, bool condition) => condition ? text : "";
-        public static string Unless(this string text, bool condition) => condition ? "" : text;
 
 
 
-        // Discord utilities
+        /* ===== Discord ===== */
+
 
         public static string SanitizeMentions(this string text)
         {
             return text.Replace("@", "@​"); // Zero-width space
         }
 
+        
         public static string SanitizeMarkdown(this string text)
         {
             return Regex.Replace(text, @"([\\*_`~])", "\\$1");
         }
 
 
+        // Permissions
+
         public static bool BotHas(this IChannel channel, ChannelPermission permission)
         {
-            return channel is IGuildChannel gchannel && gchannel.Guild != null && gchannel.Guild.GetCurrentUserAsync().Result.GetPermissions(gchannel).Has(permission);
+            return channel is IGuildChannel gchannel && gchannel.Guild.GetCurrentUserAsync().Result.GetPermissions(gchannel).Has(permission);
         }
 
         public static bool BotHas(this SocketCommandContext context, ChannelPermission permission)
@@ -93,22 +118,40 @@ namespace PacManBot
             return context.Guild != null && context.Guild.CurrentUser.GetPermissions(context.Channel as IGuildChannel).Has(permission);
         }
 
+
         public static bool UserHas(this SocketCommandContext context, ChannelPermission permission)
         {
             return context.Guild != null && context.Guild.GetUser(context.User.Id).GetPermissions(context.Channel as IGuildChannel).Has(permission);
         }
 
 
-        public static string FullChannelName(this SocketCommandContext context)
+        // Names
+
+        public static string NameAndGuild(this IChannel channel)
         {
-            return $"{(context.Guild != null ? $"{context.Guild.Name}/" : "")}{context.Channel.Name} ({context.Channel.Id})";
+            return $"{((channel is IGuildChannel gchannel) ? $"{gchannel.Guild.Name}/" : "")}{channel.Name}";
         }
 
-        public static string FullName(this SocketUser user)
+
+        public static string FullName(this IChannel channel)
+        {
+            return $"{channel.NameAndGuild()} ({channel.Id})";
+        }
+
+
+        public static string NameandNum(this IUser user)
         {
             return $"{user.Username}#{user.Discriminator}";
         }
 
+
+        public static string FullName(this IUser user)
+        {
+            return $"{user.NameandNum()} ({user.Id})";
+        }
+
+
+        // Etc
 
         public static Emote ToEmote(this string text)
         {
@@ -116,14 +159,22 @@ namespace PacManBot
             return emote;
         }
 
+
         public static Emoji ToEmoji(this string unicode)
         {
             return new Emoji(unicode);
         }
 
 
+        public static bool IsHidden(this CommandInfo command)
+        {
+            return command.Remarks != null && command.Remarks.Contains(CommandRemark.Hidden);
+        }
 
-        // Game utilities
+
+
+
+        /* ===== Pac-Man ===== */
 
         public static Dir Opposite(this Dir dir)
         {

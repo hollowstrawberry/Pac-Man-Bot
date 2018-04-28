@@ -72,14 +72,14 @@ namespace PacManBot.Services
                 if (GameInstance.GameInputs.ContainsKey(emote)) //Valid reaction input
                 {
                     string strInput = GameInstance.GameInputs[emote].ToString();
-                    await logger.Log(LogSeverity.Verbose, LogSource.Game, $"Input {strInput}{new string(' ', 5 - strInput.Length)} by user {user.FullName()} in channel {guild?.Name}/{channel.Name} ({channel.Id})");
+                    await logger.Log(LogSeverity.Verbose, LogSource.Game, $"Input {strInput}{new string(' ', 5 - strInput.Length)} by user {user.FullName()} in channel {channel.FullName()}");
 
                     game.DoTick(GameInstance.GameInputs[emote]);
 
                     if (game.state != GameInstance.State.Active) // Ends game
                     {
                         if (!game.custom) storage.AddScore(
-                            new ScoreEntry(game.state, game.score, game.time, user.Id, user.FullName(), DateTime.Now, $"{guild?.Name}/{channel.Name}")
+                            new ScoreEntry(game.state, game.score, game.time, user.Id, user.NameandNum(), DateTime.Now, $"{guild?.Name}/{channel.Name}")
                         );
                         storage.DeleteGame(game);
                     }

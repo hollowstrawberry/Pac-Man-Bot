@@ -248,7 +248,7 @@ namespace PacManBot.Services
                     }
                 }
 
-                logger.Log(LogSeverity.Info, $"Loaded {GameInstances.Count} games from previous session{$" with {fail} errors".If(fail > 0)}.");
+                logger.Log(LogSeverity.Info, LogSource.Storage, $"Loaded {GameInstances.Count} games from previous session{$" with {fail} errors".If(fail > 0)}.");
             }
             else
             {

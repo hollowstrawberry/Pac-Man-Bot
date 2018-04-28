@@ -39,7 +39,7 @@ namespace PacManBot.Modules
             catch (Exception e)
             {
                 await ReplyAsync($"```cs\n{e.Message}```");
-                await logger.Log(LogSeverity.Debug, "Eval", $"{e.Message}");
+                await logger.Log(LogSeverity.Debug, "Eval", $"{e}");
                 await Context.Message.AddReactionAsync(CustomEmoji.Cross);
             }
             finally

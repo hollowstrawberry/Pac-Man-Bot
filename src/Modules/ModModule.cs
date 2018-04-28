@@ -44,7 +44,7 @@ namespace PacManBot.Modules
                 }
                 catch (Discord.Net.HttpException e)
                 {
-                    await logger.Log(LogSeverity.Warning, $"Couldn't delete message {message.Id} in {Context.FullChannelName()}: {e.Message}");
+                    await logger.Log(LogSeverity.Warning, $"Couldn't delete message {message.Id} in {Context.Channel.FullName()}: {e.Message}");
                 }
             }
         }
