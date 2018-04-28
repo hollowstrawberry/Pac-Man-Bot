@@ -6,6 +6,7 @@ using Discord;
 using Discord.Commands;
 using PacManBot.Services;
 using PacManBot.Constants;
+using PacManBot.CustomCommandAttributes;
 
 namespace PacManBot.Modules
 {
@@ -27,7 +28,9 @@ namespace PacManBot.Modules
         }
 
 
-        [Command("run"), Alias("eval", "runasync", "evalasync"), Remarks("<code> —"), Summary("Run code, super dangerous do not try at home. Developer only.")]
+
+        [Command("run"), Alias("eval", "runasync", "evalasync"), HideHelp]
+        [Summary("Run code, super dangerous do not try at home. Developer only.")]
         public async Task ScriptEval([Remainder]string code)
         {
             try
@@ -49,12 +52,13 @@ namespace PacManBot.Modules
         }
 
 
-        [Command("feedbackreply"), Remarks("<userId> <message> —"), Summary("This is how Samrux replies to feedback. Developer only.")]
-        public async Task ReplyFeedback(ulong id, [Remainder]string message)
+        [Command("feedbackreply"), HideHelp]
+        [Summary("This is how Samrux replies to feedback. Developer only.")]
+        public async Task ReplyFeedback(ulong useriD, [Remainder]string message)
         {
             try
             {
-                await Context.Client.GetUser(id).SendMessageAsync("```diff\n+The following message was sent in response to your recent feedback." +
+                await Context.Client.GetUser(useriD).SendMessageAsync("```diff\n+The following message was sent in response to your recent feedback." +
                                                                   "\n-To reply to this message, use the 'feedback' command again.```\n" + message);
                 await Context.Message.AddReactionAsync(CustomEmoji.Check);
             }
@@ -67,7 +71,8 @@ namespace PacManBot.Modules
         }
 
 
-        [Command("garbagecollect"), Alias("gc"), Summary("Clears unused memory if possible. Developer only.")]
+        [Command("garbagecollect"), Alias("gc"), HideHelp]
+        [Summary("Clears unused memory if possible. Developer only.")]
         public async Task DoGarbageCollect()
         {
             GC.Collect();
@@ -78,12 +83,13 @@ namespace PacManBot.Modules
         }
 
 
-        [Command("file"), Alias("readfile"), Remarks("[startpoint] [endpoint] <filename> —"), Summary("Sends the contents of a file in the bot's host location. Developer only.")]
-        public async Task ReadFile(int start, int length, [Remainder]string file)
+        [Command("file"), Alias("readfile"), HideHelp, Parameters("[start] [length] <file>")]
+        [Summary("Sends the contents of a file in the bot's host location. Developer only.")]
+        public async Task ReadFile(int start, int length, [Remainder]string filename)
         {
             try
             {
-                await ReplyAsync($"```{"cs".If(file.Contains(".cs"))}\n{File.ReadAllText(file).Replace("```", "`​``").Substring(start).Truncate(length)}".Truncate(1997) + "```");
+                await ReplyAsync($"```{"cs".If(filename.Contains(".cs"))}\n{File.ReadAllText(filename).Replace("```", "`​``").Substring(start).Truncate(length)}".Truncate(1997) + "```");
             }
             catch (Exception e)
             {
@@ -91,13 +97,14 @@ namespace PacManBot.Modules
                 await ReplyAsync($"```{e.Message}```");
             }
         }
-        [Command("file"), Alias("readfile")]
+        [Command("file"), Alias("readfile"), HideHelp]
         public async Task ReadFile(int start, [Remainder]string file) => await ReadFile(start, 2000, file);
-        [Command("file"), Alias("readfile")]
+        [Command("file"), Alias("readfile"), HideHelp]
         public async Task ReadFile([Remainder]string file) => await ReadFile(0, 2000, file);
 
 
-        [Command("getguilds"), Summary("Gets a list of guilds and member counts where this bot is in. Developer only.")]
+        [Command("getguilds"), HideHelp]
+        [Summary("Gets a list of guilds and member counts where this bot is in. Developer only.")]
         public async Task GetGuildMembers()
         {
             await ReplyAsync(string.Join("\n", Context.Client.Guilds.OrderByDescending(g => g.MemberCount).Select(g => $"{g.Name}: {g.MemberCount}")).Truncate(2000));

@@ -7,6 +7,7 @@ using Discord.Commands;
 using Discord.WebSocket;
 using PacManBot.Services;
 using PacManBot.Constants;
+using PacManBot.CustomCommandAttributes;
 using static PacManBot.Modules.PacMan.GameInstance;
 
 namespace PacManBot.Modules.PacMan
@@ -30,10 +31,10 @@ namespace PacManBot.Modules.PacMan
 
 
 
-        [Command("play"), Alias("p"), Remarks("[mobile/m] [\\`\\`\\`custom map\\`\\`\\`] — *Start a new game on this channel*")]
-        [Summary("Starts a new game, unless there is already an active game on this channel.\nAdding \"mobile\" or \"m\" after the command will begin the game in *Mobile Mode*, " +
-                 "which uses simple characters that will work in phones. (To change back to normal mode, use the **{prefix}refresh** command.)\nIf you add a valid customized map " +
-                 "between \\`\\`\\`triple backticks\\`\\`\\`, it will start a custom game using that map instead. For more information about custom games, use the **{prefix}custom** command.")]
+        [Command("play"), Alias("p", "game", "start"), Remarks("Start a new game on this channel"), Parameters("[mobile/m] [\\`\\`\\`custom map\\`\\`\\`]")]
+        [Summary("Starts a new game, unless there is already an active game on this channel.\nAdding \"mobile\" or \"m\" after the command will begin the game in *Mobile Mode*, "
+               + "which uses simple characters that will work in phones. (To change back to normal mode, use the **{prefix}refresh** command.)\nIf you add a valid customized map "
+               + "between \\`\\`\\`triple backticks\\`\\`\\`, it will start a custom game using that map instead. For more information about custom games, use the **{prefix}custom** command.")]
         [RequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.AddReactions)]
         public async Task StartGameInstance([Remainder]string args = "")
         {
@@ -49,7 +50,6 @@ namespace PacManBot.Modules.PacMan
                     return;
                 }
             }
-
 
             string[] argSplice = args.Split("```");
             string preMessage = "";
@@ -100,12 +100,12 @@ namespace PacManBot.Modules.PacMan
         }
 
 
-        [Command("refresh"), Alias("r"), Remarks("[mobile/m] — *Move the game to the bottom of the chat*")]
+        [Command("refresh"), Alias("ref", "r"), Remarks("Move the game to the bottom of the chat")]
         [Summary("If there is already an active game on this channel, using this command moves the game message to the bottom of the chat, and deletes the old one." +
                  "\nThis is useful if the game message has been lost in a sea of other messages or if you encounter a problem with reactions.\nAdding \"mobile\" or \"m\" " +
                  "after the command will refresh the game in *Mobile Mode*, which uses simple characters that will work in phones. Refreshing again will return it to normal.")]
         [RequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.AddReactions)]
-        public async Task RefreshGameInstance(string arg = "")
+        public async Task RefreshGameInstance([Name("mobile/m")] string arg = "")
         {
             foreach (GameInstance game in storage.GameInstances)
             {
@@ -138,7 +138,7 @@ namespace PacManBot.Modules.PacMan
         }
 
 
-        [Command("end"), Alias("stop"), Remarks("— *End a game you started. Always usable by moderators*")]
+        [Command("end"), Alias("stop"), Remarks("End a game you started. Always usable by moderators")]
         [Summary("Ends the current game on this channel, but only if the person using the command started the game or if they have the Manage Messages permission.")]
         public async Task EndGameInstance()
         {
@@ -174,9 +174,12 @@ namespace PacManBot.Modules.PacMan
         }
 
 
-        [Command("leaderboard"), Alias("lb", "l"), Remarks("[all/month/week/day] [number] [number] — *Displays scores from the Global Leaderboard, in a given range from a given period*")]
-        [Summary("By default, displays the top 10 scores of all time from the Global Leaderboard of all servers.\nYou can specify a time period to display scores from (all/month/week/day)." +
-                 "\nYou can also specify a range of scores between two positive numbers.\nIf given just one number, it will be taken as the start point if >20, or as the end point otherwise.")]
+        [Command("leaderboard"), Alias("lb", "l"), Parameters("[all/month/week/day] [start] [end]")]
+        [Remarks("Global Leaderboard scores"), ExampleUsage("leaderboard 5\nlb month 11 30")]
+        [Summary("By default, displays the top 10 scores of all time from the Global Leaderboard of all servers.\n"
+               + "You can specify a time period to display scores from: all/month/week/day (a/m/w/d are also valid). "
+               + "You can also specify a range of scores from [start] to [end], where those are two positive numbers.\n"
+               + "Only 20 scores may be displayed at once. If given just one number, it will be taken as the start if it's above 20, or as the end otherwise.")]
         public async Task SendTopScores(int min = 10, int? max = null) => await SendTopScores(Utils.TimePeriod.all, min, max);
 
         [Command("leaderboard"), Alias("lb", "l")]
@@ -228,7 +231,7 @@ namespace PacManBot.Modules.PacMan
             }
 
             content.Append(max - min >= MaxDisplayedScores && max < scores.Count ? $"*Only {MaxDisplayedScores} scores may be displayed at once*"
-                                                                                  : max >= scores.Count ? "*No more scores could be found*" : "");
+                           : max >= scores.Count ? "*No more scores could be found*" : "");
 
 
             var embed = new EmbedBuilder()
@@ -242,10 +245,10 @@ namespace PacManBot.Modules.PacMan
         }
 
 
-        [Command("score"), Alias("sc", "s"), Remarks("[all/month/week/day] [user] — *See your own or another user's place on the Global Leaderboard, in a given period*")]
-        [Summary("See your own highest score of all time in the *Global Leaderboard* of all servers. " +
-                 "You can specify a user in your guild using their name, mention or ID to see their score instead." +
-                 "\nYou can also specify a time period to display scores from (all/month/week/day).")]
+        [Command("score"), Alias("sc", "s"), Parameters("[all/month/week/day] [user]")]
+        [ExampleUsage("score d\nsc week @Samrux#3980"), Remarks("See your or a person's top score")]
+        [Summary("See your own highest score of all time in the *Global Leaderboard* of all servers. You can specify a user in your guild using their name, mention or ID, to see their score instead."
+               + "\nYou can also specify a time period to display scores from: all/month/week/day (a/m/w/d are also valid)")]
         public async Task SendPersonalBest(SocketGuildUser guildUser = null) => await SendPersonalBest(Utils.TimePeriod.all, (guildUser ?? Context.User).Id);
 
         [Command("score"), Alias("sc", "s")]
@@ -277,7 +280,7 @@ namespace PacManBot.Modules.PacMan
         }
 
 
-        [Command("custom"), Remarks("— *Learn how custom maps work*")]
+        [Command("custom"), Remarks("Learn how custom maps work")]
         [Summary("Using this command will display detailed help about the custom maps that you can design and play yourself!")]
         [RequireBotPermission(ChannelPermission.EmbedLinks)]
         public async Task SayCustomMapHelp()

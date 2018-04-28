@@ -24,14 +24,16 @@ namespace PacManBot.Modules
         }
 
 
-        [Command("say"), Remarks("<message> — *Make the bot say anything*")]
+
+        [Command("say"), Remarks("Make the bot say anything")]
         [Summary("Repeats back the message provided. Only users with the Manage Messages permission can use this command.")]
         [RequireUserPermission(ChannelPermission.ManageMessages)]
-        public async Task Say([Remainder]string text) => await ReplyAsync(text.SanitizeMentions());
+        public async Task Say([Remainder]string message) => await ReplyAsync(message.SanitizeMentions());
 
 
-        [Command("clear"), Alias("c"), Remarks("[amount] — *Clear messages from this bot*")]
-        [Summary("Clears all messages sent by *this bot only*, checking up to the amount of messages provided, or 10 messages by default. Only users with the Manage Messages permission can use this command.")]
+        [Command("clear"), Alias("c"), Remarks("Clear messages from this bot")]
+        [Summary("Clears all messages sent by *this bot only*, checking up to the amount of messages provided, or 10 messages by default. "
+               + "Only users with the Manage Messages permission can use this command.")]
         [RequireUserPermission(ChannelPermission.ManageMessages), RequireBotPermission(ChannelPermission.ReadMessageHistory)]
         public async Task ClearGameMessages(int amount = 10)
         {
@@ -50,12 +52,13 @@ namespace PacManBot.Modules
         }
 
 
-        [Command("setprefix"), Remarks("<prefix> — *Set a custom prefix for this server (Admin)*")]
-        [Summary("Change the custom prefix for this server. Only server Administrators can use this command.\nPrefixes can't contain \\*.")]
+        [Command("setprefix"), Remarks("Set a custom prefix for this server (Admin)")]
+        [Summary("Change the custom prefix for this server. Only server Administrators can use this command.\n"
+               + "Prefixes can't contain these characters: \\* \\_ \\~ \\` \\\\")]
         [RequireUserPermission(GuildPermission.Administrator)]
-        public async Task SetServerPrefix(string newPrefix)
+        public async Task SetServerPrefix(string prefix)
         {
-            if (newPrefix.ContainsAny("*", "_", "~", "`", "\\"))
+            if (prefix.ContainsAny("*", "_", "~", "`", "\\"))
             {
                 await ReplyAsync($"{CustomEmoji.Cross} The prefix can't contain markdown special characters: *_~\\`\\\\");
                 return;
@@ -63,9 +66,9 @@ namespace PacManBot.Modules
 
             try
             {
-                storage.SetPrefix(Context.Guild.Id, newPrefix);
-                await ReplyAsync($"{CustomEmoji.Check} Prefix for this server has been successfully set to '{newPrefix}'.");
-                await logger.Log(LogSeverity.Info, $"Prefix for server {Context.Guild.Id} set to {newPrefix}");
+                storage.SetPrefix(Context.Guild.Id, prefix);
+                await ReplyAsync($"{CustomEmoji.Check} Prefix for this server has been successfully set to '{prefix}'.");
+                await logger.Log(LogSeverity.Info, $"Prefix for server {Context.Guild.Id} set to {prefix}");
             }
             catch (Exception e)
             {
@@ -75,7 +78,7 @@ namespace PacManBot.Modules
         }
 
 
-        [Command("togglewaka"), Remarks("— *Toggle \"waka\" autoresponse from the bot*")]
+        [Command("togglewaka"), Remarks("Toggle \"waka\" autoresponse from the bot")]
         [Summary("The bot normally responds every time a message contains purely multiples of \"waka\", unless it's turned off server-wide using this command. Requires the user to be a Moderator.")]
         [RequireUserPermission(GuildPermission.ManageMessages)]
         public async Task ToggleWakaResponse()

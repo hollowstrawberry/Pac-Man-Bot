@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -8,6 +9,7 @@ using Discord;
 using Discord.Commands;
 using PacManBot.Services;
 using PacManBot.Constants;
+using PacManBot.CustomCommandAttributes;
 
 namespace PacManBot.Modules
 {
@@ -27,10 +29,11 @@ namespace PacManBot.Modules
         }
 
 
-        [Command("about"), Alias("a", "info"), Remarks("— *About this bot*")]
+
+        [Command("about"), Alias("a", "info"), Remarks("About this bot")]
         [Summary("Shows relevant information, data and links about Pac-Man Bot.")]
         [RequireBotPermission(ChannelPermission.EmbedLinks)]
-        public async Task SayBotInfo()
+        public async Task SendBotInfo()
         {
             string description = storage.BotContent["about"].Replace("{prefix}", storage.GetPrefixOrEmpty(Context.Guild));
             string[] fields = storage.BotContent["aboutfields"].Split('\n').Where(s => s.Contains("|")).ToArray();
@@ -55,12 +58,12 @@ namespace PacManBot.Modules
         }
 
 
-        [Command("help"), Alias("h", "commands"), Remarks("[command] — *List of commands or help about a command*")]
+        [Command("help"), Alias("h", "commands"), Parameters("[command]"), Remarks("List of commands or help about a command")]
         [Summary("Show a complete list of commands you can use. You can specify a command to see detailed help about that command.")]
         [RequireBotPermission(ChannelPermission.EmbedLinks)]
         public async Task SendCommandHelp(string commandName) //With argument
         {
-            string prefix = storage.GetPrefix(Context.Guild).If(Context.Guild != null);
+            string prefix = storage.GetPrefixOrEmpty(Context.Guild);
 
             CommandInfo command = commands.Commands.FirstOrDefault(c => c.Aliases.Contains(commandName));
             if (command == null)
@@ -69,16 +72,18 @@ namespace PacManBot.Modules
                 return;
             }
 
+            var helpInfo = new CommandHelpInfo(command);
+
+
             var embed = new EmbedBuilder()
             {
                 Title = $"{CustomEmoji.PacMan} __Command__: {prefix}{command.Name}",
                 Color = new Color(241, 195, 15)
             };
 
-            if (command.IsHidden()) embed.AddField("Hidden command", "*Are you a wizard?*", true);
+            if (helpInfo.Hidden) embed.AddField("Hidden command", "*Are you a wizard?*", true);
 
-            string parameters = command.Remarks == null ? "" : command.Remarks.Split('—')[0].Trim().Replace(CommandRemark.Hidden, "");
-            if (parameters != "") embed.AddField("Parameters", parameters, true);
+            if (helpInfo.Parameters != "") embed.AddField("Parameters", helpInfo.Parameters, true);
 
             if (command.Aliases.Count > 1)
             {
@@ -86,20 +91,18 @@ namespace PacManBot.Modules
                 for (int i = 1; i < command.Aliases.Count; i++) aliasList += $"{", ".If(i > 1)}{prefix}{command.Aliases[i]}";
                 embed.AddField("Aliases", aliasList, true);
             }
-            if (!string.IsNullOrWhiteSpace(command.Summary))
-            {
-                string summary = command.Summary.Replace("{prefix}", prefix);
-                if (!string.IsNullOrWhiteSpace(parameters) && parameters.Contains("[")) summary += "\n\n*Parameters in [brackets] are optional.*";
-                embed.AddField("Summary", summary, false);
-            }
 
-            await ReplyAsync("", false, embed.Build()); //Send the built embed
+            if (helpInfo.Summary != "") embed.AddField("Summary", helpInfo.Summary.Replace("{prefix}", prefix), false);
+
+            if (helpInfo.ExampleUsage != "") embed.AddField("Example Usage", helpInfo.ExampleUsage.Replace("{prefix}", prefix), false);
+
+            await ReplyAsync("", false, embed.Build());
         }
 
 
         [Command("help"), Alias("h", "commands")]
         [RequireBotPermission(ChannelPermission.EmbedLinks)]
-        public async Task SendAllHelp() //Without arguments
+        public async Task SendAllHelp()
         {
             string prefix = storage.GetPrefix(Context.Guild).If(Context.Guild != null);
 
@@ -107,42 +110,40 @@ namespace PacManBot.Modules
             {
                 Title = $"{CustomEmoji.PacMan} __**Bot Commands**__",
                 Description = (Context.Guild == null ? "No prefix is needed in a DM!" : $"Prefix for this server is '{prefix}'")
-                            + $"\nYou can do **{prefix}help command** for more information about a command.\n*Aliases are listed with commas. Parameters in [] are optional.*",
+                            + $"\nYou can do **{prefix}help command** for more information about a command.\n*Parameter types: <needed> [optional]*",
                 Color = new Color(241, 195, 15)
             };
 
-            var allModules = commands.Modules.OrderBy(m => m.Name); //Alphabetically
-            foreach (var module in allModules.Where(m => !m.Preconditions.Contains(new RequireOwnerAttribute()))) //Go through all modules except dev modules
+            foreach (var module in commands.Modules.OrderBy(m => m.Name))
             {
-                string moduleText = null; //Text under the module title in the embed block
+                var moduleText = new StringBuilder(); //Text under the module title in the embed block
                 List<string> previousCommands = new List<string>(); //Storing the command names so they can't repeat
 
                 foreach (var command in module.Commands) //Go through all commands
                 {
-                    if (!command.IsHidden() && !previousCommands.Contains(command.Name)
-                        && (await command.CheckPreconditionsAsync(Context)).IsSuccess //Only shows commands which can be executed
-                    ){
-                        for (int i = 0; i < command.Aliases.Count; i++) //Lists command name and aliases
-                        {
-                            moduleText += $"{", ".If(i > 0)}**{command.Aliases[i]}**";
-                        }
+                    var helpInfo = new CommandHelpInfo(command);
 
-                        if (!string.IsNullOrWhiteSpace(command.Remarks)) moduleText += $" {command.Remarks}"; //Short description
-                        moduleText += "\n";
+                    if (!helpInfo.Hidden && !previousCommands.Contains(command.Name)
+                        && (await command.CheckPreconditionsAsync(Context)).IsSuccess //Only shows commands which can be executed
+                    ) {
+                        moduleText.Append($"**{command.Name} {helpInfo.Parameters}**");
+                        if (helpInfo.Remarks != "") moduleText.Append($" — *{helpInfo.Remarks}*");
+                        moduleText.Append('\n');
 
                         previousCommands.Add(command.Name);
                     }
                 }
 
-                if (!string.IsNullOrWhiteSpace(moduleText)) embed.AddField($"{module.Name}", moduleText, false);
+                if (moduleText.Length > 0) embed.AddField(module.Name, moduleText.ToString(), false);
             }
 
             await ReplyAsync("", false, embed.Build()); //Send the built embed
         }
 
 
-        [Command("waka"), Alias("ping"), Remarks("— *Waka waka waka*")]
-        [Summary("Tests the ping (server reaction time in milliseconds) and shows other quick stats about the bot at the current moment.\nDid you know the bot responds every time you say \"waka\" in chat? Shhh, it's a secret.")]
+        [Command("waka"), Alias("ping"), Parameters(""), Remarks("Ping? Nah, waka.")]
+        [Summary("Tests the ping (server reaction time in milliseconds) and shows other quick stats about the bot at the current moment.\n" +
+                 "Did you know the bot responds every time you say \"waka\" in chat? Shhh, it's a secret.")]
         public async Task Ping([Remainder]string args = "") //Useless args
         {
             var stopwatch = Stopwatch.StartNew();
@@ -153,9 +154,10 @@ namespace PacManBot.Modules
         }
 
 
-        [Command("prefix"), Remarks("— *Show the current prefix for this server*")]
-        [Summary("Reminds you of this bot's prefix for this server. Tip: The prefix is already here in this help block.\nYou can use the **{prefix}setprefix prefix** command to set a prefix if you're an Administrator.")]
-        public async Task GetServerPrefix([Remainder]string args = "") //Useless args
+        [Command("prefix"), Remarks("Show the current prefix for this server")]
+        [Summary("Shows this bot's prefix for this server, even though you can already see it here.\n" +
+                 "You can use the **{prefix}setprefix [prefix]** command to set a prefix if you're an Administrator.")]
+        public async Task GetServerPrefix()
         {
             string reply;
             if (Context.Guild == null)
@@ -171,8 +173,9 @@ namespace PacManBot.Modules
         }
 
 
-        [Command("feedback"), Alias("suggestion", "bug"), Remarks("<message> — *Send a message to the bot's developer*")]
-        [Summary("Whatever text you write after this command will be sent directly to the bot's developer. You may receive an answer through the bot in a DM.")]
+        [Command("feedback"), Alias("suggestion", "bug"), Remarks("Send a message to the bot's developer")]
+        [Summary("Whatever text you write after this command will be sent directly to the bot's developer. "
+               + "You may receive an answer through the bot in a DM.")]
         public async Task SendFeedback([Remainder]string message)
         {
             try
@@ -189,10 +192,10 @@ namespace PacManBot.Modules
         }
 
 
-        [Command("invite"), Alias("inv"), Remarks("— *Invite this bot to your server*")]
+        [Command("invite"), Alias("inv"), Remarks("Invite this bot to your server")]
         [Summary("Shows a fancy embed block with the bot's invite link. I'd show it right now too, since you're already here, but I really want you to see that fancy embed.")]
         [RequireBotPermission(ChannelPermission.EmbedLinks)]
-        public async Task SayBotInvite([Remainder]string args = "") //Useless args
+        public async Task SendBotInvite()
         {
             var embed = new EmbedBuilder()
             {
@@ -207,22 +210,23 @@ namespace PacManBot.Modules
 
 
 
-        [Command("party"), Alias("blob", "dance"), Remarks(CommandRemark.Hidden + "[number]")]
+        [Command("party"), Alias("blob", "dance"), HideHelp]
         [Summary("Takes a number which can be either an amount of emotes or a message ID to react to. Giving 0 causes it to react to the command.")]
-        public async Task BlobDanceFast(ulong num = 1)
+        public async Task BlobDanceFast(ulong number = 1)
         {
-            if (num < 1) await Context.Message.AddReactionAsync(CustomEmoji.Dance);
-            else if (num <= 50) await ReplyAsync($"{CustomEmoji.Dance}".Multiply((int)num));
+            if (number < 1) await Context.Message.AddReactionAsync(CustomEmoji.Dance);
+            else if (number <= 50) await ReplyAsync($"{CustomEmoji.Dance}".Multiply((int)number));
             else
             {
-                if (await Context.Channel.GetMessageAsync(num) is IUserMessage message) await message.AddReactionAsync(CustomEmoji.Dance);
+                if (await Context.Channel.GetMessageAsync(number) is IUserMessage message) await message.AddReactionAsync(CustomEmoji.Dance);
                 else await Context.Message.AddReactionAsync(CustomEmoji.Cross);
             }
         }
 
 
-        [Command("spamparty"), Alias("spamblob", "spamdance"), Remarks(CommandRemark.Hidden + "[amount]"), Summary("Usable by the owner for spam")]
-        [RequireOwner]
+        [Command("spamparty"), Alias("spamblob", "spamdance"), HideHelp]
+        [Summary("Reacts to everything with a blob dance emote. Only usable by a moderator.")]
+        [RequireUserPermission(ChannelPermission.ManageMessages), RequireBotPermission(ChannelPermission.AddReactions)]
         public async Task SpamDance(int amount = 5)
         {
             foreach (IUserMessage message in Context.Channel.GetCachedMessages(amount))
@@ -230,5 +234,10 @@ namespace PacManBot.Modules
                 await message.AddReactionAsync(CustomEmoji.Dance);
             }
         }
+
+
+        [Command("command"), ExampleUsage("help play"), HideHelp]
+        [Summary("This is not a real command. If you want to see help for a specific command, please do **{prefix}help [command name]**, where \"[command name]\" is the name of a command.")]
+        public async Task DoNothing() => await logger.Log(LogSeverity.Verbose, "Someone tried to do \"<help command\"");
     }
 }

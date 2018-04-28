@@ -3,7 +3,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Discord;
 using Discord.Commands;
-using PacManBot.Constants;
 using static PacManBot.Modules.PacMan.GameInstance;
 
 namespace PacManBot
@@ -31,7 +30,6 @@ namespace PacManBot
 
 
 
-
         // Arrays
 
         public static T Last<T>(this T[] array) => array[array.Length - 1];
@@ -51,12 +49,6 @@ namespace PacManBot
         public static string Truncate(this string text, int maxLength)
         {
             return text.Substring(0, Math.Min(maxLength, text.Length));
-        }
-
-
-        public static string[] Split(this string text, string separator) //Shorthand
-        {
-            return text.Split(new string[] { separator }, StringSplitOptions.None);
         }
 
 
@@ -163,12 +155,6 @@ namespace PacManBot
         public static Emoji ToEmoji(this string unicode)
         {
             return new Emoji(unicode);
-        }
-
-
-        public static bool IsHidden(this CommandInfo command)
-        {
-            return command.Remarks != null && command.Remarks.Contains(CommandRemark.Hidden);
         }
 
 

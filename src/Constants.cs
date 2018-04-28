@@ -38,11 +38,4 @@ namespace PacManBot.Constants
             Loading = "<a:loading:410612084527595520>".ToEmote(),
             Dance = "<a:danceblobfast:439575722567401479>".ToEmote();
     }
-
-
-    public static class CommandRemark
-    {
-        public const string
-            Hidden = "{Hidden}";
-    }
 }
