@@ -75,11 +75,11 @@ namespace PacManBot.Modules
                 Color = new Color(241, 195, 15)
             };
 
-            string parameters = string.IsNullOrWhiteSpace(command.Remarks) ? "" : command.Remarks.Split('—')[0].Trim();
-            if (!string.IsNullOrWhiteSpace(parameters))
-            {
-                embed.AddField("Parameters", parameters, true);
-            }
+            if (command.IsHidden()) embed.AddField("Hidden command", "*Are you a wizard?*", true);
+
+            string parameters = command.Remarks == null ? "" : command.Remarks.Split('—')[0].Trim().Replace(CommandRemark.Hidden, "");
+            if (parameters != "") embed.AddField("Parameters", parameters, true);
+
             if (command.Aliases.Count > 1)
             {
                 string aliasList = "";
@@ -207,7 +207,7 @@ namespace PacManBot.Modules
 
 
 
-        [Command("dance"), Alias("blob", "party", "blobdance", "blobparty"), Remarks(CommandRemark.Hidden)]
+        [Command("dance"), Alias("blob", "party"), Remarks(CommandRemark.Hidden + "[number]")]
         [Summary("Dance. Takes a number which can be either an amount of emotes or a message ID to react to. Giving 0 causes it to react to the command.")]
         public async Task BlobDanceFast(ulong num = 1)
         {
@@ -229,7 +229,7 @@ namespace PacManBot.Modules
         }
 
 
-        [Command("spamdance"), Alias("spamparty", "spamblob"), Remarks(CommandRemark.Hidden), Summary("Please don't")]
+        [Command("spamdance"), Alias("spamblob", "spamparty"), Remarks(CommandRemark.Hidden + "[amount]"), Summary("Usable by the owner")]
         [RequireOwner]
         public async Task SpamDance(int amount = 10)
         {

@@ -161,14 +161,9 @@ namespace PacManBot
 
         private async Task UpdateGuildCountAsync()
         {
-            int guilds = client.Guilds.Count;
-            await logger.Log(LogSeverity.Info, $"Guild count is now {guilds}");
-
-            // Update online guild count
-            if (guildCountTimer == null || guildCountTimer.Elapsed.TotalMinutes >= 15.0)
+            if (guildCountTimer == null || guildCountTimer.Elapsed.TotalMinutes >= 20)
             {
-                await client.SetGameAsync($"{botConfig.defaultPrefix}help | {guilds} guilds");
-
+                await client.SetGameAsync($"{botConfig.defaultPrefix}help | {client.Guilds.Count} guilds");
 
                 string[] website = { $"bots.discord.pw",
                                      $"discordbots.org" };
@@ -179,7 +174,7 @@ namespace PacManBot
 
                     string requesturi = "https://" + website[i] + $"/api/bots/{client.CurrentUser.Id}/stats";
                     var webclient = new HttpClient();
-                    var content = new StringContent($"{{\"server_count\": {guilds}}}", System.Text.Encoding.UTF8, "application/json");
+                    var content = new StringContent($"{{\"server_count\": {client.Guilds.Count}}}", System.Text.Encoding.UTF8, "application/json");
                     webclient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(botConfig.httpToken[i]);
                     var response = await webclient.PostAsync(requesturi, content);
 
@@ -187,6 +182,8 @@ namespace PacManBot
                 }
 
                 guildCountTimer = Stopwatch.StartNew();
+
+                await logger.Log(LogSeverity.Info, $"Guild count updated to {client.Guilds.Count}");
             }
         }
     }
