@@ -9,6 +9,7 @@ using PacManBot.Services;
 using PacManBot.Constants;
 using PacManBot.CustomCommandAttributes;
 using static PacManBot.Modules.PacMan.GameInstance;
+using Discord.Net;
 
 namespace PacManBot.Modules.PacMan
 {
@@ -93,10 +94,11 @@ namespace PacManBot.Modules.PacMan
 
             try
             {
-                await AddControls(gameMessage); //Controls for easy access
+                await AddControls(gameMessage);
                 await gameMessage.ModifyAsync(m => m.Content = newGame.GetDisplay()); //Restore display to normal
             }
-            catch (Discord.Net.HttpException) {;} // Message not found (deleted at some point)
+            catch (HttpException) { } // Message not found (deleted at some point)
+            catch (RateLimitedException) { await logger.Log(LogSeverity.Warning, $"Ratelimit editing game message in {Context.Channel.FullName()}"); }
         }
 
 
@@ -126,9 +128,10 @@ namespace PacManBot.Modules.PacMan
                     try
                     {
                         await AddControls(newMsg);
-                        await newMsg.ModifyAsync(m => m.Content = game.GetDisplay()); //Edit message
+                        await newMsg.ModifyAsync(m => m.Content = game.GetDisplay()); //Restore display to normal
                     }
-                    catch (Discord.Net.HttpException) {;} // Not found (deleted at some point)
+                    catch (HttpException) { } // Message not found (deleted at some point)
+                    catch (RateLimitedException) { await logger.Log(LogSeverity.Warning, $"Ratelimit editing game message in {Context.Channel.FullName()}"); }
 
                     return;
                 }
@@ -306,9 +309,9 @@ namespace PacManBot.Modules.PacMan
                 {
                     await message.AddReactionAsync(input);
                 }
-                catch (Discord.Net.RateLimitedException)
+                catch (RateLimitedException)
                 {
-                    await logger.Log(LogSeverity.Warning, $"Ratelimit adding controls to message {message.Id} in {Context.Channel.FullName()}");
+                    await logger.Log(LogSeverity.Warning, $"Ratelimit adding controls to game message in {Context.Channel.FullName()}");
                 }
             }
         }
