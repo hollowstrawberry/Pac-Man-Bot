@@ -3,6 +3,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
+using Discord.Net;
 using Discord.WebSocket;
 
 namespace PacManBot.Services
@@ -50,18 +51,25 @@ namespace PacManBot.Services
 
             if (message.HasMentionPrefix(client.CurrentUser, ref commandPosition) || message.HasStringPrefix($"{prefix} ", ref commandPosition) || message.HasStringPrefix(prefix, ref commandPosition) || context.Channel is IDMChannel)
             {
-                var result = await commands.ExecuteAsync(context, commandPosition, provider); //Try to execute the command
-                if (!result.IsSuccess)
+                try
                 {
-                    string error = result.ErrorReason;
-                    if (!error.Contains("Unknown command")) await logger.Log(LogSeverity.Verbose, $"Command {message} by {message.Author.FullName()} in channel {context.Channel.FullName()} couldn't be executed. {error}");
-
-                    string reply = GetCommandErrorReply(error, context.Guild);
-
-                    if (reply != null && (context.Channel is IDMChannel || context.BotHas(ChannelPermission.SendMessages)))
+                    var result = await commands.ExecuteAsync(context, commandPosition, provider); //Try to execute the command
+                    if (!result.IsSuccess)
                     {
-                        await context.Channel.SendMessageAsync(reply);
+                        string error = result.ErrorReason;
+                        if (!error.Contains("Unknown command")) await logger.Log(LogSeverity.Verbose, $"Command {message} by {message.Author.FullName()} in channel {context.Channel.FullName()} couldn't be executed. {error}");
+
+                        string reply = GetCommandErrorReply(error, context.Guild);
+
+                        if (reply != null && (context.Channel is IDMChannel || context.BotHas(ChannelPermission.SendMessages)))
+                        {
+                            await context.Channel.SendMessageAsync(reply);
+                        }
                     }
+                }
+                catch (RateLimitedException)
+                {
+                    await logger.Log(LogSeverity.Error, $"Ratelimit during command {context.Message.Content} in channel {context.Channel.FullName()}");
                 }
             }
 

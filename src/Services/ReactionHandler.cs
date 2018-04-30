@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Discord;
+using Discord.Net;
 using Discord.WebSocket;
 using PacManBot.Constants;
 using PacManBot.Modules.PacMan;
@@ -48,7 +49,14 @@ namespace PacManBot.Services
                 if (reaction.MessageId == game.messageId)
                 {
                     var message = await messageData.GetOrDownloadAsync();
-                    await GameInput(game, message, reaction);
+                    try
+                    {
+                        await GameInput(game, message, reaction);
+                    }
+                    catch (RateLimitedException)
+                    {
+                        await logger.Log(LogSeverity.Error, $"Ratelimit during input of game in {game.channelId}");
+                    }
                     return;
                 }
             }
@@ -68,7 +76,8 @@ namespace PacManBot.Services
                 if (GameInstance.GameInputs.ContainsKey(emote)) //Valid reaction input
                 {
                     string strInput = GameInstance.GameInputs[emote].ToString();
-                    await logger.Log(LogSeverity.Verbose, LogSource.Game, $"Input {strInput}{new string(' ', 5 - strInput.Length)} by user {user.FullName()} in channel {channel.FullName()}");
+                    await logger.Log(LogSeverity.Verbose, LogSource.Game + $"/Shard #{(guild == null ? 0 : client.GetShardIdFor(guild))}",
+                                     $"Input {strInput}{new string(' ', 5 - strInput.Length)} by user {user.FullName()} in channel {channel.FullName()}");
 
                     game.DoTick(GameInstance.GameInputs[emote]);
 
