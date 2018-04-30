@@ -151,7 +151,7 @@ namespace PacManBot.Modules
             stopwatch.Stop();
 
             await message.ModifyAsync(m => m.Content = $"{CustomEmoji.PacMan} Waka in {(int)stopwatch.Elapsed.TotalMilliseconds}ms\n"
-                                                     + $"Shard {Context.Client.ShardId} with {Context.Client.Guilds} guilds\n"
+                                                     + $"Shard {Context.Client.ShardId} with {Context.Client.Guilds.Count} guilds\n"
                                                      + $"{storage.GameInstances.Count} total active games\n");
         }
 
