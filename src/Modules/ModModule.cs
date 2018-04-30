@@ -8,6 +8,7 @@ using PacManBot.Constants;
 namespace PacManBot.Modules
 {
     [Name("<:staff:412019879772815361>Mod")]
+    [RequireUserPermission(GuildPermission.ManageMessages)]
     public class ModModule : ModuleBase<SocketCommandContext>
     {
         private readonly LoggingService logger;
@@ -27,14 +28,13 @@ namespace PacManBot.Modules
 
         [Command("say"), Remarks("Make the bot say anything")]
         [Summary("Repeats back the message provided. Only users with the Manage Messages permission can use this command.")]
-        [RequireUserPermission(ChannelPermission.ManageMessages)]
         public async Task Say([Remainder]string message) => await ReplyAsync(message.SanitizeMentions());
 
 
         [Command("clear"), Alias("c"), Remarks("Clear messages from this bot")]
         [Summary("Clears all messages sent by *this bot only*, checking up to the amount of messages provided, or 10 messages by default. "
                + "Only users with the Manage Messages permission can use this command.")]
-        [RequireUserPermission(ChannelPermission.ManageMessages), RequireBotPermission(ChannelPermission.ReadMessageHistory)]
+        [RequireBotPermission(ChannelPermission.ReadMessageHistory)]
         public async Task ClearGameMessages(int amount = 10)
         {
             var messages = await Context.Channel.GetMessagesAsync(amount).FlattenAsync();
@@ -80,7 +80,6 @@ namespace PacManBot.Modules
 
         [Command("togglewaka"), Remarks("Toggle \"waka\" autoresponse from the bot")]
         [Summary("The bot normally responds every time a message contains purely multiples of \"waka\", unless it's turned off server-wide using this command. Requires the user to be a Moderator.")]
-        [RequireUserPermission(GuildPermission.ManageMessages)]
         public async Task ToggleWakaResponse()
         {
             try

@@ -55,7 +55,7 @@ namespace PacManBot.Services
                     }
                     catch (RateLimitedException)
                     {
-                        await logger.Log(LogSeverity.Error, $"Ratelimit during input of game in {game.channelId}");
+                        await logger.Log(LogSeverity.Warning, LogSource.Game, $"Ratelimit during input in {game.channelId}");
                     }
                     return;
                 }

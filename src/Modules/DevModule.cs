@@ -12,7 +12,6 @@ namespace PacManBot.Modules
 {
     [Name("Developer")]
     [RequireOwner]
-    [RequireBotPermission(ChannelPermission.AddReactions)]
     public class DevModule : ModuleBase<SocketCommandContext>
     {
         private readonly LoggingService logger;
@@ -52,7 +51,7 @@ namespace PacManBot.Modules
         }
 
 
-        [Command("feedbackreply"), HideHelp]
+        [Command("feedbackreply"), Alias("reply"), HideHelp]
         [Summary("This is how Samrux replies to feedback. Developer only.")]
         public async Task ReplyFeedback(ulong useriD, [Remainder]string message)
         {
@@ -68,6 +67,15 @@ namespace PacManBot.Modules
                 await ReplyAsync($"```{e.Message}```");
                 await Context.Message.AddReactionAsync(CustomEmoji.Cross);
             }
+        }
+
+
+        [Command("reloadcontent"), Alias("reload"), HideHelp]
+        [Summary("Reloads the content.bot file. Developer only")]
+        public async Task ReloadContent()
+        {
+            storage.LoadBotContent();
+            await logger.Log(LogSeverity.Info, "Reloaded bot content");
         }
 
 
