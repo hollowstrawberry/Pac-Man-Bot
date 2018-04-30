@@ -1,6 +1,8 @@
 # Pac-Man Bot
 Play Pac-Man on a Discord chat! Play on a server with friends or in a direct message with the bot. Featuring turn-based gameplay with reaction controls, the focus is low spam and original arcade game fidelity. Get a spot on the global leaderboard!
 
+Now nearing 2000 guilds!
+
 Bot invite link: http://bit.ly/pacman-bot | Support server: https://discord.gg/hGHnfda
 
 
