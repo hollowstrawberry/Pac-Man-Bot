@@ -187,10 +187,10 @@ namespace PacManBot.Modules.PacMan
             public int power = 0; //Time left of power mode
             public int ghostStreak = 0; //Ghosts eaten during the current power mode
 
-            public Player(Pos pos)
+            public Player(Pos pos, Pos origin)
             {
-                this.pos = pos ?? new Pos(0, 0);
-                origin = this.pos;
+                this.pos = pos;
+                this.origin = origin;
             }
         }
 
@@ -205,12 +205,12 @@ namespace PacManBot.Modules.PacMan
             public AiMode mode; //Ghost behavior mode
             public int pauseTime; //Time remaining until it can move
 
-            public Ghost(Pos pos, AiType type, Pos corner)
+            public Ghost(AiType type, Pos pos, Pos origin, Pos corner) // Had to split pos and origin because of the deserializer
             {
-                this.pos = pos;
                 this.type = type;
-                this.corner = corner ?? pos;
-                origin = pos;
+                this.pos = pos;
+                this.origin = origin;
+                this.corner = corner ?? origin;
                 pauseTime = GhostSpawnPauseTime[(int)type];
             }
 
@@ -347,7 +347,8 @@ namespace PacManBot.Modules.PacMan
             pellets = maxPellets;
 
             // Game objects
-            player = new Player(FindChar(CharPlayer));
+            Pos playerPos = FindChar(CharPlayer) ?? new Pos(0, 0);
+            player = new Player(playerPos, playerPos);
             SetMapAt(player.pos, ' ');
 
             fruitSpawnPos = FindChar(CharFruit) ?? new Pos(-1, -1);
@@ -364,7 +365,7 @@ namespace PacManBot.Modules.PacMan
             {
                 Pos ghostPos = FindChar(CharGhost);
                 if (ghostPos == null) break;
-                ghosts.Add(new Ghost(ghostPos, (AiType)i, ghostCorners[i]));
+                ghosts.Add(new Ghost((AiType)i, ghostPos, ghostPos, ghostCorners[i]));
                 map[ghostPos.x, ghostPos.y] = ' ';
             }
 

@@ -76,7 +76,7 @@ namespace PacManBot.Services
                 if (GameInstance.GameInputs.ContainsKey(emote)) //Valid reaction input
                 {
                     string strInput = GameInstance.GameInputs[emote].ToString();
-                    await logger.Log(LogSeverity.Verbose, LogSource.Game + $"/Shard #{(guild == null ? 0 : client.GetShardIdFor(guild))}",
+                    await logger.Log(LogSeverity.Verbose, LogSource.Game + $"/{(guild == null ? 0 : client.GetShardIdFor(guild))}",
                                      $"Input {strInput}{new string(' ', 5 - strInput.Length)} by user {user.FullName()} in channel {channel.FullName()}");
 
                     game.DoTick(GameInstance.GameInputs[emote]);
