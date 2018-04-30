@@ -16,14 +16,16 @@ namespace PacManBot.Modules.PacMan
     [Name("🎮Game")]
     public class PacManModule : ModuleBase<SocketCommandContext>
     {
+        private readonly DiscordShardedClient shardedClient;
         private readonly LoggingService logger;
         private readonly StorageService storage;
 
         private const int MaxDisplayedScores = 20;
 
 
-        public PacManModule(LoggingService logger, StorageService storage)
+        public PacManModule(DiscordShardedClient shardedClient, LoggingService logger, StorageService storage)
         {
+            this.shardedClient = shardedClient;
             this.logger = logger;
             this.storage = storage;
         }
@@ -63,7 +65,7 @@ namespace PacManBot.Modules.PacMan
             GameInstance newGame;
             try
             {
-                newGame = new GameInstance(Context.Channel.Id, Context.User.Id, customMap, Context.Client, storage, logger);
+                newGame = new GameInstance(Context.Channel.Id, Context.User.Id, customMap, shardedClient, storage, logger);
             }
             catch (InvalidMapException e)
             {
@@ -218,7 +220,7 @@ namespace PacManBot.Modules.PacMan
                               + $"{" ".If(entry.score.ToString().Length < storage.ScoreEntries[min - 1].score.ToString().Length)}{entry.score} points "
                               + $"in {entry.turns} turns";
                 //Aligns names
-                content.Append(result + new string(' ', Math.Max(38 - result.Length, 0)) + $"- {entry.GetUsername(Context.Client)}`\n");
+                content.Append(result + new string(' ', Math.Max(38 - result.Length, 0)) + $"- {entry.GetUsername(shardedClient)}`\n");
             }
 
             content.Append(max - min >= MaxDisplayedScores && max < scores.Count ? $"*Only {MaxDisplayedScores} scores may be displayed at once*"
@@ -259,7 +261,7 @@ namespace PacManBot.Modules.PacMan
                     var embed = new EmbedBuilder()
                     {
                         Title = $"🏆 __**Global Leaderboard**__ 🏆",
-                        Description = $"Highest score {Utils.ScorePeriodString(time)}:\n{scores[i].ToStringSimpleScoreboard(Context.Client, i + 1)}",
+                        Description = $"Highest score {Utils.ScorePeriodString(time)}:\n{scores[i].ToStringSimpleScoreboard(shardedClient, i + 1)}",
                         Color = new Color(241, 195, 15)
                     };
                     await ReplyAsync("", false, embed.Build());

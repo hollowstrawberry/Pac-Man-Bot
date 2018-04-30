@@ -30,7 +30,7 @@ namespace PacManBot.Modules.PacMan
         }
 
 
-        public string GetUsername(DiscordSocketClient client)
+        public string GetUsername(DiscordShardedClient client)
         {
             return client.GetUser(userId)?.NameandNum() ?? username ?? "Unknown";
         }
@@ -42,7 +42,7 @@ namespace PacManBot.Modules.PacMan
         }
 
 
-        public string ToStringSimpleScoreboard(DiscordSocketClient client, int position)
+        public string ToStringSimpleScoreboard(DiscordShardedClient client, int position)
         {
             return $"{position}. ({state}) {score} points in {turns} turns by user {GetUsername(client).SanitizeMarkdown().SanitizeMentions()}";
         }

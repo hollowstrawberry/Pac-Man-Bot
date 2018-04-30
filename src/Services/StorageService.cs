@@ -159,6 +159,7 @@ namespace PacManBot.Services
         public void LoadBotContent()
         {
             BotContent = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile(BotFile.Contents).Build();
+            logger.LoadLogExclude(this);
         }
 
 

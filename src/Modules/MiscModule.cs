@@ -10,19 +10,22 @@ using Discord.Commands;
 using PacManBot.Services;
 using PacManBot.Constants;
 using PacManBot.CustomCommandAttributes;
+using Discord.WebSocket;
 
 namespace PacManBot.Modules
 {
     [Name("📁Other")]
     public class MiscModule : ModuleBase<SocketCommandContext>
     {
+        private readonly DiscordShardedClient shardedClient;
         private readonly CommandService commands;
         private readonly LoggingService logger;
         private readonly StorageService storage;
 
 
-        public MiscModule(CommandService commands, LoggingService logger, StorageService storage)
+        public MiscModule(DiscordShardedClient shardedClient, CommandService commands, LoggingService logger, StorageService storage)
         {
+            this.shardedClient = shardedClient;
             this.commands = commands;
             this.logger = logger;
             this.storage = storage;
@@ -44,8 +47,8 @@ namespace PacManBot.Modules
                 Description = description,
                 Color = new Color(241, 195, 15)
             };
-            embed.AddField("Shard", $"{Context.Client.ShardId}", true);
-            embed.AddField("Active games", $"{storage.GameInstances.Count}", true);
+            embed.AddField("Total guilds", $"{shardedClient.Guilds.Count}", true);
+            embed.AddField("Total active games", $"{storage.GameInstances.Count}", true);
             embed.AddField("Latency", $"{Context.Client.Latency}ms", true);
 
             for (int i = 0; i < fields.Length; i++)
@@ -150,9 +153,15 @@ namespace PacManBot.Modules
             var message = await ReplyAsync($"{CustomEmoji.Loading} Waka");
             stopwatch.Stop();
 
-            await message.ModifyAsync(m => m.Content = $"{CustomEmoji.PacMan} Waka in {(int)stopwatch.Elapsed.TotalMilliseconds}ms |"
-                                                     + $"Shard {Context.Client.ShardId} with {Context.Client.Guilds.Count} guilds |"
-                                                     + $"{storage.GameInstances.Count} total active games\n");
+            int shardGames = 0;
+            foreach (var game in storage.GameInstances)
+            {
+                if (game.Guild != null && Context.Client.Guilds.Contains(game.Guild)) shardGames++;
+            }
+
+            await message.ModifyAsync(m => m.Content = $"{CustomEmoji.PacMan} Waka in `{(int)stopwatch.Elapsed.TotalMilliseconds}`ms **|** "
+                                                     + $"Shard #{Context.Client.ShardId}/{shardedClient.Shards.Count - 1} with {Context.Client.Guilds.Count} guilds "
+                                                     + $"and {shardGames} active games\n");
         }
 
 

@@ -50,7 +50,7 @@ namespace PacManBot.Modules.PacMan
 
         // Fields
 
-        private IDiscordClient client;
+        private DiscordShardedClient client;
         private StorageService storage;
         private LoggingService logger;
         private Random random = new Random();
@@ -116,7 +116,7 @@ namespace PacManBot.Modules.PacMan
             }
         }
 
-        public IGuild Guild => (client.GetChannelAsync(channelId).GetAwaiter().GetResult() as IGuildChannel).Guild;
+        public SocketGuild Guild => (client.GetChannel(channelId) as SocketGuildChannel)?.Guild;
         public string GameFile => $"{Folder}{channelId}{Extension}";
 
         private Pos FruitSecondPos => fruitSpawnPos + Dir.right; //Second tile which fruit will also occupy
@@ -329,7 +329,7 @@ namespace PacManBot.Modules.PacMan
 
         private GameInstance() { } // For JSON to use
 
-        public GameInstance(ulong channelId, ulong ownerId, string newMap, DiscordSocketClient client, StorageService storage, LoggingService logger)
+        public GameInstance(ulong channelId, ulong ownerId, string newMap, DiscordShardedClient client, StorageService storage, LoggingService logger)
         {
             this.client = client;
             this.storage = storage;

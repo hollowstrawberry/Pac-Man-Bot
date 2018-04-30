@@ -76,6 +76,16 @@ namespace PacManBot.Modules
         {
             storage.LoadBotContent();
             await logger.Log(LogSeverity.Info, "Reloaded bot content");
+            await Context.Message.AddReactionAsync(CustomEmoji.Check);
+        }
+
+
+        [Command("log"), HideHelp]
+        [Summary("Stores an entry in the bot logs. Developer only")]
+        public async Task LogSomething([Remainder]string message)
+        {
+            await logger.Log(LogSeverity.Info, LogSource.Owner, message);
+            await Context.Message.AddReactionAsync(CustomEmoji.Check);
         }
 
 

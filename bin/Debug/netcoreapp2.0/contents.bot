@@ -86,6 +86,12 @@ To start a custom game, send **{prefix}play \\`\\`\\`map\\`\\`\\`** or **{prefix
 
 "customlinks":
 "Original game map|https://github.com/Samrux/Pac-Man-Bot/blob/master/bin/contents.bot
-Custom map examples|https://github.com/Samrux/Pac-Man-Bot/blob/master/Example%20custom%20maps.txt"
+Custom map examples|https://github.com/Samrux/Pac-Man-Bot/blob/master/Example%20custom%20maps.txt",
+
+
+"logexclude":
+"at System.DateTime.Add
+Unknown Guild
+VOICE_STATE_UPDATE"
 
 }

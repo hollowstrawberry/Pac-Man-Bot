@@ -20,7 +20,8 @@ namespace PacManBot.Constants
         public const string
             Bot = "Bot",
             Game = "Game",
-            Storage = "Storage";
+            Storage = "Storage",
+            Owner = "Owner";
     }
 
 
