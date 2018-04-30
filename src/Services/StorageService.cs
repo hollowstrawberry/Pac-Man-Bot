@@ -15,7 +15,7 @@ namespace PacManBot.Services
 {
     public class StorageService
     {
-        private readonly DiscordSocketClient client;
+        private readonly DiscordShardedClient client;
         private readonly LoggingService logger;
 
         private JsonSerializerSettings GameJsonSettings = new JsonSerializerSettings
@@ -31,9 +31,7 @@ namespace PacManBot.Services
         public string WakaExclude { get; private set; }
 
 
-
-
-        public StorageService(DiscordSocketClient client, LoggingService logger, BotConfig config)
+        public StorageService(DiscordShardedClient client, LoggingService logger, BotConfig config)
         {
             this.client = client;
             this.logger = logger;
@@ -52,13 +50,13 @@ namespace PacManBot.Services
         {
             return (Prefixes.ContainsKey(serverId)) ? Prefixes[serverId] : DefaultPrefix;
         }
-        public string GetPrefix(SocketGuild guild = null)
+        public string GetPrefix(IGuild guild = null)
         {
             return (guild == null) ? DefaultPrefix : GetPrefix(guild.Id);
         }
 
 
-        public string GetPrefixOrEmpty(SocketGuild guild)
+        public string GetPrefixOrEmpty(IGuild guild)
         {
             return (guild == null) ? "" : GetPrefix(guild.Id);
         }
@@ -121,6 +119,7 @@ namespace PacManBot.Services
                 logger.Log(LogSeverity.Error, LogSource.Storage, $"Trying to delete game at index {i}: Not found.");
             }
         }
+
         public void DeleteGame(GameInstance game)
         {
             if (GameInstances.Contains(game)) DeleteGame(GameInstances.IndexOf(game));
@@ -146,7 +145,7 @@ namespace PacManBot.Services
         public void AddScore(ScoreEntry entry)
         {
             string scoreString = entry.ToString();
-            logger.Log(LogSeverity.Verbose, LogSource.Storage, $"New scoreboard entry: {scoreString}");
+            logger.Log(LogSeverity.Info, LogSource.Storage, $"New scoreboard entry: {scoreString}");
             File.AppendAllText(BotFile.Scoreboard, $"\n{scoreString}");
 
             int index = ScoreEntries.BinarySearch(entry, ScoreEntry.Comparer);

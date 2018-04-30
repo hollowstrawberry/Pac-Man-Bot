@@ -44,7 +44,7 @@ namespace PacManBot.Modules
                 Description = description,
                 Color = new Color(241, 195, 15)
             };
-            embed.AddField("Server count", $"{Context.Client.Guilds.Count}", true);
+            embed.AddField("Shard", $"{Context.Client.ShardId}", true);
             embed.AddField("Active games", $"{storage.GameInstances.Count}", true);
             embed.AddField("Latency", $"{Context.Client.Latency}ms", true);
 
@@ -150,7 +150,9 @@ namespace PacManBot.Modules
             var message = await ReplyAsync($"{CustomEmoji.Loading} Waka");
             stopwatch.Stop();
 
-            await message.ModifyAsync(m => m.Content = $"{CustomEmoji.PacMan} Waka in {(int)stopwatch.Elapsed.TotalMilliseconds}ms | {Context.Client.Guilds.Count} guilds | {storage.GameInstances.Count} active games\n");
+            await message.ModifyAsync(m => m.Content = $"{CustomEmoji.PacMan} Waka in {(int)stopwatch.Elapsed.TotalMilliseconds}ms\n"
+                                                     + $"Shard {Context.Client.ShardId} with {Context.Client.Guilds} guilds\n"
+                                                     + $"{storage.GameInstances.Count} total active games\n");
         }
 
 
@@ -211,12 +213,13 @@ namespace PacManBot.Modules
 
 
         [Command("party"), Alias("blob", "dance"), HideHelp]
-        [Summary("Takes a number which can be either an amount of emotes or a message ID to react to. Giving 0 causes it to react to the command.")]
-        public async Task BlobDanceFast(ulong number = 1)
+        [Summary("Takes a number which can be either an amount of emotes to send or a message ID to react to. Reacts to the command by default.")]
+        public async Task BlobDanceFast(ulong number = 0)
         {
             if (number < 1) await Context.Message.AddReactionAsync(CustomEmoji.Dance);
-            else if (number <= 50) await ReplyAsync($"{CustomEmoji.Dance}".Multiply((int)number));
-            else
+            else if (number <= 10) await ReplyAsync($"{CustomEmoji.Dance}".Multiply((int)number));
+            else if (number <= 1000000) await ReplyAsync($"Are you insane?");
+            else // Message ID
             {
                 if (await Context.Channel.GetMessageAsync(number) is IUserMessage message) await message.AddReactionAsync(CustomEmoji.Dance);
                 else await Context.Message.AddReactionAsync(CustomEmoji.Cross);

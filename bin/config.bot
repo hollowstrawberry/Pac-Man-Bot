@@ -1,6 +1,7 @@
 {
   "defaultPrefix": "<",
 
+  "shardCount": 1,
   "clientLogLevel": "Verbose",
   "commandLogLevel": "Verbose",
   "messageCacheSize": 100,

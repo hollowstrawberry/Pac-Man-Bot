@@ -20,8 +20,6 @@ namespace PacManBot.Modules.PacMan
         private readonly StorageService storage;
 
         private const int MaxDisplayedScores = 20;
-        private string ManualModeMessage => "__Manual mode:__ Both adding and removing reactions count as input. Do one action at a time to prevent buggy behavior." +
-                                            "\nGive this bot the permission to Manage Messages to remove reactions automatically.".If(Context.Guild != null);
 
 
         public PacManModule(LoggingService logger, StorageService storage)
@@ -87,11 +85,6 @@ namespace PacManBot.Modules.PacMan
             var gameMessage = await ReplyAsync(preMessage + newGame.GetDisplay(showHelp: false) + "```diff\n+Starting game```"); //Output the game
             newGame.messageId = gameMessage.Id;
 
-            if (!Context.BotHas(ChannelPermission.ManageMessages))
-            {
-                await ReplyAsync(ManualModeMessage);
-            }
-
             try
             {
                 await AddControls(gameMessage);
@@ -119,11 +112,6 @@ namespace PacManBot.Modules.PacMan
                     game.mobileDisplay = arg.StartsWith("m");
                     var newMsg = await ReplyAsync(game.GetDisplay(showHelp: false) + "```diff\n+Refreshing game```"); //Send new message
                     game.messageId = newMsg.Id; //Change focus message for this channel
-
-                    if (!Context.BotHas(ChannelPermission.ManageMessages))
-                    {
-                        await ReplyAsync(ManualModeMessage);
-                    }
 
                     try
                     {

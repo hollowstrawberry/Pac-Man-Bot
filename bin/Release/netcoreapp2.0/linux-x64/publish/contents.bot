@@ -42,7 +42,7 @@
 
 "aboutfields":
 "Author|Samrux#3980
-Version|v2.12.2
+Version|v2.13
 Library|Discord.Net 2.0 (C#)
 <:discord:409811304103149569> Bot invite|[Click here](https://discordapp.com/oauth2/authorize?client_id=398127484983443468&scope=bot&permissions=355392 \"https://discordapp.com/oauth2/authorize?client_id=398127484983443468&scope=bot&permissions=355392\")
 <:staff:412019879772815361> Pac-Man server|[Click here](https://discord.gg/hGHnfda \"https://discord.gg/hGHnfda\")
@@ -53,10 +53,10 @@ Library|Discord.Net 2.0 (C#)
 "```css
 @ 'Welcome to Pac-Man Bot!'
 
-The game is played in turns, using the emoji reactions as controls. The arrows will move Pac-Man and change his direction, and the wait symbol will skip a turn. You must avoid the ghosts and collect all the pellets to win. Try and get a high score!
-You can use the '{prefix}refresh' or '{prefix}refresh mobile' commands to move this game message to the bottom of the chat and change display modes. Using '{prefix}end' will end the game.
-Also, sorry about the ocassional lag - It is the Discord rate-limit.
+The game is played in turns, using reactions as controls. Use the arrow emoji to move Pac-Man (O), and the wait emoji to skip a turn. You must avoid the ghosts and collect all the pellets to win. Try and get a high score!
+Both adding and removing reactions will count as input. Due to the Discord rate-limit the game can be laggy, so please do one action at a time to prevent buggy behavior!
 
+You can use the '{prefix}refresh' or '{prefix}refresh mobile' commands to move this game message to the bottom of the chat. Using '{prefix}end' will end the game.
 For more information about the bot, use the '{prefix}help' and '{prefix}about' commands.
 
 ;Here are some more #tips:

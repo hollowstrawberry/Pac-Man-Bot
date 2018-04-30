@@ -10,14 +10,14 @@ namespace PacManBot.Services
 {
     public class LoggingService
     {
-        private readonly DiscordSocketClient client;
+        private readonly DiscordShardedClient client;
         private readonly CommandService commands;
 
         public const string LogDirectory = "logs/";
         private string LogFile => $"{LogDirectory}{DateTime.Now.ToString("yyyy-MM-dd")}.txt";
 
 
-        public LoggingService(DiscordSocketClient client, CommandService commands)
+        public LoggingService(DiscordShardedClient client, CommandService commands)
         {
             this.client = client;
             this.commands = commands;

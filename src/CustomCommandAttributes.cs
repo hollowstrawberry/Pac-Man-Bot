@@ -29,15 +29,15 @@ namespace PacManBot.CustomCommandAttributes
 
             if (Parameters == null)
             {
-                var parsText = new StringBuilder();
+                var paramsText = new StringBuilder();
                 foreach (var parameter in command.Parameters)
                 {
-                    parsText.Append(parameter.IsOptional ? '[' : '<');
-                    parsText.Append(parameter.Name);
-                    parsText.Append(parameter.IsOptional ? ']' : '>');
-                    parsText.Append(' ');
+                    paramsText.Append(parameter.IsOptional ? '[' : '<');
+                    paramsText.Append(parameter.Name);
+                    paramsText.Append(parameter.IsOptional ? ']' : '>');
+                    paramsText.Append(' ');
                 }
-                Parameters = parsText.ToString();
+                Parameters = paramsText.ToString();
             }
         }
     }
@@ -45,6 +45,7 @@ namespace PacManBot.CustomCommandAttributes
 
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
     class HideHelp : Attribute { }
+
 
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
     class Parameters : Attribute
@@ -55,6 +56,7 @@ namespace PacManBot.CustomCommandAttributes
             Value = value;
         }
     }
+
 
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
     class ExampleUsage : Attribute

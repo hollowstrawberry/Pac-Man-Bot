@@ -9,7 +9,7 @@ namespace PacManBot.Services
 {
     public class CommandHandler
     {
-        private readonly DiscordSocketClient client;
+        private readonly DiscordShardedClient client;
         private readonly CommandService commands;
         private readonly StorageService storage;
         private readonly LoggingService logger;
@@ -18,7 +18,7 @@ namespace PacManBot.Services
         public readonly Regex waka = new Regex(@"^(w+a+k+a+\W*)+$", RegexOptions.IgnoreCase);
 
 
-        public CommandHandler(DiscordSocketClient client, CommandService commands, StorageService storage, LoggingService logger, IServiceProvider provider)
+        public CommandHandler(DiscordShardedClient client, CommandService commands, StorageService storage, LoggingService logger, IServiceProvider provider)
         {
             this.client = client;
             this.commands = commands;
@@ -39,11 +39,11 @@ namespace PacManBot.Services
 
         private async Task OnMessageReceivedAsync(SocketMessage genericMessage)
         {
-            var message = genericMessage as SocketUserMessage;
-            if (message == null || message.Author.IsBot) return;
+            if (!(genericMessage is SocketUserMessage message) || message.Author.IsBot) return;
 
-            var context = new SocketCommandContext(client, message);
-            if (context.Channel is SocketGuildChannel && !context.BotHas(ChannelPermission.SendMessages)) return;
+            var context = new ShardedCommandContext(client, message);
+
+            if (context.Channel is IGuildChannel && !context.BotHas(ChannelPermission.SendMessages)) return;
 
             string prefix = storage.GetPrefix(context.Guild);
             int commandPosition = 0;

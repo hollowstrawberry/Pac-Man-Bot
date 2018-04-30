@@ -25,20 +25,23 @@ namespace PacManBot
         public string defaultPrefix;
         public string discordToken;
         public string[] httpToken;
+        public int shardCount;
         public int messageCacheSize;
         public LogSeverity clientLogLevel;
         public LogSeverity commandLogLevel;
     }
 
+
     public class Bot
     {
-        private DiscordSocketClient client;
+        private DiscordShardedClient client;
         private LoggingService logger;
         private StorageService storage;
         private BotConfig botConfig;
 
         private CancellationTokenSource cancelReconnectTimeout = null;
         private Stopwatch guildCountTimer = null;
+        int shardsReady = 0;
 
 
         public static void Main(string[] args) => new Bot().MainAsync().GetAwaiter().GetResult();
@@ -49,10 +52,10 @@ namespace PacManBot
             if (!File.Exists(BotFile.Config)) throw new Exception($"Configuration file {BotFile.Config} is missing.");
 
             botConfig = JsonConvert.DeserializeObject<BotConfig>(File.ReadAllText(BotFile.Config));
-            var clientConfig = new DiscordSocketConfig { LogLevel = botConfig.clientLogLevel, MessageCacheSize = botConfig.messageCacheSize};
+            var clientConfig = new DiscordSocketConfig { TotalShards = botConfig.shardCount, LogLevel = botConfig.clientLogLevel, MessageCacheSize = botConfig.messageCacheSize};
             var commandConfig = new CommandServiceConfig { DefaultRunMode = RunMode.Async, LogLevel = botConfig.commandLogLevel };
 
-            client = new DiscordSocketClient(clientConfig);
+            client = new DiscordShardedClient(clientConfig);
 
             //Prepare services
             var services = new ServiceCollection()
@@ -77,9 +80,9 @@ namespace PacManBot
             provider.GetRequiredService<ScriptingService>();
 
             //Events
-            client.Ready += OnReady;
-            client.Connected += OnConnected;
-            client.Disconnected += OnDisconnected;
+            client.ShardReady += OnShardReady;
+            client.ShardConnected += OnShardConnected;
+            client.ShardDisconnected += OnShardDisconnected;
             client.JoinedGuild += OnJoinedGuild;
             client.LeftGuild += OnLeftGuild;
             client.ChannelDestroyed += OnChannelDestroyed;
@@ -90,27 +93,29 @@ namespace PacManBot
 
 
         // Events
-        
-        private Task OnConnected()
+
+        private Task OnShardConnected(DiscordSocketClient shard)
         {
             if (cancelReconnectTimeout != null)
             {
                 cancelReconnectTimeout.Cancel();
                 logger.Log(LogSeverity.Info, "Client reconnected. Timeout cancelled.");
+                cancelReconnectTimeout = new CancellationTokenSource();
             }
-
-            cancelReconnectTimeout = new CancellationTokenSource();
 
             return Task.CompletedTask;
         }
 
 
-        private Task OnDisconnected(Exception e)
+        private Task OnShardDisconnected(Exception e, DiscordSocketClient shard)
         {
+            if (cancelReconnectTimeout == null) cancelReconnectTimeout = new CancellationTokenSource();
+
             logger.Log(LogSeverity.Info, "Client disconnected. Starting reconnection timeout...");
-            Task.Delay(TimeSpan.FromSeconds(30), cancelReconnectTimeout.Token).ContinueWith(_ =>
+
+            Task.Delay(TimeSpan.FromSeconds(100), cancelReconnectTimeout.Token).ContinueWith(_ =>
             {
-                if (client.ConnectionState != ConnectionState.Connected)
+                if (shard.ConnectionState != ConnectionState.Connected)
                 {
                     logger.Log(LogSeverity.Critical, "Reconnection timeout expired. Shutting down...");
                     Environment.Exit(1);
@@ -121,9 +126,13 @@ namespace PacManBot
         }
 
 
-        private Task OnReady()
+        private Task OnShardReady(DiscordSocketClient shard)
         {
-            Task.Run(async () => await UpdateGuildCountAsync());
+            if (++shardsReady == client.Shards.Count)
+            {
+                logger.Log(LogSeverity.Info, "All shards ready");
+                Task.Run(async () => await UpdateGuildCountAsync());
+            }
             return Task.CompletedTask;
         }
 
@@ -163,7 +172,9 @@ namespace PacManBot
         {
             if (guildCountTimer == null || guildCountTimer.Elapsed.TotalMinutes >= 20)
             {
-                await client.SetGameAsync($"{botConfig.defaultPrefix}help | {client.Guilds.Count} guilds");
+                int guilds = client.Guilds.Count;
+
+                await client.SetGameAsync($"{botConfig.defaultPrefix}help | {guilds} guilds");
 
                 string[] website = { $"bots.discord.pw",
                                      $"discordbots.org" };
@@ -174,7 +185,7 @@ namespace PacManBot
 
                     string requesturi = "https://" + website[i] + $"/api/bots/{client.CurrentUser.Id}/stats";
                     var webclient = new HttpClient();
-                    var content = new StringContent($"{{\"server_count\": {client.Guilds.Count}}}", System.Text.Encoding.UTF8, "application/json");
+                    var content = new StringContent($"{{\"server_count\": {guilds}}}", System.Text.Encoding.UTF8, "application/json");
                     webclient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(botConfig.httpToken[i]);
                     var response = await webclient.PostAsync(requesturi, content);
 
@@ -183,7 +194,7 @@ namespace PacManBot
 
                 guildCountTimer = Stopwatch.StartNew();
 
-                await logger.Log(LogSeverity.Info, $"Guild count updated to {client.Guilds.Count}");
+                await logger.Log(LogSeverity.Info, $"Guild count updated to {guilds}");
             }
         }
     }

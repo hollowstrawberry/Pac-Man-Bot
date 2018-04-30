@@ -9,14 +9,12 @@ namespace PacManBot.Services
 {
     class ReactionHandler
     {
-        private readonly DiscordSocketClient client;
+        private readonly DiscordShardedClient client;
         private readonly StorageService storage;
         private readonly LoggingService logger;
 
-        private enum Change { Add, Remove }
 
-
-        public ReactionHandler(DiscordSocketClient client, StorageService storage, LoggingService logger)
+        public ReactionHandler(DiscordShardedClient client, StorageService storage, LoggingService logger)
         {
             this.client = client;
             this.storage = storage;
@@ -30,35 +28,34 @@ namespace PacManBot.Services
 
         private Task OnReactionAdded(Cacheable<IUserMessage, ulong> m, ISocketMessageChannel c, SocketReaction r)
         {
-            Task.Run(async () => await OnReactionChangedAsync(m, c, r, Change.Add)); // Prevents the gateway task from getting blocked
+            Task.Run(async () => await OnReactionChangedAsync(m, c, r)); // Prevents the gateway task from getting blocked
             return Task.CompletedTask;
         }
 
         private Task OnReactionRemoved(Cacheable<IUserMessage, ulong> m, ISocketMessageChannel c, SocketReaction r)
         {
-            Task.Run(async () => await OnReactionChangedAsync(m, c, r, Change.Remove)); // Prevents the gateway task from getting blocked
+            Task.Run(async () => await OnReactionChangedAsync(m, c, r)); // Prevents the gateway task from getting blocked
             return Task.CompletedTask;
         }
 
 
-        private async Task OnReactionChangedAsync(Cacheable<IUserMessage, ulong> messageData, ISocketMessageChannel channel, SocketReaction reaction, Change change)
+        private async Task OnReactionChangedAsync(Cacheable<IUserMessage, ulong> messageData, ISocketMessageChannel channel, SocketReaction reaction)
         {
             if (!reaction.User.IsSpecified || reaction.UserId == client.CurrentUser.Id) return;
-            if (change == Change.Remove && channel.BotHas(ChannelPermission.ManageMessages)) return; // Removing in this case doesn't count as input as the reaction will be automatically removed by the bot 
 
             foreach (GameInstance game in storage.GameInstances) // Checks if the reacted message is a game
             {
                 if (reaction.MessageId == game.messageId)
                 {
                     var message = await messageData.GetOrDownloadAsync();
-                    await GameInput(game, message, reaction, change);
+                    await GameInput(game, message, reaction);
                     return;
                 }
             }
         }
 
 
-        private async Task GameInput(GameInstance game, IUserMessage message, SocketReaction reaction, Change reactionChange)
+        private async Task GameInput(GameInstance game, IUserMessage message, SocketReaction reaction)
         {
             var channel = message.Channel;
             var guild = (channel as IGuildChannel)?.Guild;
@@ -92,13 +89,9 @@ namespace PacManBot.Services
                     }
                 }
 
-                if (channel.BotHas(ChannelPermission.ManageMessages)) //Can remove reactions
+                if (game.state != GameInstance.State.Active && channel.BotHas(ChannelPermission.ManageMessages))
                 {
-                    if (game.state == GameInstance.State.Active)
-                    {
-                        if (reactionChange == Change.Add) await message.RemoveReactionAsync(reaction.Emote, user);
-                    }
-                    else await message.RemoveAllReactionsAsync();
+                    await message.RemoveAllReactionsAsync();
                 }
             }
         }

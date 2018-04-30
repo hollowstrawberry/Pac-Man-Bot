@@ -11,13 +11,13 @@ namespace PacManBot.Services
 {
     public class StartupService
     {
-        private readonly DiscordSocketClient client;
+        private readonly DiscordShardedClient client;
         private readonly CommandService commands;
         private readonly LoggingService logger;
         private readonly BotConfig config;
 
 
-        public StartupService(DiscordSocketClient client, CommandService commands, LoggingService logger, BotConfig config)
+        public StartupService(DiscordShardedClient client, CommandService commands, LoggingService logger, BotConfig config)
         {
             this.client = client;
             this.commands = commands;
