@@ -69,7 +69,7 @@ namespace PacManBot.Services
                 }
                 catch (RateLimitedException)
                 {
-                    await logger.Log(LogSeverity.Error, $"Ratelimit during command {context.Message.Content} in channel {context.Channel.FullName()}");
+                    await logger.Log(LogSeverity.Error, $"Rate limit during command {context.Message.Content} in channel {context.Channel.FullName()}");
                 }
             }
 

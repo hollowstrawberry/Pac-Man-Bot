@@ -27,6 +27,7 @@ namespace PacManBot.Services
         }
 
 
+
         private Task OnReactionAdded(Cacheable<IUserMessage, ulong> m, ISocketMessageChannel c, SocketReaction r)
         {
             Task.Run(async () => await OnReactionChangedAsync(m, c, r)); // Prevents the gateway task from getting blocked
@@ -35,7 +36,7 @@ namespace PacManBot.Services
 
         private Task OnReactionRemoved(Cacheable<IUserMessage, ulong> m, ISocketMessageChannel c, SocketReaction r)
         {
-            Task.Run(async () => await OnReactionChangedAsync(m, c, r)); // Prevents the gateway task from getting blocked
+            Task.Run(async () => await OnReactionChangedAsync(m, c, r));
             return Task.CompletedTask;
         }
 
@@ -55,7 +56,7 @@ namespace PacManBot.Services
                     }
                     catch (RateLimitedException)
                     {
-                        await logger.Log(LogSeverity.Warning, LogSource.Game, $"Ratelimit during input in {game.channelId}");
+                        await logger.Log(LogSeverity.Warning, LogSource.Game, $"Rate limit during input in {game.channelId}");
                     }
                     return;
                 }
@@ -76,7 +77,7 @@ namespace PacManBot.Services
                 if (GameInstance.GameInputs.ContainsKey(emote)) //Valid reaction input
                 {
                     string strInput = GameInstance.GameInputs[emote].ToString();
-                    await logger.Log(LogSeverity.Verbose, LogSource.Game + $"/{(guild == null ? 0 : client.GetShardIdFor(guild))}",
+                    await logger.Log(LogSeverity.Verbose, LogSource.Game + $"{(guild == null ? 0 : client.GetShardIdFor(guild))}",
                                      $"Input {strInput}{new string(' ', 5 - strInput.Length)} by user {user.FullName()} in channel {channel.FullName()}");
 
                     game.DoTick(GameInstance.GameInputs[emote]);

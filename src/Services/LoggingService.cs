@@ -38,11 +38,11 @@ namespace PacManBot.Services
         public Task Log(LogMessage message)
         {
             if (!Directory.Exists(LogDirectory)) Directory.CreateDirectory(LogDirectory); //Create the log directory if it doesn't exist
-            if (!File.Exists(LogFile)) File.WriteAllText(LogFile, ""); //Create today's log file if it doesn't exist
+            if (!File.Exists(LogFile)) File.Create(LogFile).Dispose(); //Create today's log file if it doesn't exist
 
             if (logExclude != null && message.Message.ContainsAny(logExclude)) return Task.CompletedTask;
 
-            string logText = $"{DateTime.Now.ToString("hh:mm:ss")} [{message.Severity}] {message.Source}: {message.Exception?.ToString() ?? message.Message}";
+            string logText = $"{DateTime.Now.ToString("hh:mm:ss")} [{message.Severity}] {message.Source.Replace("Shard #", "Gateway")}: {message.Exception?.ToString() ?? message.Message}";
             File.AppendAllText(LogFile, $"{logText}\n"); //Write the log text to a file
 
             return Console.Out.WriteLineAsync(logText); //Write the log text to the console

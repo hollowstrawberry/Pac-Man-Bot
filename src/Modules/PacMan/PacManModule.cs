@@ -93,7 +93,7 @@ namespace PacManBot.Modules.PacMan
                 await gameMessage.ModifyAsync(m => m.Content = newGame.GetDisplay()); //Restore display to normal
             }
             catch (HttpException) { } // Message not found (deleted at some point)
-            catch (RateLimitedException) { await logger.Log(LogSeverity.Warning, $"Ratelimit editing game message in {Context.Channel.FullName()}"); }
+            catch (RateLimitedException) { await logger.Log(LogSeverity.Warning, $"Rate limit editing game message in {Context.Channel.FullName()}"); }
         }
 
 
@@ -121,7 +121,7 @@ namespace PacManBot.Modules.PacMan
                         await newMsg.ModifyAsync(m => m.Content = game.GetDisplay()); //Restore display to normal
                     }
                     catch (HttpException) { } // Message not found (deleted at some point)
-                    catch (RateLimitedException) { await logger.Log(LogSeverity.Warning, $"Ratelimit editing game message in {Context.Channel.FullName()}"); }
+                    catch (RateLimitedException) { await logger.Log(LogSeverity.Warning, $"Rate limit editing game message in {Context.Channel.FullName()}"); }
 
                     return;
                 }
@@ -301,7 +301,7 @@ namespace PacManBot.Modules.PacMan
                 }
                 catch (RateLimitedException)
                 {
-                    await logger.Log(LogSeverity.Warning, $"Ratelimit adding controls to game message in {Context.Channel.FullName()}");
+                    await logger.Log(LogSeverity.Warning, $"Rate limit adding controls to game message in {Context.Channel.FullName()}");
                 }
             }
         }

@@ -149,19 +149,22 @@ namespace PacManBot.Modules
                  "Did you know the bot responds every time you say \"waka\" in chat? Shhh, it's a secret.")]
         public async Task Ping([Remainder]string args = "") //Useless args
         {
-            var stopwatch = Stopwatch.StartNew();
+            var stopwatch = Stopwatch.StartNew(); // Measure the time it takes to send a message to chat
             var message = await ReplyAsync($"{CustomEmoji.Loading} Waka");
             stopwatch.Stop();
 
             int shardGames = 0;
             foreach (var game in storage.GameInstances)
             {
-                if (game.Guild != null && Context.Client.Guilds.Contains(game.Guild)) shardGames++;
+                if (game.Guild != null && Context.Client.Guilds.Contains(game.Guild) || game.Guild == null && Context.Client.ShardId == 0)
+                {
+                    shardGames++;
+                }
             }
 
-            await message.ModifyAsync(m => m.Content = $"{CustomEmoji.PacMan} Waka in `{(int)stopwatch.Elapsed.TotalMilliseconds}`ms **|** "
-                                                     + $"Shard #{Context.Client.ShardId}/{shardedClient.Shards.Count - 1} with {Context.Client.Guilds.Count} guilds "
-                                                     + $"and {shardGames} active games\n");
+            string content = $"{CustomEmoji.PacMan} Waka in `{(int)stopwatch.ElapsedMilliseconds}`ms **|** {shardedClient.Guilds.Count} total guilds, {storage.GameInstances.Count} total active games";
+            if (shardedClient.Shards.Count > 1) content += $"```css\nShard {Context.Client.ShardId}/{shardedClient.Shards.Count - 1} controlling {Context.Client.Guilds.Count} guilds and {shardGames} games```";
+            await message.ModifyAsync(m => m.Content = content);                   
         }
 
 
