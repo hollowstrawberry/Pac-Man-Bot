@@ -348,6 +348,8 @@ namespace PacManBot.Modules.PacMan
             maxPellets = newMap.Count(c => c == CharPellet || c == CharPowerPellet || c == CharSoftWallPellet);
             pellets = maxPellets;
 
+            creation = DateTime.Now;
+
             // Game objects
             Pos playerPos = FindChar(CharPlayer) ?? new Pos(0, 0);
             player = new Player(playerPos, playerPos);
