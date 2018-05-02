@@ -31,7 +31,7 @@ namespace PacManBot.Modules.PacMan
             { "⬇".ToEmoji(), GameInput.Down },
             { "➡".ToEmoji(), GameInput.Right },
             { CustomEmoji.Help, GameInput.Help },
-            { CustomEmoji.Wait, GameInput.Wait }
+            { "⏭".ToEmoji(), GameInput.Fast }
         };
 
         private const int PowerTime = 20, ScatterCycle = 100, ScatterTime1 = 30, ScatterTime2 = 20;
@@ -62,6 +62,7 @@ namespace PacManBot.Modules.PacMan
         [DataMember] public int score = 0;
         [DataMember] public int time = 0; //How many turns have passed
         [DataMember] public State state = State.Active;
+        [DataMember] public DateTime creation = new DateTime(2018, 5, 2, 1, 0, 0); // Date I implemented creation date tracking
         [DataMember] public bool mobileDisplay = false;
 
         [IgnoreDataMember] private char[,] map;
@@ -73,6 +74,7 @@ namespace PacManBot.Modules.PacMan
         [DataMember] private int fruitTimer = 0;
         [DataMember] private Pos fruitSpawnPos; //Where all fruit will spawn
         [DataMember] private GameInput lastInput = GameInput.None;
+        [DataMember] private bool fastForward = false;
 
 
 
@@ -132,9 +134,9 @@ namespace PacManBot.Modules.PacMan
 
         public enum State { Active, Lose, Win }
 
-        public enum GameInput { None, Left, Up, Down, Right, Wait, Refresh, Help }
+        public enum GameInput { None, Up, Left, Down, Right, Wait, Help, Fast }
 
-        public enum Dir { none, left, up, down, right }
+        public enum Dir { none, up, left, down, right }
 
         public enum AiType { Blinky, Pinky, Inky, Clyde }
 
@@ -378,6 +380,12 @@ namespace PacManBot.Modules.PacMan
         {
             if (state != State.Active) return; //Failsafe
 
+            if (input == GameInput.Fast) // Toggle fastforward
+            {
+                fastForward = !fastForward;
+                return;
+            }
+
             if (input == GameInput.Help || lastInput == GameInput.Help) //Does nothing
             {
                 lastInput = (lastInput == GameInput.Help) ? GameInput.None : input;
@@ -386,88 +394,103 @@ namespace PacManBot.Modules.PacMan
 
             lastInput = input;
 
-            time++;
-            oldScore = score;
 
-            //Player
-            Dir newDir = (int)input < 5 ? (Dir)input : Dir.none;
-            if (newDir != Dir.none)
+            bool continueInput = true;
+
+            do
             {
-                player.dir = newDir;
-                if (NonSolid(player.pos + newDir)) player.pos += newDir;
-                WrapAround(ref player.pos);
-            }
+                time++;
+                oldScore = score;
 
-            //Fruit
-            if (fruitTimer > 0)
-            {
-                if (fruitSpawnPos == player.pos || FruitSecondPos == player.pos)
+                //Player
+                Dir newDir = (int)input < 5 ? (Dir)input : Dir.none;
+                if (newDir != Dir.none)
                 {
-                    score += FruitScore;
-                    fruitTimer = 0;
-                }
-                else
-                {
-                    fruitTimer--;
-                }
-            }
-
-            //Pellet collision
-            char tile = MapAt(player.pos);
-            if (tile == CharPellet || tile == CharPowerPellet || tile == CharSoftWallPellet)
-            {
-                pellets--;
-                if ((pellets == FruitTrigger1 || pellets == FruitTrigger2) && fruitSpawnPos.x >= 0)
-                {
-                    fruitTimer = random.Next(25, 30 + 1);
+                    player.dir = newDir;
+                    if (NonSolid(player.pos + newDir)) player.pos += newDir;
+                    WrapAround(ref player.pos);
                 }
 
-                score += (tile == CharPowerPellet) ? 50 : 10;
-                map[player.pos.x, player.pos.y] = (tile == CharSoftWallPellet) ? CharSoftWall : ' ';
-                if (tile == CharPowerPellet)
+                foreach (Dir dir in AllDirs) // Check perpendicular directions
                 {
-                    player.power += PowerTime;
-                    foreach (Ghost ghost in ghosts) ghost.mode = AiMode.Frightened;
+                    int diff = Math.Abs((int)player.dir - (int)dir);
+                    if ((diff == 1 || diff == 3) && NonSolid(player.pos + dir)) continueInput = false; // Stops at intersections
                 }
 
-                if (pellets == 0)
+                //Fruit
+                if (fruitTimer > 0)
                 {
-                    state = State.Win;
-                }
-            }
-
-            //Ghosts
-            foreach (Ghost ghost in ghosts)
-            {
-                bool didAI = false;
-                while (true) //Checks player collision before and after AI
-                {
-                    if (player.pos == ghost.pos) //Collision
+                    if (fruitSpawnPos == player.pos || FruitSecondPos == player.pos)
                     {
-                        if (ghost.mode == AiMode.Frightened)
-                        {
-                            ghost.pos = ghost.origin;
-                            ghost.dir = Dir.none;
-                            ghost.pauseTime = 6;
-                            ghost.DecideMode(time); //Removes frightened state
-                            score += 200 * (int)Math.Pow(2, player.ghostStreak); //Each ghost gives double the points of the last
-                            player.ghostStreak++;
-                        }
-                        else state = State.Lose;
+                        score += FruitScore;
+                        fruitTimer = 0;
+                        continueInput = false;
+                    }
+                    else
+                    {
+                        fruitTimer--;
+                    }
+                }
 
-                        didAI = true; //Skips AI after collision
+                //Pellet collision
+                char tile = MapAt(player.pos);
+                if (tile == CharPellet || tile == CharPowerPellet || tile == CharSoftWallPellet)
+                {
+                    pellets--;
+                    if ((pellets == FruitTrigger1 || pellets == FruitTrigger2) && fruitSpawnPos.x >= 0)
+                    {
+                        fruitTimer = random.Next(25, 30 + 1);
                     }
 
-                    if (didAI || state != State.Active) break; //Doesn't run AI twice, or if the user already won
+                    score += (tile == CharPowerPellet) ? 50 : 10;
+                    map[player.pos.x, player.pos.y] = (tile == CharSoftWallPellet) ? CharSoftWall : ' ';
+                    if (tile == CharPowerPellet)
+                    {
+                        player.power += PowerTime;
+                        foreach (Ghost ghost in ghosts) ghost.mode = AiMode.Frightened;
+                        continueInput = false;
+                    }
 
-                    ghost.AI(this); //Full ghost behavior
-                    didAI = true;
+                    if (pellets == 0)
+                    {
+                        state = State.Win;
+                    }
                 }
-            }
 
-            if (player.power > 0) player.power--;
-            if (player.power == 0) player.ghostStreak = 0;
+                //Ghosts
+                foreach (Ghost ghost in ghosts)
+                {
+                    bool didAI = false;
+                    while (true) //Checks player collision before and after AI
+                    {
+                        if (player.pos == ghost.pos) //Collision
+                        {
+                            if (ghost.mode == AiMode.Frightened)
+                            {
+                                ghost.pos = ghost.origin;
+                                ghost.dir = Dir.none;
+                                ghost.pauseTime = 6;
+                                ghost.DecideMode(time); //Removes frightened state
+                                score += 200 * (int)Math.Pow(2, player.ghostStreak); //Each ghost gives double the points of the last
+                                player.ghostStreak++;
+                            }
+                            else state = State.Lose;
 
+                            continueInput = false;
+                            didAI = true; //Skips AI after collision
+                        }
+
+                        if (didAI || state != State.Active) break; //Doesn't run AI twice, or if the user already won
+
+                        ghost.AI(this); //Full ghost behavior
+                        didAI = true;
+                    }
+                }
+
+                if (player.power > 0) player.power--;
+                if (player.power == 0) player.ghostStreak = 0;
+
+            } while (fastForward && continueInput);
 
             if (state == State.Active)
             {
@@ -568,6 +591,7 @@ namespace PacManBot.Modules.PacMan
                 {
                     case State.Active:
                         display.Insert(0, mobileDisplay ? "```\n" : "```css\n");
+                        if (fastForward) display.Append("#Fastforward: Active");
                         break;
 
                     case State.Lose:

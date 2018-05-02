@@ -78,7 +78,7 @@ namespace PacManBot.Services
                 {
                     string strInput = GameInstance.GameInputs[emote].ToString();
                     await logger.Log(LogSeverity.Verbose, LogSource.Game + $"{(guild == null ? 0 : client.GetShardIdFor(guild))}",
-                                     $"Input {strInput}{new string(' ', 5 - strInput.Length)} by user {user.FullName()} in channel {channel.FullName()}");
+                                     $"Input {strInput}{new string(' ', Math.Max(0, 5 - strInput.Length))} by user {user.FullName()} in channel {channel.FullName()}");
 
                     game.DoTick(GameInstance.GameInputs[emote]);
 
