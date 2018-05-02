@@ -206,6 +206,7 @@ namespace PacManBot.Modules.PacMan
             public AiType type; //Ghost behavior type
             public AiMode mode; //Ghost behavior mode
             public int pauseTime; //Time remaining until it can move
+            public bool exitRight = false; //It will exit the ghost box to the left unless modes have changed
 
             public Ghost(AiType type, Pos pos, Pos origin, Pos corner) // Had to split pos and origin because of the deserializer
             {
@@ -219,11 +220,14 @@ namespace PacManBot.Modules.PacMan
             public void AI(GameInstance game)
             {
                 //Decide mode
-                if (game.player.power <= 1) DecideMode(game.time); //Doesn't change mode while the player is in power mode
+                if (game.player.power <= 1) DecideMode(game);
 
-                if (pauseTime > 0)
+                if (pauseTime > 0) // In the cage
                 {
+                    pos = origin;
+                    dir = Dir.none;
                     pauseTime--;
+                    if (JustChangedMode(game, checkAll: true)) exitRight = true; // Exits to the right if modes changed
                     return;
                 }
 
@@ -272,26 +276,34 @@ namespace PacManBot.Modules.PacMan
                         break;
                 }
 
+
                 //Decide movement
+
                 Dir newDir = Dir.none;
 
-                if (game.MapAt(pos) == CharDoor || game.MapAt(pos + Dir.up) == CharDoor)
+                if (game.MapAt(pos) == CharDoor || game.MapAt(pos + Dir.up) == CharDoor) // Exiting the cage
                 {
-                    newDir = Dir.up; //If it's inside the cage
+                    newDir = Dir.up;
                 }
-                else if (type == AiType.Blinky && !game.custom && game.time < 4)
+                else if (dir == Dir.up && game.MapAt(pos + Dir.down) == CharDoor) // Getting away from the cage
                 {
-                    newDir = Dir.left; //Blinky starts already facing left
+                    newDir = exitRight ? Dir.right : Dir.left;
+                }
+                else if (JustChangedMode(game))
+                {
+                    newDir = dir.Opposite();
                 }
                 else //Track target
                 {
+                    exitRight = false;
+
                     float distance = 1000f;
                     foreach (Dir testDir in AllDirs) //Decides the direction that will get it closest to its target
                     {
                         Pos testPos = pos + testDir;
 
                         if (testDir == Dir.up && (game.MapAt(testPos) == CharSoftWall || game.MapAt(testPos) == CharSoftWallPellet)) continue; //Can't go up these places
-                        if (testDir == dir.Opposite() && mode != AiMode.Frightened && !JustChangedMode(game.time)) continue; //Can't turn 180 degrees except on special situations
+                        if (testDir == dir.Opposite()) continue; //Can't turn 180 degrees unless the direction was changed previously
 
                         if (game.NonSolid(testPos) && Pos.Distance(testPos, target) < distance) //Check if it can move to the tile and if this direction is better than the previous
                         {
@@ -303,24 +315,28 @@ namespace PacManBot.Modules.PacMan
                 }
 
                 dir = newDir;
-                pos += newDir;
+                if (mode != AiMode.Frightened || game.time % 2 == 0) pos += dir; // If frightened, only moves on even turns
                 game.WrapAround(ref pos);
             }
 
-            public void DecideMode(int time)
+            public void DecideMode(GameInstance game)
             {
-                if (time < 4 * ScatterCycle  //In set cycles, a set number of turns is spent in scatter mode, up to 4 times
-                    && (time < 2 * ScatterCycle && time % ScatterCycle < ScatterTime1
-                    || time >= 2 * ScatterCycle && time % ScatterCycle < ScatterTime2)
+                if (game.time < 4 * ScatterCycle  //In set cycles, a set number of turns is spent in scatter mode, up to 4 times
+                    && (game.time < 2 * ScatterCycle && game.time % ScatterCycle < ScatterTime1
+                    || game.time >= 2 * ScatterCycle && game.time % ScatterCycle < ScatterTime2)
                 ) { mode = AiMode.Scatter; }
                 else { mode = AiMode.Chase; }
             }
 
-            private bool JustChangedMode(int time)
+            private bool JustChangedMode(GameInstance game, bool checkAll = false)
             {
-                for (int i = 0; i < 2; i++) if (time == i * ScatterCycle || time == i * ScatterCycle + ScatterTime1) return true;
-                for (int i = 2; i < 4; i++) if (time == i * ScatterCycle || time == i * ScatterCycle + ScatterTime2) return true;
-                return false;
+                if (game.time == 0) return false;
+                if (mode == AiMode.Frightened && !checkAll) return game.player.power == PowerTime; // If frightened it only counts as changing modes at the start (but during pausetime it scans anyway)
+
+                for (int i = 0; i < 2; i++) if (game.time == i * ScatterCycle || game.time == i * ScatterCycle + ScatterTime1) return true;
+                for (int i = 2; i < 4; i++) if (game.time == i * ScatterCycle || game.time == i * ScatterCycle + ScatterTime2) return true;
+
+                return checkAll ? game.player.power == PowerTime : false;
             }
         }
 
@@ -469,10 +485,8 @@ namespace PacManBot.Modules.PacMan
                         {
                             if (ghost.mode == AiMode.Frightened)
                             {
-                                ghost.pos = ghost.origin;
-                                ghost.dir = Dir.none;
                                 ghost.pauseTime = 6;
-                                ghost.DecideMode(time); //Removes frightened state
+                                ghost.DecideMode(this); //Removes frightened state
                                 score += 200 * (int)Math.Pow(2, player.ghostStreak); //Each ghost gives double the points of the last
                                 player.ghostStreak++;
                             }

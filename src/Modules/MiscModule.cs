@@ -217,7 +217,7 @@ namespace PacManBot.Modules
                 Color = new Color(241, 195, 15),
                 ThumbnailUrl = Context.Client.CurrentUser.GetAvatarUrl(ImageFormat.Auto, 128)
             };
-            embed.AddField($"➡ <{storage.BotContent["invite"]}>", "*Thanks for inviting Pac-Man Bot!*", false);
+            embed.AddField($"➡ <{storage.BotContent["shortinvite"]}>", "*Thanks for inviting Pac-Man Bot!*", false);
             await ReplyAsync("", false, embed.Build());
         }
 
