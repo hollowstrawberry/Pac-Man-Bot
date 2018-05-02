@@ -1,6 +1,6 @@
 ﻿{
 
-"invite": "http://bit.ly/pacman-bot",
+"shortinvite": "http://bit.ly/pacman-bot",
 
 "map":
 "╔════════════╤╤════════════╗
@@ -42,7 +42,7 @@
 
 "aboutfields":
 "Author|Samrux#3980
-Version|v2.14
+Version|v2.15
 Library|Discord.Net 2.0 (C#)
 <:discord:409811304103149569> Bot invite|[Click here](https://discordapp.com/oauth2/authorize?client_id=398127484983443468&scope=bot&permissions=355392 \"https://discordapp.com/oauth2/authorize?client_id=398127484983443468&scope=bot&permissions=355392\")
 <:staff:412019879772815361> Pac-Man server|[Click here](https://discord.gg/hGHnfda \"https://discord.gg/hGHnfda\")
@@ -54,7 +54,7 @@ Library|Discord.Net 2.0 (C#)
 @ 'Welcome to Pac-Man Bot!';
 
 #Controls:
-This game is played in turns by adding or removing a reaction. The arrow emotes will move Pac-Man and the skip emote will toggle fast-forward mode.
+This game is played in turns by adding or removing a reaction. The arrow emotes will move Pac-Man, and the skip emote will toggle fast-forward mode. In fast-forward mode, the arrows move Pac-Man until you reach an intersection or hit something.
 Due to the Discord rate-limit the game can be laggy, so please do one action at a time to prevent strange behavior!
 To win, you must collect all the pellets, while avoiding the ghosts. Try to get a high score!
 
