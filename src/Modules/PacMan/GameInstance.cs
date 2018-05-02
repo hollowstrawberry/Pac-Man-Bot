@@ -62,7 +62,7 @@ namespace PacManBot.Modules.PacMan
         [DataMember] public int score = 0;
         [DataMember] public int time = 0; //How many turns have passed
         [DataMember] public State state = State.Active;
-        [DataMember] public DateTime creation = new DateTime(2018, 5, 2, 1, 0, 0); // Date I implemented creation date tracking
+        [DataMember] public DateTime lastPlayed;
         [DataMember] public bool mobileDisplay = false;
 
         [IgnoreDataMember] private char[,] map;
@@ -354,6 +354,7 @@ namespace PacManBot.Modules.PacMan
             this.logger = logger;
             this.channelId = channelId;
             this.ownerId = ownerId;
+            lastPlayed = DateTime.Now;
 
             // Map
             if (newMap == null) newMap = storage.BotContent["map"];
@@ -363,8 +364,6 @@ namespace PacManBot.Modules.PacMan
 
             maxPellets = newMap.Count(c => c == CharPellet || c == CharPowerPellet || c == CharSoftWallPellet);
             pellets = maxPellets;
-
-            creation = DateTime.Now;
 
             // Game objects
             Pos playerPos = FindChar(CharPlayer) ?? new Pos(0, 0);
@@ -397,6 +396,8 @@ namespace PacManBot.Modules.PacMan
         public void DoTick(GameInput input)
         {
             if (state != State.Active) return; //Failsafe
+
+            lastPlayed = DateTime.Now;
 
             if (lastInput == GameInput.Help) // Closes help
             {

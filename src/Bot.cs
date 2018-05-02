@@ -131,7 +131,7 @@ namespace PacManBot
             if (++shardsReady == client.Shards.Count)
             {
                 logger.Log(LogSeverity.Info, "All shards ready");
-                Task.Run(async () => await UpdateGuildCountAsync());
+                _ = UpdateGuildCountAsync(); // Discarding allows the async code to run without blocking the gateway task
             }
             return Task.CompletedTask;
         }
@@ -139,7 +139,7 @@ namespace PacManBot
 
         private Task OnJoinedGuild(SocketGuild guild)
         {
-            Task.Run(async () => await UpdateGuildCountAsync());
+            _ = UpdateGuildCountAsync();
             return Task.CompletedTask;
         }
 
@@ -151,7 +151,7 @@ namespace PacManBot
                 if (storage.GameInstances[i].Guild?.Id == guild.Id) storage.DeleteGame(i);
             }
 
-            Task.Run(async () => await UpdateGuildCountAsync());
+            _ = UpdateGuildCountAsync();
             return Task.CompletedTask;
         }
 
@@ -168,7 +168,21 @@ namespace PacManBot
 
 
 
-        private async Task UpdateGuildCountAsync()
+
+        private async Task UpdateGuildCountAsync() //I have to do this so that exceptions don't go silent
+        {
+            try
+            {
+                await UpdateGuildCountInternal();
+            }
+            catch (Exception e)
+            {
+                await logger.Log(LogSeverity.Error, $"{e}");
+            }
+        }
+
+
+        private async Task UpdateGuildCountInternal()
         {
             if (guildCountTimer == null || guildCountTimer.Elapsed.TotalMinutes >= 20)
             {

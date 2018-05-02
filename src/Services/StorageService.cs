@@ -239,6 +239,7 @@ namespace PacManBot.Services
                             var game = JsonConvert.DeserializeObject<GameInstance>(File.ReadAllText(file), GameJsonSettings);
                             game.SetServices(client, this, logger);
                             GameInstances.Add(game);
+                            //StoreGame(game); // Update old files
                         }
                         catch (Exception e)
                         {

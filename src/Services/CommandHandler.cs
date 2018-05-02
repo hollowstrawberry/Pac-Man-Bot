@@ -33,12 +33,25 @@ namespace PacManBot.Services
 
         private Task OnMessageReceived(SocketMessage m)
         {
-            Task.Run(async () => await OnMessageReceivedAsync(m));  // Prevents the gateway task from getting blocked
+            _ = OnMessageReceivedAsync(m); // Discarding allows the async code to run without blocking the gateway task
             return Task.CompletedTask;
         }
 
 
-        private async Task OnMessageReceivedAsync(SocketMessage genericMessage)
+        private async Task OnMessageReceivedAsync(SocketMessage m) //I have to do this so that exceptions don't go silent
+        {
+            try
+            {
+                await OnMessageReceivedInternal(m);
+            }
+            catch (Exception e)
+            {
+                await logger.Log(LogSeverity.Error, $"{e}");
+            }
+        }
+
+
+        private async Task OnMessageReceivedInternal(SocketMessage genericMessage)
         {
             if (!(genericMessage is SocketUserMessage message) || message.Author.IsBot) return;
 

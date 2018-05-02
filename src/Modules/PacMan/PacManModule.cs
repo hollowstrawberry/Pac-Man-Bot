@@ -3,13 +3,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Discord;
+using Discord.Net;
 using Discord.Commands;
 using Discord.WebSocket;
 using PacManBot.Services;
 using PacManBot.Constants;
 using PacManBot.CustomCommandAttributes;
 using static PacManBot.Modules.PacMan.GameInstance;
-using Discord.Net;
 
 namespace PacManBot.Modules.PacMan
 {

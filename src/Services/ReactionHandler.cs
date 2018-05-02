@@ -30,18 +30,32 @@ namespace PacManBot.Services
 
         private Task OnReactionAdded(Cacheable<IUserMessage, ulong> m, ISocketMessageChannel c, SocketReaction r)
         {
-            Task.Run(async () => await OnReactionChangedAsync(m, c, r)); // Prevents the gateway task from getting blocked
+            _ = OnReactionChangedAsync(m, c, r); // Discarding allows the async code to run without blocking the gateway task
             return Task.CompletedTask;
         }
 
         private Task OnReactionRemoved(Cacheable<IUserMessage, ulong> m, ISocketMessageChannel c, SocketReaction r)
         {
-            Task.Run(async () => await OnReactionChangedAsync(m, c, r));
+            _ = OnReactionChangedAsync(m, c, r);
             return Task.CompletedTask;
         }
 
 
-        private async Task OnReactionChangedAsync(Cacheable<IUserMessage, ulong> messageData, ISocketMessageChannel channel, SocketReaction reaction)
+
+        private async Task OnReactionChangedAsync(Cacheable<IUserMessage, ulong> m, ISocketMessageChannel c, SocketReaction r) //I have to do this so that exceptions don't go silent
+        {
+            try
+            {
+                await OnReactionChangedInternal(m, c, r);
+            }
+            catch (Exception e)
+            {
+                await logger.Log(LogSeverity.Error, $"{e}");
+            }
+        }
+
+
+        private async Task OnReactionChangedInternal(Cacheable<IUserMessage, ulong> messageData, ISocketMessageChannel channel, SocketReaction reaction)
         {
             if (!reaction.User.IsSpecified || reaction.UserId == client.CurrentUser.Id) return;
 

@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Discord;
+using Discord.WebSocket;
 using Discord.Commands;
 using PacManBot.Services;
 using PacManBot.Constants;
@@ -14,13 +15,15 @@ namespace PacManBot.Modules
     [RequireOwner]
     public class DevModule : ModuleBase<SocketCommandContext>
     {
+        private readonly DiscordShardedClient shardedClient;
         private readonly LoggingService logger;
         private readonly StorageService storage;
         private readonly ScriptingService scripting;
 
 
-        public DevModule(CommandService commands, LoggingService logger, StorageService storage, ScriptingService scripting)
+        public DevModule(DiscordShardedClient shardedClient, CommandService commands, LoggingService logger, StorageService storage, ScriptingService scripting)
         {
+            this.shardedClient = shardedClient;
             this.logger = logger;
             this.storage = storage;
             this.scripting = scripting;
@@ -35,7 +38,7 @@ namespace PacManBot.Modules
             try
             {
                 await Context.Message.AddReactionAsync(CustomEmoji.Loading);
-                await scripting.Eval(code, Context);
+                await scripting.Eval(code, new ShardedCommandContext(shardedClient, Context.Message));
                 await Context.Message.AddReactionAsync(CustomEmoji.Check);
             }
             catch (Exception e)
@@ -57,7 +60,7 @@ namespace PacManBot.Modules
         {
             try
             {
-                await Context.Client.GetUser(useriD).SendMessageAsync("```diff\n+The following message was sent in response to your recent feedback." +
+                await shardedClient.GetUser(useriD).SendMessageAsync("```diff\n+The following message was sent in response to your recent feedback." +
                                                                   "\n-To reply to this message, use the 'feedback' command again.```\n" + message);
                 await Context.Message.AddReactionAsync(CustomEmoji.Check);
             }
@@ -125,7 +128,7 @@ namespace PacManBot.Modules
         [Summary("Gets a list of guilds and member counts where this bot is in. Developer only.")]
         public async Task GetGuildMembers()
         {
-            await ReplyAsync(string.Join("\n", Context.Client.Guilds.OrderByDescending(g => g.MemberCount).Select(g => $"{g.Name}: {g.MemberCount}")).Truncate(2000));
+            await ReplyAsync(string.Join("\n", shardedClient.Guilds.OrderByDescending(g => g.MemberCount).Select(g => $"{g.Name}: {g.MemberCount}")).Truncate(2000));
         }
     }
 }

@@ -163,7 +163,7 @@ namespace PacManBot.Modules
             }
 
             string content = $"{CustomEmoji.PacMan} Waka in `{(int)stopwatch.ElapsedMilliseconds}`ms **|** {shardedClient.Guilds.Count} total guilds, {storage.GameInstances.Count} total active games";
-            if (shardedClient.Shards.Count > 1) content += $"```css\nShard {Context.Client.ShardId}/{shardedClient.Shards.Count - 1} controlling {Context.Client.Guilds.Count} guilds and {shardGames} games```";
+            if (shardedClient.Shards.Count > 1) content += $"```css\nShard {Context.Client.ShardId + 1}/{shardedClient.Shards.Count} controlling {Context.Client.Guilds.Count} guilds and {shardGames} games```";
             await message.ModifyAsync(m => m.Content = content);                   
         }
 

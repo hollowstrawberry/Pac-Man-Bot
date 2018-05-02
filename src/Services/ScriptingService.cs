@@ -24,10 +24,10 @@ namespace PacManBot.Services
                 .WithImports(
                     "System", "System.IO", "System.Threading.Tasks", "System.Collections.Generic", "System.Linq", "System.Text.RegularExpressions",
                     "Discord", "Discord.WebSocket", "Discord.Commands",
-                    "PacManBot", "PacManBot.Services", "PacManBot.Constants", "PacManBot.Utils", "PacManBot.Modules", "PacManBot.Modules.PacMan"
+                    "PacManBot", "PacManBot.Constants", "PacManBot.Utils", "PacManBot.Services", "PacManBot.Modules", "PacManBot.Modules.PacMan"
                 )
                 .WithReferences(
-                    typeof(SocketCommandContext).Assembly,
+                    typeof(ShardedCommandContext).Assembly,
                     typeof(StorageService).Assembly,
                     typeof(IMessageChannel).Assembly,
                     typeof(RestUserMessage).Assembly
@@ -35,7 +35,7 @@ namespace PacManBot.Services
         }
 
 
-        public async Task Eval(string code, SocketCommandContext context)
+        public async Task Eval(string code, ShardedCommandContext context)
         {
             try
             {
@@ -65,11 +65,11 @@ namespace PacManBot.Services
 
     public class ScriptArgs : EventArgs
     {
-        public readonly SocketCommandContext Context;
+        public readonly ShardedCommandContext Context;
         public readonly StorageService storage;
         public readonly LoggingService logger;
 
-        public ScriptArgs(SocketCommandContext Context, StorageService storage, LoggingService logger)
+        public ScriptArgs(ShardedCommandContext Context, StorageService storage, LoggingService logger)
         {
             this.Context = Context;
             this.storage = storage;
