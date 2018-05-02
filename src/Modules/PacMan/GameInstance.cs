@@ -382,27 +382,27 @@ namespace PacManBot.Modules.PacMan
         {
             if (state != State.Active) return; //Failsafe
 
+            if (lastInput == GameInput.Help) // Closes help
+            {
+                lastInput = GameInput.None;
+                return;
+            }
+
+            lastInput = input;
+
+            if (input == GameInput.Help) return; // Opens help
             if (input == GameInput.Fast) // Toggle fastforward
             {
                 fastForward = !fastForward;
                 return;
             }
 
-            if (input == GameInput.Help || lastInput == GameInput.Help) //Does nothing
-            {
-                lastInput = (lastInput == GameInput.Help) ? GameInput.None : input;
-                return;
-            }
-
-            lastInput = input;
-
-
+            oldScore = score;
             bool continueInput = true;
 
             do
             {
                 time++;
-                oldScore = score;
 
                 //Player
                 Dir newDir = (int)input < 5 ? (Dir)input : Dir.none;
