@@ -18,8 +18,7 @@ namespace PacManBot.Services
         private readonly DiscordShardedClient client;
         private readonly LoggingService logger;
 
-        private JsonSerializerSettings GameJsonSettings = new JsonSerializerSettings
-        {
+        private JsonSerializerSettings GameJsonSettings = new JsonSerializerSettings {
             ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor
         };
 

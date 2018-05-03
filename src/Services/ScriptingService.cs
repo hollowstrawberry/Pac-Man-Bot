@@ -29,8 +29,8 @@ namespace PacManBot.Services
                 .WithReferences(
                     typeof(ShardedCommandContext).Assembly,
                     typeof(StorageService).Assembly,
-                    typeof(IMessageChannel).Assembly,
-                    typeof(RestUserMessage).Assembly
+                    typeof(RestUserMessage).Assembly,
+                    typeof(IMessageChannel).Assembly
                 );
         }
 

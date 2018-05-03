@@ -14,25 +14,23 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>bin\Debug</OutputPath>
+    <LangVersion>7.2</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <OutputPath>bin\Release</OutputPath>
+    <LangVersion>7.2</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="host\**" />
-    <Compile Remove="logs\**" />
+    <Compile Remove="_Emotes\**" />
     <Compile Remove="_Screenshots\**" />
-    <Compile Remove="Properties\**" />
-    <EmbeddedResource Remove="host\**" />
-    <EmbeddedResource Remove="logs\**" />
+    <EmbeddedResource Remove="_Emotes\**" />
     <EmbeddedResource Remove="_Screenshots\**" />
-    <EmbeddedResource Remove="Properties\**" />
-    <None Remove="host\**" />
-    <None Remove="logs\**" />
+    <None Include="bin\config.bot" />
+    <None Include="bin\contents.bot" />
+    <None Remove="_Emotes\**" />
     <None Remove="_Screenshots\**" />
-    <None Remove="Properties\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -50,11 +48,11 @@
   <ItemGroup>
     <None Remove=".gitattributes" />
     <None Remove=".gitignore" />
-    <None Remove=".leu" />
-    <None Remove="App.config" />
+    <None Remove="Example custom maps.txt" />
     <None Remove="LinuxPublish.bat" />
     <None Remove="Icon.ico" />
     <None Remove="packages.config" />
+    <None Remove="README.md" />
   </ItemGroup>
 
   <ItemGroup>
@@ -70,5 +68,9 @@
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.0.0" />
   </ItemGroup>
+
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="copy &quot;bin\contents.bot&quot; &quot;bin/Debug/netcoreapp2.0/contents.bot&quot;" />
+  </Target>
 
 </Project>

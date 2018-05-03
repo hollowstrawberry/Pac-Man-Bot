@@ -8,7 +8,6 @@ using Discord.Commands;
 using Discord.WebSocket;
 using PacManBot.Services;
 using PacManBot.Constants;
-using PacManBot.CustomCommandAttributes;
 using static PacManBot.Modules.PacMan.GameInstance;
 
 namespace PacManBot.Modules.PacMan

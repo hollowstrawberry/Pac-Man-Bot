@@ -1,83 +1,34 @@
 using System;
-using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using Discord;
-using Discord.Commands;
 using Discord.WebSocket;
-using Microsoft.Extensions.DependencyInjection;
 using PacManBot.Services;
 using PacManBot.Constants;
-using Newtonsoft.Json;
-
-
-//Made by Samrux for fun
-//GitHub repo: https://github.com/Samrux/Pac-Man-Bot
-
 
 namespace PacManBot
 {
-    public class BotConfig
-    {
-        public string defaultPrefix;
-        public string discordToken;
-        public string[] httpToken;
-        public int shardCount;
-        public int messageCacheSize;
-        public LogSeverity clientLogLevel;
-        public LogSeverity commandLogLevel;
-    }
-
-
     public class Bot
     {
+        private BotConfig botConfig;
         private DiscordShardedClient client;
         private LoggingService logger;
         private StorageService storage;
-        private BotConfig botConfig;
 
         private CancellationTokenSource cancelReconnectTimeout = null;
         private Stopwatch guildCountTimer = null;
         int shardsReady = 0;
 
 
-        public static void Main(string[] args) => new Bot().MainAsync().GetAwaiter().GetResult();
-
-
-        public async Task MainAsync()
+        public Bot(BotConfig botConfig, DiscordShardedClient client, LoggingService logger, StorageService storage)
         {
-            if (!File.Exists(BotFile.Config)) throw new Exception($"Configuration file {BotFile.Config} is missing.");
-
-            botConfig = JsonConvert.DeserializeObject<BotConfig>(File.ReadAllText(BotFile.Config));
-            var clientConfig = new DiscordSocketConfig { TotalShards = botConfig.shardCount, LogLevel = botConfig.clientLogLevel, MessageCacheSize = botConfig.messageCacheSize};
-            var commandConfig = new CommandServiceConfig { DefaultRunMode = RunMode.Async, LogLevel = botConfig.commandLogLevel };
-
-            client = new DiscordShardedClient(clientConfig);
-
-            //Prepare services
-            var services = new ServiceCollection()
-                .AddSingleton(client)
-                .AddSingleton(new CommandService(commandConfig))
-                .AddSingleton<CommandHandler>()
-                .AddSingleton<ReactionHandler>()
-                .AddSingleton<ScriptingService>()
-                .AddSingleton<LoggingService>()
-                .AddSingleton<StorageService>()
-                .AddSingleton<StartupService>()
-                .AddSingleton(botConfig);
-
-            var provider = services.BuildServiceProvider();
-
-            //Initialize services
-            logger = provider.GetRequiredService<LoggingService>();
-            storage = provider.GetRequiredService<StorageService>();
-            await provider.GetRequiredService<StartupService>().StartAsync();
-            provider.GetRequiredService<CommandHandler>();
-            provider.GetRequiredService<ReactionHandler>();
-            provider.GetRequiredService<ScriptingService>();
+            this.botConfig = botConfig;
+            this.client = client;
+            this.logger = logger;
+            this.storage = storage;
 
             //Events
             client.ShardReady += OnShardReady;
@@ -86,13 +37,20 @@ namespace PacManBot
             client.JoinedGuild += OnJoinedGuild;
             client.LeftGuild += OnLeftGuild;
             client.ChannelDestroyed += OnChannelDestroyed;
+        }
 
-            await Task.Delay(-1); //Prevent the application from closing
+
+        public async Task StartAsync()
+        {
+            if (string.IsNullOrWhiteSpace(botConfig.discordToken)) throw new Exception($"Missing bot token in {BotFile.Config}");
+
+            await client.LoginAsync(TokenType.Bot, botConfig.discordToken); //Login to discord
+            await client.StartAsync(); //Connect to the websocket
         }
 
 
 
-        // Events
+
 
         private Task OnShardConnected(DiscordSocketClient shard)
         {
@@ -211,5 +169,17 @@ namespace PacManBot
                 await logger.Log(LogSeverity.Info, $"Guild count updated to {guilds}");
             }
         }
+    }
+
+
+    public class BotConfig
+    {
+        public string defaultPrefix = "<";
+        public string discordToken;
+        public string[] httpToken = { };
+        public int shardCount = 1;
+        public int messageCacheSize = 100;
+        public LogSeverity clientLogLevel = LogSeverity.Verbose;
+        public LogSeverity commandLogLevel = LogSeverity.Verbose;
     }
 }

@@ -3,11 +3,10 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Discord;
-using Discord.WebSocket;
 using Discord.Commands;
+using Discord.WebSocket;
 using PacManBot.Services;
 using PacManBot.Constants;
-using PacManBot.CustomCommandAttributes;
 
 namespace PacManBot.Modules
 {

@@ -1,6 +1,6 @@
 ﻿{
 
-"invite": "https://discordapp.com/oauth2/authorize?client_id=398127484983443468&permissions=347200&scope=bot",
+"shortinvite": "http://bit.ly/pacman-bot",
 
 "map":
 "╔════════════╤╤════════════╗
@@ -42,7 +42,7 @@
 
 "aboutfields":
 "Author|Samrux#3980
-Version|v2.13.1
+Version|v2.15.1
 Library|Discord.Net 2.0 (C#)
 <:discord:409811304103149569> Bot invite|[Click here](https://discordapp.com/oauth2/authorize?client_id=398127484983443468&scope=bot&permissions=355392 \"https://discordapp.com/oauth2/authorize?client_id=398127484983443468&scope=bot&permissions=355392\")
 <:staff:412019879772815361> Pac-Man server|[Click here](https://discord.gg/hGHnfda \"https://discord.gg/hGHnfda\")
@@ -51,15 +51,19 @@ Library|Discord.Net 2.0 (C#)
 
 "gamehelp":
 "```css
-@ 'Welcome to Pac-Man Bot!'
+@ 'Welcome to Pac-Man Bot!';
 
-The game is played in turns, using reactions as controls. Use the arrow emoji to move Pac-Man (O), and the wait emoji to skip a turn. You must avoid the ghosts and collect all the pellets to win. Try and get a high score!
-Both adding and removing reactions will count as input. Due to the Discord rate-limit the game can be laggy, so please do one action at a time to prevent buggy behavior!
+#Controls:
+This game is played in turns by adding or removing a reaction. The arrow emotes will move Pac-Man, and the skip emote will toggle fast-forward mode. In fast-forward mode, the arrows move Pac-Man until you reach an intersection or hit something.
+Due to the Discord rate-limit the game can be laggy, so please do one action at a time to prevent strange behavior!
+To win, you must collect all the pellets, while avoiding the ghosts. Try to get a high score!
 
-You can use the '{prefix}refresh' or '{prefix}refresh mobile' commands to move this game message to the bottom of the chat. Using '{prefix}end' will end the game.
-For more information about the bot, use the '{prefix}help' and '{prefix}about' commands.
+#Commands: @
+\"{prefix}refresh\"/\"{prefix}refresh m\" - Move game to the bottom of chat
+\"{prefix}end\" - End game if you started it, or for moderators
+\"{prefix}help\" and \"{prefix}about\" - More information;
 
-;Here are some more #tips:
+#Tips:
 • Each eaten ghost during the same power mode yields twice as many points as the last!
 • Eat the fruit that spawns after eating a large amount of pellets for extra points!
 • Blinky chases you, Pinky tries to ambush you, Inky will follow Blinky's lead, and Clyde is kind of shy. 4 times during the game they will scatter and stop chasing you.

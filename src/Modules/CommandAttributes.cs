@@ -2,7 +2,7 @@ using System;
 using System.Text;
 using Discord.Commands;
 
-namespace PacManBot.CustomCommandAttributes
+namespace PacManBot.Modules
 {
     public class CommandHelpInfo
     {
@@ -11,6 +11,7 @@ namespace PacManBot.CustomCommandAttributes
         public string Summary { get; private set; }
         public string Parameters { get; private set; }
         public string ExampleUsage { get; private set; }
+
 
         public CommandHelpInfo(CommandInfo command)
         {
@@ -43,11 +44,12 @@ namespace PacManBot.CustomCommandAttributes
     }
 
 
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
+
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
     class HideHelp : Attribute { }
 
 
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
     class Parameters : Attribute
     {
         public string Value { get; private set; }
@@ -58,7 +60,7 @@ namespace PacManBot.CustomCommandAttributes
     }
 
 
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
     class ExampleUsage : Attribute
     {
         public string Value { get; private set; }

@@ -7,10 +7,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
+using Discord.WebSocket;
 using PacManBot.Services;
 using PacManBot.Constants;
-using PacManBot.CustomCommandAttributes;
-using Discord.WebSocket;
 
 namespace PacManBot.Modules
 {
