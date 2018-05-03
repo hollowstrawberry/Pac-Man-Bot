@@ -4,6 +4,7 @@ using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using Microsoft.Extensions.DependencyInjection;
 using Discord;
 using Discord.WebSocket;
 using PacManBot.Services;
@@ -14,6 +15,8 @@ namespace PacManBot
     public class Bot
     {
         private BotConfig botConfig;
+        private IServiceProvider provider;
+
         private DiscordShardedClient client;
         private LoggingService logger;
         private StorageService storage;
@@ -23,12 +26,14 @@ namespace PacManBot
         int shardsReady = 0;
 
 
-        public Bot(BotConfig botConfig, DiscordShardedClient client, LoggingService logger, StorageService storage)
+        public Bot(BotConfig botConfig, IServiceProvider provider)
         {
             this.botConfig = botConfig;
-            this.client = client;
-            this.logger = logger;
-            this.storage = storage;
+            this.provider = provider;
+
+            client = provider.GetRequiredService<DiscordShardedClient>();
+            logger = provider.GetRequiredService<LoggingService>();
+            storage = provider.GetRequiredService<StorageService>();
 
             //Events
             client.ShardReady += OnShardReady;
@@ -42,10 +47,12 @@ namespace PacManBot
 
         public async Task StartAsync()
         {
-            if (string.IsNullOrWhiteSpace(botConfig.discordToken)) throw new Exception($"Missing bot token in {BotFile.Config}");
-
             await client.LoginAsync(TokenType.Bot, botConfig.discordToken); //Login to discord
             await client.StartAsync(); //Connect to the websocket
+
+            provider.GetRequiredService<CommandHandler>();
+            provider.GetRequiredService<ReactionHandler>();
+            provider.GetRequiredService<ScriptingService>();
         }
 
 

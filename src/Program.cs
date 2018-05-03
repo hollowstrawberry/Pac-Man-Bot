@@ -23,7 +23,9 @@ namespace PacManBot
             if (!File.Exists(BotFile.Config)) throw new Exception($"Missing required file {BotFile.Config}: Bot can't run");
             if (!File.Exists(BotFile.Contents)) throw new Exception($"Missing required file {BotFile.Contents}: Bot can't run.");
 
+            // Set up configurations
             var botConfig = JsonConvert.DeserializeObject<BotConfig>(File.ReadAllText(BotFile.Config));
+            if (string.IsNullOrWhiteSpace(botConfig.discordToken)) throw new Exception($"Missing bot token in {BotFile.Config}");
 
 
             var clientConfig = new DiscordSocketConfig
@@ -46,7 +48,7 @@ namespace PacManBot
             await commands.AddModulesAsync(Assembly.GetEntryAssembly());
 
 
-            //Prepare services
+            // Set up service collection
             var services = new ServiceCollection()
                 .AddSingleton(client)
                 .AddSingleton(commands)
@@ -60,14 +62,6 @@ namespace PacManBot
             var provider = services.BuildServiceProvider();
 
 
-            //Initialize services
-            var logger = provider.GetRequiredService<LoggingService>();
-            var storage = provider.GetRequiredService<StorageService>();
-            provider.GetRequiredService<CommandHandler>();
-            provider.GetRequiredService<ReactionHandler>();
-            provider.GetRequiredService<ScriptingService>();
-
-
             //Check files
             string[] secondaryFile = new string[] { BotFile.Prefixes, BotFile.Scoreboard, BotFile.WakaExclude };
             for (int i = 0; i < secondaryFile.Length; i++)
@@ -75,13 +69,13 @@ namespace PacManBot
                 if (!File.Exists(secondaryFile[i]))
                 {
                     File.Create(secondaryFile[i]).Dispose();
-                    await logger.Log(LogSeverity.Warning, $"Created missing file \"{secondaryFile[i]}\"");
+                    Console.WriteLine($"Created missing file \"{secondaryFile[i]}\"");
                 }
             }
 
 
             //Let's go
-            await new Bot(botConfig, client, logger, storage).StartAsync();
+            await new Bot(botConfig, provider).StartAsync();
 
             await Task.Delay(-1);
         }
