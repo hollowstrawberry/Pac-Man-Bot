@@ -35,10 +35,10 @@ namespace PacManBot.Modules.PacMan
         [Summary("Starts a new game, unless there is already an active game on this channel.\nAdding \"mobile\" or \"m\" after the command will begin the game in *Mobile Mode*, "
                + "which uses simple characters that will work in phones. (To change back to normal mode, use the **{prefix}refresh** command.)\nIf you add a valid customized map "
                + "between \\`\\`\\`triple backticks\\`\\`\\`, it will start a custom game using that map instead. For more information about custom games, use the **{prefix}custom** command.")]
-        [RequireBotPermission(ChannelPermission.ReadMessageHistory), RequireBotPermission(ChannelPermission.UseExternalEmojis)/*, RequireBotPermission(ChannelPermission.AddReactions)*/]
+        [RequireBotPermissionImproved(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.AddReactions)]
         public async Task StartGameInstance([Remainder]string args = "")
         {
-            if (Context.Guild != null && !Context.BotHas(ChannelPermission.SendMessages)) return;
+            if (!Context.BotCan(ChannelPermission.SendMessages)) return;
 
             string prefix = storage.GetPrefixOrEmpty(Context.Guild);
 
@@ -99,7 +99,7 @@ namespace PacManBot.Modules.PacMan
         [Summary("If there is already an active game on this channel, using this command moves the game message to the bottom of the chat, and deletes the old one." +
                  "\nThis is useful if the game message has been lost in a sea of other messages or if you encounter a problem with reactions.\nAdding \"mobile\" or \"m\" " +
                  "after the command will refresh the game in *Mobile Mode*, which uses simple characters that will work in phones. Refreshing again will return it to normal.")]
-        [RequireBotPermission(ChannelPermission.ReadMessageHistory), RequireBotPermission(ChannelPermission.UseExternalEmojis)/*, RequireBotPermission(ChannelPermission.AddReactions)*/]
+        [RequireBotPermissionImproved(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.AddReactions)]
         public async Task RefreshGameInstance([Name("mobile/m")] string arg = "")
         {
             foreach (GameInstance game in storage.GameInstances)
@@ -137,7 +137,7 @@ namespace PacManBot.Modules.PacMan
             {
                 if (Context.Channel.Id == game.channelId)
                 {
-                    if (game.ownerId == Context.User.Id || Context.Guild != null && Context.UserHas(ChannelPermission.ManageMessages))
+                    if (game.ownerId == Context.User.Id || Context.UserCan(ChannelPermission.ManageMessages))
                     {
                         storage.DeleteGame(game);
                         await ReplyAsync("Game ended.");
@@ -266,7 +266,7 @@ namespace PacManBot.Modules.PacMan
 
         [Command("custom"), Remarks("Learn how custom maps work")]
         [Summary("Using this command will display detailed help about the custom maps that you can design and play yourself!")]
-        [RequireBotPermission(ChannelPermission.EmbedLinks)]
+        [RequireBotPermissionImproved(ChannelPermission.EmbedLinks)]
         public async Task SayCustomMapHelp()
         {
             string message = storage.BotContent["customhelp"].Replace("{prefix}", storage.GetPrefixOrEmpty(Context.Guild));

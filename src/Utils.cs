@@ -10,6 +10,8 @@ namespace PacManBot
 {
     public static class Utils
     {
+        public static ChannelPermission CorrectDmPermissions = (ChannelPermission)37080128;
+
 
         public enum TimePeriod
         {
@@ -120,20 +122,23 @@ namespace PacManBot
 
         // Permissions
 
-        public static bool BotHas(this IChannel channel, ChannelPermission permission)
+        public static bool BotCan(this IChannel channel, ChannelPermission permission)
         {
-            return channel is IGuildChannel gchannel && gchannel.Guild.GetCurrentUserAsync().Result.GetPermissions(gchannel).Has(permission);
+            ChannelPermission perms = channel is IGuildChannel gchannel ? (ChannelPermission)gchannel.Guild.GetCurrentUserAsync().Result.GetPermissions(gchannel).RawValue : CorrectDmPermissions;
+            return perms.HasFlag(permission);
         }
 
-        public static bool BotHas(this SocketCommandContext context, ChannelPermission permission)
+        public static bool BotCan(this SocketCommandContext context, ChannelPermission permission)
         {
-            return context.Guild != null && context.Guild.CurrentUser.GetPermissions(context.Channel as IGuildChannel).Has(permission);
+            ChannelPermission perms = context.Guild == null ? CorrectDmPermissions : (ChannelPermission)context.Guild.CurrentUser.GetPermissions(context.Channel as IGuildChannel).RawValue;
+            return perms.HasFlag(permission);
         }
 
 
-        public static bool UserHas(this SocketCommandContext context, ChannelPermission permission)
+        public static bool UserCan(this SocketCommandContext context, ChannelPermission permission)
         {
-            return context.Guild != null && context.Guild.GetUser(context.User.Id).GetPermissions(context.Channel as IGuildChannel).Has(permission);
+            ChannelPermission perms = context.Guild == null ? CorrectDmPermissions : (ChannelPermission)context.Guild.GetUser(context.User.Id).GetPermissions(context.Channel as IGuildChannel).RawValue;
+            return perms.HasFlag(permission);
         }
 
 

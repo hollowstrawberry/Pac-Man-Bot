@@ -11,7 +11,7 @@ using PacManBot.Constants;
 namespace PacManBot.Modules
 {
     [Name("Developer")]
-    [RequireOwner]
+    [RequireOwner, RequireBotPermissionImproved(ChannelPermission.AddReactions)]
     public class DevModule : ModuleBase<SocketCommandContext>
     {
         private readonly DiscordShardedClient shardedClient;

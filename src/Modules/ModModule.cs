@@ -9,7 +9,7 @@ using Discord.Net;
 namespace PacManBot.Modules
 {
     [Name("<:staff:412019879772815361>Mod")]
-    [RequireUserPermission(GuildPermission.ManageMessages)]
+    [RequireUserPermissionImproved(GuildPermission.ManageMessages)]
     public class ModModule : ModuleBase<SocketCommandContext>
     {
         private readonly LoggingService logger;
@@ -35,7 +35,7 @@ namespace PacManBot.Modules
         [Command("clear"), Alias("c"), Remarks("Clear messages from this bot")]
         [Summary("Clears all messages sent by *this bot only*, checking up to the amount of messages provided, or 10 messages by default. "
                + "Only users with the Manage Messages permission can use this command.")]
-        [RequireBotPermission(ChannelPermission.ReadMessageHistory)]
+        [RequireBotPermissionImproved(ChannelPermission.ReadMessageHistory)]
         public async Task ClearGameMessages(int amount = 10)
         {
             foreach (IMessage message in await Context.Channel.GetMessagesAsync(amount).FlattenAsync())
@@ -55,7 +55,7 @@ namespace PacManBot.Modules
         [Command("setprefix"), Remarks("Set a custom prefix for this server (Admin)")]
         [Summary("Change the custom prefix for this server. Only server Administrators can use this command.\n"
                + "Prefixes can't contain these characters: \\* \\_ \\~ \\` \\\\")]
-        [RequireUserPermission(GuildPermission.Administrator)]
+        [RequireUserPermissionImproved(GuildPermission.Administrator)]
         public async Task SetServerPrefix(string prefix)
         {
             if (prefix.ContainsAny("*", "_", "~", "`", "\\"))

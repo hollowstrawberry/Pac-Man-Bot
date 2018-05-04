@@ -34,7 +34,7 @@ namespace PacManBot.Modules
 
         [Command("about"), Alias("a", "info"), Remarks("About this bot")]
         [Summary("Shows relevant information, data and links about Pac-Man Bot.")]
-        [RequireBotPermission(ChannelPermission.EmbedLinks)]
+        [RequireBotPermissionImproved(ChannelPermission.EmbedLinks)]
         public async Task SendBotInfo()
         {
             string description = storage.BotContent["about"].Replace("{prefix}", storage.GetPrefixOrEmpty(Context.Guild));
@@ -62,7 +62,7 @@ namespace PacManBot.Modules
 
         [Command("help"), Alias("h", "commands"), Parameters("[command]"), Remarks("List of commands or help about a command")]
         [Summary("Show a complete list of commands you can use. You can specify a command to see detailed help about that command.")]
-        [RequireBotPermission(ChannelPermission.EmbedLinks)]
+        [RequireBotPermissionImproved(ChannelPermission.EmbedLinks)]
         public async Task SendCommandHelp(string commandName)
         {
             string prefix = storage.GetPrefixOrEmpty(Context.Guild);
@@ -103,7 +103,7 @@ namespace PacManBot.Modules
 
 
         [Command("help"), Alias("h", "commands")]
-        [RequireBotPermission(ChannelPermission.EmbedLinks)]
+        [RequireBotPermissionImproved(ChannelPermission.EmbedLinks)]
         public async Task SendAllHelp()
         {
             string prefix = storage.GetPrefix(Context.Guild).If(Context.Guild != null);
@@ -207,7 +207,7 @@ namespace PacManBot.Modules
 
         [Command("invite"), Alias("inv"), Remarks("Invite this bot to your server")]
         [Summary("Shows a fancy embed block with the bot's invite link. I'd show it right now too, since you're already here, but I really want you to see that fancy embed.")]
-        [RequireBotPermission(ChannelPermission.EmbedLinks)]
+        [RequireBotPermissionImproved(ChannelPermission.EmbedLinks)]
         public async Task SendBotInvite()
         {
             var embed = new EmbedBuilder()
@@ -240,7 +240,7 @@ namespace PacManBot.Modules
 
         [Command("spamparty"), Alias("spamblob", "spamdance"), HideHelp]
         [Summary("Reacts to everything with a blob dance emote. Only usable by a moderator.")]
-        [RequireUserPermission(ChannelPermission.ManageMessages), RequireBotPermission(ChannelPermission.AddReactions)]
+        [RequireUserPermissionImproved(ChannelPermission.ManageMessages), RequireBotPermissionImproved(ChannelPermission.AddReactions)]
         public async Task SpamDance(int amount = 5)
         {
             foreach (IUserMessage message in Context.Channel.GetCachedMessages(amount))

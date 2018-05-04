@@ -55,43 +55,35 @@ namespace PacManBot.Services
 
         private async Task OnMessageReceivedInternal(SocketMessage genericMessage)
         {
-            if (client.CurrentUser == null) return;
+            if (client.CurrentUser == null) return; // Not ready
             if (!(genericMessage is SocketUserMessage message) || message.Author.IsBot) return;
 
             var context = new ShardedCommandContext(client, message);
 
-            if (context.Channel is IGuildChannel && !context.BotHas(ChannelPermission.SendMessages)) return;
+            if (!context.BotCan(ChannelPermission.SendMessages)) return;
 
             string prefix = storage.GetPrefix(context.Guild);
             int commandPosition = 0;
 
             if (message.HasMentionPrefix(client.CurrentUser, ref commandPosition) || message.HasStringPrefix($"{prefix} ", ref commandPosition) || message.HasStringPrefix(prefix, ref commandPosition) || context.Channel is IDMChannel)
             {
-                try
+                var result = await commands.ExecuteAsync(context, commandPosition, provider); //Try to execute the command
+                if (!result.IsSuccess)
                 {
-                    var result = await commands.ExecuteAsync(context, commandPosition, provider); //Try to execute the command
-                    if (!result.IsSuccess)
+                    string error = result.ErrorReason;
+                    if (!error.Contains("Unknown command")) await logger.Log(LogSeverity.Verbose, $"Command {message} by {message.Author.FullName()} in channel {context.Channel.FullName()} couldn't be executed. {error}");
+
+                    string reply = GetCommandErrorReply(error, context.Guild);
+
+                    if (reply != null && context.BotCan(ChannelPermission.SendMessages))
                     {
-                        string error = result.ErrorReason;
-                        if (!error.Contains("Unknown command")) await logger.Log(LogSeverity.Verbose, $"Command {message} by {message.Author.FullName()} in channel {context.Channel.FullName()} couldn't be executed. {error}");
-
-                        string reply = GetCommandErrorReply(error, context.Guild);
-
-                        if (reply != null && (context.Channel is IDMChannel || context.BotHas(ChannelPermission.SendMessages)))
-                        {
-                            await context.Channel.SendMessageAsync(reply);
-                        }
+                        await context.Channel.SendMessageAsync(reply);
                     }
                 }
-                catch (RateLimitedException)
-                {
-                    await logger.Log(LogSeverity.Error, $"Rate limit during command {context.Message.Content} in channel {context.Channel.FullName()}");
-                }
             }
-
             else //waka
             {
-                if (waka.IsMatch(message.ToString()) && !storage.WakaExclude.Contains($"{context.Guild.Id}") && context.BotHas(ChannelPermission.SendMessages))
+                if (waka.IsMatch(message.ToString()) && !storage.WakaExclude.Contains($"{context.Guild.Id}") && context.BotCan(ChannelPermission.SendMessages))
                 {
                     await context.Channel.SendMessageAsync("waka");
                     await logger.Log(LogSeverity.Verbose, $"Waka at {context.Channel.FullName()}");
@@ -105,9 +97,9 @@ namespace PacManBot.Services
             string help = $"Please use **{storage.GetPrefixOrEmpty(guild)}help [command name]** or try again.";
 
             if (error.Contains("Bot requires"))  return guild == null ? "You need to be in a guild to use this command!"
-                                                                      : $"This bot requires the permission {error.Split(' ').Last()}!";
+                                                                      : $"This bot is missing the permission**{Regex.Replace(error.Split(' ').Last(), @"([A-Z])", @" $1")}**!";
             if (error.Contains("User requires")) return guild == null ? "You need to be in a guild to use this command!"
-                                                                      : $"You need the permission {error.Split(' ').Last()} to use this command!";
+                                                                      : $"You need the permission**{Regex.Replace(error.Split(' ').Last(), @"([A-Z])", @" $1")}** to use this command!";
             if (error.Contains("User not found")) return $"Can't find the specified user!";
             if (error.Contains("Failed to parse")) return $"Invalid command parameters! {help}";
             if (error.Contains("too few parameters")) return $"Missing command parameters! {help}";

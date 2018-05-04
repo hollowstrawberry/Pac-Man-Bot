@@ -1,6 +1,4 @@
-{
-
-"shortinvite": "http://bit.ly/pacman-bot",
+﻿"shortinvite": "http://bit.ly/pacman-bot",
 
 "map":
 "╔════════════╤╤════════════╗
@@ -42,7 +40,7 @@
 
 "aboutfields":
 "Author|Samrux#3980
-Version|v2.15.1
+Version|v2.15.2
 Library|Discord.Net 2.0 (C#)
 <:discord:409811304103149569> Bot invite|[Click here](https://discordapp.com/oauth2/authorize?client_id=398127484983443468&scope=bot&permissions=355392 \"https://discordapp.com/oauth2/authorize?client_id=398127484983443468&scope=bot&permissions=355392\")
 <:staff:412019879772815361> Pac-Man server|[Click here](https://discord.gg/hGHnfda \"https://discord.gg/hGHnfda\")

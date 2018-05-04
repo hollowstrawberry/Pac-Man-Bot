@@ -57,8 +57,8 @@ namespace PacManBot.Services
 
         private async Task OnReactionChangedInternal(Cacheable<IUserMessage, ulong> messageData, ISocketMessageChannel channel, SocketReaction reaction)
         {
-            if (client.CurrentUser == null) return;
-            if (!reaction.User.IsSpecified || reaction.UserId == client.CurrentUser.Id) return;
+            if (client.CurrentUser == null) return; // Not ready
+            if (!reaction.User.IsSpecified || reaction.User.Value.IsBot) return;
 
             foreach (GameInstance game in storage.GameInstances) // Checks if the reacted message is a game
             {
@@ -73,7 +73,7 @@ namespace PacManBot.Services
                     {
                         await logger.Log(LogSeverity.Warning, LogSource.Game, $"Rate limit during input in {game.channelId}");
                     }
-                    catch (HttpException e)
+                    catch (Exception e) when (e is HttpException || e is TimeoutException || e is TaskCanceledException)
                     {
                         await logger.Log(LogSeverity.Warning, LogSource.Game, $"During game input in {game.channelId}: {e.Message}");
                     }
@@ -118,7 +118,7 @@ namespace PacManBot.Services
                     }
                 }
 
-                if (game.state != GameInstance.State.Active && channel.BotHas(ChannelPermission.ManageMessages))
+                if (game.state != GameInstance.State.Active && channel.BotCan(ChannelPermission.ManageMessages))
                 {
                     await message.RemoveAllReactionsAsync();
                 }
