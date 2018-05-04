@@ -46,7 +46,7 @@ namespace PacManBot.Services
         {
             try
             {
-                await OnReactionChangedInternal(m, c, r);
+                await OnReactionChangedInternalAsync(m, c, r);
             }
             catch (Exception e)
             {
@@ -55,10 +55,10 @@ namespace PacManBot.Services
         }
 
 
-        private async Task OnReactionChangedInternal(Cacheable<IUserMessage, ulong> messageData, ISocketMessageChannel channel, SocketReaction reaction)
+        private async Task OnReactionChangedInternalAsync(Cacheable<IUserMessage, ulong> messageData, ISocketMessageChannel channel, SocketReaction reaction)
         {
             if (client.CurrentUser == null) return; // Not ready
-            if (!reaction.User.IsSpecified || reaction.User.Value.IsBot) return;
+            if (!reaction.User.IsSpecified || reaction.UserId == client.CurrentUser.Id) return;
 
             foreach (GameInstance game in storage.GameInstances) // Checks if the reacted message is a game
             {
