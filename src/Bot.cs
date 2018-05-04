@@ -46,11 +46,8 @@ namespace PacManBot
 
         public async Task StartAsync()
         {
-            await client.LoginAsync(TokenType.Bot, botConfig.discordToken); //Login to discord
-            await client.StartAsync(); //Connect to the websocket
-
-            services.Get<CommandHandler>().Start();
-            services.Get<ReactionHandler>().Start();
+            await client.LoginAsync(TokenType.Bot, botConfig.discordToken);
+            await client.StartAsync();
         }
 
 

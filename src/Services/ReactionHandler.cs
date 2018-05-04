@@ -20,11 +20,8 @@ namespace PacManBot.Services
             this.client = client;
             this.storage = storage;
             this.logger = logger;
-        }
 
-
-        public void Start()
-        {
+            //Events
             client.ReactionAdded += OnReactionAdded;
             client.ReactionRemoved += OnReactionRemoved;
         }
@@ -60,6 +57,7 @@ namespace PacManBot.Services
 
         private async Task OnReactionChangedInternal(Cacheable<IUserMessage, ulong> messageData, ISocketMessageChannel channel, SocketReaction reaction)
         {
+            if (client.CurrentUser == null) return;
             if (!reaction.User.IsSpecified || reaction.UserId == client.CurrentUser.Id) return;
 
             foreach (GameInstance game in storage.GameInstances) // Checks if the reacted message is a game

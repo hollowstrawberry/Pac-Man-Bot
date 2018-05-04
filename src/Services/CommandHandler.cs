@@ -26,13 +26,11 @@ namespace PacManBot.Services
             this.storage = storage;
             this.logger = logger;
             this.provider = provider;
-        }
 
-
-        public void Start()
-        {
+            //Events
             client.MessageReceived += OnMessageReceived;
         }
+
 
 
         private Task OnMessageReceived(SocketMessage m)
@@ -57,6 +55,7 @@ namespace PacManBot.Services
 
         private async Task OnMessageReceivedInternal(SocketMessage genericMessage)
         {
+            if (client.CurrentUser == null) return;
             if (!(genericMessage is SocketUserMessage message) || message.Author.IsBot) return;
 
             var context = new ShardedCommandContext(client, message);
