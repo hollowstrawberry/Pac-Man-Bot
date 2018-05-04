@@ -149,7 +149,7 @@ namespace PacManBot.Modules
         public async Task Ping([Remainder]string args = "") //Useless args
         {
             var stopwatch = Stopwatch.StartNew(); // Measure the time it takes to send a message to chat
-            var message = await ReplyAsync($"{CustomEmoji.Loading} Waka");
+            var message = await ReplyAsync($"{CustomEmoji.Loading} Waka", options: Utils.DefaultRequestOptions);
             stopwatch.Stop();
 
             int shardGames = 0;
@@ -163,7 +163,7 @@ namespace PacManBot.Modules
 
             string content = $"{CustomEmoji.PacMan} Waka in `{(int)stopwatch.ElapsedMilliseconds}`ms **|** {shardedClient.Guilds.Count} total guilds, {storage.GameInstances.Count} total active games";
             if (shardedClient.Shards.Count > 1) content += $"```css\nShard {Context.Client.ShardId + 1}/{shardedClient.Shards.Count} controlling {Context.Client.Guilds.Count} guilds and {shardGames} games```";
-            await message.ModifyAsync(m => m.Content = content);                   
+            await message.ModifyAsync(m => m.Content = content, Utils.DefaultRequestOptions);                   
         }
 
 

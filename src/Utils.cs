@@ -10,7 +10,8 @@ namespace PacManBot
 {
     public static class Utils
     {
-        public static ChannelPermission CorrectDmPermissions = (ChannelPermission)37080128;
+        public static readonly RequestOptions DefaultRequestOptions = new RequestOptions() { RetryMode = RetryMode.RetryRatelimit, Timeout = 10000 };
+        public const ChannelPermission CorrectDmPermissions = (ChannelPermission)37080128;
 
 
         public enum TimePeriod

@@ -5,6 +5,7 @@ using Discord.Net;
 using Discord.WebSocket;
 using PacManBot.Constants;
 using PacManBot.Modules.PacMan;
+using static PacManBot.Modules.PacMan.GameInstance;
 
 namespace PacManBot.Services
 {
@@ -69,11 +70,9 @@ namespace PacManBot.Services
                     {
                         await PacManInput(game, message, reaction);
                     }
-                    catch (RateLimitedException)
-                    {
-                        await logger.Log(LogSeverity.Warning, LogSource.Game, $"Rate limit during input in {game.channelId}");
-                    }
-                    catch (Exception e) when (e is HttpException || e is TimeoutException || e is TaskCanceledException)
+                    catch (TaskCanceledException) {}
+                    catch (TimeoutException) {}
+                    catch (HttpException e)
                     {
                         await logger.Log(LogSeverity.Warning, LogSource.Game, $"During game input in {game.channelId}: {e.Message}");
                     }
@@ -89,19 +88,19 @@ namespace PacManBot.Services
             var channel = message.Channel;
             var guild = (channel as IGuildChannel)?.Guild;
 
-            if (game.state == GameInstance.State.Active)
+            if (game.state == State.Active)
             {
                 IEmote emote = reaction.Emote;
                 var user = reaction.User.Value as SocketUser;
 
-                if (GameInstance.GameInputs.ContainsKey(emote)) //Valid reaction input
+                if (GameInputs.ContainsKey(emote)) //Valid reaction input
                 {
                     await logger.Log(LogSeverity.Verbose, LogSource.Game + $"{(guild == null ? 0 : client.GetShardIdFor(guild))}",
-                                     $"Input {GameInstance.GameInputs[emote].Align(5)} by user {user.FullName()} in channel {channel.FullName()}");
+                                     $"Input {GameInputs[emote].Align(5)} by user {user.FullName()} in channel {channel.FullName()}");
 
-                    game.DoTick(GameInstance.GameInputs[emote]);
+                    game.DoTick(GameInputs[emote]);
 
-                    if (game.state != GameInstance.State.Active) // Ends game
+                    if (game.state == State.Win || game.state == State.Lose)
                     {
                         if (!game.custom) storage.AddScore(
                             new ScoreEntry(game.state, game.score, game.time, user.Id, user.NameandNum(), DateTime.Now, $"{guild?.Name}/{channel.Name}")
@@ -109,16 +108,11 @@ namespace PacManBot.Services
                         storage.DeleteGame(game);
                     }
 
-                    await message.ModifyAsync(m => m.Content = game.GetDisplay()); //Update display
-
-                    if (game.state != GameInstance.State.Active) //Failsafe to bug where the display doesn't update in order if there are multiple inputs at once
-                    {
-                        await Task.Delay(3100);
-                        await message.ModifyAsync(m => m.Content = game.GetDisplay());
-                    }
+                    game.CancelPreviousEdits();
+                    await message.ModifyAsync(m => m.Content = game.GetDisplay(), game.MessageEditOptions);
                 }
 
-                if (game.state != GameInstance.State.Active && channel.BotCan(ChannelPermission.ManageMessages))
+                if (game.state != State.Active && channel.BotCan(ChannelPermission.ManageMessages))
                 {
                     await message.RemoveAllReactionsAsync();
                 }

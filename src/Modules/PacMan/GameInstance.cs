@@ -8,6 +8,7 @@ using Discord;
 using Discord.WebSocket;
 using PacManBot.Constants;
 using PacManBot.Services;
+using System.Threading;
 
 namespace PacManBot.Modules.PacMan
 {
@@ -54,6 +55,7 @@ namespace PacManBot.Modules.PacMan
         private StorageService storage;
         private LoggingService logger;
         private Random random = new Random();
+        private CancellationTokenSource messageEditCTS = new CancellationTokenSource();
 
         [DataMember] public bool custom = false;
         [DataMember] public readonly ulong channelId; //Which channel this game is located in
@@ -118,6 +120,7 @@ namespace PacManBot.Modules.PacMan
             }
         }
 
+        public RequestOptions MessageEditOptions => new RequestOptions() { Timeout = 10000, RetryMode = RetryMode.RetryRatelimit, CancelToken = messageEditCTS.Token };
         public SocketGuild Guild => (client.GetChannel(channelId) as SocketGuildChannel)?.Guild;
         public string GameFile => $"{Folder}{channelId}{Extension}";
 
@@ -132,7 +135,7 @@ namespace PacManBot.Modules.PacMan
 
         //Game data types
 
-        public enum State { Active, Lose, Win }
+        public enum State { Active, Cancelled, Lose, Win }
 
         public enum GameInput { None, Up, Left, Down, Right, Wait, Help, Fast }
 
@@ -606,11 +609,6 @@ namespace PacManBot.Modules.PacMan
                 //Code tags
                 switch (state)
                 {
-                    case State.Active:
-                        display.Insert(0, mobileDisplay ? "```\n" : "```css\n");
-                        if (fastForward) display.Append("#Fastforward: Active");
-                        break;
-
                     case State.Lose:
                         display.Insert(0, "```diff\n");
                         display.Replace("\n", "\n-", 0, display.Length - 1); //All red
@@ -620,14 +618,28 @@ namespace PacManBot.Modules.PacMan
                         display.Insert(0, "```diff\n");
                         display.Replace("\n", "\n+", 0, display.Length - 1); //All green
                         break;
+
+                    case State.Cancelled:
+                        display.Insert(0, "```diff\n");
+                        display.Replace("\n", "\n*** ", 0, display.Length - 1); //All gray
+                        break;
+
+                    default:
+                        display.Insert(0, mobileDisplay ? "```\n" : "```css\n");
+                        if (fastForward) display.Append("#Fastforward: Active");
+                        break;
                 }
                 display.Append("```");
 
                 if (state != State.Active || custom) //Secondary info box
                 {
                     display.Append("```diff");
-                    if (state == State.Win) display.Append("\n+You won!");
-                    else if (state == State.Lose) display.Append("\n-You lost!");
+                    switch (state)
+                    {
+                        case State.Win: display.Append("\n+You won!"); break;
+                        case State.Lose: display.Append("\n-You lost!"); ; break;
+                        case State.Cancelled: display.Append("\n-Game has been ended!"); break;
+                    }
                     if (custom) display.Append("\n*** Custom game: Score won't be registered. ***");
                     display.Append("```");
                 }
@@ -705,6 +717,13 @@ namespace PacManBot.Modules.PacMan
             this.client = client;
             this.storage = storage;
             this.logger = logger;
+        }
+
+
+        public void CancelPreviousEdits()
+        {
+            messageEditCTS.Cancel();
+            messageEditCTS = new CancellationTokenSource();
         }
     }
 }

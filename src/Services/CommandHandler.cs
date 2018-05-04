@@ -77,7 +77,7 @@ namespace PacManBot.Services
 
                     if (reply != null && context.BotCan(ChannelPermission.SendMessages))
                     {
-                        await context.Channel.SendMessageAsync(reply);
+                        await context.Channel.SendMessageAsync(reply, options: Utils.DefaultRequestOptions);
                     }
                 }
             }

@@ -82,16 +82,16 @@ namespace PacManBot.Modules.PacMan
             storage.GameInstances.Add(newGame);
  
             if (mobile) newGame.mobileDisplay = true;
-            var gameMessage = await ReplyAsync(preMessage + newGame.GetDisplay(showHelp: false) + "```diff\n+Starting game```"); //Output the game
+            var gameMessage = await ReplyAsync(preMessage + newGame.GetDisplay(showHelp: false) + "```diff\n+Starting game```", options: Utils.DefaultRequestOptions); //Output the game
             newGame.messageId = gameMessage.Id;
 
             try
             {
-                await AddControls(gameMessage);
-                await gameMessage.ModifyAsync(m => m.Content = newGame.GetDisplay()); //Restore display to normal
+                var requestOptions = newGame.MessageEditOptions; // So the edit can be cancelled
+                await AddControls(newGame, gameMessage);
+                await gameMessage.ModifyAsync(m => m.Content = newGame.GetDisplay(), requestOptions); //Restore display to normal
             }
-            catch (HttpException) { } // Something happened to the message, we can ignore it
-            catch (RateLimitedException) { await logger.Log(LogSeverity.Warning, $"Rate limit editing game message in {Context.Channel.FullName()}"); }
+            catch (Exception e) when (e is HttpException || e is TimeoutException || e is TaskCanceledException) {} // We can ignore these
         }
 
 
@@ -110,16 +110,16 @@ namespace PacManBot.Modules.PacMan
                     if (oldMsg != null) await oldMsg.DeleteAsync(); //Delete old message
 
                     game.mobileDisplay = arg.StartsWith("m");
-                    var newMsg = await ReplyAsync(game.GetDisplay(showHelp: false) + "```diff\n+Refreshing game```"); //Send new message
+                    var newMsg = await ReplyAsync(game.GetDisplay(showHelp: false) + "```diff\n+Refreshing game```", options: Utils.DefaultRequestOptions); //Send new message
                     game.messageId = newMsg.Id; //Change focus message for this channel
 
                     try
                     {
-                        await AddControls(newMsg);
-                        await newMsg.ModifyAsync(m => m.Content = game.GetDisplay()); //Restore display to normal
+                        var requestOptions = game.MessageEditOptions; // So the edit can be cancelled
+                        await AddControls(game, newMsg);
+                        await newMsg.ModifyAsync(m => m.Content = game.GetDisplay(), requestOptions); //Restore display to normal
                     }
-                    catch (HttpException) { } // Something happened to the message, we can ignore it
-                    catch (RateLimitedException) { await logger.Log(LogSeverity.Warning, $"Rate limit editing game message in {Context.Channel.FullName()}"); }
+                    catch (Exception e) when (e is HttpException || e is TimeoutException || e is TaskCanceledException) {} // We can ignore these
 
                     return;
                 }
@@ -139,6 +139,8 @@ namespace PacManBot.Modules.PacMan
                 {
                     if (game.ownerId == Context.User.Id || Context.UserCan(ChannelPermission.ManageMessages))
                     {
+                        game.state = State.Cancelled;
+                        game.CancelPreviousEdits();
                         storage.DeleteGame(game);
                         await ReplyAsync("Game ended.");
 
@@ -146,8 +148,8 @@ namespace PacManBot.Modules.PacMan
                         {
                             if (await Context.Channel.GetMessageAsync(game.messageId) is IUserMessage gameMessage)
                             {
-                                if (Context.Guild != null) await gameMessage.DeleteAsync(); //So as to not leave spam in guild channels
-                                else await gameMessage.ModifyAsync(m => m.Content = game.GetDisplay() + "```diff\n-Game has been ended!```"); //Edit message
+                                if (Context.Guild != null) await gameMessage.DeleteAsync(Utils.DefaultRequestOptions); //So as to not leave spam in guild channels
+                                else await gameMessage.ModifyAsync(m => m.Content = game.GetDisplay(), Utils.DefaultRequestOptions);
                             }
                         }
                         catch (HttpException) { } // Something happened to the message, we can ignore it
@@ -225,7 +227,7 @@ namespace PacManBot.Modules.PacMan
                 Color = new Color(241, 195, 15)
             };
 
-            await ReplyAsync("", false, embed.Build());
+            await ReplyAsync("", false, embed.Build(), Utils.DefaultRequestOptions);
         }
 
 
@@ -255,7 +257,7 @@ namespace PacManBot.Modules.PacMan
                         Description = $"Highest score {Utils.ScorePeriodString(time)}:\n{scores[i].ToStringSimpleScoreboard(shardedClient, i + 1)}",
                         Color = new Color(241, 195, 15)
                     };
-                    await ReplyAsync("", false, embed.Build());
+                    await ReplyAsync("", false, embed.Build(), Utils.DefaultRequestOptions);
                     return;
                 }
             }
@@ -277,23 +279,17 @@ namespace PacManBot.Modules.PacMan
             {
                 embed.AddField(links[i].Split('|')[0], $"[Click here]({links[i].Split('|')[1]} \"{links[i].Split('|')[1]}\")", true);
             }
-            await ReplyAsync(message, false, embed.Build());
+            await ReplyAsync(message, false, embed.Build(), Utils.DefaultRequestOptions);
         }
 
 
 
-        public async Task AddControls(IUserMessage message)
+        public async Task AddControls(GameInstance game, IUserMessage message)
         {
             foreach (IEmote input in GameInputs.Keys)
             {
-                try
-                {
-                    await message.AddReactionAsync(input);
-                }
-                catch (RateLimitedException)
-                {
-                    await logger.Log(LogSeverity.Warning, $"Rate limit adding controls to game message in {Context.Channel.FullName()}");
-                }
+                if (game.state != State.Active) break;
+                await message.AddReactionAsync(input, Utils.DefaultRequestOptions);
             }
         }
     }

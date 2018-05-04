@@ -15,8 +15,9 @@ namespace PacManBot.Services
 
         private string[] logExclude = null;
 
+        private const int WriteAttempts = 1000;
         public const string LogDirectory = "logs/";
-        private string LogFile => $"{LogDirectory}{DateTime.Now.ToString("yyyy-MM-dd")}.txt";
+        public string LogFile => $"{LogDirectory}{DateTime.Now.ToString("yyyy-MM-dd")}.txt";
 
 
         public LoggingService(DiscordShardedClient client, CommandService commands)
@@ -43,7 +44,16 @@ namespace PacManBot.Services
             if (logExclude != null && message.Message.ContainsAny(logExclude)) return Task.CompletedTask;
 
             string logText = $"{DateTime.Now.ToString("hh:mm:ss")} [{message.Severity}] {message.Source.Replace("Shard #", "Gateway")}: {message.Exception?.ToString() ?? message.Message}";
-            File.AppendAllText(LogFile, $"{logText}\n"); //Write the log text to a file
+
+            for (int i = 0; i <= WriteAttempts; ++i)
+            {
+                try
+                {
+                    File.AppendAllText(LogFile, $"{logText}\n"); //Write the log text to a file
+                    break;
+                }
+                catch (IOException) when (i < WriteAttempts) { Task.Delay(1); }
+            }
 
             return Console.Out.WriteLineAsync(logText); //Write the log text to the console
         }
