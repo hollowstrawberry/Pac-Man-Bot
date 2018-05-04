@@ -4,6 +4,7 @@ using Discord;
 using Discord.Commands;
 using PacManBot.Services;
 using PacManBot.Constants;
+using Discord.Net;
 
 namespace PacManBot.Modules
 {
@@ -37,14 +38,13 @@ namespace PacManBot.Modules
         [RequireBotPermission(ChannelPermission.ReadMessageHistory)]
         public async Task ClearGameMessages(int amount = 10)
         {
-            var messages = await Context.Channel.GetMessagesAsync(amount).FlattenAsync();
-            foreach (IMessage message in messages)
+            foreach (IMessage message in await Context.Channel.GetMessagesAsync(amount).FlattenAsync())
             {
                 try
                 {
                     if (message.Author.Id == Context.Client.CurrentUser.Id) await message.DeleteAsync(); //Remove all messages from this bot
                 }
-                catch (Discord.Net.HttpException e)
+                catch (HttpException e)
                 {
                     await logger.Log(LogSeverity.Warning, $"Couldn't delete message {message.Id} in {Context.Channel.FullName()}: {e.Message}");
                 }

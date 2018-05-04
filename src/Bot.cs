@@ -4,7 +4,6 @@ using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Diagnostics;
-using Microsoft.Extensions.DependencyInjection;
 using Discord;
 using Discord.WebSocket;
 using PacManBot.Services;
@@ -15,7 +14,7 @@ namespace PacManBot
     public class Bot
     {
         private BotConfig botConfig;
-        private IServiceProvider provider;
+        private IServiceProvider services;
 
         private DiscordShardedClient client;
         private LoggingService logger;
@@ -26,14 +25,14 @@ namespace PacManBot
         int shardsReady = 0;
 
 
-        public Bot(BotConfig botConfig, IServiceProvider provider)
+        public Bot(BotConfig botConfig, IServiceProvider services)
         {
             this.botConfig = botConfig;
-            this.provider = provider;
+            this.services = services;
 
-            client = provider.GetRequiredService<DiscordShardedClient>();
-            logger = provider.GetRequiredService<LoggingService>();
-            storage = provider.GetRequiredService<StorageService>();
+            client = services.Get<DiscordShardedClient>();
+            logger = services.Get<LoggingService>();
+            storage = services.Get<StorageService>();
 
             //Events
             client.ShardReady += OnShardReady;
@@ -50,11 +49,9 @@ namespace PacManBot
             await client.LoginAsync(TokenType.Bot, botConfig.discordToken); //Login to discord
             await client.StartAsync(); //Connect to the websocket
 
-            provider.GetRequiredService<CommandHandler>();
-            provider.GetRequiredService<ReactionHandler>();
-            provider.GetRequiredService<ScriptingService>();
+            services.Get<CommandHandler>().Start();
+            services.Get<ReactionHandler>().Start();
         }
-
 
 
 

@@ -63,7 +63,7 @@ namespace PacManBot.Modules
         [Command("help"), Alias("h", "commands"), Parameters("[command]"), Remarks("List of commands or help about a command")]
         [Summary("Show a complete list of commands you can use. You can specify a command to see detailed help about that command.")]
         [RequireBotPermission(ChannelPermission.EmbedLinks)]
-        public async Task SendCommandHelp(string commandName) //With argument
+        public async Task SendCommandHelp(string commandName)
         {
             string prefix = storage.GetPrefixOrEmpty(Context.Guild);
 

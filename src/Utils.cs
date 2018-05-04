@@ -3,6 +3,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Discord;
 using Discord.Commands;
+using Microsoft.Extensions.DependencyInjection;
 using static PacManBot.Modules.PacMan.GameInstance;
 
 namespace PacManBot
@@ -26,6 +27,12 @@ namespace PacManBot
             else if (period == TimePeriod.week) return "in the last 7 days";
             else if (period == TimePeriod.day) return "in the last 24 hours";
             else return "of all time";
+        }
+
+
+        public static T Get<T>(this IServiceProvider provider) // I thought the long name was ugly
+        {
+            return provider.GetRequiredService<T>();
         }
 
 
@@ -59,6 +66,19 @@ namespace PacManBot
             StringBuilder sb = new StringBuilder(amount * value.Length);
             for (int i = 0; i < amount; i++) sb.Append(value);
             return sb.ToString();
+        }
+
+
+        public static string Align(this object value, int length, bool right = false)
+        {
+            string str = value.ToString();
+            string fill = new string(' ', Math.Max(0, length - str.Length));
+            return right ? fill + str : str + fill;
+        }
+
+        public static string AlignTo(this object value, object guide, bool right = false)
+        {
+            return value.Align(guide.ToString().Length, right);
         }
 
 

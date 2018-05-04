@@ -26,8 +26,12 @@ namespace PacManBot.Services
             this.storage = storage;
             this.logger = logger;
             this.provider = provider;
+        }
 
-            this.client.MessageReceived += OnMessageReceived;
+
+        public void Start()
+        {
+            client.MessageReceived += OnMessageReceived;
         }
 
 

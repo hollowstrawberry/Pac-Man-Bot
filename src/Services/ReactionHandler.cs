@@ -20,10 +20,13 @@ namespace PacManBot.Services
             this.client = client;
             this.storage = storage;
             this.logger = logger;
+        }
 
-            // Events
-            this.client.ReactionAdded += OnReactionAdded;
-            this.client.ReactionRemoved += OnReactionRemoved;
+
+        public void Start()
+        {
+            client.ReactionAdded += OnReactionAdded;
+            client.ReactionRemoved += OnReactionRemoved;
         }
 
 
@@ -66,19 +69,24 @@ namespace PacManBot.Services
                     var message = await messageData.GetOrDownloadAsync();
                     try
                     {
-                        await GameInput(game, message, reaction);
+                        await PacManInput(game, message, reaction);
                     }
                     catch (RateLimitedException)
                     {
                         await logger.Log(LogSeverity.Warning, LogSource.Game, $"Rate limit during input in {game.channelId}");
                     }
+                    catch (HttpException e)
+                    {
+                        await logger.Log(LogSeverity.Warning, LogSource.Game, $"During game input in {game.channelId}: {e.Message}");
+                    }
+
                     return;
                 }
             }
         }
 
 
-        private async Task GameInput(GameInstance game, IUserMessage message, SocketReaction reaction)
+        private async Task PacManInput(GameInstance game, IUserMessage message, SocketReaction reaction)
         {
             var channel = message.Channel;
             var guild = (channel as IGuildChannel)?.Guild;
@@ -90,9 +98,8 @@ namespace PacManBot.Services
 
                 if (GameInstance.GameInputs.ContainsKey(emote)) //Valid reaction input
                 {
-                    string strInput = GameInstance.GameInputs[emote].ToString();
                     await logger.Log(LogSeverity.Verbose, LogSource.Game + $"{(guild == null ? 0 : client.GetShardIdFor(guild))}",
-                                     $"Input {strInput}{new string(' ', Math.Max(0, 5 - strInput.Length))} by user {user.FullName()} in channel {channel.FullName()}");
+                                     $"Input {GameInstance.GameInputs[emote].Align(5)} by user {user.FullName()} in channel {channel.FullName()}");
 
                     game.DoTick(GameInstance.GameInputs[emote]);
 

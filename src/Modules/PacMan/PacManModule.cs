@@ -66,11 +66,10 @@ namespace PacManBot.Modules.PacMan
             {
                 newGame = new GameInstance(Context.Channel.Id, Context.User.Id, customMap, shardedClient, storage, logger);
             }
-            catch (InvalidMapException e)
+            catch (InvalidMapException e) when (customMap != null)
             {
-                if (customMap == null) await logger.Log(LogSeverity.Error, LogSource.Game, $"{e}");
-                else await logger.Log(LogSeverity.Debug, LogSource.Game, $"Failed to create custom game: {e.Message}");
-                await ReplyAsync($"The provided map is invalid: {e.Message}.{$"\nUse the **{prefix}custom** command for more info.".If(customMap != null)}");
+                await logger.Log(LogSeverity.Debug, LogSource.Game, $"Failed to create custom game: {e.Message}");
+                await ReplyAsync($"The provided map is invalid: {e.Message}.\nUse the **{prefix}custom** command for more info.");
                 return;
             }
             catch (Exception e)
@@ -91,7 +90,7 @@ namespace PacManBot.Modules.PacMan
                 await AddControls(gameMessage);
                 await gameMessage.ModifyAsync(m => m.Content = newGame.GetDisplay()); //Restore display to normal
             }
-            catch (HttpException) { } // Message not found (deleted at some point)
+            catch (HttpException) { } // Something happened to the message, we can ignore it
             catch (RateLimitedException) { await logger.Log(LogSeverity.Warning, $"Rate limit editing game message in {Context.Channel.FullName()}"); }
         }
 
@@ -119,7 +118,7 @@ namespace PacManBot.Modules.PacMan
                         await AddControls(newMsg);
                         await newMsg.ModifyAsync(m => m.Content = game.GetDisplay()); //Restore display to normal
                     }
-                    catch (HttpException) { } // Message not found (deleted at some point)
+                    catch (HttpException) { } // Something happened to the message, we can ignore it
                     catch (RateLimitedException) { await logger.Log(LogSeverity.Warning, $"Rate limit editing game message in {Context.Channel.FullName()}"); }
 
                     return;
@@ -151,10 +150,7 @@ namespace PacManBot.Modules.PacMan
                                 else await gameMessage.ModifyAsync(m => m.Content = game.GetDisplay() + "```diff\n-Game has been ended!```"); //Edit message
                             }
                         }
-                        catch (Discord.Net.HttpException e)
-                        {
-                            await logger.Log(LogSeverity.Warning, $"Failed to grab game message from removed game in {Context.Channel.Id}: {e.Message}");
-                        }
+                        catch (HttpException) { } // Something happened to the message, we can ignore it
                     }
                     else await ReplyAsync("You can't end this game because you didn't start it!");
 
@@ -213,13 +209,9 @@ namespace PacManBot.Modules.PacMan
             {
                 ScoreEntry entry = scores[i - 1]; // The list is always kept sorted so we just go by index
 
-                //Aligns elements
-                string result = $"`{i}. {" ".If(i.ToString().Length < max.ToString().Length)}"
-                              + $"({entry.state}) {" ".If(entry.state == State.Win)}"
-                              + $"{" ".If(entry.score.ToString().Length < storage.ScoreEntries[min - 1].score.ToString().Length)}{entry.score} points "
-                              + $"in {entry.turns} turns";
-                //Aligns names
-                content.Append(result + new string(' ', Math.Max(38 - result.Length, 0)) + $"- {entry.GetUsername(shardedClient)}`\n");
+                //Align each element in the line
+                string result = $"`{$"{i}.".AlignTo($"{min + MaxDisplayedScores}.")} {$"({entry.state})".Align(6)} {entry.score.AlignTo(scores[min - 1].score, right: true)} points in {entry.turns} turns";
+                content.Append(result.Align(38) + $"- {entry.GetUsername(shardedClient)}`\n");
             }
 
             content.Append(max - min >= MaxDisplayedScores && max < scores.Count ? $"*Only {MaxDisplayedScores} scores may be displayed at once*"
