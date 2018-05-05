@@ -85,7 +85,7 @@ namespace PacManBot.Services
             {
                 if (waka.IsMatch(message.ToString()) && !storage.WakaExclude.Contains($"{context.Guild.Id}") && context.BotCan(ChannelPermission.SendMessages))
                 {
-                    await context.Channel.SendMessageAsync("waka");
+                    await context.Channel.SendMessageAsync("waka", options: Utils.DefaultRequestOptions);
                     await logger.Log(LogSeverity.Verbose, $"Waka at {context.Channel.FullName()}");
                 }
             }

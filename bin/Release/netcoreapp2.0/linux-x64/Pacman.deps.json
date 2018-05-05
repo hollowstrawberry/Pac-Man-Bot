@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v2.0/linux-x64",
-    "signature": "7cba0ef9a64b636c3cd4aa24550bd3b23de8c1da"
+    "signature": "3660f3aeddcfc1ed38bd605f561a91fb2a4393f0"
   },
   "compilationOptions": {},
   "targets": {
@@ -9,35 +9,35 @@
     ".NETCoreApp,Version=v2.0/linux-x64": {
       "Pacman/1.0.0": {
         "dependencies": {
-          "Discord.Net": "2.0.0-beta-00876",
-          "Discord.Net.Commands": "2.0.0-beta-00876",
-          "Discord.Net.Core": "2.0.0-beta-00876",
-          "Discord.Net.Rest": "2.0.0-beta-00876",
+          "Discord.Net": "2.0.0-beta2-00936",
+          "Discord.Net.Commands": "2.0.0-beta2-00936",
+          "Discord.Net.Core": "2.0.0-beta2-00936",
+          "Discord.Net.Rest": "2.0.0-beta2-00936",
           "Discord.Net.Rpc": "2.0.0-beta-00860",
-          "Discord.Net.WebSocket": "2.0.0-beta-00876",
-          "Discord.Net.Webhook": "2.0.0-beta-00876",
-          "Microsoft.CodeAnalysis.CSharp": "2.6.1",
-          "Microsoft.CodeAnalysis.Scripting": "2.6.1",
-          "Microsoft.Extensions.Configuration": "2.0.0",
-          "Microsoft.Extensions.Configuration.Json": "2.0.0",
+          "Discord.Net.WebSocket": "2.0.0-beta2-00936",
+          "Discord.Net.Webhook": "2.0.0-beta2-00936",
+          "Microsoft.CodeAnalysis.CSharp": "2.8.0",
+          "Microsoft.CodeAnalysis.Scripting": "2.8.0",
+          "Microsoft.Extensions.Configuration": "2.0.1",
+          "Microsoft.Extensions.Configuration.Json": "2.0.1",
           "Microsoft.NETCore.App": "2.0.0"
         },
         "runtime": {
           "Pacman.dll": {}
         }
       },
-      "Discord.Net/2.0.0-beta-00876": {
+      "Discord.Net/2.0.0-beta2-00936": {
         "dependencies": {
-          "Discord.Net.Commands": "2.0.0-beta-00876",
-          "Discord.Net.Core": "2.0.0-beta-00876",
-          "Discord.Net.Rest": "2.0.0-beta-00876",
-          "Discord.Net.WebSocket": "2.0.0-beta-00876",
-          "Discord.Net.Webhook": "2.0.0-beta-00876"
+          "Discord.Net.Commands": "2.0.0-beta2-00936",
+          "Discord.Net.Core": "2.0.0-beta2-00936",
+          "Discord.Net.Rest": "2.0.0-beta2-00936",
+          "Discord.Net.WebSocket": "2.0.0-beta2-00936",
+          "Discord.Net.Webhook": "2.0.0-beta2-00936"
         }
       },
-      "Discord.Net.Commands/2.0.0-beta-00876": {
+      "Discord.Net.Commands/2.0.0-beta2-00936": {
         "dependencies": {
-          "Discord.Net.Core": "2.0.0-beta-00876",
+          "Discord.Net.Core": "2.0.0-beta2-00936",
           "Microsoft.Extensions.DependencyInjection": "1.1.1",
           "NETStandard.Library": "2.0.0"
         },
@@ -45,7 +45,7 @@
           "lib/netstandard1.1/Discord.Net.Commands.dll": {}
         }
       },
-      "Discord.Net.Core/2.0.0-beta-00876": {
+      "Discord.Net.Core/2.0.0-beta2-00936": {
         "dependencies": {
           "NETStandard.Library": "2.0.0",
           "Newtonsoft.Json": "10.0.2",
@@ -56,9 +56,9 @@
           "lib/netstandard1.3/Discord.Net.Core.dll": {}
         }
       },
-      "Discord.Net.Rest/2.0.0-beta-00876": {
+      "Discord.Net.Rest/2.0.0-beta2-00936": {
         "dependencies": {
-          "Discord.Net.Core": "2.0.0-beta-00876",
+          "Discord.Net.Core": "2.0.0-beta2-00936",
           "NETStandard.Library": "2.0.0",
           "System.Net.Http": "4.3.2"
         },
@@ -68,8 +68,8 @@
       },
       "Discord.Net.Rpc/2.0.0-beta-00860": {
         "dependencies": {
-          "Discord.Net.Core": "2.0.0-beta-00876",
-          "Discord.Net.Rest": "2.0.0-beta-00876",
+          "Discord.Net.Core": "2.0.0-beta2-00936",
+          "Discord.Net.Rest": "2.0.0-beta2-00936",
           "NETStandard.Library": "2.0.0",
           "System.Net.WebSockets.Client": "4.3.1"
         },
@@ -77,20 +77,20 @@
           "lib/netstandard1.3/Discord.Net.Rpc.dll": {}
         }
       },
-      "Discord.Net.Webhook/2.0.0-beta-00876": {
+      "Discord.Net.Webhook/2.0.0-beta2-00936": {
         "dependencies": {
-          "Discord.Net.Core": "2.0.0-beta-00876",
-          "Discord.Net.Rest": "2.0.0-beta-00876",
+          "Discord.Net.Core": "2.0.0-beta2-00936",
+          "Discord.Net.Rest": "2.0.0-beta2-00936",
           "NETStandard.Library": "2.0.0"
         },
         "runtime": {
           "lib/netstandard1.1/Discord.Net.Webhook.dll": {}
         }
       },
-      "Discord.Net.WebSocket/2.0.0-beta-00876": {
+      "Discord.Net.WebSocket/2.0.0-beta2-00936": {
         "dependencies": {
-          "Discord.Net.Core": "2.0.0-beta-00876",
-          "Discord.Net.Rest": "2.0.0-beta-00876",
+          "Discord.Net.Core": "2.0.0-beta2-00936",
+          "Discord.Net.Rest": "2.0.0-beta2-00936",
           "NETStandard.Library": "2.0.0",
           "System.Net.WebSockets.Client": "4.3.1"
         },
@@ -99,7 +99,7 @@
         }
       },
       "Microsoft.CodeAnalysis.Analyzers/1.1.0": {},
-      "Microsoft.CodeAnalysis.Common/2.6.1": {
+      "Microsoft.CodeAnalysis.Common/2.8.0": {
         "dependencies": {
           "Microsoft.CodeAnalysis.Analyzers": "1.1.0",
           "System.AppContext": "4.3.0",
@@ -145,32 +145,32 @@
           "lib/netstandard1.3/Microsoft.CodeAnalysis.dll": {}
         }
       },
-      "Microsoft.CodeAnalysis.CSharp/2.6.1": {
+      "Microsoft.CodeAnalysis.CSharp/2.8.0": {
         "dependencies": {
-          "Microsoft.CodeAnalysis.Common": "2.6.1"
+          "Microsoft.CodeAnalysis.Common": "2.8.0"
         },
         "runtime": {
           "lib/netstandard1.3/Microsoft.CodeAnalysis.CSharp.dll": {}
         }
       },
-      "Microsoft.CodeAnalysis.CSharp.Scripting/2.6.1": {
+      "Microsoft.CodeAnalysis.CSharp.Scripting/2.8.0": {
         "dependencies": {
-          "Microsoft.CodeAnalysis.CSharp": "2.6.1",
-          "Microsoft.CodeAnalysis.Scripting.Common": "2.6.1"
+          "Microsoft.CodeAnalysis.CSharp": "2.8.0",
+          "Microsoft.CodeAnalysis.Scripting.Common": "2.8.0"
         },
         "runtime": {
           "lib/netstandard1.3/Microsoft.CodeAnalysis.CSharp.Scripting.dll": {}
         }
       },
-      "Microsoft.CodeAnalysis.Scripting/2.6.1": {
+      "Microsoft.CodeAnalysis.Scripting/2.8.0": {
         "dependencies": {
-          "Microsoft.CodeAnalysis.CSharp.Scripting": "2.6.1",
-          "Microsoft.CodeAnalysis.Scripting.Common": "2.6.1"
+          "Microsoft.CodeAnalysis.CSharp.Scripting": "2.8.0",
+          "Microsoft.CodeAnalysis.Scripting.Common": "2.8.0"
         }
       },
-      "Microsoft.CodeAnalysis.Scripting.Common/2.6.1": {
+      "Microsoft.CodeAnalysis.Scripting.Common/2.8.0": {
         "dependencies": {
-          "Microsoft.CodeAnalysis.Common": "2.6.1",
+          "Microsoft.CodeAnalysis.Common": "2.8.0",
           "System.AppContext": "4.3.0",
           "System.Collections": "4.3.0",
           "System.Collections.Immutable": "1.3.1",
@@ -215,15 +215,15 @@
           "System.Threading": "4.3.0"
         }
       },
-      "Microsoft.Extensions.Configuration/2.0.0": {
+      "Microsoft.Extensions.Configuration/2.0.1": {
         "dependencies": {
-          "Microsoft.Extensions.Configuration.Abstractions": "2.0.0"
+          "Microsoft.Extensions.Configuration.Abstractions": "2.0.1"
         },
         "runtime": {
           "lib/netstandard2.0/Microsoft.Extensions.Configuration.dll": {}
         }
       },
-      "Microsoft.Extensions.Configuration.Abstractions/2.0.0": {
+      "Microsoft.Extensions.Configuration.Abstractions/2.0.1": {
         "dependencies": {
           "Microsoft.Extensions.Primitives": "2.0.0"
         },
@@ -231,19 +231,19 @@
           "lib/netstandard2.0/Microsoft.Extensions.Configuration.Abstractions.dll": {}
         }
       },
-      "Microsoft.Extensions.Configuration.FileExtensions/2.0.0": {
+      "Microsoft.Extensions.Configuration.FileExtensions/2.0.1": {
         "dependencies": {
-          "Microsoft.Extensions.Configuration": "2.0.0",
-          "Microsoft.Extensions.FileProviders.Physical": "2.0.0"
+          "Microsoft.Extensions.Configuration": "2.0.1",
+          "Microsoft.Extensions.FileProviders.Physical": "2.0.1"
         },
         "runtime": {
           "lib/netstandard2.0/Microsoft.Extensions.Configuration.FileExtensions.dll": {}
         }
       },
-      "Microsoft.Extensions.Configuration.Json/2.0.0": {
+      "Microsoft.Extensions.Configuration.Json/2.0.1": {
         "dependencies": {
-          "Microsoft.Extensions.Configuration": "2.0.0",
-          "Microsoft.Extensions.Configuration.FileExtensions": "2.0.0",
+          "Microsoft.Extensions.Configuration": "2.0.1",
+          "Microsoft.Extensions.Configuration.FileExtensions": "2.0.1",
           "Newtonsoft.Json": "10.0.2"
         },
         "runtime": {
@@ -268,7 +268,7 @@
           "lib/netstandard1.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll": {}
         }
       },
-      "Microsoft.Extensions.FileProviders.Abstractions/2.0.0": {
+      "Microsoft.Extensions.FileProviders.Abstractions/2.0.1": {
         "dependencies": {
           "Microsoft.Extensions.Primitives": "2.0.0"
         },
@@ -276,16 +276,16 @@
           "lib/netstandard2.0/Microsoft.Extensions.FileProviders.Abstractions.dll": {}
         }
       },
-      "Microsoft.Extensions.FileProviders.Physical/2.0.0": {
+      "Microsoft.Extensions.FileProviders.Physical/2.0.1": {
         "dependencies": {
-          "Microsoft.Extensions.FileProviders.Abstractions": "2.0.0",
-          "Microsoft.Extensions.FileSystemGlobbing": "2.0.0"
+          "Microsoft.Extensions.FileProviders.Abstractions": "2.0.1",
+          "Microsoft.Extensions.FileSystemGlobbing": "2.0.1"
         },
         "runtime": {
           "lib/netstandard2.0/Microsoft.Extensions.FileProviders.Physical.dll": {}
         }
       },
-      "Microsoft.Extensions.FileSystemGlobbing/2.0.0": {
+      "Microsoft.Extensions.FileSystemGlobbing/2.0.1": {
         "runtime": {
           "lib/netstandard2.0/Microsoft.Extensions.FileSystemGlobbing.dll": {}
         }
@@ -1669,33 +1669,33 @@
       "serviceable": false,
       "sha512": ""
     },
-    "Discord.Net/2.0.0-beta-00876": {
+    "Discord.Net/2.0.0-beta2-00936": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-XgOQXct+Q/RzcYKLQnGaop37Sj6MiReKNghYYKVRMpiQe+u7PRepJ59uKTPMyF+H11KlN5Rcg4qdw/IpY0cwmg==",
-      "path": "discord.net/2.0.0-beta-00876",
-      "hashPath": "discord.net.2.0.0-beta-00876.nupkg.sha512"
+      "sha512": "sha512-GhY5bDtDAcahO9a6+IOAxEA1DiiiuYM+GKCByGDktT9PtZ5cpcnVOatgOSIiyBgyj/yuokGrVUIIHUsrWB/mSA==",
+      "path": "discord.net/2.0.0-beta2-00936",
+      "hashPath": "discord.net.2.0.0-beta2-00936.nupkg.sha512"
     },
-    "Discord.Net.Commands/2.0.0-beta-00876": {
+    "Discord.Net.Commands/2.0.0-beta2-00936": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-ANbNQ0xs2BqsFg28tF5iIXlmot/4NZknge+duy8qD9Sox5/SJ3OK6BCiXFTcNKd52RREs+oTWb2/wfFtniGUFA==",
-      "path": "discord.net.commands/2.0.0-beta-00876",
-      "hashPath": "discord.net.commands.2.0.0-beta-00876.nupkg.sha512"
+      "sha512": "sha512-gC5KRzGD41Px+qfbYV/IOP9hoU5eUbnuW9+ic37vsMTceE79xrF3vgmCo9F06n2MtYgGlVXui3DLEAYAkLLYsQ==",
+      "path": "discord.net.commands/2.0.0-beta2-00936",
+      "hashPath": "discord.net.commands.2.0.0-beta2-00936.nupkg.sha512"
     },
-    "Discord.Net.Core/2.0.0-beta-00876": {
+    "Discord.Net.Core/2.0.0-beta2-00936": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-efMcpbDJfST1427+ryzmWCwwtzxsOmgxZx4S8Dn47JPkvUfJghdgjMGSaAOmrdIcYr/rdIRQwcyqjb8LPuOuiw==",
-      "path": "discord.net.core/2.0.0-beta-00876",
-      "hashPath": "discord.net.core.2.0.0-beta-00876.nupkg.sha512"
+      "sha512": "sha512-EIYtcrNtzBxLAjo1qGk7mD0jJxPWh47jtHdcvsBHzTXUCnCTYMq0WEQHmMfqoH+tXv4eP7rmH6iVeNf+oCHqzA==",
+      "path": "discord.net.core/2.0.0-beta2-00936",
+      "hashPath": "discord.net.core.2.0.0-beta2-00936.nupkg.sha512"
     },
-    "Discord.Net.Rest/2.0.0-beta-00876": {
+    "Discord.Net.Rest/2.0.0-beta2-00936": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-GDOTELoUBDOSjyBsWPa6ntVJbEjQZaK4RBwSdJ7zwAVBiWoR1pzihzakVvHDddvoWCgsyc/6oZPP5pFjXqQ2xg==",
-      "path": "discord.net.rest/2.0.0-beta-00876",
-      "hashPath": "discord.net.rest.2.0.0-beta-00876.nupkg.sha512"
+      "sha512": "sha512-wjC/3PI7l/kyBTsufA+pZyL0heoVdqHs6W3bide2w7y0EYHQ4IG7mXeQPqKQJJamxTeiJ+5ZUWq5Z24ADaE3+Q==",
+      "path": "discord.net.rest/2.0.0-beta2-00936",
+      "hashPath": "discord.net.rest.2.0.0-beta2-00936.nupkg.sha512"
     },
     "Discord.Net.Rpc/2.0.0-beta-00860": {
       "type": "package",
@@ -1704,19 +1704,19 @@
       "path": "discord.net.rpc/2.0.0-beta-00860",
       "hashPath": "discord.net.rpc.2.0.0-beta-00860.nupkg.sha512"
     },
-    "Discord.Net.Webhook/2.0.0-beta-00876": {
+    "Discord.Net.Webhook/2.0.0-beta2-00936": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-SPuhsiMk0mJOsWoBGUnQOGcjzDM/Ii6KpQS6QNR3hXb0o/9Gy3ESWsd+KpPxPvV3lvPiddQRzjB6tC4qlV3sWg==",
-      "path": "discord.net.webhook/2.0.0-beta-00876",
-      "hashPath": "discord.net.webhook.2.0.0-beta-00876.nupkg.sha512"
+      "sha512": "sha512-FKlhYjswVRx2/+jDkkkmnj0MHoLpSR2vHy8ktDoUPTBROWKz2mjNn7X/KXRwLOUgfkBrlL+lgZ6tGfc68b26CA==",
+      "path": "discord.net.webhook/2.0.0-beta2-00936",
+      "hashPath": "discord.net.webhook.2.0.0-beta2-00936.nupkg.sha512"
     },
-    "Discord.Net.WebSocket/2.0.0-beta-00876": {
+    "Discord.Net.WebSocket/2.0.0-beta2-00936": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-fPp44bXcHaWG8y75EHeewKLAjbGs3w5ladqNGxMkPgHcTowVE+tmdyJjeQWLdrDrYkbBZx7+Kwkt64AkGsvONg==",
-      "path": "discord.net.websocket/2.0.0-beta-00876",
-      "hashPath": "discord.net.websocket.2.0.0-beta-00876.nupkg.sha512"
+      "sha512": "sha512-djOWCusmiwcpDG6NM4NZ9l214CkEVFoJIQS4ooPzCeBBPv+w3zHSCl+8wiWt1fUebPQ0W3REJLRU3/w3/sttsQ==",
+      "path": "discord.net.websocket/2.0.0-beta2-00936",
+      "hashPath": "discord.net.websocket.2.0.0-beta2-00936.nupkg.sha512"
     },
     "Microsoft.CodeAnalysis.Analyzers/1.1.0": {
       "type": "package",
@@ -1725,40 +1725,40 @@
       "path": "microsoft.codeanalysis.analyzers/1.1.0",
       "hashPath": "microsoft.codeanalysis.analyzers.1.1.0.nupkg.sha512"
     },
-    "Microsoft.CodeAnalysis.Common/2.6.1": {
+    "Microsoft.CodeAnalysis.Common/2.8.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-FUDSP9wUdFrVQlSvfzpDWdeeoYHAyhednROVZVEccDDo8XV58NYAg5aNYWVnwsYfbhyFwAk/xFNXK6vi9c6vYg==",
-      "path": "microsoft.codeanalysis.common/2.6.1",
-      "hashPath": "microsoft.codeanalysis.common.2.6.1.nupkg.sha512"
+      "sha512": "sha512-lYUBqh3OD3iEQqxt9KB472VzgOnEKoUVG4Lx5Xw4oJe9dZtITkHFtct+T73jH3FOASFI1NSzzP5MBM0c9zZspA==",
+      "path": "microsoft.codeanalysis.common/2.8.0",
+      "hashPath": "microsoft.codeanalysis.common.2.8.0.nupkg.sha512"
     },
-    "Microsoft.CodeAnalysis.CSharp/2.6.1": {
+    "Microsoft.CodeAnalysis.CSharp/2.8.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-HodSc/cNtkTMufeYqliX6/RPH66/n8fRRHkmzP0R7ezr5b/DmPyMjiTBr1mOs5NbXyqjSTTSdPJ4xfBlp2NREQ==",
-      "path": "microsoft.codeanalysis.csharp/2.6.1",
-      "hashPath": "microsoft.codeanalysis.csharp.2.6.1.nupkg.sha512"
+      "sha512": "sha512-+4CHAwHMwLO5GRqPJ7Khv2Ny//omhukPKP3Ny/d2XDpt11bX35zb9pTziwZN0eNvxj6a46joIdHEYQ1JsekI3w==",
+      "path": "microsoft.codeanalysis.csharp/2.8.0",
+      "hashPath": "microsoft.codeanalysis.csharp.2.8.0.nupkg.sha512"
     },
-    "Microsoft.CodeAnalysis.CSharp.Scripting/2.6.1": {
+    "Microsoft.CodeAnalysis.CSharp.Scripting/2.8.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-Yun5YHvCoADPWL6nUdobZ5ZH4vzlA2ptEJuRfTQn+gn51b3oqZU3oGDZk5fqopyfsI9ya4zrslgFmk0Q1dl5Qw==",
-      "path": "microsoft.codeanalysis.csharp.scripting/2.6.1",
-      "hashPath": "microsoft.codeanalysis.csharp.scripting.2.6.1.nupkg.sha512"
+      "sha512": "sha512-3t3nfMB7oiGuHQEajpqCOmJA2DRSGiQcmxoLaKgvFtV4t6V/3fmCK0CofuLKixP294+v7i5tkykSt/0t61Hoig==",
+      "path": "microsoft.codeanalysis.csharp.scripting/2.8.0",
+      "hashPath": "microsoft.codeanalysis.csharp.scripting.2.8.0.nupkg.sha512"
     },
-    "Microsoft.CodeAnalysis.Scripting/2.6.1": {
+    "Microsoft.CodeAnalysis.Scripting/2.8.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-GflgUPL4/fj1uVJ/6KMjNlQrHHU1RfnetSSBEU5tiAGsvlR+hNfC7LGWSb5c//YrWEwGGWajMfsElxzVJOlhzQ==",
-      "path": "microsoft.codeanalysis.scripting/2.6.1",
-      "hashPath": "microsoft.codeanalysis.scripting.2.6.1.nupkg.sha512"
+      "sha512": "sha512-LzuTqW2BDq3WFRN/kCeA/62ff/fQiNEjQvYVVG4yqGhu/5XtwnyQrIoWLDH13A45M6pw8rLAqiXVvFDIo8OrUA==",
+      "path": "microsoft.codeanalysis.scripting/2.8.0",
+      "hashPath": "microsoft.codeanalysis.scripting.2.8.0.nupkg.sha512"
     },
-    "Microsoft.CodeAnalysis.Scripting.Common/2.6.1": {
+    "Microsoft.CodeAnalysis.Scripting.Common/2.8.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-l2I6l6XZ9S8oRr3mglR4AlptYUBbJGU10RYR0JhKQWnbG5d1z0UgT2Yff/WXqOQ89Q7nAhBiZfegt43ZGAqVBg==",
-      "path": "microsoft.codeanalysis.scripting.common/2.6.1",
-      "hashPath": "microsoft.codeanalysis.scripting.common.2.6.1.nupkg.sha512"
+      "sha512": "sha512-1h8elyyMpYXl7BDm04XVqlil4VsNIn7Pu6kWx7U5jMCWkysQ5uVHYbbhvTUZTGrhh9F90F2iJMetkboE7GIO2A==",
+      "path": "microsoft.codeanalysis.scripting.common/2.8.0",
+      "hashPath": "microsoft.codeanalysis.scripting.common.2.8.0.nupkg.sha512"
     },
     "Microsoft.CSharp/4.3.0": {
       "type": "package",
@@ -1767,33 +1767,33 @@
       "path": "microsoft.csharp/4.3.0",
       "hashPath": "microsoft.csharp.4.3.0.nupkg.sha512"
     },
-    "Microsoft.Extensions.Configuration/2.0.0": {
+    "Microsoft.Extensions.Configuration/2.0.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-SsI4RqI8EH00+cYO96tbftlh87sNUv1eeyuBU1XZdQkG0RrHAOjWgl7P0FoLeTSMXJpOnfweeOWj2d1/5H3FxA==",
-      "path": "microsoft.extensions.configuration/2.0.0",
-      "hashPath": "microsoft.extensions.configuration.2.0.0.nupkg.sha512"
+      "sha512": "sha512-d9fFoEYRaBccu/Z2B2BZCil/lEnmoVQ8YiY1dGViERh0qWjixgR9y/M7EGaoTrAunnmvAmfwxuij/gCq6WvL1w==",
+      "path": "microsoft.extensions.configuration/2.0.1",
+      "hashPath": "microsoft.extensions.configuration.2.0.1.nupkg.sha512"
     },
-    "Microsoft.Extensions.Configuration.Abstractions/2.0.0": {
+    "Microsoft.Extensions.Configuration.Abstractions/2.0.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-rHFrXqMIvQNq51H8RYTO4IWmDOYh8NUzyqGlh0xHWTP6XYnKk7Ryinys2uDs+Vu88b3AMlM3gBBSs78m6OQpYQ==",
-      "path": "microsoft.extensions.configuration.abstractions/2.0.0",
-      "hashPath": "microsoft.extensions.configuration.abstractions.2.0.0.nupkg.sha512"
+      "sha512": "sha512-stGq1c136UUYOsgQuJ5fjiygqZhgt6Kj0pm4iL0qq1MICNgEKTJ4tnbXLkZfrDHDz+olsT2VY9cVv2yshg+m+A==",
+      "path": "microsoft.extensions.configuration.abstractions/2.0.1",
+      "hashPath": "microsoft.extensions.configuration.abstractions.2.0.1.nupkg.sha512"
     },
-    "Microsoft.Extensions.Configuration.FileExtensions/2.0.0": {
+    "Microsoft.Extensions.Configuration.FileExtensions/2.0.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-ebFbu+vsz4rzeAICWavk9a0FutWVs7aNZap5k/IVxVhu2CnnhOp/H/gNtpzplrqjYDaNYdmv9a/DoUvH2ynVEQ==",
-      "path": "microsoft.extensions.configuration.fileextensions/2.0.0",
-      "hashPath": "microsoft.extensions.configuration.fileextensions.2.0.0.nupkg.sha512"
+      "sha512": "sha512-ig55mY9fpfvVbQLuiT1ETjpYuI33RiSfhdon0nfl3m9cRSCJrrq2X7MXus2ihh2eW3ev+jPBHWNOFjN0YRN3cg==",
+      "path": "microsoft.extensions.configuration.fileextensions/2.0.1",
+      "hashPath": "microsoft.extensions.configuration.fileextensions.2.0.1.nupkg.sha512"
     },
-    "Microsoft.Extensions.Configuration.Json/2.0.0": {
+    "Microsoft.Extensions.Configuration.Json/2.0.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-thPz4SckRGNqeLbdvJ619YxRFSkWuL1K5QqTMb3TVdEwjQj4O39yfUtjtI/XlWJiY7JKK4MUKAiQZVYc8ohKKg==",
-      "path": "microsoft.extensions.configuration.json/2.0.0",
-      "hashPath": "microsoft.extensions.configuration.json.2.0.0.nupkg.sha512"
+      "sha512": "sha512-RIh+RKEFkLDNeOhwPasPslqVDr72NVedR0rNKwxWnCZftAlSa4jmKg7nCacB4pU7rK2TMgl85ZaHZmrxC7Rcew==",
+      "path": "microsoft.extensions.configuration.json/2.0.1",
+      "hashPath": "microsoft.extensions.configuration.json.2.0.1.nupkg.sha512"
     },
     "Microsoft.Extensions.DependencyInjection/1.1.1": {
       "type": "package",
@@ -1809,26 +1809,26 @@
       "path": "microsoft.extensions.dependencyinjection.abstractions/1.1.1",
       "hashPath": "microsoft.extensions.dependencyinjection.abstractions.1.1.1.nupkg.sha512"
     },
-    "Microsoft.Extensions.FileProviders.Abstractions/2.0.0": {
+    "Microsoft.Extensions.FileProviders.Abstractions/2.0.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-Z0AK+hmLO33WAXQ5P1uPzhH7z5yjDHX/XnUefXxE//SyvCb9x4cVjND24dT5566t/yzGp8/WLD7EG9KQKZZklQ==",
-      "path": "microsoft.extensions.fileproviders.abstractions/2.0.0",
-      "hashPath": "microsoft.extensions.fileproviders.abstractions.2.0.0.nupkg.sha512"
+      "sha512": "sha512-Gzc5yXvwIrKpdti0Ev4jC0inVrGZpI86eLZorMVRqAPXowR8JDRbcHjhmID2EqA4rdhL/IsfD42+4upKpHULDw==",
+      "path": "microsoft.extensions.fileproviders.abstractions/2.0.1",
+      "hashPath": "microsoft.extensions.fileproviders.abstractions.2.0.1.nupkg.sha512"
     },
-    "Microsoft.Extensions.FileProviders.Physical/2.0.0": {
+    "Microsoft.Extensions.FileProviders.Physical/2.0.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-DKO2j2socZbHNCCVEWsLVpB3AQIIzKYFNyITVeWdA1jQ829GJIQf4MUD04+1c+Q2kbK03pIKQZmEy4CGIfgDZw==",
-      "path": "microsoft.extensions.fileproviders.physical/2.0.0",
-      "hashPath": "microsoft.extensions.fileproviders.physical.2.0.0.nupkg.sha512"
+      "sha512": "sha512-h+6bcXYlGldl7BUhnQKFxL2sMfeg9Gr/AuVexYOCYWmzDsc4iyUoy3NL7i2vkG209wd0ZXf+pZzRDwGPFhmlSw==",
+      "path": "microsoft.extensions.fileproviders.physical/2.0.1",
+      "hashPath": "microsoft.extensions.fileproviders.physical.2.0.1.nupkg.sha512"
     },
-    "Microsoft.Extensions.FileSystemGlobbing/2.0.0": {
+    "Microsoft.Extensions.FileSystemGlobbing/2.0.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-UC87vRDUB7/vSaNY/FVhbdAyRkfFBTkYmcUoglxk6TyTojhSqYaG5pZsoP4e1ZuXktFXJXJBTvK8U/QwCo0z3g==",
-      "path": "microsoft.extensions.filesystemglobbing/2.0.0",
-      "hashPath": "microsoft.extensions.filesystemglobbing.2.0.0.nupkg.sha512"
+      "sha512": "sha512-q7KsG2kjwo2Ps0WdV7MFh64cQS0UHikV8qv4HQrUfWQyxim5vNmLzAbuduarS9QWbhRHTtUanx+ohyAQdumdnw==",
+      "path": "microsoft.extensions.filesystemglobbing/2.0.1",
+      "hashPath": "microsoft.extensions.filesystemglobbing.2.0.1.nupkg.sha512"
     },
     "Microsoft.Extensions.Primitives/2.0.0": {
       "type": "package",

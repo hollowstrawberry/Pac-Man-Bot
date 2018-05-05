@@ -38,25 +38,20 @@ namespace PacManBot
             var botConfig = JsonConvert.DeserializeObject<BotConfig>(File.ReadAllText(BotFile.Config));
             if (string.IsNullOrWhiteSpace(botConfig.discordToken)) throw new Exception($"Missing bot token in {BotFile.Config}");
 
-
             var clientConfig = new DiscordSocketConfig
             {
                 TotalShards = botConfig.shardCount,
                 LogLevel = botConfig.clientLogLevel,
                 MessageCacheSize = botConfig.messageCacheSize
             };
-
             var client = new DiscordShardedClient(clientConfig);
-
 
             var commandConfig = new CommandServiceConfig
             {
                 DefaultRunMode = RunMode.Async,
                 LogLevel = botConfig.commandLogLevel
             };
-
             var commands = new CommandService(commandConfig);
-            await commands.AddModulesAsync(Assembly.GetEntryAssembly());
 
 
             // Set up services
@@ -72,6 +67,8 @@ namespace PacManBot
 
             var provider = services.BuildServiceProvider();
             foreach (var service in services) provider.GetRequiredService(service.ServiceType);
+
+            await commands.AddModulesAsync(Assembly.GetEntryAssembly(), provider);
 
 
             // Let's go

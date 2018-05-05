@@ -61,6 +61,7 @@ namespace PacManBot.Modules
         }
     }
 
+
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
     class ExampleUsage : Attribute
     {
@@ -70,6 +71,7 @@ namespace PacManBot.Modules
             Value = value;
         }
     }
+
 
 
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
@@ -94,15 +96,18 @@ namespace PacManBot.Modules
             if (guildPerms != null)
             {
                 if (context.Guild == null) return PreconditionResult.FromError("Bot requires guild permissions");
-                GuildPermission guildPermissions = (GuildPermission)(await context.Guild.GetCurrentUserAsync()).GuildPermissions.RawValue;
-                return guildPermissions.HasFlag(guildPerms) ? PreconditionResult.FromSuccess() : PreconditionResult.FromError($"Bot requires guild permission {(guildPerms ^ guildPermissions) & guildPerms}");
+                GuildPermission currentPerms = (GuildPermission)(await context.Guild.GetCurrentUserAsync()).GuildPermissions.RawValue;
+
+                return currentPerms.HasFlag(guildPerms) ? PreconditionResult.FromSuccess() : PreconditionResult.FromError($"Bot requires guild permission {(guildPerms ^ currentPerms) & guildPerms}");
             }
+            else
+            {
+                ChannelPermission currentPerms;
+                if (context.Guild == null) currentPerms = Utils.CorrectDmPermissions;
+                else currentPerms = (ChannelPermission)(await context.Guild.GetCurrentUserAsync()).GetPermissions(context.Channel as IGuildChannel).RawValue;
 
-            ChannelPermission channelPermissions;
-            if (context.Guild == null) channelPermissions = Utils.CorrectDmPermissions;
-            else channelPermissions = (ChannelPermission)(await context.Guild.GetCurrentUserAsync()).GetPermissions(context.Channel as IGuildChannel).RawValue;
-
-            return channelPermissions.HasFlag(channelPerms) ? PreconditionResult.FromSuccess() : PreconditionResult.FromError($"Bot requires channel permission {(channelPerms ^ channelPermissions) & channelPerms}");
+                return currentPerms.HasFlag(channelPerms) ? PreconditionResult.FromSuccess() : PreconditionResult.FromError($"Bot requires channel permission {(channelPerms ^ currentPerms) & channelPerms}");
+            }
         }
     }
 
@@ -129,15 +134,17 @@ namespace PacManBot.Modules
             if (guildPerms != null)
             {
                 if (context.Guild == null) return PreconditionResult.FromError("User requires guild permissions");
-                GuildPermission guildPermissions = (GuildPermission)(context.User as IGuildUser).GuildPermissions.RawValue;
-                return guildPermissions.HasFlag(guildPerms) ? PreconditionResult.FromSuccess() : PreconditionResult.FromError($"User requires guild permission {(guildPerms ^ guildPermissions) & guildPerms}");
+                GuildPermission currentPerms = (GuildPermission)(context.User as IGuildUser).GuildPermissions.RawValue;
+                return currentPerms.HasFlag(guildPerms) ? PreconditionResult.FromSuccess() : PreconditionResult.FromError($"User requires guild permission {(guildPerms ^ currentPerms) & guildPerms}");
             }
+            else
+            {
+                ChannelPermission currentPerms;
+                if (context.Guild == null) currentPerms = Utils.CorrectDmPermissions;
+                else currentPerms = (ChannelPermission)(context.User as IGuildUser).GetPermissions(context.Channel as IGuildChannel).RawValue;
 
-            ChannelPermission channelPermissions;
-            if (context.Guild == null) channelPermissions = Utils.CorrectDmPermissions;
-            else channelPermissions = (ChannelPermission)(context.User as IGuildUser).GetPermissions(context.Channel as IGuildChannel).RawValue;
-
-            return channelPermissions.HasFlag(channelPerms) ? PreconditionResult.FromSuccess() : PreconditionResult.FromError($"User requires channel permission {(channelPerms ^ channelPermissions) & channelPerms}");
+                return currentPerms.HasFlag(channelPerms) ? PreconditionResult.FromSuccess() : PreconditionResult.FromError($"User requires channel permission {(channelPerms ^ currentPerms) & channelPerms}");
+            }
         }
     }
 }
