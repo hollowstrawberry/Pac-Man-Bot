@@ -20,9 +20,10 @@ namespace PacManBot
         private LoggingService logger;
         private StorageService storage;
 
+        int shardsReady = 0;
+        bool reconnecting = false;
         private CancellationTokenSource cancelReconnectTimeout = null;
         private Stopwatch guildCountTimer = null;
-        int shardsReady = 0;
 
 
         public Bot(BotConfig botConfig, IServiceProvider services)
@@ -53,12 +54,16 @@ namespace PacManBot
 
 
 
-        private Task OnShardConnected(DiscordSocketClient shard)
+        private Task OnShardConnected(DiscordSocketClient currentShard)
         {
-            if (cancelReconnectTimeout != null)
+            bool allConnected = true;
+            foreach (var shard in client.Shards) if (shard.ConnectionState != ConnectionState.Connected) allConnected = false;
+
+            if (allConnected && cancelReconnectTimeout != null)
             {
+                reconnecting = false;
                 cancelReconnectTimeout.Cancel();
-                logger.Log(LogSeverity.Info, "Client reconnected. Timeout cancelled.");
+                logger.Log(LogSeverity.Info, "All clients reconnected. Timeout cancelled.");
                 cancelReconnectTimeout = new CancellationTokenSource();
             }
 
@@ -66,15 +71,18 @@ namespace PacManBot
         }
 
 
-        private Task OnShardDisconnected(Exception e, DiscordSocketClient shard)
+        private Task OnShardDisconnected(Exception e, DiscordSocketClient currentShard)
         {
+            if (reconnecting) return Task.CompletedTask;
+            reconnecting = true;
+
             if (cancelReconnectTimeout == null) cancelReconnectTimeout = new CancellationTokenSource();
 
             logger.Log(LogSeverity.Info, "Client disconnected. Starting reconnection timeout...");
 
-            Task.Delay(TimeSpan.FromSeconds(100), cancelReconnectTimeout.Token).ContinueWith(_ =>
+            Task.Delay(TimeSpan.FromSeconds(180), cancelReconnectTimeout.Token).ContinueWith(_ =>
             {
-                if (shard.ConnectionState != ConnectionState.Connected)
+                foreach (var shard in client.Shards) if (shard.ConnectionState != ConnectionState.Connected)
                 {
                     logger.Log(LogSeverity.Critical, "Reconnection timeout expired. Shutting down...");
                     Environment.Exit(1);

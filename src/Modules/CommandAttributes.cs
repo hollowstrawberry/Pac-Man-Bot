@@ -35,10 +35,7 @@ namespace PacManBot.Modules
                 var paramsText = new StringBuilder();
                 foreach (var parameter in command.Parameters)
                 {
-                    paramsText.Append(parameter.IsOptional ? '[' : '<');
-                    paramsText.Append(parameter.Name);
-                    paramsText.Append(parameter.IsOptional ? ']' : '>');
-                    paramsText.Append(' ');
+                    paramsText.Append(parameter.IsOptional ? $"[{parameter.Name}] " : $"<{parameter.Name}> ");
                 }
                 Parameters = paramsText.ToString();
             }
