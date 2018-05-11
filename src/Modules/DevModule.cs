@@ -76,7 +76,17 @@ namespace PacManBot.Modules
         [Summary("Reloads the content.bot file. Developer only")]
         public async Task ReloadContent()
         {
-            storage.LoadBotContent();
+            try
+            {
+                storage.LoadBotContent();
+            }
+            catch (Exception e)
+            {
+                await logger.Log(LogSeverity.Error, $"{e}");
+                await ReplyAsync(e.Message);
+                return;
+            }
+
             await logger.Log(LogSeverity.Info, "Reloaded bot content");
             await Context.Message.AddReactionAsync(CustomEmoji.Check);
         }

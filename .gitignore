@@ -12,7 +12,7 @@
 obj/
 bin/**/logs/
 bin/**/games/
-bin/netcoreapp2.0/
+bin/Debug/
 _Emotes/
 
 # Files

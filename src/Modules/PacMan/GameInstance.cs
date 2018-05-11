@@ -2,13 +2,13 @@ using System;
 using System.IO;
 using System.Text;
 using System.Linq;
+using System.Threading;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Discord;
 using Discord.WebSocket;
 using PacManBot.Constants;
 using PacManBot.Services;
-using System.Threading;
 
 namespace PacManBot.Modules.PacMan
 {
@@ -348,7 +348,7 @@ namespace PacManBot.Modules.PacMan
 
         // Game methods
 
-        private GameInstance() { } // For JSON to use
+        private GameInstance() { } // Used by JSON deserializing
 
         public GameInstance(ulong channelId, ulong ownerId, string newMap, DiscordShardedClient client, StorageService storage, LoggingService logger)
         {
@@ -396,7 +396,7 @@ namespace PacManBot.Modules.PacMan
         }
 
 
-        public void DoTick(GameInput input)
+        public void DoTurn(GameInput input)
         {
             if (state != State.Active) return; //Failsafe
 
@@ -706,9 +706,9 @@ namespace PacManBot.Modules.PacMan
         private void WrapAround(ref Pos pos) //Wraps the position from one side of the map to the other if it's out of bounds
         {
             if (pos.x < 0) pos.x = map.LengthX() + pos.x;
-            else if (pos.x > map.LengthX() - 1) pos.x -= map.LengthX();
+            else if (pos.x >= map.LengthX()) pos.x -= map.LengthX();
             if (pos.y < 0) pos.y = map.LengthY() + pos.y;
-            else if (pos.y > map.LengthY() - 1) pos.y -= map.LengthY();
+            else if (pos.y >= map.LengthY()) pos.y -= map.LengthY();
         }
 
         

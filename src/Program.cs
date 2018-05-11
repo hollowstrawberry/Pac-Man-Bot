@@ -34,7 +34,7 @@ namespace PacManBot
                 }
             }
 
-            // Set up configurations
+            // Set up congigurations
             var botConfig = JsonConvert.DeserializeObject<BotConfig>(File.ReadAllText(BotFile.Config));
             if (string.IsNullOrWhiteSpace(botConfig.discordToken)) throw new Exception($"Missing bot token in {BotFile.Config}");
 

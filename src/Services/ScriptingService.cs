@@ -1,10 +1,10 @@
 using System;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.CSharp.Scripting;
+using Microsoft.CodeAnalysis.Scripting;
 using Discord;
 using Discord.Rest;
 using Discord.Commands;
-using Microsoft.CodeAnalysis.CSharp.Scripting;
-using Microsoft.CodeAnalysis.Scripting;
 
 namespace PacManBot.Services
 {
@@ -41,8 +41,6 @@ namespace PacManBot.Services
         {
             try
             {
-                string postCode = "\nTask ReplyAsync(string msg) => Context.Channel.SendMessageAsync(msg);";
-
                 code = code.Trim(' ', '`', '\n');
                 if (code.StartsWith("cs\n")) code = code.Remove(0, 3); //C# code block in Discord
 
@@ -50,6 +48,8 @@ namespace PacManBot.Services
                 {
                     code = "await ReplyAsync($\"{" + code + "}\");";
                 }
+
+                string postCode = "\nTask ReplyAsync(string msg) => Context.Channel.SendMessageAsync(msg);";
 
                 await CSharpScript.EvaluateAsync(code + postCode, scriptOptions, new ScriptArgs(context, storage, logger, scheduling));
                 await logger.Log(LogSeverity.Info, $"Successfully executed code in channel {context.Channel.FullName()}:\n{code}");

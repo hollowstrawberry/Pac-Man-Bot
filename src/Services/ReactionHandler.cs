@@ -43,9 +43,9 @@ namespace PacManBot.Services
 
 
 
-        private async Task OnReactionChangedAsync(Cacheable<IUserMessage, ulong> m, ISocketMessageChannel c, SocketReaction r) //I have to do this so that exceptions don't go silent
+        private async Task OnReactionChangedAsync(Cacheable<IUserMessage, ulong> m, ISocketMessageChannel c, SocketReaction r)
         {
-            try
+            try //I have to wrap everything in a try so that exceptions don't go silent
             {
                 await OnReactionChangedInternalAsync(m, c, r);
             }
@@ -60,8 +60,8 @@ namespace PacManBot.Services
         {
             if (client.CurrentUser == null) return; // Not ready
             if (!reaction.User.IsSpecified || reaction.UserId == client.CurrentUser.Id) return;
-
-            foreach (GameInstance game in storage.GameInstances) // Checks if the reacted message is a game
+ 
+            foreach (var game in storage.GameInstances) // Checks if the reacted message is a game
             {
                 if (reaction.MessageId == game.messageId)
                 {
@@ -98,7 +98,7 @@ namespace PacManBot.Services
                     await logger.Log(LogSeverity.Verbose, LogSource.Game + $"{(guild == null ? 0 : client.GetShardIdFor(guild))}",
                                      $"Input {GameInputs[emote].Align(5)} by user {user.FullName()} in channel {channel.FullName()}");
 
-                    game.DoTick(GameInputs[emote]);
+                    game.DoTurn(GameInputs[emote]);
 
                     if (game.state == State.Win || game.state == State.Lose)
                     {
@@ -114,7 +114,7 @@ namespace PacManBot.Services
 
                 if (game.state != State.Active && channel.BotCan(ChannelPermission.ManageMessages))
                 {
-                    await message.RemoveAllReactionsAsync();
+                    await message.RemoveAllReactionsAsync(Utils.DefaultRequestOptions);
                 }
             }
         }

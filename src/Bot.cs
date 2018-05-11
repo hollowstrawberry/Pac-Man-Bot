@@ -5,12 +5,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Collections.Generic;
 using Discord;
 using Discord.WebSocket;
 using PacManBot.Services;
-using PacManBot.Constants;
-using PacManBot.Modules.PacMan;
 
 namespace PacManBot
 {
@@ -25,8 +22,8 @@ namespace PacManBot
 
         int shardsReady = 0;
         bool reconnecting = false;
-        private CancellationTokenSource cancelReconnectTimeout = null;
         private Stopwatch guildCountTimer = null;
+        private CancellationTokenSource cancelReconnectTimeout = null;
 
 
         public Bot(BotConfig botConfig, IServiceProvider services)
@@ -116,8 +113,10 @@ namespace PacManBot
 
         private Task OnLeftGuild(SocketGuild guild)
         {
-            var toDelete = storage.GameInstances.FindAll(game => game.Guild?.Id == guild.Id);
-            foreach (var game in toDelete) storage.DeleteGame(game);
+            foreach (var game in storage.GameInstances.Where(game => game.Guild?.Id == guild.Id).ToArray())
+            {
+                storage.DeleteGame(game);
+            }
 
             _ = UpdateGuildCountAsync();
             return Task.CompletedTask;
@@ -126,8 +125,10 @@ namespace PacManBot
 
         private Task OnChannelDestroyed(SocketChannel channel)
         {
-            var toDelete = storage.GameInstances.FindAll(game => game.channelId == channel.Id);
-            foreach (var game in toDelete) storage.DeleteGame(game);
+            foreach (var game in storage.GameInstances.Where(game => game.channelId == channel.Id).ToArray())
+            {
+                storage.DeleteGame(game);
+            }
 
             return Task.CompletedTask;
         }

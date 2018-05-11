@@ -26,10 +26,13 @@ namespace PacManBot
 
         public static string ScorePeriodString(TimePeriod period)
         {
-            if (period == TimePeriod.month) return "in the last 30 days";
-            else if (period == TimePeriod.week) return "in the last 7 days";
-            else if (period == TimePeriod.day) return "in the last 24 hours";
-            else return "of all time";
+            switch (period)
+            {
+                case TimePeriod.month: return "in the last 30 days";
+                case TimePeriod.week: return "in the last 7 days";
+                case TimePeriod.day: return "in the last 24 hours";
+                default: return "of all time";
+            }
         }
 
 

@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading;
 using Discord;
@@ -24,7 +25,7 @@ namespace PacManBot.Services
             this.logger = logger;
 
             timers = new List<Timer>();
-            deleteOldGames = new Timer(new TimerCallback(DeleteOldGames), null, TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(60));
+            deleteOldGames = new Timer(new TimerCallback(DeleteOldGames), null, TimeSpan.FromMinutes(0), TimeSpan.FromMinutes(60));
         }
 
 
@@ -33,10 +34,12 @@ namespace PacManBot.Services
             var now = DateTime.Now;
             int previousCount = storage.GameInstances.Count;
 
-            var toDelete = storage.GameInstances.FindAll(game => (now - game.lastPlayed).TotalDays > 7.0);
-            foreach (var game in toDelete) storage.DeleteGame(game);
+            foreach (var game in storage.GameInstances.Where(game => (now - game.lastPlayed).TotalDays > 7.0).ToArray())
+            {
+                storage.DeleteGame(game);
+            }
 
-            logger.Log(LogSeverity.Debug, LogSource.Scheduling, $"Cleaned {previousCount - storage.GameInstances.Count} abandoned games");
+            logger.Log(LogSeverity.Debug, LogSource.Scheduling, $"Removed {previousCount - storage.GameInstances.Count} abandoned games");
         }
     }
 }

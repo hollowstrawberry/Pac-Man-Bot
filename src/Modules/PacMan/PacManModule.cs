@@ -42,11 +42,11 @@ namespace PacManBot.Modules.PacMan
 
             string prefix = storage.GetPrefixOrEmpty(Context.Guild);
 
-            foreach (GameInstance game in storage.GameInstances)
+            foreach (var game in storage.GameInstances)
             {
                 if (Context.Channel.Id == game.channelId) //Finds a game instance corresponding to this channel
                 {
-                    await ReplyAsync($"There is already an ongoing game on this channel!\nYou could use the **{prefix}refresh** command to bring it to the bottom of the chat.");
+                    await ReplyAsync($"There is already an active game on this channel!\nYou could use the **{prefix}refresh** command to bring it to the bottom of the chat.");
                     return;
                 }
             }
@@ -79,7 +79,7 @@ namespace PacManBot.Modules.PacMan
                 return;
             }
 
-            storage.GameInstances.Add(newGame);
+            storage.AddGame(newGame);
  
             if (mobile) newGame.mobileDisplay = true;
             var gameMessage = await ReplyAsync(preMessage + newGame.GetDisplay(showHelp: false) + "```diff\n+Starting game```", options: Utils.DefaultRequestOptions); //Output the game
@@ -102,7 +102,7 @@ namespace PacManBot.Modules.PacMan
         [RequireBotPermissionImproved(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.AddReactions)]
         public async Task RefreshGameInstance([Name("mobile/m")] string arg = "")
         {
-            foreach (GameInstance game in storage.GameInstances)
+            foreach (var game in storage.GameInstances)
             {
                 if (Context.Channel.Id == game.channelId) //Finds a game instance corresponding to this channel
                 {
@@ -133,14 +133,13 @@ namespace PacManBot.Modules.PacMan
         [Summary("Ends the current game on this channel, but only if the person using the command started the game or if they have the Manage Messages permission.")]
         public async Task EndGameInstance()
         {
-            foreach (GameInstance game in storage.GameInstances)
+            foreach (var game in storage.GameInstances)
             {
                 if (Context.Channel.Id == game.channelId)
                 {
                     if (game.ownerId == Context.User.Id || Context.UserCan(ChannelPermission.ManageMessages))
                     {
                         game.state = State.Cancelled;
-                        game.CancelPreviousEdits();
                         storage.DeleteGame(game);
                         await ReplyAsync("Game ended.");
 
@@ -191,7 +190,7 @@ namespace PacManBot.Modules.PacMan
             }
 
             var scores = storage.GetScores(time);
-            
+
             if (scores.Count < 1)
             {
                 await ReplyAsync("There are no registered scores within this period!");
@@ -207,13 +206,13 @@ namespace PacManBot.Modules.PacMan
             var content = new StringBuilder();
             content.Append($"Displaying best scores {Utils.ScorePeriodString(time)}\nᅠ\n");
 
-            for (int i = min; i < scores.Count && i <= max && i < min + MaxDisplayedScores; i++)
+            for (int i = min; i < scores.Count() && i <= max && i < min + MaxDisplayedScores; i++)
             {
                 ScoreEntry entry = scores[i - 1]; // The list is always kept sorted so we just go by index
 
                 //Align each element in the line
                 string result = $"`{$"{i}.".AlignTo($"{min + MaxDisplayedScores}.")} {$"({entry.state})".Align(6)} {entry.score.AlignTo(scores[min - 1].score, right: true)} points in {entry.turns} turns";
-                content.Append(result.Align(38) + $"- {entry.GetUsername(shardedClient)}`\n");
+                content.Append(result.Align(38) + $"- {entry.GetUsername(shardedClient).Replace("`", "")}`\n");
             }
 
             content.Append(max - min >= MaxDisplayedScores && max < scores.Count ? $"*Only {MaxDisplayedScores} scores may be displayed at once*"
