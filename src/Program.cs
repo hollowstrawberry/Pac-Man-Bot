@@ -63,6 +63,7 @@ namespace PacManBot
                 .AddSingleton<StorageService>()
                 .AddSingleton<CommandHandler>()
                 .AddSingleton<ReactionHandler>()
+                .AddSingleton<SchedulingService>()
                 .AddSingleton<ScriptingService>();
 
             var provider = services.BuildServiceProvider();

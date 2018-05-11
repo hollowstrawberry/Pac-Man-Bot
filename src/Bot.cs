@@ -1,13 +1,16 @@
 using System;
-using System.Net.Http;
-using System.Net.Http.Headers;
+using System.Linq;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Diagnostics;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Collections.Generic;
 using Discord;
 using Discord.WebSocket;
 using PacManBot.Services;
 using PacManBot.Constants;
+using PacManBot.Modules.PacMan;
 
 namespace PacManBot
 {
@@ -113,10 +116,8 @@ namespace PacManBot
 
         private Task OnLeftGuild(SocketGuild guild)
         {
-            for (int i = 0; i < storage.GameInstances.Count; i++) //Removes leftover games in the guild we left
-            {
-                if (storage.GameInstances[i].Guild?.Id == guild.Id) storage.DeleteGame(i);
-            }
+            var toDelete = storage.GameInstances.FindAll(game => game.Guild?.Id == guild.Id);
+            foreach (var game in toDelete) storage.DeleteGame(game);
 
             _ = UpdateGuildCountAsync();
             return Task.CompletedTask;
@@ -125,10 +126,8 @@ namespace PacManBot
 
         private Task OnChannelDestroyed(SocketChannel channel)
         {
-            for (int i = 0; i < storage.GameInstances.Count; i++) //Removes a leftover game in that channel
-            {
-                if (storage.GameInstances[i].channelId == channel.Id) storage.DeleteGame(i);
-            }
+            var toDelete = storage.GameInstances.FindAll(game => game.channelId == channel.Id);
+            foreach (var game in toDelete) storage.DeleteGame(game);
 
             return Task.CompletedTask;
         }
@@ -157,20 +156,21 @@ namespace PacManBot
 
                 await client.SetGameAsync($"{botConfig.defaultPrefix}help | {guilds} guilds");
 
-                string[] website = { $"bots.discord.pw",
-                                     $"discordbots.org" };
-
-                for (int i = 0; i < website.Length && i < botConfig.httpToken.Length; i++)
+                using (var httpClient = new HttpClient())
                 {
-                    if (string.IsNullOrWhiteSpace(botConfig.httpToken[i])) continue;
+                    string[] website = { $"bots.discord.pw", $"discordbots.org" };
+                    for (int i = 0; i < website.Length && i < botConfig.httpToken.Length; i++)
+                    {
+                        if (string.IsNullOrWhiteSpace(botConfig.httpToken[i])) continue;
 
-                    string requesturi = "https://" + website[i] + $"/api/bots/{client.CurrentUser.Id}/stats";
-                    var webclient = new HttpClient();
-                    var content = new StringContent($"{{\"server_count\": {guilds}}}", System.Text.Encoding.UTF8, "application/json");
-                    webclient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(botConfig.httpToken[i]);
-                    var response = await webclient.PostAsync(requesturi, content);
+                        string requesturi = "https://" + website[i] + $"/api/bots/{client.CurrentUser.Id}/stats";
+                        var content = new StringContent($"{{\"server_count\": {guilds}}}", System.Text.Encoding.UTF8, "application/json");
+                        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(botConfig.httpToken[i]);
+                        var response = await httpClient.PostAsync(requesturi, content);
 
-                    await logger.Log(LogSeverity.Verbose, $"Sent guild count to {website[i]} - {(response.IsSuccessStatusCode ? "Success" : $"Response:\n{response}")}");
+                        await logger.Log(response.IsSuccessStatusCode ? LogSeverity.Verbose : LogSeverity.Warning,
+                                         $"Sent guild count to {website[i]} - {(response.IsSuccessStatusCode ? "Success" : $"Response:\n{response}")}");
+                    }
                 }
 
                 guildCountTimer = Stopwatch.StartNew();

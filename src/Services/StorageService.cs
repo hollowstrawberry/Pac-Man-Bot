@@ -105,24 +105,18 @@ namespace PacManBot.Services
         }
 
 
-        public void DeleteGame(int i)
-        {
-            if (i < GameInstances.Count())
-            {
-                logger.Log(LogSeverity.Verbose, LogSource.Storage, $"Removing game at {GameInstances[i].channelId}");
-                if (File.Exists(GameInstances[i].GameFile)) File.Delete(GameInstances[i].GameFile);
-                GameInstances.RemoveAt(i);
-            }
-            else
-            {
-                logger.Log(LogSeverity.Error, LogSource.Storage, $"Trying to delete game at index {i}: Not found.");
-            }
-        }
-
         public void DeleteGame(GameInstance game)
         {
-            if (GameInstances.Contains(game)) DeleteGame(GameInstances.IndexOf(game));
-            else logger.Log(LogSeverity.Error, LogSource.Storage, $"Trying to delete game: Not found.");
+            try
+            {
+                if (File.Exists(game.GameFile)) File.Delete(game.GameFile);
+                GameInstances.Remove(game);
+                logger.Log(LogSeverity.Verbose, LogSource.Storage, $"Removed game at {game.channelId}");
+            }
+            catch (Exception e)
+            {
+                logger.Log(LogSeverity.Error, LogSource.Storage, $"Trying to delete game at {game.channelId}: {e.Message}");
+            }
         }
 
 

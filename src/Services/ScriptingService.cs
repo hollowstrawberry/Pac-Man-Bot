@@ -13,12 +13,14 @@ namespace PacManBot.Services
         private readonly ScriptOptions scriptOptions;
         private readonly StorageService storage;
         private readonly LoggingService logger;
+        private readonly SchedulingService scheduling;
 
 
-        public ScriptingService(StorageService storage, LoggingService logger)
+        public ScriptingService(StorageService storage, LoggingService logger, SchedulingService scheduling)
         {
             this.storage = storage;
             this.logger = logger;
+            this.scheduling = scheduling;
 
             scriptOptions = ScriptOptions.Default
                 .WithImports(
@@ -49,7 +51,7 @@ namespace PacManBot.Services
                     code = "await ReplyAsync($\"{" + code + "}\");";
                 }
 
-                await CSharpScript.EvaluateAsync(code + postCode, scriptOptions, new ScriptArgs(context, storage, logger));
+                await CSharpScript.EvaluateAsync(code + postCode, scriptOptions, new ScriptArgs(context, storage, logger, scheduling));
                 await logger.Log(LogSeverity.Info, $"Successfully executed code in channel {context.Channel.FullName()}:\n{code}");
             }
             finally
@@ -68,12 +70,14 @@ namespace PacManBot.Services
         public readonly ShardedCommandContext Context;
         public readonly StorageService storage;
         public readonly LoggingService logger;
+        public readonly SchedulingService scheduling;
 
-        public ScriptArgs(ShardedCommandContext Context, StorageService storage, LoggingService logger)
+        public ScriptArgs(ShardedCommandContext Context, StorageService storage, LoggingService logger, SchedulingService scheduling)
         {
             this.Context = Context;
             this.storage = storage;
             this.logger = logger;
+            this.scheduling = scheduling;
         }
     }
 }

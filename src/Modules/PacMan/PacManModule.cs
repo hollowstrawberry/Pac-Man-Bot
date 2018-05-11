@@ -50,7 +50,7 @@ namespace PacManBot.Modules.PacMan
                     return;
                 }
             }
-
+            
             string[] argSplice = args.Split("```");
             string preMessage = "";
 

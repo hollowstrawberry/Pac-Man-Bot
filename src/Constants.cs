@@ -21,6 +21,7 @@ namespace PacManBot.Constants
             Bot = "Bot",
             Game = "Game",
             Storage = "Storage",
+            Scheduling = "Scheduling",
             Owner = "Owner";
     }
 
