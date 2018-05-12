@@ -3,6 +3,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Discord;
 using Discord.Commands;
+using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
 using static PacManBot.Modules.PacMan.GameInstance;
 
@@ -110,6 +111,16 @@ namespace PacManBot
 
 
         /* ===== Discord ===== */
+
+
+        public static bool AllShardsConnected(this DiscordShardedClient client)
+        {
+            foreach (var shard in client.Shards)
+            {
+                if (shard.ConnectionState != ConnectionState.Connected) return false;
+            }
+            return true;
+        }
 
 
         public static string SanitizeMentions(this string text)

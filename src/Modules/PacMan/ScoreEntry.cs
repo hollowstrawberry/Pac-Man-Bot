@@ -54,7 +54,7 @@ namespace PacManBot.Modules.PacMan
 
             if (splice.Count == 5)
             {
-                splice.AddRange(splice[4].Split('"').Where(x => !string.IsNullOrWhiteSpace(x)));  // username, date, guild
+                splice.AddRange(splice[4].Split('"').Where(s => !string.IsNullOrWhiteSpace(s)));  // username, date, guild
                 splice.RemoveAt(4);
 
                 if (splice.Count == 7

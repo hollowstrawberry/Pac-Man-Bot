@@ -1,44 +1,48 @@
 using System;
 using System.Linq;
-using System.Diagnostics;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Runtime.Serialization;
 using Discord;
 using Discord.WebSocket;
 using PacManBot.Services;
 
 namespace PacManBot
 {
+    [DataContract]
+    public class BotConfig
+    {
+        [DataMember] public readonly string defaultPrefix = "<";
+        [DataMember] public readonly string discordToken;
+        [DataMember] public readonly string[] httpToken = { };
+        [DataMember] public readonly int shardCount = 1;
+        [DataMember] public readonly int messageCacheSize = 100;
+        [DataMember] public readonly LogSeverity clientLogLevel = LogSeverity.Verbose;
+        [DataMember] public readonly LogSeverity commandLogLevel = LogSeverity.Verbose;
+    }
+
+
     public class Bot
     {
-        private BotConfig botConfig;
-        private IServiceProvider services;
-
-        private DiscordShardedClient client;
-        private LoggingService logger;
-        private StorageService storage;
+        BotConfig botConfig;
+        DiscordShardedClient client;
+        LoggingService logger;
+        StorageService storage;
 
         int shardsReady = 0;
-        bool reconnecting = false;
-        private Stopwatch guildCountTimer = null;
-        private CancellationTokenSource cancelReconnectTimeout = null;
+        DateTime lastGuildCountUpdate = DateTime.MinValue;
 
 
         public Bot(BotConfig botConfig, IServiceProvider services)
         {
             this.botConfig = botConfig;
-            this.services = services;
-
             client = services.Get<DiscordShardedClient>();
             logger = services.Get<LoggingService>();
             storage = services.Get<StorageService>();
 
             //Events
             client.ShardReady += OnShardReady;
-            client.ShardConnected += OnShardConnected;
-            client.ShardDisconnected += OnShardDisconnected;
             client.JoinedGuild += OnJoinedGuild;
             client.LeftGuild += OnLeftGuild;
             client.ChannelDestroyed += OnChannelDestroyed;
@@ -53,44 +57,6 @@ namespace PacManBot
 
 
 
-
-        private Task OnShardConnected(DiscordSocketClient currentShard)
-        {
-            bool allConnected = true;
-            foreach (var shard in client.Shards) if (shard.ConnectionState != ConnectionState.Connected) allConnected = false;
-
-            if (allConnected && cancelReconnectTimeout != null)
-            {
-                reconnecting = false;
-                cancelReconnectTimeout.Cancel();
-                logger.Log(LogSeverity.Info, "All clients reconnected. Timeout cancelled.");
-                cancelReconnectTimeout = new CancellationTokenSource();
-            }
-
-            return Task.CompletedTask;
-        }
-
-
-        private Task OnShardDisconnected(Exception e, DiscordSocketClient currentShard)
-        {
-            if (reconnecting) return Task.CompletedTask;
-            reconnecting = true;
-
-            if (cancelReconnectTimeout == null) cancelReconnectTimeout = new CancellationTokenSource();
-
-            logger.Log(LogSeverity.Info, "Client disconnected. Starting reconnection timeout...");
-
-            Task.Delay(TimeSpan.FromSeconds(180), cancelReconnectTimeout.Token).ContinueWith(_ =>
-            {
-                foreach (var shard in client.Shards) if (shard.ConnectionState != ConnectionState.Connected)
-                {
-                    logger.Log(LogSeverity.Critical, "Reconnection timeout expired. Shutting down...");
-                    Environment.Exit(1);
-                }
-            });
-
-            return Task.CompletedTask;
-        }
 
 
         private Task OnShardReady(DiscordSocketClient shard)
@@ -113,19 +79,20 @@ namespace PacManBot
 
         private Task OnLeftGuild(SocketGuild guild)
         {
-            foreach (var game in storage.GameInstances.Where(game => game.Guild?.Id == guild.Id).ToArray())
+            _ = UpdateGuildCountAsync();
+
+            foreach (var game in storage.GameInstances.Where(g => g.Guild?.Id == guild.Id).ToArray())
             {
                 storage.DeleteGame(game);
             }
 
-            _ = UpdateGuildCountAsync();
             return Task.CompletedTask;
         }
 
 
         private Task OnChannelDestroyed(SocketChannel channel)
         {
-            foreach (var game in storage.GameInstances.Where(game => game.channelId == channel.Id).ToArray())
+            foreach (var game in storage.GameInstances.Where(g => g.channelId == channel.Id).ToArray())
             {
                 storage.DeleteGame(game);
             }
@@ -151,8 +118,11 @@ namespace PacManBot
 
         private async Task UpdateGuildCountInternal()
         {
-            if (guildCountTimer == null || guildCountTimer.Elapsed.TotalMinutes >= 20)
+            var now = DateTime.Now;
+
+            if ((now - lastGuildCountUpdate).TotalMinutes > 20.0)
             {
+                lastGuildCountUpdate = now;
                 int guilds = client.Guilds.Count;
 
                 await client.SetGameAsync($"{botConfig.defaultPrefix}help | {guilds} guilds");
@@ -174,22 +144,8 @@ namespace PacManBot
                     }
                 }
 
-                guildCountTimer = Stopwatch.StartNew();
-
                 await logger.Log(LogSeverity.Info, $"Guild count updated to {guilds}");
             }
         }
-    }
-
-
-    public class BotConfig
-    {
-        public string defaultPrefix = "<";
-        public string discordToken;
-        public string[] httpToken = { };
-        public int shardCount = 1;
-        public int messageCacheSize = 100;
-        public LogSeverity clientLogLevel = LogSeverity.Verbose;
-        public LogSeverity commandLogLevel = LogSeverity.Verbose;
     }
 }

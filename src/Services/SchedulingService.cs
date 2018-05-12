@@ -1,7 +1,8 @@
 using System;
 using System.Linq;
-using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 using Discord;
 using Discord.WebSocket;
 using PacManBot.Constants;
@@ -14,8 +15,11 @@ namespace PacManBot.Services
         private readonly StorageService storage;
         private readonly LoggingService logger;
 
-        public List<Timer> timers; // If I ever want to schedule anything remotely using eval
+        public List<Timer> timers; // If for some reason I ever want to schedule anything remotely using eval
+        private readonly Timer checkConnection;
         private readonly Timer deleteOldGames;
+
+        private CancellationTokenSource cancelShutdown = new CancellationTokenSource();
 
 
         public SchedulingService(DiscordShardedClient client, StorageService storage, LoggingService logger)
@@ -24,8 +28,46 @@ namespace PacManBot.Services
             this.storage = storage;
             this.logger = logger;
 
+            checkConnection = new Timer(new TimerCallback(CheckConnection), null, TimeSpan.FromMinutes(5), TimeSpan.FromMinutes(5));
+            deleteOldGames = new Timer(new TimerCallback(DeleteOldGames), null, TimeSpan.Zero, TimeSpan.FromMinutes(60));
+
             timers = new List<Timer>();
-            deleteOldGames = new Timer(new TimerCallback(DeleteOldGames), null, TimeSpan.FromMinutes(0), TimeSpan.FromMinutes(60));
+            timers.Append(checkConnection);
+            timers.Append(deleteOldGames);
+
+            //Events
+            client.ShardConnected += OnShardConnected;
+        }
+
+
+
+        private Task OnShardConnected(DiscordSocketClient shard)
+        {
+            if (client.AllShardsConnected())
+            {
+                cancelShutdown.Cancel();
+                cancelShutdown = new CancellationTokenSource();
+            }
+            return Task.CompletedTask;
+        }
+
+
+        public async void CheckConnection(object state)
+        {
+            if (client.AllShardsConnected()) return;
+
+            await logger.Log(LogSeverity.Info, LogSource.Scheduling, "A shard is disconnected. Waiting for reconnection...");
+
+            try
+            {
+                await Task.Delay(TimeSpan.FromMinutes(3), cancelShutdown.Token);
+                await logger.Log(LogSeverity.Critical, LogSource.Scheduling, "Reconnection timed out. Shutting down...");
+                Environment.Exit(666);
+            }
+            catch (TaskCanceledException)
+            {
+                await logger.Log(LogSeverity.Info, LogSource.Scheduling, "All shards reconnected. Shutdown aborted");
+            }
         }
 
 
@@ -34,12 +76,12 @@ namespace PacManBot.Services
             var now = DateTime.Now;
             int previousCount = storage.GameInstances.Count;
 
-            foreach (var game in storage.GameInstances.Where(game => (now - game.lastPlayed).TotalDays > 7.0).ToArray())
+            foreach (var game in storage.GameInstances.Where(g => (now - g.lastPlayed).TotalDays > 7.0).ToArray())
             {
                 storage.DeleteGame(game);
             }
 
-            logger.Log(LogSeverity.Debug, LogSource.Scheduling, $"Removed {previousCount - storage.GameInstances.Count} abandoned games");
+            logger.Log(LogSeverity.Info, LogSource.Scheduling, $"Removed {previousCount - storage.GameInstances.Count} old games");
         }
     }
 }
