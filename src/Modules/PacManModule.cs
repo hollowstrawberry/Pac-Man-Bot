@@ -6,11 +6,12 @@ using Discord;
 using Discord.Net;
 using Discord.Commands;
 using Discord.WebSocket;
+using PacManBot.Games;
 using PacManBot.Services;
 using PacManBot.Constants;
-using static PacManBot.Modules.PacMan.GameInstance;
+using static PacManBot.Games.GameUtils;
 
-namespace PacManBot.Modules.PacMan
+namespace PacManBot.Modules
 {
     [Name("🎮Game")]
     public class PacManModule : ModuleBase<SocketCommandContext>
@@ -42,7 +43,7 @@ namespace PacManBot.Modules.PacMan
 
             string prefix = storage.GetPrefixOrEmpty(Context.Guild);
 
-            foreach (var game in storage.GameInstances)
+            foreach (PacManGame game in storage.GameInstances.Where(g => g is PacManGame))
             {
                 if (Context.Channel.Id == game.channelId) //Finds a game instance corresponding to this channel
                 {
@@ -61,10 +62,10 @@ namespace PacManBot.Modules.PacMan
             string customMap = null;
             if (args.Contains("```")) customMap = argSplice[1].Trim('\n', '`');
 
-            GameInstance newGame;
+            PacManGame newGame;
             try
             {
-                newGame = new GameInstance(Context.Channel.Id, Context.User.Id, customMap, shardedClient, storage, logger);
+                newGame = new PacManGame(Context.Channel.Id, Context.User.Id, customMap, shardedClient, storage, logger);
             }
             catch (InvalidMapException e) when (customMap != null)
             {
@@ -82,14 +83,14 @@ namespace PacManBot.Modules.PacMan
             storage.AddGame(newGame);
  
             if (mobile) newGame.mobileDisplay = true;
-            var gameMessage = await ReplyAsync(preMessage + newGame.GetDisplay(showHelp: false) + "```diff\n+Starting game```", options: Utils.DefaultRequestOptions); //Output the game
+            var gameMessage = await ReplyAsync(preMessage + newGame.GetContent(showHelp: false) + "```diff\n+Starting game```", options: Utils.DefaultRequestOptions); //Output the game
             newGame.messageId = gameMessage.Id;
 
             try
             {
                 var requestOptions = newGame.MessageEditOptions; // So the edit can be cancelled
                 await AddControls(newGame, gameMessage);
-                await gameMessage.ModifyAsync(m => m.Content = newGame.GetDisplay(), requestOptions); //Restore display to normal
+                await gameMessage.ModifyAsync(m => m.Content = newGame.GetContent(), requestOptions); //Restore display to normal
             }
             catch (Exception e) when (e is HttpException || e is TimeoutException || e is TaskCanceledException) {} // We can ignore these
         }
@@ -102,7 +103,7 @@ namespace PacManBot.Modules.PacMan
         [RequireBotPermissionImproved(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.AddReactions)]
         public async Task RefreshGameInstance([Name("mobile/m")] string arg = "")
         {
-            foreach (var game in storage.GameInstances)
+            foreach (PacManGame game in storage.GameInstances.Where(g => g is PacManGame))
             {
                 if (Context.Channel.Id == game.channelId) //Finds a game instance corresponding to this channel
                 {
@@ -110,14 +111,14 @@ namespace PacManBot.Modules.PacMan
                     if (oldMsg != null) await oldMsg.DeleteAsync(); //Delete old message
 
                     game.mobileDisplay = arg.StartsWith("m");
-                    var newMsg = await ReplyAsync(game.GetDisplay(showHelp: false) + "```diff\n+Refreshing game```", options: Utils.DefaultRequestOptions); //Send new message
+                    var newMsg = await ReplyAsync(game.GetContent(showHelp: false) + "```diff\n+Refreshing game```", options: Utils.DefaultRequestOptions); //Send new message
                     game.messageId = newMsg.Id; //Change focus message for this channel
 
                     try
                     {
                         var requestOptions = game.MessageEditOptions; // So the edit can be cancelled
                         await AddControls(game, newMsg);
-                        await newMsg.ModifyAsync(m => m.Content = game.GetDisplay(), requestOptions); //Restore display to normal
+                        await newMsg.ModifyAsync(m => m.Content = game.GetContent(), requestOptions); //Restore display to normal
                     }
                     catch (Exception e) when (e is HttpException || e is TimeoutException || e is TaskCanceledException) {} // We can ignore these
 
@@ -133,13 +134,13 @@ namespace PacManBot.Modules.PacMan
         [Summary("Ends the current game on this channel, but only if the person using the command started the game or if they have the Manage Messages permission.")]
         public async Task EndGameInstance()
         {
-            foreach (var game in storage.GameInstances)
+            foreach (PacManGame game in storage.GameInstances.Where(g => g is PacManGame))
             {
                 if (Context.Channel.Id == game.channelId)
                 {
-                    if (game.ownerId == Context.User.Id || Context.UserCan(ChannelPermission.ManageMessages))
+                    if (game.OwnerId == Context.User.Id || Context.UserCan(ChannelPermission.ManageMessages))
                     {
-                        game.state = State.Cancelled;
+                        game.state = State.Ended;
                         storage.DeleteGame(game);
                         await ReplyAsync("Game ended.");
 
@@ -148,7 +149,7 @@ namespace PacManBot.Modules.PacMan
                             if (await Context.Channel.GetMessageAsync(game.messageId) is IUserMessage gameMessage)
                             {
                                 if (Context.Guild != null) await gameMessage.DeleteAsync(Utils.DefaultRequestOptions); //So as to not leave spam in guild channels
-                                else await gameMessage.ModifyAsync(m => m.Content = game.GetDisplay(), Utils.DefaultRequestOptions);
+                                else await gameMessage.ModifyAsync(m => m.Content = game.GetContent(), Utils.DefaultRequestOptions);
                             }
                         }
                         catch (HttpException) { } // Something happened to the message, we can ignore it
@@ -283,12 +284,12 @@ namespace PacManBot.Modules.PacMan
 
 
 
-        public async Task AddControls(GameInstance game, IUserMessage message)
+        public async Task AddControls(PacManGame game, IUserMessage message)
         {
-            foreach (IEmote input in GameInputs.Keys)
+            foreach (string input in game.GameInputs.Keys)
             {
                 if (game.state != State.Active) break;
-                await message.AddReactionAsync(input, Utils.DefaultRequestOptions);
+                await message.AddReactionAsync(input.Contains(":") ? (IEmote)input.ToEmote() : (IEmote)input.ToEmoji(), Utils.DefaultRequestOptions);
             }
         }
     }

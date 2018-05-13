@@ -4,13 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
-using System.Collections.Concurrent;
 using Newtonsoft.Json;
 using Microsoft.Extensions.Configuration;
 using Discord;
 using Discord.WebSocket;
+using PacManBot.Games;
 using PacManBot.Constants;
-using PacManBot.Modules.PacMan;
 
 namespace PacManBot.Services
 {
@@ -125,7 +124,7 @@ namespace PacManBot.Services
                 game.CancelPreviousEdits();
                 if (File.Exists(game.GameFile)) File.Delete(game.GameFile);
                 gameInstances.Remove(game);
-                logger.Log(LogSeverity.Verbose, LogSource.Storage, $"Removed game at {game.channelId}");
+                logger.Log(LogSeverity.Verbose, LogSource.Storage, $"Removed {game.GetType().Name} at {game.channelId}");
             }
             catch (Exception e)
             {
@@ -239,7 +238,7 @@ namespace PacManBot.Services
                     {
                         try
                         {
-                            var game = JsonConvert.DeserializeObject<GameInstance>(File.ReadAllText(file), gameJsonSettings);
+                            var game = JsonConvert.DeserializeObject<PacManGame>(File.ReadAllText(file), gameJsonSettings);
                             game.SetServices(client, this, logger);
                             gameInstances.Add(game);
                         }

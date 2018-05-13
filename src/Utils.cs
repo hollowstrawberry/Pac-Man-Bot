@@ -5,13 +5,17 @@ using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
-using static PacManBot.Modules.PacMan.GameInstance;
 
 namespace PacManBot
 {
     public static class Utils
     {
-        public static readonly RequestOptions DefaultRequestOptions = new RequestOptions() { RetryMode = RetryMode.RetryRatelimit, Timeout = 10000 };
+        public static readonly RequestOptions DefaultRequestOptions = new RequestOptions()
+        {
+            RetryMode = RetryMode.RetryRatelimit,
+            Timeout = 10000
+        };
+
         public const ChannelPermission CorrectDmPermissions = (ChannelPermission)37080128;
 
 
@@ -43,14 +47,10 @@ namespace PacManBot
         }
 
 
-
-        // Arrays
-
-        public static T Last<T>(this T[] array) => array[array.Length - 1];
-
-        public static int LengthX<T>(this T[,] array) => array.GetLength(0);
-        public static int LengthY<T>(this T[,] array) => array.GetLength(1);
-
+        public static T Last<T>(this T[] array)
+        {
+            return array[array.Length - 1];
+        }
 
 
 
@@ -183,7 +183,7 @@ namespace PacManBot
         }
 
 
-        // Etc
+        // Emotes
 
         public static Emote ToEmote(this string text)
         {
@@ -195,31 +195,6 @@ namespace PacManBot
         public static Emoji ToEmoji(this string unicode)
         {
             return new Emoji(unicode);
-        }
-
-
-
-
-        /* ===== Pac-Man ===== */
-
-        public static Dir Opposite(this Dir dir)
-        {
-            switch (dir)
-            {
-                case Dir.up:    return Dir.down;
-                case Dir.down:  return Dir.up;
-                case Dir.left:  return Dir.right;
-                case Dir.right: return Dir.left;
-                default: return Dir.none;
-            }
-        }
-
-        public static Pos OfLength(this Dir dir, int num) //Converts a direction into what's essentially a vector
-        {
-            if (num < 0) num = 0;
-            Pos pos = new Pos(0, 0);
-            for (int i = 0; i < num; i++) pos += dir;
-            return pos;
         }
     }
 }

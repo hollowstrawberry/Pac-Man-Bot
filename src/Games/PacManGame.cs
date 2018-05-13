@@ -2,15 +2,15 @@ using System;
 using System.IO;
 using System.Text;
 using System.Linq;
-using System.Threading;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Discord;
 using Discord.WebSocket;
 using PacManBot.Constants;
 using PacManBot.Services;
+using static PacManBot.Games.GameUtils;
 
-namespace PacManBot.Modules.PacMan
+namespace PacManBot.Games
 {
     public class InvalidMapException : Exception
     {
@@ -21,18 +21,20 @@ namespace PacManBot.Modules.PacMan
 
 
     [DataContract] // Serializable to store in JSON
-    public class GameInstance
+    public class PacManGame : GameInstance
     {
-        //Constants
+        // Constants
 
-        static public readonly Dictionary<IEmote, GameInput> GameInputs = new Dictionary<IEmote, GameInput>() //Reaction controls
+        private static readonly TimeSpan _expiry = TimeSpan.FromDays(7);
+
+        private static readonly Dictionary<string, GameInput> _gameInputs = new Dictionary<string, GameInput>() // Reaction controls
         {
-            { "⬅".ToEmoji(), GameInput.Left },
-            { "⬆".ToEmoji(), GameInput.Up },
-            { "⬇".ToEmoji(), GameInput.Down },
-            { "➡".ToEmoji(), GameInput.Right },
-            { CustomEmoji.Help, GameInput.Help },
-            { "⏭".ToEmoji(), GameInput.Fast }
+            { "⬅", GameInput.Left },
+            { "⬆", GameInput.Up },
+            { "⬇", GameInput.Down },
+            { "➡", GameInput.Right },
+            { $"{CustomEmoji.Help}", GameInput.Help },
+            { "⏭", GameInput.Fast }
         };
 
         private const int PowerTime = 20, ScatterCycle = 100, ScatterTime1 = 30, ScatterTime2 = 20;
@@ -44,34 +46,18 @@ namespace PacManBot.Modules.PacMan
         private readonly static int[] GhostSpawnPauseTime = { 0, 3, 15, 35 };
         private readonly static Dir[] AllDirs = { Dir.up, Dir.left, Dir.down, Dir.right }; // Order of preference when deciding direction
 
-        public const string Folder = "games/";
-        public const string Extension = ".json";
-
-
 
         // Fields
 
-        private DiscordShardedClient client;
-        private StorageService storage;
-        private LoggingService logger;
-        private Random random = new Random();
-        private CancellationTokenSource messageEditCTS = new CancellationTokenSource();
-
         [DataMember] public bool custom = false;
-        [DataMember] public readonly ulong channelId; //Which channel this game is located in
-        [DataMember] public ulong ownerId; //Which user started this game
-        [DataMember] public ulong messageId = 1; //The focus message of the game, for controls to work. Even if not set, it must be a number above 0 or else a call to get the message object will throw an error
-        [DataMember] public int score = 0;
-        [DataMember] public int time = 0; //How many turns have passed
-        [DataMember] public State state = State.Active;
-        [DataMember] public DateTime lastPlayed;
         [DataMember] public bool mobileDisplay = false;
+        [DataMember] public int score = 0;
 
         [IgnoreDataMember] private char[,] map;
         [DataMember] private int maxPellets;
         [DataMember] private int pellets; //Pellets remaining
         [DataMember] private int oldScore = 0; //Score obtained last turn
-        [DataMember] private Player player;
+        [DataMember] private PacMan pacMan;
         [DataMember] private List<Ghost> ghosts;
         [DataMember] private int fruitTimer = 0;
         [DataMember] private Pos fruitSpawnPos; //Where all fruit will spawn
@@ -79,8 +65,14 @@ namespace PacManBot.Modules.PacMan
         [DataMember] private bool fastForward = false;
 
 
-
         // Properties
+
+        public ulong OwnerId => userId[0];
+        public override TimeSpan Expiry => _expiry;
+
+        public override Dictionary<string, GameInput> GameInputs => _gameInputs;
+
+        public override string GameFile => $"{Folder}{channelId}{Extension}";
 
         [DataMember] private string FullMap //Converts map between char[,] and string
         {
@@ -120,10 +112,6 @@ namespace PacManBot.Modules.PacMan
             }
         }
 
-        public RequestOptions MessageEditOptions => new RequestOptions() { Timeout = 10000, RetryMode = RetryMode.RetryRatelimit, CancelToken = messageEditCTS.Token };
-        public SocketGuild Guild => (client.GetChannel(channelId) as SocketGuildChannel)?.Guild;
-        public string GameFile => $"{Folder}{channelId}{Extension}";
-
         private Pos FruitSecondPos => fruitSpawnPos + Dir.right; //Second tile which fruit will also occupy
         private int FruitTrigger1 => maxPellets - 70; //Amount of pellets remaining needed to spawn fruit
         private int FruitTrigger2 => maxPellets - 170;
@@ -135,12 +123,6 @@ namespace PacManBot.Modules.PacMan
 
         //Game data types
 
-        public enum State { Active, Cancelled, Lose, Win }
-
-        public enum GameInput { None, Up, Left, Down, Right, Wait, Help, Fast }
-
-        public enum Dir { none, up, left, down, right }
-
         public enum AiType { Blinky, Pinky, Inky, Clyde }
 
         public enum AiMode { Chase, Scatter, Frightened }
@@ -149,42 +131,7 @@ namespace PacManBot.Modules.PacMan
 
         // Game objects
 
-        public class Pos //Coordinate in the map
-        {
-            public int x, y;
-            public Pos(int x, int y)
-            {
-                this.x = x;
-                this.y = y;
-            }
-
-            public static bool operator !=(Pos pos1, Pos pos2) => !(pos1 == pos2);
-            public static bool operator ==(Pos pos1, Pos pos2)
-            {
-                if (pos1 is null || pos2 is null) return ReferenceEquals(pos1, pos2);
-                return pos1.x == pos2.x && pos1.y == pos2.y;
-            }
-
-            public static Pos operator +(Pos pos1, Pos pos2) => new Pos(pos1.x + pos2.x, pos1.y + pos2.y);
-            public static Pos operator -(Pos pos1, Pos pos2) => new Pos(pos1.x - pos2.x, pos1.y - pos2.y);
-
-            public static Pos operator +(Pos pos, Dir dir) //Moves position in the given direction
-            {
-                switch (dir)
-                {
-                    case Dir.up: return new Pos(pos.x, pos.y - 1);
-                    case Dir.down: return new Pos(pos.x, pos.y + 1);
-                    case Dir.left: return new Pos(pos.x - 1, pos.y);
-                    case Dir.right: return new Pos(pos.x + 1, pos.y);
-                    default: return pos;
-                }
-            }
-
-            public static float Distance(Pos pos1, Pos pos2) => (float)Math.Sqrt(Math.Pow(pos2.x - pos1.x, 2) + Math.Pow(pos2.y - pos1.y, 2));
-        }
-
-
-        private class Player
+        private class PacMan
         {
             public readonly Pos origin; //Position it started at
             public Pos pos; //Position on the map
@@ -192,7 +139,7 @@ namespace PacManBot.Modules.PacMan
             public int power = 0; //Time left of power mode
             public int ghostStreak = 0; //Ghosts eaten during the current power mode
 
-            public Player(Pos pos, Pos origin)
+            public PacMan(Pos pos, Pos origin)
             {
                 this.pos = pos;
                 this.origin = origin;
@@ -220,10 +167,10 @@ namespace PacManBot.Modules.PacMan
                 pauseTime = GhostSpawnPauseTime[(int)type];
             }
 
-            public void AI(GameInstance game)
+            public void AI(PacManGame game)
             {
                 //Decide mode
-                if (game.player.power <= 1) DecideMode(game);
+                if (game.pacMan.power <= 1) DecideMode(game);
 
                 if (pauseTime > 0) // In the cage
                 {
@@ -243,24 +190,24 @@ namespace PacManBot.Modules.PacMan
                         switch (type)
                         {
                             case AiType.Blinky:
-                                target = game.player.pos;
+                                target = game.pacMan.pos;
                                 break;
 
                             case AiType.Pinky:
-                                target = game.player.pos;
-                                target += game.player.dir.OfLength(4); //4 squares ahead
-                                if (game.player.dir == Dir.up) target += Dir.left.OfLength(4); //Intentional bug from the original arcade
+                                target = game.pacMan.pos;
+                                target += game.pacMan.dir.OfLength(4); //4 squares ahead
+                                if (game.pacMan.dir == Dir.up) target += Dir.left.OfLength(4); //Intentional bug from the original arcade
                                 break;
 
                             case AiType.Inky:
-                                target = game.player.pos;
-                                target += game.player.dir.OfLength(2); //2 squares ahead
-                                if (game.player.dir == Dir.up) target += Dir.left.OfLength(2); //Intentional bug from the original arcade
+                                target = game.pacMan.pos;
+                                target += game.pacMan.dir.OfLength(2); //2 squares ahead
+                                if (game.pacMan.dir == Dir.up) target += Dir.left.OfLength(2); //Intentional bug from the original arcade
                                 target += target - game.ghosts[(int)AiType.Blinky].pos; //Opposite position relative to Blinky
                                 break;
 
                             case AiType.Clyde:
-                                if (Pos.Distance(pos, game.player.pos) > 8) target = game.player.pos;
+                                if (Pos.Distance(pos, game.pacMan.pos) > 8) target = game.pacMan.pos;
                                 else target = corner; //When close, gets scared
                                 break;
                         }
@@ -273,7 +220,7 @@ namespace PacManBot.Modules.PacMan
                     case AiMode.Frightened:
                         for (int i = 0; i < 20; i++)
                         {
-                            target = pos + (Dir)(game.random.Next(1, 5)); //Random adjacent empty space, 20 attempts
+                            target = pos + (Dir)(GlobalRandom.Next(1, 5)); //Random adjacent empty space, 20 attempts
                             if (game.NonSolid(target)) break;
                         }
                         break;
@@ -284,11 +231,11 @@ namespace PacManBot.Modules.PacMan
 
                 Dir newDir = Dir.none;
 
-                if (game.MapAt(pos) == CharDoor || game.MapAt(pos + Dir.up) == CharDoor) // Exiting the cage
+                if (game.map.At(pos) == CharDoor || game.map.At(pos + Dir.up) == CharDoor) // Exiting the cage
                 {
                     newDir = Dir.up;
                 }
-                else if (dir == Dir.up && game.MapAt(pos + Dir.down) == CharDoor) // Getting away from the cage
+                else if (dir == Dir.up && game.map.At(pos + Dir.down) == CharDoor) // Getting away from the cage
                 {
                     newDir = exitRight ? Dir.right : Dir.left;
                 }
@@ -305,7 +252,7 @@ namespace PacManBot.Modules.PacMan
                     {
                         Pos testPos = pos + testDir;
 
-                        if (testDir == Dir.up && (game.MapAt(testPos) == CharSoftWall || game.MapAt(testPos) == CharSoftWallPellet)) continue; //Can't go up these places
+                        if (testDir == Dir.up && (game.map.At(testPos) == CharSoftWall || game.map.At(testPos) == CharSoftWallPellet)) continue; //Can't go up these places
                         if (testDir == dir.Opposite()) continue; //Can't turn 180 degrees unless the direction was changed previously
 
                         if (game.NonSolid(testPos) && Pos.Distance(testPos, target) < distance) //Check if it can move to the tile and if this direction is better than the previous
@@ -319,10 +266,10 @@ namespace PacManBot.Modules.PacMan
 
                 dir = newDir;
                 if (mode != AiMode.Frightened || game.time % 2 == 0) pos += dir; // If frightened, only moves on even turns
-                game.WrapAround(ref pos);
+                game.map.Wrap(ref pos);
             }
 
-            public void DecideMode(GameInstance game)
+            public void DecideMode(PacManGame game)
             {
                 if (game.time < 4 * ScatterCycle  //In set cycles, a set number of turns is spent in scatter mode, up to 4 times
                     && (game.time < 2 * ScatterCycle && game.time % ScatterCycle < ScatterTime1
@@ -331,34 +278,26 @@ namespace PacManBot.Modules.PacMan
                 else { mode = AiMode.Chase; }
             }
 
-            private bool JustChangedMode(GameInstance game, bool checkAll = false)
+            private bool JustChangedMode(PacManGame game, bool checkAll = false)
             {
                 if (game.time == 0) return false;
-                if (mode == AiMode.Frightened && !checkAll) return game.player.power == PowerTime; // If frightened it only counts as changing modes at the start (but during pausetime it scans anyway)
+                if (mode == AiMode.Frightened && !checkAll) return game.pacMan.power == PowerTime; // If frightened it only counts as changing modes at the start (but during pausetime it scans anyway)
 
                 for (int i = 0; i < 2; i++) if (game.time == i * ScatterCycle || game.time == i * ScatterCycle + ScatterTime1) return true;
                 for (int i = 2; i < 4; i++) if (game.time == i * ScatterCycle || game.time == i * ScatterCycle + ScatterTime2) return true;
 
-                return checkAll ? game.player.power == PowerTime : false;
+                return checkAll ? game.pacMan.power == PowerTime : false;
             }
         }
 
 
 
 
-        // Game methods
+        private PacManGame() : base() { } // Used by JSON deserializing
 
-        private GameInstance() { } // Used by JSON deserializing
-
-        public GameInstance(ulong channelId, ulong ownerId, string newMap, DiscordShardedClient client, StorageService storage, LoggingService logger)
+        public PacManGame(ulong channelId, ulong ownerId, string newMap, DiscordShardedClient client, StorageService storage, LoggingService logger)
+            : base(channelId, new ulong[] { ownerId }, client, storage, logger)
         {
-            this.client = client;
-            this.storage = storage;
-            this.logger = logger;
-            this.channelId = channelId;
-            this.ownerId = ownerId;
-            lastPlayed = DateTime.Now;
-
             // Map
             if (newMap == null) newMap = storage.BotContent["map"];
             else custom = true;
@@ -370,11 +309,11 @@ namespace PacManBot.Modules.PacMan
 
             // Game objects
             Pos playerPos = FindChar(CharPlayer) ?? new Pos(0, 0);
-            player = new Player(playerPos, playerPos);
-            SetMapAt(player.pos, ' ');
+            pacMan = new PacMan(playerPos, playerPos);
+            map.SetAt(pacMan.pos, ' ');
 
             fruitSpawnPos = FindChar(CharFruit) ?? new Pos(-1, -1);
-            if (fruitSpawnPos.x >= 0) SetMapAt(fruitSpawnPos, ' ');
+            if (fruitSpawnPos.x >= 0) map.SetAt(fruitSpawnPos, ' ');
 
             ghosts = new List<Ghost>();
             Pos[] ghostCorners = new Pos[] { //Matches original game
@@ -396,11 +335,9 @@ namespace PacManBot.Modules.PacMan
         }
 
 
-        public void DoTurn(GameInput input)
+        public override void DoTurn(GameInput input)
         {
-            if (state != State.Active) return; //Failsafe
-
-            lastPlayed = DateTime.Now;
+            base.DoTurn(input);
 
             if (lastInput == GameInput.Help) // Closes help
             {
@@ -420,29 +357,41 @@ namespace PacManBot.Modules.PacMan
             oldScore = score;
             bool continueInput = true;
 
+            Dir newDir = Dir.none;
+            switch (input)
+            {
+                case GameInput.Up: newDir = Dir.up; break;
+                case GameInput.Right: newDir = Dir.right; break;
+                case GameInput.Down: newDir = Dir.down; break;
+                case GameInput.Left: newDir = Dir.left; break;
+            }
+
+
+            int consecutive = 0;
+
             do
             {
                 time++;
+                consecutive++;
 
                 //Player
-                Dir newDir = (int)input < 5 ? (Dir)input : Dir.none;
                 if (newDir != Dir.none)
                 {
-                    player.dir = newDir;
-                    if (NonSolid(player.pos + newDir)) player.pos += newDir;
-                    WrapAround(ref player.pos);
+                    pacMan.dir = newDir;
+                    if (NonSolid(pacMan.pos + newDir)) pacMan.pos += newDir;
+                    map.Wrap(ref pacMan.pos);
                 }
 
                 foreach (Dir dir in AllDirs) // Check perpendicular directions
                 {
-                    int diff = Math.Abs((int)player.dir - (int)dir);
-                    if ((diff == 1 || diff == 3) && NonSolid(player.pos + dir)) continueInput = false; // Stops at intersections
+                    int diff = Math.Abs((int)pacMan.dir - (int)dir);
+                    if ((diff == 1 || diff == 3) && NonSolid(pacMan.pos + dir)) continueInput = false; // Stops at intersections
                 }
 
                 //Fruit
                 if (fruitTimer > 0)
                 {
-                    if (fruitSpawnPos == player.pos || FruitSecondPos == player.pos)
+                    if (fruitSpawnPos == pacMan.pos || FruitSecondPos == pacMan.pos)
                     {
                         score += FruitScore;
                         fruitTimer = 0;
@@ -455,20 +404,20 @@ namespace PacManBot.Modules.PacMan
                 }
 
                 //Pellet collision
-                char tile = MapAt(player.pos);
+                char tile = map.At(pacMan.pos);
                 if (tile == CharPellet || tile == CharPowerPellet || tile == CharSoftWallPellet)
                 {
                     pellets--;
                     if ((pellets == FruitTrigger1 || pellets == FruitTrigger2) && fruitSpawnPos.x >= 0)
                     {
-                        fruitTimer = random.Next(25, 30 + 1);
+                        fruitTimer = GlobalRandom.Next(25, 30 + 1);
                     }
 
                     score += (tile == CharPowerPellet) ? 50 : 10;
-                    map[player.pos.x, player.pos.y] = (tile == CharSoftWallPellet) ? CharSoftWall : ' ';
+                    map[pacMan.pos.x, pacMan.pos.y] = (tile == CharSoftWallPellet) ? CharSoftWall : ' ';
                     if (tile == CharPowerPellet)
                     {
-                        player.power += PowerTime;
+                        pacMan.power += PowerTime;
                         foreach (Ghost ghost in ghosts) ghost.mode = AiMode.Frightened;
                         continueInput = false;
                     }
@@ -485,14 +434,14 @@ namespace PacManBot.Modules.PacMan
                     bool didAI = false;
                     while (true) //Checks player collision before and after AI
                     {
-                        if (player.pos == ghost.pos) //Collision
+                        if (pacMan.pos == ghost.pos) //Collision
                         {
                             if (ghost.mode == AiMode.Frightened)
                             {
                                 ghost.pauseTime = 6;
                                 ghost.DecideMode(this); //Removes frightened state
-                                score += 200 * (int)Math.Pow(2, player.ghostStreak); //Each ghost gives double the points of the last
-                                player.ghostStreak++;
+                                score += 200 * (int)Math.Pow(2, pacMan.ghostStreak); //Each ghost gives double the points of the last
+                                pacMan.ghostStreak++;
                             }
                             else state = State.Lose;
 
@@ -507,10 +456,10 @@ namespace PacManBot.Modules.PacMan
                     }
                 }
 
-                if (player.power > 0) player.power--;
-                if (player.power == 0) player.ghostStreak = 0;
+                if (pacMan.power > 0) pacMan.power--;
+                if (pacMan.power == 0) pacMan.ghostStreak = 0;
 
-            } while (fastForward && continueInput);
+            } while (fastForward && continueInput && consecutive <= 20);
 
             if (state == State.Active)
             {
@@ -519,7 +468,7 @@ namespace PacManBot.Modules.PacMan
         }
 
 
-        public string GetDisplay(bool showHelp = true)
+        public override string GetContent(bool showHelp = true)
         {
             if (lastInput == GameInput.Help)
             {
@@ -558,7 +507,7 @@ namespace PacManBot.Modules.PacMan
                 {
                     displayMap[ghost.pos.x, ghost.pos.y] = (ghost.mode == AiMode.Frightened) ? CharGhostFrightened : GhostAppearance[(int)ghost.type];
                 }
-                displayMap[player.pos.x, player.pos.y] = (state == State.Lose) ? CharPlayerDead : CharPlayer;
+                displayMap[pacMan.pos.x, pacMan.pos.y] = (state == State.Lose) ? CharPlayerDead : CharPlayer;
 
                 //Converts 2d array to string
                 for (int y = 0; y < displayMap.LengthY(); y++)
@@ -576,9 +525,9 @@ namespace PacManBot.Modules.PacMan
                     $"┌{"───< Mobile Mode >───┐".If(mobileDisplay)}",
                     $"│ {"#".If(!mobileDisplay)}Time: {time}",
                     $"│ {"#".If(!mobileDisplay)}Score: {score}{$" +{score - oldScore}".If(score - oldScore != 0)}",
-                    $"│ {$"{"#".If(!mobileDisplay)}Power: {player.power}".If(player.power > 0)}",
+                    $"│ {$"{"#".If(!mobileDisplay)}Power: {pacMan.power}".If(pacMan.power > 0)}",
                     $"│ ",
-                    $"│ {CharPlayer} - Pac-Man{$": {player.dir}".If(player.dir != Dir.none)}",
+                    $"│ {CharPlayer} - Pac-Man{$": {pacMan.dir}".If(pacMan.dir != Dir.none)}",
                     $"│ ",
                     $"│ ", " │ ", " │ ", " │ ", //7-10: ghosts
                     $"│ ",
@@ -619,7 +568,7 @@ namespace PacManBot.Modules.PacMan
                         display.Replace("\n", "\n+", 0, display.Length - 1); //All green
                         break;
 
-                    case State.Cancelled:
+                    case State.Ended:
                         display.Insert(0, "```diff\n");
                         display.Replace("\n", "\n*** ", 0, display.Length - 1); //All gray
                         break;
@@ -638,7 +587,7 @@ namespace PacManBot.Modules.PacMan
                     {
                         case State.Win: display.Append("\n+You won!"); break;
                         case State.Lose: display.Append("\n-You lost!"); ; break;
-                        case State.Cancelled: display.Append("\n-Game has been ended!"); break;
+                        case State.Ended: display.Append("\n-Game has been ended!"); break;
                     }
                     if (custom) display.Append("\n*** Custom game: Score won't be registered. ***");
                     display.Append("```");
@@ -684,46 +633,8 @@ namespace PacManBot.Modules.PacMan
         private bool NonSolid(int x, int y) => NonSolid(new Pos(x, y));
         private bool NonSolid(Pos pos) //Defines which tiles in the map entities can move through
         {
-            WrapAround(ref pos);
-            return (MapAt(pos) == ' ' || MapAt(pos) == CharPellet || MapAt(pos) == CharPowerPellet || MapAt(pos) == CharSoftWall || MapAt(pos) == CharSoftWallPellet);
-        }
-
-
-        private char MapAt(Pos pos) //Returns the character at the specified pos
-        {
-            WrapAround(ref pos);
-            return map[pos.x, pos.y];
-        }
-
-
-        private void SetMapAt(Pos pos, char ch)
-        {
-            WrapAround(ref pos);
-            map[pos.x, pos.y] = ch;
-        }
-
-
-        private void WrapAround(ref Pos pos) //Wraps the position from one side of the map to the other if it's out of bounds
-        {
-            if (pos.x < 0) pos.x = map.LengthX() + pos.x;
-            else if (pos.x >= map.LengthX()) pos.x -= map.LengthX();
-            if (pos.y < 0) pos.y = map.LengthY() + pos.y;
-            else if (pos.y >= map.LengthY()) pos.y -= map.LengthY();
-        }
-
-        
-        public void SetServices(DiscordShardedClient client, StorageService storage, LoggingService logger)
-        {
-            this.client = client;
-            this.storage = storage;
-            this.logger = logger;
-        }
-
-
-        public void CancelPreviousEdits()
-        {
-            messageEditCTS.Cancel();
-            messageEditCTS = new CancellationTokenSource();
+            map.Wrap(ref pos);
+            return (map.At(pos) == ' ' || map.At(pos) == CharPellet || map.At(pos) == CharPowerPellet || map.At(pos) == CharSoftWall || map.At(pos) == CharSoftWallPellet);
         }
     }
 }

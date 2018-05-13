@@ -29,7 +29,7 @@ namespace PacManBot.Services
             this.logger = logger;
 
             checkConnection = new Timer(new TimerCallback(CheckConnection), null, TimeSpan.FromMinutes(5), TimeSpan.FromMinutes(5));
-            deleteOldGames = new Timer(new TimerCallback(DeleteOldGames), null, TimeSpan.Zero, TimeSpan.FromMinutes(60));
+            deleteOldGames = new Timer(new TimerCallback(DeleteOldGames), null, TimeSpan.Zero, TimeSpan.FromMinutes(1));
 
             timers = new List<Timer>();
             timers.Append(checkConnection);
@@ -60,7 +60,7 @@ namespace PacManBot.Services
 
             try
             {
-                await Task.Delay(TimeSpan.FromMinutes(3), cancelShutdown.Token);
+                await Task.Delay(TimeSpan.FromMinutes(2), cancelShutdown.Token);
                 await logger.Log(LogSeverity.Critical, LogSource.Scheduling, "Reconnection timed out. Shutting down...");
                 Environment.Exit(666);
             }
@@ -76,12 +76,13 @@ namespace PacManBot.Services
             var now = DateTime.Now;
             int previousCount = storage.GameInstances.Count;
 
-            foreach (var game in storage.GameInstances.Where(g => (now - g.lastPlayed).TotalDays > 7.0).ToArray())
+            foreach (var game in storage.GameInstances.Where(g => (now - g.lastPlayed) > g.Expiry).ToArray())
             {
                 storage.DeleteGame(game);
             }
 
-            logger.Log(LogSeverity.Info, LogSource.Scheduling, $"Removed {previousCount - storage.GameInstances.Count} old games");
+            int removed = previousCount - storage.GameInstances.Count;
+            if (removed > 0) logger.Log(LogSeverity.Info, LogSource.Scheduling, $"Removed {removed} expired game{"s".If(removed > 1)}");
         }
     }
 }

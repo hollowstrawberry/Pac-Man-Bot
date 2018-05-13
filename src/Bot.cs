@@ -103,48 +103,42 @@ namespace PacManBot
 
 
 
-        private async Task UpdateGuildCountAsync() //I have to do this so that exceptions don't go silent
+        private async Task UpdateGuildCountAsync()
         {
-            try
+            try // I have to wrap discarded async methods in a try block so that exceptions don't go silent
             {
-                await UpdateGuildCountInternal();
+                var now = DateTime.Now;
+
+                if ((now - lastGuildCountUpdate).TotalMinutes > 20.0)
+                {
+                    lastGuildCountUpdate = now;
+                    int guilds = client.Guilds.Count;
+
+                    await client.SetGameAsync($"{botConfig.defaultPrefix}help | {guilds} guilds");
+
+                    using (var httpClient = new HttpClient())
+                    {
+                        string[] website = { $"bots.discord.pw", $"discordbots.org" };
+                        for (int i = 0; i < website.Length && i < botConfig.httpToken.Length; i++)
+                        {
+                            if (string.IsNullOrWhiteSpace(botConfig.httpToken[i])) continue;
+
+                            string requesturi = "https://" + website[i] + $"/api/bots/{client.CurrentUser.Id}/stats";
+                            var content = new StringContent($"{{\"server_count\": {guilds}}}", System.Text.Encoding.UTF8, "application/json");
+                            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(botConfig.httpToken[i]);
+                            var response = await httpClient.PostAsync(requesturi, content);
+
+                            await logger.Log(response.IsSuccessStatusCode ? LogSeverity.Verbose : LogSeverity.Warning,
+                                             $"Sent guild count to {website[i]} - {(response.IsSuccessStatusCode ? "Success" : $"Response:\n{response}")}");
+                        }
+                    }
+
+                    await logger.Log(LogSeverity.Info, $"Guild count updated to {guilds}");
+                }
             }
             catch (Exception e)
             {
                 await logger.Log(LogSeverity.Error, $"{e}");
-            }
-        }
-
-
-        private async Task UpdateGuildCountInternal()
-        {
-            var now = DateTime.Now;
-
-            if ((now - lastGuildCountUpdate).TotalMinutes > 20.0)
-            {
-                lastGuildCountUpdate = now;
-                int guilds = client.Guilds.Count;
-
-                await client.SetGameAsync($"{botConfig.defaultPrefix}help | {guilds} guilds");
-
-                using (var httpClient = new HttpClient())
-                {
-                    string[] website = { $"bots.discord.pw", $"discordbots.org" };
-                    for (int i = 0; i < website.Length && i < botConfig.httpToken.Length; i++)
-                    {
-                        if (string.IsNullOrWhiteSpace(botConfig.httpToken[i])) continue;
-
-                        string requesturi = "https://" + website[i] + $"/api/bots/{client.CurrentUser.Id}/stats";
-                        var content = new StringContent($"{{\"server_count\": {guilds}}}", System.Text.Encoding.UTF8, "application/json");
-                        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(botConfig.httpToken[i]);
-                        var response = await httpClient.PostAsync(requesturi, content);
-
-                        await logger.Log(response.IsSuccessStatusCode ? LogSeverity.Verbose : LogSeverity.Warning,
-                                         $"Sent guild count to {website[i]} - {(response.IsSuccessStatusCode ? "Success" : $"Response:\n{response}")}");
-                    }
-                }
-
-                await logger.Log(LogSeverity.Info, $"Guild count updated to {guilds}");
             }
         }
     }

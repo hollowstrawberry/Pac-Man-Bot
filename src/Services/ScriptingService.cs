@@ -26,7 +26,7 @@ namespace PacManBot.Services
                 .WithImports(
                     "System", "System.IO", "System.Threading.Tasks", "System.Collections.Generic", "System.Linq", "System.Text.RegularExpressions",
                     "Discord", "Discord.WebSocket", "Discord.Commands",
-                    "PacManBot", "PacManBot.Constants", "PacManBot.Utils", "PacManBot.Services", "PacManBot.Modules", "PacManBot.Modules.PacMan"
+                    "PacManBot", "PacManBot.Constants", "PacManBot.Utils", "PacManBot.Services", "PacManBot.Modules", "PacManBot.Games"
                 )
                 .WithReferences(
                     typeof(ShardedCommandContext).Assembly,

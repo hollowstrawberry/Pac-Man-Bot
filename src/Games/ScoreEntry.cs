@@ -2,14 +2,15 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using Discord.WebSocket;
+using static PacManBot.Games.GameUtils;
 
-namespace PacManBot.Modules.PacMan
+namespace PacManBot.Games
 {
     public class ScoreEntry
     {
         public static ScoreEntryComparer Comparer = new ScoreEntryComparer();
 
-        public GameInstance.State state;
+        public State state;
         public int score;
         public int turns;
         public ulong userId;
@@ -18,7 +19,7 @@ namespace PacManBot.Modules.PacMan
         public string channel;
 
 
-        public ScoreEntry(GameInstance.State state, int score, int turns, ulong userId, string username, DateTime date, string channel)
+        public ScoreEntry(State state, int score, int turns, ulong userId, string username, DateTime date, string channel)
         {
             this.state = state;
             this.score = score;
@@ -58,7 +59,7 @@ namespace PacManBot.Modules.PacMan
                 splice.RemoveAt(4);
 
                 if (splice.Count == 7
-                    && Enum.TryParse(splice[0], out GameInstance.State state)
+                    && Enum.TryParse(splice[0], out State state)
                     && int.TryParse(splice[1], out int score)
                     && int.TryParse(splice[2], out int turns)
                     && ulong.TryParse(splice[3], out ulong userId)

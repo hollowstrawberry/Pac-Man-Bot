@@ -4,7 +4,6 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
-using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using PacManBot.Services;
@@ -61,8 +60,7 @@ namespace PacManBot
                 .AddSingleton(botConfig)
                 .AddSingleton<LoggingService>()
                 .AddSingleton<StorageService>()
-                .AddSingleton<CommandHandler>()
-                .AddSingleton<ReactionHandler>()
+                .AddSingleton<InputService>()
                 .AddSingleton<SchedulingService>()
                 .AddSingleton<ScriptingService>();
 
