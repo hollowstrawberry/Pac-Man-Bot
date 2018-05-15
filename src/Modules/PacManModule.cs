@@ -36,7 +36,7 @@ namespace PacManBot.Modules
         [Summary("Starts a new Pac-Man game, unless there is already a game in this channel.\nAdding \"mobile\" or \"m\" after the command will begin the game in *Mobile Mode*, "
                + "which uses simple characters that will work in phones. Use **{prefix}display** to change mode later.\n\nIf you add a valid customized map "
                + "between \\`\\`\\`triple backticks\\`\\`\\`, it will start a custom game using that map instead. For more information about custom games, use the **{prefix}custom** command.\n\n"
-               + "Use **{prefix}cancel** to end the game. Use **{prefix}move** to move the game message to the bottom of the chat.")]
+               + "Use **{prefix}bump** to move the game message to the bottom of the chat. Use **{prefix}cancel** to end the game. ")]
         [RequireBotPermissionImproved(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.AddReactions | ChannelPermission.EmbedLinks)]
         public async Task StartGameInstance([Remainder]string args = "")
         {
@@ -49,7 +49,7 @@ namespace PacManBot.Modules
                 if (Context.Channel.Id == game.channelId)
                 {
                     await ReplyAsync(game is PacManGame ?
-                        $"There is already a game in this channel!\nYou can use the **{prefix}move** command to bring it to the bottom of the chat." :
+                        $"There is already a game in this channel!\nYou can use the **{prefix}bump** command to bring it to the bottom of the chat." :
                         $"There is already a different game in this channel! Try using **{prefix}cancel**", options: Utils.DefaultRequestOptions);
                     return;
                 }

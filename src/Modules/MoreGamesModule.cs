@@ -32,7 +32,7 @@ namespace PacManBot.Modules
         [Command("tictactoe"), Alias("ttt", "tic"), Remarks("Play Tic-Tac-Toe with another user or the bot")]
         [Summary("You can choose a guild member to invite as an opponent using a mention, username, nickname or user ID. Otherwise, you'll play against the bot.\n"
                + "The game is played by sending the number of a free cell (1 to 9) in chat while it is your turn. Using a prefix is unnecessary when sending a number.\n\n"
-               + "You can cancel the game at any time by using **{prefix}cancel**, or move it to the bottom of the chat by using **{prefix}move**.\n"
+               + "You can cancel the game at any time with **{prefix}cancel**, or move it to the bottom of the chat with **{prefix}bump**.\n"
                + "The game times out if 2 minutes pass without any input.\n\nYou can also make the bot challenge someone with **{prefix}ttt vs <opponent>**")]
         [RequireBotPermissionImproved(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
         public async Task StartTicTacToe(SocketGuildUser opponent = null)
@@ -53,7 +53,7 @@ namespace PacManBot.Modules
         [Command("connect4"), Alias("c4", "four"), Remarks("Play Connect Four with another user or the bot")]
         [Summary("You can choose a guild member to invite as an opponent using a mention, username, nickname or user ID. Otherwise, you'll play against the bot.\n"
                + "The game is played by sending the number of a column (1 to 7) in chat while it is your turn. Using a prefix is unnecessary when sending a number.\n\n"
-               + "You can cancel the game at any time by using **{prefix}cancel**, or move it to the bottom of the chat by using **{prefix}move**.\n"
+               + "You can cancel the game at any time with **{prefix}cancel**, or move it to the bottom of the chat with **{prefix}bump**.\n"
                + "The game times out if 2 minutes pass without any input.\n\nYou can also make the bot challenge someone with **{prefix}ttt vs <opponent>**")]
         [RequireBotPermissionImproved(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
         public async Task StartConnectFour(SocketGuildUser opponent = null)
@@ -117,7 +117,7 @@ namespace PacManBot.Modules
 
 
 
-        [Command("move"), Alias("refresh", "r")]
+        [Command("bump"), Alias("move", "refresh", "r")]
         [Remarks("Move any game to the bottom of the chat")]
         [Summary("Moves the current game's message in this channel to the bottom of the chat, deleting the old one."
                + "This is useful if the game got lost in a sea of other messages, or if the game stopped responding")]

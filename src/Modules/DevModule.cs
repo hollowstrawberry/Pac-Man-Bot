@@ -159,5 +159,13 @@ namespace PacManBot.Modules
                 }
             }
         }
+
+
+        [Command("throw"), HideHelp]
+        [Summary("Why would you do this")]
+        public async Task ThrowException()
+        {
+            throw new Exception("Huh.");
+        }
     }
 }

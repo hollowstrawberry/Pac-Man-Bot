@@ -41,15 +41,18 @@ namespace PacManBot.Services
             if (!Directory.Exists(LogDirectory)) Directory.CreateDirectory(LogDirectory); //Create the log directory if it doesn't exist
             if (!File.Exists(LogFile)) File.Create(LogFile).Dispose(); //Create today's log file if it doesn't exist
 
-            if (message.Message == null || logExclude != null && message.Message.ContainsAny(logExclude)) return Task.CompletedTask;
+            if (logExclude != null && ((message.Message?.ContainsAny(logExclude) ?? false) || (message.Exception?.ToString().ContainsAny(logExclude) ?? false)))
+            {
+                return Task.CompletedTask;
+            }
 
-            string logText = $"{DateTime.Now.ToString("hh:mm:ss")} [{message.Severity}] {message.Source.Replace("Shard #", "Gateway")}: {message.Exception?.ToString() ?? message.Message}";
+            string logText = $"{DateTime.Now.ToString("hh:mm:ss")} [{message.Severity}] {message.Source.Replace("Shard #", "Gateway")}: {message.Message}{message.Exception}";
 
             for (int i = 0; i <= WriteAttempts; ++i)
             {
                 try
                 {
-                    File.AppendAllText(LogFile, $"{logText}\n"); //Write the log text to a file
+                    File.AppendAllTextAsync(LogFile, $"{logText}\n"); //Write the log text to a file
                     break;
                 }
                 catch (IOException) when (i < WriteAttempts) { Task.Delay(1); }

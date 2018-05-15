@@ -60,7 +60,7 @@ To win, you must collect all the pellets, while avoiding the ghosts. Try to get 
 
 #Commands: @
 \"{prefix}display\" - Switch between normal and mobile mode
-\"{prefix}move\" - Move game message to the bottom of the chat
+\"{prefix}bump\" - Move game message to the bottom of the chat
 \"{prefix}cancel\" - End the game unless someone is playing
 \"{prefix}help\" and \"{prefix}about\" - More information;
 
@@ -99,5 +99,4 @@ Custom map examples|https://github.com/Samrux/Pac-Man-Bot/blob/master/Example%20
 "at System.DateTime.Add
 Unknown Guild
 VOICE_STATE_UPDATE"
-
 }

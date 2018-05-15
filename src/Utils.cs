@@ -103,20 +103,20 @@ namespace PacManBot
         }
 
 
-        public static bool ContainsAny(this string text, params string[] matches)
+        public static bool ContainsAny(this string text, params string[] values)
         {
-            foreach(string match in matches)
+            foreach(string value in values)
             {
-                if (text.Contains(match)) return true;
+                if (text.Contains(value)) return true;
             }
             return false;
         }
 
-        public static bool ContainsAny(this string text, params char[] matches)
+        public static bool ContainsAny(this string text, params char[] values)
         {
-            foreach (char match in matches)
+            foreach (char value in values)
             {
-                if (text.Contains(match.ToString())) return true;
+                if (text.Contains(value.ToString())) return true;
             }
             return false;
         }
