@@ -76,7 +76,7 @@ namespace PacManBot.Games
                 if (time < userId.Length) return GlobalRandom.Choose(StartTexts);
 
                 if (winner == Player.None) return GlobalRandom.Choose(GameTexts);
-                else if (userId[(int)winner] == client.CurrentUser.Id) return GlobalRandom.Choose(WinTexts);
+                else if (winner != Player.Tie && userId[(int)winner] == client.CurrentUser.Id) return GlobalRandom.Choose(WinTexts);
                 else return GlobalRandom.Choose(NotWinTexts);
             }
 

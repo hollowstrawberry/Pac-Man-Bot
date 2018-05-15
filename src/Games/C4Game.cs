@@ -10,7 +10,7 @@ using static PacManBot.Games.GameUtils;
 
 namespace PacManBot.Games
 {
-    class C4Game : GameInstance
+    public class C4Game : GameInstance
     {
         private const int Columns = 7, Rows = 6;
         private static readonly TimeSpan _expiry = TimeSpan.FromMinutes(2);
@@ -146,7 +146,7 @@ namespace PacManBot.Games
         {
             int? target = null;
 
-            var losingMoves = new List<int>();
+            var notLosingMoves = new List<int>();
 
             foreach (int column in AvailableColumns(board)) // All moves it can make
             {
@@ -172,21 +172,22 @@ namespace PacManBot.Games
                     }
                 }
 
-                if (canLose) losingMoves.Add(column);
+                if (!canLose) notLosingMoves.Add(column);
             }
+
+            string debug = $"{turn.Align(4)} ";
+            if (target != null) debug += $"win {target + 1}";
 
             if (target == null) // Random
             {
-                foreach (int x in losingMoves)
-                {
-                    Console.Write($"{x+1} ");
-                }
-                Console.Write('\n');
-
-                var columns = AvailableColumns(board);
-                if (losingMoves.Count < columns.Count) columns.RemoveAll(x => losingMoves.Contains(x)); // Tries to avoid the possibility of losing
+                var columns = notLosingMoves.Count > 0 ? notLosingMoves : AvailableColumns(board); // Tries it best to not lose
                 target = GlobalRandom.Choose(columns);
+
+                debug += $"{target + 1} / ";
+                foreach (int x in notLosingMoves) debug += $"{x + 1} ";
             }
+
+            Console.WriteLine(debug);
 
             DoTurn($"{1 + target}");
         }

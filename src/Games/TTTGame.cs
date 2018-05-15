@@ -9,7 +9,7 @@ using static PacManBot.Games.GameUtils;
 
 namespace PacManBot.Games
 {
-    class TTTGame : GameInstance
+    public class TTTGame : GameInstance
     {
         private static readonly TimeSpan _expiry = TimeSpan.FromMinutes(2);
 
