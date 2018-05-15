@@ -37,7 +37,7 @@ namespace PacManBot.Modules
                + "which uses simple characters that will work in phones. Use **{prefix}display** to change mode later.\n\nIf you add a valid customized map "
                + "between \\`\\`\\`triple backticks\\`\\`\\`, it will start a custom game using that map instead. For more information about custom games, use the **{prefix}custom** command.\n\n"
                + "Use **{prefix}cancel** to end the game. Use **{prefix}move** to move the game message to the bottom of the chat.")]
-        [RequireBotPermissionImproved(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.AddReactions)]
+        [RequireBotPermissionImproved(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.AddReactions | ChannelPermission.EmbedLinks)]
         public async Task StartGameInstance([Remainder]string args = "")
         {
             if (!Context.BotCan(ChannelPermission.SendMessages)) return;

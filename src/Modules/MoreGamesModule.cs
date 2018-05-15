@@ -33,19 +33,45 @@ namespace PacManBot.Modules
         [Summary("You can choose a guild member to invite as an opponent using a mention, username, nickname or user ID. Otherwise, you'll play against the bot.\n"
                + "The game is played by sending the number of a free cell (1 to 9) in chat while it is your turn. Using a prefix is unnecessary when sending a number.\n\n"
                + "You can cancel the game at any time by using **{prefix}cancel**, or move it to the bottom of the chat by using **{prefix}move**.\n"
-               + "The game times out if 2 minutes pass without any input.")]
-        public async Task StartTicTacToe(SocketGuildUser opponent = null) => await RunGame<TTTGame>(opponent?.Id ?? Context.Client.CurrentUser.Id);
+               + "The game times out if 2 minutes pass without any input.\n\nYou can also make the bot challenge someone with **{prefix}ttt vs <opponent>**")]
+        [RequireBotPermissionImproved(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
+        public async Task StartTicTacToe(SocketGuildUser opponent = null)
+        {
+            await RunGame<TTTGame>(Context.User, opponent ?? (IUser)Context.Client.CurrentUser);
+        }
+
+
+        [Command("tictactoe vs"), Alias("ttt vs", "tic vs"), HideHelp]
+        [Summary("Make the bot challenge a user... or another bot")]
+        [RequireBotPermissionImproved(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
+        public async Task StartTicTacToeVs(SocketGuildUser opponent)
+        {
+            await RunGame<TTTGame>(Context.Client.CurrentUser, opponent);
+        }
 
 
         [Command("connect4"), Alias("c4", "four"), Remarks("Play Connect Four with another user or the bot")]
         [Summary("You can choose a guild member to invite as an opponent using a mention, username, nickname or user ID. Otherwise, you'll play against the bot.\n"
                + "The game is played by sending the number of a column (1 to 7) in chat while it is your turn. Using a prefix is unnecessary when sending a number.\n\n"
                + "You can cancel the game at any time by using **{prefix}cancel**, or move it to the bottom of the chat by using **{prefix}move**.\n"
-               + "The game times out if 2 minutes pass without any input.")]
-        public async Task StartConnectFour(SocketGuildUser opponent = null) => await RunGame<C4Game>(opponent?.Id ?? Context.Client.CurrentUser.Id);
+               + "The game times out if 2 minutes pass without any input.\n\nYou can also make the bot challenge someone with **{prefix}ttt vs <opponent>**")]
+        [RequireBotPermissionImproved(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
+        public async Task StartConnectFour(SocketGuildUser opponent = null)
+        {
+            await RunGame<C4Game>(Context.User, opponent ?? (IUser)Context.Client.CurrentUser);
+        }
 
 
-        private async Task RunGame<T>(ulong opponentId) where T : GameInstance
+        [Command("connect4 vs"), Alias("c4 vs", "four vs"), HideHelp]
+        [Summary("Make the bot challenge a user... or another bot")]
+        [RequireBotPermissionImproved(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
+        public async Task StartConnectFoureVs(SocketGuildUser opponent)
+        {
+            await RunGame<C4Game>(Context.Client.CurrentUser, opponent);
+        }
+
+
+        private async Task RunGame<T>(IUser challenger, IUser opponent) where T : GameInstance
         {
             foreach (var game in storage.GameInstances)
             {
@@ -58,7 +84,7 @@ namespace PacManBot.Modules
                 }
             }
 
-            var players = new ulong[] { opponentId, Context.User.Id };
+            var players = new ulong[] { opponent.Id, challenger.Id };
             Type type = typeof(T);
 
             GameInstance newGame;
@@ -66,7 +92,7 @@ namespace PacManBot.Modules
             else if (type == typeof(C4Game)) newGame = new C4Game(Context.Channel.Id, players, shardedClient, logger, storage);
             else throw new NotImplementedException();
 
-            storage.AddGame(newGame);
+            if (!challenger.IsBot || !opponent.IsBot) storage.AddGame(newGame); // If both are bots it'll be over instantaneously
 
             var gameMessage = await ReplyAsync(newGame.GetContent(), false, newGame.GetEmbed().Build(), Utils.DefaultRequestOptions);
             newGame.messageId = gameMessage.Id;
@@ -95,6 +121,7 @@ namespace PacManBot.Modules
         [Remarks("Move any game to the bottom of the chat")]
         [Summary("Moves the current game's message in this channel to the bottom of the chat, deleting the old one."
                + "This is useful if the game got lost in a sea of other messages, or if the game stopped responding")]
+        [RequireBotPermissionImproved(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks | ChannelPermission.AddReactions)]
         private async Task MoveGame()
         {
             foreach (var game in storage.GameInstances)
@@ -124,6 +151,7 @@ namespace PacManBot.Modules
         [Command("cancel"), Alias("end")]
         [Remarks("Cancel any game you're playing. Always usable by moderators")]
         [Summary("Cancels the current game in this channel, but only if you started or if nobody has played in over a minute. Always usable by users with the Manage Messages permission.")]
+        [RequireBotPermissionImproved(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks | ChannelPermission.AddReactions)]
         public async Task CancelGame()
         {
             foreach (var game in storage.GameInstances)
@@ -138,9 +166,11 @@ namespace PacManBot.Modules
                         try
                         {
                             var gameMessage = await game.GetMessage();
-                            if (gameMessage != null) await gameMessage.ModifyAsync(m => { m.Content = game.GetContent(); m.Embed = game.GetEmbed()?.Build(); }, Utils.DefaultRequestOptions);
-
-                            if (game is PacManGame && Context.BotCan(ChannelPermission.ManageMessages)) await gameMessage.RemoveAllReactionsAsync(Utils.DefaultRequestOptions);
+                            if (gameMessage != null)
+                            {
+                                await gameMessage.ModifyAsync(m => { m.Content = game.GetContent(); m.Embed = game.GetEmbed()?.Build(); }, Utils.DefaultRequestOptions);
+                                if (game is PacManGame && Context.BotCan(ChannelPermission.ManageMessages)) await gameMessage.RemoveAllReactionsAsync(Utils.DefaultRequestOptions);
+                            }
                         }
                         catch (HttpException) { } // Something happened to the message, we can ignore it
 
@@ -155,6 +185,8 @@ namespace PacManBot.Modules
                     return;
                 }
             }
+
+            await ReplyAsync("There is no active game in this channel!", options: Utils.DefaultRequestOptions);
         }
     }
 }

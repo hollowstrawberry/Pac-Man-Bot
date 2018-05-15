@@ -109,7 +109,7 @@ namespace PacManBot.Games
 
             return new EmbedBuilder()
             {
-                Title = (winner == Player.None) ? $"{turn} Player's turn" : winner == Player.Tie ? "It's a tie!" : $"{turn} is the winner!",
+                Title = EmbedTitle(),
                 Description = description.ToString(),
                 Color = turn.Color(),
                 ThumbnailUrl = winner == Player.None ? turn.Circle().ToEmote()?.Url : User(winner)?.GetAvatarUrl(),

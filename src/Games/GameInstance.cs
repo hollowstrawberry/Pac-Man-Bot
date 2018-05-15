@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Runtime.Serialization;
@@ -69,17 +70,14 @@ namespace PacManBot.Games
 
         public virtual string GetContent(bool showHelp = true)
         {
-            if (state != State.Cancelled && userId[0] == client.CurrentUser.Id)
+            if (state != State.Cancelled && userId.Contains(client.CurrentUser.Id))
             {
                 if (time < userId.Length) return GlobalRandom.Choose(StartTexts);
                 if (time < userId.Length) return GlobalRandom.Choose(StartTexts);
 
-                switch (winner)
-                {
-                    case Player.None: return GlobalRandom.Choose(GameTexts);
-                    case Player.Red: return GlobalRandom.Choose(WinTexts);
-                    default: return GlobalRandom.Choose(NotWinTexts);
-                }
+                if (winner == Player.None) return GlobalRandom.Choose(GameTexts);
+                else if (userId[(int)winner] == client.CurrentUser.Id) return GlobalRandom.Choose(WinTexts);
+                else return GlobalRandom.Choose(NotWinTexts);
             }
 
             if (state == State.Active)
@@ -122,6 +120,15 @@ namespace PacManBot.Games
         protected string StripPrefix(string value)
         {
             return value.Replace(storage.GetPrefix(Guild), "").Trim();
+        }
+
+
+        protected string EmbedTitle()
+        {
+            return (winner == Player.None) ? $"{turn} Player's turn" :
+                winner == Player.Tie ? "It's a tie!" :
+                userId[0] != userId[1] ? $"{turn} is the winner!" :
+                userId[0] == client.CurrentUser.Id ? "I win!" : "A winner is you!"; // These two are for laughs
         }
 
 

@@ -1,26 +1,29 @@
 using System;
 using System.Threading.Tasks;
-using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
+using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Discord;
 using Discord.Rest;
 using Discord.Commands;
+using Discord.WebSocket;
 
 namespace PacManBot.Services
 {
     public class ScriptingService // Thanks to oatmeal and amibu
     {
-        private readonly ScriptOptions scriptOptions;
-        private readonly StorageService storage;
+        private readonly IServiceProvider provider;
+        private readonly DiscordShardedClient shardedClient;
         private readonly LoggingService logger;
-        private readonly SchedulingService scheduling;
+        private readonly StorageService storage;
+
+        private readonly ScriptOptions scriptOptions;
 
 
-        public ScriptingService(StorageService storage, LoggingService logger, SchedulingService scheduling)
+        public ScriptingService(IServiceProvider provider)
         {
-            this.storage = storage;
-            this.logger = logger;
-            this.scheduling = scheduling;
+            this.shardedClient = provider.Get<DiscordShardedClient>();
+            this.logger = provider.Get<LoggingService>();
+            this.storage = provider.Get<StorageService>();
 
             scriptOptions = ScriptOptions.Default
                 .WithImports(
@@ -51,7 +54,7 @@ namespace PacManBot.Services
 
                 string postCode = "\nTask ReplyAsync(string msg) => Context.Channel.SendMessageAsync(msg);";
 
-                await CSharpScript.EvaluateAsync(code + postCode, scriptOptions, new ScriptArgs(context, storage, logger, scheduling));
+                await CSharpScript.EvaluateAsync(code + postCode, scriptOptions, new ScriptArgs(context, provider, shardedClient, logger, storage));
                 await logger.Log(LogSeverity.Info, $"Successfully executed code in channel {context.Channel.FullName()}:\n{code}");
             }
             finally
@@ -68,16 +71,18 @@ namespace PacManBot.Services
     public class ScriptArgs : EventArgs
     {
         public readonly ShardedCommandContext Context;
-        public readonly StorageService storage;
+        public readonly IServiceProvider provider;
+        DiscordShardedClient shardedClient;
         public readonly LoggingService logger;
-        public readonly SchedulingService scheduling;
+        public readonly StorageService storage;
 
-        public ScriptArgs(ShardedCommandContext Context, StorageService storage, LoggingService logger, SchedulingService scheduling)
+        public ScriptArgs(ShardedCommandContext Context, IServiceProvider provider, DiscordShardedClient shardedClient, LoggingService logger, StorageService storage)
         {
             this.Context = Context;
-            this.storage = storage;
+            this.provider = provider;
+            this.shardedClient = shardedClient;
             this.logger = logger;
-            this.scheduling = scheduling;
+            this.storage = storage;
         }
     }
 }

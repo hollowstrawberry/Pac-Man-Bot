@@ -95,7 +95,7 @@ namespace PacManBot.Games
             {
                 for (int x = 0; x < 3; x++)
                 {
-                    description.Append(board[x, y].Symbol(highlighted.Contains(new Pos(x,y))) ??
+                    description.Append(board[x, y].Symbol(highlighted.Contains(new Pos(x, y))) ??
                         (state == State.Active ? $"{CustomEmoji.NumberCircle[1 + 3*y + x]}" : Player.None.Circle()));
                 }
                 description.Append('\n');
@@ -106,7 +106,7 @@ namespace PacManBot.Games
 
             return new EmbedBuilder()
             {
-                Title = (winner == Player.None) ? $"{turn} Player's turn" : winner == Player.Tie ? "It's a tie!" : $"{turn} is the winner!",
+                Title = EmbedTitle(),
                 Description = description.ToString(),
                 Color = turn.Color(),
                 ThumbnailUrl = winner == Player.None ? turn.Symbol().ToEmote()?.Url : User(winner)?.GetAvatarUrl(),
