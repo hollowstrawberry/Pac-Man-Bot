@@ -73,7 +73,6 @@ namespace PacManBot.Games
             if (state != State.Cancelled && userId.Contains(client.CurrentUser.Id))
             {
                 if (time < userId.Length) return GlobalRandom.Choose(StartTexts);
-                if (time < userId.Length) return GlobalRandom.Choose(StartTexts);
 
                 if (winner == Player.None) return GlobalRandom.Choose(GameTexts);
                 else if (winner != Player.Tie && userId[(int)winner] == client.CurrentUser.Id) return GlobalRandom.Choose(WinTexts);
@@ -88,7 +87,7 @@ namespace PacManBot.Games
                 }
                 if (time == 0 && showHelp && userId.Length > 1 && userId[0] != userId[1])
                 {
-                    return $"{User(0).Mention} You were invited to play {Name}. If you don't want to play, type **{storage.GetPrefix(Guild)}cancel**";
+                    return $"{User(0).Mention} You were invited to play {Name}.\nChoose an action below, or type **{storage.GetPrefix(Guild)}cancel** if you don't want to play";
                 }
             }
 

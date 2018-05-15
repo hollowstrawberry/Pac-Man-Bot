@@ -601,7 +601,7 @@ namespace PacManBot.Games
 
                     default:
                         display.Insert(0, mobileDisplay ? "```\n" : "```css\n");
-                        if (fastForward) display.Append("#Fastforward: Active");
+                        display.Append($"#Fastforward: {(fastForward ? "Active" : "Disabled")}");
                         break;
                 }
                 display.Append("```");

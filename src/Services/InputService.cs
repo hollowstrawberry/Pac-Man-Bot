@@ -196,6 +196,8 @@ namespace PacManBot.Services
         {
             var gameMessage = await game.GetMessage();
 
+            await logger.Log(LogSeverity.Verbose, $"{game.Name} input {message.Content} by user {message.Author.FullName()} on channel {message.Channel.FullName()}");
+
             game.DoTurn(message.Content);
 
             if (game.winner != Player.None) storage.DeleteGame(game);
@@ -205,7 +207,7 @@ namespace PacManBot.Services
             {
                 try
                 {
-                    await gameMessage.ModifyAsync(m => { m.Embed = game.GetEmbed().Build(); m.Content = game.GetContent(); }, requestOptions);
+                    await gameMessage.ModifyAsync(m => { m.Content = game.GetContent(); m.Embed = game.GetEmbed()?.Build(); }, requestOptions);
                 }
                 finally
                 {
