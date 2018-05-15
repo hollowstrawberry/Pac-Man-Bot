@@ -1,9 +1,10 @@
 using System;
 using System.Threading;
-using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Runtime.Serialization;
 using Discord;
 using Discord.WebSocket;
+using PacManBot.Constants;
 using PacManBot.Services;
 using static PacManBot.Games.GameUtils;
 
@@ -15,11 +16,10 @@ namespace PacManBot.Games
         public const string Folder = "games/";
         public const string Extension = ".json";
 
-
         protected DiscordShardedClient client;
         protected StorageService storage;
         protected LoggingService logger;
-        protected CancellationTokenSource messageEditCTS = new CancellationTokenSource();
+        protected CancellationTokenSource discordRequestCTS = new CancellationTokenSource();
 
         public Player turn = Player.Red;
         public Player winner = Player.None; // For two-player games
@@ -30,22 +30,25 @@ namespace PacManBot.Games
         [DataMember] public ulong messageId = 1; //The focus message of the game. Even if not set, it must be a number above 0 or else a call to get the message object will throw an error
         [DataMember] public ulong[] userId; //Users playing this game
 
+        public abstract string Name { get; }
         public abstract TimeSpan Expiry { get; }
-        public abstract Dictionary<string, GameInput> GameInputs { get; }
-        public virtual string GameFile => $"{Folder}{this.GetType().Name}{channelId}{Extension}";
-        public virtual RequestOptions MessageEditOptions => new RequestOptions() { Timeout = 10000, RetryMode = RetryMode.RetryRatelimit, CancelToken = messageEditCTS.Token };
+        public virtual string GameFile => $"{Folder}{Name}{channelId}{Extension}";
+        public virtual RequestOptions RequestOptions => new RequestOptions() { Timeout = 10000, RetryMode = RetryMode.RetryRatelimit, CancelToken = discordRequestCTS.Token };
 
-        public IMessageChannel Channel => client.GetChannel(channelId) as IMessageChannel;
+        public ISocketMessageChannel Channel => client.GetChannel(channelId) as ISocketMessageChannel;
         public SocketGuild Guild => (client.GetChannel(channelId) as SocketGuildChannel)?.Guild;
+        public async Task<IUserMessage> GetMessage() => (await Channel.GetMessageAsync(messageId, options: Utils.DefaultRequestOptions)) as IUserMessage;
+        public IUser User(Player player) => User((int)player);
+        public IUser User(int i = 0) => i < userId.Length ? client.GetUser(userId[i]) : null;
 
 
         protected GameInstance() { } // Used when deserializing
 
-        protected GameInstance(ulong channelId, ulong[] userId, DiscordShardedClient client, StorageService storage, LoggingService logger)
+        protected GameInstance(ulong channelId, ulong[] userId, DiscordShardedClient client, LoggingService logger, StorageService storage)
         {
             this.client = client;
-            this.storage = storage;
             this.logger = logger;
+            this.storage = storage;
             this.channelId = channelId;
             this.userId = userId;
 
@@ -54,29 +57,82 @@ namespace PacManBot.Games
 
 
 
-        public virtual string GetContent(bool showHelp = true) => "";
+        public abstract bool IsInput(string value);
 
 
-        public virtual EmbedBuilder GetEmbed(bool showHelp = true) => null;
-
-
-        public virtual void DoTurn(GameInput input)
+        public virtual void DoTurn(string input)
         {
-            if (state != State.Active) return; //Failsafe
+            if (state != State.Active || winner != Player.None) return; //Failsafe
             lastPlayed = DateTime.Now;
         }
 
-        public virtual void SetServices(DiscordShardedClient client, StorageService storage, LoggingService logger)
+
+        public virtual string GetContent(bool showHelp = true)
         {
-            this.client = client;
-            this.storage = storage;
-            this.logger = logger;
+            if (state != State.Cancelled && userId[0] == client.CurrentUser.Id)
+            {
+                if (time < userId.Length) return GlobalRandom.Choose(StartTexts);
+                if (time < userId.Length) return GlobalRandom.Choose(StartTexts);
+
+                switch (winner)
+                {
+                    case Player.None: return GlobalRandom.Choose(GameTexts);
+                    case Player.Red: return GlobalRandom.Choose(WinTexts);
+                    default: return GlobalRandom.Choose(NotWinTexts);
+                }
+            }
+
+            if (state == State.Active)
+            {
+                if (userId[0] == userId[1])
+                {
+                    return "Feeling lonely, or just testing the bot?";
+                }
+                if (time == 0 && showHelp && userId.Length > 1 && userId[0] != userId[1])
+                {
+                    return $"{User(0).Mention} You were invited to play {Name}. If you don't want to play, type **{storage.GetPrefix(Guild)}cancel**";
+                }
+            }
+
+            return "";
         }
 
-        public virtual void CancelPreviousEdits()
+
+        public virtual EmbedBuilder GetEmbed(bool showHelp = true)
         {
-            messageEditCTS.Cancel();
-            messageEditCTS = new CancellationTokenSource();
+            return null;
+        }
+
+
+        public virtual void SetServices(DiscordShardedClient client, LoggingService logger, StorageService storage)
+        {
+            this.client = client;
+            this.logger = logger;
+            this.storage = storage;
+        }
+
+
+        public virtual void CancelRequests()
+        {
+            discordRequestCTS.Cancel();
+            discordRequestCTS = new CancellationTokenSource();
+        }
+
+
+        protected string StripPrefix(string value)
+        {
+            return value.Replace(storage.GetPrefix(Guild), "").Trim();
+        }
+
+
+        protected EmbedBuilder CancelledEmbed()
+        {
+            return new EmbedBuilder()
+            {
+                Title = Name,
+                Description = DateTime.Now - lastPlayed > Expiry ? "Game timed out" : "Game cancelled",
+                Color = Player.None.Color(),
+            };
         }
     }
 }

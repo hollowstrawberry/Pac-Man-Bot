@@ -13,8 +13,8 @@ using PacManBot.Constants;
 
 namespace PacManBot.Modules
 {
-    [Name("📁Other")]
-    public class MiscModule : ModuleBase<SocketCommandContext>
+    [Name("📁General"), Remarks("3")]
+    public class GeneralModule : ModuleBase<SocketCommandContext>
     {
         private readonly DiscordShardedClient shardedClient;
         private readonly CommandService commands;
@@ -22,7 +22,7 @@ namespace PacManBot.Modules
         private readonly StorageService storage;
 
 
-        public MiscModule(DiscordShardedClient shardedClient, CommandService commands, LoggingService logger, StorageService storage)
+        public GeneralModule(DiscordShardedClient shardedClient, CommandService commands, LoggingService logger, StorageService storage)
         {
             this.shardedClient = shardedClient;
             this.commands = commands;
@@ -56,7 +56,7 @@ namespace PacManBot.Modules
                 embed.AddField(splice[0], splice[1], true);
             }
 
-            await ReplyAsync("", false, embed.Build());
+            await ReplyAsync("", false, embed.Build(), Utils.DefaultRequestOptions);
         }
 
 
@@ -98,7 +98,7 @@ namespace PacManBot.Modules
 
             if (helpInfo.ExampleUsage != "") embed.AddField("Example Usage", helpInfo.ExampleUsage.Replace("{prefix}", prefix), false);
 
-            await ReplyAsync("", false, embed.Build());
+            await ReplyAsync("", false, embed.Build(), Utils.DefaultRequestOptions);
         }
 
 
@@ -116,7 +116,7 @@ namespace PacManBot.Modules
                 Color = new Color(241, 195, 15)
             };
 
-            foreach (var module in commands.Modules.OrderBy(m => m.Name))
+            foreach (var module in commands.Modules.OrderBy(m => m.Remarks))
             {
                 var moduleText = new StringBuilder(); //Text under the module title in the embed block
                 List<string> previousCommands = new List<string>(); //Storing the command names so they can't repeat
@@ -139,7 +139,7 @@ namespace PacManBot.Modules
                 if (moduleText.Length > 0) embed.AddField(module.Name, moduleText.ToString(), false);
             }
 
-            await ReplyAsync("", false, embed.Build()); //Send the built embed
+            await ReplyAsync("", false, embed.Build(), Utils.DefaultRequestOptions); //Send the built embed
         }
 
 
@@ -182,7 +182,7 @@ namespace PacManBot.Modules
                 string prefix = storage.GetPrefix(Context.Guild.Id);
                 reply = $"Prefix for this server is set to '{prefix}'{" (the default)".If(prefix == storage.DefaultPrefix)}. It can be changed with the command **setprefix**.";
             }
-            await ReplyAsync(reply);
+            await ReplyAsync(reply, options: Utils.DefaultRequestOptions);
         }
 
 
@@ -194,13 +194,14 @@ namespace PacManBot.Modules
             try
             {
                 File.AppendAllText(BotFile.FeedbackLog, $"[{Context.User.FullName()}] {message}\n\n");
-                await ReplyAsync($"{CustomEmoji.Check} Message sent. Thank you!");
-                await (await Context.Client.GetApplicationInfoAsync()).Owner.SendMessageAsync($"```diff\n+Feedback received: {Context.User.FullName()}```\n{message}");
+                await ReplyAsync($"{CustomEmoji.Check} Message sent. Thank you!", options: Utils.DefaultRequestOptions);
+                var app = await Context.Client.GetApplicationInfoAsync(Utils.DefaultRequestOptions);
+                await app.Owner.SendMessageAsync($"```diff\n+Feedback received: {Context.User.FullName()}```\n{message}", options: Utils.DefaultRequestOptions);
             }
             catch (Exception e)
             {
                 await logger.Log(LogSeverity.Error, $"{e}");
-                await ReplyAsync("Oops, I didn't catch that. Please try again.");
+                await ReplyAsync("Oops, I didn't catch that, please try again. Maybe the dev screwed up", options: Utils.DefaultRequestOptions);
             }
         }
 
@@ -227,12 +228,12 @@ namespace PacManBot.Modules
         [Summary("Takes a number which can be either an amount of emotes to send or a message ID to react to. Reacts to the command by default.")]
         public async Task BlobDanceFast(ulong number = 0)
         {
-            if (number < 1) await Context.Message.AddReactionAsync(CustomEmoji.Dance);
+            if (number < 1) await Context.Message.AddReactionAsync(CustomEmoji.Dance, options: Utils.DefaultRequestOptions);
             else if (number <= 10) await ReplyAsync($"{CustomEmoji.Dance}".Multiply((int)number));
             else if (number <= 1000000) await ReplyAsync($"Are you insane?");
             else // Message ID
             {
-                if (await Context.Channel.GetMessageAsync(number) is IUserMessage message) await message.AddReactionAsync(CustomEmoji.Dance);
+                if (await Context.Channel.GetMessageAsync(number) is IUserMessage message) await message.AddReactionAsync(CustomEmoji.Dance, Utils.DefaultRequestOptions);
                 else await Context.Message.AddReactionAsync(CustomEmoji.Cross);
             }
         }
@@ -245,13 +246,13 @@ namespace PacManBot.Modules
         {
             foreach (IUserMessage message in Context.Channel.GetCachedMessages(amount))
             {
-                await message.AddReactionAsync(CustomEmoji.Dance);
+                await message.AddReactionAsync(CustomEmoji.Dance, Utils.DefaultRequestOptions);
             }
         }
 
 
         [Command("command"), ExampleUsage("help play"), HideHelp]
         [Summary("This is not a real command. If you want to see help for a specific command, please do **{prefix}help [command name]**, where \"[command name]\" is the name of a command.")]
-        public async Task DoNothing() => await logger.Log(LogSeverity.Verbose, "Someone tried to do \"<help command\"");
+        public async Task DoNothing() => await logger.Log(LogSeverity.Info, "Someone tried to do \"<help command\"");
     }
 }

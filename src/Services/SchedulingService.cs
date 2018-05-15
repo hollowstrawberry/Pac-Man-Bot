@@ -29,7 +29,7 @@ namespace PacManBot.Services
             this.logger = logger;
 
             checkConnection = new Timer(new TimerCallback(CheckConnection), null, TimeSpan.FromMinutes(5), TimeSpan.FromMinutes(5));
-            deleteOldGames = new Timer(new TimerCallback(DeleteOldGames), null, TimeSpan.Zero, TimeSpan.FromMinutes(1));
+            deleteOldGames = new Timer(new TimerCallback(DeleteOldGames), null, TimeSpan.Zero, TimeSpan.FromMinutes(30));
 
             timers = new List<Timer>();
             timers.Append(checkConnection);

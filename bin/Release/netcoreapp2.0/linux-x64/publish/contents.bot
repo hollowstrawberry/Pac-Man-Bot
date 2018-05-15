@@ -35,14 +35,15 @@
 
 "about":
 "Play Pac-Man on a Discord chat! Featuring turn-based gameplay with reaction controls, the focus is low spam and original arcade game fidelity. You can play in a server with friends or in a DM with the bot.
-🎮 To begin, use the command **{prefix}play** or **{prefix}play mobile**
+Now with more games to challenge your friends or the bot itself! Use **{prefix}help** for a list of commands.
+🎮 To play Pac-Man, use the command **{prefix}play** or **{prefix}play mobile**
 🏆 Get a spot on the global **{prefix}leaderboard**!
 🤖 You can contact the developer [here](https://discord.gg/hGHnfda) or by using **{prefix}feedback**
 ` `",
 
 "aboutfields":
 "Author|Samrux#3980
-Version|v2.15.4
+Version|v3.0.0
 Library|Discord.Net 2.0 (C#)
 <:discord:409811304103149569> Bot invite|[Click here](https://discordapp.com/oauth2/authorize?client_id=398127484983443468&scope=bot&permissions=355392 \"https://discordapp.com/oauth2/authorize?client_id=398127484983443468&scope=bot&permissions=355392\")
 <:staff:412019879772815361> Pac-Man server|[Click here](https://discord.gg/hGHnfda \"https://discord.gg/hGHnfda\")
@@ -59,34 +60,36 @@ Due to the Discord rate-limit the game can be laggy, so please do one action at 
 To win, you must collect all the pellets, while avoiding the ghosts. Try to get a high score!
 
 #Commands: @
-\"{prefix}refresh\"/\"{prefix}refresh m\" - Move game to the bottom of chat
-\"{prefix}end\" - End game if you started it, or for moderators
+\"{prefix}move\" - Move game message to the bottom of the chat
+\"{prefix}cancel\" - End the game unless someone is playing
+\"{prefix}display\" - Switch between normal and mobile mode
 \"{prefix}help\" and \"{prefix}about\" - More information;
 
 #Tips:
 • Each eaten ghost during the same power mode yields twice as many points as the last!
 • Eat the fruit that spawns after eating a large amount of pellets for extra points!
 • Blinky chases you, Pinky tries to ambush you, Inky will follow Blinky's lead, and Clyde is kind of shy. 4 times during the game they will scatter and stop chasing you.
-• The ghosts can't turn 180º unless they're Eatable or switching between chasing/scattering.
+• The ghosts can't turn 180º unless they're Eatable or switching modes
 
 @ 'Add any reaction to return to the game'
 ```",
 
 "customhelp":
-"You can play using your own custom maps!
+"You can play Pac-Man using your own custom maps!
 To start a custom game, send **{prefix}play \\`\\`\\`map\\`\\`\\`** or **{prefix}play mobile \\`\\`\\`map\\`\\`\\`**
 
 **__Guidelines__**
 **1.** Maps must have constant width on all lines.
 **2.** Maps must have some space to move through.
-**3.** All but spaces and the following special characters are walls:
+**3.** Special characters:
  `O`: Pac-Man
  `G`: Ghosts, up to 4
  `-`: Ghost box door
  `·●`: Pellets
  `$`: Fruit (left tile)
  `~`: A pellet, but ghosts can't move here from below
- `_`: Empty, but ghosts can't move here from below",
+ `_`: Empty, but ghosts can't move here from below
+ **4.** Any character except a space or a special character is a wall.",
 
 "customlinks":
 "Original game map|https://github.com/Samrux/Pac-Man-Bot/blob/master/bin/contents.bot

@@ -66,12 +66,12 @@ namespace PacManBot.Services
         {
             try //I have to wrap discarded async methods in a try block so that exceptions don't go silent
             {
-                if (client.CurrentUser == null // Not ready
-                    || !(genericMessage is SocketUserMessage message)
-                    || message.Author.IsBot || !message.Channel.BotCan(ChannelPermission.SendMessages)) return;
-
-                // Only runs one
-                _ = await CommandAsync(message) || await GameInputAsync(message) || await AutoresponseAsync(message);
+                if (client.CurrentUser != null && genericMessage is SocketUserMessage message
+                    && !message.Author.IsBot && message.Channel.BotCan(ChannelPermission.SendMessages))
+                {
+                    // Only runs one
+                    if (await CommandAsync(message) || await GameInputAsync(message) || await AutoresponseAsync(message));
+                }
             }
             catch (Exception e)
             {
@@ -84,15 +84,16 @@ namespace PacManBot.Services
         {
             try
             {
-                if (client.CurrentUser == null // Not ready
-                    || !reaction.User.IsSpecified || reaction.UserId == client.CurrentUser.Id) return; //Maybe someone will one day makes a bot that plays this bot
-
-                await PacManInputAsync(messageData, channel, reaction);
+                if (client.CurrentUser != null && reaction.UserId != client.CurrentUser.Id)
+                {
+                    await PacManInputAsync(messageData, channel, reaction);
+                }
             }
             catch (Exception e)
             {
                 await logger.Log(LogSeverity.Error, $"{e}");
             }
+            //Maybe someone will one day make a bot that plays this bot
         }
 
 
@@ -144,14 +145,11 @@ namespace PacManBot.Services
         {
             foreach (var game in storage.GameInstances.Where(g => g is TTTGame || g is C4Game))
             {
-                if (game.channelId == message.Channel.Id && game.userId[(int)game.turn] == message.Author.Id)
+                if (game.channelId == message.Channel.Id && game.userId[(int)game.turn] == message.Author.Id && game.IsInput(message.Content))
                 {
-                    string input = message.Content.Replace(storage.GetPrefix((message.Channel as IGuildChannel).Guild), "").Trim();
-                    if (!game.GameInputs.ContainsKey(input)) return false;
-
                     try
                     {
-                        await ExecuteGameInputAsync(game, message, game.GameInputs[input]);
+                        await ExecuteGameInputAsync(game, message);
                     }
                     catch (TaskCanceledException) { }
                     catch (TimeoutException) { }
@@ -171,12 +169,11 @@ namespace PacManBot.Services
         {
             foreach (PacManGame game in storage.GameInstances.Where(g => g is PacManGame))
             {
-                if (game.messageId == reaction.MessageId && game.GameInputs.ContainsKey(reaction.Emote.ToString()))
+                if (game.messageId == reaction.MessageId && game.IsInput(reaction.Emote.ToString()))
                 {
-                    var message = await messageData.GetOrDownloadAsync();
                     try
                     {
-                        await ExecutePacManInputAsync(game, message, reaction.User.Value, game.GameInputs[reaction.Emote.ToString()]);
+                        await ExecutePacManInputAsync(game, reaction, await messageData.GetOrDownloadAsync());
                     }
                     catch (TaskCanceledException) { }
                     catch (TimeoutException) { }
@@ -195,37 +192,40 @@ namespace PacManBot.Services
 
 
 
-        private async Task ExecuteGameInputAsync(GameInstance game, IUserMessage message, GameInput input)
+        private async Task ExecuteGameInputAsync(GameInstance game, IUserMessage message)
         {
-            var gameMessage = await game.Channel.GetMessageAsync(game.messageId) as IUserMessage;
+            var gameMessage = await game.GetMessage();
 
-            game.DoTurn(input);
+            game.DoTurn(message.Content);
 
             if (game.winner != Player.None) storage.DeleteGame(game);
 
+            var requestOptions = game.RequestOptions;
             if (message.Channel.BotCan(ChannelPermission.ManageMessages))
             {
-                await gameMessage.ModifyAsync(m => { m.Embed = game.GetEmbed().Build(); m.Content = game.GetContent(); }, game.MessageEditOptions);
                 await message.DeleteAsync(Utils.DefaultRequestOptions);
+                await gameMessage.ModifyAsync(m => { m.Embed = game.GetEmbed().Build(); m.Content = game.GetContent(); }, requestOptions);
             }
             else
             {
-                var newMsg = await gameMessage.Channel.SendMessageAsync(game.GetContent(), false, game.GetEmbed().Build(), game.MessageEditOptions);
+                var newMsg = await gameMessage.Channel.SendMessageAsync(game.GetContent(), false, game.GetEmbed().Build(), requestOptions);
                 game.messageId = newMsg.Id;
                 await gameMessage.DeleteAsync(Utils.DefaultRequestOptions);
             }
         }
 
 
-        private async Task ExecutePacManInputAsync(PacManGame game, IUserMessage gameMessage, IUser user, GameInput input)
+        private async Task ExecutePacManInputAsync(PacManGame game, SocketReaction reaction, IUserMessage gameMessage)
         {
+            var input = reaction.Emote.ToString();
+            var user = reaction.User.IsSpecified ? reaction.User.Value : client.GetUser(reaction.UserId);
             var channel = gameMessage.Channel;
             var guild = (channel as IGuildChannel)?.Guild;
 
             if (game.state == State.Active)
             {
                 await logger.Log(LogSeverity.Verbose, LogSource.Game + $"{(guild == null ? 0 : client.GetShardIdFor(guild))}",
-                                    $"Input {input.Align(5)} by user {user.FullName()} in channel {channel.FullName()}");
+                                    $"Input {PacManGame.GameInputs[input].Align(5)} by user {user.FullName()} in channel {channel.FullName()}");
 
                 game.DoTurn(input);
 
@@ -237,8 +237,8 @@ namespace PacManBot.Services
                     storage.DeleteGame(game);
                 }
 
-                game.CancelPreviousEdits();
-                await gameMessage.ModifyAsync(m => m.Content = game.GetContent(), game.MessageEditOptions);
+                game.CancelRequests();
+                await gameMessage.ModifyAsync(m => m.Content = game.GetContent(), game.RequestOptions);
 
                 if (game.state != State.Active && channel.BotCan(ChannelPermission.ManageMessages))
                 {

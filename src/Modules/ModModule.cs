@@ -8,7 +8,7 @@ using Discord.Net;
 
 namespace PacManBot.Modules
 {
-    [Name("<:staff:412019879772815361>Mod")]
+    [Name("<:staff:412019879772815361>Mod"), Remarks("5")]
     [RequireUserPermissionImproved(GuildPermission.ManageMessages)]
     public class ModModule : ModuleBase<SocketCommandContext>
     {
@@ -29,11 +29,11 @@ namespace PacManBot.Modules
 
         [Command("say"), Remarks("Make the bot say anything")]
         [Summary("Repeats back the message provided. Only users with the Manage Messages permission can use this command.")]
-        public async Task Say([Remainder]string message) => await ReplyAsync(message.SanitizeMentions());
+        public async Task Say([Remainder]string message) => await ReplyAsync(message.SanitizeMentions(), options: Utils.DefaultRequestOptions);
 
 
-        [Command("clear"), Alias("c"), Remarks("Clear messages from this bot")]
-        [Summary("Clears all messages sent by *this bot only*, checking up to the amount of messages provided, or 10 messages by default. "
+        [Command("clear"), Alias("c"), Remarks("Clear this bot's messages and commands")]
+        [Summary("Clears all commands and messages for *this bot only*, from the last [amount] messages, or the last 10 messages by default.\n"
                + "Only users with the Manage Messages permission can use this command.")]
         [RequireBotPermissionImproved(ChannelPermission.ReadMessageHistory)]
         public async Task ClearGameMessages(int amount = 10)
@@ -42,7 +42,10 @@ namespace PacManBot.Modules
             {
                 try
                 {
-                    if (message.Author.Id == Context.Client.CurrentUser.Id) await message.DeleteAsync(); //Remove all messages from this bot
+                    if (message.Author.Id == Context.Client.CurrentUser.Id || message.Content.StartsWith(storage.GetPrefix(Context.Guild)) && Context.BotCan(ChannelPermission.ManageMessages))
+                    {
+                        await message.DeleteAsync(Utils.DefaultRequestOptions);
+                    }
                 }
                 catch (HttpException e)
                 {
@@ -60,20 +63,20 @@ namespace PacManBot.Modules
         {
             if (prefix.ContainsAny("*", "_", "~", "`", "\\"))
             {
-                await ReplyAsync($"{CustomEmoji.Cross} The prefix can't contain markdown special characters: *_~\\`\\\\");
+                await ReplyAsync($"{CustomEmoji.Cross} The prefix can't contain markdown special characters: *_~\\`\\\\", options: Utils.DefaultRequestOptions);
                 return;
             }
 
             try
             {
                 storage.SetPrefix(Context.Guild.Id, prefix);
-                await ReplyAsync($"{CustomEmoji.Check} Prefix for this server has been successfully set to '{prefix}'.");
+                await ReplyAsync($"{CustomEmoji.Check} Prefix for this server has been successfully set to '{prefix}'.", options: Utils.DefaultRequestOptions);
                 await logger.Log(LogSeverity.Info, $"Prefix for server {Context.Guild.Id} set to {prefix}");
             }
             catch (Exception e)
             {
                 await logger.Log(LogSeverity.Error, $"{e}");
-                await ReplyAsync($"{CustomEmoji.Cross} There was a problem setting the prefix. {ErrorMessage}");
+                await ReplyAsync($"{CustomEmoji.Cross} There was a problem setting the prefix. {ErrorMessage}", options: Utils.DefaultRequestOptions);
             }
         }
 
@@ -85,12 +88,12 @@ namespace PacManBot.Modules
             try
             {
                 bool nowaka = storage.ToggleWaka(Context.Guild.Id);
-                await ReplyAsync($"{CustomEmoji.Check} \"Waka\" responses turned **{(nowaka ? "on" : "off")}** in this server.");
+                await ReplyAsync($"{CustomEmoji.Check} \"Waka\" responses turned **{(nowaka ? "ON" : "OFF")}** in this server.", options: Utils.DefaultRequestOptions);
             }
             catch (Exception e)
             {
                 await logger.Log(LogSeverity.Error, $"{e}");
-                await ReplyAsync($"{CustomEmoji.Cross} Oops, something went wrong. {ErrorMessage}");
+                await ReplyAsync($"{CustomEmoji.Cross} Oops, something went wrong. {ErrorMessage}", options: Utils.DefaultRequestOptions);
             }
         }
     }

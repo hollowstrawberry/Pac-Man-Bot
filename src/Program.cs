@@ -48,7 +48,8 @@ namespace PacManBot
             var commandConfig = new CommandServiceConfig
             {
                 DefaultRunMode = RunMode.Async,
-                LogLevel = botConfig.commandLogLevel
+                LogLevel = botConfig.commandLogLevel,
+                ThrowOnError = true
             };
             var commands = new CommandService(commandConfig);
 

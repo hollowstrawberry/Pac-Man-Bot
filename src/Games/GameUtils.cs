@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
 using Discord;
 using PacManBot.Constants;
 
@@ -7,6 +8,28 @@ namespace PacManBot.Games
     public static class GameUtils
     {
         public static readonly Random GlobalRandom = new Random();
+
+
+        public static readonly string[] StartTexts = new string[]
+        {
+            "I'll give it a go", "Let's do this", "Dare to defy the gamemaster?", "May the best win", "I was getting bored!", "Maybe you should play with a real person instead",
+            "In need of friends to play with?"
+        };
+        public static readonly string[] GameTexts = new string[]
+        {
+            "🤔", "🔣", "🤖", $"{CustomEmoji.Thinkxel}", $"{CustomEmoji.PacMan}", "Hmm...", "Nice move.", "Take this!", "Huh.", "Aha!", "Come on now", "All according to plan",
+            "I think I'm winning this one", "Beep boop", "Boop?", "Interesting...", "Recalculating...", "ERROR: YourSkills not found", "I wish to be a real bot", "That's all you got?",
+            "Let's see what happens", "I don't even know what I'm doing", "This is a good time for you to quit", "Curious."
+        };
+        public static readonly string[] WinTexts = new string[]
+        {
+            "👍", $"{CustomEmoji.PacMan}", $"{CustomEmoji.Dance}", "Rekt", "Better luck next time", "Beep!", ":)", "Nice", "Muahaha", "You weren't even trying"
+        };
+        public static readonly string[] NotWinTexts = new string[]
+        {
+            "Oof", "No u", "Foiled again!", "Boo...", "Ack", "Good job!", "gg", "You're good at this", "I let you win, of course"
+        };
+
 
 
         // Data types
@@ -22,15 +45,14 @@ namespace PacManBot.Games
             }
 
             public override int GetHashCode() => base.GetHashCode();
+            public override bool Equals(object obj) => obj is Pos pos && this == pos;
 
-            public override bool Equals(object obj)
+            public static bool operator ==(Pos pos1, Pos pos2)
             {
-                if (this is null || obj is null) return this is null && obj is null;
-                return obj is Pos pos && x == pos.x && y == pos.y;
+                if (pos1 is null || pos2 is null) return pos1 is null && pos2 is null;
+                return pos1.x == pos2.x && pos1.y == pos2.y;
             }
-
-            public static bool operator ==(Pos pos1, Pos pos2) => pos1.Equals(pos2);
-            public static bool operator !=(Pos pos1, Pos pos2) => !pos1.Equals(pos2);
+            public static bool operator !=(Pos pos1, Pos pos2) => !(pos1 == pos2);
             public static Pos operator +(Pos pos1, Pos pos2) => new Pos(pos1.x + pos2.x, pos1.y + pos2.y);
             public static Pos operator -(Pos pos1, Pos pos2) => new Pos(pos1.x - pos2.x, pos1.y - pos2.y);
 
@@ -52,21 +74,13 @@ namespace PacManBot.Games
 
         public enum State
         {
-            Active, Ended, Lose, Win,
+            Active, Completed, Cancelled, Lose, Win,
         }
 
 
         public enum Player
         {
             Red, Blue, Tie, None,
-        }
-
-
-        public enum GameInput
-        {
-            Zero, One, Two, Three, Four, Five, Six, Seven, Eight, Nine,
-            Up, Left, Down, Right, Wait, Help, Fast,
-            None = -1,
         }
 
 
@@ -113,21 +127,37 @@ namespace PacManBot.Games
             switch (player)
             {
                 case Player.Red: return new Color(221, 46, 68);
-                case Player.Blue: return new Color(46, 126, 221);
+                case Player.Blue: return new Color(85, 172, 238);
                 case Player.Tie: return new Color(120, 177, 89);
                 default: return new Color(150, 150, 150);
             }
         }
 
-        public static string Circle(this Player player)
+        public static string Circle(this Player player, bool highlighted = false)
         {
             switch (player)
             {
-                case Player.Red: return "🔴";
-                case Player.Blue: return "🔵";
+                case Player.Red: return (highlighted ? CustomEmoji.C4redHL : CustomEmoji.C4red).ToString();
+                case Player.Blue: return (highlighted ? CustomEmoji.C4blueHL : CustomEmoji.C4blue).ToString();
                 case Player.None: return "⚫";
-                default: return $"{CustomEmoji.Staff}";
+                default: return CustomEmoji.Staff.ToString();
             }
+        }
+
+        public static string Symbol(this Player player, bool highlighted = false)
+        {
+            switch (player)
+            {
+                case Player.Red: return (highlighted ? CustomEmoji.TTTxHL : CustomEmoji.TTTx).ToString();
+                case Player.Blue: return (highlighted ? CustomEmoji.TTToHL : CustomEmoji.TTTo).ToString();
+                case Player.None: return null;
+                default: return CustomEmoji.Staff.ToString();
+            }
+        }
+
+        public static Player OtherPlayer(this Player player)
+        {
+            return player == Player.Red ? Player.Blue : Player.Red;
         }
 
 
@@ -150,6 +180,90 @@ namespace PacManBot.Games
             Pos pos = new Pos(0, 0);
             for (int i = 0; i < num; i++) pos += dir;
             return pos;
+        }
+
+
+
+
+        // For Tic-Tac-Toe (expandable) and Connect Four
+
+        public static bool FindLines<T>(this T[,] board, T value, int length, List<Pos> result = null)
+        {
+            bool win = false;
+            List<Pos> line = new List<Pos>();
+
+
+            void CheckCell(Pos pos)
+            {
+                if (board.At(pos).Equals(value))
+                {
+                    line.Add(pos);
+
+                    if (line.Count >= length)
+                    {
+                        win = true;
+                        if (result != null)
+                        {
+                            if (line.Count == length)
+                            {
+                                foreach (Pos p in line)
+                                {
+                                    if (!result.Contains(p)) result.Add(p);
+                                }
+                            }
+                            else if (!result.Contains(pos)) result.Add(pos); // Above minimum length
+                        }
+                    }
+                }
+                else line = new List<Pos>();
+            }
+
+
+            for (int y = 0; y < board.LengthY(); y++) // Horizontals
+            {
+                for (int x = 0; x < board.LengthX(); x++)
+                {
+                    CheckCell(new Pos(x, y));
+                }
+                line = new List<Pos>();
+            }
+
+            for (int x = 0; x < board.LengthX(); x++) // Verticals
+            {
+                for (int y = 0; y < board.LengthY(); y++)
+                {
+                    CheckCell(new Pos(x, y));
+                }
+                line = new List<Pos>();
+            }
+
+            for (int d = length - 1; d <= board.LengthY() + board.LengthX() - length; d++) //Top-to-left diagonals
+            {
+                for (int y = 0; y <= d; y++)
+                {
+                    int x = d - y;
+                    if (x < board.LengthX() && y < board.LengthY())
+                    {
+                        CheckCell(new Pos(x, y));
+                    }
+                }
+                line = new List<Pos>();
+            }
+
+            for (int d = length - 1; d <= board.LengthY() + board.LengthX() - length; d++) //Top-to-right diagonals
+            {
+                for (int y = 0; y <= d; y++)
+                {
+                    int x = board.LengthX() - 1 - d + y;
+                    if (x >= 0 && y < board.LengthY())
+                    {
+                        CheckCell(new Pos(x, y));
+                    }
+                }
+                line = new List<Pos>();
+            }
+
+            return win;
         }
     }
 }

@@ -7,10 +7,11 @@ using Discord.Commands;
 using Discord.WebSocket;
 using PacManBot.Services;
 using PacManBot.Constants;
+using Discord.Net;
 
 namespace PacManBot.Modules
 {
-    [Name("Developer")]
+    [Name("Developer"), Remarks("0")]
     [RequireOwner, RequireBotPermissionImproved(ChannelPermission.AddReactions)]
     public class DevModule : ModuleBase<SocketCommandContext>
     {
@@ -48,7 +49,7 @@ namespace PacManBot.Modules
             }
             finally
             {
-                await Context.Message.RemoveReactionAsync(CustomEmoji.Loading, Context.Client.CurrentUser);
+                await Context.Message.RemoveReactionAsync(CustomEmoji.Loading, Context.Client.CurrentUser, Utils.DefaultRequestOptions);
             }
         }
 
@@ -66,7 +67,7 @@ namespace PacManBot.Modules
             catch (Exception e)
             {
                 await logger.Log(LogSeverity.Debug, $"{e.Message}");
-                await ReplyAsync($"```{e.Message}```");
+                await ReplyAsync($"```{e.Message}```", options: Utils.DefaultRequestOptions);
                 await Context.Message.AddReactionAsync(CustomEmoji.Cross);
             }
         }
@@ -83,7 +84,7 @@ namespace PacManBot.Modules
             catch (Exception e)
             {
                 await logger.Log(LogSeverity.Error, $"{e}");
-                await ReplyAsync(e.Message);
+                await ReplyAsync(e.Message, options: Utils.DefaultRequestOptions);
                 return;
             }
 
@@ -119,12 +120,12 @@ namespace PacManBot.Modules
         {
             try
             {
-                await ReplyAsync($"```{"cs".If(filename.Contains(".cs"))}\n{File.ReadAllText(filename).Replace("```", "`​``").Substring(start).Truncate(length)}".Truncate(1997) + "```");
+                await ReplyAsync($"```{"cs".If(filename.Contains(".cs"))}\n{File.ReadAllText(filename).Replace("```", "`​``").Substring(start).Truncate(length)}".Truncate(1997) + "```", options: Utils.DefaultRequestOptions);
             }
             catch (Exception e)
             {
                 await logger.Log(LogSeverity.Debug, $"{e.Message}");
-                await ReplyAsync($"```{e.Message}```");
+                await ReplyAsync($"```{e.Message}```", options: Utils.DefaultRequestOptions);
             }
         }
         [Command("file"), Alias("readfile"), HideHelp]
@@ -137,7 +138,26 @@ namespace PacManBot.Modules
         [Summary("Gets a list of guilds and member counts where this bot is in. Developer only.")]
         public async Task GetGuildMembers()
         {
-            await ReplyAsync(string.Join("\n", shardedClient.Guilds.OrderByDescending(g => g.MemberCount).Select(g => $"{g.Name}: {g.MemberCount}")).Truncate(2000));
+            await ReplyAsync(string.Join("\n", shardedClient.Guilds.OrderByDescending(g => g.MemberCount).Select(g => $"{g.Name}: {g.MemberCount}")).Truncate(2000), options: Utils.DefaultRequestOptions);
+        }
+
+
+        [Command("sudoclear"), Alias("wipe"), HideHelp]
+        [Summary("Clear all messages in a range. Developer only.")]
+        [RequireBotPermissionImproved(ChannelPermission.ReadMessageHistory | ChannelPermission.ManageMessages)]
+        public async Task ClearGameMessages(int amount = 10)
+        {
+            foreach (IMessage message in await Context.Channel.GetMessagesAsync(amount).FlattenAsync())
+            {
+                try
+                {
+                    await message.DeleteAsync(Utils.DefaultRequestOptions);
+                }
+                catch (HttpException e)
+                {
+                    await logger.Log(LogSeverity.Warning, $"Couldn't delete message {message.Id} in {Context.Channel.FullName()}: {e.Message}");
+                }
+            }
         }
     }
 }

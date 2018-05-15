@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using Discord;
@@ -51,6 +53,18 @@ namespace PacManBot
         {
             return array[array.Length - 1];
         }
+
+
+        public static T Choose<T>(this Random random, T[] values)
+        {
+            return values[random.Next(values.Length)];
+        }
+
+        public static T Choose<T>(this Random random, IList<T> values)
+        {
+            return values[random.Next(values.Count)];
+        }
+
 
 
 

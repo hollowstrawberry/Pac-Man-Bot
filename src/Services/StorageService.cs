@@ -121,7 +121,7 @@ namespace PacManBot.Services
         {
             try
             {
-                game.CancelPreviousEdits();
+                game.CancelRequests();
                 if (File.Exists(game.GameFile)) File.Delete(game.GameFile);
                 gameInstances.Remove(game);
                 logger.Log(LogSeverity.Verbose, LogSource.Storage, $"Removed {game.GetType().Name} at {game.channelId}");
@@ -239,7 +239,7 @@ namespace PacManBot.Services
                         try
                         {
                             var game = JsonConvert.DeserializeObject<PacManGame>(File.ReadAllText(file), gameJsonSettings);
-                            game.SetServices(client, this, logger);
+                            game.SetServices(client, logger, this);
                             gameInstances.Add(game);
                         }
                         catch (Exception e)
