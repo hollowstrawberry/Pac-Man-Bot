@@ -203,8 +203,14 @@ namespace PacManBot.Services
             var requestOptions = game.RequestOptions;
             if (message.Channel.BotCan(ChannelPermission.ManageMessages))
             {
-                await message.DeleteAsync(Utils.DefaultRequestOptions);
-                await gameMessage.ModifyAsync(m => { m.Embed = game.GetEmbed().Build(); m.Content = game.GetContent(); }, requestOptions);
+                try
+                {
+                    await gameMessage.ModifyAsync(m => { m.Embed = game.GetEmbed().Build(); m.Content = game.GetContent(); }, requestOptions);
+                }
+                finally
+                {
+                    await message.DeleteAsync(Utils.DefaultRequestOptions);
+                }
             }
             else
             {

@@ -62,7 +62,7 @@ namespace PacManBot.Games
         [DataMember] private int fruitTimer = 0;
         [DataMember] private Pos fruitSpawnPos; //Where all fruit will spawn
         [DataMember] private GameInput lastInput = GameInput.None;
-        [DataMember] private bool fastForward = false;
+        [DataMember] private bool fastForward = true;
 
 
         // Properties

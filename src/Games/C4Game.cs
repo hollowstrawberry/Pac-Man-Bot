@@ -175,19 +175,11 @@ namespace PacManBot.Games
                 if (!canLose) notLosingMoves.Add(column);
             }
 
-            string debug = $"{turn.Align(4)} ";
-            if (target != null) debug += $"win {target + 1}";
-
-            if (target == null) // Random
+            if (target == null) // Picks random while trying its best not to lose
             {
-                var columns = notLosingMoves.Count > 0 ? notLosingMoves : AvailableColumns(board); // Tries it best to not lose
+                var columns = notLosingMoves.Count > 0 ? notLosingMoves : AvailableColumns(board);
                 target = GlobalRandom.Choose(columns);
-
-                debug += $"{target + 1} / ";
-                foreach (int x in notLosingMoves) debug += $"{x + 1} ";
             }
-
-            Console.WriteLine(debug);
 
             DoTurn($"{1 + target}");
         }
