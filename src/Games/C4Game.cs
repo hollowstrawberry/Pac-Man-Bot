@@ -21,8 +21,6 @@ namespace PacManBot.Games
         public override string Name => "Connect Four";
         public override TimeSpan Expiry => _expiry;
 
-        public bool PlayingAI => client.GetUser(userId[(int)turn]).IsBot;
-
 
         public C4Game(ulong channelId, ulong[] userId, DiscordShardedClient client, LoggingService logger, StorageService storage)
             : base(channelId, userId, client, logger, storage)
@@ -36,8 +34,6 @@ namespace PacManBot.Games
                     board[x, y] = Player.None;
                 }
             }
-
-            if (PlayingAI) DoTurnAI();
         }
 
 
@@ -65,7 +61,6 @@ namespace PacManBot.Games
             if (winner == Player.None)
             {
                 turn = turn.OtherPlayer();
-                if (PlayingAI) DoTurnAI();
             }
             else
             {

@@ -101,7 +101,7 @@ namespace PacManBot.Modules
                 {
                     await ReplyAsync(otherGame.userId.Contains(Context.User.Id) ?
                         $"You're already playing a game in this channel!\nUse **{storage.GetPrefixOrEmpty(Context.Guild)}cancel** if you want to cancel it." :
-                        "There is already a different game in this channel!\nWait until it's finished, it times out, or a moderator cancels it.");
+                        $"There is already a different game in this channel!\nWait until it's finished or try doing **{storage.GetPrefixOrEmpty(Context.Guild)}cancel**");
                     return;
                 }
             }
@@ -115,14 +115,32 @@ namespace PacManBot.Modules
             else if (type == typeof(C4Game)) game = new C4Game(Context.Channel.Id, players, shardedClient, logger, storage);
             else throw new NotImplementedException();
 
-            if (game.state == State.Active) storage.AddGame(game); // If both are bots it'll be finished already
+
+            if (game.state == State.Active) storage.AddGame(game);
 
             var gameMessage = await ReplyAsync(game.GetContent(), false, game.GetEmbed().Build(), Utils.DefaultRequestOptions);
             game.messageId = gameMessage.Id;
 
             while (game.state == State.Active)
             {
-                await Task.Delay(2000);
+                if (!game.PlayingAI) await Task.Delay(1000);
+                else
+                {
+                    while (game.PlayingAI) // a loop for bot-on-bot matches
+                    {
+                        try
+                        {
+                            game.CancelRequests();
+                            game.DoTurnAI();
+                            if (game.messageId != gameMessage.Id) gameMessage = await game.GetMessage();
+                            if (gameMessage != null) await gameMessage.ModifyAsync(m => { m.Content = game.GetContent(); m.Embed = game.GetEmbed()?.Build(); }, game.RequestOptions);
+                        }
+                        catch (Exception e) when (e is TaskCanceledException || e is TimeoutException || e is HttpException) { }
+
+                        await Task.Delay(GlobalRandom.Next(500, 2001));
+                    }
+                }
+
                 if ((DateTime.Now - game.lastPlayed) > game.Expiry)
                 {
                     game.state = State.Cancelled;
@@ -136,6 +154,8 @@ namespace PacManBot.Modules
                     return;
                 }
             }
+
+            if (storage.GameInstances.Contains(game)) storage.DeleteGame(game); // When playing against the bot
         }
 
 

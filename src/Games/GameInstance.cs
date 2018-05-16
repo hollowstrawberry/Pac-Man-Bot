@@ -41,6 +41,7 @@ namespace PacManBot.Games
         public async Task<IUserMessage> GetMessage() => (await Channel.GetMessageAsync(messageId, options: Utils.DefaultRequestOptions)) as IUserMessage;
         public IUser User(Player player) => User((int)player);
         public IUser User(int i = 0) => i < userId.Length ? client.GetUser(userId[i]) : null;
+        public bool PlayingAI => state == State.Active && User(turn).IsBot;
 
 
         protected GameInstance() { } // Used when deserializing

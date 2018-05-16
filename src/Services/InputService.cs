@@ -151,8 +151,7 @@ namespace PacManBot.Services
                     {
                         await ExecuteGameInputAsync(game, message);
                     }
-                    catch (TaskCanceledException) { }
-                    catch (TimeoutException) { }
+                    catch (Exception e) when (e is TaskCanceledException || e is OperationCanceledException || e is TimeoutException) { }
                     catch (HttpException e)
                     {
                         await logger.Log(LogSeverity.Warning, LogSource.Game, $"During {game.GetType().Name} input in {game.channelId}: {e.Message}");
@@ -175,8 +174,7 @@ namespace PacManBot.Services
                     {
                         await ExecutePacManInputAsync(game, reaction, await messageData.GetOrDownloadAsync());
                     }
-                    catch (TaskCanceledException) { }
-                    catch (TimeoutException) { }
+                    catch (Exception e) when (e is TaskCanceledException || e is OperationCanceledException || e is TimeoutException) { }
                     catch (HttpException e)
                     {
                         await logger.Log(LogSeverity.Warning, LogSource.Game, $"During Pac-Man input in {game.channelId}: {e.Message}");
@@ -199,20 +197,15 @@ namespace PacManBot.Services
             await logger.Log(LogSeverity.Verbose, game.Name, $"Input {message.Content} by user {message.Author.FullName()} on channel {message.Channel.FullName()}");
 
             game.DoTurn(message.Content);
+            if (game.PlayingAI && !message.Channel.BotCan(ChannelPermission.ManageMessages)) game.DoTurnAI();
 
             if (game.winner != Player.None) storage.DeleteGame(game);
 
             var requestOptions = game.RequestOptions;
             if (message.Channel.BotCan(ChannelPermission.ManageMessages))
             {
-                try
-                {
-                    await gameMessage.ModifyAsync(m => { m.Content = game.GetContent(); m.Embed = game.GetEmbed()?.Build(); }, requestOptions);
-                }
-                finally
-                {
-                    await message.DeleteAsync(Utils.DefaultRequestOptions);
-                }
+                await message.DeleteAsync(Utils.DefaultRequestOptions);
+                await gameMessage.ModifyAsync(m => { m.Content = game.GetContent(); m.Embed = game.GetEmbed()?.Build(); }, requestOptions);
             }
             else
             {

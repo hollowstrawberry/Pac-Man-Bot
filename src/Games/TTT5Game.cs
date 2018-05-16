@@ -19,10 +19,8 @@ namespace PacManBot.Games
         private List<Pos> highlighted = new List<Pos>();
         private int[] threes = new int[] { -1, -1 };
 
-        public override string Name => "Tic-Tac-Toe";
+        public override string Name => "5-Tic-Tac-Toe";
         public override TimeSpan Expiry => _expiry;
-
-        public bool PlayingAI => client.GetUser(userId[(int)turn]).IsBot;
 
 
 
@@ -37,8 +35,6 @@ namespace PacManBot.Games
                     board[x, y] = Player.None;
                 }
             }
-
-            if (PlayingAI) DoTurnAI();
         }
 
 
@@ -66,7 +62,6 @@ namespace PacManBot.Games
             if (winner == Player.None)
             {
                 turn = turn.OtherPlayer();
-                if (PlayingAI) DoTurnAI();
             }
             else
             {
