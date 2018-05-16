@@ -13,7 +13,7 @@ namespace PacManBot.Games
     public class C4Game : GameInstance
     {
         private const int Columns = 7, Rows = 6;
-        private static readonly TimeSpan _expiry = TimeSpan.FromMinutes(2);
+        private static readonly TimeSpan _expiry = TimeSpan.FromMinutes(5);
 
         private Player[,] board;
         private List<Pos> highlighted;
@@ -59,7 +59,7 @@ namespace PacManBot.Games
 
             time++;
 
-            if (FindWinner(board, turn, highlighted)) winner = turn;
+            if (FindWinner(board, turn, time, highlighted)) winner = turn;
             else if (IsTie(board, turn, time)) winner = Player.Tie;
 
             if (winner == Player.None)
@@ -117,8 +117,9 @@ namespace PacManBot.Games
         }
 
 
-        private static bool FindWinner(Player[,] board, Player player, List<Pos> highlighted = null)
+        private static bool FindWinner(Player[,] board, Player player, int time, List<Pos> highlighted = null)
         {
+            if (time < 7) return false;
             return board.FindLines(player, 4, highlighted);
         }
 
@@ -134,7 +135,7 @@ namespace PacManBot.Games
             {
                 var tempBoard = (Player[,])board.Clone();
                 PlacePiece(tempBoard, column, turn);
-                if (FindWinner(tempBoard, turn) || !IsTie(tempBoard, turn, time + 1)) return false;
+                if (FindWinner(tempBoard, turn, time + 1) || !IsTie(tempBoard, turn, time + 1)) return false;
             }
 
             return true;
@@ -142,46 +143,62 @@ namespace PacManBot.Games
 
 
 
-        private void DoTurnAI()
+        public override void DoTurnAI()
         {
-            int? target = null;
-
-            var notLosingMoves = new List<int>();
+            var moves = new Dictionary<int, int>(); // Column and amount of possible loses by playing in that column
+            var avoidMoves = new List<int>(); // Moves where it can lose right away
 
             foreach (int column in AvailableColumns(board)) // All moves it can make
             {
                 var tempBoard = (Player[,])board.Clone();
                 PlacePiece(tempBoard, column, turn);
 
-                if (FindWinner(tempBoard, turn)) // Can win in 1 move
+                if (FindWinner(tempBoard, turn, time + 1)) // Can win in 1 move
                 {
-                    target = column;
+                    moves = new Dictionary<int, int> { { column, 0 } };
+                    avoidMoves = new List<int>();
                     break;
                 }
 
-                bool canLose = false;
-                foreach (int columnOpponent in AvailableColumns(tempBoard)) // All moves the opponent can follow with
-                {
-                    var tempBoardOpponent = (Player[,])tempBoard.Clone();
-                    PlacePiece(tempBoardOpponent, columnOpponent, turn.OtherPlayer());
+                moves.Add(column, MayLoseCount(tempBoard, turn, turn.OtherPlayer(), time + 1, depth: 3));
 
-                    if (FindWinner(tempBoardOpponent, turn.OtherPlayer()))
-                    {
-                        canLose = true;
-                        break;
-                    }
-                }
-
-                if (!canLose) notLosingMoves.Add(column);
+                if (MayLoseCount(tempBoard, turn, turn.OtherPlayer(), time + 1, depth: 1) > 0) avoidMoves.Add(column); // Can lose right away
             }
 
-            if (target == null) // Picks random while trying its best not to lose
+            if (avoidMoves.Count < moves.Count)
             {
-                var columns = notLosingMoves.Count > 0 ? notLosingMoves : AvailableColumns(board);
-                target = GlobalRandom.Choose(columns);
+                foreach (int move in avoidMoves) moves.Remove(move);
             }
 
-            DoTurn($"{1 + target}");
+            int leastLoses = moves.Min(x => x.Value);
+            var finalOptions = moves.Where(x => x.Value == leastLoses).Select(x => x.Key).ToList();
+
+            DoTurn($"{1 + GlobalRandom.Choose(finalOptions)}");
+        }
+
+
+        private static int MayLoseCount(Player[,] board, Player player, Player turn, int time, int depth)
+        {
+            int count = 0;
+
+            if (depth <= 0 || time == board.LengthX() * board.LengthY()) return count;
+
+            foreach (int column in AvailableColumns(board))
+            {
+                var tempBoard = (Player[,])board.Clone();
+                PlacePiece(tempBoard, column, turn);
+
+                if (turn != player && FindWinner(tempBoard, turn, time + 1)) // Loses to opponent
+                {
+                    count++;
+                }
+                else if (turn != player || !FindWinner(tempBoard, turn, time + 1)) // Isn't a win
+                {
+                    count += MayLoseCount(tempBoard, player, turn.OtherPlayer(), time + 1, depth - 1);
+                }
+            }
+
+            return count;
         }
 
 

@@ -11,7 +11,7 @@ namespace PacManBot.Games
 {
     public class TTTGame : GameInstance
     {
-        private static readonly TimeSpan _expiry = TimeSpan.FromMinutes(2);
+        private static readonly TimeSpan _expiry = TimeSpan.FromMinutes(5);
 
         private Player[,] board;
         private List<Pos> highlighted;
@@ -23,14 +23,14 @@ namespace PacManBot.Games
 
 
 
-        public TTTGame(ulong channelId, ulong[] userId, DiscordShardedClient client, LoggingService logger, StorageService storage)
+        public TTTGame(ulong channelId, ulong[] userId, DiscordShardedClient client, LoggingService logger, StorageService storage, int size = 3)
             : base(channelId, userId, client, logger, storage)
         {
             highlighted = new List<Pos>();
-            board = new Player[3,3];
-            for (int x = 0; x < 3; x++)
+            board = new Player[size,size];
+            for (int x = 0; x < size; x++)
             {
-                for (int y = 0; y < 3; y++)
+                for (int y = 0; y < size; y++)
                 {
                     board[x, y] = Player.None;
                 }
@@ -43,7 +43,7 @@ namespace PacManBot.Games
 
         public override bool IsInput(string value)
         {
-            return int.TryParse(StripPrefix(value), out int num) && num > 0 && num < 10;
+            return int.TryParse(StripPrefix(value), out int num) && num > 0 && num <= board.Length;
         }
 
 
@@ -53,8 +53,8 @@ namespace PacManBot.Games
 
             int input = int.Parse(StripPrefix(rawInput)) - 1;
 
-            int y = input / 3;
-            int x = input % 3;
+            int y = input / board.LengthX();
+            int x = input % board.LengthX();
 
             if (board[x, y] != Player.None) return; // Cell is already occupied
 
@@ -84,25 +84,24 @@ namespace PacManBot.Games
 
             var description = new StringBuilder();
 
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < userId.Length; i++)
             {
                 description.Append($"{"►".If(i == (int)turn)}{((Player)i).Symbol()} - {User((Player)i).NameandNum().SanitizeMarkdown()}\n");
             }
 
             description.Append("ᅠ\n");
 
-            for (int y = 0; y < 3; y++)
+            for (int y = 0; y < board.LengthY(); y++)
             {
-                for (int x = 0; x < 3; x++)
+                for (int x = 0; x < board.LengthX(); x++)
                 {
                     description.Append(board[x, y].Symbol(highlighted.Contains(new Pos(x, y))) ??
-                        (state == State.Active ? $"{CustomEmoji.NumberCircle[1 + 3*y + x]}" : Player.None.Circle()));
+                        (state == State.Active ? $"{CustomEmoji.NumberCircle[1 + board.LengthX()*y + x]}" : Player.None.Circle()));
                 }
                 description.Append('\n');
             }
 
             if (state == State.Active) description.Append($"ᅠ\n*Say the number of a cell (1 to 9) to place an {(turn == Player.Red ? "X" : "O")}*");
-
 
             return new EmbedBuilder()
             {
@@ -122,8 +121,8 @@ namespace PacManBot.Games
 
         private static bool IsTie(Player[,] board, Player turn, int time)
         {
-            if (time < 7) return false;
-            else if (time == 9) return true;
+            if (time < board.LengthX() * board.LengthY() - 3) return false;
+            else if (time == board.LengthX()*board.LengthY()) return true;
 
             turn = turn.OtherPlayer();
 
@@ -140,12 +139,12 @@ namespace PacManBot.Games
 
 
 
-        private void DoTurnAI()
+        public override void DoTurnAI()
         {
             Pos target = TryCompleteLine(turn) ?? TryCompleteLine(turn.OtherPlayer()); //Win or block
             if (target == null) target = GlobalRandom.Choose(EmptyCells(board));
 
-            DoTurn($"{1 + target.y * 3 + target.x}");
+            DoTurn($"{1 + target.y * board.LengthX() + target.x}");
         }
 
 
@@ -201,9 +200,9 @@ namespace PacManBot.Games
         private static List<Pos> EmptyCells(Player[,] board)
         {
             List<Pos> empty = new List<Pos>();
-            for (int y = 0; y < 3; y++)
+            for (int y = 0; y < board.LengthY(); y++)
             {
-                for (int x = 0; x < 3; x++)
+                for (int x = 0; x < board.LengthX(); x++)
                 {
                     if (board[x, y] == Player.None) empty.Add(new Pos(x, y));
                 }
@@ -212,21 +211,3 @@ namespace PacManBot.Games
         }
     }
 }
-
-
-/*
-for (int y = 0; y < 3; y++)
-{
-    for (int x = 0; x < 3; x++)
-    {
-        switch (temp[x, y])
-        {
-            case Player.None: Console.Write(' '); break;
-            case Player.Red: Console.Write('X'); break;
-            case Player.Blue: Console.Write('O'); break;
-        }
-    }
-    Console.Write('\n');
-}
-Console.Write('\n');
-*/

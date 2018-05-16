@@ -64,5 +64,14 @@ namespace PacManBot.Constants
             "<:8circle:445021372465283098>".ToEmote(),
             "<:9circle:445021373245554699>".ToEmote(),
         };
+
+        public static readonly IEmote[] LetterCircle = new Emote[]
+        {
+            "<:circleA:446196337831313409>".ToEmote(),
+            "<:circleB:446196339660029952>".ToEmote(),
+            "<:circleC:446196339471024129>".ToEmote(),
+            "<:circleD:446196339450314753>".ToEmote(),
+            "<:circleE:446196339987054592>".ToEmote(),
+        };
     }
 }

@@ -66,6 +66,14 @@ namespace PacManBot
         }
 
 
+        public static string StringElements<T>(this IList<T> values)
+        {
+            string e = "";
+            foreach (var value in values) e += $"{value} ";
+            return e;
+        }
+
+
 
 
         /* ===== Strings ===== */

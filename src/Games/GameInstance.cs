@@ -67,6 +67,10 @@ namespace PacManBot.Games
             lastPlayed = DateTime.Now;
         }
 
+        public virtual void DoTurnAI()
+        {
+        }
+
 
         public virtual string GetContent(bool showHelp = true)
         {

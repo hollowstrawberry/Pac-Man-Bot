@@ -206,12 +206,9 @@ namespace PacManBot.Games
                         {
                             if (line.Count == length)
                             {
-                                foreach (Pos p in line)
-                                {
-                                    if (!result.Contains(p)) result.Add(p);
-                                }
+                                foreach (Pos p in line) result.Add(p);
                             }
-                            else if (!result.Contains(pos)) result.Add(pos); // Above minimum length
+                            else result.Add(pos); // Above minimum length
                         }
                     }
                 }

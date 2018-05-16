@@ -30,10 +30,10 @@ namespace PacManBot.Modules
 
 
         [Command("tictactoe"), Alias("ttt", "tic"), Remarks("Play Tic-Tac-Toe with another user or the bot")]
-        [Summary("You can choose a guild member to invite as an opponent using a mention, username, nickname or user ID. Otherwise, you'll play against the bot.\n"
-               + "The game is played by sending the number of a free cell (1 to 9) in chat while it is your turn. Using a prefix is unnecessary when sending a number.\n\n"
-               + "You can cancel the game at any time with **{prefix}cancel**, or move it to the bottom of the chat with **{prefix}bump**.\n"
-               + "The game times out if 2 minutes pass without any input.\n\nYou can also make the bot challenge someone with **{prefix}ttt vs <opponent>**")]
+        [Summary("You can choose a guild member to invite as an opponent using a mention, username, nickname or user ID. Otherwise, you'll play against the bot.\n\n"
+               + "You play by sending the number of a free cell (1 to 9) in chat while it is your turn, and to win you must make a line of 3 symbols in any direction\n\n"
+               + "Do **{prefix}cancel** to end the game or **{prefix}bump** to move it to the bottom of the chat. The game times out after 5 minutes of inactivity.\n\n"
+               + "You can also make the bot challenge another user or bot with **{prefix}ttt vs <opponent>**")]
         [RequireBotPermissionImproved(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
         public async Task StartTicTacToe(SocketGuildUser opponent = null)
         {
@@ -50,11 +50,33 @@ namespace PacManBot.Modules
         }
 
 
+        [Command("5ttt"), Alias("ttt5", "5tictactoe", "5tic"), Remarks("Play a harder 5-Tic-Tac-Toe with another user or the bot")]
+        [Summary("You can choose a guild member to invite as an opponent using a mention, username, nickname or user ID. Otherwise, you'll play against the bot.\n\n"
+               + "You play by sending the column and row of the cell you want to play, for example, \"C4\". The player who makes the **most lines of 3 symbols** wins. "
+               + "However, if a player makes a lines of **4**, they win instantly.\n\n"
+               + "Do **{prefix}cancel** to end the game or **{prefix}bump** to move it to the bottom of the chat. The game times out after 5 minutes of inactivity.\n\n"
+               + "You can also make the bot challenge another user or bot with **{prefix}5ttt vs <opponent>**")]
+        [RequireBotPermissionImproved(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
+        public async Task StartTicTacToe5(SocketGuildUser opponent = null)
+        {
+            await RunGame<TTT5Game>(Context.User, opponent ?? (IUser)Context.Client.CurrentUser);
+        }
+
+
+        [Command("5ttt vs"), Alias("ttt5 vs", "5tictactoe vs", "5tic vs"), HideHelp]
+        [Summary("Make the bot challenge a user... or another bot")]
+        [RequireBotPermissionImproved(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
+        public async Task Start5TicTacToeVs(SocketGuildUser opponent)
+        {
+            await RunGame<TTT5Game>(Context.Client.CurrentUser, opponent);
+        }
+
+
         [Command("connect4"), Alias("c4", "four"), Remarks("Play Connect Four with another user or the bot")]
-        [Summary("You can choose a guild member to invite as an opponent using a mention, username, nickname or user ID. Otherwise, you'll play against the bot.\n"
-               + "The game is played by sending the number of a column (1 to 7) in chat while it is your turn. Using a prefix is unnecessary when sending a number.\n\n"
-               + "You can cancel the game at any time with **{prefix}cancel**, or move it to the bottom of the chat with **{prefix}bump**.\n"
-               + "The game times out if 2 minutes pass without any input.\n\nYou can also make the bot challenge someone with **{prefix}ttt vs <opponent>**")]
+        [Summary("You can choose a guild member to invite as an opponent using a mention, username, nickname or user ID. Otherwise, you'll play against the bot.\n\n"
+               + "You play by sending the number of a free cell (1 to 7) in chat while it is your turn, and to win you must make a line of 3 symbols in any direction\n\n"
+               + "Do **{prefix}cancel** to end the game or **{prefix}bump** to move it to the bottom of the chat. The game times out after 5 minutes of inactivity.\n\n"
+               + "You can also make the bot challenge another user or bot with **{prefix}c4 vs <opponent>**")]
         [RequireBotPermissionImproved(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
         public async Task StartConnectFour(SocketGuildUser opponent = null)
         {
@@ -73,11 +95,11 @@ namespace PacManBot.Modules
 
         private async Task RunGame<T>(IUser challenger, IUser opponent) where T : GameInstance
         {
-            foreach (var game in storage.GameInstances)
+            foreach (var otherGame in storage.GameInstances)
             {
-                if (game.channelId == Context.Channel.Id)
+                if (otherGame.channelId == Context.Channel.Id)
                 {
-                    await ReplyAsync(game.userId.Contains(Context.User.Id) ?
+                    await ReplyAsync(otherGame.userId.Contains(Context.User.Id) ?
                         $"You're already playing a game in this channel!\nUse **{storage.GetPrefixOrEmpty(Context.Guild)}cancel** if you want to cancel it." :
                         "There is already a different game in this channel!\nWait until it's finished, it times out, or a moderator cancels it.");
                     return;
@@ -87,31 +109,32 @@ namespace PacManBot.Modules
             var players = new ulong[] { opponent.Id, challenger.Id };
             Type type = typeof(T);
 
-            GameInstance newGame;
-            if (type == typeof(TTTGame)) newGame = new TTTGame(Context.Channel.Id, players, shardedClient, logger, storage);
-            else if (type == typeof(C4Game)) newGame = new C4Game(Context.Channel.Id, players, shardedClient, logger, storage);
+            GameInstance game;
+            if (type == typeof(TTTGame)) game = new TTTGame(Context.Channel.Id, players, shardedClient, logger, storage);
+            else if (type == typeof(TTT5Game)) game = new TTT5Game(Context.Channel.Id, players, shardedClient, logger, storage);
+            else if (type == typeof(C4Game)) game = new C4Game(Context.Channel.Id, players, shardedClient, logger, storage);
             else throw new NotImplementedException();
 
-            if (!challenger.IsBot || !opponent.IsBot) storage.AddGame(newGame); // If both are bots it'll be over instantaneously
+            if (game.state == State.Active) storage.AddGame(game); // If both are bots it'll be finished already
 
-            var gameMessage = await ReplyAsync(newGame.GetContent(), false, newGame.GetEmbed().Build(), Utils.DefaultRequestOptions);
-            newGame.messageId = gameMessage.Id;
+            var gameMessage = await ReplyAsync(game.GetContent(), false, game.GetEmbed().Build(), Utils.DefaultRequestOptions);
+            game.messageId = gameMessage.Id;
 
-            while (newGame.state == State.Active)
+            while (game.state == State.Active)
             {
-                if ((DateTime.Now - newGame.lastPlayed) > newGame.Expiry)
+                await Task.Delay(2000);
+                if ((DateTime.Now - game.lastPlayed) > game.Expiry)
                 {
-                    newGame.state = State.Cancelled;
-                    storage.DeleteGame(newGame);
+                    game.state = State.Cancelled;
+                    storage.DeleteGame(game);
                     try
                     {
-                        if (gameMessage.Id != newGame.messageId) gameMessage = await newGame.GetMessage();
-                        if (gameMessage != null) await gameMessage.ModifyAsync(m => { m.Content = newGame.GetContent(); m.Embed = newGame.GetEmbed()?.Build(); }, Utils.DefaultRequestOptions);
+                        if (gameMessage.Id != game.messageId) gameMessage = await game.GetMessage();
+                        if (gameMessage != null) await gameMessage.ModifyAsync(m => { m.Content = game.GetContent(); m.Embed = game.GetEmbed()?.Build(); }, Utils.DefaultRequestOptions);
                     }
                     catch (HttpException) { } // Something happened to the message, we can ignore it
                     return;
                 }
-                await Task.Delay(1000);
             }
         }
 

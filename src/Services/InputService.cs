@@ -70,7 +70,7 @@ namespace PacManBot.Services
                     && !message.Author.IsBot && message.Channel.BotCan(ChannelPermission.SendMessages))
                 {
                     // Only runs one
-                    if (await CommandAsync(message) || await GameInputAsync(message) || await AutoresponseAsync(message));
+                    if (await GameInputAsync(message) || await CommandAsync(message) || await AutoresponseAsync(message));
                 }
             }
             catch (Exception e)
@@ -143,7 +143,7 @@ namespace PacManBot.Services
 
         private async Task<bool> GameInputAsync(SocketUserMessage message)
         {
-            foreach (var game in storage.GameInstances.Where(g => g is TTTGame || g is C4Game))
+            foreach (var game in storage.GameInstances.Where(g => !(g is PacManGame)))
             {
                 if (game.channelId == message.Channel.Id && game.userId[(int)game.turn] == message.Author.Id && game.IsInput(message.Content))
                 {
@@ -196,7 +196,7 @@ namespace PacManBot.Services
         {
             var gameMessage = await game.GetMessage();
 
-            await logger.Log(LogSeverity.Verbose, $"{game.Name} input {message.Content} by user {message.Author.FullName()} on channel {message.Channel.FullName()}");
+            await logger.Log(LogSeverity.Verbose, game.Name, $"Input {message.Content} by user {message.Author.FullName()} on channel {message.Channel.FullName()}");
 
             game.DoTurn(message.Content);
 
@@ -232,8 +232,7 @@ namespace PacManBot.Services
 
             if (game.state == State.Active)
             {
-                await logger.Log(LogSeverity.Verbose, LogSource.Game + $"{(guild == null ? 0 : client.GetShardIdFor(guild))}",
-                                    $"Input {PacManGame.GameInputs[input].Align(5)} by user {user.FullName()} in channel {channel.FullName()}");
+                await logger.Log(LogSeverity.Verbose, game.Name, $"Input {PacManGame.GameInputs[input].Align(5)} by user {user.FullName()} in channel {channel.FullName()}");
 
                 game.DoTurn(input);
 
