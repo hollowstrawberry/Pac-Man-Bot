@@ -43,6 +43,12 @@ namespace PacManBot.Games
         public IUser User(Player player) => User((int)player);
         public IUser User(int i = 0) => i < userId.Length ? client.GetUser(userId[i]) : null;
         public bool PlayingAI => state == State.Active && User(turn).IsBot;
+        public bool BotVsBot => User(0).IsBot && User(1).IsBot;
+
+        public Action<MessageProperties> UpdateDisplay => (msg => {
+            msg.Content = GetContent();
+            msg.Embed = GetEmbed()?.Build();
+        });
 
 
         protected GameInstance() { } // Used when deserializing
@@ -79,7 +85,7 @@ namespace PacManBot.Games
             if (state != State.Cancelled && userId.Contains(client.CurrentUser.Id))
             {
                 if (message == "") message = GlobalRandom.Choose(StartTexts);
-                else if (time > 1 && winner == Player.None && (!User(0).IsBot || !User(1).IsBot || userId[0] == userId[1] || time % 2 == 0)) message = GlobalRandom.Choose(GameTexts);
+                else if (time > 1 && winner == Player.None && (!BotVsBot || userId[0] == userId[1] || time % 2 == 0)) message = GlobalRandom.Choose(GameTexts);
                 else if (winner != Player.None)
                 {
                     if (winner != Player.Tie && userId[(int)winner] == client.CurrentUser.Id) message = GlobalRandom.Choose(WinTexts);

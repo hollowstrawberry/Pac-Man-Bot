@@ -133,7 +133,7 @@ namespace PacManBot.Modules
                         game.DoTurnAI();
                         if (game.messageId != gameMessage.Id) gameMessage = await game.GetMessage();
                         game.CancelRequests();
-                        if (gameMessage != null) await gameMessage.ModifyAsync(m => { m.Content = game.GetContent(); m.Embed = game.GetEmbed()?.Build(); }, game.RequestOptions);
+                        if (gameMessage != null) await gameMessage.ModifyAsync(game.UpdateDisplay, game.RequestOptions);
                     }
                     catch (Exception e) when (e is TaskCanceledException || e is TimeoutException || e is HttpException) { }
 
@@ -148,7 +148,7 @@ namespace PacManBot.Modules
                     try
                     {
                         if (gameMessage.Id != game.messageId) gameMessage = await game.GetMessage();
-                        if (gameMessage != null) await gameMessage.ModifyAsync(m => { m.Content = game.GetContent(); m.Embed = game.GetEmbed()?.Build(); }, Utils.DefaultRequestOptions);
+                        if (gameMessage != null) await gameMessage.ModifyAsync(game.UpdateDisplay, Utils.DefaultRequestOptions);
                     }
                     catch (HttpException) { } // Something happened to the message, we can ignore it
                     return;
@@ -201,7 +201,7 @@ namespace PacManBot.Modules
             {
                 if (game.channelId == Context.Channel.Id)
                 {
-                    if (game.userId.Contains(Context.User.Id) || Context.UserCan(ChannelPermission.ManageMessages) || DateTime.Now - game.lastPlayed > TimeSpan.FromSeconds(60))
+                    if (game.userId.Contains(Context.User.Id) || Context.UserCan(ChannelPermission.ManageMessages) || game.BotVsBot || DateTime.Now - game.lastPlayed > TimeSpan.FromSeconds(60))
                     {
                         game.state = State.Cancelled;
                         storage.DeleteGame(game);
@@ -211,7 +211,7 @@ namespace PacManBot.Modules
                             var gameMessage = await game.GetMessage();
                             if (gameMessage != null)
                             {
-                                await gameMessage.ModifyAsync(m => { m.Content = game.GetContent(); m.Embed = game.GetEmbed()?.Build(); }, Utils.DefaultRequestOptions);
+                                await gameMessage.ModifyAsync(game.UpdateDisplay, Utils.DefaultRequestOptions);
                                 if (game is PacManGame && Context.BotCan(ChannelPermission.ManageMessages)) await gameMessage.RemoveAllReactionsAsync(Utils.DefaultRequestOptions);
                             }
                         }

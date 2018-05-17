@@ -204,14 +204,12 @@ namespace PacManBot.Services
             var requestOptions = game.RequestOptions;
             if (message.Channel.BotCan(ChannelPermission.ManageMessages))
             {
-                await gameMessage.ModifyAsync(m => { m.Content = game.GetContent(); m.Embed = game.GetEmbed()?.Build(); }, requestOptions);
+                await gameMessage.ModifyAsync(game.UpdateDisplay, requestOptions);
                 await message.DeleteAsync(Utils.DefaultRequestOptions);
             }
             else
             {
-                Console.WriteLine("wth");
                 var newMsg = await gameMessage.Channel.SendMessageAsync(game.GetContent(), false, game.GetEmbed().Build(), requestOptions);
-                Console.WriteLine("wtf");
                 game.messageId = newMsg.Id;
                 await gameMessage.DeleteAsync(Utils.DefaultRequestOptions);
             }
@@ -240,7 +238,7 @@ namespace PacManBot.Services
                 }
 
                 game.CancelRequests();
-                await gameMessage.ModifyAsync(m => m.Content = game.GetContent(), game.RequestOptions);
+                await gameMessage.ModifyAsync(game.UpdateDisplay, game.RequestOptions);
 
                 if (game.state != State.Active && channel.BotCan(ChannelPermission.ManageMessages))
                 {

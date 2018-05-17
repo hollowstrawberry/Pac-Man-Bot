@@ -105,7 +105,7 @@ namespace PacManBot.Modules
                     {
                         game.CancelRequests();
                         var gameMessage = await game.GetMessage();
-                        if (gameMessage != null) await gameMessage.ModifyAsync(m => m.Content = game.GetContent(), game.RequestOptions);
+                        if (gameMessage != null) await gameMessage.ModifyAsync(game.UpdateDisplay, game.RequestOptions);
                     }
                     catch (TaskCanceledException) { }
                     catch (Exception e)
@@ -257,7 +257,7 @@ namespace PacManBot.Modules
                     await message.AddReactionAsync(input.Contains(":") ? input.ToEmote() : (IEmote)input.ToEmoji(), Utils.DefaultRequestOptions);
                 }
 
-                await message.ModifyAsync(m => m.Content = game.GetContent(), requestOptions); //Restore display to normal
+                await message.ModifyAsync(game.UpdateDisplay, requestOptions); //Restore display to normal
             }
             catch (Exception e) when (e is HttpException || e is TimeoutException || e is TaskCanceledException) { } // We can ignore these
         }

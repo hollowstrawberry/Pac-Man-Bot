@@ -47,7 +47,7 @@ namespace PacManBot.Modules
                         await message.DeleteAsync(Utils.DefaultRequestOptions);
                     }
                 }
-                catch (HttpException e)
+                catch (Exception e) when (e is HttpException || e is TimeoutException)
                 {
                     await logger.Log(LogSeverity.Warning, $"Couldn't delete message {message.Id} in {Context.Channel.FullName()}: {e.Message}");
                 }
