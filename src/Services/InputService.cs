@@ -193,6 +193,8 @@ namespace PacManBot.Services
         private async Task ExecuteGameInputAsync(GameInstance game, IUserMessage message)
         {
             var gameMessage = await game.GetMessage();
+            game.CancelRequests();
+            var requestOptions = game.RequestOptions;
 
             await logger.Log(LogSeverity.Verbose, game.Name, $"Input {message.Content} by user {message.Author.FullName()} on channel {message.Channel.FullName()}");
 
@@ -201,7 +203,6 @@ namespace PacManBot.Services
 
             if (game.winner != Player.None) storage.DeleteGame(game);
 
-            var requestOptions = game.RequestOptions;
             if (message.Channel.BotCan(ChannelPermission.ManageMessages))
             {
                 await message.DeleteAsync(Utils.DefaultRequestOptions);

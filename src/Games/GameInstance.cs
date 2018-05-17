@@ -24,6 +24,7 @@ namespace PacManBot.Games
 
         public Player turn = Player.Red;
         public Player winner = Player.None; // For two-player games
+        protected string message = "";
         [DataMember] public State state = State.Active; // For one-player games
         [DataMember] public DateTime lastPlayed;
         [DataMember] public int time = 0; //How many turns have passed
@@ -77,11 +78,15 @@ namespace PacManBot.Games
         {
             if (state != State.Cancelled && userId.Contains(client.CurrentUser.Id))
             {
-                if (time < userId.Length) return GlobalRandom.Choose(StartTexts);
+                if (time == 0) message = GlobalRandom.Choose(StartTexts);
+                else if (time > 1 && winner == Player.None && userId[(int)turn] != client.CurrentUser.Id) message = GlobalRandom.Choose(GameTexts);
+                else if (winner != Player.None && winner != Player.Tie)
+                {
+                    if (userId[(int)winner] == client.CurrentUser.Id) message = GlobalRandom.Choose(WinTexts);
+                    else message = GlobalRandom.Choose(NotWinTexts);
+                }
 
-                if (winner == Player.None) return GlobalRandom.Choose(GameTexts);
-                else if (winner != Player.Tie && userId[(int)winner] == client.CurrentUser.Id) return GlobalRandom.Choose(WinTexts);
-                else return GlobalRandom.Choose(NotWinTexts);
+                return message;
             }
 
             if (state == State.Active)

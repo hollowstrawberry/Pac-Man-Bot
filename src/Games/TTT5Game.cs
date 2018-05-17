@@ -100,7 +100,7 @@ namespace PacManBot.Games
             if (state == State.Active)
             {
                 description.Append($"ᅠ\nSay a column and row to place an {(turn == Player.Red ? "X" : "O")} in that cell (Example: B4)");
-                description.Append("\nTo win you must make **more lines of three** than your opponent.\nBut if someone makes a line of **four**, they win instantly!");
+                description.Append("\nTo win you must make **more lines of three** than your opponent,\nbut if someone makes a line of **four**, they **win instantly**!");
             }
 
 
@@ -139,62 +139,160 @@ namespace PacManBot.Games
 
         public override void DoTurnAI()
         {
-            var moves = new Dictionary<Pos, int>(); // Cell and amount of possible loses by playing in that cell
-            var avoidMoves = new List<Pos>(); // Moves where it can lose right away
+            var moves = TryCompleteLine(turn, 4) ?? TryCompleteLine(turn.OtherPlayer(), 4) ?? // Win or avoid losing
+                        TryCompleteFlyingLine(turn) ?? TryCompleteFlyingLine(turn.OtherPlayer()); // Forced win / forced lose situations
 
-            foreach (Pos pos in EmptyCells(board)) // All moves it can make
+            if (moves == null) // Lines of 3
             {
-                var tempBoard = (Player[,])board.Clone();
-                tempBoard.SetAt(pos, turn);
+                var lines = TryCompleteLine(turn, 3);
+                var blocks = TryCompleteLine(turn.OtherPlayer(), 3);
 
-                if (FindWinner(tempBoard, turn, time + 1) == turn) // Can win in 1 move
+                if (lines == null && blocks == null) moves = TryCompleteLine(turn.OtherPlayer(), 2) ?? EmptyCells(board); // Hugs player in the beginning
+                else if (lines == null) moves = blocks;
+                else if (blocks == null) moves = lines;
+                else
                 {
-                    moves = new Dictionary<Pos, int> { { pos, 0 } };
-                    avoidMoves = new List<Pos>();
-                    break;
+                    var combo = lines.Where(x => blocks.Contains(x)).ToList();
+                    if (combo.Count > 0) moves = combo;
+                    else moves = lines;
                 }
-
-                moves.Add(pos, MayLoseCount(tempBoard, turn, turn.OtherPlayer(), time + 1, depth: 3));
-
-                if (MayLoseCount(tempBoard, turn, turn.OtherPlayer(), time + 1, depth: 1) > 0) avoidMoves.Add(pos); // Can lose right away
             }
-
-            if (avoidMoves.Count < moves.Count)
-            {
-                foreach (Pos move in avoidMoves) moves.Remove(move);
-            }
-
-            int leastLoses = moves.Min(x => x.Value);
-            var finalOptions = moves.Where(x => x.Value == leastLoses).Select(x => x.Key).ToList();
-            Pos target = GlobalRandom.Choose(finalOptions);
-
-            DoTurn($"{(char)('A' + target.x)}{1 + target.y}");
+            
+            Pos choice = GlobalRandom.Choose(moves);
+            DoTurn($"{(char)('A' + choice.x)}{1 + choice.y}");
         }
 
 
-        private static int MayLoseCount(Player[,] board, Player player, Player turn, int time, int depth)
+        private List<Pos> TryCompleteLine(Player player, int length)
         {
-            int count = 0;
+            uint count = 0;
+            List<Pos> matches = new List<Pos>();
+            Pos missing = null;
 
-            if (depth <= 0 || time == board.Length) return count;
 
-            foreach (Pos pos in EmptyCells(board))
+            void CheckCell(Pos pos)
             {
-                var tempBoard = (Player[,])board.Clone();
-                tempBoard.SetAt(pos, turn);
-
-                Player winner = FindWinner(tempBoard, turn, time + 1);
-                if (winner == player.OtherPlayer()) // Loses to opponent
+                if (board.At(pos) == player) count++; // Consecutive symbols
+                else if (board.At(pos) == Player.None) // Find a gap
                 {
-                    count++;
+                    if (missing != null) count = 0; // There was already a gap, line is broken
+                    missing = pos;
                 }
-                else if (winner != player) // Isn't a win
+                else // line is broken
                 {
-                    count += MayLoseCount(tempBoard, player, turn.OtherPlayer(), time + 1, depth - 1);
+                    count = 0;
+                    missing = null;
+                }
+
+                if (count == length - 1 && missing != null) matches.Add(missing);
+            }
+
+
+            for (int y = 0; y < board.LengthY(); y++) // Rows
+            {
+                count = 0;
+                missing = null;
+
+                for (int x = 0; x < board.LengthX(); x++)
+                {
+                    CheckCell(new Pos(x, y));
                 }
             }
 
-            return count;
+            for (int x = 0; x < board.LengthX(); x++) // Columns
+            {
+                count = 0;
+                missing = null;
+
+                for (int y = 0; y < board.LengthY(); y++)
+                {
+                    CheckCell(new Pos(x, y));
+                }
+            }
+
+            for (int d = length - 1; d <= board.LengthY() + board.LengthX() - length; d++) //Top-to-left diagonals
+            {
+                count = 0;
+                missing = null;
+
+                for (int x, y = 0; y <= d; y++)
+                {
+                    if ((x = d - y) < board.LengthX() && y < board.LengthY())
+                    {
+                        CheckCell(new Pos(x, y));
+                    }
+                }
+            }
+
+            for (int d = length - 1; d <= board.LengthY() + board.LengthX() - length; d++) //Top-to-right diagonals
+            {
+                count = 0;
+                missing = null;
+
+                for (int x, y = 0; y <= d; y++)
+                {
+                    if ((x = board.LengthX() - 1 - d + y) >= 0 && y < board.LengthY())
+                    {
+                        CheckCell(new Pos(x, y));
+                    }
+                }
+            }
+
+            return matches.Count > 0 ? matches : null;
+        }
+
+
+        private List<Pos> TryCompleteFlyingLine(Player player) // A flying line is when there is a line of 3 in the center with the extremes empty
+        {
+            uint count = 0;
+            List<Pos> matches = new List<Pos>();
+            Pos missing = null;
+
+
+            void CheckCell(Pos pos)
+            {
+                if (board.At(pos) == player) count++; // Consecutive symbols
+                else if (board.At(pos) == Player.None) missing = pos; // Find a gap
+
+                if (count == 2 && missing != null) matches.Add(missing);
+            }
+
+
+            for (int y = 0; y < board.LengthY(); y++) // Rows
+            {
+                count = 0;
+                missing = null;
+                if (board[0, y] != Player.None || board[board.LengthX() - 1, y] != Player.None) continue;
+
+                for (int x = 1; x < board.LengthX() - 1; x++) CheckCell(new Pos(x, y));
+            }
+
+            for (int x = 0; x < board.LengthX(); x++) // Columns
+            {
+                count = 0;
+                missing = null;
+                if (board[x, 0] != Player.None || board[x, board.LengthY() - 1] != Player.None) continue;
+
+                for (int y = 1; y < board.LengthY() - 1; y++) CheckCell(new Pos(x, y));
+            }
+
+            if (board[0, 0] == Player.None && board[board.LengthX() - 1, board.LengthY() - 1] == Player.None)
+            {
+                count = 0;
+                missing = null;
+
+                for (int d = 1; d < board.LengthX() - 1; d++) CheckCell(new Pos(d, d));
+            }
+
+            if (board[board.LengthX() - 1, 0] == Player.None && board[0, board.LengthY() - 1] == Player.None)
+            {
+                count = 0;
+                missing = null;
+
+                for (int d = 1; d < board.LengthX() - 1; d++) CheckCell(new Pos(board.LengthX() - 1 - d, d));
+            }
+            
+            return matches.Count > 0 ? matches : null;
         }
 
 

@@ -115,7 +115,6 @@ namespace PacManBot.Modules
             else if (type == typeof(C4Game)) game = new C4Game(Context.Channel.Id, players, shardedClient, logger, storage);
             else throw new NotImplementedException();
 
-
             if (game.state == State.Active) storage.AddGame(game);
 
             var gameMessage = await ReplyAsync(game.GetContent(), false, game.GetEmbed().Build(), Utils.DefaultRequestOptions);
@@ -130,9 +129,9 @@ namespace PacManBot.Modules
                     {
                         try
                         {
-                            game.CancelRequests();
                             game.DoTurnAI();
                             if (game.messageId != gameMessage.Id) gameMessage = await game.GetMessage();
+                            game.CancelRequests();
                             if (gameMessage != null) await gameMessage.ModifyAsync(m => { m.Content = game.GetContent(); m.Embed = game.GetEmbed()?.Build(); }, game.RequestOptions);
                         }
                         catch (Exception e) when (e is TaskCanceledException || e is TimeoutException || e is HttpException) { }
