@@ -194,7 +194,6 @@ namespace PacManBot.Services
         {
             var gameMessage = await game.GetMessage();
             game.CancelRequests();
-            var requestOptions = game.RequestOptions;
 
             await logger.Log(LogSeverity.Verbose, game.Name, $"Input {message.Content} by user {message.Author.FullName()} on channel {message.Channel.FullName()}");
 
@@ -203,6 +202,7 @@ namespace PacManBot.Services
 
             if (game.winner != Player.None) storage.DeleteGame(game);
 
+            var requestOptions = game.RequestOptions;
             if (message.Channel.BotCan(ChannelPermission.ManageMessages))
             {
                 await message.DeleteAsync(Utils.DefaultRequestOptions);
@@ -210,7 +210,9 @@ namespace PacManBot.Services
             }
             else
             {
+                Console.WriteLine("wth");
                 var newMsg = await gameMessage.Channel.SendMessageAsync(game.GetContent(), false, game.GetEmbed().Build(), requestOptions);
+                Console.WriteLine("wtf");
                 game.messageId = newMsg.Id;
                 await gameMessage.DeleteAsync(Utils.DefaultRequestOptions);
             }

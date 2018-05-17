@@ -115,15 +115,18 @@ namespace PacManBot.Modules
             else if (type == typeof(C4Game)) game = new C4Game(Context.Channel.Id, players, shardedClient, logger, storage);
             else throw new NotImplementedException();
 
-            if (game.state == State.Active) storage.AddGame(game);
+            bool bothBots = challenger.IsBot && opponent.IsBot;
+
+            if (!bothBots && game.PlayingAI && !Context.BotCan(ChannelPermission.ManageMessages)) game.DoTurnAI();
+
+            storage.AddGame(game);
 
             var gameMessage = await ReplyAsync(game.GetContent(), false, game.GetEmbed().Build(), Utils.DefaultRequestOptions);
             game.messageId = gameMessage.Id;
 
             while (game.state == State.Active)
             {
-                if (!game.PlayingAI) await Task.Delay(1000);
-                else
+                if (game.PlayingAI && (Context.BotCan(ChannelPermission.ManageMessages) || bothBots))
                 {
                     while (game.PlayingAI) // a loop for bot-on-bot matches
                     {
@@ -139,6 +142,7 @@ namespace PacManBot.Modules
                         await Task.Delay(GlobalRandom.Next(500, 2001));
                     }
                 }
+                else await Task.Delay(1000);
 
                 if ((DateTime.Now - game.lastPlayed) > game.Expiry)
                 {
