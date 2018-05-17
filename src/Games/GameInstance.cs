@@ -78,11 +78,11 @@ namespace PacManBot.Games
         {
             if (state != State.Cancelled && userId.Contains(client.CurrentUser.Id))
             {
-                if (time == 0 || time == 1 && message == "") message = GlobalRandom.Choose(StartTexts);
-                else if (winner == Player.None && (userId[(int)turn] == client.CurrentUser.Id || !Channel.BotCan(ChannelPermission.ManageMessages))) message = GlobalRandom.Choose(GameTexts);
-                else if (winner != Player.None && winner != Player.Tie)
+                if (message == "") message = GlobalRandom.Choose(StartTexts);
+                else if (time > 1 && winner == Player.None && (!User(0).IsBot || !User(1).IsBot || userId[0] == userId[1] || time % 2 == 0)) message = GlobalRandom.Choose(GameTexts);
+                else if (winner != Player.None)
                 {
-                    if (userId[(int)winner] == client.CurrentUser.Id) message = GlobalRandom.Choose(WinTexts);
+                    if (winner != Player.Tie && userId[(int)winner] == client.CurrentUser.Id) message = GlobalRandom.Choose(WinTexts);
                     else message = GlobalRandom.Choose(NotWinTexts);
                 }
 

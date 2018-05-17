@@ -141,24 +141,37 @@ namespace PacManBot.Games
         {
             var moves = TryCompleteLine(turn, 4) ?? TryCompleteLine(turn.OtherPlayer(), 4) ?? // Win or avoid losing
                         TryCompleteFlyingLine(turn) ?? TryCompleteFlyingLine(turn.OtherPlayer()); // Forced win / forced lose situations
-
+            string action = "normal";
             if (moves == null) // Lines of 3
             {
                 var lines = TryCompleteLine(turn, 3);
                 var blocks = TryCompleteLine(turn.OtherPlayer(), 3);
-
-                if (lines == null && blocks == null) moves = TryCompleteLine(turn.OtherPlayer(), 2) ?? EmptyCells(board); // Hugs player in the beginning
+                action = "threes";
+                if (lines == null && blocks == null)
+                {
+                    action = "random";
+                    moves = TryCompleteLine(turn.OtherPlayer(), 2) ?? EmptyCells(board); // Hugs player in the beginning
+                }
                 else if (lines == null) moves = blocks;
                 else if (blocks == null) moves = lines;
                 else
                 {
                     var combo = lines.Where(x => blocks.Contains(x)).ToList();
-                    if (combo.Count > 0) moves = combo;
+                    if (combo.Count > 0)
+                    {
+                        action = "combo";
+                        moves = combo;
+                    }
                     else moves = lines;
                 }
             }
-            
+
             Pos choice = GlobalRandom.Choose(moves);
+
+            action += $" {choice.x+1},{choice.y+1} /";
+            foreach (var m in moves) action += $" {m.x+1},{m.y+1}";
+            logger.Log(LogSeverity.Debug, "AI", action);
+
             DoTurn($"{(char)('A' + choice.x)}{1 + choice.y}");
         }
 
@@ -190,31 +203,26 @@ namespace PacManBot.Games
 
             for (int y = 0; y < board.LengthY(); y++) // Rows
             {
-                count = 0;
-                missing = null;
-
                 for (int x = 0; x < board.LengthX(); x++)
                 {
                     CheckCell(new Pos(x, y));
                 }
+                count = 0;
+                missing = null;
             }
 
             for (int x = 0; x < board.LengthX(); x++) // Columns
             {
-                count = 0;
-                missing = null;
-
                 for (int y = 0; y < board.LengthY(); y++)
                 {
                     CheckCell(new Pos(x, y));
                 }
+                count = 0;
+                missing = null;
             }
 
             for (int d = length - 1; d <= board.LengthY() + board.LengthX() - length; d++) //Top-to-left diagonals
             {
-                count = 0;
-                missing = null;
-
                 for (int x, y = 0; y <= d; y++)
                 {
                     if ((x = d - y) < board.LengthX() && y < board.LengthY())
@@ -222,13 +230,12 @@ namespace PacManBot.Games
                         CheckCell(new Pos(x, y));
                     }
                 }
+                count = 0;
+                missing = null;
             }
 
             for (int d = length - 1; d <= board.LengthY() + board.LengthX() - length; d++) //Top-to-right diagonals
             {
-                count = 0;
-                missing = null;
-
                 for (int x, y = 0; y <= d; y++)
                 {
                     if ((x = board.LengthX() - 1 - d + y) >= 0 && y < board.LengthY())
@@ -236,6 +243,8 @@ namespace PacManBot.Games
                         CheckCell(new Pos(x, y));
                     }
                 }
+                count = 0;
+                missing = null;
             }
 
             return matches.Count > 0 ? matches : null;

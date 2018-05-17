@@ -193,20 +193,19 @@ namespace PacManBot.Services
         private async Task ExecuteGameInputAsync(GameInstance game, IUserMessage message)
         {
             var gameMessage = await game.GetMessage();
-            game.CancelRequests();
 
             await logger.Log(LogSeverity.Verbose, game.Name, $"Input {message.Content} by user {message.Author.FullName()} on channel {message.Channel.FullName()}");
 
             game.DoTurn(message.Content);
-            if (game.PlayingAI && !message.Channel.BotCan(ChannelPermission.ManageMessages)) game.DoTurnAI();
-
+            if (game.PlayingAI) game.DoTurnAI();
             if (game.winner != Player.None) storage.DeleteGame(game);
 
+            game.CancelRequests();
             var requestOptions = game.RequestOptions;
             if (message.Channel.BotCan(ChannelPermission.ManageMessages))
             {
-                await message.DeleteAsync(Utils.DefaultRequestOptions);
                 await gameMessage.ModifyAsync(m => { m.Content = game.GetContent(); m.Embed = game.GetEmbed()?.Build(); }, requestOptions);
+                await message.DeleteAsync(Utils.DefaultRequestOptions);
             }
             else
             {

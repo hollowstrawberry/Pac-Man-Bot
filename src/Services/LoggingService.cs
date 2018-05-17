@@ -15,7 +15,7 @@ namespace PacManBot.Services
 
         private string[] logExclude = null;
 
-        private const int WriteAttempts = 1000;
+        private const int WriteAttempts = 10000;
         public const string LogDirectory = "logs/";
         public string LogFile => $"{LogDirectory}{DateTime.Now.ToString("yyyy-MM-dd")}.txt";
 
@@ -55,7 +55,7 @@ namespace PacManBot.Services
                     File.AppendAllTextAsync(LogFile, $"{logText}\n"); //Write the log text to a file
                     break;
                 }
-                catch (IOException) when (i < WriteAttempts) { Task.Delay(1); }
+                catch (IOException) when (i < WriteAttempts) { Task.Delay(2); }
             }
 
             return Console.Out.WriteLineAsync(logText); //Write the log text to the console

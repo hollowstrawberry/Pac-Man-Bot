@@ -93,6 +93,7 @@ namespace PacManBot.Modules
         }
 
 
+
         private async Task RunGame<T>(IUser challenger, IUser opponent) where T : GameInstance
         {
             foreach (var otherGame in storage.GameInstances)
@@ -106,6 +107,7 @@ namespace PacManBot.Modules
                 }
             }
 
+            bool bothBots = challenger.IsBot && opponent.IsBot;
             var players = new ulong[] { opponent.Id, challenger.Id };
             Type type = typeof(T);
 
@@ -115,9 +117,7 @@ namespace PacManBot.Modules
             else if (type == typeof(C4Game)) game = new C4Game(Context.Channel.Id, players, shardedClient, logger, storage);
             else throw new NotImplementedException();
 
-            bool bothBots = challenger.IsBot && opponent.IsBot;
-
-            if (!bothBots && game.PlayingAI && !Context.BotCan(ChannelPermission.ManageMessages)) game.DoTurnAI();
+            if (!bothBots && game.PlayingAI) game.DoTurnAI();
 
             storage.AddGame(game);
 
@@ -126,21 +126,18 @@ namespace PacManBot.Modules
 
             while (game.state == State.Active)
             {
-                if (game.PlayingAI && (Context.BotCan(ChannelPermission.ManageMessages) || bothBots))
+                if (bothBots)
                 {
-                    while (game.PlayingAI) // a loop for bot-on-bot matches
+                    try
                     {
-                        try
-                        {
-                            game.DoTurnAI();
-                            if (game.messageId != gameMessage.Id) gameMessage = await game.GetMessage();
-                            game.CancelRequests();
-                            if (gameMessage != null) await gameMessage.ModifyAsync(m => { m.Content = game.GetContent(); m.Embed = game.GetEmbed()?.Build(); }, game.RequestOptions);
-                        }
-                        catch (Exception e) when (e is TaskCanceledException || e is TimeoutException || e is HttpException) { }
-
-                        await Task.Delay(GlobalRandom.Next(500, 2001));
+                        game.DoTurnAI();
+                        if (game.messageId != gameMessage.Id) gameMessage = await game.GetMessage();
+                        game.CancelRequests();
+                        if (gameMessage != null) await gameMessage.ModifyAsync(m => { m.Content = game.GetContent(); m.Embed = game.GetEmbed()?.Build(); }, game.RequestOptions);
                     }
+                    catch (Exception e) when (e is TaskCanceledException || e is TimeoutException || e is HttpException) { }
+
+                    await Task.Delay(GlobalRandom.Next(1000, 2001));
                 }
                 else await Task.Delay(1000);
 
