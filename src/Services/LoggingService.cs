@@ -15,7 +15,7 @@ namespace PacManBot.Services
 
         private string[] logExclude = null;
 
-        private const int WriteAttempts = 10000;
+        private const int WriteAttempts = 1000;
         public const string LogDirectory = "logs/";
         public string LogFile => $"{LogDirectory}{DateTime.Now.ToString("yyyy-MM-dd")}.txt";
 

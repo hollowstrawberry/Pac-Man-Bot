@@ -8,6 +8,8 @@ using Discord.WebSocket;
 using PacManBot.Services;
 using PacManBot.Constants;
 using Discord.Net;
+using PacManBot.Games;
+using static PacManBot.Games.GameUtils;
 
 namespace PacManBot.Modules
 {
@@ -158,6 +160,44 @@ namespace PacManBot.Modules
                     await logger.Log(LogSeverity.Warning, $"Couldn't delete message {message.Id} in {Context.Channel.FullName()}: {e.Message}");
                 }
             }
+        }
+
+
+        [Command("deusexmachina"), Alias("deus", "domoves"), HideHelp]
+        [Summary("Clear all messages in a range. Developer only.")]
+        [RequireBotPermissionImproved(ChannelPermission.ReadMessageHistory | ChannelPermission.ManageMessages)]
+        public async Task DoRemoteGameMoves(params string[] moves)
+        {
+            foreach (var game in storage.GameInstances.Where(g => !(g is PacManGame)))
+            {
+                if (game.channelId == Context.Channel.Id)
+                {
+                    bool success = true;
+                    foreach (string move in moves)
+                    {
+                        if (game.IsInput(move) && game.state == State.Active) game.DoTurn(move);
+                        else success = false;
+                    }
+
+                    var msg = await game.GetMessage();
+                    if (msg != null) await msg.ModifyAsync(game.UpdateDisplay, Utils.DefaultRequestOptions);
+                    else msg = await ReplyAsync(game.GetContent(), false, game.GetEmbed()?.Build(), Utils.DefaultRequestOptions);
+
+                    if (game.AITurn)
+                    {
+                        game.DoTurnAI();
+                        await Task.Delay(1000);
+                        await msg.ModifyAsync(game.UpdateDisplay, Utils.DefaultRequestOptions);
+                    }
+
+                    if (game.state != State.Active) storage.DeleteGame(game);
+
+                    await Context.Message.AddReactionAsync(success ? CustomEmoji.Check : CustomEmoji.Cross);
+                    return;
+                }
+            }
+
+            await ReplyAsync("How about you start a game first");
         }
 
 

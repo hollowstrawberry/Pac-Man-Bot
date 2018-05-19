@@ -117,7 +117,7 @@ namespace PacManBot.Modules
             else if (type == typeof(C4Game)) game = new C4Game(Context.Channel.Id, players, shardedClient, logger, storage);
             else throw new NotImplementedException();
 
-            if (!bothBots && game.PlayingAI) game.DoTurnAI();
+            if (!bothBots && game.AITurn) game.DoTurnAI();
 
             storage.AddGame(game);
 
@@ -223,7 +223,7 @@ namespace PacManBot.Modules
                         }
                         else await Context.Message.AddReactionAsync(CustomEmoji.Check, Utils.DefaultRequestOptions);
                     }
-                    else await ReplyAsync("You can't cancel this game because it's not yours and someone else is still playing!", options: Utils.DefaultRequestOptions);
+                    else await ReplyAsync("You can't cancel this game because someone else is still playing!", options: Utils.DefaultRequestOptions);
 
                     return;
                 }

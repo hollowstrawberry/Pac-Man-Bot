@@ -135,9 +135,7 @@ namespace PacManBot.Games
 
         public override void DoTurnAI()
         {
-            Pos target = TryCompleteLine(turn) ?? TryCompleteLine(turn.OtherPlayer()); //Win or block
-            if (target == null) target = GlobalRandom.Choose(EmptyCells(board));
-
+            Pos target = TryCompleteLine(turn) ?? TryCompleteLine(turn.OtherPlayer()) ?? GlobalRandom.Choose(EmptyCells(board)); //Win or block or random
             DoTurn($"{1 + target.y * board.LengthX() + target.x}");
         }
 

@@ -42,7 +42,7 @@ namespace PacManBot.Games
         public async Task<IUserMessage> GetMessage() => (await Channel.GetMessageAsync(messageId, options: Utils.DefaultRequestOptions)) as IUserMessage;
         public IUser User(Player player) => User((int)player);
         public IUser User(int i = 0) => i < userId.Length ? client.GetUser(userId[i]) : null;
-        public bool PlayingAI => state == State.Active && User(turn).IsBot;
+        public bool AITurn => state == State.Active && User(turn).IsBot;
         public bool BotVsBot => User(0).IsBot && User(1).IsBot;
 
         public Action<MessageProperties> UpdateDisplay => (msg => {

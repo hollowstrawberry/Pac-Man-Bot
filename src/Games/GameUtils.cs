@@ -99,24 +99,24 @@ namespace PacManBot.Games
 
         public static int LengthY<T>(this T[,] board) => board.GetLength(1);
 
-        public static T At<T>(this T[,] board, Pos pos)
+        public static T At<T>(this T[,] board, Pos pos, bool wrap = true)
         {
-            board.Wrap(ref pos);
+            if (wrap) board.Wrap(ref pos);
             return board[pos.x, pos.y];
         }
 
-        public static void SetAt<T>(this T[,] board, Pos pos, T value)
+        public static void SetAt<T>(this T[,] board, Pos pos, T value, bool wrap = true)
         {
-            board.Wrap(ref pos);
+            if (wrap) board.Wrap(ref pos);
             board[pos.x, pos.y] = value;
         }
 
         public static void Wrap<T>(this T[,] board, ref Pos pos) //Wraps the position from one side of the board to the other if it's out of bounds
         {
-            if (pos.x < 0) pos.x += board.LengthX();
-            else if (pos.x >= board.LengthX()) pos.x -= board.LengthX();
-            if (pos.y < 0) pos.y += board.LengthY();
-            else if (pos.y >= board.LengthY()) pos.y -= board.LengthY();
+            while (pos.x < 0) pos.x += board.LengthX();
+            while (pos.x >= board.LengthX()) pos.x -= board.LengthX();
+            while (pos.y < 0) pos.y += board.LengthY();
+            while (pos.y >= board.LengthY()) pos.y -= board.LengthY();
         }
 
 
@@ -237,10 +237,9 @@ namespace PacManBot.Games
 
             for (int d = length - 1; d <= board.LengthY() + board.LengthX() - length; d++) //Top-to-left diagonals
             {
-                for (int y = 0; y <= d; y++)
+                for (int x, y = 0; y <= d; y++)
                 {
-                    int x = d - y;
-                    if (x < board.LengthX() && y < board.LengthY())
+                    if (y < board.LengthY() && (x = d - y) < board.LengthX())
                     {
                         CheckCell(new Pos(x, y));
                     }
@@ -250,10 +249,9 @@ namespace PacManBot.Games
 
             for (int d = length - 1; d <= board.LengthY() + board.LengthX() - length; d++) //Top-to-right diagonals
             {
-                for (int y = 0; y <= d; y++)
+                for (int x, y = 0; y <= d; y++)
                 {
-                    int x = board.LengthX() - 1 - d + y;
-                    if (x >= 0 && y < board.LengthY())
+                    if (y < board.LengthY() && (x = board.LengthX() - 1 - d + y) >= 0)
                     {
                         CheckCell(new Pos(x, y));
                     }

@@ -41,14 +41,14 @@ namespace PacManBot.Games
 
         public override bool IsInput(string value)
         {
-            return Regex.IsMatch(value.ToUpper(), @"[ABCDE][12345]");
+            return Regex.IsMatch(StripPrefix(value).ToUpper(), @"^[ABCDE][12345]$");
         }
 
 
         public override void DoTurn(string rawInput)
         {
             base.DoTurn(rawInput);
-            rawInput = rawInput.ToUpper();
+            rawInput = StripPrefix(rawInput).ToUpper();
 
             int x = rawInput[0] - 'A';
             int y = rawInput[1] - '1';
@@ -57,9 +57,8 @@ namespace PacManBot.Games
 
             board[x, y] = turn;
             time++;
-            winner = FindWinner(board, turn, time, threes, highlighted);
 
-            if (winner == Player.None)
+            if ((winner = FindWinner()) == Player.None)
             {
                 turn = turn.OtherPlayer();
             }
@@ -79,8 +78,7 @@ namespace PacManBot.Games
 
             for (int i = 0; i < userId.Length; i++)
             {
-                description.Append($"{"►".If(i == (int)turn)}{((Player)i).Symbol()} {$"{threes[i]} lines".If(threes[i] >= 0)}" +
-                    $" - {User((Player)i).NameandNum().SanitizeMarkdown()}\n");
+                description.Append($"{"►".If(i == (int)turn)}{((Player)i).Symbol()} {$"{threes[i]} lines".If(threes[i] >= 0)} - {User((Player)i).NameandNum().SanitizeMarkdown()}\n");
             }
 
             description.Append("ᅠ\n");
@@ -114,7 +112,7 @@ namespace PacManBot.Games
         }
 
 
-        private static Player FindWinner(Player[,] board, Player turn, int time, int[] threes = null, List<Pos> highlighted = null)
+        private Player FindWinner()
         {
             if (time < 7) return Player.None;
             if (board.FindLines(turn, 4, highlighted)) return turn;
@@ -122,14 +120,12 @@ namespace PacManBot.Games
             if (time < board.Length) return Player.None;
             else // Game over, count threees
             {
-                if (threes == null) threes = new int[] { 0, 0 };
-
                 for (int i = 0; i < 2; i++)
                 {
                     var lines = new List<Pos>();
                     board.FindLines((Player)i, 3, lines);
                     threes[i] = lines.Count / 3;
-                    if (highlighted != null) highlighted.AddRange(lines);
+                    highlighted.AddRange(lines);
                 }
 
                 return threes[0] > threes[1] ? Player.Red : threes[0] < threes[1] ? Player.Blue : Player.Tie;
@@ -139,40 +135,49 @@ namespace PacManBot.Games
 
         public override void DoTurnAI()
         {
+            string debug = "priority";
             var moves = TryCompleteLine(turn, 4) ?? TryCompleteLine(turn.OtherPlayer(), 4) ?? // Win or avoid losing
                         TryCompleteFlyingLine(turn) ?? TryCompleteFlyingLine(turn.OtherPlayer()); // Forced win / forced lose situations
-            string action = "normal";
+
+            if (time < 2 && board[2, 2] == Player.None && GlobalRandom.Next(4) > 0) moves = new List<Pos> { new Pos(2, 2) };
+
             if (moves == null) // Lines of 3
             {
                 var lines = TryCompleteLine(turn, 3);
                 var blocks = TryCompleteLine(turn.OtherPlayer(), 3);
-                action = "threes";
+
                 if (lines == null && blocks == null)
                 {
-                    action = "random";
-                    moves = TryCompleteLine(turn.OtherPlayer(), 2) ?? EmptyCells(board); // Hugs player in the beginning
+                    moves = TryCompleteLine(turn, 2) ?? EmptyCells(board); // Next to itself 
+                    debug = "random";
                 }
-                else if (lines == null) moves = blocks;
-                else if (blocks == null) moves = lines;
                 else
                 {
-                    var combo = lines.Where(x => blocks.Contains(x)).ToList();
+                    var combo = new List<Pos>();
+                    if (lines != null) combo.AddRange(lines.GroupBy(x => x).Where(g => g.Count() > 1).Select(g => g.Key)); // Double line
+                    if (blocks != null) combo.AddRange(blocks.GroupBy(x => x).Where(g => g.Count() > 1).Select(g => g.Key)); // Double block
+                    if (lines != null && blocks != null) combo.AddRange(lines.Where(x => blocks.Contains(x))); // line + block
+
                     if (combo.Count > 0)
                     {
-                        action = "combo";
                         moves = combo;
+                        debug = "combo";
                     }
-                    else moves = lines;
+                    else
+                    {
+                        moves = lines ?? blocks;
+                        debug = "threes";
+                    }
                 }
             }
 
             Pos choice = GlobalRandom.Choose(moves);
-
-            action += $" {choice.x+1},{choice.y+1} /";
-            foreach (var m in moves) action += $" {m.x+1},{m.y+1}";
-            logger.Log(LogSeverity.Debug, "AI", action);
-
             DoTurn($"{(char)('A' + choice.x)}{1 + choice.y}");
+
+            debug += $" {choice.x+1},{choice.y+1} /";
+            foreach (var m in moves) debug += $" {m.x+1},{m.y+1}";
+            logger.Log(LogSeverity.Debug, "AI", debug);
+
         }
 
 
@@ -225,7 +230,7 @@ namespace PacManBot.Games
             {
                 for (int x, y = 0; y <= d; y++)
                 {
-                    if ((x = d - y) < board.LengthX() && y < board.LengthY())
+                    if (y < board.LengthY() && (x = d - y) < board.LengthX())
                     {
                         CheckCell(new Pos(x, y));
                     }
@@ -238,7 +243,7 @@ namespace PacManBot.Games
             {
                 for (int x, y = 0; y <= d; y++)
                 {
-                    if ((x = board.LengthX() - 1 - d + y) >= 0 && y < board.LengthY())
+                    if (y < board.LengthY() && (x = board.LengthX() - 1 - d + y) >= 0)
                     {
                         CheckCell(new Pos(x, y));
                     }
