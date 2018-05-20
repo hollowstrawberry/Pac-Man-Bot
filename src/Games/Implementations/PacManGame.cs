@@ -76,10 +76,13 @@ namespace PacManBot.Games
         [DataMember] public override ulong MessageId { get; set; }
         [DataMember] public override ulong ChannelId { get; set; }
 
-        [DataMember] public ulong OwnerId { get { return UserId[0]; } set { UserId = new ulong[] { value }; } }
+        [DataMember] public ulong OwnerId
+        {
+            get { return UserId[0]; }
+            set { UserId = new ulong[] { value }; }
+        }
 
-        [DataMember]
-        private string FullMap //Converts map between char[,] and string
+        [DataMember] private string FullMap //Converts map between char[,] and string
         {
             set
             {
@@ -152,13 +155,16 @@ namespace PacManBot.Games
 
         // Game objects
 
+        [DataContract]
         private class PacMan
         {
-            public readonly Pos origin; //Position it started at
-            public Pos pos; //Position on the map
-            public Dir dir = Dir.none; //Direction it's facing
-            public int power = 0; //Time left of power mode
-            public int ghostStreak = 0; //Ghosts eaten during the current power mode
+            [DataMember] public readonly Pos origin; //Position it started at
+            [DataMember] public Pos pos; //Position on the map
+            [DataMember] public Dir dir = Dir.none; //Direction it's facing
+            [DataMember] public int power = 0; //Time left of power mode
+            [DataMember] public int ghostStreak = 0; //Ghosts eaten during the current power mode
+
+            private PacMan() { }
 
             public PacMan(Pos pos, Pos origin)
             {
@@ -168,16 +174,19 @@ namespace PacManBot.Games
         }
 
 
+        [DataContract]
         private class Ghost
         {
-            public readonly Pos origin; //Tile it spawns in
-            public readonly Pos corner; //Preferred corner
-            public Pos pos; //Position on the map
-            public Dir dir = Dir.none; //Direction it's facing
-            public AiType type; //Ghost behavior type
-            public AiMode mode; //Ghost behavior mode
-            public int pauseTime; //Time remaining until it can move
-            public bool exitRight = false; //It will exit the ghost box to the left unless modes have changed
+            [DataMember] public readonly Pos origin; //Tile it spawns in
+            [DataMember] public readonly Pos corner; //Preferred corner
+            [DataMember] public Pos pos; //Position on the map
+            [DataMember] public Dir dir; //Direction it's facing
+            [DataMember] public AiType type; //Ghost behavior type
+            [DataMember] public AiMode mode; //Ghost behavior mode
+            [DataMember] public int pauseTime; //Time remaining until it can move
+            [DataMember] public bool exitRight = false; //It will exit the ghost box to the left unless modes have changed
+
+            private Ghost() { }
 
             public Ghost(AiType type, Pos pos, Pos origin, Pos corner) // Had to split pos and origin because of the deserializer
             {
@@ -198,7 +207,13 @@ namespace PacManBot.Games
                     pos = origin;
                     dir = Dir.none;
                     pauseTime--;
-                    if (JustChangedMode(game, checkFrightened: true)) exitRight = true; // Exits to the right if modes changed
+                    if (JustChangedMode(game, fullCheck: true)) exitRight = true; // Exits to the right if modes changed
+                    return;
+                }
+
+                if (mode == AiMode.Frightened && game.Time % 2 == 1)
+                {
+                    if (JustChangedMode(game)) dir = dir.Opposite();
                     return;
                 }
 
@@ -237,56 +252,48 @@ namespace PacManBot.Games
                     case AiMode.Scatter:
                         target = corner;
                         break;
-
-                    case AiMode.Frightened:
-                        for (int i = 0; i < 20; i++)
-                        {
-                            target = pos + (Dir)(GlobalRandom.Next(1, 5)); //Random adjacent empty space, 20 attempts
-                            if (game.NonSolid(target)) break;
-                        }
-                        break;
                 }
 
 
                 //Decide movement
 
-                Dir newDir = Dir.none;
-
                 if (game.map.At(pos) == CharDoor || game.map.At(pos + Dir.up) == CharDoor) // Exiting the cage
                 {
-                    newDir = Dir.up;
+                    dir = Dir.up;
                 }
                 else if (dir == Dir.up && game.map.At(pos + Dir.down) == CharDoor) // Getting away from the cage
                 {
-                    newDir = exitRight ? Dir.right : Dir.left;
+                    dir = exitRight ? Dir.right : Dir.left;
                 }
                 else if (JustChangedMode(game))
                 {
-                    newDir = dir.Opposite();
+                    dir = dir.Opposite();
+                }
+                else if (mode == AiMode.Frightened) // Turns randomly at intersections
+                {
+                    dir = GlobalRandom.Choose(AllDirs.Where(p => p != dir.Opposite() && game.NonSolid(pos + p)).ToArray());
                 }
                 else //Track target
                 {
                     exitRight = false;
 
                     float distance = 1000f;
-                    foreach (Dir testDir in AllDirs) //Decides the direction that will get it closest to its target
+                    foreach (Dir testDir in AllDirs.Where(x => x != dir.Opposite())) //Decides the direction that will get it closest to its target
                     {
                         Pos testPos = pos + testDir;
 
                         if (testDir == Dir.up && (game.map.At(testPos) == CharSoftWall || game.map.At(testPos) == CharSoftWallPellet)) continue; //Can't go up these places
-                        if (testDir == dir.Opposite()) continue; //Can't turn 180 degrees unless the direction was changed previously
 
                         if (game.NonSolid(testPos) && Pos.Distance(testPos, target) < distance) //Check if it can move to the tile and if this direction is better than the previous
                         {
-                            newDir = testDir;
+                            dir = testDir;
                             distance = Pos.Distance(testPos, target);
                         }
                         //Console.WriteLine($"Target: {target.x},{target.y} / Ghost: {pos.x},{pos.y} / Test Dir: {(pos + testDir).x},{(pos + testDir).y} / Test Dist: {Pos.Distance(pos + testDir, target)}"); //For debugging AI
                     }
                 }
 
-                dir = newDir;
-                if (mode != AiMode.Frightened || game.Time % 2 == 0) pos += dir; // If frightened, only moves on even turns
+                pos += dir; // If frightened, only moves on even turns
                 game.map.Wrap(ref pos);
             }
 
@@ -299,15 +306,15 @@ namespace PacManBot.Games
                 else { mode = AiMode.Chase; }
             }
 
-            private bool JustChangedMode(PacManGame game, bool checkFrightened = false) // checkFrightened detects the switch to Frightened, but not from it
+            private bool JustChangedMode(PacManGame game, bool fullCheck = false) // fullCheck detects changes to other ghosts
             {
                 if (game.Time == 0) return false;
-                if (mode == AiMode.Frightened && !checkFrightened) return game.pacMan.power == PowerTime;
+                if (mode == AiMode.Frightened && !fullCheck) return game.pacMan.power == PowerTime; // Detects the switch to Frightened, but not from it
 
                 for (int i = 0; i < 2; i++) if (game.Time == i * ScatterCycle || game.Time == i * ScatterCycle + ScatterTime1) return true;
                 for (int i = 2; i < 4; i++) if (game.Time == i * ScatterCycle || game.Time == i * ScatterCycle + ScatterTime2) return true;
 
-                return checkFrightened ? game.pacMan.power == PowerTime : false;
+                return fullCheck ? game.pacMan.power == PowerTime : false;
             }
         }
 

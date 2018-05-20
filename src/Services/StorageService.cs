@@ -249,6 +249,7 @@ namespace PacManBot.Services
             }
 
             uint fail = 0;
+            bool firstFail = true;
 
             foreach (string file in Directory.GetFiles(PacManGame.Folder))
             {
@@ -256,28 +257,17 @@ namespace PacManBot.Services
                 {
                     try
                     {
-                        string content = File.ReadAllText(file);
-                        if (content.Contains("userId"))
-                        {
-                            content = Regex.Replace(content, @"""userId"":\[([0-9]*)\]", @"""OwnerId"":$1");
-                            content = content.Replace("\"channelId\":", "\"ChannelId\":");
-                            content = content.Replace("\"state\":", "\"State\":");
-                            content = content.Replace("\"lastPlayed\":", "\"LastPlayed\":");
-                            content = content.Replace("\"time\":", "\"Time\":");
-                            content = content.Replace("\"messageId\":", "\"MessageId\":");
-                            content = content.Replace("\"player\":", "\"pacMan\":");
-                        }
-
-                        var game = JsonConvert.DeserializeObject<PacManGame>(content, gameJsonSettings);
+                        var game = JsonConvert.DeserializeObject<PacManGame>(File.ReadAllText(file), gameJsonSettings);
                         game.SetServices(client, logger, this);
                         gameInstances.Add(game);
-                        StoreGame(game); // Update old files
+                        // StoreGame(game); // Update old files
                     }
                     catch (Exception e)
                     {
-                        logger.Log(LogSeverity.Error, LogSource.Storage, $"Couldn't load game at {file}: {e.Message}");
+                        logger.Log(LogSeverity.Error, LogSource.Storage, $"Couldn't load game at {file}: {(firstFail ? e.ToString() : e.Message)}");
                         Console.ReadLine();
                         fail++;
+                        firstFail = false;
                     }
                 }
             }
