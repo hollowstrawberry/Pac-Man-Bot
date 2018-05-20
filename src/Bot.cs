@@ -53,6 +53,7 @@ namespace PacManBot
         {
             await client.LoginAsync(TokenType.Bot, botConfig.discordToken);
             await client.StartAsync();
+            storage.AppInfo = await client.GetApplicationInfoAsync();
         }
 
 
@@ -92,7 +93,7 @@ namespace PacManBot
 
         private Task OnChannelDestroyed(SocketChannel channel)
         {
-            foreach (var game in storage.GameInstances.Where(g => g.channelId == channel.Id).ToArray())
+            foreach (var game in storage.GameInstances.Where(g => g.ChannelId == channel.Id).ToArray())
             {
                 storage.DeleteGame(game);
             }

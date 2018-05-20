@@ -21,6 +21,7 @@ namespace PacManBot.Services
 
         public ScriptingService(IServiceProvider provider)
         {
+            this.provider = provider;
             this.shardedClient = provider.Get<DiscordShardedClient>();
             this.logger = provider.Get<LoggingService>();
             this.storage = provider.Get<StorageService>();

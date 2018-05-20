@@ -10,7 +10,7 @@ using static PacManBot.Games.GameUtils;
 
 namespace PacManBot.Games
 {
-    public class C4Game : GameInstance
+    public class C4Game : TwoPlayerGame, IMessagesGame
     {
         private const int Columns = 7, Rows = 6;
         private static readonly TimeSpan _expiry = TimeSpan.FromMinutes(5);
@@ -38,25 +38,26 @@ namespace PacManBot.Games
 
 
 
-        public override bool IsInput(string value)
+        public bool IsInput(string value)
         {
             return int.TryParse(StripPrefix(value), out int num) && num > 0 && num <= Columns;
         }
 
 
-        public override void DoTurn(string rawInput)
+        public void DoTurn(string input)
         {
-            base.DoTurn(rawInput);
+            if (State != State.Active) return;
+            LastPlayed = DateTime.Now;
 
-            int column = int.Parse(StripPrefix(rawInput)) - 1;
+            int column = int.Parse(StripPrefix(input)) - 1;
             if (!AvailableColumns(board).Contains(column)) return; // Column is full
 
             PlacePiece(board, column, turn);
 
-            time++;
+            Time++;
 
-            if (FindWinner(board, turn, time, highlighted)) winner = turn;
-            else if (IsTie(board, turn, time)) winner = Player.Tie;
+            if (FindWinner(board, turn, Time, highlighted)) winner = turn;
+            else if (IsTie(board, turn, Time)) winner = Player.Tie;
 
             if (winner == Player.None)
             {
@@ -64,7 +65,7 @@ namespace PacManBot.Games
             }
             else
             {
-                state = State.Completed;
+                State = State.Completed;
                 turn = winner;
             }
         }
@@ -72,7 +73,7 @@ namespace PacManBot.Games
 
         public override EmbedBuilder GetEmbed(bool showHelp = true)
         {
-            if (state == State.Cancelled) return CancelledEmbed();
+            if (State == State.Cancelled) return CancelledEmbed();
 
             var description = new StringBuilder();
 
@@ -83,7 +84,7 @@ namespace PacManBot.Games
 
             description.Append("ᅠ\n");
 
-            if (state == State.Active)
+            if (State == State.Active)
             {
                 var columns = AvailableColumns(board);
                 for (int x = 0; x < Columns; x++) description.Append(columns.Contains(x) ? CustomEmoji.NumberCircle[x + 1] : CustomEmoji.Empty);
@@ -99,7 +100,7 @@ namespace PacManBot.Games
                 description.Append('\n');
             }
 
-            if (state == State.Active) description.Append($"ᅠ\n*Say the number of a column (1 to 7) to place a piece*");
+            if (State == State.Active) description.Append($"ᅠ\n*Say the number of a column (1 to 7) to place a piece*");
 
 
             return new EmbedBuilder()
@@ -148,16 +149,16 @@ namespace PacManBot.Games
                 var tempBoard = (Player[,])board.Clone();
                 PlacePiece(tempBoard, column, turn);
 
-                if (FindWinner(tempBoard, turn, time + 1)) // Can win in 1 move
+                if (FindWinner(tempBoard, turn, Time + 1)) // Can win in 1 move
                 {
                     moves = new Dictionary<int, int> { { column, 0 } };
                     avoidMoves = new List<int>();
                     break;
                 }
 
-                moves.Add(column, MayLoseCount(tempBoard, turn, turn.OtherPlayer(), time + 1, depth: 3));
+                moves.Add(column, MayLoseCount(tempBoard, turn, turn.OtherPlayer(), Time + 1, depth: 3));
 
-                if (MayLoseCount(tempBoard, turn, turn.OtherPlayer(), time + 1, depth: 1) > 0) avoidMoves.Add(column); // Can lose right away
+                if (MayLoseCount(tempBoard, turn, turn.OtherPlayer(), Time + 1, depth: 1) > 0) avoidMoves.Add(column); // Can lose right away
             }
 
             if (avoidMoves.Count < moves.Count)

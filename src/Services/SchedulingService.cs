@@ -64,7 +64,7 @@ namespace PacManBot.Services
                 await logger.Log(LogSeverity.Critical, LogSource.Scheduling, "Reconnection timed out. Shutting down...");
                 Environment.Exit(666);
             }
-            catch (TaskCanceledException)
+            catch (OperationCanceledException)
             {
                 await logger.Log(LogSeverity.Info, LogSource.Scheduling, "All shards reconnected. Shutdown aborted");
             }
@@ -76,7 +76,7 @@ namespace PacManBot.Services
             var now = DateTime.Now;
             int previousCount = storage.GameInstances.Count;
 
-            foreach (var game in storage.GameInstances.Where(g => (now - g.lastPlayed) > g.Expiry).ToArray())
+            foreach (var game in storage.GameInstances.Where(g => (now - g.LastPlayed) > g.Expiry).ToArray())
             {
                 storage.DeleteGame(game);
             }

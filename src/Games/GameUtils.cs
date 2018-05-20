@@ -33,6 +33,7 @@ namespace PacManBot.Games
 
 
 
+
         // Data types
 
         public class Pos // 2d coordinates

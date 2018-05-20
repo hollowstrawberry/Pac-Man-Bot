@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Net;
@@ -94,13 +93,13 @@ namespace PacManBot.Modules
 
 
 
-        private async Task RunGame<T>(IUser challenger, IUser opponent) where T : GameInstance
+        private async Task RunGame<T>(IUser challenger, IUser opponent) where T : TwoPlayerGame
         {
             foreach (var otherGame in storage.GameInstances)
             {
-                if (otherGame.channelId == Context.Channel.Id)
+                if (otherGame.ChannelId == Context.Channel.Id)
                 {
-                    await ReplyAsync(otherGame.userId.Contains(Context.User.Id) ?
+                    await ReplyAsync(otherGame.UserId.Contains(Context.User.Id) ?
                         $"You're already playing a game in this channel!\nUse **{storage.GetPrefixOrEmpty(Context.Guild)}cancel** if you want to cancel it." :
                         $"There is already a different game in this channel!\nWait until it's finished or try doing **{storage.GetPrefixOrEmpty(Context.Guild)}cancel**");
                     return;
@@ -111,7 +110,7 @@ namespace PacManBot.Modules
             var players = new ulong[] { opponent.Id, challenger.Id };
             Type type = typeof(T);
 
-            GameInstance game;
+            TwoPlayerGame game;
             if (type == typeof(TTTGame)) game = new TTTGame(Context.Channel.Id, players, shardedClient, logger, storage);
             else if (type == typeof(TTT5Game)) game = new TTT5Game(Context.Channel.Id, players, shardedClient, logger, storage);
             else if (type == typeof(C4Game)) game = new C4Game(Context.Channel.Id, players, shardedClient, logger, storage);
@@ -121,34 +120,34 @@ namespace PacManBot.Modules
 
             storage.AddGame(game);
 
-            var gameMessage = await ReplyAsync(game.GetContent(), false, game.GetEmbed().Build(), Utils.DefaultRequestOptions);
-            game.messageId = gameMessage.Id;
+            var gameMessage = await ReplyAsync(game.GetContent(), false, game.GetEmbed().Build(), Utils.DefaultOptions);
+            game.MessageId = gameMessage.Id;
 
-            while (game.state == State.Active)
+            while (game.State == State.Active)
             {
                 if (bothBots)
                 {
                     try
                     {
                         game.DoTurnAI();
-                        if (game.messageId != gameMessage.Id) gameMessage = await game.GetMessage();
+                        if (game.MessageId != gameMessage.Id) gameMessage = await game.GetMessage();
                         game.CancelRequests();
                         if (gameMessage != null) await gameMessage.ModifyAsync(game.UpdateDisplay, game.RequestOptions);
                     }
-                    catch (Exception e) when (e is TaskCanceledException || e is TimeoutException || e is HttpException) { }
+                    catch (Exception e) when (e is OperationCanceledException || e is TimeoutException || e is HttpException) { }
 
                     await Task.Delay(GlobalRandom.Next(1000, 2001));
                 }
                 else await Task.Delay(1000);
 
-                if ((DateTime.Now - game.lastPlayed) > game.Expiry)
+                if ((DateTime.Now - game.LastPlayed) > game.Expiry)
                 {
-                    game.state = State.Cancelled;
+                    game.State = State.Cancelled;
                     storage.DeleteGame(game);
                     try
                     {
-                        if (gameMessage.Id != game.messageId) gameMessage = await game.GetMessage();
-                        if (gameMessage != null) await gameMessage.ModifyAsync(game.UpdateDisplay, Utils.DefaultRequestOptions);
+                        if (gameMessage.Id != game.MessageId) gameMessage = await game.GetMessage();
+                        if (gameMessage != null) await gameMessage.ModifyAsync(game.UpdateDisplay, Utils.DefaultOptions);
                     }
                     catch (HttpException) { } // Something happened to the message, we can ignore it
                     return;
@@ -167,27 +166,24 @@ namespace PacManBot.Modules
         [RequireBotPermissionImproved(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks | ChannelPermission.AddReactions)]
         private async Task MoveGame()
         {
-            foreach (var game in storage.GameInstances)
+            var game = storage.GetGame(Context.Channel.Id);
+            if (game == null)
             {
-                if (game.channelId == Context.Channel.Id)
-                {
-                    try
-                    {
-                        var gameMessage = await game.GetMessage();
-                        if (gameMessage != null) await gameMessage.DeleteAsync(Utils.DefaultRequestOptions); // Old message
-                    }
-                    catch (HttpException) { } // Something happened to the message, can ignore it
-
-                    var message = await ReplyAsync(game.GetContent(), false, game.GetEmbed()?.Build(), Utils.DefaultRequestOptions);
-                    game.messageId = message.Id;
-
-                    if (game is PacManGame pacManGame) await PacManModule.AddControls(pacManGame, message);
-
-                    return;
-                }
+                await ReplyAsync("There is no active game in this channel!", options: Utils.DefaultOptions);
+                return;
             }
 
-            await ReplyAsync("There is no active game in this channel!");
+            try
+            {
+                var gameMessage = await game.GetMessage();
+                if (gameMessage != null) await gameMessage.DeleteAsync(Utils.DefaultOptions); // Old message
+            }
+            catch (HttpException) { } // Something happened to the message, can ignore it
+
+            var message = await ReplyAsync(game.GetContent(), false, game.GetEmbed()?.Build(), Utils.DefaultOptions);
+            game.MessageId = message.Id;
+
+            if (game is PacManGame pacManGame) await PacManModule.AddControls(pacManGame, message);
         }
 
 
@@ -197,39 +193,37 @@ namespace PacManBot.Modules
         [RequireBotPermissionImproved(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks | ChannelPermission.AddReactions)]
         public async Task CancelGame()
         {
-            foreach (var game in storage.GameInstances)
+            var game = storage.GetGame(Context.Channel.Id);
+            if (game == null)
             {
-                if (game.channelId == Context.Channel.Id)
-                {
-                    if (game.userId.Contains(Context.User.Id) || Context.UserCan(ChannelPermission.ManageMessages) || game.BotVsBot || DateTime.Now - game.lastPlayed > TimeSpan.FromSeconds(60))
-                    {
-                        game.state = State.Cancelled;
-                        storage.DeleteGame(game);
-
-                        try
-                        {
-                            var gameMessage = await game.GetMessage();
-                            if (gameMessage != null)
-                            {
-                                await gameMessage.ModifyAsync(game.UpdateDisplay, Utils.DefaultRequestOptions);
-                                if (game is PacManGame && Context.BotCan(ChannelPermission.ManageMessages)) await gameMessage.RemoveAllReactionsAsync(Utils.DefaultRequestOptions);
-                            }
-                        }
-                        catch (HttpException) { } // Something happened to the message, we can ignore it
-
-                        if (game is PacManGame pacManGame && Context.Guild != null)
-                        {
-                            await ReplyAsync($"Game ended. Score won't be registered.\n**Result:** {pacManGame.score} points in {pacManGame.time} turns", options: Utils.DefaultRequestOptions);
-                        }
-                        else await Context.Message.AddReactionAsync(CustomEmoji.Check, Utils.DefaultRequestOptions);
-                    }
-                    else await ReplyAsync("You can't cancel this game because someone else is still playing!", options: Utils.DefaultRequestOptions);
-
-                    return;
-                }
+                await ReplyAsync("There is no active game in this channel!", options: Utils.DefaultOptions);
+                return;
             }
 
-            await ReplyAsync("There is no active game in this channel!", options: Utils.DefaultRequestOptions);
+            if (game.UserId.Contains(Context.User.Id) || Context.UserCan(ChannelPermission.ManageMessages) || DateTime.Now - game.LastPlayed > TimeSpan.FromSeconds(60)
+                || game is TwoPlayerGame tpGame && tpGame.BotVsBot)
+            {
+                game.State = State.Cancelled;
+                storage.DeleteGame(game);
+
+                try
+                {
+                    var gameMessage = await game.GetMessage();
+                    if (gameMessage != null)
+                    {
+                        await gameMessage.ModifyAsync(game.UpdateDisplay, Utils.DefaultOptions);
+                        if (game is PacManGame && Context.BotCan(ChannelPermission.ManageMessages)) await gameMessage.RemoveAllReactionsAsync(Utils.DefaultOptions);
+                    }
+                }
+                catch (HttpException) { } // Something happened to the message, we can ignore it
+
+                if (game is PacManGame pacManGame && Context.Guild != null)
+                {
+                    await ReplyAsync($"Game ended. Score won't be registered.\n**Result:** {pacManGame.score} points in {pacManGame.Time} turns", options: Utils.DefaultOptions);
+                }
+                else await Context.Message.AddReactionAsync(CustomEmoji.Check, Utils.DefaultOptions);
+            }
+            else await ReplyAsync("You can't cancel this game because someone else is still playing!", options: Utils.DefaultOptions);
         }
     }
 }

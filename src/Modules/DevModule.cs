@@ -51,7 +51,7 @@ namespace PacManBot.Modules
             }
             finally
             {
-                await Context.Message.RemoveReactionAsync(CustomEmoji.Loading, Context.Client.CurrentUser, Utils.DefaultRequestOptions);
+                await Context.Message.RemoveReactionAsync(CustomEmoji.Loading, Context.Client.CurrentUser, Utils.DefaultOptions);
             }
         }
 
@@ -69,7 +69,7 @@ namespace PacManBot.Modules
             catch (Exception e)
             {
                 await logger.Log(LogSeverity.Debug, $"{e.Message}");
-                await ReplyAsync($"```{e.Message}```", options: Utils.DefaultRequestOptions);
+                await ReplyAsync($"```{e.Message}```", options: Utils.DefaultOptions);
                 await Context.Message.AddReactionAsync(CustomEmoji.Cross);
             }
         }
@@ -86,7 +86,7 @@ namespace PacManBot.Modules
             catch (Exception e)
             {
                 await logger.Log(LogSeverity.Error, $"{e}");
-                await ReplyAsync(e.Message, options: Utils.DefaultRequestOptions);
+                await ReplyAsync(e.Message, options: Utils.DefaultOptions);
                 return;
             }
 
@@ -122,12 +122,12 @@ namespace PacManBot.Modules
         {
             try
             {
-                await ReplyAsync($"```{"cs".If(filename.Contains(".cs"))}\n{File.ReadAllText(filename).Replace("```", "`​``").Substring(start).Truncate(length)}".Truncate(1997) + "```", options: Utils.DefaultRequestOptions);
+                await ReplyAsync($"```{filename.Split('.').Last()}\n{File.ReadAllText(filename).Replace("```", "`​``").Substring(start).Truncate(length)}".Truncate(1997) + "```", options: Utils.DefaultOptions);
             }
             catch (Exception e)
             {
                 await logger.Log(LogSeverity.Debug, $"{e.Message}");
-                await ReplyAsync($"```{e.Message}```", options: Utils.DefaultRequestOptions);
+                await ReplyAsync($"```{e.Message}```", options: Utils.DefaultOptions);
             }
         }
         [Command("file"), Alias("readfile"), HideHelp]
@@ -140,20 +140,20 @@ namespace PacManBot.Modules
         [Summary("Gets a list of guilds and member counts where this bot is in. Developer only.")]
         public async Task GetGuildMembers()
         {
-            await ReplyAsync(string.Join("\n", shardedClient.Guilds.OrderByDescending(g => g.MemberCount).Select(g => $"{g.Name}: {g.MemberCount}")).Truncate(2000), options: Utils.DefaultRequestOptions);
+            await ReplyAsync(string.Join("\n", shardedClient.Guilds.OrderByDescending(g => g.MemberCount).Select(g => $"{g.Name}: {g.MemberCount}")).Truncate(2000), options: Utils.DefaultOptions);
         }
 
 
-        [Command("sudoclear"), Alias("wipe"), HideHelp]
+        [Command("sudo clear"), Alias("sudoclear", "wipe"), HideHelp]
         [Summary("Clear all messages in a range. Developer only.")]
         [RequireBotPermissionImproved(ChannelPermission.ReadMessageHistory | ChannelPermission.ManageMessages)]
-        public async Task ClearGameMessages(int amount = 10)
+        public async Task ClearAllMessages(int amount = 10)
         {
             foreach (IMessage message in await Context.Channel.GetMessagesAsync(amount).FlattenAsync())
             {
                 try
                 {
-                    await message.DeleteAsync(Utils.DefaultRequestOptions);
+                    await message.DeleteAsync(Utils.DefaultOptions);
                 }
                 catch (HttpException e)
                 {
@@ -163,49 +163,54 @@ namespace PacManBot.Modules
         }
 
 
+        [Command("sudo say"), Alias("sudosay"), HideHelp]
+        [Summary("Say anything. Developer-only version.")]
+        public async Task ClearGameMessages([Remainder]string text)
+        {
+            await ReplyAsync(text, options: Utils.DefaultOptions);
+        }
+
+
         [Command("deusexmachina"), Alias("deus", "domoves"), HideHelp]
-        [Summary("Clear all messages in a range. Developer only.")]
-        [RequireBotPermissionImproved(ChannelPermission.ReadMessageHistory | ChannelPermission.ManageMessages)]
+        [Summary("Execute game moves in sequence regardless of turn or dignity. Developer only.")]
         public async Task DoRemoteGameMoves(params string[] moves)
         {
-            foreach (var game in storage.GameInstances.Where(g => !(g is PacManGame)))
+            var game = storage.GetGame<IMessagesGame>(Context.Channel.Id);
+            if (game == null)
             {
-                if (game.channelId == Context.Channel.Id)
-                {
-                    bool success = true;
-                    foreach (string move in moves)
-                    {
-                        if (game.IsInput(move) && game.state == State.Active) game.DoTurn(move);
-                        else success = false;
-                    }
-
-                    var msg = await game.GetMessage();
-                    if (msg != null) await msg.ModifyAsync(game.UpdateDisplay, Utils.DefaultRequestOptions);
-                    else msg = await ReplyAsync(game.GetContent(), false, game.GetEmbed()?.Build(), Utils.DefaultRequestOptions);
-
-                    if (game.AITurn)
-                    {
-                        game.DoTurnAI();
-                        await Task.Delay(1000);
-                        await msg.ModifyAsync(game.UpdateDisplay, Utils.DefaultRequestOptions);
-                    }
-
-                    if (game.state != State.Active) storage.DeleteGame(game);
-
-                    await Context.Message.AddReactionAsync(success ? CustomEmoji.Check : CustomEmoji.Cross);
-                    return;
-                }
+                await ReplyAsync("How about you start a game first", options: Utils.DefaultOptions);
+                return;
             }
 
-            await ReplyAsync("How about you start a game first");
+            bool success = true;
+            foreach (string move in moves)
+            {
+                if (game.IsInput(move) && game.State == State.Active) game.DoTurn(move);
+                else success = false;
+            }
+
+            var msg = await game.GetMessage();
+            if (msg != null) await msg.ModifyAsync(game.UpdateDisplay, Utils.DefaultOptions);
+            else msg = await ReplyAsync(game.GetContent(), false, game.GetEmbed()?.Build(), Utils.DefaultOptions);
+
+            if (game is TwoPlayerGame tpGame && tpGame.AITurn)
+            {
+                tpGame.DoTurnAI();
+                await Task.Delay(1000);
+                await msg.ModifyAsync(game.UpdateDisplay, Utils.DefaultOptions);
+            }
+
+            if (game.State != State.Active) storage.DeleteGame(game);
+
+            await Context.Message.AddReactionAsync(success ? CustomEmoji.Check : CustomEmoji.Cross); 
         }
 
 
         [Command("throw"), HideHelp]
         [Summary("Why would you do this")]
-        public async Task ThrowException()
+        public Task ThrowException()
         {
-            throw new Exception("Huh.");
+            throw new Exception("Accuracy roll: 20 | Successful throw");
         }
     }
 }

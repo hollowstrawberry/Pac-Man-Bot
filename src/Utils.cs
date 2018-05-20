@@ -13,7 +13,7 @@ namespace PacManBot
 {
     public static class Utils
     {
-        public static readonly RequestOptions DefaultRequestOptions = new RequestOptions()
+        public static readonly RequestOptions DefaultOptions = new RequestOptions()
         {
             RetryMode = RetryMode.RetryRatelimit,
             Timeout = 10000

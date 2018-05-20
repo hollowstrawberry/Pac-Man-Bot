@@ -1,10 +1,10 @@
 using System;
 using System.Threading.Tasks;
 using Discord;
+using Discord.Net;
 using Discord.Commands;
 using PacManBot.Services;
 using PacManBot.Constants;
-using Discord.Net;
 
 namespace PacManBot.Modules
 {
@@ -29,7 +29,7 @@ namespace PacManBot.Modules
 
         [Command("say"), Remarks("Make the bot say anything")]
         [Summary("Repeats back the message provided. Only users with the Manage Messages permission can use this command.")]
-        public async Task Say([Remainder]string message) => await ReplyAsync(message.SanitizeMentions(), options: Utils.DefaultRequestOptions);
+        public async Task Say([Remainder]string message) => await ReplyAsync(message.SanitizeMentions(), options: Utils.DefaultOptions);
 
 
         [Command("clear"), Alias("c"), Remarks("Clear this bot's messages and commands")]
@@ -44,7 +44,7 @@ namespace PacManBot.Modules
                 {
                     if (message.Author.Id == Context.Client.CurrentUser.Id || message.Content.StartsWith(storage.GetPrefix(Context.Guild)) && Context.BotCan(ChannelPermission.ManageMessages))
                     {
-                        await message.DeleteAsync(Utils.DefaultRequestOptions);
+                        await message.DeleteAsync(Utils.DefaultOptions);
                     }
                 }
                 catch (Exception e) when (e is HttpException || e is TimeoutException)
@@ -63,20 +63,20 @@ namespace PacManBot.Modules
         {
             if (prefix.ContainsAny("*", "_", "~", "`", "\\"))
             {
-                await ReplyAsync($"{CustomEmoji.Cross} The prefix can't contain markdown special characters: *_~\\`\\\\", options: Utils.DefaultRequestOptions);
+                await ReplyAsync($"{CustomEmoji.Cross} The prefix can't contain markdown special characters: *_~\\`\\\\", options: Utils.DefaultOptions);
                 return;
             }
 
             try
             {
                 storage.SetPrefix(Context.Guild.Id, prefix);
-                await ReplyAsync($"{CustomEmoji.Check} Prefix for this server has been successfully set to '{prefix}'.", options: Utils.DefaultRequestOptions);
+                await ReplyAsync($"{CustomEmoji.Check} Prefix for this server has been successfully set to '{prefix}'.", options: Utils.DefaultOptions);
                 await logger.Log(LogSeverity.Info, $"Prefix for server {Context.Guild.Id} set to {prefix}");
             }
             catch (Exception e)
             {
                 await logger.Log(LogSeverity.Error, $"{e}");
-                await ReplyAsync($"{CustomEmoji.Cross} There was a problem setting the prefix. {ErrorMessage}", options: Utils.DefaultRequestOptions);
+                await ReplyAsync($"{CustomEmoji.Cross} There was a problem setting the prefix. {ErrorMessage}", options: Utils.DefaultOptions);
             }
         }
 
@@ -88,12 +88,12 @@ namespace PacManBot.Modules
             try
             {
                 bool nowaka = storage.ToggleWaka(Context.Guild.Id);
-                await ReplyAsync($"{CustomEmoji.Check} \"Waka\" responses turned **{(nowaka ? "ON" : "OFF")}** in this server.", options: Utils.DefaultRequestOptions);
+                await ReplyAsync($"{CustomEmoji.Check} \"Waka\" responses turned **{(nowaka ? "ON" : "OFF")}** in this server.", options: Utils.DefaultOptions);
             }
             catch (Exception e)
             {
                 await logger.Log(LogSeverity.Error, $"{e}");
-                await ReplyAsync($"{CustomEmoji.Cross} Oops, something went wrong. {ErrorMessage}", options: Utils.DefaultRequestOptions);
+                await ReplyAsync($"{CustomEmoji.Cross} Oops, something went wrong. {ErrorMessage}", options: Utils.DefaultOptions);
             }
         }
     }

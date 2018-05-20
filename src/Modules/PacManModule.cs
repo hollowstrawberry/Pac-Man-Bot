@@ -46,11 +46,11 @@ namespace PacManBot.Modules
 
             foreach (var game in storage.GameInstances)
             {
-                if (Context.Channel.Id == game.channelId)
+                if (Context.Channel.Id == game.ChannelId)
                 {
                     await ReplyAsync(game is PacManGame ?
                         $"There is already a game in this channel!\nYou can use the **{prefix}bump** command to bring it to the bottom of the chat." :
-                        $"There is already a different game in this channel! Try using **{prefix}cancel**", options: Utils.DefaultRequestOptions);
+                        $"There is already a different game in this channel! Try using **{prefix}cancel**", options: Utils.DefaultOptions);
                     return;
                 }
             }
@@ -73,20 +73,20 @@ namespace PacManBot.Modules
             catch (InvalidMapException e) when (customMap != null)
             {
                 await logger.Log(LogSeverity.Debug, LogSource.Game, $"Failed to create custom game: {e.Message}");
-                await ReplyAsync($"The provided map is invalid: {e.Message}.\nUse the **{prefix}custom** command for more info.", options: Utils.DefaultRequestOptions);
+                await ReplyAsync($"The provided map is invalid: {e.Message}.\nUse the **{prefix}custom** command for more info.", options: Utils.DefaultOptions);
                 return;
             }
             catch (Exception e)
             {
                 await logger.Log(LogSeverity.Error, LogSource.Game, $"{e}");
-                await ReplyAsync($"There was an error starting the game. Please try again or contact the author of the bot using **{prefix}feedback**", options: Utils.DefaultRequestOptions);
+                await ReplyAsync($"There was an error starting the game. Please try again or contact the author of the bot using **{prefix}feedback**", options: Utils.DefaultOptions);
                 return;
             }
 
             storage.AddGame(newGame);
 
-            var gameMessage = await ReplyAsync(preMessage + newGame.GetContent(showHelp: false) + "```diff\n+Starting game```", options: Utils.DefaultRequestOptions); //Output the game
-            newGame.messageId = gameMessage.Id;
+            var gameMessage = await ReplyAsync(preMessage + newGame.GetContent(showHelp: false) + "```diff\n+Starting game```", options: Utils.DefaultOptions); //Output the game
+            newGame.MessageId = gameMessage.Id;
 
             await AddControls(newGame, gameMessage);
         }
@@ -96,31 +96,29 @@ namespace PacManBot.Modules
         [Summary("A Pac-Man game can either be in normal or mobile mode. Using this command will switch modes for the current game in this channel")]
         public async Task ChangeGameDisplay()
         {
-            foreach (PacManGame game in storage.GameInstances.Where(g => g is PacManGame))
+            var game = storage.GetGame<PacManGame>(Context.Channel.Id);
+            if (game == null)
             {
-                if (game.channelId == Context.Channel.Id)
-                {
-                    game.mobileDisplay = !game.mobileDisplay;
-                    try
-                    {
-                        game.CancelRequests();
-                        var gameMessage = await game.GetMessage();
-                        if (gameMessage != null) await gameMessage.ModifyAsync(game.UpdateDisplay, game.RequestOptions);
-                    }
-                    catch (TaskCanceledException) { }
-                    catch (Exception e)
-                    {
-                        if (!(e is HttpException || e is TimeoutException)) await logger.Log(LogSeverity.Error, $"{e}");
-                        await Context.Message.AddReactionAsync(CustomEmoji.Cross, Utils.DefaultRequestOptions);
-                        return;
-                    }
-
-                    await Context.Message.AddReactionAsync(CustomEmoji.Check, Utils.DefaultRequestOptions);
-                    return;
-                }
+                await ReplyAsync("There is no active Pac-Man game in this channel!", options: Utils.DefaultOptions);
+                return;
             }
 
-            await ReplyAsync("There is no Pac-Man game active in this channel!");
+            game.mobileDisplay = !game.mobileDisplay;
+            try
+            {
+                game.CancelRequests();
+                var gameMessage = await game.GetMessage();
+                if (gameMessage != null) await gameMessage.ModifyAsync(game.UpdateDisplay, game.RequestOptions);
+            }
+            catch (OperationCanceledException) { }
+            catch (Exception e)
+            {
+                if (!(e is HttpException || e is TimeoutException)) await logger.Log(LogSeverity.Error, $"{e}");
+                await Context.Message.AddReactionAsync(CustomEmoji.Cross, Utils.DefaultOptions);
+                return;
+            }
+
+            await Context.Message.AddReactionAsync(CustomEmoji.Check, Utils.DefaultOptions);
         }
 
 
@@ -137,7 +135,7 @@ namespace PacManBot.Modules
         {
             if (min < 1 || max < 1 || max < min)
             {
-                await ReplyAsync($"Invalid range of scores. Try **{storage.GetPrefixOrEmpty(Context.Guild)}help lb** for more info", options: Utils.DefaultRequestOptions);
+                await ReplyAsync($"Invalid range of scores. Try **{storage.GetPrefixOrEmpty(Context.Guild)}help lb** for more info", options: Utils.DefaultOptions);
                 return;
             }
             if (max == null) 
@@ -154,13 +152,13 @@ namespace PacManBot.Modules
 
             if (scores.Count < 1)
             {
-                await ReplyAsync("There are no registered scores within this period!", options: Utils.DefaultRequestOptions);
+                await ReplyAsync("There are no registered scores within this period!", options: Utils.DefaultOptions);
                 return;
             }
 
             if (min > scores.Count)
             {
-                await ReplyAsync("No scores found within the specified range.", options: Utils.DefaultRequestOptions);
+                await ReplyAsync("No scores found within the specified range.", options: Utils.DefaultOptions);
                 return;
             }
 
@@ -187,7 +185,7 @@ namespace PacManBot.Modules
                 Color = new Color(241, 195, 15)
             };
 
-            await ReplyAsync("", false, embed.Build(), Utils.DefaultRequestOptions);
+            await ReplyAsync("", false, embed.Build(), Utils.DefaultOptions);
         }
 
 
@@ -218,12 +216,12 @@ namespace PacManBot.Modules
                         Color = new Color(241, 195, 15)
                     };
 
-                    await ReplyAsync("", false, embed.Build(), Utils.DefaultRequestOptions);
+                    await ReplyAsync("", false, embed.Build(), Utils.DefaultOptions);
                     return;
                 }
             }
 
-            await ReplyAsync(time == Utils.TimePeriod.all ? "No scores registered for this user!" : "No scores registered during that time!", options: Utils.DefaultRequestOptions);
+            await ReplyAsync(time == Utils.TimePeriod.all ? "No scores registered for this user!" : "No scores registered during that time!", options: Utils.DefaultOptions);
         }
 
 
@@ -241,7 +239,7 @@ namespace PacManBot.Modules
                 embed.AddField(links[i].Split('|')[0], $"[Click here]({links[i].Split('|')[1]} \"{links[i].Split('|')[1]}\")", true);
             }
 
-            await ReplyAsync(message, false, embed.Build(), Utils.DefaultRequestOptions);
+            await ReplyAsync(message, false, embed.Build(), Utils.DefaultOptions);
         }
 
 
@@ -251,15 +249,15 @@ namespace PacManBot.Modules
             {
                 var requestOptions = game.RequestOptions; // So the edit can be cancelled
 
-                foreach (string input in PacManGame.GameInputs.Keys)
+                foreach (IEmote input in PacManGame.GameInputs.Keys)
                 {
-                    if (game.state != State.Active) break;
-                    await message.AddReactionAsync(input.Contains(":") ? input.ToEmote() : (IEmote)input.ToEmoji(), Utils.DefaultRequestOptions);
+                    if (game.State != State.Active) break;
+                    await message.AddReactionAsync(input, Utils.DefaultOptions);
                 }
 
                 await message.ModifyAsync(game.UpdateDisplay, requestOptions); //Restore display to normal
             }
-            catch (Exception e) when (e is HttpException || e is TimeoutException || e is TaskCanceledException) { } // We can ignore these
+            catch (Exception e) when (e is HttpException || e is TimeoutException || e is OperationCanceledException) { } // We can ignore these
         }
     }
 }

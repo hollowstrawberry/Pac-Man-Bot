@@ -11,7 +11,7 @@ using static PacManBot.Games.GameUtils;
 
 namespace PacManBot.Games
 {
-    public class TTT5Game : GameInstance
+    public class TTT5Game : TwoPlayerGame, IMessagesGame
     {
         private static readonly TimeSpan _expiry = TimeSpan.FromMinutes(5);
 
@@ -39,24 +39,23 @@ namespace PacManBot.Games
 
 
 
-        public override bool IsInput(string value)
+        public bool IsInput(string value)
         {
             return Regex.IsMatch(StripPrefix(value).ToUpper(), @"^[ABCDE][12345]$");
         }
 
 
-        public override void DoTurn(string rawInput)
+        public void DoTurn(string input)
         {
-            base.DoTurn(rawInput);
-            rawInput = StripPrefix(rawInput).ToUpper();
+            input = StripPrefix(input).ToUpper();
+            int x = input[0] - 'A';
+            int y = input[1] - '1';
 
-            int x = rawInput[0] - 'A';
-            int y = rawInput[1] - '1';
-
-            if (board[x, y] != Player.None) return; // Cell is already occupied
+            if (State != State.Active || board[x, y] != Player.None) return; // Cell is already occupied
 
             board[x, y] = turn;
-            time++;
+            Time++;
+            LastPlayed = DateTime.Now;
 
             if ((winner = FindWinner()) == Player.None)
             {
@@ -64,7 +63,7 @@ namespace PacManBot.Games
             }
             else
             {
-                state = State.Completed;
+                State = State.Completed;
                 turn = winner;
             }
         }
@@ -72,11 +71,11 @@ namespace PacManBot.Games
 
         public override EmbedBuilder GetEmbed(bool showHelp = true)
         {
-            if (state == State.Cancelled) return CancelledEmbed();
+            if (State == State.Cancelled) return CancelledEmbed();
 
             var description = new StringBuilder();
 
-            for (int i = 0; i < userId.Length; i++)
+            for (int i = 0; i < UserId.Length; i++)
             {
                 description.Append($"{"►".If(i == (int)turn)}{((Player)i).Symbol()} {$"{threes[i]} lines".If(threes[i] >= 0)} - {User((Player)i).NameandNum().SanitizeMarkdown()}\n");
             }
@@ -95,7 +94,7 @@ namespace PacManBot.Games
                 description.Append('\n');
             }
 
-            if (state == State.Active)
+            if (State == State.Active)
             {
                 description.Append($"ᅠ\nSay a column and row to place an {(turn == Player.Red ? "X" : "O")} in that cell (Example: B4)");
                 description.Append("\nTo win you must make **more lines of three** than your opponent,\nbut if someone makes a line of **four**, they **win instantly**!");
@@ -114,10 +113,10 @@ namespace PacManBot.Games
 
         private Player FindWinner()
         {
-            if (time < 7) return Player.None;
+            if (Time < 7) return Player.None;
             if (board.FindLines(turn, 4, highlighted)) return turn;
 
-            if (time < board.Length) return Player.None;
+            if (Time < board.Length) return Player.None;
             else // Game over, count threees
             {
                 for (int i = 0; i < 2; i++)
@@ -139,7 +138,7 @@ namespace PacManBot.Games
             var moves = TryCompleteLine(turn, 4) ?? TryCompleteLine(turn.OtherPlayer(), 4) ?? // Win or avoid losing
                         TryCompleteFlyingLine(turn) ?? TryCompleteFlyingLine(turn.OtherPlayer()); // Forced win / forced lose situations
 
-            if (time < 2 && board[2, 2] == Player.None && GlobalRandom.Next(4) > 0) moves = new List<Pos> { new Pos(2, 2) };
+            if (Time < 2 && board[2, 2] == Player.None && GlobalRandom.Next(4) > 0) moves = new List<Pos> { new Pos(2, 2) };
 
             if (moves == null) // Lines of 3
             {

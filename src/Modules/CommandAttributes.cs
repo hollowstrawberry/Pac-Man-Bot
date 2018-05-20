@@ -128,6 +128,8 @@ namespace PacManBot.Modules
 
         public override async Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, CommandInfo command, IServiceProvider services)
         {
+            await Task.Delay(0); // yeah
+
             if (guildPerms != null)
             {
                 if (context.Guild == null) return PreconditionResult.FromError("User requires guild permissions");

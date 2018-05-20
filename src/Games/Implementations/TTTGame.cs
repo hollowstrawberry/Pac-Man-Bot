@@ -9,7 +9,7 @@ using static PacManBot.Games.GameUtils;
 
 namespace PacManBot.Games
 {
-    public class TTTGame : GameInstance
+    public class TTTGame : TwoPlayerGame, IMessagesGame
     {
         private static readonly TimeSpan _expiry = TimeSpan.FromMinutes(5);
 
@@ -36,29 +36,26 @@ namespace PacManBot.Games
 
 
 
-        public override bool IsInput(string value)
+        public bool IsInput(string value)
         {
             return int.TryParse(StripPrefix(value), out int num) && num > 0 && num <= board.Length;
         }
 
 
-        public override void DoTurn(string rawInput)
+        public void DoTurn(string input)
         {
-            base.DoTurn(rawInput);
+            int cell = int.Parse(StripPrefix(input)) - 1;
+            int y = cell / board.LengthX();
+            int x = cell % board.LengthX();
 
-            int input = int.Parse(StripPrefix(rawInput)) - 1;
-
-            int y = input / board.LengthX();
-            int x = input % board.LengthX();
-
-            if (board[x, y] != Player.None) return; // Cell is already occupied
+            if (State != State.Active || board[x, y] != Player.None) return;
 
             board[x, y] = turn;
-            
-            time++;
+            Time++;
+            LastPlayed = DateTime.Now;
 
             if (FindWinner(board, turn, highlighted)) winner = turn;
-            else if (IsTie(board, turn, time)) winner = Player.Tie;
+            else if (IsTie(board, turn, Time)) winner = Player.Tie;
 
             if (winner == Player.None)
             {
@@ -66,7 +63,7 @@ namespace PacManBot.Games
             }
             else
             {
-                state = State.Completed;
+                State = State.Completed;
                 turn = winner;
             }
         }
@@ -74,11 +71,11 @@ namespace PacManBot.Games
 
         public override EmbedBuilder GetEmbed(bool showHelp = true)
         {
-            if (state == State.Cancelled) return CancelledEmbed();
+            if (State == State.Cancelled) return CancelledEmbed();
 
             var description = new StringBuilder();
 
-            for (int i = 0; i < userId.Length; i++)
+            for (int i = 0; i < UserId.Length; i++)
             {
                 description.Append($"{"►".If(i == (int)turn)}{((Player)i).Symbol()} - {User((Player)i).NameandNum().SanitizeMarkdown()}\n");
             }
@@ -90,12 +87,12 @@ namespace PacManBot.Games
                 for (int x = 0; x < board.LengthX(); x++)
                 {
                     description.Append(board[x, y].Symbol(highlighted.Contains(new Pos(x, y))) ??
-                        (state == State.Active ? $"{CustomEmoji.NumberCircle[1 + board.LengthX()*y + x]}" : Player.None.Circle()));
+                        (State == State.Active ? $"{CustomEmoji.NumberCircle[1 + board.LengthX()*y + x]}" : Player.None.Circle()));
                 }
                 description.Append('\n');
             }
 
-            if (state == State.Active) description.Append($"ᅠ\n*Say the number of a cell (1 to 9) to place an {(turn == Player.Red ? "X" : "O")}*");
+            if (State == State.Active) description.Append($"ᅠ\n*Say the number of a cell (1 to 9) to place an {(turn == Player.Red ? "X" : "O")}*");
 
             return new EmbedBuilder()
             {
