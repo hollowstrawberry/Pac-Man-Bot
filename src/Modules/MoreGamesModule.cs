@@ -33,7 +33,7 @@ namespace PacManBot.Modules
                + "You play by sending the number of a free cell (1 to 9) in chat while it is your turn, and to win you must make a line of 3 symbols in any direction\n\n"
                + "Do **{prefix}cancel** to end the game or **{prefix}bump** to move it to the bottom of the chat. The game times out after 5 minutes of inactivity.\n\n"
                + "You can also make the bot challenge another user or bot with **{prefix}ttt vs <opponent>**")]
-        [RequireBotPermissionImproved(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
+        [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
         public async Task StartTicTacToe(SocketGuildUser opponent = null)
         {
             await RunGame<TTTGame>(Context.User, opponent ?? (IUser)Context.Client.CurrentUser);
@@ -42,7 +42,7 @@ namespace PacManBot.Modules
 
         [Command("tictactoe vs"), Alias("ttt vs", "tic vs"), HideHelp]
         [Summary("Make the bot challenge a user... or another bot")]
-        [RequireBotPermissionImproved(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
+        [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
         public async Task StartTicTacToeVs(SocketGuildUser opponent)
         {
             await RunGame<TTTGame>(Context.Client.CurrentUser, opponent);
@@ -55,7 +55,7 @@ namespace PacManBot.Modules
                + "However, if a player makes a lines of **4**, they win instantly.\n\n"
                + "Do **{prefix}cancel** to end the game or **{prefix}bump** to move it to the bottom of the chat. The game times out after 5 minutes of inactivity.\n\n"
                + "You can also make the bot challenge another user or bot with **{prefix}5ttt vs <opponent>**")]
-        [RequireBotPermissionImproved(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
+        [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
         public async Task StartTicTacToe5(SocketGuildUser opponent = null)
         {
             await RunGame<TTT5Game>(Context.User, opponent ?? (IUser)Context.Client.CurrentUser);
@@ -64,7 +64,7 @@ namespace PacManBot.Modules
 
         [Command("5ttt vs"), Alias("ttt5 vs", "5tictactoe vs", "5tic vs"), HideHelp]
         [Summary("Make the bot challenge a user... or another bot")]
-        [RequireBotPermissionImproved(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
+        [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
         public async Task Start5TicTacToeVs(SocketGuildUser opponent)
         {
             await RunGame<TTT5Game>(Context.Client.CurrentUser, opponent);
@@ -76,7 +76,7 @@ namespace PacManBot.Modules
                + "You play by sending the number of a free cell (1 to 7) in chat while it is your turn, and to win you must make a line of 3 symbols in any direction\n\n"
                + "Do **{prefix}cancel** to end the game or **{prefix}bump** to move it to the bottom of the chat. The game times out after 5 minutes of inactivity.\n\n"
                + "You can also make the bot challenge another user or bot with **{prefix}c4 vs <opponent>**")]
-        [RequireBotPermissionImproved(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
+        [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
         public async Task StartConnectFour(SocketGuildUser opponent = null)
         {
             await RunGame<C4Game>(Context.User, opponent ?? (IUser)Context.Client.CurrentUser);
@@ -85,7 +85,7 @@ namespace PacManBot.Modules
 
         [Command("connect4 vs"), Alias("c4 vs", "four vs"), HideHelp]
         [Summary("Make the bot challenge a user... or another bot")]
-        [RequireBotPermissionImproved(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
+        [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
         public async Task StartConnectFoureVs(SocketGuildUser opponent)
         {
             await RunGame<C4Game>(Context.Client.CurrentUser, opponent);
@@ -136,7 +136,7 @@ namespace PacManBot.Modules
                     }
                     catch (Exception e) when (e is OperationCanceledException || e is TimeoutException || e is HttpException) { }
 
-                    await Task.Delay(GlobalRandom.Next(1000, 2001));
+                    await Task.Delay(Bot.Random.Next(1000, 2001));
                 }
                 else await Task.Delay(1000);
 
@@ -163,7 +163,7 @@ namespace PacManBot.Modules
         [Remarks("Move any game to the bottom of the chat")]
         [Summary("Moves the current game's message in this channel to the bottom of the chat, deleting the old one."
                + "This is useful if the game got lost in a sea of other messages, or if the game stopped responding")]
-        [RequireBotPermissionImproved(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks | ChannelPermission.AddReactions)]
+        [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks | ChannelPermission.AddReactions)]
         private async Task MoveGame()
         {
             var game = storage.GetGame(Context.Channel.Id);
@@ -190,7 +190,7 @@ namespace PacManBot.Modules
         [Command("cancel"), Alias("end")]
         [Remarks("Cancel any game you're playing. Always usable by moderators")]
         [Summary("Cancels the current game in this channel, but only if you started or if nobody has played in over a minute. Always usable by users with the Manage Messages permission.")]
-        [RequireBotPermissionImproved(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks | ChannelPermission.AddReactions)]
+        [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks | ChannelPermission.AddReactions)]
         public async Task CancelGame()
         {
             var game = storage.GetGame(Context.Channel.Id);
@@ -224,6 +224,75 @@ namespace PacManBot.Modules
                 else await Context.Message.AddReactionAsync(CustomEmoji.Check, Utils.DefaultOptions);
             }
             else await ReplyAsync("You can't cancel this game because someone else is still playing!", options: Utils.DefaultOptions);
+        }
+
+
+        [Command("clockagotchi"), Alias("pet"), HideHelp]
+        [Summary("Happy birthday Clock!\n\n**{prefix}pet** - Adopt, or check on your pet if you have one\n" +
+                                          "**{prefix}pet name <name>** - Give a name to your pet\n" +
+                                          "**{prefix}pet feed** - Feed your pet\n" +
+                                          "**{prefix}pet play** - Play with your pet\n" +
+                                          "**{prefix}pet clean** - Clean your pet\n" +
+                                          "**{prefix}pet donate** - Gives your pet to a loving family that will take care of it (Deletes pet)")]
+        [BetterRequireBotPermission(ChannelPermission.EmbedLinks | ChannelPermission.AddReactions)]
+        public async Task Clockagotchi(string action = "", [Remainder]string args = "")
+        {
+            var pet = (PetGame)storage.GameInstances.FirstOrDefault(x => x is PetGame && x.UserId[0] == Context.User.Id);
+            if (pet == null)
+            {
+                if (action == "")
+                {
+                    pet = new PetGame("", Context.User.Id, shardedClient, logger, storage);
+                    storage.AddGame(pet);
+                }
+                else
+                {
+                    await ReplyAsync($"You don't have a pet yet! Simply do **{storage.GetPrefixOrEmpty(Context.Guild)}pet** to adopt one.");
+                    return;
+                }
+            }
+            switch (action)
+            {
+                case "feed":
+                    pet.UpdateStats(feed: true);
+                    await ReplyAsync("Your pet loves it! It's now full.");
+                    return;
+
+                case "play":
+                    pet.UpdateStats(play: true);
+                    await ReplyAsync("Your pet is now very happy!");
+                    return;
+
+                case "clean":
+                    pet.UpdateStats(wash: true);
+                    await ReplyAsync("Your pet is now squeaky-clean!");
+                    return;
+
+                case "donate":
+                    storage.DeleteGame(pet);
+                    await ReplyAsync($"Goodbye {pet.Name}!");
+                    return;
+
+                case "name":
+                    if (args != "")
+                    {
+                        pet.SetName(args);
+                        await Context.Message.AddReactionAsync(CustomEmoji.Check);
+                    }
+                    else
+                    {
+                        await ReplyAsync("Please specify a name!");
+                    }
+                    return;
+
+                case "":
+                    await ReplyAsync(pet.GetContent(), false, pet.GetEmbed()?.Build(), Utils.DefaultOptions);
+                    return;
+
+                default:
+                    await ReplyAsync($"Unknown pet command! Do **{storage.GetPrefixOrEmpty(Context.Guild)}help pet** for help");
+                    return;
+            }
         }
     }
 }

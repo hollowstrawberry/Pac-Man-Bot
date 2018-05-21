@@ -34,7 +34,7 @@ namespace PacManBot.Modules
 
         [Command("about"), Alias("a", "info"), Remarks("About this bot")]
         [Summary("Shows relevant information, data and links about Pac-Man Bot.")]
-        [RequireBotPermissionImproved(ChannelPermission.EmbedLinks)]
+        [BetterRequireBotPermission(ChannelPermission.EmbedLinks)]
         public async Task SendBotInfo()
         {
             string description = storage.BotContent["about"].Replace("{prefix}", storage.GetPrefixOrEmpty(Context.Guild));
@@ -62,7 +62,7 @@ namespace PacManBot.Modules
 
         [Command("help"), Alias("h", "commands"), Parameters("[command]"), Remarks("List of commands or help about a command")]
         [Summary("Show a complete list of commands you can use. You can specify a command to see detailed help about that command.")]
-        [RequireBotPermissionImproved(ChannelPermission.EmbedLinks)]
+        [BetterRequireBotPermission(ChannelPermission.EmbedLinks)]
         public async Task SendCommandHelp([Remainder]string commandName)
         {
             string prefix = storage.GetPrefixOrEmpty(Context.Guild);
@@ -103,7 +103,7 @@ namespace PacManBot.Modules
 
 
         [Command("help"), Alias("h", "commands")]
-        [RequireBotPermissionImproved(ChannelPermission.EmbedLinks)]
+        [BetterRequireBotPermission(ChannelPermission.EmbedLinks)]
         public async Task SendAllHelp()
         {
             string prefix = storage.GetPrefix(Context.Guild).If(Context.Guild != null);
@@ -208,7 +208,7 @@ namespace PacManBot.Modules
 
         [Command("invite"), Alias("inv"), Remarks("Invite this bot to your server")]
         [Summary("Shows a fancy embed block with the bot's invite link. I'd show it right now too, since you're already here, but I really want you to see that fancy embed.")]
-        [RequireBotPermissionImproved(ChannelPermission.EmbedLinks)]
+        [BetterRequireBotPermission(ChannelPermission.EmbedLinks)]
         public async Task SendBotInvite()
         {
             var embed = new EmbedBuilder()
@@ -226,7 +226,7 @@ namespace PacManBot.Modules
 
         [Command("party"), Alias("blob", "dance"), HideHelp]
         [Summary("Takes a number which can be either an amount of emotes to send or a message ID to react to. Reacts to the command by default.")]
-        public async Task BlobDanceFast(ulong number = 0)
+        public async Task BlobDance(ulong number = 0)
         {
             if (number < 1) await Context.Message.AddReactionAsync(CustomEmoji.Dance, options: Utils.DefaultOptions);
             else if (number <= 10) await ReplyAsync($"{CustomEmoji.Dance}".Multiply((int)number));
@@ -241,7 +241,7 @@ namespace PacManBot.Modules
 
         [Command("spamparty"), Alias("spamblob", "spamdance"), HideHelp]
         [Summary("Reacts to everything with a blob dance emote. Only usable by a moderator.")]
-        [RequireUserPermissionImproved(ChannelPermission.ManageMessages), RequireBotPermissionImproved(ChannelPermission.AddReactions)]
+        [BetterRequireUserPermission(ChannelPermission.ManageMessages), BetterRequireBotPermission(ChannelPermission.AddReactions)]
         public async Task SpamDance(int amount = 5)
         {
             foreach (IUserMessage message in Context.Channel.GetCachedMessages(amount))
@@ -251,10 +251,12 @@ namespace PacManBot.Modules
         }
 
 
-        [Command("neat"), Alias("nice"), HideHelp]
-        [Summary("Neat")]
-        [RequireUserPermissionImproved(ChannelPermission.ManageMessages), RequireBotPermissionImproved(ChannelPermission.AddReactions)]
+        [Command("neat"), HideHelp, Summary("Neat")]
         public async Task Neat() => await ReplyAsync("neat", options: Utils.DefaultOptions);
+
+        [Command("nice"), HideHelp, Summary("Neat")]
+        public async Task Nice() => await ReplyAsync("nice", options: Utils.DefaultOptions);
+
 
 
         [Command("command"), ExampleUsage("help play"), HideHelp]

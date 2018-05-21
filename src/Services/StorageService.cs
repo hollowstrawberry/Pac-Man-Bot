@@ -146,7 +146,7 @@ namespace PacManBot.Services
         }
 
 
-        public void StoreGame(PacManGame game)
+        public void StoreGame(IStoreableGame game)
         {
             File.WriteAllText(game.GameFile, JsonConvert.SerializeObject(game), Encoding.UTF8);
         }
@@ -257,7 +257,10 @@ namespace PacManBot.Services
                 {
                     try
                     {
-                        var game = JsonConvert.DeserializeObject<PacManGame>(File.ReadAllText(file), gameJsonSettings);
+                        IStoreableGame game;
+                        if (file.Contains("pet")) game = JsonConvert.DeserializeObject<PetGame>(File.ReadAllText(file), gameJsonSettings);
+                        else game = JsonConvert.DeserializeObject<PacManGame>(File.ReadAllText(file), gameJsonSettings);
+
                         game.SetServices(client, logger, this);
                         gameInstances.Add(game);
                         // StoreGame(game); // Update old files

@@ -32,12 +32,12 @@ namespace PacManBot.Modules
 
 
 
-        [Command("play"), Alias("p", "start", "pacman"), Remarks("Start a new game in this channel"), Parameters("[mobile] [\\`\\`\\`custom map\\`\\`\\`]")]
+        [Command("play"), Alias("pacman", "p", "start"), Remarks("Start a new game in this channel"), Parameters("[mobile] [\\`\\`\\`custom map\\`\\`\\`]")]
         [Summary("Starts a new Pac-Man game, unless there is already a game in this channel.\nAdding \"mobile\" or \"m\" after the command will begin the game in *Mobile Mode*, "
                + "which uses simple characters that will work in phones. Use **{prefix}display** to change mode later.\n\nIf you add a valid customized map "
                + "between \\`\\`\\`triple backticks\\`\\`\\`, it will start a custom game using that map instead. For more information about custom games, use the **{prefix}custom** command.\n\n"
                + "Use **{prefix}bump** to move the game message to the bottom of the chat. Use **{prefix}cancel** to end the game. ")]
-        [RequireBotPermissionImproved(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.AddReactions | ChannelPermission.EmbedLinks)]
+        [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.AddReactions | ChannelPermission.EmbedLinks)]
         public async Task StartGameInstance([Remainder]string args = "")
         {
             if (!Context.BotCan(ChannelPermission.SendMessages)) return;
@@ -227,7 +227,7 @@ namespace PacManBot.Modules
 
         [Command("custom"), Remarks("Learn how custom maps work")]
         [Summary("Using this command will display detailed help about the custom Pac-Man maps that you can design and play yourself!")]
-        [RequireBotPermissionImproved(ChannelPermission.EmbedLinks)]
+        [BetterRequireBotPermission(ChannelPermission.EmbedLinks)]
         public async Task SayCustomMapHelp()
         {
             string message = storage.BotContent["customhelp"].Replace("{prefix}", storage.GetPrefixOrEmpty(Context.Guild));

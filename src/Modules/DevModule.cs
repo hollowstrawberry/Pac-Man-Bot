@@ -14,7 +14,7 @@ using static PacManBot.Games.GameUtils;
 namespace PacManBot.Modules
 {
     [Name("Developer"), Remarks("0")]
-    [RequireOwner, RequireBotPermissionImproved(ChannelPermission.AddReactions)]
+    [RequireOwner, BetterRequireBotPermission(ChannelPermission.AddReactions)]
     public class DevModule : ModuleBase<SocketCommandContext>
     {
         private readonly DiscordShardedClient shardedClient;
@@ -146,7 +146,7 @@ namespace PacManBot.Modules
 
         [Command("sudo clear"), Alias("sudoclear", "wipe"), HideHelp]
         [Summary("Clear all messages in a range. Developer only.")]
-        [RequireBotPermissionImproved(ChannelPermission.ReadMessageHistory | ChannelPermission.ManageMessages)]
+        [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.ManageMessages)]
         public async Task ClearAllMessages(int amount = 10)
         {
             foreach (IMessage message in await Context.Channel.GetMessagesAsync(amount).FlattenAsync())

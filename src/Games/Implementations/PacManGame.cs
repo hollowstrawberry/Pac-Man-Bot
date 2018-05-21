@@ -21,7 +21,7 @@ namespace PacManBot.Games
 
 
     [DataContract] // Serializable to store in JSON
-    public class PacManGame : BaseGame, IReactionsGame
+    public class PacManGame : BaseGame, IReactionsGame, IStoreableGame
     {
         // Constants
 
@@ -166,10 +166,10 @@ namespace PacManBot.Games
 
             private PacMan() { }
 
-            public PacMan(Pos pos, Pos origin)
+            public PacMan(Pos pos)
             {
                 this.pos = pos;
-                this.origin = origin;
+                origin = pos;
             }
         }
 
@@ -188,12 +188,12 @@ namespace PacManBot.Games
 
             private Ghost() { }
 
-            public Ghost(AiType type, Pos pos, Pos origin, Pos corner) // Had to split pos and origin because of the deserializer
+            public Ghost(AiType type, Pos pos, Pos? corner) // Had to split pos and origin because of the deserializer
             {
                 this.type = type;
                 this.pos = pos;
-                this.origin = origin;
-                this.corner = corner ?? origin;
+                this.corner = corner ?? pos;
+                origin = pos;
                 pauseTime = GhostSpawnPauseTime[(int)type];
             }
 
@@ -211,14 +211,14 @@ namespace PacManBot.Games
                     return;
                 }
 
-                if (mode == AiMode.Frightened && game.Time % 2 == 1)
+                if (mode == AiMode.Frightened && game.Time % 2 == 1) // If frightened, only moves on even turns
                 {
                     if (JustChangedMode(game)) dir = dir.Opposite();
                     return;
                 }
 
                 //Decide target: tile it's trying to reach
-                Pos target = new Pos(0,0);
+                Pos target = default;
 
                 switch (mode)
                 {
@@ -271,13 +271,13 @@ namespace PacManBot.Games
                 }
                 else if (mode == AiMode.Frightened) // Turns randomly at intersections
                 {
-                    dir = GlobalRandom.Choose(AllDirs.Where(p => p != dir.Opposite() && game.NonSolid(pos + p)).ToArray());
+                    dir = Bot.Random.Choose(AllDirs.Where(p => p != dir.Opposite() && game.NonSolid(pos + p)).ToArray());
                 }
                 else //Track target
                 {
                     exitRight = false;
 
-                    float distance = 1000f;
+                    float distance = float.PositiveInfinity;
                     foreach (Dir testDir in AllDirs.Where(x => x != dir.Opposite())) //Decides the direction that will get it closest to its target
                     {
                         Pos testPos = pos + testDir;
@@ -293,7 +293,7 @@ namespace PacManBot.Games
                     }
                 }
 
-                pos += dir; // If frightened, only moves on even turns
+                pos += dir;
                 game.map.Wrap(ref pos);
             }
 
@@ -338,8 +338,8 @@ namespace PacManBot.Games
             pellets = maxPellets;
 
             // Game objects
-            Pos playerPos = FindChar(CharPlayer) ?? new Pos(0, 0);
-            pacMan = new PacMan(playerPos, playerPos);
+            Pos playerPos = FindChar(CharPlayer).GetValueOrDefault();
+            pacMan = new PacMan(playerPos);
             map.SetAt(pacMan.pos, ' ');
 
             fruitSpawnPos = FindChar(CharFruit) ?? new Pos(-1, -1);
@@ -354,10 +354,10 @@ namespace PacManBot.Games
             };
             for (int i = 0; i < 4; i++)
             {
-                Pos ghostPos = FindChar(CharGhost);
-                if (ghostPos == null) break;
-                ghosts.Add(new Ghost((AiType)i, ghostPos, ghostPos, ghostCorners[i]));
-                map[ghostPos.x, ghostPos.y] = ' ';
+                Pos? ghostPos = FindChar(CharGhost);
+                if (!ghostPos.HasValue) break;
+                ghosts.Add(new Ghost((AiType)i, ghostPos.Value, ghostCorners[i]));
+                map.SetAt(ghostPos.Value, ' ');
             }
 
             storage.StoreGame(this);
@@ -451,7 +451,7 @@ namespace PacManBot.Games
                     pellets--;
                     if ((pellets == FruitTrigger1 || pellets == FruitTrigger2) && fruitSpawnPos.x >= 0)
                     {
-                        fruitTimer = GlobalRandom.Next(25, 30 + 1);
+                        fruitTimer = Bot.Random.Next(25, 30 + 1);
                     }
 
                     score += (tile == CharPowerPellet) ? 50 : 10;
@@ -662,7 +662,7 @@ namespace PacManBot.Games
         }
 
 
-        private Pos FindChar(char c, int index = 0) //Finds the specified character instance in the map
+        private Pos? FindChar(char c, int index = 0) //Finds the specified character instance in the map
         {
             for (int y = 0; y < map.LengthY(); y++)
             {
@@ -691,7 +691,7 @@ namespace PacManBot.Games
         }
 
 
-        public virtual void SetServices(DiscordShardedClient client, LoggingService logger, StorageService storage)
+        public void SetServices(DiscordShardedClient client, LoggingService logger, StorageService storage)
         {
             this.client = client;
             this.logger = logger;

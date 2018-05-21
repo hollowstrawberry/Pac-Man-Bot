@@ -21,7 +21,7 @@ namespace PacManBot.Games
 
 
         protected TwoPlayerGame(ulong channelId, ulong[] userId, DiscordShardedClient client, LoggingService logger, StorageService storage)
-            : base(channelId, userId, client, logger, storage) {}
+            : base(channelId, userId, client, logger, storage) { }
 
 
         public abstract void DoTurnAI();
@@ -31,12 +31,12 @@ namespace PacManBot.Games
         {
             if (State != State.Cancelled && UserId[0] != UserId[1] && UserId.Contains(client.CurrentUser.Id))
             {
-                if (message == "") message = GlobalRandom.Choose(StartTexts);
-                else if (Time > 1 && winner == Player.None && (!BotVsBot || Time % 2 == 0)) message = GlobalRandom.Choose(GameTexts);
+                if (message == "") message = Bot.Random.Choose(StartTexts);
+                else if (Time > 1 && winner == Player.None && (!BotVsBot || Time % 2 == 0)) message = Bot.Random.Choose(GameTexts);
                 else if (winner != Player.None)
                 {
-                    if (winner != Player.Tie && UserId[(int)winner] == client.CurrentUser.Id) message = GlobalRandom.Choose(WinTexts);
-                    else message = GlobalRandom.Choose(NotWinTexts);
+                    if (winner != Player.Tie && UserId[(int)winner] == client.CurrentUser.Id) message = Bot.Random.Choose(WinTexts);
+                    else message = Bot.Random.Choose(NotWinTexts);
                 }
 
                 return message;

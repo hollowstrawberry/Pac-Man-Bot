@@ -169,7 +169,7 @@ namespace PacManBot.Games
             int leastLoses = moves.Min(x => x.Value);
             var finalOptions = moves.Where(x => x.Value == leastLoses).Select(x => x.Key).ToList();
 
-            DoTurn($"{1 + GlobalRandom.Choose(finalOptions)}");
+            DoTurn($"{1 + Bot.Random.Choose(finalOptions)}");
         }
 
 

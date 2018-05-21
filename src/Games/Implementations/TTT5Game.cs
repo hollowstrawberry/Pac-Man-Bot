@@ -135,19 +135,19 @@ namespace PacManBot.Games
         public override void DoTurnAI()
         {
             string debug = "priority";
-            var moves = TryCompleteLine(turn, 4) ?? TryCompleteLine(turn.OtherPlayer(), 4) ?? // Win or avoid losing
-                        TryCompleteFlyingLine(turn) ?? TryCompleteFlyingLine(turn.OtherPlayer()); // Forced win / forced lose situations
+            var moves = TryCompleteLines(turn, 4) ?? TryCompleteLines(turn.OtherPlayer(), 4) ?? // Win or avoid losing
+                        TryCompleteFlyingLines(turn) ?? TryCompleteFlyingLines(turn.OtherPlayer()); // Forced win / forced lose situations
 
-            if (Time < 2 && board[2, 2] == Player.None && GlobalRandom.Next(4) > 0) moves = new List<Pos> { new Pos(2, 2) };
+            if (Time < 2 && board[2, 2] == Player.None && Bot.Random.Next(4) > 0) moves = new List<Pos> { new Pos(2, 2) };
 
             if (moves == null) // Lines of 3
             {
-                var lines = TryCompleteLine(turn, 3);
-                var blocks = TryCompleteLine(turn.OtherPlayer(), 3);
+                var lines = TryCompleteLines(turn, 3);
+                var blocks = TryCompleteLines(turn.OtherPlayer(), 3);
 
                 if (lines == null && blocks == null)
                 {
-                    moves = TryCompleteLine(turn, 2) ?? EmptyCells(board); // Next to itself 
+                    moves = TryCompleteLines(turn, 2) ?? EmptyCells(board); // Next to itself 
                     debug = "random";
                 }
                 else
@@ -170,7 +170,7 @@ namespace PacManBot.Games
                 }
             }
 
-            Pos choice = GlobalRandom.Choose(moves);
+            Pos choice = Bot.Random.Choose(moves);
             DoTurn($"{(char)('A' + choice.x)}{1 + choice.y}");
 
             debug += $" {choice.x+1},{choice.y+1} /";
@@ -180,11 +180,11 @@ namespace PacManBot.Games
         }
 
 
-        private List<Pos> TryCompleteLine(Player player, int length)
+        private List<Pos> TryCompleteLines(Player player, int length)
         {
             uint count = 0;
             List<Pos> matches = new List<Pos>();
-            Pos missing = null;
+            Pos? missing = null;
 
 
             void CheckCell(Pos pos)
@@ -201,7 +201,7 @@ namespace PacManBot.Games
                     missing = null;
                 }
 
-                if (count == length - 1 && missing != null) matches.Add(missing);
+                if (count == length - 1 && missing.HasValue) matches.Add(missing.Value);
             }
 
 
@@ -255,11 +255,11 @@ namespace PacManBot.Games
         }
 
 
-        private List<Pos> TryCompleteFlyingLine(Player player) // A flying line is when there is a line of 3 in the center with the extremes empty
+        private List<Pos> TryCompleteFlyingLines(Player player) // A flying line is when there is a line of 3 in the center with the extremes empty
         {
             uint count = 0;
             List<Pos> matches = new List<Pos>();
-            Pos missing = null;
+            Pos? missing = null;
 
 
             void CheckCell(Pos pos)
@@ -267,7 +267,7 @@ namespace PacManBot.Games
                 if (board.At(pos) == player) count++; // Consecutive symbols
                 else if (board.At(pos) == Player.None) missing = pos; // Find a gap
 
-                if (count == 2 && missing != null) matches.Add(missing);
+                if (count == 2 && missing.HasValue) matches.Add(missing.Value);
             }
 
 

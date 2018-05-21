@@ -9,7 +9,7 @@ using PacManBot.Constants;
 namespace PacManBot.Modules
 {
     [Name("<:staff:412019879772815361>Mod"), Remarks("5")]
-    [RequireUserPermissionImproved(GuildPermission.ManageMessages)]
+    [BetterRequireUserPermission(GuildPermission.ManageMessages)]
     public class ModModule : ModuleBase<SocketCommandContext>
     {
         private readonly LoggingService logger;
@@ -35,7 +35,7 @@ namespace PacManBot.Modules
         [Command("clear"), Alias("c"), Remarks("Clear this bot's messages and commands")]
         [Summary("Clears all commands and messages for *this bot only*, from the last [amount] messages, or the last 10 messages by default.\n"
                + "Only users with the Manage Messages permission can use this command.")]
-        [RequireBotPermissionImproved(ChannelPermission.ReadMessageHistory)]
+        [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory)]
         public async Task ClearGameMessages(int amount = 10)
         {
             foreach (IMessage message in await Context.Channel.GetMessagesAsync(amount).FlattenAsync())
@@ -58,7 +58,7 @@ namespace PacManBot.Modules
         [Command("setprefix"), Remarks("Set a custom prefix for this server (Admin)")]
         [Summary("Change the custom prefix for this server. Only server Administrators can use this command.\n"
                + "Prefixes can't contain these characters: \\* \\_ \\~ \\` \\\\")]
-        [RequireUserPermissionImproved(GuildPermission.Administrator)]
+        [BetterRequireUserPermission(GuildPermission.Administrator)]
         public async Task SetServerPrefix(string prefix)
         {
             if (prefix.ContainsAny("*", "_", "~", "`", "\\"))

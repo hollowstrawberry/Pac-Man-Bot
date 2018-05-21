@@ -132,15 +132,15 @@ namespace PacManBot.Games
 
         public override void DoTurnAI()
         {
-            Pos target = TryCompleteLine(turn) ?? TryCompleteLine(turn.OtherPlayer()) ?? GlobalRandom.Choose(EmptyCells(board)); //Win or block or random
+            Pos target = TryCompleteLine(turn) ?? TryCompleteLine(turn.OtherPlayer()) ?? Bot.Random.Choose(EmptyCells(board)); //Win or block or random
             DoTurn($"{1 + target.y * board.LengthX() + target.x}");
         }
 
 
-        private Pos TryCompleteLine(Player player)
+        private Pos? TryCompleteLine(Player player)
         {
             uint count = 0;
-            Pos missing = null;
+            Pos? missing = null;
 
             for (int y = 0; y < 3; y++) // Rows
             {

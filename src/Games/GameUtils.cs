@@ -8,8 +8,7 @@ namespace PacManBot.Games
 {
     public static class GameUtils
     {
-        public static readonly Random GlobalRandom = new Random();
-
+        // AI match flavor text
 
         public static readonly string[] StartTexts = new string[]
         {
@@ -36,7 +35,7 @@ namespace PacManBot.Games
 
         // Data types
 
-        public class Pos // 2d coordinates
+        public struct Pos // 2d coordinates
         {
             public int x, y;
 
@@ -46,14 +45,10 @@ namespace PacManBot.Games
                 this.y = y;
             }
 
-            public override int GetHashCode() => base.GetHashCode();
+            public override int GetHashCode() => x.GetHashCode() ^ y.GetHashCode();
             public override bool Equals(object obj) => obj is Pos pos && this == pos;
 
-            public static bool operator ==(Pos pos1, Pos pos2)
-            {
-                if (pos1 is null || pos2 is null) return pos1 is null && pos2 is null;
-                return pos1.x == pos2.x && pos1.y == pos2.y;
-            }
+            public static bool operator ==(Pos pos1, Pos pos2) => pos1.x == pos2.x && pos1.y == pos2.y;
             public static bool operator !=(Pos pos1, Pos pos2) => !(pos1 == pos2);
             public static Pos operator +(Pos pos1, Pos pos2) => new Pos(pos1.x + pos2.x, pos1.y + pos2.y);
             public static Pos operator -(Pos pos1, Pos pos2) => new Pos(pos1.x - pos2.x, pos1.y - pos2.y);
@@ -70,7 +65,8 @@ namespace PacManBot.Games
                 }
             }
 
-            public static float Distance(Pos pos1, Pos pos2) => (float)Math.Sqrt(Math.Pow(pos2.x - pos1.x, 2) + Math.Pow(pos2.y - pos1.y, 2));
+            public static float Distance(Pos pos1, Pos pos2)
+                => (float)Math.Sqrt(Math.Pow(pos2.x - pos1.x, 2) + Math.Pow(pos2.y - pos1.y, 2));
         }
 
 

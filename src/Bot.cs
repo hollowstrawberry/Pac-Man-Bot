@@ -25,13 +25,15 @@ namespace PacManBot
 
     public class Bot
     {
-        BotConfig botConfig;
-        DiscordShardedClient client;
-        LoggingService logger;
-        StorageService storage;
+        public static Random Random = new Random();
 
-        int shardsReady = 0;
-        DateTime lastGuildCountUpdate = DateTime.MinValue;
+        private BotConfig botConfig;
+        private DiscordShardedClient client;
+        private LoggingService logger;
+        private StorageService storage;
+
+        private int shardsReady = 0;
+        private DateTime lastGuildCountUpdate = DateTime.MinValue;
 
 
         public Bot(BotConfig botConfig, IServiceProvider services)

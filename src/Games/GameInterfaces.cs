@@ -1,7 +1,9 @@
 using System;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
+using PacManBot.Services;
 using static PacManBot.Games.GameUtils;
 
 namespace PacManBot.Games
@@ -45,5 +47,12 @@ namespace PacManBot.Games
     {
         bool IsInput(IEmote value);
         void DoTurn(IEmote input);
+    }
+
+
+    public interface IStoreableGame : IBaseGame
+    {
+        string GameFile { get; }
+        void SetServices(DiscordShardedClient client, LoggingService logger, StorageService storage);
     }
 }

@@ -70,80 +70,65 @@ namespace PacManBot.Modules
     }
 
 
-
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
-    class RequireBotPermissionImproved : PreconditionAttribute
+    // The original preconditions just... didn't work?
+    abstract class BaseBetterRequirePermission : PreconditionAttribute
     {
-        GuildPermission? guildPerms = null;
-        ChannelPermission? channelPerms = null;
+        protected GuildPermission? guildPerms = null;
+        protected ChannelPermission? channelPerms = null;
 
 
-        public RequireBotPermissionImproved(ChannelPermission channelPerms)
+        public BaseBetterRequirePermission(ChannelPermission channelPerms)
         {
             this.channelPerms = channelPerms;
         }
 
-        public RequireBotPermissionImproved(GuildPermission guildPerms)
+        public BaseBetterRequirePermission(GuildPermission guildPerms)
         {
             this.guildPerms = guildPerms;
         }
 
-        public override async Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, CommandInfo command, IServiceProvider services)
+
+        protected PreconditionResult CheckPermissions(ICommandContext context, CommandInfo command, IGuildUser user, string name)
         {
             if (guildPerms != null)
             {
-                if (context.Guild == null) return PreconditionResult.FromError("Bot requires guild permissions");
-                GuildPermission currentPerms = (GuildPermission)(await context.Guild.GetCurrentUserAsync()).GuildPermissions.RawValue;
+                if (user == null) return PreconditionResult.FromError($"{name} requires guild permissions but is not in a guild");
+                GuildPermission currentPerms = (GuildPermission)user.GuildPermissions.RawValue;
 
-                return currentPerms.HasFlag(guildPerms) ? PreconditionResult.FromSuccess() : PreconditionResult.FromError($"Bot requires guild permission {(guildPerms ^ currentPerms) & guildPerms}");
+                if (currentPerms.HasFlag(guildPerms)) return PreconditionResult.FromSuccess();
+                else return PreconditionResult.FromError($"{name} requires guild permission {(guildPerms ^ currentPerms) & guildPerms}");
             }
             else
             {
                 ChannelPermission currentPerms;
-                if (context.Guild == null) currentPerms = Utils.CorrectDmPermissions;
-                else currentPerms = (ChannelPermission)(await context.Guild.GetCurrentUserAsync()).GetPermissions(context.Channel as IGuildChannel).RawValue;
+                if (user == null) currentPerms = Utils.CorrectDmPermissions; // They got these wrong in the library
+                else currentPerms = (ChannelPermission)user.GetPermissions(context.Channel as IGuildChannel).RawValue;
 
-                return currentPerms.HasFlag(channelPerms) ? PreconditionResult.FromSuccess() : PreconditionResult.FromError($"Bot requires channel permission {(channelPerms ^ currentPerms) & channelPerms}");
+                if (currentPerms.HasFlag(channelPerms)) return PreconditionResult.FromSuccess();
+                else return PreconditionResult.FromError($"{name} requires guild permission {(channelPerms ^ currentPerms) & channelPerms}");
             }
         }
     }
 
 
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
-    class RequireUserPermissionImproved : PreconditionAttribute
+    class BetterRequireBotPermission : BaseBetterRequirePermission
     {
-        GuildPermission? guildPerms = null;
-        ChannelPermission? channelPerms = null;
-
-
-        public RequireUserPermissionImproved(ChannelPermission channelPerms)
-        {
-            this.channelPerms = channelPerms;
-        }
-
-        public RequireUserPermissionImproved(GuildPermission guildPerms)
-        {
-            this.guildPerms = guildPerms;
-        }
+        public BetterRequireBotPermission(ChannelPermission channelPerms) : base(channelPerms) { }
+        public BetterRequireBotPermission(GuildPermission guildPerms) : base(guildPerms) { }
 
         public override async Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, CommandInfo command, IServiceProvider services)
-        {
-            await Task.Delay(0); // yeah
+            => CheckPermissions(context, command, context.Guild == null ? null : await context.Guild.GetCurrentUserAsync(), "Bot");
+    }
 
-            if (guildPerms != null)
-            {
-                if (context.Guild == null) return PreconditionResult.FromError("User requires guild permissions");
-                GuildPermission currentPerms = (GuildPermission)(context.User as IGuildUser).GuildPermissions.RawValue;
-                return currentPerms.HasFlag(guildPerms) ? PreconditionResult.FromSuccess() : PreconditionResult.FromError($"User requires guild permission {(guildPerms ^ currentPerms) & guildPerms}");
-            }
-            else
-            {
-                ChannelPermission currentPerms;
-                if (context.Guild == null) currentPerms = Utils.CorrectDmPermissions;
-                else currentPerms = (ChannelPermission)(context.User as IGuildUser).GetPermissions(context.Channel as IGuildChannel).RawValue;
 
-                return currentPerms.HasFlag(channelPerms) ? PreconditionResult.FromSuccess() : PreconditionResult.FromError($"User requires channel permission {(channelPerms ^ currentPerms) & channelPerms}");
-            }
-        }
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
+    class BetterRequireUserPermission : BaseBetterRequirePermission
+    {
+        public BetterRequireUserPermission(ChannelPermission channelPerms) : base(channelPerms) { }
+        public BetterRequireUserPermission(GuildPermission guildPerms) : base(guildPerms) { }
+
+        public override Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, CommandInfo command, IServiceProvider services)
+            => new Task<PreconditionResult>(() => CheckPermissions(context, command, context.User as IGuildUser, "User"));
     }
 }
