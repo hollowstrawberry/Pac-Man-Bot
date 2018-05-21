@@ -124,7 +124,7 @@ namespace PacManBot.Services
             try
             {
                 game.CancelRequests();
-                if (game is PacManGame pmGame && File.Exists(pmGame.GameFile)) File.Delete(pmGame.GameFile);
+                if (game is IStoreableGame sGame && File.Exists(sGame.GameFile)) File.Delete(sGame.GameFile);
                 gameInstances.Remove(game);
                 logger.Log(LogSeverity.Verbose, LogSource.Storage, $"Removed {game.GetType().Name} at {game.ChannelId}");
             }

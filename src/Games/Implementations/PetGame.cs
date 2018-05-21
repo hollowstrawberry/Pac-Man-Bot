@@ -9,6 +9,10 @@ namespace PacManBot.Games
     [DataContract]
     class PetGame : BaseGame, IStoreableGame
     {
+        public static string[] FoodEmotes = new string[] { "🍌", "🍎", "🍊", "🍕", "🌮", "🍩", "🍪", "🍐"};
+        public static string[] PlayEmotes = new string[] { "⚽", "🏀", "🏈", "🎾", "🏓", "🎨" };
+        public static string[] CleanEmotes = new string[] { "💧", "🚿", "🛁" };
+
         private const int MaxStat = 20;
 
         public override string Name => "Clockagotchi";
@@ -16,7 +20,7 @@ namespace PacManBot.Games
         public string GameFile => $"games/pet{UserId[0]}.json";
 
         [DataMember] public string PetName { get; private set; }
-        [DataMember] private string petImageUrl = null;
+        [DataMember] public string petImageUrl = null;
         [DataMember] private int satiation;
         [DataMember] private int fun;
         [DataMember] private int clean;
@@ -59,20 +63,18 @@ namespace PacManBot.Games
 
             desc += $"**Name:** {(PetName == "" ? "*Unnamed*" : PetName)}\n";
 
-            var age = (DateTime.Now - bornDate);
-            desc += $"**Age:** {$"{(int)age.TotalDays} day{"s".If((int)age.TotalDays > 1)}, ".If((int)age.TotalDays > 0)}" +
-                $"{$"{age.Hours} hour{"s".If(age.Hours > 1)}, ".If(age.Hours > 0)}" +
-                (age.Minutes > 0 ? $"{age.Minutes} minute{"s".If(age.Minutes > 1)}\n\n" : "Newborn\n\n");
+            string age = (DateTime.Now - bornDate).Humanized();
+            desc += $"**Age:** {(age == "Just now" ? "Newborn" : age)}\n\n";
 
             desc += $"🍎 **Satiation:** {satiation}/{MaxStat}{" Hungry!".If(satiation < 5)}\n";
             desc += $"🏈 **Happiness:** {fun}/{MaxStat}{" Lonely!".If(satiation < 5)}\n";
-            desc += $"🛀 **Cleanness:** {clean}/{MaxStat}{" Dirty!".If(satiation < 5)}";
+            desc += $"🛁 **Cleanness:** {clean}/{MaxStat}{" Dirty!".If(satiation < 5)}";
 
             return new EmbedBuilder
             {
                 Title = $"{owner?.Nickname ?? client.GetUser(OwnerId).Username}'s Clockagotchi",
                 Description = desc,
-                Color = TotalStats >= 45 ? new Color(0, 200, 0) : TotalStats >= 20 ? new Color(255, 200, 0) : new Color(255, 0, 0),
+                Color = TotalStats > 40 ? new Color(0, 200, 0) : TotalStats > 15 ? new Color(255, 200, 0) : new Color(255, 0, 0),
                 ThumbnailUrl = petImageUrl ?? "https://cdn.discordapp.com/attachments/353729197824278541/447979173554946051/clockagotchi.png",
             };
         }
@@ -85,9 +87,9 @@ namespace PacManBot.Games
 
             int oldSatiation = satiation, oldFun = fun, oldClean = clean;
 
-            satiation = feed ? MaxStat : Math.Max(0, satiation - (int)(hours * (Bot.Random.NextDouble() + 0.5)));
-            fun = play ? MaxStat : Math.Max(0, fun - (int)(hours * 1.2 * (Bot.Random.NextDouble() + 0.5)));
-            clean = wash ? MaxStat : Math.Max(0, clean - (int)(hours / 1.6 * (Bot.Random.NextDouble() + 0.5)));
+            satiation = feed ? MaxStat : Math.Max(0, satiation - (int)(hours * Bot.Random.NextDouble(0.75, 1.25)));
+            fun = play ? MaxStat : Math.Max(0, fun - (int)(hours * 1.2 * Bot.Random.NextDouble(0.75, 1.25)));
+            clean = wash ? MaxStat : Math.Max(0, clean - (int)(hours / 1.6 * Bot.Random.NextDouble(0.75, 1.25)));
 
             if (oldSatiation != satiation || oldFun != fun || oldClean != clean) lastUpdated = now;
 
@@ -97,14 +99,14 @@ namespace PacManBot.Games
 
         public void SetName(string name)
         {
-            PetName = name.SanitizeMarkdown().SanitizeMentions();
+            PetName = name?.SanitizeMarkdown().SanitizeMentions().Trim('<', '>');
             UpdateStats();
         }
 
 
         public void SetImage(string url)
         {
-            petImageUrl = url;
+            petImageUrl = url?.Trim('<', '>');
             UpdateStats();
         }
 

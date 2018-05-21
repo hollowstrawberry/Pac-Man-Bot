@@ -44,17 +44,30 @@ namespace PacManBot
         }
 
 
+
+        // Lists
+
         public static T Get<T>(this IServiceProvider provider) // I thought the long name was ugly
         {
             return provider.GetRequiredService<T>();
         }
 
 
-        public static T Last<T>(this T[] array)
+        public static T Last<T>(this IList<T> list)
         {
-            return array[array.Length - 1];
+            return list[list.Count - 1];
         }
 
+
+        public static IEnumerable<IEnumerable<T>> Permutations<T>(this IEnumerable<T> list, int length)
+        {
+            if (length == 1) return list.Select(t => new T[] { t });
+            return Permutations(list, length - 1).SelectMany(t => list, (t1, t2) => t1.Concat(new T[] { t2 }));
+        }
+
+
+
+        // Random
 
         public static T Choose<T>(this Random random, T[] values)
         {
@@ -66,11 +79,17 @@ namespace PacManBot
             return values[random.Next(values.Count)];
         }
 
-
-        public static IEnumerable<IEnumerable<T>> Permutations<T>(this IEnumerable<T> list, int length)
+        public static double NextDouble(this Random random, double min, double max)
         {
-            if (length == 1) return list.Select(t => new T[] { t });
-            return Permutations(list, length - 1).SelectMany(t => list, (t1, t2) => t1.Concat(new T[] { t2 }));
+            return random.NextDouble() * (max - min) + min;
+        }
+
+
+
+        public static string Humanized(this TimeSpan span)
+        {
+            int days = (int)span.TotalDays, hours = span.Hours, minutes = span.Minutes;
+            return $"{days} day{"s".If(days > 1)}, ".If(days > 0) + $"{hours} hour{"s".If(hours > 1)}, ".If(hours > 0) + (minutes > 0 ? $"{minutes} minute{"s".If(minutes > 1)}" : "Just now");
         }
 
 

@@ -227,14 +227,34 @@ namespace PacManBot.Modules
         }
 
 
+        [Command("clockagotchi"), Alias("pet"), Parameters("[command]"), HideHelp]
+        [Summary("**__Pet Commands__**\n" +
+                 "**{prefix}pet** - Check on your pet or adopt if you don't have one\n" +
+                 "**{prefix}pet <user>** - Check another user's pet\n" +
+                 "**{prefix}pet name <name>** - Name your pet\n" +
+                 "**{prefix}pet image <image>** - Give your pet an image\n" +
+                 "**{prefix}pet feed** - Feed your pet\n" +
+                 "**{prefix}pet play** - Play with your pet\n" +
+                 "**{prefix}pet clean** - Clean your pet\n" +
+                 "**{prefix}pet release** - Gives your pet to a loving family that will take care of it (Deletes pet)\n" +
+                 "**{prefix}pet help** - This list of commands")]
+        [BetterRequireBotPermission(ChannelPermission.EmbedLinks | ChannelPermission.AddReactions)]
+        public async Task ClockagotchiUser(SocketGuildUser user)
+        {
+            var pet = (PetGame)storage.GameInstances.FirstOrDefault(x => x is PetGame && x.UserId[0] == user.Id);
+
+            if (pet == null)
+            {
+                await ReplyAsync("This person doesn't have a pet :(");
+            }
+            else
+            {
+                await ReplyAsync(pet.GetContent(), false, pet.GetEmbed(user)?.Build(), Utils.DefaultOptions);
+            }
+        }
+
+
         [Command("clockagotchi"), Alias("pet"), HideHelp]
-        [Summary("Happy birthday Clock!\n\n**{prefix}pet** - Adopt, or check on your pet if you have one\n" +
-                                          "**{prefix}pet name <name>** - Give a name to your pet\n" +
-                                          "**{prefix}pet image <url>** - Give your pet an image\n" +
-                                          "**{prefix}pet feed** - Feed your pet\n" +
-                                          "**{prefix}pet play** - Play with your pet\n" +
-                                          "**{prefix}pet clean** - Clean your pet\n" +
-                                          "**{prefix}pet release** - Gives your pet to a loving family that will take care of it (Deletes pet)")]
         [BetterRequireBotPermission(ChannelPermission.EmbedLinks | ChannelPermission.AddReactions)]
         public async Task Clockagotchi(string action = "", [Remainder]string args = "")
         {
@@ -252,26 +272,27 @@ namespace PacManBot.Modules
                     return;
                 }
             }
+
             switch (action)
             {
                 case "feed":
                     pet.UpdateStats(feed: true);
-                    await Context.Message.AddReactionAsync(CustomEmoji.Check);
+                    await Context.Message.AddReactionAsync(Bot.Random.Choose(PetGame.FoodEmotes).ToEmoji());
                     return;
 
                 case "play":
                     pet.UpdateStats(play: true);
-                    await Context.Message.AddReactionAsync(CustomEmoji.Check);
+                    await Context.Message.AddReactionAsync(Bot.Random.Choose(PetGame.PlayEmotes).ToEmoji());
                     return;
 
                 case "clean":
                     pet.UpdateStats(wash: true);
-                    await Context.Message.AddReactionAsync(CustomEmoji.Check);
+                    await Context.Message.AddReactionAsync(Bot.Random.Choose(PetGame.CleanEmotes).ToEmoji());
                     return;
 
                 case "release":
                     storage.DeleteGame(pet);
-                    await ReplyAsync($"Goodbye {pet.Name}!");
+                    await ReplyAsync($"Goodbye {pet.PetName}!");
                     return;
 
                 case "name":
@@ -280,20 +301,18 @@ namespace PacManBot.Modules
                         pet.SetName(args);
                         await Context.Message.AddReactionAsync(CustomEmoji.Check);
                     }
-                    else
-                    {
-                        await ReplyAsync("Please specify a name!");
-                    }
+                    else await ReplyAsync($"{CustomEmoji.Cross} Please specify a name!");
                     return;
 
                 case "image":
-                    pet.SetImage(args == "" ? Context.Message.Attachments.FirstOrDefault()?.Url ?? null : args);
-                    
+                    string url = args == "" ? Context.Message.Attachments.FirstOrDefault()?.Url ?? null : args;
                     await Context.Message.AddReactionAsync(CustomEmoji.Check);
+                    if (url == null) await ReplyAsync(pet.petImageUrl == null ? "Please specify an image!" : "Pet image reset!");
+                    pet.SetImage(url);
                     return;
 
                 case "help":
-                    var summary = typeof(MoreGamesModule).GetMethod(nameof(Clockagotchi)).GetCustomAttributes(typeof(SummaryAttribute), false).FirstOrDefault() as SummaryAttribute;
+                    var summary = typeof(MoreGamesModule).GetMethod(nameof(ClockagotchiUser)).GetCustomAttributes(typeof(SummaryAttribute), false).FirstOrDefault() as SummaryAttribute;
                     await ReplyAsync(summary?.Text.Replace("{prefix}", storage.GetPrefixOrEmpty(Context.Guild)) ?? "Couldn't get help", options: Utils.DefaultOptions);
                     return;
 
@@ -302,7 +321,7 @@ namespace PacManBot.Modules
                     return;
 
                 default:
-                    await ReplyAsync($"Unknown pet command! Do **{storage.GetPrefixOrEmpty(Context.Guild)}help pet** for help");
+                    await ReplyAsync($"Unknown pet command! Do **{storage.GetPrefixOrEmpty(Context.Guild)}pet help** for help");
                     return;
             }
         }
