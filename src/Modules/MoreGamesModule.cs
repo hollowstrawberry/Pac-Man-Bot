@@ -230,10 +230,11 @@ namespace PacManBot.Modules
         [Command("clockagotchi"), Alias("pet"), HideHelp]
         [Summary("Happy birthday Clock!\n\n**{prefix}pet** - Adopt, or check on your pet if you have one\n" +
                                           "**{prefix}pet name <name>** - Give a name to your pet\n" +
+                                          "**{prefix}pet image <url>** - Give your pet an image\n" +
                                           "**{prefix}pet feed** - Feed your pet\n" +
                                           "**{prefix}pet play** - Play with your pet\n" +
                                           "**{prefix}pet clean** - Clean your pet\n" +
-                                          "**{prefix}pet donate** - Gives your pet to a loving family that will take care of it (Deletes pet)")]
+                                          "**{prefix}pet release** - Gives your pet to a loving family that will take care of it (Deletes pet)")]
         [BetterRequireBotPermission(ChannelPermission.EmbedLinks | ChannelPermission.AddReactions)]
         public async Task Clockagotchi(string action = "", [Remainder]string args = "")
         {
@@ -255,20 +256,20 @@ namespace PacManBot.Modules
             {
                 case "feed":
                     pet.UpdateStats(feed: true);
-                    await ReplyAsync("Your pet loves it! It's now full.");
+                    await Context.Message.AddReactionAsync(CustomEmoji.Check);
                     return;
 
                 case "play":
                     pet.UpdateStats(play: true);
-                    await ReplyAsync("Your pet is now very happy!");
+                    await Context.Message.AddReactionAsync(CustomEmoji.Check);
                     return;
 
                 case "clean":
                     pet.UpdateStats(wash: true);
-                    await ReplyAsync("Your pet is now squeaky-clean!");
+                    await Context.Message.AddReactionAsync(CustomEmoji.Check);
                     return;
 
-                case "donate":
+                case "release":
                     storage.DeleteGame(pet);
                     await ReplyAsync($"Goodbye {pet.Name}!");
                     return;
@@ -285,8 +286,19 @@ namespace PacManBot.Modules
                     }
                     return;
 
+                case "image":
+                    pet.SetImage(args == "" ? Context.Message.Attachments.FirstOrDefault()?.Url ?? null : args);
+                    
+                    await Context.Message.AddReactionAsync(CustomEmoji.Check);
+                    return;
+
+                case "help":
+                    var summary = typeof(MoreGamesModule).GetMethod(nameof(Clockagotchi)).GetCustomAttributes(typeof(SummaryAttribute), false).FirstOrDefault() as SummaryAttribute;
+                    await ReplyAsync(summary?.Text.Replace("{prefix}", storage.GetPrefixOrEmpty(Context.Guild)) ?? "Couldn't get help", options: Utils.DefaultOptions);
+                    return;
+
                 case "":
-                    await ReplyAsync(pet.GetContent(), false, pet.GetEmbed()?.Build(), Utils.DefaultOptions);
+                    await ReplyAsync(pet.GetContent(), false, pet.GetEmbed(Context.User as IGuildUser)?.Build(), Utils.DefaultOptions);
                     return;
 
                 default:

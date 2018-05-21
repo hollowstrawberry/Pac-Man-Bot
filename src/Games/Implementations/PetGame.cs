@@ -15,7 +15,8 @@ namespace PacManBot.Games
         public override TimeSpan Expiry => TimeSpan.MaxValue;
         public string GameFile => $"games/pet{UserId[0]}.json";
 
-        [DataMember] private string name;
+        [DataMember] public string PetName { get; private set; }
+        [DataMember] private string petImageUrl = null;
         [DataMember] private int satiation;
         [DataMember] private int fun;
         [DataMember] private int clean;
@@ -37,7 +38,7 @@ namespace PacManBot.Games
         public PetGame(string name, ulong ownerId, DiscordShardedClient client, LoggingService logger, StorageService storage)
             : base(1, new ulong[] { ownerId }, client, logger, storage)
         {
-            this.name = name;
+            PetName = name;
             satiation = MaxStat;
             fun = MaxStat;
             clean = MaxStat;
@@ -46,20 +47,21 @@ namespace PacManBot.Games
         }
 
 
-        public override EmbedBuilder GetEmbed(bool showHelp = true)
+        public override EmbedBuilder GetEmbed(bool showHelp = true) => GetEmbed(null);
+        public EmbedBuilder GetEmbed(IGuildUser owner)
         {
             UpdateStats();
 
-            IUser owner = client.GetUser(OwnerId);
             string desc = "";
 
-            if (name == "") desc += $"Congratulations on your new Clockagotchi!\nUse the 'pet name' command to name it\n\n";
+            string prefix = storage.GetPrefixOrEmpty(owner?.Guild);
+            if (PetName == "") desc += $"Congratulations on your new Clockagotchi!\nUse the **{prefix}pet name** and **{prefix}pet image** commands to customize it\n\n";
 
-            desc += $"**Name:** {(name == "" ? "*Unnamed*" : name)}\n";
+            desc += $"**Name:** {(PetName == "" ? "*Unnamed*" : PetName)}\n";
 
             var age = (DateTime.Now - bornDate);
             desc += $"**Age:** {$"{(int)age.TotalDays} day{"s".If((int)age.TotalDays > 1)}, ".If((int)age.TotalDays > 0)}" +
-                $"{$"{age.Hours} hours{"s".If(age.Hours > 1)}, ".If(age.Hours > 0)}" +
+                $"{$"{age.Hours} hour{"s".If(age.Hours > 1)}, ".If(age.Hours > 0)}" +
                 (age.Minutes > 0 ? $"{age.Minutes} minute{"s".If(age.Minutes > 1)}\n\n" : "Newborn\n\n");
 
             desc += $"🍎 **Satiation:** {satiation}/{MaxStat}{" Hungry!".If(satiation < 5)}\n";
@@ -68,10 +70,10 @@ namespace PacManBot.Games
 
             return new EmbedBuilder
             {
-                Title = $"*{owner.Username}*'s Clockagotchi",
+                Title = $"{owner?.Nickname ?? client.GetUser(OwnerId).Username}'s Clockagotchi",
                 Description = desc,
                 Color = TotalStats >= 45 ? new Color(0, 200, 0) : TotalStats >= 20 ? new Color(255, 200, 0) : new Color(255, 0, 0),
-                ThumbnailUrl = "https://cdn.discordapp.com/attachments/353729197824278541/447979173554946051/clockagotchi.png",
+                ThumbnailUrl = petImageUrl ?? "https://cdn.discordapp.com/attachments/353729197824278541/447979173554946051/clockagotchi.png",
             };
         }
 
@@ -95,7 +97,14 @@ namespace PacManBot.Games
 
         public void SetName(string name)
         {
-            this.name = name.SanitizeMarkdown().SanitizeMentions();
+            PetName = name.SanitizeMarkdown().SanitizeMentions();
+            UpdateStats();
+        }
+
+
+        public void SetImage(string url)
+        {
+            petImageUrl = url;
             UpdateStats();
         }
 

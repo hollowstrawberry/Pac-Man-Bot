@@ -128,7 +128,7 @@ namespace PacManBot.Modules
         public BetterRequireUserPermission(ChannelPermission channelPerms) : base(channelPerms) { }
         public BetterRequireUserPermission(GuildPermission guildPerms) : base(guildPerms) { }
 
-        public override Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, CommandInfo command, IServiceProvider services)
-            => new Task<PreconditionResult>(() => CheckPermissions(context, command, context.User as IGuildUser, "User"));
+        public override async Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, CommandInfo command, IServiceProvider services)
+            => CheckPermissions(context, command, context.User as IGuildUser, "User");
     }
 }
