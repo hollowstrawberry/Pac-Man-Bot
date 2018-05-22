@@ -245,7 +245,7 @@ namespace PacManBot.Modules
 
             if (pet == null)
             {
-                await ReplyAsync("This person doesn't have a pet :(");
+                await ReplyAsync("This person doesn't have a pet :(", options: Utils.DefaultOptions);
             }
             else
             {
@@ -268,7 +268,7 @@ namespace PacManBot.Modules
                 }
                 else
                 {
-                    await ReplyAsync($"You don't have a pet yet! Simply do **{storage.GetPrefixOrEmpty(Context.Guild)}pet** to adopt one.");
+                    await ReplyAsync($"You don't have a pet yet! Simply do **{storage.GetPrefixOrEmpty(Context.Guild)}pet** to adopt one.", options: Utils.DefaultOptions);
                     return;
                 }
             }
@@ -276,39 +276,54 @@ namespace PacManBot.Modules
             switch (action)
             {
                 case "feed":
-                    pet.UpdateStats(feed: true);
-                    await Context.Message.AddReactionAsync(Bot.Random.Choose(PetGame.FoodEmotes).ToEmoji());
+                    if (pet.UpdateStats(feed: true)) await Context.Message.AddReactionAsync(Bot.Random.Choose(PetGame.FoodEmotes).ToEmoji(), Utils.DefaultOptions);
+                    else await ReplyAsync($"{CustomEmoji.Cross} Your pet is already full!");
                     return;
 
                 case "play":
-                    pet.UpdateStats(play: true);
-                    await Context.Message.AddReactionAsync(Bot.Random.Choose(PetGame.PlayEmotes).ToEmoji());
+                    if (pet.UpdateStats(play: true)) await Context.Message.AddReactionAsync(Bot.Random.Choose(PetGame.PlayEmotes).ToEmoji(), Utils.DefaultOptions);
+                    else await ReplyAsync($"{CustomEmoji.Cross} Your pet is tired rigth now!", options: Utils.DefaultOptions);
                     return;
 
                 case "clean":
-                    pet.UpdateStats(wash: true);
-                    await Context.Message.AddReactionAsync(Bot.Random.Choose(PetGame.CleanEmotes).ToEmoji());
+                    if (pet.UpdateStats(wash: true)) await Context.Message.AddReactionAsync(Bot.Random.Choose(PetGame.CleanEmotes).ToEmoji(), Utils.DefaultOptions);
+                    else await ReplyAsync($"{CustomEmoji.Cross} Your pet is already clean!", options: Utils.DefaultOptions);
                     return;
 
                 case "release":
                     storage.DeleteGame(pet);
-                    await ReplyAsync($"Goodbye {pet.PetName}!");
+                    await ReplyAsync($"Goodbye {pet.PetName}!", options: Utils.DefaultOptions);
                     return;
 
                 case "name":
                     if (args != "")
                     {
-                        pet.SetName(args);
-                        await Context.Message.AddReactionAsync(CustomEmoji.Check);
+                        pet.PetName = args;
+                        await Context.Message.AddReactionAsync(CustomEmoji.Check, Utils.DefaultOptions);
                     }
-                    else await ReplyAsync($"{CustomEmoji.Cross} Please specify a name!");
+                    else await ReplyAsync($"{CustomEmoji.Cross} Please specify a name!", options: Utils.DefaultOptions);
                     return;
 
                 case "image":
-                    string url = args == "" ? Context.Message.Attachments.FirstOrDefault()?.Url ?? null : args;
-                    await Context.Message.AddReactionAsync(CustomEmoji.Check);
-                    if (url == null) await ReplyAsync(pet.petImageUrl == null ? "Please specify an image!" : "Pet image reset!");
-                    pet.SetImage(url);
+                    string url = args != "" ? args : Context.Message.Attachments.FirstOrDefault()?.Url;
+                    if (url == null && pet.PetImageUrl == null)
+                    {
+                        await ReplyAsync($"{CustomEmoji.Cross} Please specify an image!", options: Utils.DefaultOptions);
+                    }
+                    else
+                    {
+                        try
+                        {
+                            pet.PetImageUrl = url;
+                            if (url == null) await ReplyAsync($"{CustomEmoji.Check} Pet image reset!");
+                            else await Context.Message.AddReactionAsync(CustomEmoji.Check, Utils.DefaultOptions);
+                        }
+                        catch (InvalidOperationException)
+                        {
+                            await ReplyAsync($"{CustomEmoji.Cross} Invalid link!", options: Utils.DefaultOptions);
+                        }
+                    }
+
                     return;
 
                 case "help":
@@ -321,7 +336,7 @@ namespace PacManBot.Modules
                     return;
 
                 default:
-                    await ReplyAsync($"Unknown pet command! Do **{storage.GetPrefixOrEmpty(Context.Guild)}pet help** for help");
+                    await ReplyAsync($"Unknown pet command! Do **{storage.GetPrefixOrEmpty(Context.Guild)}pet help** for help", options: Utils.DefaultOptions);
                     return;
             }
         }
