@@ -258,7 +258,12 @@ namespace PacManBot.Services
                     try
                     {
                         IStoreableGame game;
-                        if (file.Contains("pet")) game = JsonConvert.DeserializeObject<PetGame>(File.ReadAllText(file).Replace("PetName", "petName"), gameJsonSettings);
+                        if (file.Contains("pet"))
+                        {
+                            string content = File.ReadAllText(file).Replace("PetName", "petName").Replace("fun", "happiness").Replace("clean", "hygiene");
+                            game = JsonConvert.DeserializeObject<PetGame>(content, gameJsonSettings);
+                            StoreGame(game); // Update old files
+                        }
                         else game = JsonConvert.DeserializeObject<PacManGame>(File.ReadAllText(file), gameJsonSettings);
 
                         game.SetServices(client, logger, this);

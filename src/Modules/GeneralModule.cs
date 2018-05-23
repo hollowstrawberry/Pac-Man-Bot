@@ -127,11 +127,9 @@ namespace PacManBot.Modules
 
                     if (!helpInfo.Hidden && !previousCommands.Contains(command.Name))
                     {
-                        Console.WriteLine("hello there " + command.Name);
                         var prec = await command.CheckPreconditionsAsync(Context);
-                        Console.WriteLine("evaluated " + command.Name);
                         if (!prec.IsSuccess) continue;
-                        Console.WriteLine("added " + command.Name);
+
                         moduleText.Append($"**{command.Name} {helpInfo.Parameters}**");
                         if (helpInfo.Remarks != "") moduleText.Append($" — *{helpInfo.Remarks}*");
                         moduleText.Append('\n');

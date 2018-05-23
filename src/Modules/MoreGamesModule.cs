@@ -28,6 +28,167 @@ namespace PacManBot.Modules
         }
 
 
+
+
+        [Command("pet"), Alias("clockagotchi"), Parameters("[command]")]
+        [Remarks("Adopt your own pet!")]
+        [Summary("**__Pet Commands__**\n\n" +
+                 "**{prefix}pet** - Check on your pet or adopt if you don't have one\n" +
+                 "**{prefix}pet stats** - Check your pet's statistics and achievements\n" +
+                 "**{prefix}pet name <name>** - Name your pet\n" +
+                 "**{prefix}pet image <image>** - Give your pet an image\n" +
+                 "**{prefix}pet <user>** - See another person's pet\n\n" +
+                 "**{prefix}pet feed** - Fills your pet's Satiation and restores 1 Energy\n" +
+                 "**{prefix}pet play** - Fills your pet's Happinness and consumes 5 Energy\n" +
+                 "**{prefix}pet clean** - Fills your pet's Hygiene\n" +
+                 "**{prefix}pet sleep** - Put your pet to sleep to restore Energy over time\n\n" +
+                 "**{prefix}pet help** - This list of commands\n" +
+                 "**{prefix}pet release** - Gives your pet to a loving family that will take care of it (Deletes pet)")]
+        [BetterRequireBotPermission(ChannelPermission.EmbedLinks | ChannelPermission.AddReactions)]
+        public async Task ClockagotchiUser(SocketGuildUser user)
+        {
+            var pet = (PetGame)storage.GameInstances.FirstOrDefault(x => x is PetGame && x.UserId[0] == user.Id);
+
+            if (pet == null)
+            {
+                await ReplyAsync("This person doesn't have a pet :(", options: Utils.DefaultOptions);
+            }
+            else
+            {
+                await ReplyAsync(pet.GetContent(), false, pet.GetEmbed(user)?.Build(), Utils.DefaultOptions);
+            }
+        }
+
+
+        [Command("clockagotchi"), Alias("pet"), HideHelp]
+        [BetterRequireBotPermission(ChannelPermission.EmbedLinks | ChannelPermission.AddReactions)]
+        public async Task Clockagotchi(string action = "", [Remainder]string args = "")
+        {
+            var pet = (PetGame)storage.GameInstances.FirstOrDefault(x => x is PetGame && x.UserId[0] == Context.User.Id);
+            if (pet == null)
+            {
+                if (action == "")
+                {
+                    pet = new PetGame("", Context.User.Id, shardedClient, logger, storage);
+                    storage.AddGame(pet);
+                }
+                else
+                {
+                    await ReplyAsync($"You don't have a pet yet! Simply do **{storage.GetPrefixOrEmpty(Context.Guild)}pet** to adopt one.", options: Utils.DefaultOptions);
+                    return;
+                }
+            }
+
+            switch (action)
+            {
+                case "":
+                    await ReplyAsync(pet.GetContent(), false, pet.GetEmbed(Context.User as IGuildUser)?.Build(), Utils.DefaultOptions);
+                    return;
+
+
+                case "stats":
+                case "achievements":
+                case "medals":
+                    await ReplyAsync("", false, pet.GetEmbedAchievements(Context.User as IGuildUser)?.Build(), Utils.DefaultOptions);
+                    return;
+
+
+                case "feed":
+                case "food":
+                case "eat":
+                    if (pet.Feed()) await Context.Message.AddReactionAsync(Bot.Random.Choose(PetGame.FoodEmotes).ToEmoji(), Utils.DefaultOptions);
+                    else await ReplyAsync($"{CustomEmoji.Cross} Your pet is already full!");
+                    return;
+
+
+                case "play":
+                case "fun":
+                    if (pet.Play()) await Context.Message.AddReactionAsync(Bot.Random.Choose(PetGame.PlayEmotes).ToEmoji(), Utils.DefaultOptions);
+                    else
+                    {
+                        string message = pet.Happiness == PetGame.MaxStat ? "Your pet doesn't want to play anymore!" : "Your pet is too tired to play! It needs 5 energy or more.";
+                        await ReplyAsync($"{CustomEmoji.Cross} {message}", options: Utils.DefaultOptions);
+                    }
+                    return;
+
+
+                case "clean":
+                case "wash":
+                    if (pet.Clean()) await Context.Message.AddReactionAsync(Bot.Random.Choose(PetGame.CleanEmotes).ToEmoji(), Utils.DefaultOptions);
+                    else await ReplyAsync($"{CustomEmoji.Cross} Your pet is already clean!", options: Utils.DefaultOptions);
+                    return;
+
+
+                case "sleep":
+                case "wake":
+                case "wakeup":
+                case "rest":
+                    pet.UpdateStats(false);
+                    if (pet.Energy == PetGame.MaxStat && !pet.Asleep)
+                    {
+                        await ReplyAsync($"{CustomEmoji.Cross} Your pet is not tired!", options: Utils.DefaultOptions);
+                    }
+                    else
+                    {
+                        pet.ToggleSleep();
+                        await Context.Message.AddReactionAsync(pet.Asleep ? "💤".ToEmoji() : "☀".ToEmoji(), Utils.DefaultOptions);
+                    }
+                    return;
+
+
+                case "release":
+                    storage.DeleteGame(pet);
+                    await ReplyAsync($"Goodbye {(string.IsNullOrWhiteSpace(pet.PetName) ? pet.Name : pet.PetName)}!", options: Utils.DefaultOptions);
+                    return;
+
+
+                case "name":
+                    if (args != "")
+                    {
+                        pet.PetName = args;
+                        await Context.Message.AddReactionAsync(CustomEmoji.Check, Utils.DefaultOptions);
+                    }
+                    else await ReplyAsync($"{CustomEmoji.Cross} Please specify a name!", options: Utils.DefaultOptions);
+                    return;
+
+
+                case "image":
+                    string url = args != "" ? args : Context.Message.Attachments.FirstOrDefault()?.Url;
+                    if (url == null && pet.PetImageUrl == null)
+                    {
+                        await ReplyAsync($"{CustomEmoji.Cross} Please specify an image!", options: Utils.DefaultOptions);
+                    }
+                    else
+                    {
+                        try
+                        {
+                            pet.PetImageUrl = url;
+                            if (url == null) await ReplyAsync($"{CustomEmoji.Check} Pet image reset!");
+                            else await Context.Message.AddReactionAsync(CustomEmoji.Check, Utils.DefaultOptions);
+                        }
+                        catch (InvalidOperationException)
+                        {
+                            await ReplyAsync($"{CustomEmoji.Cross} Invalid link!", options: Utils.DefaultOptions);
+                        }
+                    }
+                    return;
+
+
+                case "help":
+                    var summary = typeof(MoreGamesModule).GetMethod(nameof(ClockagotchiUser)).GetCustomAttributes(typeof(SummaryAttribute), false).FirstOrDefault() as SummaryAttribute;
+                    await ReplyAsync(summary?.Text.Replace("{prefix}", storage.GetPrefixOrEmpty(Context.Guild)) ?? "Couldn't get help", options: Utils.DefaultOptions);
+                    return;
+
+
+                default:
+                    await ReplyAsync($"Unknown pet command! Do **{storage.GetPrefixOrEmpty(Context.Guild)}pet help** for help", options: Utils.DefaultOptions);
+                    return;
+            }
+        }
+
+
+
+
         [Command("tictactoe"), Alias("ttt", "tic"), Remarks("Play Tic-Tac-Toe with another user or the bot")]
         [Summary("You can choose a guild member to invite as an opponent using a mention, username, nickname or user ID. Otherwise, you'll play against the bot.\n\n"
                + "You play by sending the number of a free cell (1 to 9) in chat while it is your turn, and to win you must make a line of 3 symbols in any direction\n\n"
@@ -159,6 +320,7 @@ namespace PacManBot.Modules
 
 
 
+
         [Command("bump"), Alias("b", "refresh", "r", "move")]
         [Remarks("Move any game to the bottom of the chat")]
         [Summary("Moves the current game's message in this channel to the bottom of the chat, deleting the old one."
@@ -224,121 +386,6 @@ namespace PacManBot.Modules
                 else await Context.Message.AddReactionAsync(CustomEmoji.Check, Utils.DefaultOptions);
             }
             else await ReplyAsync("You can't cancel this game because someone else is still playing!", options: Utils.DefaultOptions);
-        }
-
-
-        [Command("clockagotchi"), Alias("pet"), Parameters("[command]"), HideHelp]
-        [Summary("**__Pet Commands__**\n" +
-                 "**{prefix}pet** - Check on your pet or adopt if you don't have one\n" +
-                 "**{prefix}pet <user>** - Check another user's pet\n" +
-                 "**{prefix}pet name <name>** - Name your pet\n" +
-                 "**{prefix}pet image <image>** - Give your pet an image\n" +
-                 "**{prefix}pet feed** - Feed your pet\n" +
-                 "**{prefix}pet play** - Play with your pet\n" +
-                 "**{prefix}pet clean** - Clean your pet\n" +
-                 "**{prefix}pet release** - Gives your pet to a loving family that will take care of it (Deletes pet)\n" +
-                 "**{prefix}pet help** - This list of commands")]
-        [BetterRequireBotPermission(ChannelPermission.EmbedLinks | ChannelPermission.AddReactions)]
-        public async Task ClockagotchiUser(SocketGuildUser user)
-        {
-            var pet = (PetGame)storage.GameInstances.FirstOrDefault(x => x is PetGame && x.UserId[0] == user.Id);
-
-            if (pet == null)
-            {
-                await ReplyAsync("This person doesn't have a pet :(", options: Utils.DefaultOptions);
-            }
-            else
-            {
-                await ReplyAsync(pet.GetContent(), false, pet.GetEmbed(user)?.Build(), Utils.DefaultOptions);
-            }
-        }
-
-
-        [Command("clockagotchi"), Alias("pet"), HideHelp]
-        [BetterRequireBotPermission(ChannelPermission.EmbedLinks | ChannelPermission.AddReactions)]
-        public async Task Clockagotchi(string action = "", [Remainder]string args = "")
-        {
-            var pet = (PetGame)storage.GameInstances.FirstOrDefault(x => x is PetGame && x.UserId[0] == Context.User.Id);
-            if (pet == null)
-            {
-                if (action == "")
-                {
-                    pet = new PetGame("", Context.User.Id, shardedClient, logger, storage);
-                    storage.AddGame(pet);
-                }
-                else
-                {
-                    await ReplyAsync($"You don't have a pet yet! Simply do **{storage.GetPrefixOrEmpty(Context.Guild)}pet** to adopt one.", options: Utils.DefaultOptions);
-                    return;
-                }
-            }
-
-            switch (action)
-            {
-                case "feed":
-                    if (pet.UpdateStats(feed: true)) await Context.Message.AddReactionAsync(Bot.Random.Choose(PetGame.FoodEmotes).ToEmoji(), Utils.DefaultOptions);
-                    else await ReplyAsync($"{CustomEmoji.Cross} Your pet is already full!");
-                    return;
-
-                case "play":
-                    if (pet.UpdateStats(play: true)) await Context.Message.AddReactionAsync(Bot.Random.Choose(PetGame.PlayEmotes).ToEmoji(), Utils.DefaultOptions);
-                    else await ReplyAsync($"{CustomEmoji.Cross} Your pet is tired rigth now!", options: Utils.DefaultOptions);
-                    return;
-
-                case "clean":
-                    if (pet.UpdateStats(wash: true)) await Context.Message.AddReactionAsync(Bot.Random.Choose(PetGame.CleanEmotes).ToEmoji(), Utils.DefaultOptions);
-                    else await ReplyAsync($"{CustomEmoji.Cross} Your pet is already clean!", options: Utils.DefaultOptions);
-                    return;
-
-                case "release":
-                    storage.DeleteGame(pet);
-                    await ReplyAsync($"Goodbye {pet.PetName}!", options: Utils.DefaultOptions);
-                    return;
-
-                case "name":
-                    if (args != "")
-                    {
-                        pet.PetName = args;
-                        await Context.Message.AddReactionAsync(CustomEmoji.Check, Utils.DefaultOptions);
-                    }
-                    else await ReplyAsync($"{CustomEmoji.Cross} Please specify a name!", options: Utils.DefaultOptions);
-                    return;
-
-                case "image":
-                    string url = args != "" ? args : Context.Message.Attachments.FirstOrDefault()?.Url;
-                    if (url == null && pet.PetImageUrl == null)
-                    {
-                        await ReplyAsync($"{CustomEmoji.Cross} Please specify an image!", options: Utils.DefaultOptions);
-                    }
-                    else
-                    {
-                        try
-                        {
-                            pet.PetImageUrl = url;
-                            if (url == null) await ReplyAsync($"{CustomEmoji.Check} Pet image reset!");
-                            else await Context.Message.AddReactionAsync(CustomEmoji.Check, Utils.DefaultOptions);
-                        }
-                        catch (InvalidOperationException)
-                        {
-                            await ReplyAsync($"{CustomEmoji.Cross} Invalid link!", options: Utils.DefaultOptions);
-                        }
-                    }
-
-                    return;
-
-                case "help":
-                    var summary = typeof(MoreGamesModule).GetMethod(nameof(ClockagotchiUser)).GetCustomAttributes(typeof(SummaryAttribute), false).FirstOrDefault() as SummaryAttribute;
-                    await ReplyAsync(summary?.Text.Replace("{prefix}", storage.GetPrefixOrEmpty(Context.Guild)) ?? "Couldn't get help", options: Utils.DefaultOptions);
-                    return;
-
-                case "":
-                    await ReplyAsync(pet.GetContent(), false, pet.GetEmbed(Context.User as IGuildUser)?.Build(), Utils.DefaultOptions);
-                    return;
-
-                default:
-                    await ReplyAsync($"Unknown pet command! Do **{storage.GetPrefixOrEmpty(Context.Guild)}pet help** for help", options: Utils.DefaultOptions);
-                    return;
-            }
         }
     }
 }
