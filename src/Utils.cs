@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using Discord;
@@ -86,6 +88,14 @@ namespace PacManBot
 
 
 
+        // Misc
+
+        public static int Ceiling(this double num)
+        {
+            return (int)Math.Ceiling(num);
+        }
+
+
         public static string Humanized(this TimeSpan span)
         {
             int days = (int)span.TotalDays, hours = span.Hours, minutes = span.Minutes;
@@ -146,6 +156,24 @@ namespace PacManBot
                 if (text.Contains(value.ToString())) return true;
             }
             return false;
+        }
+
+
+        public static bool IsImageUrl(string URL)
+        {
+            try
+            {
+                var req = WebRequest.Create(URL);
+                req.Method = "HEAD";
+                using (var resp = req.GetResponse())
+                {
+                    return resp.ContentType.ToLower().StartsWith("image/");
+                }
+            }
+            catch (WebException)
+            {
+                return false;
+            }
         }
 
 
