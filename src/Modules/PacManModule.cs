@@ -108,7 +108,7 @@ namespace PacManBot.Modules
             {
                 game.CancelRequests();
                 var gameMessage = await game.GetMessage();
-                if (gameMessage != null) await gameMessage.ModifyAsync(game.UpdateDisplay, game.RequestOptions);
+                if (gameMessage != null) await gameMessage.ModifyAsync(game.UpdateMessage, game.RequestOptions);
             }
             catch (OperationCanceledException) { }
             catch (Exception e)
@@ -255,7 +255,7 @@ namespace PacManBot.Modules
                     await message.AddReactionAsync(input, Utils.DefaultOptions);
                 }
 
-                await message.ModifyAsync(game.UpdateDisplay, requestOptions); //Restore display to normal
+                await message.ModifyAsync(game.UpdateMessage, requestOptions); //Restore display to normal
             }
             catch (Exception e) when (e is HttpException || e is TimeoutException || e is OperationCanceledException) { } // We can ignore these
         }

@@ -190,14 +190,14 @@ namespace PacManBot.Modules
             }
 
             var msg = await game.GetMessage();
-            if (msg != null) await msg.ModifyAsync(game.UpdateDisplay, Utils.DefaultOptions);
+            if (msg != null) await msg.ModifyAsync(game.UpdateMessage, Utils.DefaultOptions);
             else msg = await ReplyAsync(game.GetContent(), false, game.GetEmbed()?.Build(), Utils.DefaultOptions);
 
             if (game is TwoPlayerGame tpGame && tpGame.AITurn)
             {
                 tpGame.DoTurnAI();
                 await Task.Delay(1000);
-                await msg.ModifyAsync(game.UpdateDisplay, Utils.DefaultOptions);
+                await msg.ModifyAsync(game.UpdateMessage, Utils.DefaultOptions);
             }
 
             if (game.State != State.Active) storage.DeleteGame(game);

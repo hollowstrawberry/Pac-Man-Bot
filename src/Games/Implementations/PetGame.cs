@@ -15,6 +15,7 @@ namespace PacManBot.Games
         public static string[] FoodEmotes = new string[] { "🍌", "🍎", "🍊", "🍕", "🌮", "🍩", "🍪", "🍐", "🍉", "🍇", "🍑", "🍧", "🍫", "🥕", "🍼" };
         public static string[] PlayEmotes = new string[] { "⚽", "🏀", "🏈", "🎾", "🏓", "🎨", "🎤", "🎭", "🏐", "🎣", };
         public static string[] CleanEmotes = new string[] { "💧", "🚿", "🛁", "🚽", "🚰", "💦", "👣", "💩", "✨" };
+        public static string[] SleepEmotes = new string[] { "💤", "🛏", "🌃", "🌠", "⭐", "🌙", "🌜" };
         public static string[] BannerUrl = new string[] { null, "https://cdn.discordapp.com/attachments/412314001414815751/448939830433415189/copperbanner.png", "https://cdn.discordapp.com/attachments/412314001414815751/448939834354958370/silverbanner.png", "https://cdn.discordapp.com/attachments/412314001414815751/448939832102617090/goldbanner.png" };
 
         public const int MaxStat = 20;
@@ -123,7 +124,7 @@ namespace PacManBot.Games
 
 
         public override EmbedBuilder GetEmbed(bool showHelp = true) => GetEmbed(null);
-        public EmbedBuilder GetEmbed(IGuildUser owner)
+        public EmbedBuilder GetEmbed(IGuildUser owner, bool decimals = false)
         {
             bool wasAsleep = asleep;
             UpdateStats();
@@ -145,23 +146,23 @@ namespace PacManBot.Games
             var status = new StringBuilder();
             if (asleep) status.Append("💤💤💤\n\n");
             else if (wasAsleep) status.Append("Your pet woke up!\n\n");
-            status.Append((satiation >= 5 ? "🍎" : "🍽") + $" **Satiation:** {satiation.Ceiling()}/{MaxStat}\n");
-            status.Append((happiness >= 5 ? "🏈" : "🕸") + $" **Happiness:** {happiness.Ceiling()}/{MaxStat}\n");
-            status.Append((hygiene >= 5 ? "🛁" : "💩")   + $" **Hygiene:** {hygiene.Ceiling()}/{MaxStat}\n");
-            status.Append((energy >= 5 ? "⚡" : "🍂") + $" **Energy:** {energy.Ceiling()}/{MaxStat}\n");
+            status.Append((satiation >= 5 ? "🍎" : "🍽") + $" **Satiation:** {(decimals ? satiation.ToString("0.000") : satiation.Ceiling().ToString())}/{MaxStat}\n");
+            status.Append((happiness >= 5 ? "🏈" : "🕸") + $" **Happiness:** {(decimals ? happiness.ToString("0.000") : happiness.Ceiling().ToString())}/{MaxStat}\n");
+            status.Append((hygiene >= 5 ? "🛁" : "💩")   + $" **Hygiene:** {(decimals ? hygiene.ToString("0.000") : hygiene.Ceiling().ToString())}/{MaxStat}\n");
+            status.Append((energy >= 5 ? "⚡" : "🍂") + $" **Energy:** {(decimals ? energy.ToString("0.000") : energy.Ceiling().ToString())}/{MaxStat}\n");
 
             
             var unlocks = new StringBuilder();
-            if (achievements.Attention > 0)
-            {
-                unlocks.Append("**• **");
-                unlocks.Append(achievements.Attention >= 3 ? "Gold" : achievements.Attention >= 2 ? "Silver" : "Copper");
-                unlocks.Append(" Banner\n\n");
-            }
             if (achievements.Care3) unlocks.Append("🥇 ");
             if (achievements.Care2) unlocks.Append("🥈 ");
             if (achievements.Care1) unlocks.Append("🥉 ");
             if (achievements.Custom) unlocks.Append("🎖");
+            if (achievements.Attention > 0)
+            {
+                unlocks.Append("\n**•** ");
+                unlocks.Append(achievements.Attention >= 3 ? "Gold" : achievements.Attention >= 2 ? "Silver" : "Copper");
+                unlocks.Append(" Banner");
+            }
 
 
             return new EmbedBuilder
@@ -262,7 +263,7 @@ namespace PacManBot.Games
 
         public bool Feed()
         {
-            UpdateStats(false);
+            UpdateStats(store: false);
 
             bool canEat = satiation.Ceiling() != MaxStat;
             if (canEat)
@@ -277,13 +278,13 @@ namespace PacManBot.Games
 
         public bool Play()
         {
-            UpdateStats(false);
+            UpdateStats(store: false);
 
-            bool canPlay = happiness.Ceiling() != MaxStat && energy >= 5;
-            if (canPlay )
+            bool canPlay = happiness.Ceiling() != MaxStat && energy.Ceiling() >= 5;
+            if (canPlay)
             {
                 happiness = MaxStat;
-                energy = Math.Max(0, energy - 5);
+                energy = Math.Max(0, energy - (energy.Ceiling() == MaxStat ? 5.5 : 5.0)); // It's all for appearance
                 achievements.timesPlayed++;
             }
             storage.StoreGame(this);
@@ -292,7 +293,7 @@ namespace PacManBot.Games
 
         public bool Clean()
         {
-            UpdateStats(false);
+            UpdateStats(store: false);
 
             bool canClean = hygiene.Ceiling() != MaxStat;
             if (canClean)
@@ -306,7 +307,7 @@ namespace PacManBot.Games
 
         public void ToggleSleep()
         {
-            UpdateStats(false);
+            UpdateStats(store: false);
             asleep = !asleep;
             storage.StoreGame(this);
         }

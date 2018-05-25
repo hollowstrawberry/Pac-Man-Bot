@@ -200,16 +200,16 @@ namespace PacManBot.Services
             game.CancelRequests();
             var requestOptions = game.RequestOptions;
 
-            if (message.Channel.BotCan(ChannelPermission.ManageMessages))
+            if (gameMessage != null && message.Channel.BotCan(ChannelPermission.ManageMessages))
             {
-                await gameMessage.ModifyAsync(game.UpdateDisplay, requestOptions);
+                await gameMessage.ModifyAsync(game.UpdateMessage, requestOptions);
                 await message.DeleteAsync(Utils.DefaultOptions);
             }
             else
             {
-                var newMsg = await gameMessage.Channel.SendMessageAsync(game.GetContent(), false, game.GetEmbed().Build(), requestOptions);
+                var newMsg = await gameMessage.Channel.SendMessageAsync(game.GetContent(), false, game.GetEmbed()?.Build(), requestOptions);
                 game.MessageId = newMsg.Id;
-                await gameMessage.DeleteAsync(Utils.DefaultOptions);
+                if (gameMessage != null) await gameMessage.DeleteAsync(Utils.DefaultOptions);
             }
         }
 
@@ -239,7 +239,7 @@ namespace PacManBot.Services
             }
 
             game.CancelRequests();
-            await gameMessage.ModifyAsync(game.UpdateDisplay, game.RequestOptions);
+            await gameMessage.ModifyAsync(game.UpdateMessage, game.RequestOptions);
         }
 
 

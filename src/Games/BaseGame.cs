@@ -33,7 +33,7 @@ namespace PacManBot.Games
 
         public RequestOptions RequestOptions => new RequestOptions() { Timeout = 10000, RetryMode = RetryMode.RetryRatelimit, CancelToken = discordRequestCTS.Token };
 
-        public Action<MessageProperties> UpdateDisplay => (msg => {
+        public Action<MessageProperties> UpdateMessage => (msg => {
             msg.Content = GetContent();
             msg.Embed = GetEmbed()?.Build();
         });

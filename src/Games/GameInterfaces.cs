@@ -27,7 +27,7 @@ namespace PacManBot.Games
         SocketGuild Guild { get; }
         Task<IUserMessage> GetMessage();
         RequestOptions RequestOptions { get; } // Used when modifying the game message
-        Action<MessageProperties> UpdateDisplay { get; } // Lambda to edit a game message
+        Action<MessageProperties> UpdateMessage { get; } // Edit a Discord message with the game
 
         // Methods
         string GetContent(bool showHelp = true);

@@ -87,6 +87,11 @@ namespace PacManBot.Modules
                     return;
 
 
+                case "exact":
+                    await ReplyAsync(pet.GetContent(), false, pet.GetEmbed(Context.User as IGuildUser, true)?.Build(), Utils.DefaultOptions);
+                    return;
+
+
                 case "stats":
                 case "achievements":
                 case "unlocks":
@@ -132,7 +137,7 @@ namespace PacManBot.Modules
                     else
                     {
                         pet.ToggleSleep();
-                        if (pet.Asleep) await Context.Message.AddReactionAsync("💤".ToEmoji(), Utils.DefaultOptions);
+                        if (pet.Asleep) await ReplyAsync($"{Bot.Random.Choose(PetGame.SleepEmotes)} You put your pet to sleep.", options: Utils.DefaultOptions);
                         else await ReplyAsync("🌅 You wake up your pet.", options: Utils.DefaultOptions);
                     }
                     return;
@@ -283,7 +288,16 @@ namespace PacManBot.Modules
 
             storage.AddGame(game);
 
-            var gameMessage = await ReplyAsync(game.GetContent(), false, game.GetEmbed().Build(), Utils.DefaultOptions);
+            IUserMessage gameMessage;
+            try
+            {
+                gameMessage = await ReplyAsync(game.GetContent(), false, game.GetEmbed()?.Build(), Utils.DefaultOptions);
+            }
+            catch (HttpException e)
+            {
+                await logger.Log(LogSeverity.Error, e.Reason); // Let's hope I figure out why I get Bad Gateway
+                throw e;
+            }
             game.MessageId = gameMessage.Id;
 
             while (game.State == State.Active)
@@ -295,7 +309,7 @@ namespace PacManBot.Modules
                         game.DoTurnAI();
                         if (game.MessageId != gameMessage.Id) gameMessage = await game.GetMessage();
                         game.CancelRequests();
-                        if (gameMessage != null) await gameMessage.ModifyAsync(game.UpdateDisplay, game.RequestOptions);
+                        if (gameMessage != null) await gameMessage.ModifyAsync(game.UpdateMessage, game.RequestOptions);
                     }
                     catch (Exception e) when (e is OperationCanceledException || e is TimeoutException || e is HttpException) { }
 
@@ -310,7 +324,7 @@ namespace PacManBot.Modules
                     try
                     {
                         if (gameMessage.Id != game.MessageId) gameMessage = await game.GetMessage();
-                        if (gameMessage != null) await gameMessage.ModifyAsync(game.UpdateDisplay, Utils.DefaultOptions);
+                        if (gameMessage != null) await gameMessage.ModifyAsync(game.UpdateMessage, Utils.DefaultOptions);
                     }
                     catch (HttpException) { } // Something happened to the message, we can ignore it
                     return;
@@ -375,7 +389,7 @@ namespace PacManBot.Modules
                     var gameMessage = await game.GetMessage();
                     if (gameMessage != null)
                     {
-                        await gameMessage.ModifyAsync(game.UpdateDisplay, Utils.DefaultOptions);
+                        await gameMessage.ModifyAsync(game.UpdateMessage, Utils.DefaultOptions);
                         if (game is PacManGame && Context.BotCan(ChannelPermission.ManageMessages)) await gameMessage.RemoveAllReactionsAsync(Utils.DefaultOptions);
                     }
                 }
@@ -387,7 +401,7 @@ namespace PacManBot.Modules
                 }
                 else await Context.Message.AddReactionAsync(CustomEmoji.Check, Utils.DefaultOptions);
             }
-            else await ReplyAsync("You can't cancel this game because someone else is still playing!", options: Utils.DefaultOptions);
+            else await ReplyAsync("You can't cancel this game because someone else is still playing! Try again in a minute.", options: Utils.DefaultOptions);
         }
     }
 }
