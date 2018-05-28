@@ -60,6 +60,7 @@ namespace PacManBot.Modules
             "**{prefix}pet clean** - Fills your pet's Hygiene\n" +
             "**{prefix}pet sleep** - Put your pet to sleep to restore Energy over time\n\n" +
             "**{prefix}pet help** - This list of commands\n" +
+            "**{prefix}pet pet** - Pet your pet\n" +
             "**{prefix}pet user <user>** - See another person's pet\n" +
             "**{prefix}pet release** - Gives your pet to a loving family that will take care of it (Deletes pet forever)")]
         [BetterRequireBotPermission(ChannelPermission.EmbedLinks | ChannelPermission.AddReactions)]
@@ -184,6 +185,11 @@ namespace PacManBot.Modules
                 case "help":
                     var summary = typeof(MoreGamesModule).GetMethod(nameof(Clockagotchi)).GetCustomAttributes(typeof(SummaryAttribute), false).FirstOrDefault() as SummaryAttribute;
                     await ReplyAsync(summary?.Text.Replace("{prefix}", storage.GetPrefixOrEmpty(Context.Guild)) ?? "Couldn't get help", options: Utils.DefaultOptions);
+                    return;
+
+
+                case "pet":
+                    await ReplyAsync(Bot.Random.Choose(PetGame.Petting), options: Utils.DefaultOptions);
                     return;
 
 

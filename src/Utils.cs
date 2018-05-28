@@ -99,7 +99,8 @@ namespace PacManBot
         public static string Humanized(this TimeSpan span)
         {
             int days = (int)span.TotalDays, hours = span.Hours, minutes = span.Minutes;
-            return $"{days} day{"s".If(days > 1)}, ".If(days > 0) + $"{hours} hour{"s".If(hours > 1)}, ".If(hours > 0) + (minutes > 0 ? $"{minutes} minute{"s".If(minutes > 1)}" : "Just now");
+            string result = $"{days} day{"s".If(days > 1)}, ".If(days > 0) + $"{hours} hour{"s".If(hours > 1)}, ".If(hours > 0) + $"{minutes} minute{"s".If(minutes > 1)}".If(minutes > 0);
+            return result != "" ? result : "Just now";
         }
 
 
