@@ -6,7 +6,7 @@ using static PacManBot.Games.GameUtils;
 
 namespace PacManBot.Games
 {
-    public abstract class TwoPlayerGame : BaseGame
+    public abstract class TwoPlayerGame : ChannelGame
     {
         public Player turn = Player.Red;
         public Player winner = Player.None;

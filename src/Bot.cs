@@ -84,7 +84,7 @@ namespace PacManBot
         {
             _ = UpdateGuildCountAsync();
 
-            foreach (var game in storage.GameInstances.Where(g => g.Guild?.Id == guild.Id).ToArray())
+            foreach (var game in storage.Games.Where(g => g.Guild?.Id == guild.Id).ToArray())
             {
                 storage.DeleteGame(game);
             }
@@ -95,7 +95,7 @@ namespace PacManBot
 
         private Task OnChannelDestroyed(SocketChannel channel)
         {
-            foreach (var game in storage.GameInstances.Where(g => g.ChannelId == channel.Id).ToArray())
+            foreach (var game in storage.Games.Where(g => g.ChannelId == channel.Id).ToArray())
             {
                 storage.DeleteGame(game);
             }

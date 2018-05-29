@@ -44,7 +44,7 @@ namespace PacManBot.Modules
 
             string prefix = storage.GetPrefixOrEmpty(Context.Guild);
 
-            foreach (var game in storage.GameInstances)
+            foreach (var game in storage.Games)
             {
                 if (Context.Channel.Id == game.ChannelId)
                 {

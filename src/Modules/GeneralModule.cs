@@ -47,7 +47,7 @@ namespace PacManBot.Modules
                 Color = new Color(241, 195, 15)
             };
             embed.AddField("Total guilds", $"{shardedClient.Guilds.Count}", true);
-            embed.AddField("Total active games", $"{storage.GameInstances.Count}", true);
+            embed.AddField("Total active games", $"{storage.Games.Where(g => !(g is Games.PetGame)).Count()}", true);
             embed.AddField("Latency", $"{Context.Client.Latency}ms", true);
 
             for (int i = 0; i < fields.Length; i++)
@@ -155,7 +155,7 @@ namespace PacManBot.Modules
             stopwatch.Stop();
 
             int shardGames = 0;
-            foreach (var game in storage.GameInstances)
+            foreach (var game in storage.Games)
             {
                 if (game.Guild != null && Context.Client.Guilds.Contains(game.Guild) || game.Guild == null && Context.Client.ShardId == 0)
                 {
@@ -163,7 +163,7 @@ namespace PacManBot.Modules
                 }
             }
 
-            string content = $"{CustomEmoji.PacMan} Waka in `{(int)stopwatch.ElapsedMilliseconds}`ms **|** {shardedClient.Guilds.Count} total guilds, {storage.GameInstances.Count} total active games";
+            string content = $"{CustomEmoji.PacMan} Waka in `{(int)stopwatch.ElapsedMilliseconds}`ms **|** {shardedClient.Guilds.Count} total guilds, {storage.Games.Count} total active games";
             if (shardedClient.Shards.Count > 1) content += $"```css\nShard {Context.Client.ShardId + 1}/{shardedClient.Shards.Count} controlling {Context.Client.Guilds.Count} guilds and {shardGames} games```";
             await message.ModifyAsync(m => m.Content = content, Utils.DefaultOptions);                   
         }

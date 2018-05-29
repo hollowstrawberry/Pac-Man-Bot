@@ -10,6 +10,9 @@ using static PacManBot.Games.GameUtils;
 
 namespace PacManBot.Games
 {
+    // BaseGame and ChannelGame
+
+    
     public abstract class BaseGame : IBaseGame
     {
         protected DiscordShardedClient client;
@@ -23,13 +26,7 @@ namespace PacManBot.Games
         public virtual State State { get; set; }
         public virtual DateTime LastPlayed { get; set; }
         public virtual int Time { get; set; }
-        public virtual ulong MessageId { get; set; }
-        public virtual ulong ChannelId { get; set; }
         public virtual ulong[] UserId { get; set; }
-
-        public ISocketMessageChannel Channel => client.GetChannel(ChannelId) as ISocketMessageChannel;
-        public SocketGuild Guild => (client.GetChannel(ChannelId) as SocketGuildChannel)?.Guild;
-        public async Task<IUserMessage> GetMessage() => (await Channel.GetMessageAsync(MessageId, options: Utils.DefaultOptions)) as IUserMessage;
 
         public RequestOptions RequestOptions => new RequestOptions() { Timeout = 10000, RetryMode = RetryMode.RetryRatelimit, CancelToken = discordRequestCTS.Token };
 
@@ -42,20 +39,17 @@ namespace PacManBot.Games
 
         protected BaseGame() { }
 
-        protected BaseGame(ulong channelId, ulong[] userId, DiscordShardedClient client, LoggingService logger, StorageService storage)
+        protected BaseGame(ulong[] userId, DiscordShardedClient client, LoggingService logger, StorageService storage)
         {
             this.client = client;
             this.logger = logger;
             this.storage = storage;
-            ChannelId = channelId;
             UserId = userId;
 
-            MessageId = 1;
             State = State.Active;
             Time = 0;
             LastPlayed = DateTime.Now;
         }
-
 
 
         public virtual string GetContent(bool showHelp = true) => "";
@@ -79,6 +73,27 @@ namespace PacManBot.Games
                 Description = DateTime.Now - LastPlayed > Expiry ? "Game timed out" : "Game cancelled",
                 Color = Player.None.Color(),
             };
+        }
+    }
+
+
+    public abstract class ChannelGame : BaseGame, IChannelGame
+    {
+        public virtual ulong ChannelId { get; set; }
+        public virtual ulong MessageId { get; set; }
+
+        public ISocketMessageChannel Channel => client.GetChannel(ChannelId) as ISocketMessageChannel;
+        public SocketGuild Guild => (client.GetChannel(ChannelId) as SocketGuildChannel)?.Guild;
+        public async Task<IUserMessage> GetMessage() => (await Channel.GetMessageAsync(MessageId, options: Utils.DefaultOptions)) as IUserMessage;
+
+
+        protected ChannelGame() : base() { }
+
+        protected ChannelGame(ulong channelId, ulong[] userId, DiscordShardedClient client, LoggingService logger, StorageService storage)
+            : base(userId, client, logger, storage)
+        {
+            ChannelId = channelId;
+            MessageId = 1;
         }
     }
 }

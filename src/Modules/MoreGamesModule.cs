@@ -41,7 +41,7 @@ namespace PacManBot.Modules
                 return;
             }
 
-            var pet = (PetGame)storage.GameInstances.FirstOrDefault(x => x is PetGame && x.UserId[0] == user.Id);
+            var pet = storage.GetTransientGame<PetGame>(user.Id);
 
             if (pet == null) await ReplyAsync("This person doesn't have a pet :(", options: Utils.DefaultOptions);
             else await ReplyAsync(pet.GetContent(), false, pet.GetEmbed(user)?.Build(), Utils.DefaultOptions);
@@ -66,13 +66,13 @@ namespace PacManBot.Modules
         [BetterRequireBotPermission(ChannelPermission.EmbedLinks | ChannelPermission.AddReactions)]
         public async Task Clockagotchi(string action = "", [Remainder]string args = "")
         {
-            var pet = (PetGame)storage.GameInstances.FirstOrDefault(x => x is PetGame && x.UserId[0] == Context.User.Id);
+            var pet = storage.GetTransientGame<PetGame>(Context.User.Id);
             if (pet == null)
             {
                 if (action == "")
                 {
                     pet = new PetGame("", Context.User.Id, shardedClient, logger, storage);
-                    storage.AddGame(pet);
+                    storage.AddTransientGame(pet);
                 }
                 else
                 {
@@ -189,7 +189,16 @@ namespace PacManBot.Modules
 
 
                 case "pet":
-                    await ReplyAsync(Bot.Random.Choose(PetGame.Petting), options: Utils.DefaultOptions);
+                    var now = DateTime.Now;
+                    if ((now - pet.lastPet) <= TimeSpan.FromSeconds(1.5)) return;
+                    pet.lastPet = now;
+
+                    await ReplyAsync(pet.Pet(), options: Utils.DefaultOptions);
+                    return;
+
+
+                case "count":
+                    await ReplyAsync($"This bot has {storage.TransientGames.Where(g => g is PetGame).Count()} pets in total");
                     return;
 
 
@@ -269,7 +278,7 @@ namespace PacManBot.Modules
 
         private async Task RunGame<T>(IUser challenger, IUser opponent) where T : TwoPlayerGame
         {
-            foreach (var otherGame in storage.GameInstances)
+            foreach (var otherGame in storage.Games)
             {
                 if (otherGame.ChannelId == Context.Channel.Id)
                 {
@@ -337,7 +346,7 @@ namespace PacManBot.Modules
                 }
             }
 
-            if (storage.GameInstances.Contains(game)) storage.DeleteGame(game); // When playing against the bot
+            if (storage.Games.Contains(game)) storage.DeleteGame(game); // When playing against the bot
         }
 
 

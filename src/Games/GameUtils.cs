@@ -8,6 +8,10 @@ namespace PacManBot.Games
 {
     public static class GameUtils
     {
+        public const string GameFolder = "games/";
+        public const string GameExtension = ".json";
+
+
         // AI match flavor text
 
         public static readonly string[] StartTexts = new string[]

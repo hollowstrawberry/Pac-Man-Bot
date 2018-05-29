@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v2.0/linux-x64",
-    "signature": "5a0be6dba017ac42835ab3ef4ea70fc5dcdec515"
+    "signature": "b00f31f11e490d80221112ca0d134865cfbe0abd"
   },
   "compilationOptions": {},
   "targets": {
@@ -10,9 +10,14 @@
       "Pacman/1.0.0": {
         "dependencies": {
           "Discord.Net": "2.0.0-beta2-00957",
+          "Discord.Net.Commands": "2.0.0-beta2-00957",
+          "Discord.Net.Core": "2.0.0-beta2-00957",
+          "Discord.Net.Rest": "2.0.0-beta2-00957",
           "Discord.Net.Rpc": "2.0.0-beta-00860",
-          "Microsoft.CodeAnalysis.CSharp": "2.8.0",
-          "Microsoft.CodeAnalysis.Scripting": "2.8.0",
+          "Discord.Net.WebSocket": "2.0.0-beta2-00957",
+          "Discord.Net.Webhook": "2.0.0-beta2-00957",
+          "Microsoft.CodeAnalysis.CSharp": "2.8.2",
+          "Microsoft.CodeAnalysis.Scripting": "2.8.2",
           "Microsoft.Extensions.Configuration": "2.0.2",
           "Microsoft.Extensions.Configuration.Json": "2.0.2",
           "Microsoft.NETCore.App": "2.0.0"
@@ -88,7 +93,7 @@
         }
       },
       "Microsoft.CodeAnalysis.Analyzers/1.1.0": {},
-      "Microsoft.CodeAnalysis.Common/2.8.0": {
+      "Microsoft.CodeAnalysis.Common/2.8.2": {
         "dependencies": {
           "Microsoft.CodeAnalysis.Analyzers": "1.1.0",
           "System.AppContext": "4.3.0",
@@ -134,32 +139,32 @@
           "lib/netstandard1.3/Microsoft.CodeAnalysis.dll": {}
         }
       },
-      "Microsoft.CodeAnalysis.CSharp/2.8.0": {
+      "Microsoft.CodeAnalysis.CSharp/2.8.2": {
         "dependencies": {
-          "Microsoft.CodeAnalysis.Common": "2.8.0"
+          "Microsoft.CodeAnalysis.Common": "2.8.2"
         },
         "runtime": {
           "lib/netstandard1.3/Microsoft.CodeAnalysis.CSharp.dll": {}
         }
       },
-      "Microsoft.CodeAnalysis.CSharp.Scripting/2.8.0": {
+      "Microsoft.CodeAnalysis.CSharp.Scripting/2.8.2": {
         "dependencies": {
-          "Microsoft.CodeAnalysis.CSharp": "2.8.0",
-          "Microsoft.CodeAnalysis.Scripting.Common": "2.8.0"
+          "Microsoft.CodeAnalysis.CSharp": "2.8.2",
+          "Microsoft.CodeAnalysis.Scripting.Common": "2.8.2"
         },
         "runtime": {
           "lib/netstandard1.3/Microsoft.CodeAnalysis.CSharp.Scripting.dll": {}
         }
       },
-      "Microsoft.CodeAnalysis.Scripting/2.8.0": {
+      "Microsoft.CodeAnalysis.Scripting/2.8.2": {
         "dependencies": {
-          "Microsoft.CodeAnalysis.CSharp.Scripting": "2.8.0",
-          "Microsoft.CodeAnalysis.Scripting.Common": "2.8.0"
+          "Microsoft.CodeAnalysis.CSharp.Scripting": "2.8.2",
+          "Microsoft.CodeAnalysis.Scripting.Common": "2.8.2"
         }
       },
-      "Microsoft.CodeAnalysis.Scripting.Common/2.8.0": {
+      "Microsoft.CodeAnalysis.Scripting.Common/2.8.2": {
         "dependencies": {
-          "Microsoft.CodeAnalysis.Common": "2.8.0",
+          "Microsoft.CodeAnalysis.Common": "2.8.2",
           "System.AppContext": "4.3.0",
           "System.Collections": "4.3.0",
           "System.Collections.Immutable": "1.4.0",
@@ -1564,40 +1569,40 @@
       "path": "microsoft.codeanalysis.analyzers/1.1.0",
       "hashPath": "microsoft.codeanalysis.analyzers.1.1.0.nupkg.sha512"
     },
-    "Microsoft.CodeAnalysis.Common/2.8.0": {
+    "Microsoft.CodeAnalysis.Common/2.8.2": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-lYUBqh3OD3iEQqxt9KB472VzgOnEKoUVG4Lx5Xw4oJe9dZtITkHFtct+T73jH3FOASFI1NSzzP5MBM0c9zZspA==",
-      "path": "microsoft.codeanalysis.common/2.8.0",
-      "hashPath": "microsoft.codeanalysis.common.2.8.0.nupkg.sha512"
+      "sha512": "sha512-69e6Y+eCdllSRRlLLEs8qf7C4b7XhgG2ZQW9X+n7JomrVZ7SPcMF2asPbRTSK2dRJXDlhgxb8d+a8FxFiaoTYQ==",
+      "path": "microsoft.codeanalysis.common/2.8.2",
+      "hashPath": "microsoft.codeanalysis.common.2.8.2.nupkg.sha512"
     },
-    "Microsoft.CodeAnalysis.CSharp/2.8.0": {
+    "Microsoft.CodeAnalysis.CSharp/2.8.2": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-+4CHAwHMwLO5GRqPJ7Khv2Ny//omhukPKP3Ny/d2XDpt11bX35zb9pTziwZN0eNvxj6a46joIdHEYQ1JsekI3w==",
-      "path": "microsoft.codeanalysis.csharp/2.8.0",
-      "hashPath": "microsoft.codeanalysis.csharp.2.8.0.nupkg.sha512"
+      "sha512": "sha512-6PwtKdwBv+0+2QqFXZXg7oYXS0v4eYwaA3Jlv2yJLFihv5puQqtVupOM6yecsUhTkdN1ul1YyVZldkPUKMldAQ==",
+      "path": "microsoft.codeanalysis.csharp/2.8.2",
+      "hashPath": "microsoft.codeanalysis.csharp.2.8.2.nupkg.sha512"
     },
-    "Microsoft.CodeAnalysis.CSharp.Scripting/2.8.0": {
+    "Microsoft.CodeAnalysis.CSharp.Scripting/2.8.2": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-3t3nfMB7oiGuHQEajpqCOmJA2DRSGiQcmxoLaKgvFtV4t6V/3fmCK0CofuLKixP294+v7i5tkykSt/0t61Hoig==",
-      "path": "microsoft.codeanalysis.csharp.scripting/2.8.0",
-      "hashPath": "microsoft.codeanalysis.csharp.scripting.2.8.0.nupkg.sha512"
+      "sha512": "sha512-hF+cj43z2o/ZdUdNqup1DDoEWzGA52i8Lhdpo2rChoL6i8OA/mwGUdec/p79ctZng697wUnLJXY3DJ3pTXMvdQ==",
+      "path": "microsoft.codeanalysis.csharp.scripting/2.8.2",
+      "hashPath": "microsoft.codeanalysis.csharp.scripting.2.8.2.nupkg.sha512"
     },
-    "Microsoft.CodeAnalysis.Scripting/2.8.0": {
+    "Microsoft.CodeAnalysis.Scripting/2.8.2": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-LzuTqW2BDq3WFRN/kCeA/62ff/fQiNEjQvYVVG4yqGhu/5XtwnyQrIoWLDH13A45M6pw8rLAqiXVvFDIo8OrUA==",
-      "path": "microsoft.codeanalysis.scripting/2.8.0",
-      "hashPath": "microsoft.codeanalysis.scripting.2.8.0.nupkg.sha512"
+      "sha512": "sha512-QboF2EFW7W23k2fuWRXOG/dDNQFCGqGNiEBVJlbVNmB7gjZMB4xNCJJi173aDs0wh4iJgy3Rd2K0GYn3v7Rmmg==",
+      "path": "microsoft.codeanalysis.scripting/2.8.2",
+      "hashPath": "microsoft.codeanalysis.scripting.2.8.2.nupkg.sha512"
     },
-    "Microsoft.CodeAnalysis.Scripting.Common/2.8.0": {
+    "Microsoft.CodeAnalysis.Scripting.Common/2.8.2": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-1h8elyyMpYXl7BDm04XVqlil4VsNIn7Pu6kWx7U5jMCWkysQ5uVHYbbhvTUZTGrhh9F90F2iJMetkboE7GIO2A==",
-      "path": "microsoft.codeanalysis.scripting.common/2.8.0",
-      "hashPath": "microsoft.codeanalysis.scripting.common.2.8.0.nupkg.sha512"
+      "sha512": "sha512-rOvSJWBR7HiyoXcQOJ9RHUzqnR7ytl2qkUgVB12gJAALXy4T9NqRnEiMoHaWsqoAz3j2YjE6Hui2Oelu8yi6LA==",
+      "path": "microsoft.codeanalysis.scripting.common/2.8.2",
+      "hashPath": "microsoft.codeanalysis.scripting.common.2.8.2.nupkg.sha512"
     },
     "Microsoft.Extensions.Configuration/2.0.2": {
       "type": "package",

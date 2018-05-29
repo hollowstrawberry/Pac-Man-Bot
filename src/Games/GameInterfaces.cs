@@ -18,32 +18,37 @@ namespace PacManBot.Games
         State State { get; set; }
         DateTime LastPlayed { get; set; }
         int Time { get; set; } // Current turn 
-        ulong MessageId { get; set; }
-        ulong ChannelId { get; set; }
         ulong[] UserId { get; set; } // Players
 
-        // Discord utilities
-        ISocketMessageChannel Channel { get; }
-        SocketGuild Guild { get; }
-        Task<IUserMessage> GetMessage();
+        // Discord
         RequestOptions RequestOptions { get; } // Used when modifying the game message
         Action<MessageProperties> UpdateMessage { get; } // Edit a Discord message with the game
 
-        // Methods
         string GetContent(bool showHelp = true);
         EmbedBuilder GetEmbed(bool showHelp = true);
         void CancelRequests(); // Cancels previous game message edits
     }
 
 
-    public interface IMessagesGame : IBaseGame
+    public interface IChannelGame : IBaseGame
+    {
+        ulong MessageId { get; set; }
+        ulong ChannelId { get; set; }
+
+        ISocketMessageChannel Channel { get; }
+        SocketGuild Guild { get; }
+        Task<IUserMessage> GetMessage();
+    }
+
+
+    public interface IMessagesGame : IChannelGame
     {
         bool IsInput(string value);
         void DoTurn(string input);
     }
 
 
-    public interface IReactionsGame : IBaseGame
+    public interface IReactionsGame : IChannelGame
     {
         bool IsInput(IEmote value);
         void DoTurn(IEmote input);

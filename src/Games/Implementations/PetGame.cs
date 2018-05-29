@@ -6,35 +6,38 @@ using Discord;
 using Discord.WebSocket;
 using PacManBot.Constants;
 using PacManBot.Services;
+using static PacManBot.Games.GameUtils;
 
 namespace PacManBot.Games
 {
     [DataContract]
-    class PetGame : BaseGame, IStoreableGame
+    public class PetGame : BaseGame, IStoreableGame
     {
-        public static string[] FoodEmotes = new string[] { "🍌", "🍎", "🍊", "🍕", "🌮", "🍩", "🍪", "🍐", "🍉", "🍇", "🍑", "🍧", "🍫", "🥕", "🍼" };
-        public static string[] PlayEmotes = new string[] { "⚽", "🏀", "🏈", "🎾", "🏓", "🎨", "🎤", "🎭", "🏐", "🎣", };
-        public static string[] CleanEmotes = new string[] { "💧", "🚿", "🛁", "🚽", "🚰", "💦", "👣", "💩", "✨" };
-        public static string[] SleepEmotes = new string[] { "💤", "🛏", "🌃", "🌠", "⭐", "🌙", "🌜" };
-        public static string[] BannerUrl = new string[] { null, "https://cdn.discordapp.com/attachments/412314001414815751/448939830433415189/copperbanner.png", "https://cdn.discordapp.com/attachments/412314001414815751/448939834354958370/silverbanner.png", "https://cdn.discordapp.com/attachments/412314001414815751/448939832102617090/goldbanner.png" };
+        public static readonly string[] FoodEmotes = new string[] { "🍌", "🍎", "🍊", "🍕", "🌮", "🍩", "🍪", "🍐", "🍉", "🍇", "🍑", "🍧", "🍫", "🥕", "🍼" };
+        public static readonly string[] PlayEmotes = new string[] { "⚽", "🏀", "🏈", "🎾", "🏓", "🎨", "🎤", "🎭", "🏐", "🎣", };
+        public static readonly string[] CleanEmotes = new string[] { "💧", "🚿", "🛁", "🚽", "🚰", "💦", "👣", "💩", "✨" };
+        public static readonly string[] SleepEmotes = new string[] { "💤", "🛏", "🌃", "🌠", "⭐", "🌙", "🌜" };
+        public static readonly string[] BannerUrl = new string[] { null, "https://cdn.discordapp.com/attachments/412314001414815751/448939830433415189/copperbanner.png", "https://cdn.discordapp.com/attachments/412314001414815751/448939834354958370/silverbanner.png", "https://cdn.discordapp.com/attachments/412314001414815751/448939832102617090/goldbanner.png" };
 
-        public static string[] Petting = new string[]
+        private static readonly string[] Petting = new string[]
         {
             "You pet your pet. It is now 10% petter.", "Critical pet!", "How many pets could a pet pet if a pet could pet pets?", "You pet your pet. It looks happy.",
-            "Of so many pets, you choose this one to pet.", "This is your chance to pet!", "The petting intensifies", "Your pet needs more petting",
+            "Of so many pets, you choose this one to pet.", "This is your chance to pet!", "The petting intensifies", "Your pet needs more petting.",
             "To pet or not to pet? That is the question.", "You pet your pet. Your friends' pets are jealous", "With the power of petting, your pet levels up!\nWait, there's no levelling system.",
             "You pat your pet instead. It looks dissapointed.", "Oh boy your pet looks **so** petted right now!", "Need more pets!", "Critical pet!", "It's funny because *pet* is both a noun and a verb",
             "So long, and thanks for all the pets", "Pet pet pet", "You pet your pet. Your pet pets you back, just in case.", "Is that a pet or are you just happy to see me?",
             "Whoa, pets", "You pet your pet. Who's a good boy?", "Your pet intercepts your pet!", "You roll for petting. Success!", "Want moar pets!", "wow, so pet, much petting",
             "Petting isn't so hard after all.", "Petting +10", "You roll a natural 1. You trip and accidentally pet yourself", "Petting +5", "-*Excited petting noises*-",
-            "You pet your pet. It is a good pet.",
+            "You pet your pet. It is a good pet.", "You pet your pet.", "You roll a natural 20. Your pet reaches a new plane of petting.", "How can petting be real if our pets aren't real?",
+            "Is there a limit to your pets?", "Your pet congratulates you for such a fantastic pet.", "That pet wasn't very good, but your pet acts happy so as to not let you down.",
+            "Nice pet!", "pet",
         };
 
         public const int MaxStat = 20;
 
         public override string Name => "Clockagotchi";
         public override TimeSpan Expiry => TimeSpan.MaxValue;
-        public string GameFile => $"games/pet{OwnerId}.json";
+        public string GameFile => $"{GameFolder}/pet{OwnerId}{GameExtension}";
         public double TotalStats => satiation + happiness + hygiene + energy;
 
         [DataMember] private string petName = null;
@@ -47,6 +50,8 @@ namespace PacManBot.Games
         [DataMember] private DateTime bornDate;
         [DataMember] private DateTime lastUpdated;
         [DataMember] private Achievements achievements = new Achievements();
+
+        [IgnoreDataMember] public DateTime lastPet = DateTime.Now;
 
         [DataMember] private ulong OwnerId { get { return UserId[0]; } set { UserId = new ulong[] { value }; } }
 
@@ -91,15 +96,18 @@ namespace PacManBot.Games
             [DataMember] public uint timesFed = 0;
             [DataMember] public uint timesPlayed = 0;
             [DataMember] public uint timesCleaned = 0;
+            [DataMember] public uint timesPet = 0;
             [DataMember] public DateTime lastNeglected = default;
 
             [DataMember] public uint Attention = 0;
             [DataMember] public bool Custom = false;
 
             public uint TotalActions => timesFed + timesPlayed + timesCleaned;
-            public bool Care1 => TotalActions >= 20;
-            public bool Care2 => TotalActions >= 100;
-            public bool Care3 => TotalActions >= 500;
+
+            public bool InsanePetting => timesPet >= 1000;
+            public bool GoodCare1 => TotalActions >= 20;
+            public bool GoodCare2 => TotalActions >= 100;
+            public bool GoodCare3 => TotalActions >= 500;
 
 
             public Achievements() { }
@@ -125,7 +133,7 @@ namespace PacManBot.Games
         private PetGame() { } // Used in serialization
 
         public PetGame(string name, ulong ownerId, DiscordShardedClient client, LoggingService logger, StorageService storage)
-            : base(1, new ulong[] { ownerId }, client, logger, storage)
+            : base(new ulong[] { ownerId }, client, logger, storage)
         {
             petName = name;
             bornDate = DateTime.Now;
@@ -163,15 +171,15 @@ namespace PacManBot.Games
             status.Append((hygiene >= 5 ? "🛁" : "💩")   + $" **Hygiene:** {(decimals ? hygiene.ToString("0.000") : hygiene.Ceiling().ToString())}/{MaxStat}\n");
             status.Append((energy >= 5 ? "⚡" : "🍂") + $" **Energy:** {(decimals ? energy.ToString("0.000") : energy.Ceiling().ToString())}/{MaxStat}\n");
 
-            
+
             var unlocks = new StringBuilder();
-            if (achievements.Care3) unlocks.Append("🥇 ");
-            if (achievements.Care2) unlocks.Append("🥈 ");
-            if (achievements.Care1) unlocks.Append("🥉 ");
+            if (achievements.GoodCare3) unlocks.Append("🥇 ");
+            if (achievements.GoodCare2) unlocks.Append("🥈 ");
+            if (achievements.GoodCare1) unlocks.Append("🥉 ");
+            if (achievements.InsanePetting) unlocks.Append("🎏");
             if (achievements.Custom) unlocks.Append("🎖");
             if (achievements.Attention > 0)
             {
-                unlocks.Append("\n**•** ");
                 unlocks.Append(achievements.Attention >= 3 ? "Gold" : achievements.Attention >= 2 ? "Silver" : "Copper");
                 unlocks.Append(" Banner");
             }
@@ -212,14 +220,16 @@ namespace PacManBot.Games
             stats.Append($"**Times played:** {achievements.timesPlayed}\n");
             stats.Append($"**Times cleaned:** {achievements.timesCleaned}\n");
             stats.Append($"**Total actions:** {achievements.TotalActions}\n");
+            stats.Append($"**Pettings given:** {achievements.timesPet}\n");
             stats.Append($"**Time without neglect:** {(DateTime.Now - achievements.lastNeglected).Humanized()}\n");
             stats.Append($"*(Neglect occurs when all stats reach 0)*\nᅠ");
 
             var achievs = new StringBuilder[] { new StringBuilder(), new StringBuilder() }; // off, on
             achievs[achievements.Custom ? 1 : 0].Append("\n🎖 Give your pet a name and image");
-            achievs[achievements.Care1 ? 1 : 0].Append("\n🥉 - 20 Total actions");
-            achievs[achievements.Care2 ? 1 : 0].Append("\n🥈 - 100 Total actions");
-            achievs[achievements.Care3 ? 1 : 0].Append("\n🥇 - 500 Total actions");
+            achievs[achievements.GoodCare1 ? 1 : 0].Append("\n🥉 - 20 Total actions");
+            achievs[achievements.GoodCare2 ? 1 : 0].Append("\n🥈 - 100 Total actions");
+            achievs[achievements.GoodCare3 ? 1 : 0].Append("\n🥇 - 500 Total actions");
+            achievs[achievements.InsanePetting ? 1 : 0].Append("\n🎏 Pet 1000 times");
             achievs[achievements.Attention >= 1 ? 1 : 0].Append("\n**Copper Banner** - 3 days without neglect");
             achievs[achievements.Attention >= 2 ? 1 : 0].Append("\n**Silver Banner** - 7 days without neglect");
             achievs[achievements.Attention >= 3 ? 1 : 0].Append("\n**Gold Banner** - 14 days without neglect");
@@ -322,6 +332,13 @@ namespace PacManBot.Games
             UpdateStats(store: false);
             asleep = !asleep;
             storage.StoreGame(this);
+        }
+
+
+        public string Pet()
+        {
+            achievements.timesPet++;
+            return Bot.Random.Choose(Petting);
         }
 
 

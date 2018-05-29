@@ -23,12 +23,14 @@ namespace PacManBot.Services
         };
         private readonly Dictionary<ulong, string> prefixes;
         private readonly List<ScoreEntry> scoreEntries;
-        private readonly List<IBaseGame> gameInstances;
+        private readonly List<IChannelGame> games; // Channel-specific games
+        private readonly List<IBaseGame> transientGames; // Non-channel specific games
 
         public IApplication AppInfo { get; set; }
         public string DefaultPrefix { get; private set; }
         public string WakaExclude { get; private set; }
-        public IReadOnlyList<IBaseGame> GameInstances { get; private set; }
+        public IReadOnlyList<IChannelGame> Games { get; private set; }
+        public IReadOnlyList<IBaseGame> TransientGames { get; private set; }
         public IConfigurationRoot BotContent { get; private set; }
 
 
@@ -41,8 +43,11 @@ namespace PacManBot.Services
             DefaultPrefix = config.defaultPrefix;
             prefixes = new Dictionary<ulong, string>();
             scoreEntries = new List<ScoreEntry>();
-            gameInstances = new List<IBaseGame>();
-            GameInstances = gameInstances.AsReadOnly();
+            games = new List<IChannelGame>();
+            transientGames = new List<IBaseGame>();
+
+            Games = games.AsReadOnly();
+            TransientGames = transientGames.AsReadOnly();
 
             LoadBotContent();
             LoadWakaExclude();
@@ -113,19 +118,25 @@ namespace PacManBot.Services
         }
 
 
-        public void AddGame(IBaseGame game)
+        public void AddGame(IChannelGame game)
         {
-            gameInstances.Add(game);
+            games.Add(game);
         }
 
 
-        public void DeleteGame(IBaseGame game)
+        public void AddTransientGame(IBaseGame game)
+        {
+            transientGames.Add(game);
+        }
+
+
+        public void DeleteGame(IChannelGame game)
         {
             try
             {
                 game.CancelRequests();
                 if (game is IStoreableGame sGame && File.Exists(sGame.GameFile)) File.Delete(sGame.GameFile);
-                gameInstances.Remove(game);
+                games.Remove(game);
                 logger.Log(LogSeverity.Verbose, LogSource.Storage, $"Removed {game.GetType().Name} at {game.ChannelId}");
             }
             catch (Exception e)
@@ -135,14 +146,40 @@ namespace PacManBot.Services
         }
 
 
-        public IBaseGame GetGame(ulong channelId)
+        public void DeleteGame(IBaseGame game)
         {
-            return gameInstances.FirstOrDefault(g => g.ChannelId == channelId);
+            try
+            {
+                game.CancelRequests();
+                transientGames.Remove(game);
+                logger.Log(LogSeverity.Verbose, LogSource.Storage, $"Removed {game.GetType().Name} for {game.UserId[0]}");
+            }
+            catch (Exception e)
+            {
+                logger.Log(LogSeverity.Error, LogSource.Storage, $"Trying to remove transient game for user {game.UserId[0]}: {e.Message}");
+            }
         }
 
-        public T GetGame<T>(ulong channelId) where T : IBaseGame
+
+        public IChannelGame GetGame(ulong channelId)
         {
-            return (T)gameInstances.FirstOrDefault(g => g is T tg && g.ChannelId == channelId);
+            return games.FirstOrDefault(g => g.ChannelId == channelId);
+        }
+
+        public T GetGame<T>(ulong channelId) where T : IChannelGame
+        {
+            return (T)games.FirstOrDefault(g => g.ChannelId == channelId && g is T);
+        }
+
+
+        public IBaseGame GetTransientGame(ulong channelId)
+        {
+            return games.FirstOrDefault(g => g.ChannelId == channelId);
+        }
+
+        public T GetTransientGame<T>(ulong userId) where T : IBaseGame
+        {
+            return (T)transientGames.FirstOrDefault(g => g.UserId.Contains(userId) && g is T);
         }
 
 
@@ -241,28 +278,34 @@ namespace PacManBot.Services
 
         private void LoadGames()
         {
-            if (!Directory.Exists(PacManGame.Folder))
+            if (!Directory.Exists(GameUtils.GameFolder))
             {
-                Directory.CreateDirectory(PacManGame.Folder);
-                logger.Log(LogSeverity.Warning, LogSource.Storage, $"Created missing directory \"{PacManGame.Folder}\"");
+                Directory.CreateDirectory(GameUtils.GameFolder);
+                logger.Log(LogSeverity.Warning, LogSource.Storage, $"Created missing directory \"{GameUtils.GameFolder}\"");
                 return;
             }
 
             uint fail = 0;
             bool firstFail = true;
 
-            foreach (string file in Directory.GetFiles(PacManGame.Folder))
+            foreach (string file in Directory.GetFiles(GameUtils.GameFolder))
             {
-                if (file.EndsWith(PacManGame.Extension))
+                if (file.EndsWith(GameUtils.GameExtension))
                 {
                     try
                     {
                         IStoreableGame game;
-                        if (file.Contains("pet")) game = JsonConvert.DeserializeObject<PetGame>(File.ReadAllText(file), gameJsonSettings);
-                        else game = JsonConvert.DeserializeObject<PacManGame>(File.ReadAllText(file), gameJsonSettings);
-
+                        if (file.Contains("pet"))
+                        {
+                            game = JsonConvert.DeserializeObject<PetGame>(File.ReadAllText(file), gameJsonSettings);
+                            transientGames.Add(game);
+                        }
+                        else
+                        {
+                            game = JsonConvert.DeserializeObject<PacManGame>(File.ReadAllText(file), gameJsonSettings);
+                            games.Add(game as PacManGame);
+                        }
                         game.SetServices(client, logger, this);
-                        gameInstances.Add(game);
                         // StoreGame(game); // Update old files
                     }
                     catch (Exception e)
@@ -275,7 +318,7 @@ namespace PacManBot.Services
                 }
             }
 
-            logger.Log(LogSeverity.Info, LogSource.Storage, $"Loaded {gameInstances.Count} games from previous session{$" with {fail} errors".If(fail > 0)}.");
+            logger.Log(LogSeverity.Info, LogSource.Storage, $"Loaded {games.Count} games from previous session{$" with {fail} errors".If(fail > 0)}.");
         }
     }
 }

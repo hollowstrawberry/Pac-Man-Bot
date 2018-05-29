@@ -21,12 +21,9 @@ namespace PacManBot.Games
 
 
     [DataContract] // Serializable to store in JSON
-    public class PacManGame : BaseGame, IReactionsGame, IStoreableGame
+    public class PacManGame : ChannelGame, IReactionsGame, IStoreableGame
     {
         // Constants
-
-        public const string Folder = "games/";
-        public const string Extension = ".json";
 
         public static readonly Dictionary<IEmote, GameInput> GameInputs = new Dictionary<IEmote, GameInput>() // Reaction controls
         {
@@ -122,7 +119,7 @@ namespace PacManBot.Games
 
         public override string Name => "Pac-Man";
         public override TimeSpan Expiry => _expiry;
-        public string GameFile => $"{Folder}{ChannelId}{Extension}";
+        public string GameFile => $"{GameFolder}{ChannelId}{GameExtension}";
 
 
         private Pos FruitSecondPos => fruitSpawnPos + Dir.right; //Second tile which fruit will also occupy
