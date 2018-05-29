@@ -19,20 +19,6 @@ namespace PacManBot.Games
         public static readonly string[] SleepEmotes = new string[] { "💤", "🛏", "🌃", "🌠", "⭐", "🌙", "🌜" };
         public static readonly string[] BannerUrl = new string[] { null, "https://cdn.discordapp.com/attachments/412314001414815751/448939830433415189/copperbanner.png", "https://cdn.discordapp.com/attachments/412314001414815751/448939834354958370/silverbanner.png", "https://cdn.discordapp.com/attachments/412314001414815751/448939832102617090/goldbanner.png" };
 
-        private static readonly string[] Petting = new string[]
-        {
-            "You pet your pet. It is now 10% petter.", "Critical pet!", "How many pets could a pet pet if a pet could pet pets?", "You pet your pet. It looks happy.",
-            "Of so many pets, you choose this one to pet.", "This is your chance to pet!", "The petting intensifies", "Your pet needs more petting.",
-            "To pet or not to pet? That is the question.", "You pet your pet. Your friends' pets are jealous", "With the power of petting, your pet levels up!\nWait, there's no levelling system.",
-            "You pat your pet instead. It looks dissapointed.", "Oh boy your pet looks **so** petted right now!", "Need more pets!", "Critical pet!", "It's funny because *pet* is both a noun and a verb",
-            "So long, and thanks for all the pets", "Pet pet pet", "You pet your pet. Your pet pets you back, just in case.", "Is that a pet or are you just happy to see me?",
-            "Whoa, pets", "You pet your pet. Who's a good boy?", "Your pet intercepts your pet!", "You roll for petting. Success!", "Want moar pets!", "wow, so pet, much petting",
-            "Petting isn't so hard after all.", "Petting +10", "You roll a natural 1. You trip and accidentally pet yourself", "Petting +5", "-*Excited petting noises*-",
-            "You pet your pet. It is a good pet.", "You pet your pet.", "You roll a natural 20. Your pet reaches a new plane of petting.", "How can petting be real if our pets aren't real?",
-            "Is there a limit to your pets?", "Your pet congratulates you for such a fantastic pet.", "That pet wasn't very good, but your pet acts happy so as to not let you down.",
-            "Nice pet!", "pet",
-        };
-
         public const int MaxStat = 20;
 
         public override string Name => "Clockagotchi";
@@ -338,7 +324,7 @@ namespace PacManBot.Games
         public string Pet()
         {
             achievements.timesPet++;
-            return Bot.Random.Choose(Petting);
+            return Bot.Random.Choose(storage.PettingMessages);
         }
 
 

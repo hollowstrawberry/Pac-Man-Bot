@@ -17,14 +17,14 @@ namespace PacManBot.Services
     {
         private readonly DiscordShardedClient client;
         private readonly LoggingService logger;
-        private readonly JsonSerializerSettings gameJsonSettings = new JsonSerializerSettings
-        {
-            ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
-        };
         private readonly Dictionary<ulong, string> prefixes;
         private readonly List<ScoreEntry> scoreEntries;
         private readonly List<IChannelGame> games; // Channel-specific games
         private readonly List<IBaseGame> transientGames; // Non-channel specific games
+        private readonly JsonSerializerSettings gameJsonSettings = new JsonSerializerSettings
+        {
+            ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
+        };
 
         public IApplication AppInfo { get; set; }
         public string DefaultPrefix { get; private set; }
@@ -32,6 +32,7 @@ namespace PacManBot.Services
         public IReadOnlyList<IChannelGame> Games { get; private set; }
         public IReadOnlyList<IBaseGame> TransientGames { get; private set; }
         public IConfigurationRoot BotContent { get; private set; }
+        public string[] PettingMessages { get; private set; }
 
 
         public StorageService(DiscordShardedClient client, LoggingService logger, BotConfig config)
@@ -215,6 +216,7 @@ namespace PacManBot.Services
         public void LoadBotContent()
         {
             BotContent = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile(BotFile.Contents).Build();
+            PettingMessages = BotContent["petting"].Split('\n', StringSplitOptions.RemoveEmptyEntries);
             logger.LoadLogExclude(this);
         }
 
