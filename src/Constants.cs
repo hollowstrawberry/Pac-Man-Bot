@@ -49,7 +49,8 @@ namespace PacManBot.Constants
             C4red = "<:C4red:445683639137599492>".ToEmote(),
             C4redHL = "<:C4redHL:445729766327451680>".ToEmote(),
             C4blue = "<:C4blue:445683639817207813>".ToEmote(),
-            C4blueHL = "<:C4blueHL:445729766541099011>".ToEmote();
+            C4blueHL = "<:C4blueHL:445729766541099011>".ToEmote(),
+            BlackCircle = "<:black:451507461556404224>".ToEmote();
 
         public static readonly Emote[] NumberCircle = new Emote[]
         {

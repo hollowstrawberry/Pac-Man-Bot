@@ -141,7 +141,7 @@ namespace PacManBot.Games
             {
                 case Player.Red: return (highlighted ? CustomEmoji.C4redHL : CustomEmoji.C4red).ToString();
                 case Player.Blue: return (highlighted ? CustomEmoji.C4blueHL : CustomEmoji.C4blue).ToString();
-                case Player.None: return "⚫";
+                case Player.None: return CustomEmoji.BlackCircle.ToString();
                 default: return CustomEmoji.Staff.ToString();
             }
         }
