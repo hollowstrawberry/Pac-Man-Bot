@@ -11,5 +11,5 @@ Now nearing 3000 guilds!
 [**Bot invite link here**](http://bit.ly/pacman-bot)  
 [**Support server here**](https://discord.gg/hGHnfda)
 
-You can host this bot yourself. You may find the run-ready linux release in `bin/Release/netcoreapp-2.0/linux-x64/publish/`
+You can host this bot yourself. You may find the run-ready linux release in `bin/Release/netcoreapp-2.0/linux-x64/publish/`  
 The `config.bot` and `contents.bot` files in `bin/` are necessary for the bot to run.
