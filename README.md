@@ -1,7 +1,8 @@
-![Discord Bots](https://discordbots.org/api/widget/status/398127484983443468.svg) ![Discord Bots](https://discordbots.org/api/widget/servers/398127484983443468.svg?noavatar=true)  
-![Discord Bots](https://discordbots.org/api/widget/lib/398127484983443468.svg?noavatar=true) ![Discord Bots](https://discordbots.org/api/widget/owner/398127484983443468.svg?noavatar=true)
-
 # Pac-Man Bot for Discord
+
+![Discord Bots](https://discordbots.org/api/widget/status/398127484983443468.svg) ![Discord Bots](https://discordbots.org/api/widget/servers/398127484983443468.svg?noavatar=true)  
+![Discord Bots](https://discordbots.org/api/widget/lib/398127484983443468.svg?noavatar=true) ![Discord Bots](https://discordbots.org/api/widget/owner/398127484983443468.svg?noavatar=true)  
+
 Play Pac-Man in a Discord chat! Works in a server with friends or in direct messages with the bot. Featuring turn-based gameplay with reaction controls, the focus is low spam and original arcade game fidelity. Get a spot on the global leaderboard!
 
 If Pac-Man isn't your thing, there are several other minigames:
