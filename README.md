@@ -1,10 +1,15 @@
-# Pac-Man Bot
-Play Pac-Man on a Discord chat! Play on a server with friends or in a direct message with the bot. Featuring turn-based gameplay with reaction controls, the focus is low spam and original arcade game fidelity. Get a spot on the global leaderboard!
+![Alt](https://raw.githubusercontent.com/Samrux/Pac-Man-Bot/master/bin/Icon.ico)
+# Pac-Man Bot for Discord
+Play Pac-Man in a Discord chat! Works in a server with friends or in direct messages with the bot. Featuring turn-based gameplay with reaction controls, the focus is low spam and original arcade game fidelity. Get a spot on the global leaderboard!
 
-Now nearing 2000 guilds!
+If Pac-Man isn't your thing, there are several other minigames:
+* Tic-Tac-Toe, Connect Four: Challenge your friends or the bot itself!
+* Pets: Enjoy your own simple tamagotchi clone.
 
-Bot invite link: http://bit.ly/pacman-bot | Support server: https://discord.gg/hGHnfda
+Now nearing 3000 guilds!
 
+[**Bot invite link here**](http://bit.ly/pacman-bot)  
+[**Support server here**](https://discord.gg/hGHnfda)
 
-You can host this bot yourself. You may find the run-ready linux release in bin/Release/netcoreapp-2.0/linux-x64/publish/
-You will need to put the config.bot file found in bin/ in the same directory as the program, and add your bot token to it.
+You can host this bot yourself. You may find the run-ready linux release in `bin/Release/netcoreapp-2.0/linux-x64/publish/`
+The `config.bot` and `contents.bot` files in `bin/` are necessary for the bot to run.
