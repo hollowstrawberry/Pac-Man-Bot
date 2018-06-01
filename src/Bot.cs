@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Runtime.Serialization;
 using Discord;
+using Discord.Rest;
 using Discord.WebSocket;
 using PacManBot.Services;
 
@@ -25,7 +26,8 @@ namespace PacManBot
 
     public class Bot
     {
-        public static Random Random = new Random();
+        public static RestApplication AppInfo { get; private set; }
+        public static readonly Random Random = new Random();
 
         private BotConfig botConfig;
         private DiscordShardedClient client;
@@ -55,7 +57,7 @@ namespace PacManBot
         {
             await client.LoginAsync(TokenType.Bot, botConfig.discordToken);
             await client.StartAsync();
-            storage.AppInfo = await client.GetApplicationInfoAsync();
+            AppInfo = await client.GetApplicationInfoAsync();
         }
 
 
@@ -95,10 +97,8 @@ namespace PacManBot
 
         private Task OnChannelDestroyed(SocketChannel channel)
         {
-            foreach (var game in storage.Games.Where(g => g.ChannelId == channel.Id).ToArray())
-            {
-                storage.DeleteGame(game);
-            }
+            var game = storage.GetGame(channel.Id);
+            if (game != null) storage.DeleteGame(game);
 
             return Task.CompletedTask;
         }

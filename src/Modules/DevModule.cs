@@ -144,7 +144,7 @@ namespace PacManBot.Modules
         }
 
 
-        [Command("sudo clear"), Alias("sudoclear", "wipe"), HideHelp]
+        [Command("sudo clear"), Alias("sudoclear", "sudo cl", "wipe"), HideHelp]
         [Summary("Clear all messages in a range. Developer only.")]
         [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.ManageMessages)]
         public async Task ClearAllMessages(int amount = 10)
@@ -193,7 +193,7 @@ namespace PacManBot.Modules
             if (msg != null) await msg.ModifyAsync(game.UpdateMessage, Utils.DefaultOptions);
             else msg = await ReplyAsync(game.GetContent(), false, game.GetEmbed()?.Build(), Utils.DefaultOptions);
 
-            if (game is TwoPlayerGame tpGame && tpGame.AITurn)
+            if (game is MultiplayerGame tpGame && tpGame.AITurn)
             {
                 tpGame.DoTurnAI();
                 await Task.Delay(1000);

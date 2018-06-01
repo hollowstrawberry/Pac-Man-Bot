@@ -50,7 +50,14 @@ namespace PacManBot.Constants
             C4redHL = "<:C4redHL:445729766327451680>".ToEmote(),
             C4blue = "<:C4blue:445683639817207813>".ToEmote(),
             C4blueHL = "<:C4blueHL:445729766541099011>".ToEmote(),
-            BlackCircle = "<:black:451507461556404224>".ToEmote();
+            BlackCircle = "<:black:451507461556404224>".ToEmote(),
+            
+            UnoSkip = "<:block:452172078859419678>".ToEmote(),
+            UnoReverse = "<:reverse:452172078796242964>".ToEmote(),
+            AddTwo = "<:plus2:452172078599241739>".ToEmote(),
+            AddFour = "<:plus4:452196173898448897>".ToEmote(),
+            UnoWild = "<:colors:452172078028947457>".ToEmote();
+
 
         public static readonly Emote[] NumberCircle = new Emote[]
         {
@@ -66,13 +73,22 @@ namespace PacManBot.Constants
             "<:9circle:445021373245554699>".ToEmote(),
         };
 
-        public static readonly IEmote[] LetterCircle = new Emote[]
+        public static readonly Emote[] LetterCircle = new Emote[]
         {
             "<:circleA:446196337831313409>".ToEmote(),
             "<:circleB:446196339660029952>".ToEmote(),
             "<:circleC:446196339471024129>".ToEmote(),
             "<:circleD:446196339450314753>".ToEmote(),
             "<:circleE:446196339987054592>".ToEmote(),
+        };
+
+        public static readonly Emote[] ColorSquare = new Emote[]
+        {
+            "<:redsq:452165349719277579>".ToEmote(),
+            "<:bluesq:452165349790580746>".ToEmote(),
+            "<:greensq:452165350155616257>".ToEmote(),
+            "<:yellowsq:452165350184976384>".ToEmote(),
+            "<:blacksq:452196173026164739>".ToEmote(),
         };
     }
 }

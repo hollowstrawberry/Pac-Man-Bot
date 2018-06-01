@@ -21,7 +21,7 @@ namespace PacManBot.Games
 
 
     [DataContract] // Serializable to store in JSON
-    public class PacManGame : ChannelGame, IReactionsGame, IStoreableGame
+    public class PacManGame : ChannelGame, IReactionsGame, ISingleplayerGame, IStoreableGame
     {
         // Constants
 
@@ -54,7 +54,7 @@ namespace PacManBot.Games
         [DataMember] public int score = 0;
 
         [IgnoreDataMember] private char[,] map;
-        [DataMember] private int maxPellets;
+        [DataMember] private readonly int maxPellets;
         [DataMember] private int pellets; //Pellets remaining
         [DataMember] private int oldScore = 0; //Score obtained last turn
         [DataMember] private PacMan pacMan;
@@ -67,17 +67,16 @@ namespace PacManBot.Games
 
         // Properties
 
+        public override string Name => "Pac-Man";
+        public override TimeSpan Expiry => _expiry;
+        public string GameFile => $"{GameFolder}{ChannelId}{GameExtension}";
+
         [DataMember] public override State State { get; set; }
         [DataMember] public override DateTime LastPlayed { get; set; }
         [DataMember] public override int Time { get; set; }
         [DataMember] public override ulong MessageId { get; set; }
         [DataMember] public override ulong ChannelId { get; set; }
-
-        [DataMember] public ulong OwnerId
-        {
-            get { return UserId[0]; }
-            set { UserId = new ulong[] { value }; }
-        }
+        [DataMember] public ulong OwnerId { get { return UserId[0]; } set { UserId = new ulong[] { value }; } }
 
         [DataMember] private string FullMap //Converts map between char[,] and string
         {
@@ -105,10 +104,10 @@ namespace PacManBot.Games
             get
             {
                 var stringMap = new StringBuilder();
-                for (int y = 0; y < map.LengthY(); y++)
+                for (int y = 0; y < map.Y(); y++)
                 {
                     if (y > 0) stringMap.Append('\n');
-                    for (int x = 0; x < map.LengthX(); x++)
+                    for (int x = 0; x < map.X(); x++)
                     {
                         stringMap.Append(map[x, y]);
                     }
@@ -116,10 +115,6 @@ namespace PacManBot.Games
                 return stringMap.ToString();
             }
         }
-
-        public override string Name => "Pac-Man";
-        public override TimeSpan Expiry => _expiry;
-        public string GameFile => $"{GameFolder}{ChannelId}{GameExtension}";
 
 
         private Pos FruitSecondPos => fruitSpawnPos + Dir.right; //Second tile which fruit will also occupy
@@ -227,14 +222,12 @@ namespace PacManBot.Games
                                 break;
 
                             case AiType.Pinky:
-                                target = game.pacMan.pos;
-                                target += game.pacMan.dir.OfLength(4); //4 squares ahead
+                                target = game.pacMan.pos + game.pacMan.dir.OfLength(4); //4 squares ahead
                                 if (game.pacMan.dir == Dir.up) target += Dir.left.OfLength(4); //Intentional bug from the original arcade
                                 break;
 
                             case AiType.Inky:
-                                target = game.pacMan.pos;
-                                target += game.pacMan.dir.OfLength(2); //2 squares ahead
+                                target = game.pacMan.pos + game.pacMan.dir.OfLength(2); //2 squares ahead
                                 if (game.pacMan.dir == Dir.up) target += Dir.left.OfLength(2); //Intentional bug from the original arcade
                                 target += target - game.ghosts[(int)AiType.Blinky].pos; //Opposite position relative to Blinky
                                 break;
@@ -344,10 +337,10 @@ namespace PacManBot.Games
 
             ghosts = new List<Ghost>();
             Pos[] ghostCorners = new Pos[] { //Matches original game
-                new Pos(map.LengthX() - 3, -3),
+                new Pos(map.X() - 3, -3),
                 new Pos(2, -3),
-                new Pos(map.LengthX() - 1, map.LengthY()),
-                new Pos(0, map.LengthY())
+                new Pos(map.X() - 1, map.Y()),
+                new Pos(0, map.Y())
             };
             for (int i = 0; i < 4; i++)
             {
@@ -524,9 +517,9 @@ namespace PacManBot.Games
                 char[,] displayMap = (char[,])map.Clone(); //The display array to modify
 
                 //Scan replacements
-                for (int y = 0; y < map.LengthY(); y++)
+                for (int y = 0; y < map.Y(); y++)
                 {
-                    for (int x = 0; x < map.LengthX(); x++)
+                    for (int x = 0; x < map.X(); x++)
                     {
                         if (displayMap[x, y] == CharSoftWall) displayMap[x, y] = ' ';
                         else if (displayMap[x, y] == CharSoftWallPellet) displayMap[x, y] = CharPellet;
@@ -553,9 +546,9 @@ namespace PacManBot.Games
                 displayMap[pacMan.pos.x, pacMan.pos.y] = (State == State.Lose) ? CharPlayerDead : CharPlayer;
 
                 //Converts 2d array to string
-                for (int y = 0; y < displayMap.LengthY(); y++)
+                for (int y = 0; y < displayMap.Y(); y++)
                 {
-                    for (int x = 0; x < displayMap.LengthX(); x++)
+                    for (int x = 0; x < displayMap.X(); x++)
                     {
                         display.Append(displayMap[x, y]);
                     }
@@ -590,9 +583,9 @@ namespace PacManBot.Games
                 }
                 else
                 {
-                    for (int i = 0; i < info.Length && i < map.LengthY(); i++) //Insert info
+                    for (int i = 0; i < info.Length && i < map.Y(); i++) //Insert info
                     {
-                        int insertIndex = (i + 1) * displayMap.LengthX(); //Skips ahead a certain amount of lines
+                        int insertIndex = (i + 1) * displayMap.X(); //Skips ahead a certain amount of lines
                         for (int j = i - 1; j >= 0; j--) insertIndex += info[j].Length + 2; //Takes into account the added line length of previous info
                         display.Insert(insertIndex, $" {info[i]}");
                     }
@@ -661,9 +654,9 @@ namespace PacManBot.Games
 
         private Pos? FindChar(char c, int index = 0) //Finds the specified character instance in the map
         {
-            for (int y = 0; y < map.LengthY(); y++)
+            for (int y = 0; y < map.Y(); y++)
             {
-                for (int x = 0; x < map.LengthX(); x++)
+                for (int x = 0; x < map.X(); x++)
                 {
                     if (map[x, y] == c)
                     {

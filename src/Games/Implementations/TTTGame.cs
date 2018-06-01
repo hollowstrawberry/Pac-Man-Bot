@@ -9,8 +9,9 @@ using static PacManBot.Games.GameUtils;
 
 namespace PacManBot.Games
 {
-    public class TTTGame : TwoPlayerGame, IMessagesGame
+    public class TTTGame : MultiplayerGame, IMessagesGame
     {
+        private const int Size = 3;
         private static readonly TimeSpan _expiry = TimeSpan.FromMinutes(5);
 
         private Player[,] board;
@@ -20,14 +21,15 @@ namespace PacManBot.Games
         public override TimeSpan Expiry => _expiry;
 
 
-        public TTTGame(ulong channelId, ulong[] userId, DiscordShardedClient client, LoggingService logger, StorageService storage, int size = 3)
-            : base(channelId, userId, client, logger, storage)
+        public override void Construct(ulong channelId, ulong[] userId, DiscordShardedClient client, LoggingService logger, StorageService storage)
         {
+            base.Construct(channelId, userId, client, logger, storage);
+
             highlighted = new List<Pos>();
-            board = new Player[size,size];
-            for (int x = 0; x < size; x++)
+            board = new Player[Size,Size];
+            for (int x = 0; x < Size; x++)
             {
-                for (int y = 0; y < size; y++)
+                for (int y = 0; y < Size; y++)
                 {
                     board[x, y] = Player.None;
                 }
@@ -45,26 +47,26 @@ namespace PacManBot.Games
         public void DoTurn(string input)
         {
             int cell = int.Parse(StripPrefix(input)) - 1;
-            int y = cell / board.LengthX();
-            int x = cell % board.LengthX();
+            int y = cell / board.X();
+            int x = cell % board.X();
 
             if (State != State.Active || board[x, y] != Player.None) return;
 
-            board[x, y] = turn;
+            board[x, y] = Turn;
             Time++;
             LastPlayed = DateTime.Now;
 
-            if (FindWinner(board, turn, highlighted)) winner = turn;
-            else if (IsTie(board, turn, Time)) winner = Player.Tie;
+            if (FindWinner(board, Turn, highlighted)) Winner = Turn;
+            else if (IsTie(board, Turn, Time)) Winner = Player.Tie;
 
-            if (winner == Player.None)
+            if (Winner == Player.None)
             {
-                turn = turn.OtherPlayer();
+                Turn = Turn.OtherPlayer();
             }
             else
             {
                 State = State.Completed;
-                turn = winner;
+                Turn = Winner;
             }
         }
 
@@ -77,29 +79,29 @@ namespace PacManBot.Games
 
             for (int i = 0; i < UserId.Length; i++)
             {
-                description.Append($"{"►".If(i == (int)turn)}{((Player)i).Symbol()} - {User((Player)i).NameandNum().SanitizeMarkdown()}\n");
+                description.Append($"{"►".If(i == (int)Turn)}{((Player)i).Symbol()} - {User((Player)i).NameandNum().SanitizeMarkdown()}\n");
             }
 
             description.Append("ᅠ\n");
 
-            for (int y = 0; y < board.LengthY(); y++)
+            for (int y = 0; y < board.Y(); y++)
             {
-                for (int x = 0; x < board.LengthX(); x++)
+                for (int x = 0; x < board.X(); x++)
                 {
                     description.Append(board[x, y].Symbol(highlighted.Contains(new Pos(x, y))) ??
-                        (State == State.Active ? $"{CustomEmoji.NumberCircle[1 + board.LengthX()*y + x]}" : Player.None.Circle()));
+                        (State == State.Active ? $"{CustomEmoji.NumberCircle[1 + board.X()*y + x]}" : Player.None.Circle()));
                 }
                 description.Append('\n');
             }
 
-            if (State == State.Active) description.Append($"ᅠ\n*Say the number of a cell (1 to 9) to place an {(turn == Player.Red ? "X" : "O")}*");
+            if (State == State.Active) description.Append($"ᅠ\n*Say the number of a cell (1 to 9) to place an {(Turn == Player.Red ? "X" : "O")}*");
 
             return new EmbedBuilder()
             {
                 Title = EmbedTitle(),
                 Description = description.ToString(),
-                Color = turn.Color(),
-                ThumbnailUrl = winner == Player.None ? turn.Symbol().ToEmote()?.Url : User(winner)?.GetAvatarUrl(),
+                Color = Turn.Color(),
+                ThumbnailUrl = Winner == Player.None ? Turn.Symbol().ToEmote()?.Url : User(Winner)?.GetAvatarUrl(),
             };
         }
 
@@ -112,8 +114,8 @@ namespace PacManBot.Games
 
         private static bool IsTie(Player[,] board, Player turn, int time)
         {
-            if (time < board.LengthX() * board.LengthY() - 3) return false;
-            else if (time == board.LengthX()*board.LengthY()) return true;
+            if (time < board.X() * board.Y() - 3) return false;
+            else if (time == board.X()*board.Y()) return true;
 
             turn = turn.OtherPlayer();
 
@@ -132,8 +134,8 @@ namespace PacManBot.Games
 
         public override void DoTurnAI()
         {
-            Pos target = TryCompleteLine(turn) ?? TryCompleteLine(turn.OtherPlayer()) ?? Bot.Random.Choose(EmptyCells(board)); //Win or block or random
-            DoTurn($"{1 + target.y * board.LengthX() + target.x}");
+            Pos target = TryCompleteLine(Turn) ?? TryCompleteLine(Turn.OtherPlayer()) ?? Bot.Random.Choose(EmptyCells(board)); //Win or block or random
+            DoTurn($"{1 + target.y * board.X() + target.x}");
         }
 
 
@@ -189,9 +191,9 @@ namespace PacManBot.Games
         private static List<Pos> EmptyCells(Player[,] board)
         {
             List<Pos> empty = new List<Pos>();
-            for (int y = 0; y < board.LengthY(); y++)
+            for (int y = 0; y < board.Y(); y++)
             {
-                for (int x = 0; x < board.LengthX(); x++)
+                for (int x = 0; x < board.X(); x++)
                 {
                     if (board[x, y] == Player.None) empty.Add(new Pos(x, y));
                 }

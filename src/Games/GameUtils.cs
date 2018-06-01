@@ -1,6 +1,6 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
-using System.Diagnostics;
 using Discord;
 using PacManBot.Constants;
 
@@ -10,6 +10,12 @@ namespace PacManBot.Games
     {
         public const string GameFolder = "games/";
         public const string GameExtension = ".json";
+
+        public static readonly Player MaxPlayer = Enum.GetValues(typeof(Player)).Cast<Player>().Max();
+        public static readonly Color[] PlayerColor = new Color[]
+        {
+            new Color(221, 46, 68), new Color(85, 172, 238), new Color(120, 177, 89), new Color(253, 203, 88), new Color(170, 142, 214),
+        };
 
 
         // AI match flavor text
@@ -69,8 +75,7 @@ namespace PacManBot.Games
                 }
             }
 
-            public static float Distance(Pos pos1, Pos pos2)
-                => (float)Math.Sqrt(Math.Pow(pos2.x - pos1.x, 2) + Math.Pow(pos2.y - pos1.y, 2));
+            public static float Distance(Pos pos1, Pos pos2) => (float)Math.Sqrt(Math.Pow(pos2.x - pos1.x, 2) + Math.Pow(pos2.y - pos1.y, 2));
         }
 
 
@@ -82,7 +87,9 @@ namespace PacManBot.Games
 
         public enum Player
         {
-            Red, Blue, Tie, None,
+            One, Two, Three, Four, Five, Six, Seven, Eight, Nine, Ten,
+            Red = 0, Blue, Green, Yellow, Purple,
+            None = -1, Tie = -2,
         }
 
 
@@ -96,9 +103,9 @@ namespace PacManBot.Games
 
         // 2d array extension methods
 
-        public static int LengthX<T>(this T[,] board) => board.GetLength(0);
+        public static int X<T>(this T[,] board) => board.GetLength(0);
 
-        public static int LengthY<T>(this T[,] board) => board.GetLength(1);
+        public static int Y<T>(this T[,] board) => board.GetLength(1);
 
         public static T At<T>(this T[,] board, Pos pos, bool wrap = true)
         {
@@ -114,10 +121,10 @@ namespace PacManBot.Games
 
         public static void Wrap<T>(this T[,] board, ref Pos pos) //Wraps the position from one side of the board to the other if it's out of bounds
         {
-            while (pos.x < 0) pos.x += board.LengthX();
-            while (pos.x >= board.LengthX()) pos.x -= board.LengthX();
-            while (pos.y < 0) pos.y += board.LengthY();
-            while (pos.y >= board.LengthY()) pos.y -= board.LengthY();
+            while (pos.x < 0)          pos.x += board.X();
+            while (pos.x >= board.X()) pos.x -= board.X();
+            while (pos.y < 0)          pos.y += board.Y();
+            while (pos.y >= board.Y()) pos.y -= board.Y();
         }
 
 
@@ -126,13 +133,9 @@ namespace PacManBot.Games
 
         public static Color Color(this Player player)
         {
-            switch (player)
-            {
-                case Player.Red: return new Color(221, 46, 68);
-                case Player.Blue: return new Color(85, 172, 238);
-                case Player.Tie: return new Color(120, 177, 89);
-                default: return new Color(150, 150, 150);
-            }
+            if (player >= 0 && player <= MaxPlayer) return PlayerColor[(int)player];
+            else if (player == Player.Tie) return PlayerColor[(int)Player.Green];
+            else return new Color(150, 150, 150);
         }
 
         public static string Circle(this Player player, bool highlighted = false)
@@ -218,29 +221,29 @@ namespace PacManBot.Games
             }
 
 
-            for (int y = 0; y < board.LengthY(); y++) // Horizontals
+            for (int y = 0; y < board.Y(); y++) // Horizontals
             {
-                for (int x = 0; x < board.LengthX(); x++)
+                for (int x = 0; x < board.X(); x++)
                 {
                     CheckCell(new Pos(x, y));
                 }
                 line = new List<Pos>();
             }
 
-            for (int x = 0; x < board.LengthX(); x++) // Verticals
+            for (int x = 0; x < board.X(); x++) // Verticals
             {
-                for (int y = 0; y < board.LengthY(); y++)
+                for (int y = 0; y < board.Y(); y++)
                 {
                     CheckCell(new Pos(x, y));
                 }
                 line = new List<Pos>();
             }
 
-            for (int d = length - 1; d <= board.LengthY() + board.LengthX() - length; d++) //Top-to-left diagonals
+            for (int d = length - 1; d <= board.Y() + board.X() - length; d++) //Top-to-left diagonals
             {
                 for (int x, y = 0; y <= d; y++)
                 {
-                    if (y < board.LengthY() && (x = d - y) < board.LengthX())
+                    if (y < board.Y() && (x = d - y) < board.X())
                     {
                         CheckCell(new Pos(x, y));
                     }
@@ -248,11 +251,11 @@ namespace PacManBot.Games
                 line = new List<Pos>();
             }
 
-            for (int d = length - 1; d <= board.LengthY() + board.LengthX() - length; d++) //Top-to-right diagonals
+            for (int d = length - 1; d <= board.Y() + board.X() - length; d++) //Top-to-right diagonals
             {
                 for (int x, y = 0; y <= d; y++)
                 {
-                    if (y < board.LengthY() && (x = board.LengthX() - 1 - d + y) >= 0)
+                    if (y < board.Y() && (x = board.X() - 1 - d + y) >= 0)
                     {
                         CheckCell(new Pos(x, y));
                     }

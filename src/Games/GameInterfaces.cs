@@ -22,7 +22,7 @@ namespace PacManBot.Games
 
         // Discord
         RequestOptions RequestOptions { get; } // Used when modifying the game message
-        Action<MessageProperties> UpdateMessage { get; } // Edit a Discord message with the game
+        Action<MessageProperties> UpdateMessage { get; }
 
         string GetContent(bool showHelp = true);
         EmbedBuilder GetEmbed(bool showHelp = true);
@@ -40,18 +40,35 @@ namespace PacManBot.Games
         Task<IUserMessage> GetMessage();
     }
 
-
     public interface IMessagesGame : IChannelGame
     {
         bool IsInput(string value);
         void DoTurn(string input);
     }
 
-
     public interface IReactionsGame : IChannelGame
     {
         bool IsInput(IEmote value);
         void DoTurn(IEmote input);
+    }
+
+
+    public interface ISingleplayerGame : IBaseGame
+    {
+        ulong OwnerId { get; set; }
+    }
+
+    public interface IMultiplayerGame : IBaseGame
+    {
+        Player Turn { get; }
+        Player Winner { get; }
+        string Message { get; }
+
+        bool AITurn { get; }
+        bool AllBots { get; }
+
+        IUser User(int i = 0);
+        IUser User(Player player);
     }
 
 

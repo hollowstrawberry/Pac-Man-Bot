@@ -3,6 +3,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Net;
+using Discord.Rest;
 using Discord.Commands;
 using Discord.WebSocket;
 using PacManBot.Games;
@@ -128,7 +129,7 @@ namespace PacManBot.Services
 
         private async Task<bool> AutoresponseAsync(SocketUserMessage message)
         {
-            if (!(message.Channel is SocketGuildChannel gChannel) || !storage.WakaExclude.Contains($"{gChannel.Guild.Id}") || storage.AppInfo?.Owner.Id == message.Author.Id)
+            if (!(message.Channel is SocketGuildChannel gChannel) || !storage.WakaExclude.Contains($"{gChannel.Guild.Id}") || Bot.AppInfo?.Owner.Id == message.Author.Id)
             {
                 if (waka.IsMatch(message.Content))
                 {
@@ -150,7 +151,7 @@ namespace PacManBot.Services
         private async Task<bool> MessageGameInputAsync(SocketUserMessage message)
         {
             var game = storage.GetGame<IMessagesGame>(message.Channel.Id);
-            if (game == null || !game.IsInput(message.Content) || game is TwoPlayerGame tGame && tGame.UserId[(int)tGame.turn] != message.Author.Id) return false;
+            if (game == null || !game.IsInput(message.Content) || game is MultiplayerGame mGame && mGame.UserId[(int)mGame.Turn] != message.Author.Id) return false;
 
             try
             {
@@ -194,7 +195,10 @@ namespace PacManBot.Services
             await logger.Log(LogSeverity.Verbose, game.Name, $"Input {message.Content} by user {message.Author.FullName()} on channel {message.Channel.FullName()}");
 
             game.DoTurn(message.Content);
-            if (game is TwoPlayerGame tGame && tGame.AITurn) tGame.DoTurnAI();
+            if (game is MultiplayerGame mGame)
+            {
+                while(mGame.AITurn) mGame.DoTurnAI();
+            }
             if (game.State != State.Active) storage.DeleteGame(game);
 
             game.CancelRequests();

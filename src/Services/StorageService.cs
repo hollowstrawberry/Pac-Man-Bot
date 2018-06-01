@@ -20,17 +20,21 @@ namespace PacManBot.Services
         private readonly Dictionary<ulong, string> prefixes;
         private readonly List<ScoreEntry> scoreEntries;
         private readonly List<IChannelGame> games; // Channel-specific games
-        private readonly List<IBaseGame> transientGames; // Non-channel specific games
-        private readonly JsonSerializerSettings gameJsonSettings = new JsonSerializerSettings
-        {
+        private readonly List<ISingleplayerGame> userGames; // Non-channel specific games
+
+        private readonly JsonSerializerSettings gameJsonSettings = new JsonSerializerSettings {
             ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
         };
+        private static readonly Dictionary<string, Type> StoreableTypes = new Dictionary<string, Type> {
+            { "pet", typeof(PetGame) },
+            { "uno", typeof(UnoGame) },
+            { "", typeof(PacManGame) },
+        };
 
-        public IApplication AppInfo { get; set; }
         public string DefaultPrefix { get; private set; }
         public string WakaExclude { get; private set; }
         public IReadOnlyList<IChannelGame> Games { get; private set; }
-        public IReadOnlyList<IBaseGame> TransientGames { get; private set; }
+        public IReadOnlyList<ISingleplayerGame> UserGames { get; private set; }
         public IConfigurationRoot BotContent { get; private set; }
         public string[] PettingMessages { get; private set; }
 
@@ -40,15 +44,14 @@ namespace PacManBot.Services
             this.client = client;
             this.logger = logger;
 
-            AppInfo = null;
             DefaultPrefix = config.defaultPrefix;
             prefixes = new Dictionary<ulong, string>();
             scoreEntries = new List<ScoreEntry>();
             games = new List<IChannelGame>();
-            transientGames = new List<IBaseGame>();
+            userGames = new List<ISingleplayerGame>();
 
             Games = games.AsReadOnly();
-            TransientGames = transientGames.AsReadOnly();
+            UserGames = userGames.AsReadOnly();
 
             LoadBotContent();
             LoadWakaExclude();
@@ -119,15 +122,16 @@ namespace PacManBot.Services
         }
 
 
+
         public void AddGame(IChannelGame game)
         {
             games.Add(game);
         }
 
 
-        public void AddTransientGame(IBaseGame game)
+        public void AddUserGame(ISingleplayerGame game)
         {
-            transientGames.Add(game);
+            userGames.Add(game);
         }
 
 
@@ -142,47 +146,24 @@ namespace PacManBot.Services
             }
             catch (Exception e)
             {
-                logger.Log(LogSeverity.Error, LogSource.Storage, $"Trying to remove game at {game.ChannelId}: {e.Message}");
+                logger.Log(LogSeverity.Error, LogSource.Storage, $"Trying to remove game at {game.ChannelId}: {e}");
             }
         }
 
 
-        public void DeleteGame(IBaseGame game)
+        public void DeleteUserGame(ISingleplayerGame game)
         {
             try
             {
                 game.CancelRequests();
-                transientGames.Remove(game);
-                logger.Log(LogSeverity.Verbose, LogSource.Storage, $"Removed {game.GetType().Name} for {game.UserId[0]}");
+                userGames.Remove(game);
+                logger.Log(LogSeverity.Verbose, LogSource.Storage, $"Removed {game.GetType().Name} for {game.OwnerId}");
             }
             catch (Exception e)
             {
-                logger.Log(LogSeverity.Error, LogSource.Storage, $"Trying to remove transient game for user {game.UserId[0]}: {e.Message}");
+                logger.Log(LogSeverity.Error, LogSource.Storage, $"Trying to remove user game for {game.OwnerId}: {e}");
             }
         }
-
-
-        public IChannelGame GetGame(ulong channelId)
-        {
-            return games.FirstOrDefault(g => g.ChannelId == channelId);
-        }
-
-        public T GetGame<T>(ulong channelId) where T : IChannelGame
-        {
-            return (T)games.FirstOrDefault(g => g.ChannelId == channelId && g is T);
-        }
-
-
-        public IBaseGame GetTransientGame(ulong channelId)
-        {
-            return games.FirstOrDefault(g => g.ChannelId == channelId);
-        }
-
-        public T GetTransientGame<T>(ulong userId) where T : IBaseGame
-        {
-            return (T)transientGames.FirstOrDefault(g => g.UserId.Contains(userId) && g is T);
-        }
-
 
         public void StoreGame(IStoreableGame game)
         {
@@ -190,13 +171,19 @@ namespace PacManBot.Services
         }
 
 
-        public IReadOnlyList<ScoreEntry> GetScores(Utils.TimePeriod period)
-        {
-            if (period == Utils.TimePeriod.all) return scoreEntries.AsReadOnly();
+        public IChannelGame GetGame(ulong channelId)
+            => games.FirstOrDefault(g => g.ChannelId == channelId);
 
-            var date = DateTime.Now;
-            return scoreEntries.Where(s => (date - s.date).TotalHours <= (int)period).ToList().AsReadOnly();
-        }
+        public TGame GetGame<TGame>(ulong channelId) where TGame : IChannelGame
+            => (TGame)games.FirstOrDefault(g => g.ChannelId == channelId && g is TGame);
+
+
+        public IBaseGame GetUserGame(ulong channelId)
+            => games.FirstOrDefault(g => g.ChannelId == channelId);
+
+        public TGame GetUserGame<TGame>(ulong userId) where TGame : ISingleplayerGame
+            => (TGame)userGames.FirstOrDefault(g => g.OwnerId == userId && g is TGame);
+
 
 
         public void AddScore(ScoreEntry entry)
@@ -205,9 +192,18 @@ namespace PacManBot.Services
             logger.Log(LogSeverity.Info, LogSource.Storage, $"New scoreboard entry: {scoreString}");
             File.AppendAllText(BotFile.Scoreboard, $"\n{scoreString}");
 
-            int index = scoreEntries.BinarySearch(entry, ScoreEntry.Comparer);
+            int index = scoreEntries.BinarySearch(entry);
             if (index < 0) index = ~index;
             scoreEntries.Insert(index, entry); //Adds entry in sorted position
+        }
+
+
+        public IReadOnlyList<ScoreEntry> GetScores(Utils.TimePeriod period = Utils.TimePeriod.all)
+        {
+            if (period == Utils.TimePeriod.all) return scoreEntries.AsReadOnly();
+
+            var date = DateTime.Now;
+            return scoreEntries.Where(s => (date - s.date).TotalHours <= (int)period).ToList().AsReadOnly();
         }
 
 
@@ -273,9 +269,10 @@ namespace PacManBot.Services
                 }
             }
 
-            scoreEntries.Sort(ScoreEntry.Comparer); // The list will stay sorted as new elements will be added in sorted position
+            scoreEntries.Sort(); // The list will stay sorted as new elements will be added in sorted position
             logger.Log(LogSeverity.Info, LogSource.Storage, $"Loaded {scoreEntries.Count} scoreboard entries from {BotFile.Scoreboard}{$" with {fail} errors".If(fail > 0)}.");
         }
+
 
 
         private void LoadGames()
@@ -296,18 +293,18 @@ namespace PacManBot.Services
                 {
                     try
                     {
-                        IStoreableGame game;
-                        if (file.Contains("pet"))
+                        IStoreableGame game = null;
+                        foreach (string key in StoreableTypes.Keys)
                         {
-                            game = JsonConvert.DeserializeObject<PetGame>(File.ReadAllText(file), gameJsonSettings);
-                            transientGames.Add(game);
+                            if (file.Contains(key))
+                            {
+                                game = (IStoreableGame)JsonConvert.DeserializeObject(File.ReadAllText(file), StoreableTypes[key], gameJsonSettings);
+                                if (game is ChannelGame cGame) games.Add(cGame);
+                                else if (game is ISingleplayerGame sGame) userGames.Add(sGame);
+                                break;
+                            }
                         }
-                        else
-                        {
-                            game = JsonConvert.DeserializeObject<PacManGame>(File.ReadAllText(file), gameJsonSettings);
-                            games.Add(game as PacManGame);
-                        }
-                        game.SetServices(client, logger, this);
+                        game?.SetServices(client, logger, this);
                         // StoreGame(game); // Update old files
                     }
                     catch (Exception e)

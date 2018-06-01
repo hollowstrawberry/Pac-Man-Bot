@@ -41,7 +41,7 @@ namespace PacManBot.Modules
                 return;
             }
 
-            var pet = storage.GetTransientGame<PetGame>(user.Id);
+            var pet = storage.GetUserGame<PetGame>(user.Id);
 
             if (pet == null) await ReplyAsync("This person doesn't have a pet :(", options: Utils.DefaultOptions);
             else await ReplyAsync(pet.GetContent(), false, pet.GetEmbed(user)?.Build(), Utils.DefaultOptions);
@@ -64,15 +64,15 @@ namespace PacManBot.Modules
             "**{prefix}pet user <user>** - See another person's pet\n" +
             "**{prefix}pet release** - Gives your pet to a loving family that will take care of it (Deletes pet forever)")]
         [BetterRequireBotPermission(ChannelPermission.EmbedLinks | ChannelPermission.AddReactions)]
-        public async Task Clockagotchi(string action = "", [Remainder]string args = "")
+        public async Task Clockagotchi(string action = "", [Remainder]string args = null)
         {
-            var pet = storage.GetTransientGame<PetGame>(Context.User.Id);
+            var pet = storage.GetUserGame<PetGame>(Context.User.Id);
             if (pet == null)
             {
                 if (action == "")
                 {
                     pet = new PetGame("", Context.User.Id, shardedClient, logger, storage);
-                    storage.AddTransientGame(pet);
+                    storage.AddUserGame(pet);
                 }
                 else
                 {
@@ -145,13 +145,13 @@ namespace PacManBot.Modules
 
 
                 case "release":
-                    storage.DeleteGame(pet);
+                    storage.DeleteUserGame(pet);
                     await ReplyAsync($"Goodbye {(string.IsNullOrWhiteSpace(pet.PetName) ? pet.Name : pet.PetName)}!", options: Utils.DefaultOptions);
                     return;
 
 
                 case "name":
-                    if (args != "")
+                    if (args != null)
                     {
                         pet.PetName = args;
                         await Context.Message.AddReactionAsync(CustomEmoji.Check, Utils.DefaultOptions);
@@ -161,7 +161,7 @@ namespace PacManBot.Modules
 
 
                 case "image":
-                    string url = args != "" ? args : Context.Message.Attachments.FirstOrDefault()?.Url;
+                    string url = args != null ? args : Context.Message.Attachments.FirstOrDefault()?.Url;
                     if (url == null && pet.PetImageUrl == null)
                     {
                         await ReplyAsync($"{CustomEmoji.Cross} Please specify an image!", options: Utils.DefaultOptions);
@@ -193,12 +193,12 @@ namespace PacManBot.Modules
                     if ((now - pet.lastPet) <= TimeSpan.FromSeconds(1.5)) return;
                     pet.lastPet = now;
 
-                    await ReplyAsync(pet.Pet(), options: Utils.DefaultOptions);
+                    await ReplyAsync(pet.Pet(args), options: Utils.DefaultOptions);
                     return;
 
 
                 case "count":
-                    await ReplyAsync($"This bot has {storage.TransientGames.Where(g => g is PetGame).Count()} pets in total");
+                    await ReplyAsync($"This bot has {storage.UserGames.Where(g => g is PetGame).Count()} pets in total");
                     return;
 
 
@@ -206,6 +206,108 @@ namespace PacManBot.Modules
                     await ReplyAsync($"Unknown pet command! Do **{storage.GetPrefixOrEmpty(Context.Guild)}pet help** for help", options: Utils.DefaultOptions);
                     return;
             }
+        }
+
+
+
+
+        [Command("uno"), Parameters("[players]")]
+        [Remarks("Play Uno with your friends or some bots")]
+        [Summary("Starts a new Uno game in this channel. People will be able to join and leave at any time.\n"
+               + "You can specify any number of bots as opponents. However, real people must join by themselves.\n\n"
+               + "You can use **{prefix}uno join** to join the game or invite someone else or a bot. You can use **{prefix}uno leave** to leave or kick a bot or inactive user.\n\n"
+               + "__**The rules are as follows:**__"
+               + "\n • Each player is given 7 cards."
+               + "\n • The current turn's player must choose a card that matches either the color, number or type of the last card."
+               + "\n • Skip cards make the next player skip their turn. Reverse cards change the turn direction. Draw cards force the next player to draw cards. Wild cards match any card."
+               + "\n • If the player doesn't have any matching card, they will draw more cards until they have one."
+               + "\n • The first player to get to 0 cards wins the game.")]
+        [RequireContext(ContextType.Guild)]
+        [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
+        public async Task StartUno(params SocketGuildUser[] players)
+        {
+            players = new SocketGuildUser[] { Context.User as SocketGuildUser }.Union(players.Where(x => x.IsBot)).ToArray();
+            await RunMultiplayerGame<UnoGame>(players);
+        }
+
+
+        [Command("uno join"), Alias("uno add", "uno invite"), HideHelp]
+        [Summary("Joins an ongoing Uno game in this channel. Fails if the game is full or if there aren't enough cards to draw for you.\n"
+               + "You can also invite a bot or another user to play.")]
+        [RequireContext(ContextType.Guild)]
+        [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
+        public async Task JoinUno(SocketGuildUser user = null)
+        {
+            bool self = false;
+            if (user == null)
+            {
+                self = true;
+                user = Context.User as SocketGuildUser;
+            }
+
+            var game = storage.GetGame<UnoGame>(Context.Channel.Id);
+            if (game == null)
+            {
+                await ReplyAsync($"There's no Uno game in this channel! Use **{storage.GetPrefix(Context.Guild)}uno** to start.", options: Utils.DefaultOptions);
+                return;
+            }
+            if (game.UserId.Contains(user.Id))
+            {
+                await ReplyAsync($"{(self ? "You're" : "They're")} already playing!", options: Utils.DefaultOptions);
+                return;
+            }
+            if (!self && !user.IsBot)
+            {
+                await ReplyAsync($"{user.Mention} You were invited to play {game.Name}. Do **{storage.GetPrefix(Context.Guild)}uno join** to join", options: Utils.DefaultOptions);
+                return;
+            }
+
+            string failReason = game.AddPlayer(user.Id);
+            if (failReason != null) await ReplyAsync($"{user.Mention} {"You ".If(self)}can't join this game: {failReason}", options: Utils.DefaultOptions);
+            else await MoveGame();
+
+            if (Context.BotCan(ChannelPermission.ManageMessages)) await Context.Message.DeleteAsync(options: Utils.DefaultOptions);
+            else await Context.Message.AddReactionAsync(failReason == null ? CustomEmoji.Check : CustomEmoji.Cross, options: Utils.DefaultOptions);
+        }
+
+
+        [Command("uno leave"), Alias("uno remove", "uno kick"), HideHelp]
+        [Summary("Leaves the Uno game in this channel.\nYou can also remove a bot or inactive player.")]
+        [RequireContext(ContextType.Guild)]
+        [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
+        public async Task LeaveUno(SocketGuildUser user = null)
+        {
+            bool self = false;
+            if (user == null)
+            {
+                self = true;
+                user = Context.User as SocketGuildUser;
+            }
+
+            var game = storage.GetGame<UnoGame>(Context.Channel.Id);
+            if (game == null)
+            {
+                await ReplyAsync($"There's no Uno game in this channel! Use **{storage.GetPrefix(Context.Guild)}uno** to start.", options: Utils.DefaultOptions);
+                return;
+            }
+            if (!game.UserId.Contains(user.Id))
+            {
+                await ReplyAsync($"{(self ? "You're" : "They're")} not playing!", options: Utils.DefaultOptions);
+                return;
+            }
+            if (game.UserId.Length <= 2)
+            {
+                await CancelGame();
+                return;
+            }
+            if (!self && !user.IsBot && (game.UserId[(int)game.Turn] != user.Id || (DateTime.Now - game.LastPlayed) < TimeSpan.FromMinutes(1)))
+            {
+                await ReplyAsync("To remove another user they have to be inactive for at least 1 minute during their turn.");
+            }
+
+            game.RemovePlayer(user.Id);
+            await MoveGame();
+            await Context.Message.AddReactionAsync(CustomEmoji.Check, Utils.DefaultOptions);
         }
 
 
@@ -219,16 +321,15 @@ namespace PacManBot.Modules
         [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
         public async Task StartTicTacToe(SocketGuildUser opponent = null)
         {
-            await RunGame<TTTGame>(Context.User, opponent ?? (IUser)Context.Client.CurrentUser);
+            await RunMultiplayerGame<TTTGame>(Context.User, opponent ?? (IUser)Context.Client.CurrentUser);
         }
-
 
         [Command("tictactoe vs"), Alias("ttt vs", "tic vs"), HideHelp]
         [Summary("Make the bot challenge a user... or another bot")]
         [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
         public async Task StartTicTacToeVs(SocketGuildUser opponent)
         {
-            await RunGame<TTTGame>(Context.Client.CurrentUser, opponent);
+            await RunMultiplayerGame<TTTGame>(Context.Client.CurrentUser, opponent);
         }
 
 
@@ -241,16 +342,15 @@ namespace PacManBot.Modules
         [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
         public async Task StartTicTacToe5(SocketGuildUser opponent = null)
         {
-            await RunGame<TTT5Game>(Context.User, opponent ?? (IUser)Context.Client.CurrentUser);
+            await RunMultiplayerGame<TTT5Game>(Context.User, opponent ?? (IUser)Context.Client.CurrentUser);
         }
-
 
         [Command("5ttt vs"), Alias("ttt5 vs", "5tictactoe vs", "5tic vs"), HideHelp]
         [Summary("Make the bot challenge a user... or another bot")]
         [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
         public async Task Start5TicTacToeVs(SocketGuildUser opponent)
         {
-            await RunGame<TTT5Game>(Context.Client.CurrentUser, opponent);
+            await RunMultiplayerGame<TTT5Game>(Context.Client.CurrentUser, opponent);
         }
 
 
@@ -262,21 +362,20 @@ namespace PacManBot.Modules
         [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
         public async Task StartConnectFour(SocketGuildUser opponent = null)
         {
-            await RunGame<C4Game>(Context.User, opponent ?? (IUser)Context.Client.CurrentUser);
+            await RunMultiplayerGame<C4Game>(Context.User, opponent ?? (IUser)Context.Client.CurrentUser);
         }
-
 
         [Command("connect4 vs"), Alias("c4 vs", "four vs"), HideHelp]
         [Summary("Make the bot challenge a user... or another bot")]
         [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
         public async Task StartConnectFoureVs(SocketGuildUser opponent)
         {
-            await RunGame<C4Game>(Context.Client.CurrentUser, opponent);
+            await RunMultiplayerGame<C4Game>(Context.Client.CurrentUser, opponent);
         }
 
 
 
-        private async Task RunGame<T>(IUser challenger, IUser opponent) where T : TwoPlayerGame
+        private async Task RunMultiplayerGame<TGame>(params IUser[] players) where TGame : MultiplayerGame
         {
             foreach (var otherGame in storage.Games)
             {
@@ -289,17 +388,11 @@ namespace PacManBot.Modules
                 }
             }
 
-            bool bothBots = challenger.IsBot && opponent.IsBot;
-            var players = new ulong[] { opponent.Id, challenger.Id };
-            Type type = typeof(T);
+            var playerIds = players.Select(x => x.Id).ToArray();
 
-            TwoPlayerGame game;
-            if (type == typeof(TTTGame)) game = new TTTGame(Context.Channel.Id, players, shardedClient, logger, storage);
-            else if (type == typeof(TTT5Game)) game = new TTT5Game(Context.Channel.Id, players, shardedClient, logger, storage);
-            else if (type == typeof(C4Game)) game = new C4Game(Context.Channel.Id, players, shardedClient, logger, storage);
-            else throw new NotImplementedException();
+            TGame game = MultiplayerGame.New<TGame>(Context.Channel.Id, playerIds, shardedClient, logger, storage);
 
-            if (!bothBots && game.AITurn) game.DoTurnAI();
+            while (!game.AllBots && game.AITurn) game.DoTurnAI();
 
             storage.AddGame(game);
 
@@ -310,6 +403,7 @@ namespace PacManBot.Modules
             }
             catch (HttpException e)
             {
+                storage.DeleteGame(game);
                 await logger.Log(LogSeverity.Error, e.Reason); // Let's hope I figure out why I get Bad Gateway
                 throw e;
             }
@@ -317,7 +411,7 @@ namespace PacManBot.Modules
 
             while (game.State == State.Active)
             {
-                if (bothBots)
+                if (game.AllBots)
                 {
                     try
                     {
@@ -394,7 +488,7 @@ namespace PacManBot.Modules
             }
 
             if (game.UserId.Contains(Context.User.Id) || Context.UserCan(ChannelPermission.ManageMessages) || DateTime.Now - game.LastPlayed > TimeSpan.FromSeconds(60)
-                || game is TwoPlayerGame tpGame && tpGame.BotVsBot)
+                || game is MultiplayerGame tpGame && tpGame.AllBots)
             {
                 game.State = State.Cancelled;
                 storage.DeleteGame(game);

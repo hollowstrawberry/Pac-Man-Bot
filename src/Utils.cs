@@ -49,17 +49,31 @@ namespace PacManBot
 
         // Lists
 
-        public static T Get<T>(this IServiceProvider provider) // I thought the long name was ugly
-        {
-            return provider.GetRequiredService<T>();
-        }
-
-
         public static T Last<T>(this IList<T> list)
         {
             return list[list.Count - 1];
         }
 
+        public static T Pop<T>(this List<T> list)
+        {
+            var popped = list[list.Count - 1];
+            list.RemoveAt(list.Count - 1);
+            return popped;
+        }
+
+        public static List<T> PopRange<T>(this List<T> list, int amount)
+        {
+            var popped = new List<T>();
+            for (int i = 0; i < amount && i < list.Count; i++) popped.Add(list.Pop());
+            return popped;
+        }
+
+        public static List<T> Sorted<T>(this List<T> list)
+        {
+            var copy = list.Select(x => x).ToList();
+            copy.Sort();
+            return copy;
+        }
 
         public static IEnumerable<IEnumerable<T>> Permutations<T>(this IEnumerable<T> list, int length)
         {
@@ -81,6 +95,19 @@ namespace PacManBot
             return values[random.Next(values.Count)];
         }
 
+        public static void Shuffle<T>(this Random random, IList<T> list)
+        {
+            int n = list.Count;
+            while (n > 1)
+            {
+                n--;
+                int k = random.Next(n + 1);
+                T value = list[k];
+                list[k] = list[n];
+                list[n] = value;
+            }
+        }
+
         public static double NextDouble(this Random random, double min, double max)
         {
             return random.NextDouble() * (max - min) + min;
@@ -89,6 +116,12 @@ namespace PacManBot
 
 
         // Misc
+
+        public static T Get<T>(this IServiceProvider provider) // I thought the long name was ugly
+        {
+            return provider.GetRequiredService<T>();
+        }
+
 
         public static int Ceiling(this double num)
         {

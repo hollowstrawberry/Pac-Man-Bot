@@ -11,7 +11,7 @@ using static PacManBot.Games.GameUtils;
 namespace PacManBot.Games
 {
     [DataContract]
-    public class PetGame : BaseGame, IStoreableGame
+    public class PetGame : BaseGame, ISingleplayerGame, IStoreableGame
     {
         public static readonly string[] FoodEmotes = new string[] { "🍌", "🍎", "🍊", "🍕", "🌮", "🍩", "🍪", "🍐", "🍉", "🍇", "🍑", "🍧", "🍫", "🥕", "🍼" };
         public static readonly string[] PlayEmotes = new string[] { "⚽", "🏀", "🏈", "🎾", "🏓", "🎨", "🎤", "🎭", "🏐", "🎣", };
@@ -37,9 +37,8 @@ namespace PacManBot.Games
         [DataMember] private DateTime lastUpdated;
         [DataMember] private Achievements achievements = new Achievements();
 
+        [DataMember] public ulong OwnerId { get { return UserId[0]; } set { UserId = new ulong[] { value }; } }
         [IgnoreDataMember] public DateTime lastPet = DateTime.Now;
-
-        [DataMember] private ulong OwnerId { get { return UserId[0]; } set { UserId = new ulong[] { value }; } }
 
 
         public double Satiation => satiation;
@@ -72,8 +71,6 @@ namespace PacManBot.Games
                 UpdateStats();
             }
         }
-
-
 
 
         [DataContract]
@@ -321,10 +318,11 @@ namespace PacManBot.Games
         }
 
 
-        public string Pet()
+        public string Pet(string seed = null)
         {
             achievements.timesPet++;
-            return Bot.Random.Choose(storage.PettingMessages);
+            Random random = seed == null ? Bot.Random : new Random(seed.GetHashCode());
+            return random.Choose(storage.PettingMessages);
         }
 
 

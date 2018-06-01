@@ -6,10 +6,8 @@ using static PacManBot.Games.GameUtils;
 
 namespace PacManBot.Games
 {
-    public class ScoreEntry
+    public class ScoreEntry : IComparable<ScoreEntry>
     {
-        public static ScoreEntryComparer Comparer = new ScoreEntryComparer();
-
         public State state;
         public int score;
         public int turns;
@@ -76,15 +74,11 @@ namespace PacManBot.Games
             entry = null;
             return false;
         }
-    }
 
 
-    // Allows me to add new score entries to the scoreboard in already-sorted position!
-    public class ScoreEntryComparer : IComparer<ScoreEntry>
-    {
-        public int Compare(ScoreEntry x, ScoreEntry y)
+        public int CompareTo(ScoreEntry other)
         {
-            return y.score.CompareTo(x.score);
+            return other.score.CompareTo(this.score);
         }
     }
 }

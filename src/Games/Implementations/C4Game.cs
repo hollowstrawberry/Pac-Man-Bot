@@ -10,7 +10,7 @@ using static PacManBot.Games.GameUtils;
 
 namespace PacManBot.Games
 {
-    public class C4Game : TwoPlayerGame, IMessagesGame
+    public class C4Game : MultiplayerGame, IMessagesGame
     {
         private const int Columns = 7, Rows = 6;
         private static readonly TimeSpan _expiry = TimeSpan.FromMinutes(5);
@@ -22,9 +22,10 @@ namespace PacManBot.Games
         public override TimeSpan Expiry => _expiry;
 
 
-        public C4Game(ulong channelId, ulong[] userId, DiscordShardedClient client, LoggingService logger, StorageService storage)
-            : base(channelId, userId, client, logger, storage)
+        public override void Construct(ulong channelId, ulong[] userId, DiscordShardedClient client, LoggingService logger, StorageService storage)
         {
+            base.Construct(channelId, userId, client, logger, storage);
+
             highlighted = new List<Pos>();
             board = new Player[Columns, Rows];
             for (int x = 0; x < Columns; x++)
@@ -52,21 +53,21 @@ namespace PacManBot.Games
             int column = int.Parse(StripPrefix(input)) - 1;
             if (!AvailableColumns(board).Contains(column)) return; // Column is full
 
-            PlacePiece(board, column, turn);
+            PlacePiece(board, column, Turn);
 
             Time++;
 
-            if (FindWinner(board, turn, Time, highlighted)) winner = turn;
-            else if (IsTie(board, turn, Time)) winner = Player.Tie;
+            if (FindWinner(board, Turn, Time, highlighted)) Winner = Turn;
+            else if (IsTie(board, Turn, Time)) Winner = Player.Tie;
 
-            if (winner == Player.None)
+            if (Winner == Player.None)
             {
-                turn = turn.OtherPlayer();
+                Turn = Turn.OtherPlayer();
             }
             else
             {
                 State = State.Completed;
-                turn = winner;
+                Turn = Winner;
             }
         }
 
@@ -79,7 +80,7 @@ namespace PacManBot.Games
 
             for (int i = 0; i < 2; i++)
             {
-                description.Append($"{"►".If(i == (int)turn)}{((Player)i).Circle()} - {User((Player)i).NameandNum().SanitizeMarkdown()}\n");
+                description.Append($"{"►".If(i == (int)Turn)}{((Player)i).Circle()} - {User((Player)i).NameandNum().SanitizeMarkdown()}\n");
             }
 
             description.Append("ᅠ\n");
@@ -107,8 +108,8 @@ namespace PacManBot.Games
             {
                 Title = EmbedTitle(),
                 Description = description.ToString(),
-                Color = turn.Color(),
-                ThumbnailUrl = winner == Player.None ? turn.Circle().ToEmote()?.Url : User(winner)?.GetAvatarUrl(),
+                Color = Turn.Color(),
+                ThumbnailUrl = Winner == Player.None ? Turn.Circle().ToEmote()?.Url : User(Winner)?.GetAvatarUrl(),
             };
         }
 
@@ -147,18 +148,18 @@ namespace PacManBot.Games
             foreach (int column in AvailableColumns(board)) // All moves it can make
             {
                 var tempBoard = (Player[,])board.Clone();
-                PlacePiece(tempBoard, column, turn);
+                PlacePiece(tempBoard, column, Turn);
 
-                if (FindWinner(tempBoard, turn, Time + 1)) // Can win in 1 move
+                if (FindWinner(tempBoard, Turn, Time + 1)) // Can win in 1 move
                 {
                     moves = new Dictionary<int, int> { { column, 0 } };
                     avoidMoves = new List<int>();
                     break;
                 }
 
-                moves.Add(column, MayLoseCount(tempBoard, turn, turn.OtherPlayer(), Time + 1, depth: 3));
+                moves.Add(column, MayLoseCount(tempBoard, Turn, Turn.OtherPlayer(), Time + 1, depth: 3));
 
-                if (MayLoseCount(tempBoard, turn, turn.OtherPlayer(), Time + 1, depth: 1) > 0) avoidMoves.Add(column); // Can lose right away
+                if (MayLoseCount(tempBoard, Turn, Turn.OtherPlayer(), Time + 1, depth: 1) > 0) avoidMoves.Add(column); // Can lose right away
             }
 
             if (avoidMoves.Count < moves.Count)
@@ -177,7 +178,7 @@ namespace PacManBot.Games
         {
             int count = 0;
 
-            if (depth <= 0 || time == board.LengthX() * board.LengthY()) return count;
+            if (depth <= 0 || time == board.X() * board.Y()) return count;
 
             foreach (int column in AvailableColumns(board))
             {
