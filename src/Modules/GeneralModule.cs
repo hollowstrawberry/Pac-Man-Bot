@@ -94,7 +94,13 @@ namespace PacManBot.Modules
                 embed.AddField("Aliases", aliasList, true);
             }
 
-            if (helpInfo.Summary != "") embed.AddField("Summary", helpInfo.Summary.Replace("{prefix}", prefix), false);
+            if (helpInfo.Summary != "")
+            {
+                foreach (string section in helpInfo.Summary.Replace("{prefix}", prefix).Split("{division}"))
+                {
+                    embed.AddField("Summary", section, false);
+                }
+            }
 
             if (helpInfo.ExampleUsage != "") embed.AddField("Example Usage", helpInfo.ExampleUsage.Replace("{prefix}", prefix), false);
 

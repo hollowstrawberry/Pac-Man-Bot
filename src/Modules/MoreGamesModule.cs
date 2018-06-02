@@ -212,21 +212,21 @@ namespace PacManBot.Modules
 
 
         [Command("uno"), Parameters("[players]"), Priority(0)]
-        [Remarks("Play Uno with your friends or some bots")]
+        [Remarks("Play Uno with up to 10 friends and bots")]
         [ExampleUsage("uno\nuno @Pac-Man#3944")]
         [Summary("__**Commands:**__\n"
-               + "\n • **{prefix}uno** - Starts a new Uno game. People can join and leave at any time. You can specify any amount of bots as opponents."
-               + "\n • **{prefix}uno join** - Join the game or invite a user or bot."
+               + "\n • **{prefix}uno** - Starts a new Uno game, for up to 10 players. You can specify bots as opponents. Players can join or leave at any time."
+               + "\n • **{prefix}uno join** - Join a game or invite a user or bot."
                + "\n • **{prefix}uno leave** - Leave the game or kick a bot or inactive user."
                + "\n • **{prefix}bump** - Move the game to the bottom of the chat."
                + "\n • **{prefix}cancel** - End the game in the current channel."
-               + "\n\n__**Rules:**__\n"
+               + "\nᅠ{division}\n__**Rules:**__\n"
                + "\n • Each player is given 7 cards."
                + "\n • The current turn's player must choose a card that matches either the color, number or type of the last card."
-               + "\n • If the player doesn't have any matching card, they will draw more cards until they have one."
-               + "\n • The first player to get to 0 cards wins the game."
-               + "\n • **Special cards:** Skip cards make the next player skip their turn. Reverse cards change the turn direction, or work like Skip cards with only two players. "
-               + "Draw cards force the next player to draw cards and skip their turn. Wild cards let you choose the color, and match with any card."
+               + "\n • If the player doesn't have any matching card, they will draw another card. If they still can't play they will skip a turn."
+               + "\n • The first player to lose all of their cards wins the game."
+               + "\n • **Special cards:** *Skip* cards make the next player skip a turn. *Reverse* cards change the turn direction, or act like *Skip* cards with only two players."
+               + " *Draw* cards force the next player to draw cards and skip a turn. *Wild* cards let you choose the color, and will match with any card."
                + "\nᅠ")]
         [RequireContext(ContextType.Guild)]
         [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
@@ -243,7 +243,7 @@ namespace PacManBot.Modules
         public async Task UnoHelp()
         {
             var summary = typeof(MoreGamesModule).GetMethod(nameof(StartUno)).GetCustomAttributes(typeof(SummaryAttribute), false).FirstOrDefault() as SummaryAttribute;
-            await ReplyAsync(summary?.Text.Replace("{prefix}", storage.GetPrefixOrEmpty(Context.Guild)) ?? "Couldn't get help", options: Utils.DefaultOptions);
+            await ReplyAsync(summary?.Text.Replace("{prefix}", storage.GetPrefix(Context.Guild)).Replace("{division}", "") ?? "Couldn't get help", options: Utils.DefaultOptions);
         }
 
 
