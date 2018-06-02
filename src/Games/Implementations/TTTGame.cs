@@ -12,7 +12,7 @@ namespace PacManBot.Games
     public class TTTGame : MultiplayerGame, IMessagesGame
     {
         private const int Size = 3;
-        private static readonly TimeSpan _expiry = TimeSpan.FromMinutes(5);
+        private static readonly TimeSpan _expiry = TimeSpan.FromHours(1);
 
         private Player[,] board;
         private List<Pos> highlighted;
@@ -21,9 +21,9 @@ namespace PacManBot.Games
         public override TimeSpan Expiry => _expiry;
 
 
-        public override void Construct(ulong channelId, ulong[] userId, DiscordShardedClient client, LoggingService logger, StorageService storage)
+        public override void Create(ulong channelId, ulong[] userId, DiscordShardedClient client, LoggingService logger, StorageService storage)
         {
-            base.Construct(channelId, userId, client, logger, storage);
+            base.Create(channelId, userId, client, logger, storage);
 
             highlighted = new List<Pos>();
             board = new Player[Size,Size];
@@ -94,7 +94,7 @@ namespace PacManBot.Games
                 description.Append('\n');
             }
 
-            if (State == State.Active) description.Append($"ᅠ\n*Say the number of a cell (1 to 9) to place an {(Turn == Player.Red ? "X" : "O")}*");
+            if (State == State.Active) description.Append($"ᅠ\n*Say the number of a cell (1 to 9) to place an {(Turn == Player.First ? "X" : "O")}*");
 
             return new EmbedBuilder()
             {

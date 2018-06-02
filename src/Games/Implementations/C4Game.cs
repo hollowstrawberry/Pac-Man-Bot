@@ -13,7 +13,7 @@ namespace PacManBot.Games
     public class C4Game : MultiplayerGame, IMessagesGame
     {
         private const int Columns = 7, Rows = 6;
-        private static readonly TimeSpan _expiry = TimeSpan.FromMinutes(5);
+        private static readonly TimeSpan _expiry = TimeSpan.FromHours(1);
 
         private Player[,] board;
         private List<Pos> highlighted;
@@ -22,9 +22,9 @@ namespace PacManBot.Games
         public override TimeSpan Expiry => _expiry;
 
 
-        public override void Construct(ulong channelId, ulong[] userId, DiscordShardedClient client, LoggingService logger, StorageService storage)
+        public override void Create(ulong channelId, ulong[] userId, DiscordShardedClient client, LoggingService logger, StorageService storage)
         {
-            base.Construct(channelId, userId, client, logger, storage);
+            base.Create(channelId, userId, client, logger, storage);
 
             highlighted = new List<Pos>();
             board = new Player[Columns, Rows];

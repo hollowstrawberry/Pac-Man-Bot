@@ -36,7 +36,7 @@ namespace PacManBot.Games
         public override string Name => "Uno";
         public override TimeSpan Expiry => _expiry;
         public override bool AITurn => players.Count > 1 && base.AITurn;
-        public string GameFile => $"{GameFolder}uno{ChannelId}{GameExtension}";
+        public string FilenameKey => "uno";
 
         [DataMember] public override State State { get; set; }
         [DataMember] public override DateTime LastPlayed { get; set; }
@@ -55,10 +55,12 @@ namespace PacManBot.Games
 
 
         [DataContract]
-        public struct Card : IComparable<Card>
+        struct Card : IComparable<Card>
         {
             [DataMember] public CardType Type { get; private set; }
             [DataMember] public CardColor Color { get; private set; }
+
+            public bool WildType => Type == CardType.Wild || Type == CardType.WildDrawFour;
 
             public static readonly Card Wild = new Card(CardType.Wild, CardColor.Black);
             public static readonly Card WildDrawFour = new Card(CardType.WildDrawFour, CardColor.Black);
@@ -75,7 +77,14 @@ namespace PacManBot.Games
             public Card(CardType Type, CardColor Color)
             {
                 this.Type = Type;
-                this.Color = Type == CardType.WildDrawFour || Type == CardType.Wild ? CardColor.Black : Color;
+                this.Color = Color;
+            }
+
+
+            public Card NormalizeColor()
+            {
+                if (WildType && Color != CardColor.Black) return new Card(Type, CardColor.Black);
+                else return this;
             }
 
 
@@ -86,25 +95,27 @@ namespace PacManBot.Games
 
             public string ToStringBig()
             {
-                string card = "";
+                var card = new StringBuilder();
                 for (int y = 0; y < 5; y++)
                 {
-                    card += $"{CustomEmoji.Empty}".Multiply(2);
+                    card.Append($"{CustomEmoji.Empty}".Multiply(2));
                     for (int x = 0; x < 3; x++)
                     {
-                        if (x == 1 && y == 2) card += TypeEmote[(int)Type];
-                        else card += CustomEmoji.ColorSquare[(int)Color];
+                        if (x == 1 && y == 2) card.Append(TypeEmote[(int)Type]);
+                        else card.Append(CustomEmoji.ColorSquare[(int)Color]);
                     }
-                    card += '\n';
+                    card.Append('\n');
                 }
+                card.Append($"{CustomEmoji.Empty}".Multiply(2));
+                card.Append(this.ToString());
 
-                return card + $"{CustomEmoji.Empty}".Multiply(2) + this.ToString();
+                return card.ToString();
             }
 
 
             public static Card? FromString(string value)
             {
-                value = value.ToLower();
+                value = value.ToLower().Replace(" ", "").Replace("draw2", "drawtwo").Replace("draw4", "drawfour");
                 CardColor? color = null;
                 CardType? type = null;
                 
@@ -125,7 +136,7 @@ namespace PacManBot.Games
                     if (value == typeStr || t < 10 && value == t.ToString())
                     {
                         type = (CardType)t;
-                        if (type == CardType.WildDrawFour || type == CardType.Wild) color = CardColor.Black;
+                        if (color == null && (type == CardType.WildDrawFour || type == CardType.Wild)) color = CardColor.Black;
                         break;
                     }
                 }
@@ -143,12 +154,12 @@ namespace PacManBot.Games
             }
         }
 
-        public enum CardColor
+        enum CardColor
         {
             Red, Blue, Green, Yellow, Black,
         }
 
-        public enum CardType
+        enum CardType
         {
             Zero, One, Two, Three, Four, Five, Six, Seven, Eight, Nine,
             Skip, Reverse, DrawTwo, WildDrawFour, Wild
@@ -157,16 +168,16 @@ namespace PacManBot.Games
 
 
 
-        public override void Construct(ulong channelId, ulong[] playerIds, DiscordShardedClient client, LoggingService logger, StorageService storage)
+        public override void Create(ulong channelId, ulong[] playerIds, DiscordShardedClient client, LoggingService logger, StorageService storage)
         {
-            base.Construct(channelId, new ulong[] { }, client, logger, storage);
+            base.Create(channelId, new ulong[] { }, client, logger, storage);
 
             // Make deck
             for (int color = 0; color < 4; color++)
             {
                 for (int type = 0; type < 15; type++)
                 {
-                    var card = new Card((CardType)type, (CardColor)color);
+                    var card = new Card((CardType)type, type < 13 ? (CardColor)color : CardColor.Black);
                     deck.Add(card);
                     if (type > 0 && type < 13) deck.Add(card); // Second batch of colors excluding zero
                 }
@@ -192,19 +203,25 @@ namespace PacManBot.Games
 
         public bool IsInput(string value)
         {
-            return players.Count >= 2 && Card.FromString(StripPrefix(value)) != null;
+            return players.Count >= 2 && Card.FromString(StripPrefix(value)).HasValue;
         }
 
 
         public void DoTurn(string input)
         {
             var card = Card.FromString(StripPrefix(input)).Value;
-            if (!playerCards[(int)Turn].Contains(card))
+
+            if (!playerCards[(int)Turn].Contains(card.NormalizeColor()))
             {
                 Message = $"Oops, you don't have that card!";
                 return;
             }
-            if (!CanPlace(card))
+            else if (card.Color == CardColor.Black)
+            {
+                Message = $"You must specify a color for your wild card!";
+                return;
+            }
+            else if (!CanPlace(card))
             {
                 Message = $"Oops, that card doesn't match the type or color!";
                 return;
@@ -217,10 +234,10 @@ namespace PacManBot.Games
                 saved = true;
             }
 
-            if (User(Turn).IsBot && !AllBots) Message += $"• {User(Turn)?.Username} plays {input}!\n";
+            if (User(Turn).IsBot && !AllBots) Message += $"• {User(Turn)?.Username} plays {input}\n";
             else Message = "";
 
-            playerCards[(int)Turn].Remove(card);
+            playerCards[(int)Turn].Remove(card.NormalizeColor());
             deck.Insert(0, card);
             Time++;
 
@@ -237,22 +254,23 @@ namespace PacManBot.Games
             if (card.Type == CardType.Reverse)
             {
                 reversed = !reversed;
-                Message += $"• Now going {(reversed ? "backwards" : "forwards")}!\n";
+                if (players.Count > 2) Message += $"• Now going {(reversed ? "backwards" : "forwards")}!\n";
             }
 
             Turn = FollowingPlayer();
             bool sentCards = false;
 
-            if (card.Type == CardType.Skip)
+            if (card.Type == CardType.Skip || card.Type == CardType.Reverse && players.Count == 2)
             {
-                Message += $"• {User(Turn)?.Username} skips their turn!\n";
+                Message += $"• {User(Turn)?.Username} skips a turn!\n";
                 Turn = FollowingPlayer();
             }
             else if (card.Type == CardType.WildDrawFour || card.Type == CardType.DrawTwo)
             {
                 int amount = card.Type == CardType.WildDrawFour ? 4 : 2;
-                playerCards[(int)Turn].AddRange(deck.PopRange(Math.Min(deck.Count - 1, amount)));
-                Message += $"• {User(Turn)?.Username} draws {amount} cards!\n";
+                playerCards[(int)Turn].AddRange(deck.PopRange(Math.Min(deck.Count - 1, amount)).Select(x => x.NormalizeColor()));
+                Message += $"• {User(Turn)?.Username} draws {amount} cards and skips a turn!\n";
+                Turn = FollowingPlayer();
             }
 
             while (playerCards[(int)Turn].All(x => !CanPlace(x))) // Next player can't place
@@ -261,7 +279,7 @@ namespace PacManBot.Games
                 while (!CanPlace(playerCards[(int)Turn].Last()) && deck.Count > 1) // Give him cards until he can place
                 {
                     amount++;
-                    playerCards[(int)Turn].Add(deck.Pop());
+                    playerCards[(int)Turn].Add(deck.Pop().NormalizeColor());
                 }
 
                 if (amount > 0)
@@ -274,7 +292,7 @@ namespace PacManBot.Games
 
                 if (!CanPlace(playerCards[(int)Turn].Last()))
                 {
-                    Turn = FollowingPlayer(); // Deck ran out edge case, skip players until someone can place
+                    Turn = FollowingPlayer(); // Edge case where deck ran out, skip players until someone can place
                     sentCards = false;
                 }
             }
@@ -302,6 +320,13 @@ namespace PacManBot.Games
                 choice = Bot.Random.Choose(noWilds.Count > 0 ? noWilds : playable); // Leaves wilds for last
             }
 
+            if (choice.Color == CardColor.Black)
+            {
+                var colors = Enumerable.Range(0, 4).Select(x => playerCards[(int)Turn].Count(c => c.Color == (CardColor)x));
+                int max = colors.Max();
+                choice = new Card(choice.Type, (CardColor)Bot.Random.Choose(colors.Where(x => x == max).ToList()));
+            }
+
             DoTurn(choice.ToString());
         }
 
@@ -323,7 +348,7 @@ namespace PacManBot.Games
             }
             description.Append($"```\n{deck[0].ToStringBig()}\n");
 
-            if (State == State.Active) description.Append($"ᅠ\n*Say the name of a card to place it. Cards are sent in DMs.*\n*Use **{prefix}uno join** to join the game.*\n*Use **{prefix}uno leave** to abandon.*");
+            if (State == State.Active) description.Append($"ᅠ\nSay the name of a card to place it. Cards are sent in DMs.\nUse **{prefix}uno join** to join the game.\nUse **{prefix}uno help** for rules and more commands.");
 
 
             return new EmbedBuilder()
@@ -338,7 +363,7 @@ namespace PacManBot.Games
 
         public override string GetContent(bool showHelp = true)
         {
-            return Message;
+            return State == State.Cancelled ? "" : Message;
         }
 
 
@@ -352,7 +377,7 @@ namespace PacManBot.Games
 
         private bool CanPlace(Card card)
         {
-            return card.Color == CardColor.Black || deck[0].Color == CardColor.Black || deck[0].Color == card.Color || deck[0].Type == card.Type;
+            return card.WildType || deck[0].Color == card.Color || deck[0].Type == card.Type || deck[0].Color == CardColor.Black; // The black deck[0] can only happen at the start
         }
 
 
@@ -406,7 +431,7 @@ namespace PacManBot.Games
             if (players.Contains(id)) return "You're already playing!";
 
             players.Add(id);
-            playerCards.Add(deck.PopRange(Math.Min(deck.Count - 1, CardsPerPlayer)));
+            playerCards.Add(deck.PopRange(Math.Min(deck.Count - 1, CardsPerPlayer)).Select(x => x.NormalizeColor()).ToList());
             SendCards(playerCards.Count - 1);
 
             return null;
@@ -414,7 +439,7 @@ namespace PacManBot.Games
 
 
         public void RemovePlayer(ulong id) => RemovePlayer(players.IndexOf(id));
-        public void RemovePlayer(int index)
+        private void RemovePlayer(int index)
         {
             players.RemoveAt(index);
             deck.AddRange(playerCards[index]);

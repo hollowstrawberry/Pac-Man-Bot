@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using Newtonsoft.Json;
@@ -25,11 +26,7 @@ namespace PacManBot.Services
         private readonly JsonSerializerSettings gameJsonSettings = new JsonSerializerSettings {
             ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
         };
-        private static readonly Dictionary<string, Type> StoreableTypes = new Dictionary<string, Type> {
-            { "pet", typeof(PetGame) },
-            { "uno", typeof(UnoGame) },
-            { "", typeof(PacManGame) },
-        };
+        private static readonly Dictionary<string, Type> StoreableGamesTypes = GetStoreableGameTypes();
 
         public string DefaultPrefix { get; private set; }
         public string WakaExclude { get; private set; }
@@ -140,7 +137,7 @@ namespace PacManBot.Services
             try
             {
                 game.CancelRequests();
-                if (game is IStoreableGame sGame && File.Exists(sGame.GameFile)) File.Delete(sGame.GameFile);
+                if (game is IStoreableGame sGame && File.Exists(GameFile(sGame))) File.Delete(GameFile(sGame));
                 games.Remove(game);
                 logger.Log(LogSeverity.Verbose, LogSource.Storage, $"Removed {game.GetType().Name} at {game.ChannelId}");
             }
@@ -167,7 +164,7 @@ namespace PacManBot.Services
 
         public void StoreGame(IStoreableGame game)
         {
-            File.WriteAllText(game.GameFile, JsonConvert.SerializeObject(game), Encoding.UTF8);
+            File.WriteAllText(GameFile(game), JsonConvert.SerializeObject(game), Encoding.UTF8);
         }
 
 
@@ -277,28 +274,28 @@ namespace PacManBot.Services
 
         private void LoadGames()
         {
-            if (!Directory.Exists(GameUtils.GameFolder))
+            if (!Directory.Exists(BotFile.GameFolder))
             {
-                Directory.CreateDirectory(GameUtils.GameFolder);
-                logger.Log(LogSeverity.Warning, LogSource.Storage, $"Created missing directory \"{GameUtils.GameFolder}\"");
+                Directory.CreateDirectory(BotFile.GameFolder);
+                logger.Log(LogSeverity.Warning, LogSource.Storage, $"Created missing directory \"{BotFile.GameFolder}\"");
                 return;
             }
 
             uint fail = 0;
             bool firstFail = true;
 
-            foreach (string file in Directory.GetFiles(GameUtils.GameFolder))
+            foreach (string file in Directory.GetFiles(BotFile.GameFolder))
             {
-                if (file.EndsWith(GameUtils.GameExtension))
+                if (file.EndsWith(BotFile.GameExtension))
                 {
                     try
                     {
                         IStoreableGame game = null;
-                        foreach (string key in StoreableTypes.Keys)
+                        foreach (var type in StoreableGamesTypes)
                         {
-                            if (file.Contains(key))
+                            if (file.Contains(type.Key))
                             {
-                                game = (IStoreableGame)JsonConvert.DeserializeObject(File.ReadAllText(file), StoreableTypes[key], gameJsonSettings);
+                                game = (IStoreableGame)JsonConvert.DeserializeObject(File.ReadAllText(file), type.Value, gameJsonSettings);
                                 if (game is ChannelGame cGame) games.Add(cGame);
                                 else if (game is ISingleplayerGame sGame) userGames.Add(sGame);
                                 break;
@@ -318,6 +315,23 @@ namespace PacManBot.Services
             }
 
             logger.Log(LogSeverity.Info, LogSource.Storage, $"Loaded {games.Count} games from previous session{$" with {fail} errors".If(fail > 0)}.");
+        }
+
+
+        public static string GameFile(IStoreableGame game)
+        {
+            ulong id = game is ChannelGame cGame ? cGame.ChannelId : game.UserId[0];
+            return $"{BotFile.GameFolder}{game.FilenameKey}{id}{BotFile.GameExtension}";
+        }
+
+
+        private static Dictionary<string, Type> GetStoreableGameTypes()
+        {
+            return Assembly.GetAssembly(typeof(IStoreableGame)).GetTypes()
+                .Where(t => t.IsClass && !t.IsAbstract && t.GetInterfaces().Contains(typeof(IStoreableGame)))
+                .Select(x => KeyValuePair.Create(((IStoreableGame)Activator.CreateInstance(x, true)).FilenameKey, x))
+                .OrderByDescending(x => x.Key.Length)
+                .ToDictionary(x => x.Key, x => x.Value);
         }
     }
 }

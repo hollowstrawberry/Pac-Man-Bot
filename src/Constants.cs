@@ -11,7 +11,9 @@ namespace PacManBot.Constants
             Contents = "contents.bot",
             WakaExclude = "wakaexclude.bot",
             FeedbackLog = "logs/feedback.txt",
-            CustomMapLog = "logs/custom.txt";
+            CustomMapLog = "logs/custom.txt",
+            GameFolder = "games/",
+            GameExtension = ".json";
     }
 
 

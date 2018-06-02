@@ -69,7 +69,7 @@ namespace PacManBot.Games
 
         public override string Name => "Pac-Man";
         public override TimeSpan Expiry => _expiry;
-        public string GameFile => $"{GameFolder}{ChannelId}{GameExtension}";
+        public string FilenameKey => "";
 
         [DataMember] public override State State { get; set; }
         [DataMember] public override DateTime LastPlayed { get; set; }

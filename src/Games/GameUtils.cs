@@ -8,9 +8,6 @@ namespace PacManBot.Games
 {
     public static class GameUtils
     {
-        public const string GameFolder = "games/";
-        public const string GameExtension = ".json";
-
         public static readonly Player MaxPlayer = Enum.GetValues(typeof(Player)).Cast<Player>().Max();
         public static readonly Color[] PlayerColor = new Color[]
         {
@@ -87,8 +84,7 @@ namespace PacManBot.Games
 
         public enum Player
         {
-            One, Two, Three, Four, Five, Six, Seven, Eight, Nine, Ten,
-            Red = 0, Blue, Green, Yellow, Purple,
+            First, Second, Third, Fourth, Fifth, Sixth, Seventh, Eighth, Nineth, Tenth,
             None = -1, Tie = -2,
         }
 
@@ -134,7 +130,7 @@ namespace PacManBot.Games
         public static Color Color(this Player player)
         {
             if (player >= 0 && player <= MaxPlayer) return PlayerColor[(int)player];
-            else if (player == Player.Tie) return PlayerColor[(int)Player.Green];
+            else if (player == Player.Tie) return PlayerColor[(int)Player.Third];
             else return new Color(150, 150, 150);
         }
 
@@ -142,8 +138,8 @@ namespace PacManBot.Games
         {
             switch (player)
             {
-                case Player.Red: return (highlighted ? CustomEmoji.C4redHL : CustomEmoji.C4red).ToString();
-                case Player.Blue: return (highlighted ? CustomEmoji.C4blueHL : CustomEmoji.C4blue).ToString();
+                case Player.First: return (highlighted ? CustomEmoji.C4redHL : CustomEmoji.C4red).ToString();
+                case Player.Second: return (highlighted ? CustomEmoji.C4blueHL : CustomEmoji.C4blue).ToString();
                 case Player.None: return CustomEmoji.BlackCircle.ToString();
                 default: return CustomEmoji.Staff.ToString();
             }
@@ -153,8 +149,8 @@ namespace PacManBot.Games
         {
             switch (player)
             {
-                case Player.Red: return (highlighted ? CustomEmoji.TTTxHL : CustomEmoji.TTTx).ToString();
-                case Player.Blue: return (highlighted ? CustomEmoji.TTToHL : CustomEmoji.TTTo).ToString();
+                case Player.First: return (highlighted ? CustomEmoji.TTTxHL : CustomEmoji.TTTx).ToString();
+                case Player.Second: return (highlighted ? CustomEmoji.TTToHL : CustomEmoji.TTTo).ToString();
                 case Player.None: return null;
                 default: return CustomEmoji.Staff.ToString();
             }
@@ -162,7 +158,22 @@ namespace PacManBot.Games
 
         public static Player OtherPlayer(this Player player)
         {
-            return player == Player.Red ? Player.Blue : Player.Red;
+            return player == Player.First ? Player.Second : Player.First;
+        }
+
+
+        public static string ToStringColor(this Player player)
+        {
+            switch (player)
+            {
+                case Player.First: return "Red";
+                case Player.Second: return "Blue";
+                case Player.Third: return "Green";
+                case Player.Fourth: return "Yellow";
+                case Player.Fifth: return "Purple";
+                case Player.None: return "None";
+                default: return "Gray";
+            }
         }
 
 

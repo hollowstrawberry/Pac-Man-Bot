@@ -23,7 +23,8 @@ namespace PacManBot.Games
 
         public override string Name => "Clockagotchi";
         public override TimeSpan Expiry => TimeSpan.MaxValue;
-        public string GameFile => $"{GameFolder}/pet{OwnerId}{GameExtension}";
+        public string FilenameKey => "pet";
+
         public double TotalStats => satiation + happiness + hygiene + energy;
 
         [DataMember] private string petName = null;

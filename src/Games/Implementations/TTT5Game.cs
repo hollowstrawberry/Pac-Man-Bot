@@ -13,7 +13,7 @@ namespace PacManBot.Games
 {
     public class TTT5Game : MultiplayerGame, IMessagesGame
     {
-        private static readonly TimeSpan _expiry = TimeSpan.FromMinutes(5);
+        private static readonly TimeSpan _expiry = TimeSpan.FromHours(1);
 
         private Player[,] board;
         private List<Pos> highlighted = new List<Pos>();
@@ -24,9 +24,9 @@ namespace PacManBot.Games
 
 
 
-        public override void Construct(ulong channelId, ulong[] userId, DiscordShardedClient client, LoggingService logger, StorageService storage)
+        public override void Create(ulong channelId, ulong[] userId, DiscordShardedClient client, LoggingService logger, StorageService storage)
         {
-            base.Construct(channelId, userId, client, logger, storage);
+            base.Create(channelId, userId, client, logger, storage);
 
             board = new Player[5, 5];
             for (int x = 0; x < 5; x++)
@@ -97,7 +97,7 @@ namespace PacManBot.Games
 
             if (State == State.Active)
             {
-                description.Append($"ᅠ\nSay a column and row to place an {(Turn == Player.Red ? "X" : "O")} in that cell (Example: B4)");
+                description.Append($"ᅠ\nSay a column and row to place an {(Turn == Player.First ? "X" : "O")} in that cell (Example: B4)");
                 description.Append("\nTo win you must make **more lines of three** than your opponent,\nbut if someone makes a line of **four**, they **win instantly**!");
             }
 
@@ -128,7 +128,7 @@ namespace PacManBot.Games
                     highlighted.AddRange(lines);
                 }
 
-                return threes[0] > threes[1] ? Player.Red : threes[0] < threes[1] ? Player.Blue : Player.Tie;
+                return threes[0] > threes[1] ? Player.First : threes[0] < threes[1] ? Player.Second : Player.Tie;
             }
         }
 

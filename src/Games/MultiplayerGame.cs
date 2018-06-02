@@ -32,7 +32,7 @@ namespace PacManBot.Games
 
         protected MultiplayerGame() : base() { }
 
-        public virtual void Construct(ulong channelId, ulong[] userId, DiscordShardedClient client, LoggingService logger, StorageService storage)
+        public virtual void Create(ulong channelId, ulong[] userId, DiscordShardedClient client, LoggingService logger, StorageService storage)
         {
             this.client = client;
             this.logger = logger;
@@ -41,7 +41,7 @@ namespace PacManBot.Games
             LastPlayed = DateTime.Now;
             ChannelId = channelId;
             UserId = userId;
-            Turn = Player.Red;
+            Turn = Player.First;
             Winner = Player.None;
             Message = "";
         }
@@ -49,7 +49,7 @@ namespace PacManBot.Games
         public static TGame New<TGame>(ulong channelId, ulong[] userId, DiscordShardedClient client, LoggingService logger, StorageService storage) where TGame : MultiplayerGame
         {
             TGame game = Activator.CreateInstance<TGame>();
-            game.Construct(channelId, userId, client, logger, storage);
+            game.Create(channelId, userId, client, logger, storage);
             return game;
         }
 
@@ -59,7 +59,7 @@ namespace PacManBot.Games
 
         public override string GetContent(bool showHelp = true)
         {
-            if (State != State.Cancelled && UserId[0] != UserId[1] && UserId.Contains(client.CurrentUser.Id))
+            if (State != State.Cancelled && UserId.Count(id => id == client.CurrentUser.Id) == 1)
             {
                 if (Message == "") Message = Bot.Random.Choose(StartTexts);
                 else if (Time > 1 && Winner == Player.None && (!AllBots || Time % 2 == 0)) Message = Bot.Random.Choose(GameTexts);
@@ -74,7 +74,7 @@ namespace PacManBot.Games
 
             if (State == State.Active)
             {
-                if (UserId[0] == UserId[1])
+                if (UserId[0] == UserId[1] && !UserId.Contains(client.CurrentUser.Id))
                 {
                     return "Feeling lonely, or just testing the bot?";
                 }
@@ -116,7 +116,7 @@ namespace PacManBot.Games
 
         protected string EmbedTitle()
         {
-            return (Winner == Player.None) ? $"{Turn} Player's turn" :
+            return (Winner == Player.None) ? $"{Turn.ToStringColor()} Player's turn" :
                 Winner == Player.Tie ? "It's a tie!" :
                 UserId[0] != UserId[1] ? $"{Turn} is the winner!" :
                 UserId[0] == client.CurrentUser.Id ? "I win!" : "A winner is you!"; // These two are for laughs

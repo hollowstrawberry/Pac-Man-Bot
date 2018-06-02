@@ -74,7 +74,7 @@ namespace PacManBot.Games
 
     public interface IStoreableGame : IBaseGame
     {
-        string GameFile { get; }
+        string FilenameKey { get; }
         void SetServices(DiscordShardedClient client, LoggingService logger, StorageService storage);
     }
 }

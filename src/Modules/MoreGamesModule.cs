@@ -211,17 +211,23 @@ namespace PacManBot.Modules
 
 
 
-        [Command("uno"), Parameters("[players]")]
+        [Command("uno"), Parameters("[players]"), Priority(0)]
         [Remarks("Play Uno with your friends or some bots")]
-        [Summary("Starts a new Uno game in this channel. People will be able to join and leave at any time.\n"
-               + "You can specify any number of bots as opponents. However, real people must join by themselves.\n\n"
-               + "You can use **{prefix}uno join** to join the game or invite someone else or a bot. You can use **{prefix}uno leave** to leave or kick a bot or inactive user.\n\n"
-               + "__**The rules are as follows:**__"
+        [ExampleUsage("uno\nuno @Pac-Man#3944")]
+        [Summary("__**Commands:**__\n"
+               + "\n • **{prefix}uno** - Starts a new Uno game. People can join and leave at any time. You can specify any amount of bots as opponents."
+               + "\n • **{prefix}uno join** - Join the game or invite a user or bot."
+               + "\n • **{prefix}uno leave** - Leave the game or kick a bot or inactive user."
+               + "\n • **{prefix}bump** - Move the game to the bottom of the chat."
+               + "\n • **{prefix}cancel** - End the game in the current channel."
+               + "\n\n__**Rules:**__\n"
                + "\n • Each player is given 7 cards."
                + "\n • The current turn's player must choose a card that matches either the color, number or type of the last card."
-               + "\n • Skip cards make the next player skip their turn. Reverse cards change the turn direction. Draw cards force the next player to draw cards. Wild cards match any card."
                + "\n • If the player doesn't have any matching card, they will draw more cards until they have one."
-               + "\n • The first player to get to 0 cards wins the game.")]
+               + "\n • The first player to get to 0 cards wins the game."
+               + "\n • **Special cards:** Skip cards make the next player skip their turn. Reverse cards change the turn direction, or work like Skip cards with only two players. "
+               + "Draw cards force the next player to draw cards and skip their turn. Wild cards let you choose the color, and match with any card."
+               + "\nᅠ")]
         [RequireContext(ContextType.Guild)]
         [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
         public async Task StartUno(params SocketGuildUser[] players)
@@ -231,7 +237,17 @@ namespace PacManBot.Modules
         }
 
 
-        [Command("uno join"), Alias("uno add", "uno invite"), HideHelp]
+        [Command("uno help"), Alias("uno h"), Priority(1), HideHelp]
+        [Summary("Gives rules and commands for the Uno game.")]
+        [RequireContext(ContextType.Guild)]
+        public async Task UnoHelp()
+        {
+            var summary = typeof(MoreGamesModule).GetMethod(nameof(StartUno)).GetCustomAttributes(typeof(SummaryAttribute), false).FirstOrDefault() as SummaryAttribute;
+            await ReplyAsync(summary?.Text.Replace("{prefix}", storage.GetPrefixOrEmpty(Context.Guild)) ?? "Couldn't get help", options: Utils.DefaultOptions);
+        }
+
+
+        [Command("uno join"), Alias("uno add", "uno invite"), Priority(1), HideHelp]
         [Summary("Joins an ongoing Uno game in this channel. Fails if the game is full or if there aren't enough cards to draw for you.\n"
                + "You can also invite a bot or another user to play.")]
         [RequireContext(ContextType.Guild)]
@@ -258,7 +274,7 @@ namespace PacManBot.Modules
             }
             if (!self && !user.IsBot)
             {
-                await ReplyAsync($"{user.Mention} You were invited to play {game.Name}. Do **{storage.GetPrefix(Context.Guild)}uno join** to join", options: Utils.DefaultOptions);
+                await ReplyAsync($"{user.Mention} You're being invited to play {game.Name}. Do **{storage.GetPrefix(Context.Guild)}uno join** to join.", options: Utils.DefaultOptions);
                 return;
             }
 
@@ -321,7 +337,7 @@ namespace PacManBot.Modules
         [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
         public async Task StartTicTacToe(SocketGuildUser opponent = null)
         {
-            await RunMultiplayerGame<TTTGame>(Context.User, opponent ?? (IUser)Context.Client.CurrentUser);
+            await RunMultiplayerGame<TTTGame>(opponent ?? (IUser)Context.Client.CurrentUser, Context.User);
         }
 
         [Command("tictactoe vs"), Alias("ttt vs", "tic vs"), HideHelp]
@@ -329,7 +345,7 @@ namespace PacManBot.Modules
         [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
         public async Task StartTicTacToeVs(SocketGuildUser opponent)
         {
-            await RunMultiplayerGame<TTTGame>(Context.Client.CurrentUser, opponent);
+            await RunMultiplayerGame<TTTGame>(opponent, Context.Client.CurrentUser);
         }
 
 
@@ -342,7 +358,7 @@ namespace PacManBot.Modules
         [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
         public async Task StartTicTacToe5(SocketGuildUser opponent = null)
         {
-            await RunMultiplayerGame<TTT5Game>(Context.User, opponent ?? (IUser)Context.Client.CurrentUser);
+            await RunMultiplayerGame<TTT5Game>(opponent ?? (IUser)Context.Client.CurrentUser, Context.User);
         }
 
         [Command("5ttt vs"), Alias("ttt5 vs", "5tictactoe vs", "5tic vs"), HideHelp]
@@ -350,7 +366,7 @@ namespace PacManBot.Modules
         [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
         public async Task Start5TicTacToeVs(SocketGuildUser opponent)
         {
-            await RunMultiplayerGame<TTT5Game>(Context.Client.CurrentUser, opponent);
+            await RunMultiplayerGame<TTT5Game>(opponent, Context.Client.CurrentUser);
         }
 
 
@@ -362,7 +378,7 @@ namespace PacManBot.Modules
         [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
         public async Task StartConnectFour(SocketGuildUser opponent = null)
         {
-            await RunMultiplayerGame<C4Game>(Context.User, opponent ?? (IUser)Context.Client.CurrentUser);
+            await RunMultiplayerGame<C4Game>(opponent ?? (IUser)Context.Client.CurrentUser, Context.User);
         }
 
         [Command("connect4 vs"), Alias("c4 vs", "four vs"), HideHelp]
@@ -370,7 +386,7 @@ namespace PacManBot.Modules
         [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
         public async Task StartConnectFoureVs(SocketGuildUser opponent)
         {
-            await RunMultiplayerGame<C4Game>(Context.Client.CurrentUser, opponent);
+            await RunMultiplayerGame<C4Game>(opponent, Context.Client.CurrentUser);
         }
 
 
@@ -424,7 +440,7 @@ namespace PacManBot.Modules
 
                     await Task.Delay(Bot.Random.Next(1000, 2001));
                 }
-                else await Task.Delay(1000);
+                else await Task.Delay(5000);
 
                 if ((DateTime.Now - game.LastPlayed) > game.Expiry)
                 {
