@@ -13,6 +13,7 @@ obj/
 bin/**/logs/
 bin/**/games/
 bin/Debug/
+bin/Release/
 _Emotes/
 
 # Files
