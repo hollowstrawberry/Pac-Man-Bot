@@ -193,7 +193,7 @@ namespace PacManBot.Modules
                     if ((now - pet.lastPet) <= TimeSpan.FromSeconds(1.5)) return;
                     pet.lastPet = now;
 
-                    await ReplyAsync(pet.Pet(args), options: Utils.DefaultOptions);
+                    await ReplyAsync(pet.Pet(), options: Utils.DefaultOptions);
                     return;
 
 

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Text.RegularExpressions;
 using Discord;
 using Discord.WebSocket;
 using PacManBot.Constants;
@@ -19,6 +20,7 @@ namespace PacManBot.Games
         public static readonly string[] SleepEmotes = new string[] { "💤", "🛏", "🌃", "🌠", "⭐", "🌙", "🌜" };
         public static readonly string[] BannerUrl = new string[] { null, "https://cdn.discordapp.com/attachments/412314001414815751/448939830433415189/copperbanner.png", "https://cdn.discordapp.com/attachments/412314001414815751/448939834354958370/silverbanner.png", "https://cdn.discordapp.com/attachments/412314001414815751/448939832102617090/goldbanner.png" };
 
+        public const string PetAmountPattern = @"{-?[0-9]+}";
         public const int MaxStat = 20;
 
         public override string Name => "Clockagotchi";
@@ -80,7 +82,7 @@ namespace PacManBot.Games
             [DataMember] public uint timesFed = 0;
             [DataMember] public uint timesPlayed = 0;
             [DataMember] public uint timesCleaned = 0;
-            [DataMember] public uint timesPet = 0;
+            [DataMember] public int timesPet = 0;
             [DataMember] public DateTime lastNeglected = default;
 
             [DataMember] public uint Attention = 0;
@@ -319,11 +321,19 @@ namespace PacManBot.Games
         }
 
 
-        public string Pet(string seed = null)
+        public string Pet()
         {
-            achievements.timesPet++;
-            Random random = seed == null ? Bot.Random : new Random(seed.GetHashCode());
-            return random.Choose(storage.PettingMessages);
+            string pet = Bot.Random.Choose(storage.PettingMessages);
+
+            var match = Regex.Match(pet, PetAmountPattern);
+            if (match.Success)
+            {
+                achievements.timesPet += int.Parse(match.Value.Trim('{', '}'));
+                pet = pet.Replace(match.Value, "");
+            }
+            else achievements.timesPet += 1;
+
+            return pet;
         }
 
 
