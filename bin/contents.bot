@@ -43,7 +43,7 @@ Now with more games to challenge your friends or the bot itself! Use **{prefix}h
 
 "aboutfields":
 "Author|Samrux#3980
-Version|v3.4.3
+Version|v3.4.4
 Library|Discord.Net 2.0 (C#)
 <:discord:409811304103149569> Bot invite|[Click here](https://discordapp.com/oauth2/authorize?client_id=398127484983443468&scope=bot&permissions=355392 \"https://discordapp.com/oauth2/authorize?client_id=398127484983443468&scope=bot&permissions=355392\")
 <:staff:412019879772815361> Pac-Man server|[Click here](https://discord.gg/hGHnfda \"https://discord.gg/hGHnfda\")
@@ -106,11 +106,12 @@ VOICE_STATE_UPDATE",
 You pet your pet.
 You pet your pet. It is a good pet.
 You pet your pet. It looks happy.
+You pet your pet. It is now 7% petter.{2}
 You pet your pet. It is now 10% petter.{2}
 You pet your pet. It is now 12% petter.{2}
 You pet your pet. Who's a good boy?
 You pet your pet. Your friends' pets are jealous.
-You pet your pet. Your pet pets you back, just in case. (+2) {2}
+You pet your pet. Your pet pets you back, just in case. (+2){2}
 You pet your pet. It gets so excited it falls over!
 You pet your pet. You tell it you're proud.
 You pet your pet. Your pet stares at you blankly.
@@ -118,54 +119,54 @@ You pet your pet. Your pet takes out a sign that says \"9.6\"
 You pet your pet. Neat.
 You pet your pet. Your hand feels a little tired.
 You pet your pet. You feel like you're not petting nearly enough.
-You pet your pet. You feel like you've pet enough.
-You pet your pet. Your hand is sore from petting.
+You pet your pet. You feel like you've pet enough for now.
 You pet your pet, and it asks for more. You pet again, but it keeps asking. (+10){10}
-You pet yourself. Your pet pets itself. (+2) {2}
-You pet your pet. Suddenly, the sky opens up, and a milliard pet-angels descend upon you and your pet. They crown you king of pets. (+20){20}
+You pet yourself. Your pet pets itself. (+2){2}
+You pet your pet. Suddenly, the sky opens up, and a milliard pet-angels descend upon you and your pet. They crown you king of pets. (+20){20}{king}
 You pet your pet. Your pet wonders what type of pet it is.
 You pet your pet. It's been a long day.
 You pet your pet. It loves it!
-Y̶̴o̴u̷̡ ̛͞pet̶̛͟ ͟yo҉u̶͟r ̛͘p̧͞e̴t.͟͠͡{3}
+Y̶̴o̴u̷̡ ̛͞pet̶̛͟ ͟yo҉u̶͟r ̛͘p̧͞e̴t͡{3}
 You pat your pet instead. It looks dissapointed. (-1){-1}
 This is your chance to pet!
 The petting intensifies.
-Your pet intercepts your pet! {0}
-Block!
-Dodge!
+Your pet intercepts your pet!{0}
+Block!{0}
+Dodge!{0}
 Critical pet!{2}
 Critical pet!{3}
-Petting failure!
+Petting failure! (-2){-2}
 Petting combo x2{2}
 Petting combo x3{3}
-Combo breaker! (+10){10}
-Error: Not enough pets
-You try to pet your pet, but you miss. {0}
+Combo breaker! (+6){6}
+Error: Not enough pets{0}
+You try to pet your pet, but you miss.{0}
 You try to pet your pet, but it pets you instead.
-You try to pet your pet, but another person's pet pushes it aside so that you pet it instead. You pet them both. {2}
+You try to pet your pet, but another person's pet pushes it aside so that you pet it instead. You pet them both. (+2){2}
 You try to pet your pet, but another person's pet pushes it aside and you end up petting theirs instead.
 You try to pet your pet, but it melts in excitement before you even get to do it. You now have a pet puddle. Awesome.
 You examine your pet. Yup, it's pet-ready.
-Petting check successful!
-You roll a natural 1. You trip and accidentally pet yourself.
-You roll a natural 20. Your pet glows empowered by the magic of the ancient pet-gods. (+4){4}
+Petting check successful.
+You roll a natural 1. You trip and accidentally pet yourself. (-1){-1}
+You roll a natural 20. Your pet glows empowered by the magic of the ancient pet-gods. (+10){10}
 Roll for initiative.
-Petting Skill -1{-1}
-Petting Skill +5{2}
-Petting Skill +10{4}
+Petting Skill downgrade (-1){-1}
+Petting Skill bonus (+3){3}
+Petting Skill combo! (+5){5}
 Your petting count increases by 1.
 Your petting count increases by 1. You feel amused.
-Your petting count increases by 1. Your petting skill is simply unmatched.
-Your petting count increases by 2.{2}
+Your petting count increases by 3. Your petting skill is simply unmatched.{3}
+Your petting count increases by 2. The pet was that good.{2}
 You feel entertained by all these pets.
 pet
 pet.
 Pet.
 PET
-Pat?{-1}
+Pat? (-1){-1}
+Pot. (-2){-2}
 🎺
-Pet pet pet
-pet pet pet pet pet pet pet pet pet pet pet pet pet pet pet
+Pet pet pet{3}
+pet pet pet pet pet pet pet{7}
 more.
 Nice pet!
 Good pet!
@@ -174,24 +175,25 @@ Double pet!{2}
 Triple pet!{3}
 Quadruple pet!{4}
 Super rare quintuple pet!{5}
-You feel like that last pet was pretty good.
-Yessss, perfect pet.{3}
+You feel like that last pet was pretty good. (+2){2}
+Yessss, perfect pet. (+3){3}
 You take your chance and attempt a high-risk quadruple flying spin pet. You fail, but your pet looks impressed anyway.{0}
 You take your chance and attempt a high-risk quadruple flying spin pet. You did it! Your pet claps. (+16){16}
-Your pet congratulates you for such a fantastic pet.
+Your pet congratulates you for such a fantastic pet. (+3){3}
 That pet wasn't very good, but your pet acts happy so as to not let you down.
-Maybe petting isn't your thing.
+Maybe petting isn't your thing. (-3){-3}
+PETA is trying to sue you for all of your petting. (-5){-5}
 How many pets could a pet pet if a pet could pet pets?
 Of so many pets, you choose this one to pet.
 Your pet needs more petting.
-Your pet honestly feels little tired of petting, but it tries to hide it.
+Your pet honestly feels a little tired of petting, but it tries to hide it.
 Your pet approves.
 Your pet is not impressed.
 Your pet loves it.
 Your pet is kind of new to this whole petting business.
 We are entering a new age of petting.
 To pet or not to pet? That is the question.
-Oh boy your pet looks **so** petted right now!
+Your pet is like, so petted.
 Yes, good hooman
 Good pet, best friend.
 Need more pets!
@@ -199,9 +201,9 @@ Want moar pets!
 Whoa, pets
 wow, so pet, much petting{2}
 It's funny because *pet* is both a noun and a verb{2}
-So long, and thanks for all the pets (+4){4}
+So long, and thanks for all the pets{4}
 Is that a pet or are you just happy to see me?
-Petting isn't so hard after all.
+Petting isn't so hard after all. (+2){2}
 -*Excited petting noises*-
 How can petting be real if our pets aren't real?
 Is there a limit to your pets?
@@ -212,7 +214,63 @@ You ran out of pets! Wait, you found some more.
 Your pet peeks out of your screen and you reach out to pet it.
 Repeating the word \"pet\" so much gets kind of tiresome, but it's still funny.
 You wonder how long it took this bot's developer to write a hundred different petting messages. The developer wonders if you wonder if he wonders if you wonder.
-Perhaps mankind was not meant to pet this much.
-Your pet is unpettable at the moment, but appreciates the attempt.{0}"
+Your pet is unpettable at the moment, but appreciates the attempt.{0}
+Unknown pet command. Syke! +1 pets",
+
+"superpetting":
+"You perform a super pet. (+10){10}
+You perform a super pet. Your pet is ecstatic. (+10){10}
+You perform a super pet. Your pet's eyes glow with raw petting power. (+10){10}
+You perform a super pet. Life without pets starts to lose meaning. (+10){10}
+You perform a super pet. There is no doubt in your mind or your hand. (+10){10}
+You perform a super pet. The entire server's pets look away, jealous. (+10){10}
+You perform a super pet. The locals spread word of your pets across the land. (+10){10}
+You perform a super pet. That one was pretty good. (+12){12}
+You perform a super pet. Your pet super-pets you back. (+20){20}
+You super-pet yourself. Your pet super-pets itself. (+20){20}
+Perhaps mankind was not meant to pet this much. (+10){10}
+You *reaaaaaally* pet your pet. (+10)
+Vigintuple pet!{20}
+pet pet pet pet pet pet pet pet pet pet pet pet pet pet pet pet pet pet pet pet pet pet pet pet pet pet pet pet pet pet{30}
+You perform a quintuple flaming razor pet. Your pet stares in awe. (+50){50}
+You roll a natural 120. The earth crumbles around you as ancient pet-denizens emerge from the depths, and assist you in your petting. (+100){100}
+You attempt a super pet, but your pet super-dodges.{0}
+You attempt a super pet, but your hand misses and breaks the floor. Oops! (-10){-10}
+Superb pet (+15){15}
+Extraordinary pet (+20){20}
+Stellar pet (+30){30}
+Glorious pet (+40){40}
+Insane pet (+50){50}
+Sublime pet (+60){60}
+Majestic pet (+70){70}
+Rapturous pet (+80){80}
+Divine pet (+90){90}
+Heavenly pet (+100){100}
+Legendary pet! (+150){150}
+Your petting count overflows and goes into the negatives. You instruct your royal programmers to fix the bug, and your pets go back to normal. (+20){20}
+You spin 360° and proceed to pet your pet. No-scope. (+30){30}
+Your petting expertise inspires young generations of pet owners. (+40){40}
+Samrux, this bot's owner, is worried about your health. (+50){50}
+Tales of your legendary pettings travel across the world. Millions gather to gaze upon your next pet. (+60){60}
+The earth trembles as you approach your pet. Your hand roars like thunder. Your pet is gratified. (+70){70}
+You defeat a horde of pet-demons. Then, you have breakfast and watch a movie. Oh, and you pet your pet. (+80){80}
+Kingdoms rise and fall, the sun sets and rises ten thousand times. Your pet remains above all. (+90){90}
+As the king of pets, you order your royal scientists to further study petting. They develop a new type of pet. Nice! (+20){20}
+As the king of pets, you order your royal scientists to further study petting. They discover more benefits pets face when being petted. Neat! (+20){20}
+As the king of pets, you ask your steward to bring you a martini. It's a damn good martini. You pet your pet. (+40){40}
+As the king of pets, you instruct the nearby town's pets to come over for a special event. You pet every single one, and then your own. (+61){60}
+As the king of pets, you command a statue to be erected in your pet's honour. (+80){80}
+As the king of pets, you instruct your petting minions to pet your pet. Their numbers and loving force are no match. (+100){100}
+As the king of pets, you command roads to be built all over the pet-country in order to provide safe and easy access to petting centers. Your pet-citizens parade in your name. (+120){120}
+Your pet-angels circle around you and your pet, singing a chanting chorus. A holy light illuminates your throne. You pet your pet. (+150){150}
+The pet-devil himself challenges you to a petting competition. After weeks of intense battle, your mastery of petting overpowers him. You win. Nobody beats you at a pet-off. (+200){200}
+Your pet rolls over and you pet its belly. Yesss. (+1){1}
+oof (-1){-1}
+Your hand is sore from petting. (-5){-5}
+You throw a ball at your pet. Your pet looks confused. (-5){-5}
+Your pet refuses to be pet. You ask it what's wrong, but it doesn't tell. (-10){-10}
+As a result of your reckless petting, your petting vaults go completely empty. You fill them back up, with enough time. (-30){-30}
+The pet-devil himself challenges you to a petting competition. After days of battle, you fall prey to one of his evil tricks. You lose by a hair. (-60){-60}
+PETA sues you over your careless petting. The legal battle lasts six months and costs you five million dollars. You win in the end, but your reputation hits a sharp decline. (-100){-100}"
 
 }

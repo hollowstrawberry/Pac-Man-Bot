@@ -34,6 +34,7 @@ namespace PacManBot.Services
         public IReadOnlyList<ISingleplayerGame> UserGames { get; private set; }
         public IConfigurationRoot BotContent { get; private set; }
         public string[] PettingMessages { get; private set; }
+        public string[] SuperPettingMessages { get; private set; }
 
 
         public StorageService(DiscordShardedClient client, LoggingService logger, BotConfig config)
@@ -210,6 +211,7 @@ namespace PacManBot.Services
         {
             BotContent = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile(BotFile.Contents).Build();
             PettingMessages = BotContent["petting"].Split('\n', StringSplitOptions.RemoveEmptyEntries);
+            SuperPettingMessages = BotContent["superpetting"].Split('\n', StringSplitOptions.RemoveEmptyEntries);
             logger.LoadLogExclude(this);
         }
 

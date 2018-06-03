@@ -95,6 +95,16 @@ namespace PacManBot
             return values[random.Next(values.Count)];
         }
 
+        public static double NextDouble(this Random random, double min, double max)
+        {
+            return random.NextDouble() * (max - min) + min;
+        }
+
+        public static bool OneIn(this Random random, int amount)
+        {
+            return random.Next(amount) == 0;
+        }
+
         public static void Shuffle<T>(this Random random, IList<T> list)
         {
             int n = list.Count;
@@ -106,11 +116,6 @@ namespace PacManBot
                 list[k] = list[n];
                 list[n] = value;
             }
-        }
-
-        public static double NextDouble(this Random random, double min, double max)
-        {
-            return random.NextDouble() * (max - min) + min;
         }
 
 
