@@ -328,17 +328,27 @@ namespace PacManBot.Games
         public string Pet()
         {
             string pet;
+            int amount;
 
-            if (achievements.SuperPetting && Bot.Random.OneIn(5)) pet = $"⭐ {Bot.Random.Choose(storage.SuperPettingMessages)}";
-            else pet = Bot.Random.Choose(storage.PettingMessages);
-
-            var match = Regex.Match(pet, PetAmountPattern);
-            if (match.Success)
+            do
             {
-                achievements.timesPet += int.Parse(match.Value.Trim('{', '}'));
-                pet = pet.Replace(match.Value, "");
-            }
-            else achievements.timesPet += 1;
+                if (achievements.SuperPetting && Bot.Random.OneIn(5)) pet = $"⭐ {Bot.Random.Choose(storage.SuperPettingMessages)}";
+                else pet = Bot.Random.Choose(storage.PettingMessages);
+
+                var match = Regex.Match(pet, PetAmountPattern);
+                if (match.Success)
+                {
+                    amount = int.Parse(match.Value.Trim('{', '}'));
+                    pet = pet.Replace(match.Value, "");
+                }
+                else amount = 1;
+
+            } while (achievements.timesPet - amount < 0 || achievements.SuperPetting && achievements.timesPet - amount < 1000);
+
+            achievements.timesPet += amount;
+
+            if (pet.Contains("{hide}")) pet = pet.Replace("{hide}", "");
+            else if (amount != 0) pet = pet.Trim(' ', '\n', '\r') + $" ({amount.ToString("+0;-#")} pets)";
 
             if (pet.Contains("{king}"))
             {

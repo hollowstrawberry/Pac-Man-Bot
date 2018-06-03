@@ -151,7 +151,7 @@ namespace PacManBot.Services
         private async Task<bool> MessageGameInputAsync(SocketUserMessage message)
         {
             var game = storage.GetGame<IMessagesGame>(message.Channel.Id);
-            if (game == null || !game.IsInput(message.Content) || game is MultiplayerGame mGame && mGame.UserId[(int)mGame.Turn] != message.Author.Id) return false;
+            if (game == null || !game.IsInput(message.Content, message.Author.Id)) return false;
 
             try
             {
@@ -170,7 +170,7 @@ namespace PacManBot.Services
         private async Task<bool> ReactionGameInputAsync(Cacheable<IUserMessage, ulong> messageData, ISocketMessageChannel channel, SocketReaction reaction)
         {
             var game = storage.GetGame<IReactionsGame>(channel.Id);
-            if (game == null || game.MessageId != reaction.MessageId || !game.IsInput(reaction.Emote)) return false;
+            if (game == null || game.MessageId != reaction.MessageId || !game.IsInput(reaction.Emote, reaction.UserId)) return false;
 
             try
             {

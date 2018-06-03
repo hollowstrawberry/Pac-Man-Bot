@@ -357,7 +357,7 @@ namespace PacManBot.Games
 
 
 
-        public bool IsInput(IEmote emote)
+        public bool IsInput(IEmote emote, ulong userId = 1)
         {
             return GameInputs.ContainsKey(emote);
         }

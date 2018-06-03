@@ -185,8 +185,16 @@ namespace PacManBot.Modules
             bool success = true;
             foreach (string move in moves)
             {
-                if (game.IsInput(move) && game.State == State.Active) game.DoTurn(move);
-                else success = false;
+                try
+                {
+                    if (game.State == State.Active) game.DoTurn(move);
+                    else break;
+                }
+                catch (Exception e)
+                {
+                    await logger.Log(LogSeverity.Debug, e.Message);
+                    success = false;
+                }
             }
 
             var msg = await game.GetMessage();

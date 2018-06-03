@@ -38,9 +38,9 @@ namespace PacManBot.Games
 
 
 
-        public bool IsInput(string value)
+        public bool IsInput(string value, ulong userId)
         {
-            return int.TryParse(StripPrefix(value), out int num) && num > 0 && num <= board.Length;
+            return userId == User(Turn).Id && int.TryParse(StripPrefix(value), out int num) && num > 0 && num <= board.Length;
         }
 
 

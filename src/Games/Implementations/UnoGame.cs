@@ -209,9 +209,9 @@ namespace PacManBot.Games
 
 
 
-        public bool IsInput(string value)
+        public bool IsInput(string value, ulong userId)
         {
-            return players.Count >= 2 && Card.FromString(StripPrefix(value)).HasValue;
+            return userId == User(Turn).Id && players.Count >= 2 && Card.FromString(StripPrefix(value)).HasValue;
         }
 
 

@@ -40,9 +40,9 @@ namespace PacManBot.Games
 
 
 
-        public bool IsInput(string value)
+        public bool IsInput(string value, ulong userId)
         {
-            return Regex.IsMatch(StripPrefix(value).ToUpper(), @"^[ABCDE][12345]$");
+            return userId == User(Turn).Id && Regex.IsMatch(StripPrefix(value).ToUpper(), @"^[ABCDE][12345]$");
         }
 
 

@@ -42,13 +42,13 @@ namespace PacManBot.Games
 
     public interface IMessagesGame : IChannelGame
     {
-        bool IsInput(string value);
+        bool IsInput(string value, ulong userId);
         void DoTurn(string input);
     }
 
     public interface IReactionsGame : IChannelGame
     {
-        bool IsInput(IEmote value);
+        bool IsInput(IEmote value, ulong userId);
         void DoTurn(IEmote input);
     }
 
