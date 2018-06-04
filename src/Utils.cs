@@ -83,43 +83,6 @@ namespace PacManBot
 
 
 
-        // Random
-
-        public static T Choose<T>(this Random random, T[] values)
-        {
-            return values[random.Next(values.Length)];
-        }
-
-        public static T Choose<T>(this Random random, IList<T> values)
-        {
-            return values[random.Next(values.Count)];
-        }
-
-        public static double NextDouble(this Random random, double min, double max)
-        {
-            return random.NextDouble() * (max - min) + min;
-        }
-
-        public static bool OneIn(this Random random, int amount)
-        {
-            return random.Next(amount) == 0;
-        }
-
-        public static void Shuffle<T>(this Random random, IList<T> list)
-        {
-            int n = list.Count;
-            while (n > 1)
-            {
-                n--;
-                int k = random.Next(n + 1);
-                T value = list[k];
-                list[k] = list[n];
-                list[n] = value;
-            }
-        }
-
-
-
         // Misc
 
         public static T Get<T>(this IServiceProvider provider) // I thought the long name was ugly

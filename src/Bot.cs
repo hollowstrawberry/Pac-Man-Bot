@@ -27,7 +27,7 @@ namespace PacManBot
     public class Bot
     {
         public static RestApplication AppInfo { get; private set; }
-        public static readonly Random Random = new Random();
+        public static readonly CustomRandom Random = new CustomRandom();
 
         private BotConfig botConfig;
         private DiscordShardedClient client;
