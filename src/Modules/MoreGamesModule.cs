@@ -64,6 +64,8 @@ namespace PacManBot.Modules
                 }
             }
 
+            action = action.ToLower();
+
             switch (action)
             {
                 case "":
@@ -187,11 +189,7 @@ namespace PacManBot.Modules
 
 
                 case "pet":
-                    var now = DateTime.Now;
-                    if ((now - pet.lastPet) <= TimeSpan.FromSeconds(1.5)) return;
-                    pet.lastPet = now;
-
-                    await ReplyAsync(pet.Pet(), options: Utils.DefaultOptions);
+                    await ReplyAsync("You're petting too much! Please calm down for a while.");
                     return;
 
 
@@ -206,7 +204,8 @@ namespace PacManBot.Modules
                     foreach (var p in pets.Take(10))
                     {
                         ranking.Append($"\n**{pos}.** {p.TimesPet} pettings - ");
-                        ranking.Append($"`{shardedClient.GetUser(p.OwnerId)?.Username.Replace("`", "´") ?? "Unknown"}'s {p.PetName.Replace("`", "´")}` ");
+                        if (args == "id") ranking.Append($"{pet.OwnerId} ");
+                        else ranking.Append($"`{shardedClient.GetUser(p.OwnerId)?.Username.Replace("`", "´") ?? "Unknown"}'s {p.PetName.Replace("`", "´")}` ");
                         ranking.Append(string.Join(' ', p.achievements.GetIcons(showHidden: true, highest: true)));
                         pos++;
                     }
@@ -219,6 +218,28 @@ namespace PacManBot.Modules
                     await ReplyAsync($"Unknown pet command! Do **{storage.GetPrefixOrEmpty(Context.Guild)}pet help** for help", options: Utils.DefaultOptions);
                     return;
             }
+        }
+
+
+        [Command("pet pet"), Alias("clockagotchi pet"), Priority(1), HideHelp]
+        [Summary("Pets your pet.")]
+        [BetterRequireBotPermission(ChannelPermission.EmbedLinks | ChannelPermission.AddReactions)]
+        [Ratelimit(40, 1, Measure.Minutes), Ratelimit(1000, 1, Measure.Hours)]
+        public async Task ClockagotchiPet()
+        {
+            var pet = storage.GetUserGame<PetGame>(Context.User.Id);
+            if (pet == null)
+            {
+                await ReplyAsync($"You don't have a pet yet! Simply do **{storage.GetPrefixOrEmpty(Context.Guild)}pet** to adopt one.", options: Utils.DefaultOptions);
+                return;
+            }
+
+            var now = DateTime.Now;
+            if ((now - pet.lastPet) <= TimeSpan.FromSeconds(1)) return;
+            pet.lastPet = now;
+
+            await ReplyAsync(pet.Pet(), options: Utils.DefaultOptions);
+            return;
         }
 
 

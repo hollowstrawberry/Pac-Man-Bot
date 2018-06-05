@@ -262,6 +262,7 @@ namespace PacManBot.Services
             if (error.Contains("too few parameters")) return $"Missing command parameters! {help}";
             if (error.Contains("too many parameters")) return $"Too many parameters! {help}";
             if (error.Contains("must be used in a guild")) return $"You need to be in a guild to use this command!";
+            if (error.Contains("Timeout")) return $"You're using that command too much. Please try again later.";
 
             return null;
         }

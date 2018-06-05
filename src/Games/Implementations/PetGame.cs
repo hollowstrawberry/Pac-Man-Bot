@@ -117,7 +117,6 @@ namespace PacManBot.Games
             public bool PetGod { get; set; } = false;
 
 
-
             public uint TotalActions => timesFed + timesPlayed + timesCleaned;
 
 
