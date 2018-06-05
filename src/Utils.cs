@@ -80,6 +80,16 @@ namespace PacManBot
             return list;
         }
 
+        public static List<List<T>> Split<T>(this List<T> list, int size)
+        {
+            var lists = new List<List<T>>();
+            for (int i = 0; i < list.Count; i += size)
+            {
+                lists.Add(list.GetRange(i, Math.Min(size, list.Count - i)));
+            }
+            return lists;
+        }
+
         public static IEnumerable<IEnumerable<T>> Permutations<T>(this IEnumerable<T> list, int length)
         {
             if (length == 1) return list.Select(t => new T[] { t });

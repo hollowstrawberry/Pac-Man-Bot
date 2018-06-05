@@ -122,7 +122,6 @@ You pet your pet. You feel like you're not petting nearly enough.
 You pet your pet. You feel like you've pet enough for now.
 You pet your pet, and it asks for more. You pet again, but it keeps asking.{10}
 You pet yourself. Your pet pets itself.{2}
-You pet your pet. Suddenly, the sky opens up, and a milliard pet-angels descend upon you and your pet. They crown you king of pets.{20}{king}
 You pet your pet. Your pet wonders what type of pet it is.
 You pet your pet. It's been a long day.
 You pet your pet. It loves it!
@@ -141,8 +140,8 @@ Dodge!{0}
 Critical pet!{2}
 Critical pet!{3}
 Petting failure!{-2}
-Petting combo x2{2}{hide}
-Petting combo x3{3}{hide}
+Petting combo x2{2}
+Petting combo x3{3}
 Combo breaker!{6}
 Error: Not enough pets{0}
 You try to pet your pet, but you miss.{0}
@@ -153,7 +152,7 @@ You try to pet your pet, but it melts in excitement before you even get to do it
 You examine your pet. Yup, it's pet-ready.
 Petting check successful.
 You roll a natural 1. You trip and accidentally pet yourself.{-1}
-You roll a natural 20. Your pet glows empowered by the magic of the ancient pet-gods.{10}
+You roll a natural 20. Your pet glows empowered by the magic of ancient pet-denizens.{12}
 Roll for initiative.{0}
 Petting Skill downgrade{-1}
 Petting Skill bonus{3}
@@ -169,12 +168,15 @@ Pet.{hide}
 PET{hide}
 Pat?{-1}
 Pot.{-2}
+Petn't{-4}
+Patn't
 🎺{0}
 Pet pet pet{3}{hide}
 pet pet pet pet pet pet pet{7}{hide}
 more.{0}
 Nice pet!
 Great pet!
+Cool pet!{2}
 Double pet!{2}
 Triple pet!{3}
 Quadruple pet!{4}
@@ -192,7 +194,7 @@ Of so many pets, you choose this one to pet.
 Your pet needs more petting.
 Your pet honestly feels a little tired of petting, but it tries to hide it.
 Your pet approves.{2}
-Your pet is not impressed. (+0 pets){0}
+Your pet is not impressed.{0}{hide}
 Your pet loves it.
 Your pet is kind of new to this whole petting business.
 We are entering a new age of petting.{8}
@@ -203,7 +205,7 @@ Good pet, best friend.{2}
 Need more pets!
 Want moar pets!
 Whoa, pets
-wow, so pet, much petting{2}
+wow, so pet, much petting{11}
 It's funny because *pet* is both a noun and a verb{2}
 Is that a pet or are you just happy to see me?
 Petting isn't so hard after all.{2}
@@ -216,9 +218,17 @@ You loudly exclaim the word \"pet\" instead. It works, somehow.
 You ran out of pets! Wait, you found some more.
 Your pet peeks out of your screen and you reach out to pet it.
 Repeating the word \"pet\" so much gets kind of tiresome, but it's still funny.
-You wonder how long it took this bot's developer to write a hundred different petting messages. The developer wonders if you wonder if he wonders if you wonder.
+You wonder how long it took this bot's developer to write a hundred different petting messages. The developer wonders if you wonder if he wonders if you wonder.{4}
 Your pet is unpettable at the moment, but appreciates the attempt.{0}
-Unknown pet command! Syke. +1 pets{hide}",
+Unknown pet command! Syke. +1 pets{hide}
+You pet your pet. Suddenly, the sky opens up, and a milliard pet-angels descend upon you and your pet. They crown you king of pets.{getking} The ceremony and following party lasts three whole days, and there is much joy and petting in the land.{20}
+Royal pet! {10}{king}
+Royal pet! Your pet is delighted. {10}{king}
+As the king of pets, you ask your steward to bring you a drink. It's a very good drink. You pet your pet.{15}{king}
+As the king of pets, you order your royal scientists to further study petting. They develop a new type of pet. Nice!{20}{king}
+As the king of pets, you order your royal scientists to further study petting. They discover more benefits pets face when being petted. Neat!{20}{king}
+You make a large dinner for your pet, and invite nobles from all over to participate. You pet all evening.{30}{king}
+As the king of pets, you take a day off. Petting is hard sometimes.{0}{king}",
 
 "superpetting":
 "You perform a super pet.{10}
@@ -253,7 +263,6 @@ Rapturous pet{80}
 Divine pet{90}
 Heavenly pet{100}
 Legendary pet!{150}
-Your petting count overflows and goes into the negatives. You instruct your royal programmers to fix the bug, and your pets go back to normal.{20}
 You spin 360° and proceed to pet your pet. No-scope.{30}
 Your petting expertise inspires young generations of pet owners.{40}
 Samrux, this bot's owner, is worried about your health.{50}
@@ -261,14 +270,13 @@ Tales of your legendary pettings travel across the world. Millions gather to gaz
 The earth trembles as you approach your pet. Your hand roars like thunder. Your pet is gratified.{70}
 You defeat a horde of pet-demons. Then, you have breakfast and watch a movie. Oh, and you pet your pet.{80}
 Kingdoms rise and fall, the sun sets and rises ten thousand times. Your pet remains above all.{90}
-As the king of pets, you order your royal scientists to further study petting. They develop a new type of pet. Nice!{20}
-As the king of pets, you order your royal scientists to further study petting. They discover more benefits pets face when being petted. Neat!{20}
-As the king of pets, you ask your steward to bring you a martini. It's a damn good martini. You pet your pet.{40}
-As the king of pets, you instruct the nearby town's pets to come over for a special event. You pet every single one, and then your own.{60}
-As the king of pets, you command a statue to be erected in your pet's honour.{80}
-As the king of pets, you instruct your petting minions to pet your pet. Their numbers and loving force are no match.{100}
-As the king of pets, you command roads to be built all over the pet-country in order to provide safe and easy access to petting centers. Your pet-citizens parade in your name.{120}
-The pet-angels circle around you and your pet, singing a chanting chorus. A holy light illuminates your throne. You pet your pet.{150}
+Your petting count overflows and goes into the negatives. You instruct your royal programmers to fix the bug, and your pets go back to normal.{20}{king}
+You take a vacation. A good opportunity for some petting.{40}{king}
+As the king of pets, you instruct the nearby town's pets to come over for a special event. You pet every single one, and then your own. (+61 pets){60}{hide}{king}
+As the king of pets, you command a statue to be erected in your pet's honour.{80}{king}
+As the king of pets, you instruct your petting minions to pet your pet. Their numbers and loving force are no match.{100}{king}
+As the king of pets, you command roads to be built all over the pet-country in order to provide safe and easy access to petting centers. Your pet-citizens parade in your name.{120}{king}
+The pet-angels circle around you and your pet, singing a chanting chorus. A holy light illuminates your throne. You pet your pet.{150}{king}
 The pet-devil himself challenges you to a petting competition. After weeks of intense battle, your mastery of petting overpowers him. You win. Nobody beats you at a pet-off.{200}
 Your pet rolls over and you pet its belly. Yesss.{1}
 oof{-1}

@@ -134,8 +134,16 @@ namespace PacManBot.Modules
 
 
                 case "release":
-                    storage.DeleteUserGame(pet);
-                    await ReplyAsync($"Goodbye {(string.IsNullOrWhiteSpace(pet.PetName) ? pet.Name : pet.PetName)}!", options: Utils.DefaultOptions);
+                    if (args != "yes")
+                    {
+                        await ReplyAsync($"❗ Are you sure you want to delete {pet.PetName}? It will be gone forever, along with your stats and achievements, and you can't get it back. " +
+                                         $"Do **{storage.GetPrefixOrEmpty(Context.Guild)}pet release yes** to confirm.", options: Utils.DefaultOptions);
+                    }
+                    else
+                    {
+                        storage.DeleteUserGame(pet);
+                        await ReplyAsync($"Goodbye {(string.IsNullOrWhiteSpace(pet.PetName) ? pet.Name : pet.PetName)}!", options: Utils.DefaultOptions);
+                    }
                     return;
 
 
@@ -198,8 +206,8 @@ namespace PacManBot.Modules
                     foreach (var p in pets.Take(10))
                     {
                         ranking.Append($"\n**{pos}.** {p.TimesPet} pettings - ");
-                        ranking.Append($"`{shardedClient.GetUser(p.OwnerId)?.Username.Replace("`", "´") ?? "Unknown"}'s {p.PetName.Replace("`", "´")}`");
-                        ranking.Append(string.Join(' ', p.AchievementList.Reversed().Where(x => x.Obtained).Select(x => x.Icon)));
+                        ranking.Append($"`{shardedClient.GetUser(p.OwnerId)?.Username.Replace("`", "´") ?? "Unknown"}'s {p.PetName.Replace("`", "´")}` ");
+                        ranking.Append(string.Join(' ', p.achievements.GetIcons(showHidden: true, highest: true)));
                         pos++;
                     }
 
