@@ -227,6 +227,7 @@ Royal pet! Your pet is delighted. {10}{king}
 As the king of pets, you ask your steward to bring you a drink. It's a very good drink. You pet your pet.{15}{king}
 As the king of pets, you order your royal scientists to further study petting. They develop a new type of pet. Nice!{20}{king}
 As the king of pets, you order your royal scientists to further study petting. They discover more benefits pets face when being petted. Neat!{20}{king}
+As the king of pets, you instruct your petting minions to pet your pet. Their numbers and loving force are no match.{25}{king}
 You make a large dinner for your pet, and invite nobles from all over to participate. You pet all evening.{30}{king}
 As the king of pets, you take a day off. Petting is hard sometimes.{0}{king}",
 
@@ -274,7 +275,7 @@ Your petting count overflows and goes into the negatives. You instruct your roya
 You take a vacation. A good opportunity for some petting.{40}{king}
 As the king of pets, you instruct the nearby town's pets to come over for a special event. You pet every single one, and then your own. (+61 pets){60}{hide}{king}
 As the king of pets, you command a statue to be erected in your pet's honour.{80}{king}
-As the king of pets, you instruct your petting minions to pet your pet. Their numbers and loving force are no match.{100}{king}
+As the king of pets, you propose to reform the petstitution. The changes include benefits to pet owners, and an entire article solely dedicated to various petting procedures.{100}{king}
 As the king of pets, you command roads to be built all over the pet-country in order to provide safe and easy access to petting centers. Your pet-citizens parade in your name.{120}{king}
 The pet-angels circle around you and your pet, singing a chanting chorus. A holy light illuminates your throne. You pet your pet.{150}{king}
 The pet-devil himself challenges you to a petting competition. After weeks of intense battle, your mastery of petting overpowers him. You win. Nobody beats you at a pet-off.{200}
