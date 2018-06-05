@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Discord;
@@ -28,7 +29,7 @@ namespace PacManBot.Services
 
             scriptOptions = ScriptOptions.Default
                 .WithImports(
-                    "System", "System.IO", "System.Threading.Tasks", "System.Collections.Generic", "System.Linq", "System.Text.RegularExpressions, System.Diagnostics",
+                    "System", "System.IO", "System.Threading.Tasks", "System.Collections.Generic", "System.Linq", "System.Text.RegularExpressions", "System.Diagnostics",
                     "Discord", "Discord.WebSocket", "Discord.Commands",
                     "PacManBot", "PacManBot.Constants", "PacManBot.Services", "PacManBot.Modules", "PacManBot.Games",
                     "PacManBot.Utils", "PacManBot.Games.GameUtils"

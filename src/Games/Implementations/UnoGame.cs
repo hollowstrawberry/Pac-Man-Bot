@@ -219,7 +219,7 @@ namespace PacManBot.Games
                     return true;
                 }
 
-                return userId == User(Turn).Id && players.Count >= 2 && Card.FromString(StripPrefix(value)).HasValue;
+                return userId == User(Turn)?.Id && players.Count >= 2 && Card.FromString(StripPrefix(value)).HasValue;
             }
 
             return false;

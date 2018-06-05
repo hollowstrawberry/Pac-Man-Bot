@@ -95,8 +95,8 @@ namespace PacManBot.Games
             [Achievement("🥈", "Good Care II", "100 Total actions", 6, group: 1)]
             public bool GoodCare2 => TotalActions >= 100;
 
-            [Achievement("🥇", "Good Care III", "500 Total actions", 7, group: 1)]
-            public bool GoodCare3 => TotalActions >= 500;
+            [Achievement("🥇", "Good Care III", "300 Total actions", 7, group: 1)]
+            public bool GoodCare3 => TotalActions >= 300;
 
             [Achievement("<:bronze:453367514550894602>", "Bronze Owner", "3 days without neglect", 10, hideIcon: true, group: 2)]
             public bool BronzeOwner => Attention >= 1;
@@ -113,7 +113,7 @@ namespace PacManBot.Games
             [Achievement("⭐", "Super Petting", "Pet 1,000 times", 101, group: 100), DataMember]
             public bool SuperPetting { get; set; } = false;
 
-            [Achievement("👼", "Pet God", "Pet 20,000 times", 102, group: 100), DataMember]
+            [Achievement("👼", "Pet God", "Pet 10,000 times and be king", 102, group: 100), DataMember]
             public bool PetGod { get; set; } = false;
 
 
@@ -433,15 +433,6 @@ namespace PacManBot.Games
             bool king = false;
             bool hide = false;
 
-            if (pet.Contains("{getking}"))
-            {
-                if (achievements.PetKing) pet = pet.Split("{getking}")[0] + " Again.";
-                else pet = pet.Replace("{getking}", "");
-
-                achievements.PetKing = true;
-                king = true;
-            }
-
             if (pet.Contains("{king}"))
             {
                 king = true;
@@ -456,20 +447,30 @@ namespace PacManBot.Games
             if (!achievements.SuperPetting && achievements.timesPet >= 1000)
             {
                 achievements.SuperPetting = true;
-                achievements.PetKing = true;
                 pet += "\n\n⭐ **Congratulations!** You petted 1000 times and unlocked *Super Petting*.";
             }
-
-            if (!achievements.PetGod && achievements.timesPet >= 20000)
+            else if (!achievements.PetGod && achievements.PetKing && achievements.timesPet >= 10000)
             {
                 achievements.PetGod = true;
-                pet = "👼 Having petted 20,000 times, and having lived a long and just life as Pet King, you and your pet ascend into the realm of the pet-angels.\n\n" +
+                pet = "👼 Having petted 10,000 times, and having lived a long and just life as Pet King, you and your pet ascend into the realm of the pet-angels.\n\n" +
                       $"After arriving to their heavenly dominion, some angels begin chanting: *\"{client.GetUser(OwnerId)?.Username.SanitizeMarkdown()}, {PetName}\"*. " +
                       $"Soon more and more join them, until ten billion voices act in unison. A blinding glare falls upon the pedestal you stand on. " +
                       "Your entire being slowly fades away, morphing into something else, something like... __pure petting energy__.\n" +
-                      "The sounds of grand bells and trumpets fill the realm. You have been chosen as the new **Pet God**.\n\n" +
-                      "Now, negative pets become 10x their value in gains, and where you would have gotten 0 pets you now get 100. " +
+                      "The sounds of grand bells and trumpets fill the realm. You have been chosen as a new **Pet God**.\n\n" +
+                      "Now, negative pets become positive and tenfold, and you get 100 pets each time you would have gotten 0. " +
                       "You return to the mortal world to resume your duties as king. You are also advised to finally stop petting so much.\n";
+                amount = 0;
+                hide = false;
+                king = false;
+                super = false;
+            }
+            else if (pet.Contains("{getking}"))
+            {
+                if (achievements.PetKing) pet = pet.Split("{getking}")[0] + " Again.";
+                else pet = pet.Replace("{getking}", "");
+
+                achievements.PetKing = true;
+                king = true;
             }
 
             if ((amount == 0) == hide || godEffect) pet = pet.Trim(' ') + $" ({"👼 ".If(godEffect)}{amount.ToString("+0;-#")} pets)";

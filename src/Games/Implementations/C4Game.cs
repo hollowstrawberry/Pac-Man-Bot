@@ -41,7 +41,7 @@ namespace PacManBot.Games
 
         public bool IsInput(string value, ulong userId)
         {
-            return userId == User(Turn).Id && int.TryParse(StripPrefix(value), out int num) && num > 0 && num <= Columns;
+            return userId == User(Turn)?.Id && int.TryParse(StripPrefix(value), out int num) && num > 0 && num <= Columns;
         }
 
 

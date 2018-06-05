@@ -188,8 +188,21 @@ namespace PacManBot.Modules
                     return;
 
 
-                case "pet":
-                    await ReplyAsync("You're petting too much! Please calm down for a while.");
+                case "pet": // Can only happen if the pet pet command couldn't run, because of user ratelimit
+                    var now = DateTime.Now;
+                    if ((now - pet.lastPet) <= TimeSpan.FromSeconds(1)) return;
+                    pet.lastPet = now;
+                    try
+                    {
+                        var reqOptions = new RequestOptions { RetryMode = RetryMode.RetryRatelimit, Timeout = 5_000 };
+                        await ReplyAsync($"{CustomEmoji.Cross} You're petting too much! Please calm down for a while.", options: reqOptions);
+                    }
+                    catch (TimeoutException) // Should only happen in extreme cases
+                    {
+                        pet.lastPet = now + TimeSpan.FromMinutes(5.1);
+                        var reqOoptions = new RequestOptions { RetryMode = RetryMode.RetryRatelimit, Timeout = 60_000 };
+                        await ReplyAsync($"{CustomEmoji.Cross} Because of your uncontrollable petting, PETA sued you and won. You won't be able to pet again for 5 minutes.", options: reqOoptions);
+                    }
                     return;
 
 
@@ -204,7 +217,7 @@ namespace PacManBot.Modules
                     foreach (var p in pets.Take(10))
                     {
                         ranking.Append($"\n**{pos}.** {p.TimesPet} pettings - ");
-                        if (args == "id") ranking.Append($"{pet.OwnerId} ");
+                        if (args == "id") ranking.Append($"{p.OwnerId} ");
                         else ranking.Append($"`{shardedClient.GetUser(p.OwnerId)?.Username.Replace("`", "´") ?? "Unknown"}'s {p.PetName.Replace("`", "´")}` ");
                         ranking.Append(string.Join(' ', p.achievements.GetIcons(showHidden: true, highest: true)));
                         pos++;
@@ -224,7 +237,7 @@ namespace PacManBot.Modules
         [Command("pet pet"), Alias("clockagotchi pet"), Priority(1), HideHelp]
         [Summary("Pets your pet.")]
         [BetterRequireBotPermission(ChannelPermission.EmbedLinks | ChannelPermission.AddReactions)]
-        [Ratelimit(40, 1, Measure.Minutes), Ratelimit(1000, 1, Measure.Hours)]
+        [Ratelimit(30, 1, Measure.Minutes), Ratelimit(1000, 1, Measure.Hours)]
         public async Task ClockagotchiPet()
         {
             var pet = storage.GetUserGame<PetGame>(Context.User.Id);

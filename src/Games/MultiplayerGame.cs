@@ -15,7 +15,7 @@ namespace PacManBot.Games
         public virtual string Message { get; protected set; }
 
         public virtual bool AITurn => State == State.Active && (User(Turn)?.IsBot ?? false);
-        public virtual bool AllBots => Enumerable.Range(0, UserId.Length).All(x => User(x).IsBot);
+        public virtual bool AllBots => Enumerable.Range(0, UserId.Length).All(x => User(x)?.IsBot ?? false);
 
         private Dictionary<ulong, IUser> userCache = new Dictionary<ulong, IUser>();
 
