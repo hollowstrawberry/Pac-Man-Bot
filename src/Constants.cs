@@ -58,7 +58,11 @@ namespace PacManBot.Constants
             UnoReverse = "<:reverse:452172078796242964>".ToEmote(),
             AddTwo = "<:plus2:452172078599241739>".ToEmote(),
             AddFour = "<:plus4:452196173898448897>".ToEmote(),
-            UnoWild = "<:colors:452172078028947457>".ToEmote();
+            UnoWild = "<:colors:452172078028947457>".ToEmote(),
+            
+            BronzeIcon = "<:bronze:453367514550894602>".ToEmote(),
+            SilverIcon = "<:silver:453367514588774400>".ToEmote(),
+            GoldIcon = "<:gold:453368658303909888>".ToEmote();
 
 
         public static readonly Emote[] NumberCircle = new Emote[]

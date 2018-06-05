@@ -1,8 +1,10 @@
 using System;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Reflection;
+using System.Collections.Generic;
+using System.Runtime.Serialization;
 using Discord;
 using Discord.WebSocket;
 using PacManBot.Constants;
@@ -17,7 +19,7 @@ namespace PacManBot.Games
         public static readonly string[] FoodEmotes = new string[] { "🍌", "🍎", "🍊", "🍕", "🌮", "🍩", "🍪", "🍐", "🍉", "🍇", "🍑", "🍧", "🍫", "🥕", "🍼" };
         public static readonly string[] PlayEmotes = new string[] { "⚽", "🏀", "🏈", "🎾", "🏓", "🎨", "🎤", "🎭", "🏐", "🎣", };
         public static readonly string[] CleanEmotes = new string[] { "💧", "🚿", "🛁", "🚽", "🚰", "💦", "👣", "💩", "✨" };
-        public static readonly string[] SleepEmotes = new string[] { "💤", "🛏", "🌃", "🌠", "⭐", "🌙", "🌜" };
+        public static readonly string[] SleepEmotes = new string[] { "💤", "🛏", "🌃", "🌠", "🌙", "🌜" };
         public static readonly string[] BannerUrl = new string[] { null, "https://cdn.discordapp.com/attachments/412314001414815751/448939830433415189/copperbanner.png", "https://cdn.discordapp.com/attachments/412314001414815751/448939834354958370/silverbanner.png", "https://cdn.discordapp.com/attachments/412314001414815751/448939832102617090/goldbanner.png" };
 
         public const string PetAmountPattern = @"{-?[0-9]+}";
@@ -31,24 +33,20 @@ namespace PacManBot.Games
 
         [DataMember] private string petName = null;
         [DataMember] private string petImageUrl = null;
-        [DataMember] private double satiation = 15;
-        [DataMember] private double happiness = 15;
-        [DataMember] private double hygiene = 15;
-        [DataMember] private double energy = 15;
-        [DataMember] private bool asleep = false;
-        [DataMember] private DateTime bornDate;
-        [DataMember] private DateTime lastUpdated;
+        [DataMember] public double satiation { get; private set; } = 15;
+        [DataMember] public double happiness { get; private set; } = 15;
+        [DataMember] public double hygiene { get; private set; } = 15;
+        [DataMember] public double energy { get; private set; } = 15;
+        [DataMember] public bool asleep { get; private set; } = false;
+        [DataMember] public DateTime bornDate { get; private set; }
+        [DataMember] public DateTime lastUpdated { get; private set; }
         [DataMember] private Achievements achievements = new Achievements();
 
         [DataMember] public ulong OwnerId { get { return UserId[0]; } set { UserId = new ulong[] { value }; } }
         [IgnoreDataMember] public DateTime lastPet = DateTime.Now;
 
-
-        public double Satiation => satiation;
-        public double Happiness => happiness;
-        public double Hygiene => hygiene;
-        public double Energy => energy;
-        public bool Asleep => asleep;
+        public int TimesPet => achievements.timesPet;
+        public List<AchievementAttribute> AchievementList => achievements.GetList();
 
         public string PetName
         {
@@ -76,23 +74,50 @@ namespace PacManBot.Games
         }
 
 
+
+
         [DataContract]
-        private class Achievements
+        public class Achievements
         {
             [DataMember] public uint timesFed = 0;
             [DataMember] public uint timesPlayed = 0;
             [DataMember] public uint timesCleaned = 0;
             [DataMember] public int timesPet = 0;
             [DataMember] public DateTime lastNeglected = default;
-
             [DataMember] public uint Attention = 0;
-            [DataMember] public bool Custom = false;
-            [DataMember] public bool SuperPetting = false;
-            [DataMember] public bool PetKing = false;
 
+
+            [Achievement("🎖", "At Home", "Give your pet a name and image", 1), DataMember]
+            public bool Custom { get; set; } = false;
+
+            [Achievement("🥉", "Good Care I", "20 Total actions", 5)]
             public bool GoodCare1 => TotalActions >= 20;
+
+            [Achievement("🥈", "Good Care II", "100 Total actions", 6)]
             public bool GoodCare2 => TotalActions >= 100;
+
+            [Achievement("🥇", "Good Care III", "500 Total actions", 7)]
             public bool GoodCare3 => TotalActions >= 500;
+
+            [Achievement("<:bronze:453367514550894602>", "Bronze Owner", "3 days without neglect", 10, true)]
+            public bool BronzeOwner => Attention >= 1;
+
+            [Achievement("<:silver:453367514588774400>", "Silver Owner", "7 days without neglect", 11, true)]
+            public bool SilverOwner => Attention >= 2;
+
+            [Achievement("<:gold:453368658303909888>", "Gold Owner", "14 days without neglect", 12, true)]
+            public bool GoldOwner => Attention >= 3;
+
+            [Achievement("👑", "Pet King", "Be crowned king of pets", 100), DataMember]
+            public bool PetKing { get; set; } = false;
+
+            [Achievement("⭐", "Super Petting", "Pet 1,000 times", 101), DataMember]
+            public bool SuperPetting { get; set; } = false;
+
+            [Achievement("👼", "Pet God", "Pet 20,000 times", 102), DataMember]
+            public bool PetGod { get; set; } = false;
+
+
 
             public uint TotalActions => timesFed + timesPlayed + timesCleaned;
 
@@ -100,7 +125,7 @@ namespace PacManBot.Games
             public Achievements() { }
 
 
-            public void Checks(PetGame pet)
+            public void DoChecks(PetGame pet)
             {
                 if (lastNeglected == default) lastNeglected = pet.bornDate; //old pets
                 else if (pet.TotalStats == 0) lastNeglected = DateTime.Now;
@@ -111,6 +136,50 @@ namespace PacManBot.Games
                 if (days >= 14 && Attention < 3) Attention = 3;
                 else if (days >= 7 && Attention < 2) Attention = 2;
                 else if (days >= 3 && Attention < 1) Attention = 1;
+            }
+
+            public List<AchievementAttribute> GetList()
+            {
+                return GetType().GetProperties()
+                    .Select(x => x.GetCustomAttribute<AchievementAttribute>()?.WithObtained((bool)x.GetMethod.Invoke(this, new object[] { })))
+                    .Where(x => x != null).ToList().Sorted();
+            }
+        }
+
+
+        [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, Inherited = false, AllowMultiple = false)]
+        public class AchievementAttribute : Attribute, IComparable<AchievementAttribute>
+        {
+            public string Icon { get; private set; }
+            public string Name { get; private set; }
+            public string Description { get; private set; }
+            public int Position { get; private set; }
+            public bool HideIcon { get; private set; }
+
+            public bool Obtained { get; private set; }
+
+            public AchievementAttribute(string icon, string name, string description, int position, bool hideIcon = false)
+            {
+                Icon = icon;
+                Name = name;
+                Description = description;
+                Position = position;
+                HideIcon = hideIcon;
+            }
+
+            private AchievementAttribute(AchievementAttribute old, bool obtained) : this(old.Icon, old.Name, old.Description, old.Position, old.HideIcon)
+            {
+                Obtained = obtained;
+            }
+
+            public AchievementAttribute WithObtained(bool obtained)
+            {
+                return new AchievementAttribute(this, obtained);
+            }
+
+            public int CompareTo(AchievementAttribute other)
+            {
+                return Position.CompareTo(other.Position);
             }
         }
 
@@ -159,19 +228,7 @@ namespace PacManBot.Games
             status.Append((energy >= 5 ? "⚡" : "🍂") + $" **Energy:** {(decimals ? energy.ToString("0.000") : energy.Ceiling().ToString())}/{MaxStat}\n");
 
 
-            var unlocks = new StringBuilder();
-            if (achievements.GoodCare3) unlocks.Append("🥇 ");
-            if (achievements.GoodCare2) unlocks.Append("🥈 ");
-            if (achievements.GoodCare1) unlocks.Append("🥉 ");
-            if (achievements.Custom) unlocks.Append("🎖 ");
-            if (achievements.SuperPetting) unlocks.Append("⭐ ");
-            if (achievements.PetKing) unlocks.Append("👑 ");
-            if (achievements.Attention > 0)
-            {
-                unlocks.Append('\n');
-                unlocks.Append(achievements.Attention >= 3 ? "Gold" : achievements.Attention >= 2 ? "Silver" : "Bronze");
-                unlocks.Append(" Banner");
-            }
+            var unlocks = string.Join(' ', achievements.GetList().Reversed().Where(x => x.Obtained && !x.HideIcon).Select(x => x.Icon));
 
 
             return new EmbedBuilder
@@ -193,7 +250,7 @@ namespace PacManBot.Games
                     {
                         IsInline = true,
                         Name = "Unlocks",
-                        Value = unlocks.Length == 0 ? "*None*" : unlocks.ToString(),
+                        Value = string.IsNullOrWhiteSpace(unlocks) ? "None" : unlocks,
                     },
                 }
             };
@@ -214,15 +271,11 @@ namespace PacManBot.Games
             stats.Append($"*(Neglect occurs when all stats reach 0)*\nᅠ");
 
             var achievs = new StringBuilder[] { new StringBuilder(), new StringBuilder() }; // off, on
-            achievs[achievements.Custom ? 1 : 0].Append("\n🎖 **At Home** - Give your pet a name and image");
-            achievs[achievements.GoodCare1 ? 1 : 0].Append("\n🥉 **Good Care I** - 20 Total actions");
-            achievs[achievements.GoodCare2 ? 1 : 0].Append("\n🥈 **Good Care II** - 100 Total actions");
-            achievs[achievements.GoodCare3 ? 1 : 0].Append("\n🥇 **Good Care III** - 500 Total actions");
-            achievs[achievements.PetKing ? 1 : 0].Append("\n👑 **Pet King** - Be crowned king of pets");
-            achievs[achievements.SuperPetting ? 1 : 0].Append("\n⭐ **Super Petting** - Pet 1000 times");
-            achievs[achievements.Attention >= 1 ? 1 : 0].Append("\n**Bronze Banner** - 3 days without neglect");
-            achievs[achievements.Attention >= 2 ? 1 : 0].Append("\n**Silver Banner** - 7 days without neglect");
-            achievs[achievements.Attention >= 3 ? 1 : 0].Append("\n**Gold Banner** - 14 days without neglect");
+
+            foreach (var ac in achievements.GetList())
+            {
+                achievs[ac.Obtained ? 1 : 0].Append($"\n{ac.Icon} **{ac.Name}** - {ac.Description}");
+            }
 
             return new EmbedBuilder
             {
@@ -267,7 +320,7 @@ namespace PacManBot.Games
                 asleep = false;
             }
 
-            achievements.Checks(this);
+            achievements.DoChecks(this);
             lastUpdated = now;
             if (store) storage.StoreGame(this);
         }
@@ -329,6 +382,7 @@ namespace PacManBot.Games
         {
             string pet;
             int amount;
+            bool godEffect = false;
 
             do
             {
@@ -343,12 +397,15 @@ namespace PacManBot.Games
                 }
                 else amount = 1;
 
+                if (achievements.PetGod && amount <= 0)
+                {
+                    godEffect = true;
+                    amount = amount == 0 ? 100 : -10 * amount;
+                }
+
             } while (achievements.timesPet - amount < 0 || achievements.SuperPetting && achievements.timesPet - amount < 1000);
 
             achievements.timesPet += amount;
-
-            if (pet.Contains("{hide}")) pet = pet.Replace("{hide}", "");
-            else if (amount != 0) pet = pet.Trim(' ', '\n', '\r') + $" ({amount.ToString("+0;-#")} pets)";
 
             if (pet.Contains("{king}"))
             {
@@ -356,12 +413,28 @@ namespace PacManBot.Games
                 achievements.PetKing = true;
             }
 
-            if (achievements.timesPet >= 1000 && !achievements.SuperPetting)
+            if (!achievements.SuperPetting && achievements.timesPet >= 1000)
             {
                 achievements.SuperPetting = true;
                 achievements.PetKing = true;
                 pet += "\n\n⭐ **Congratulations!** You petted 1000 times and unlocked *Super Petting*.";
             }
+
+            if (!achievements.PetGod && achievements.timesPet >= 20000)
+            {
+                achievements.PetGod = true;
+                pet = "👼 Having petted 20,000 times, and having lived a long and just life as Pet King, you and your pet ascend into the realm of the pet-angels.\n\n" +
+                      $"After arriving to their heavenly dominion, some angels begin chanting: *\"{client.GetUser(OwnerId)?.Username.SanitizeMarkdown()}, {PetName}\"*. " +
+                      $"Soon more and more join them, until ten billion voices act in unison. A blinding glare falls upon the pedestal you stand on. " +
+                      "Your entire being slowly fades away, morphing into something else, something like... __pure petting energy__.\n" +
+                      "The sounds of grand bells and trumpets fill the realm. You have been chosen as the new **Pet God**.\n\n" +
+                      "Now, negative pets become 10x their value in gains, and where you would have gotten 0 pets you now get 100. " +
+                      "You return to the mortal world to resume your duties as king. You are also advised to finally stop petting so much.\n";
+            }
+
+            if (pet.Contains("{hide}")) pet = pet.Replace("{hide}", "");
+            else if (amount != 0) pet = pet.Trim(' ', '\n', '\r') + $" ({"👼 ".If(godEffect)}{amount.ToString("+0;-#")} pets)";
+
 
             storage.StoreGame(this);
 

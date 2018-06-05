@@ -82,6 +82,10 @@ namespace PacManBot.Games
         {
             set
             {
+                if (value.Length > 1500)
+                {
+                    throw new InvalidMapException("Map exceeds the maximum length of 1500 characters");
+                }
                 if (!value.ContainsAny(' ', CharSoftWall, CharPellet, CharPowerPellet, CharSoftWallPellet))
                 {
                     throw new InvalidMapException("Map is completely solid");

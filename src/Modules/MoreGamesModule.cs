@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using System.Linq;
 using System.Threading.Tasks;
 using Discord;
@@ -29,26 +30,7 @@ namespace PacManBot.Modules
 
 
 
-
-        [Command("pet user"), Alias("clockagotchi user"), HideHelp]
-        [Summary("Checks another person's pet. See **{prefix}pet help** for more info.")]
-        [BetterRequireBotPermission(ChannelPermission.EmbedLinks | ChannelPermission.AddReactions)]
-        public async Task ClockagotchiUser(SocketGuildUser user = null)
-        {
-            if (user == null)
-            {
-                await ReplyAsync("You must specify a user!");
-                return;
-            }
-
-            var pet = storage.GetUserGame<PetGame>(user.Id);
-
-            if (pet == null) await ReplyAsync("This person doesn't have a pet :(", options: Utils.DefaultOptions);
-            else await ReplyAsync(pet.GetContent(), false, pet.GetEmbed(user)?.Build(), Utils.DefaultOptions);
-        }
-
-
-        [Command("pet"), Alias("clockagotchi"), Parameters("[command]")]
+        [Command("pet"), Alias("clockagotchi"), Parameters("[command]"), Priority(0)]
         [Remarks("Adopt your own pet!")]
         [Summary("**__Pet Commands__**\n\n" +
             "**{prefix}pet** - Check on your pet or adopt if you don't have one\n" +
@@ -58,9 +40,10 @@ namespace PacManBot.Modules
             "**{prefix}pet feed** - Fills your pet's Satiation and restores 1 Energy\n" +
             "**{prefix}pet play** - Fills your pet's Happinness and consumes 5 Energy\n" +
             "**{prefix}pet clean** - Fills your pet's Hygiene\n" +
-            "**{prefix}pet sleep** - Put your pet to sleep to restore Energy over time\n\n" +
+            "**{prefix}pet sleep/wakeup** - Sleep to restore Energy over time\n\n" +
             "**{prefix}pet help** - This list of commands\n" +
             "**{prefix}pet pet** - Pet your pet\n" +
+            "**{prefix}pet top** - Pet ranking\n" +
             "**{prefix}pet user <user>** - See another person's pet\n" +
             "**{prefix}pet release** - Gives your pet to a loving family that will take care of it (Deletes pet forever)")]
         [BetterRequireBotPermission(ChannelPermission.EmbedLinks | ChannelPermission.AddReactions)]
@@ -113,7 +96,7 @@ namespace PacManBot.Modules
                     if (pet.Play()) await Context.Message.AddReactionAsync(Bot.Random.Choose(PetGame.PlayEmotes).ToEmoji(), Utils.DefaultOptions);
                     else
                     {
-                        string message = pet.Happiness.Ceiling() == PetGame.MaxStat ? "Your pet doesn't want to play anymore!" : "Your pet is too tired to play! It needs 5 energy or more.";
+                        string message = pet.happiness.Ceiling() == PetGame.MaxStat ? "Your pet doesn't want to play anymore!" : "Your pet is too tired to play! It needs 5 energy or more.";
                         await ReplyAsync($"{CustomEmoji.Cross} {message}", options: Utils.DefaultOptions);
                     }
                     return;
@@ -127,20 +110,26 @@ namespace PacManBot.Modules
 
 
                 case "sleep":
-                case "wake":
-                case "wakeup":
                 case "rest":
                     pet.UpdateStats(false);
-                    if (pet.Energy.Ceiling() == PetGame.MaxStat && !pet.Asleep)
+                    if (pet.energy.Ceiling() == PetGame.MaxStat && !pet.asleep)
                     {
                         await ReplyAsync($"{CustomEmoji.Cross} Your pet is not tired!", options: Utils.DefaultOptions);
                     }
                     else
                     {
-                        pet.ToggleSleep();
-                        if (pet.Asleep) await ReplyAsync($"{Bot.Random.Choose(PetGame.SleepEmotes)} You put your pet to sleep.", options: Utils.DefaultOptions);
-                        else await ReplyAsync("🌅 You wake up your pet.", options: Utils.DefaultOptions);
+                        await ReplyAsync(Bot.Random.Choose(PetGame.SleepEmotes) + (pet.asleep ? " Your pet is already sleeping." : "Your pet is now asleep."), options: Utils.DefaultOptions);
+                        if (!pet.asleep) pet.ToggleSleep();
                     }
+                    return;
+
+
+                case "wake":
+                case "awaken": //?
+                case "wakeup":
+                    pet.UpdateStats(false);
+                    await ReplyAsync(pet.asleep ? "🌅 You wake up your pet." : "🌅 Your pet is already awake.", options: Utils.DefaultOptions);
+                    if (pet.asleep) pet.ToggleSleep();
                     return;
 
 
@@ -151,12 +140,13 @@ namespace PacManBot.Modules
 
 
                 case "name":
-                    if (args != null)
+                    if (string.IsNullOrWhiteSpace(args)) await ReplyAsync($"{CustomEmoji.Cross} Please specify a name!", options: Utils.DefaultOptions);
+                    else if (args.Length > 32) await ReplyAsync($"{CustomEmoji.Cross} Pet name can't go above 32 characters!", options: Utils.DefaultOptions);
+                    else
                     {
                         pet.PetName = args;
                         await Context.Message.AddReactionAsync(CustomEmoji.Check, Utils.DefaultOptions);
                     }
-                    else await ReplyAsync($"{CustomEmoji.Cross} Please specify a name!", options: Utils.DefaultOptions);
                     return;
 
 
@@ -197,8 +187,23 @@ namespace PacManBot.Modules
                     return;
 
 
-                case "count":
-                    await ReplyAsync($"This bot has {storage.UserGames.Where(g => g is PetGame).Count()} pets in total");
+                case "top":
+                case "rank":
+                case "ranking":
+                    var pets = storage.UserGames.Select(x => x as PetGame).Where(x => x != null).OrderByDescending(x => x.TimesPet);
+
+                    int pos = 1;
+                    var ranking = new StringBuilder();
+                    ranking.Append($"**Out of {pets.Count()} pets:**\n");
+                    foreach (var p in pets.Take(10))
+                    {
+                        ranking.Append($"\n**{pos}.** {p.TimesPet} pettings - ");
+                        ranking.Append($"`{shardedClient.GetUser(p.OwnerId)?.Username.Replace("`", "´") ?? "Unknown"}'s {p.PetName.Replace("`", "´")}`");
+                        ranking.Append(string.Join(' ', p.AchievementList.Reversed().Where(x => x.Obtained).Select(x => x.Icon)));
+                        pos++;
+                    }
+
+                    await ReplyAsync(ranking.ToString().Truncate(1999), options: Utils.DefaultOptions);
                     return;
 
 
@@ -209,9 +214,27 @@ namespace PacManBot.Modules
         }
 
 
+        [Command("pet user"), Alias("clockagotchi user"), Priority(1), HideHelp]
+        [Summary("Checks another person's pet. See **{prefix}pet help** for more info.")]
+        [BetterRequireBotPermission(ChannelPermission.EmbedLinks | ChannelPermission.AddReactions)]
+        public async Task ClockagotchiUser(SocketGuildUser user = null)
+        {
+            if (user == null)
+            {
+                await ReplyAsync("You must specify a user!");
+                return;
+            }
+
+            var pet = storage.GetUserGame<PetGame>(user.Id);
+
+            if (pet == null) await ReplyAsync("This person doesn't have a pet :(", options: Utils.DefaultOptions);
+            else await ReplyAsync(pet.GetContent(), false, pet.GetEmbed(user)?.Build(), Utils.DefaultOptions);
+        }
 
 
-        [Command("uno"), Parameters("[players]"), Priority(0)]
+
+
+        [Command("uno"), Parameters("[players]"), Priority(-1)]
         [Remarks("Play Uno with up to 10 friends and bots")]
         [ExampleUsage("uno\nuno @Pac-Man#3944")]
         [Summary("__**Commands:**__\n"
@@ -287,7 +310,7 @@ namespace PacManBot.Modules
         }
 
 
-        [Command("uno leave"), Alias("uno remove", "uno kick"), HideHelp]
+        [Command("uno leave"), Alias("uno remove", "uno kick"), Priority(1), HideHelp]
         [Summary("Leaves the Uno game in this channel.\nYou can also remove a bot or inactive player.")]
         [RequireContext(ContextType.Guild)]
         [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
@@ -329,7 +352,8 @@ namespace PacManBot.Modules
 
 
 
-        [Command("tictactoe"), Alias("ttt", "tic"), Remarks("Play Tic-Tac-Toe with another user or the bot")]
+        [Command("tictactoe"), Alias("ttt", "tic"), Priority(-1)]
+        [Remarks("Play Tic-Tac-Toe with another user or the bot")]
         [Summary("You can choose a guild member to invite as an opponent using a mention, username, nickname or user ID. Otherwise, you'll play against the bot.\n\n"
                + "You play by sending the number of a free cell (1 to 9) in chat while it is your turn, and to win you must make a line of 3 symbols in any direction\n\n"
                + "Do **{prefix}cancel** to end the game or **{prefix}bump** to move it to the bottom of the chat. The game times out after 5 minutes of inactivity.\n\n"
@@ -340,7 +364,7 @@ namespace PacManBot.Modules
             await RunMultiplayerGame<TTTGame>(opponent ?? (IUser)Context.Client.CurrentUser, Context.User);
         }
 
-        [Command("tictactoe vs"), Alias("ttt vs", "tic vs"), HideHelp]
+        [Command("tictactoe vs"), Alias("ttt vs", "tic vs"), Priority(1), HideHelp]
         [Summary("Make the bot challenge a user... or another bot")]
         [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
         public async Task StartTicTacToeVs(SocketGuildUser opponent)
@@ -349,7 +373,8 @@ namespace PacManBot.Modules
         }
 
 
-        [Command("5ttt"), Alias("ttt5", "5tictactoe", "5tic"), Remarks("Play a harder 5-Tic-Tac-Toe with another user or the bot")]
+        [Command("5ttt"), Alias("ttt5", "5tictactoe", "5tic"), Priority(-1)]
+        [Remarks("Play a harder 5-Tic-Tac-Toe with another user or the bot")]
         [Summary("You can choose a guild member to invite as an opponent using a mention, username, nickname or user ID. Otherwise, you'll play against the bot.\n\n"
                + "You play by sending the column and row of the cell you want to play, for example, \"C4\". The player who makes the **most lines of 3 symbols** wins. "
                + "However, if a player makes a lines of **4**, they win instantly.\n\n"
@@ -361,7 +386,7 @@ namespace PacManBot.Modules
             await RunMultiplayerGame<TTT5Game>(opponent ?? (IUser)Context.Client.CurrentUser, Context.User);
         }
 
-        [Command("5ttt vs"), Alias("ttt5 vs", "5tictactoe vs", "5tic vs"), HideHelp]
+        [Command("5ttt vs"), Alias("ttt5 vs", "5tictactoe vs", "5tic vs"), Priority(1), HideHelp]
         [Summary("Make the bot challenge a user... or another bot")]
         [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
         public async Task Start5TicTacToeVs(SocketGuildUser opponent)
@@ -370,7 +395,8 @@ namespace PacManBot.Modules
         }
 
 
-        [Command("connect4"), Alias("c4", "four"), Remarks("Play Connect Four with another user or the bot")]
+        [Command("connect4"), Alias("c4", "four"), Priority(-1)]
+        [Remarks("Play Connect Four with another user or the bot")]
         [Summary("You can choose a guild member to invite as an opponent using a mention, username, nickname or user ID. Otherwise, you'll play against the bot.\n\n"
                + "You play by sending the number of a free cell (1 to 7) in chat while it is your turn, and to win you must make a line of 3 symbols in any direction\n\n"
                + "Do **{prefix}cancel** to end the game or **{prefix}bump** to move it to the bottom of the chat. The game times out after 5 minutes of inactivity.\n\n"
@@ -381,13 +407,14 @@ namespace PacManBot.Modules
             await RunMultiplayerGame<C4Game>(opponent ?? (IUser)Context.Client.CurrentUser, Context.User);
         }
 
-        [Command("connect4 vs"), Alias("c4 vs", "four vs"), HideHelp]
+        [Command("connect4 vs"), Alias("c4 vs", "four vs"), Priority(1), HideHelp]
         [Summary("Make the bot challenge a user... or another bot")]
         [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
         public async Task StartConnectFoureVs(SocketGuildUser opponent)
         {
             await RunMultiplayerGame<C4Game>(opponent, Context.Client.CurrentUser);
         }
+
 
 
 

@@ -70,9 +70,14 @@ namespace PacManBot
 
         public static List<T> Sorted<T>(this List<T> list)
         {
-            var copy = list.Select(x => x).ToList();
-            copy.Sort();
-            return copy;
+            list.Sort();
+            return list;
+        }
+
+        public static List<T> Reversed<T>(this List<T> list)
+        {
+            list.Reverse();
+            return list;
         }
 
         public static IEnumerable<IEnumerable<T>> Permutations<T>(this IEnumerable<T> list, int length)

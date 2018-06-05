@@ -25,9 +25,9 @@ namespace PacManBot.Modules
 
             foreach (var attribute in command.Attributes)
             {
-                if (attribute is HideHelp) Hidden = true;
-                else if (attribute is Parameters parameters) Parameters = parameters.Value;
-                else if (attribute is ExampleUsage usage) ExampleUsage = "{prefix}" + usage.Value.Replace("\n", "\n{prefix}");
+                if (attribute is HideHelpAttribute) Hidden = true;
+                else if (attribute is ParametersAttribute parameters) Parameters = parameters.Value;
+                else if (attribute is ExampleUsageAttribute usage) ExampleUsage = "{prefix}" + usage.Value.Replace("\n", "\n{prefix}");
             }
 
             if (Parameters == null)
@@ -45,14 +45,14 @@ namespace PacManBot.Modules
 
 
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-    class HideHelp : Attribute { }
+    class HideHelpAttribute : Attribute { }
 
 
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-    class Parameters : Attribute
+    class ParametersAttribute : Attribute
     {
         public string Value { get; private set; }
-        public Parameters(string value)
+        public ParametersAttribute(string value)
         {
             Value = value;
         }
@@ -60,10 +60,10 @@ namespace PacManBot.Modules
 
 
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-    class ExampleUsage : Attribute
+    class ExampleUsageAttribute : Attribute
     {
         public string Value { get; private set; }
-        public ExampleUsage(string value)
+        public ExampleUsageAttribute(string value)
         {
             Value = value;
         }
@@ -71,18 +71,18 @@ namespace PacManBot.Modules
 
 
     // The original preconditions just... didn't work?
-    abstract class BaseBetterRequirePermission : PreconditionAttribute
+    abstract class BaseBetterRequirePermissionAttribute : PreconditionAttribute
     {
         protected GuildPermission? guildPerms = null;
         protected ChannelPermission? channelPerms = null;
 
 
-        public BaseBetterRequirePermission(ChannelPermission channelPerms)
+        public BaseBetterRequirePermissionAttribute(ChannelPermission channelPerms)
         {
             this.channelPerms = channelPerms;
         }
 
-        public BaseBetterRequirePermission(GuildPermission guildPerms)
+        public BaseBetterRequirePermissionAttribute(GuildPermission guildPerms)
         {
             this.guildPerms = guildPerms;
         }
@@ -112,10 +112,10 @@ namespace PacManBot.Modules
 
 
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
-    class BetterRequireBotPermission : BaseBetterRequirePermission
+    class BetterRequireBotPermissionAttribute : BaseBetterRequirePermissionAttribute
     {
-        public BetterRequireBotPermission(ChannelPermission channelPerms) : base(channelPerms) { }
-        public BetterRequireBotPermission(GuildPermission guildPerms) : base(guildPerms) { }
+        public BetterRequireBotPermissionAttribute(ChannelPermission channelPerms) : base(channelPerms) { }
+        public BetterRequireBotPermissionAttribute(GuildPermission guildPerms) : base(guildPerms) { }
 
         public override async Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, CommandInfo command, IServiceProvider services)
             => CheckPermissions(context, command, context.Guild == null ? null : await context.Guild.GetCurrentUserAsync(), "Bot");
@@ -123,10 +123,10 @@ namespace PacManBot.Modules
 
 
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
-    class BetterRequireUserPermission : BaseBetterRequirePermission
+    class BetterRequireUserPermissionAttribute : BaseBetterRequirePermissionAttribute
     {
-        public BetterRequireUserPermission(ChannelPermission channelPerms) : base(channelPerms) { }
-        public BetterRequireUserPermission(GuildPermission guildPerms) : base(guildPerms) { }
+        public BetterRequireUserPermissionAttribute(ChannelPermission channelPerms) : base(channelPerms) { }
+        public BetterRequireUserPermissionAttribute(GuildPermission guildPerms) : base(guildPerms) { }
 
         public override async Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, CommandInfo command, IServiceProvider services)
         {

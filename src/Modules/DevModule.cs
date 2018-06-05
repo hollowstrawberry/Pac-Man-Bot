@@ -62,8 +62,8 @@ namespace PacManBot.Modules
         {
             try
             {
-                await shardedClient.GetUser(useriD).SendMessageAsync("```diff\n+The following message was sent in response to your recent feedback." +
-                                                                  "\n-To reply to this message, use the 'feedback' command again.```\n" + message);
+                await shardedClient.GetUser(useriD).SendMessageAsync("```diff\n+The following message was sent to you by this bot's owner." +
+                                                                     "\n-To reply to this message, use the 'feedback' command.```\n" + message);
                 await Context.Message.AddReactionAsync(CustomEmoji.Check);
             }
             catch (Exception e)

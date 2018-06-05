@@ -211,12 +211,25 @@ namespace PacManBot.Games
 
         public bool IsInput(string value, ulong userId)
         {
-            return userId == User(Turn).Id && players.Count >= 2 && Card.FromString(StripPrefix(value)).HasValue;
+            if (players.Contains(userId))
+            {
+                if (value.ToLower() == "cards")
+                {
+                    SendCards(players.IndexOf(userId));
+                    return true;
+                }
+
+                return userId == User(Turn).Id && players.Count >= 2 && Card.FromString(StripPrefix(value)).HasValue;
+            }
+
+            return false;
         }
 
 
         public void DoTurn(string input)
         {
+            if (input.ToLower() == "cards") return;
+
             var card = Card.FromString(StripPrefix(input)).Value;
 
             if (!playerCards[(int)Turn].Contains(card.NormalizeColor()))
@@ -323,7 +336,7 @@ namespace PacManBot.Games
             }
             description.Append($"```\n{TopCard.ToStringBig()}\n");
 
-            if (State == State.Active) description.Append($"ᅠ\nSend the name of a card to place it. Cards are shown in a DM.\nUse **{prefix}uno join** to join the game.\nUse **{prefix}uno help** for rules and more commands.");
+            if (State == State.Active) description.Append($"ᅠ\nSay the name of a card to place it on top of this one.\nYour cards are shown in a DM, say \"cards\" to resend.\nUse **{prefix}uno join** to join the game.\nUse **{prefix}uno help** for rules and more commands.");
 
 
             return new EmbedBuilder()

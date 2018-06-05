@@ -181,7 +181,7 @@ namespace PacManBot.Modules
             var embed = new EmbedBuilder()
             {
                 Title = $"🏆 __**Pac-Man Global Leaderboard**__ 🏆",
-                Description = content.ToString(),
+                Description = content.ToString().Truncate(2047),
                 Color = new Color(241, 195, 15)
             };
 
