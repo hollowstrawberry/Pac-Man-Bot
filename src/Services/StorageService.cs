@@ -21,20 +21,23 @@ namespace PacManBot.Services
         private readonly Dictionary<ulong, string> prefixes;
         private readonly List<ScoreEntry> scoreEntries;
         private readonly List<IChannelGame> games; // Channel-specific games
-        private readonly List<ISingleplayerGame> userGames; // Non-channel specific games
+        private readonly List<IBaseGame> userGames; // Non-channel specific games
 
         private readonly JsonSerializerSettings gameJsonSettings = new JsonSerializerSettings {
             ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
         };
         private static readonly Dictionary<string, Type> StoreableGamesTypes = GetStoreableGameTypes();
 
-        public string DefaultPrefix { get; private set; }
         public string WakaExclude { get; private set; }
         public IReadOnlyList<IChannelGame> Games { get; private set; }
-        public IReadOnlyList<ISingleplayerGame> UserGames { get; private set; }
-        public IConfigurationRoot BotContent { get; private set; }
+        public IReadOnlyList<IBaseGame> UserGames { get; private set; }
+
+        public IConfigurationRoot BotContent { get; private set; } = null;
+        public string DefaultPrefix { get; private set; }
         public string[] PettingMessages { get; private set; }
         public string[] SuperPettingMessages { get; private set; }
+        public ulong[] NoPrefixChannels { get; private set; }
+
 
 
         public StorageService(DiscordShardedClient client, LoggingService logger, BotConfig config)
@@ -46,7 +49,7 @@ namespace PacManBot.Services
             prefixes = new Dictionary<ulong, string>();
             scoreEntries = new List<ScoreEntry>();
             games = new List<IChannelGame>();
-            userGames = new List<ISingleplayerGame>();
+            userGames = new List<IBaseGame>();
 
             Games = games.AsReadOnly();
             UserGames = userGames.AsReadOnly();
@@ -127,7 +130,7 @@ namespace PacManBot.Services
         }
 
 
-        public void AddUserGame(ISingleplayerGame game)
+        public void AddUserGame(IBaseGame game)
         {
             userGames.Add(game);
         }
@@ -149,7 +152,7 @@ namespace PacManBot.Services
         }
 
 
-        public void DeleteUserGame(ISingleplayerGame game)
+        public void DeleteUserGame(IBaseGame game)
         {
             try
             {
@@ -179,7 +182,7 @@ namespace PacManBot.Services
         public IBaseGame GetUserGame(ulong channelId)
             => games.FirstOrDefault(g => g.ChannelId == channelId);
 
-        public TGame GetUserGame<TGame>(ulong userId) where TGame : ISingleplayerGame
+        public TGame GetUserGame<TGame>(ulong userId) where TGame : IBaseGame
             => (TGame)userGames.FirstOrDefault(g => g.OwnerId == userId && g is TGame);
 
 
@@ -209,9 +212,12 @@ namespace PacManBot.Services
 
         public void LoadBotContent()
         {
-            BotContent = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile(BotFile.Contents).Build();
+            if (BotContent == null) BotContent = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile(BotFile.Contents).Build();
+            else BotContent.Reload();
+
             PettingMessages = BotContent["petting"].Split('\n', StringSplitOptions.RemoveEmptyEntries);
             SuperPettingMessages = BotContent["superpetting"].Split('\n', StringSplitOptions.RemoveEmptyEntries);
+            NoPrefixChannels = BotContent["noprefix"].Split(',').Select(x => ulong.Parse(x)).ToArray();
             logger.LoadLogExclude(this);
         }
 
@@ -299,7 +305,7 @@ namespace PacManBot.Services
                             {
                                 game = (IStoreableGame)JsonConvert.DeserializeObject(File.ReadAllText(file), type.Value, gameJsonSettings);
                                 if (game is ChannelGame cGame) games.Add(cGame);
-                                else if (game is ISingleplayerGame sGame) userGames.Add(sGame);
+                                else userGames.Add(game);
                                 break;
                             }
                         }

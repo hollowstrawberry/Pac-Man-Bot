@@ -21,7 +21,7 @@ namespace PacManBot.Games
 
 
     [DataContract] // Serializable to store in JSON
-    public class PacManGame : ChannelGame, IReactionsGame, ISingleplayerGame, IStoreableGame
+    public class PacManGame : ChannelGame, IReactionsGame, IStoreableGame
     {
         // Constants
 
@@ -76,7 +76,7 @@ namespace PacManBot.Games
         [DataMember] public override int Time { get; set; }
         [DataMember] public override ulong MessageId { get; set; }
         [DataMember] public override ulong ChannelId { get; set; }
-        [DataMember] public ulong OwnerId { get { return UserId[0]; } set { UserId = new ulong[] { value }; } }
+        [DataMember] public override ulong OwnerId { get { return UserId[0]; } set { UserId = new ulong[] { value }; } }
 
         [DataMember] private string FullMap //Converts map between char[,] and string
         {

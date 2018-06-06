@@ -218,7 +218,7 @@ namespace PacManBot.Modules
                     {
                         ranking.Append($"\n**{pos}.** {p.TimesPet} pettings - ");
                         if (args == "id") ranking.Append($"{p.OwnerId} ");
-                        else ranking.Append($"`{shardedClient.GetUser(p.OwnerId)?.Username.Replace("`", "´") ?? "Unknown"}'s {p.PetName.Replace("`", "´")}` ");
+                        else ranking.Append($"`{p.Owner?.Username.Replace("`", "´") ?? "Unknown"}'s {p.PetName.Replace("`", "´")}` ");
                         ranking.Append(string.Join(' ', p.achievements.GetIcons(showHidden: true, highest: true)));
                         pos++;
                     }
@@ -251,7 +251,7 @@ namespace PacManBot.Modules
             if ((now - pet.lastPet) <= TimeSpan.FromSeconds(1)) return;
             pet.lastPet = now;
 
-            await ReplyAsync(pet.Pet(), options: Utils.DefaultOptions);
+            await ReplyAsync(pet.DoPet(Context), options: Utils.DefaultOptions);
             return;
         }
 
@@ -297,7 +297,7 @@ namespace PacManBot.Modules
         [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
         public async Task StartUno(params SocketGuildUser[] players)
         {
-            players = new SocketGuildUser[] { Context.User as SocketGuildUser }.Union(players.Where(x => x.IsBot)).ToArray();
+            players = Utils.ArrayConcat(new SocketGuildUser[] { Context.User as SocketGuildUser }, players.Where(x => x.IsBot).ToArray());
             await RunMultiplayerGame<UnoGame>(players);
         }
 

@@ -1,9 +1,9 @@
 using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Net;
-using Discord.Rest;
 using Discord.Commands;
 using Discord.WebSocket;
 using PacManBot.Games;
@@ -105,7 +105,8 @@ namespace PacManBot.Services
             string prefix = storage.GetPrefix(context.Guild);
             int commandPosition = 0;
             
-            if (message.HasMentionPrefix(client.CurrentUser, ref commandPosition) || message.HasStringPrefix($"{prefix} ", ref commandPosition) || message.HasStringPrefix(prefix, ref commandPosition) || context.Channel is IDMChannel)
+            if (message.HasMentionPrefix(client.CurrentUser, ref commandPosition) || message.HasStringPrefix($"{prefix} ", ref commandPosition) || message.HasStringPrefix(prefix, ref commandPosition)
+                || context.Channel is IDMChannel || storage.NoPrefixChannels.Contains(message.Id))
             {
                 var result = await commands.ExecuteAsync(context, commandPosition, provider);
 

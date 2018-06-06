@@ -40,7 +40,7 @@ namespace PacManBot.Constants
             Check = "<:check:410612082929565696>".ToEmote(),
             Cross = "<:cross:410612082988285952>".ToEmote(),
             Loading = "<a:loading:410612084527595520>".ToEmote(),
-            Dance = "<a:danceblobfast:439575722567401479>".ToEmote(),
+            RapidBlobDance = "<a:danceblobfast:439575722567401479>".ToEmote(),
             Thinkxel = "<:thinkxel:409803420308996106>".ToEmote(),
             Empty = "<:Empty:445680384592576514>".ToEmote(),
 

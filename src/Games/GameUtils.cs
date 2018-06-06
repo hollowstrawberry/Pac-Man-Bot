@@ -30,7 +30,7 @@ namespace PacManBot.Games
         };
         public static readonly string[] WinTexts = new string[]
         {
-            "👍", $"{CustomEmoji.PacMan}", $"{CustomEmoji.Dance}", "Rekt", "Better luck next time", "Beep!", ":)", "Nice", "Muahaha", "You weren't even trying"
+            "👍", $"{CustomEmoji.PacMan}", $"{CustomEmoji.RapidBlobDance}", "Rekt", "Better luck next time", "Beep!", ":)", "Nice", "Muahaha", "You weren't even trying"
         };
         public static readonly string[] NotWinTexts = new string[]
         {

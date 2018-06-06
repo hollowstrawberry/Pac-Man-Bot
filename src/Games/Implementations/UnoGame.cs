@@ -72,8 +72,8 @@ namespace PacManBot.Games
                 new Color(221, 46, 68), new Color(85, 172, 238), new Color(120, 177, 89), new Color(253, 203, 88), new Color(20, 26, 30)
             };
 
-            public static readonly string[] TypeEmote = CustomEmoji.NumberCircle
-                .Union(new Emote[] { CustomEmoji.UnoSkip, CustomEmoji.UnoReverse, CustomEmoji.AddTwo, CustomEmoji.AddFour, CustomEmoji.UnoWild })
+            public static readonly string[] TypeEmote =
+                Utils.ArrayConcat(CustomEmoji.NumberCircle, new Emote[] { CustomEmoji.UnoSkip, CustomEmoji.UnoReverse, CustomEmoji.AddTwo, CustomEmoji.AddFour, CustomEmoji.UnoWild })
                 .Select(x => x.ToString()).ToArray();
 
 

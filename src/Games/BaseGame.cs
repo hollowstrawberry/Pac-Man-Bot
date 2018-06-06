@@ -22,6 +22,9 @@ namespace PacManBot.Games
         public virtual int Time { get; set; }
         public virtual ulong[] UserId { get; set; }
 
+        public virtual ulong OwnerId { get { return UserId[0]; } set { UserId = new ulong[] { value }; } }
+        public virtual IUser Owner => client.GetUser(OwnerId);
+
         public RequestOptions RequestOptions => new RequestOptions() { Timeout = 10000, RetryMode = RetryMode.RetryRatelimit, CancelToken = discordRequestCTS.Token };
 
         public Action<MessageProperties> UpdateMessage => (msg => {

@@ -90,6 +90,18 @@ namespace PacManBot
             return lists;
         }
 
+        public static T[] ArrayConcat<T>(params T[][] arrays)
+        {
+            T[] newArray = new T[arrays.Select(x => x.Length).Sum()];
+            int location = 0;
+            foreach (var array in arrays)
+            {
+                Array.Copy(array, 0, newArray, location, array.Length);
+                location += array.Length;
+            }
+            return newArray;
+        }
+
         public static IEnumerable<IEnumerable<T>> Permutations<T>(this IEnumerable<T> list, int length)
         {
             if (length == 1) return list.Select(t => new T[] { t });

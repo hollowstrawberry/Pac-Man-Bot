@@ -20,6 +20,9 @@ namespace PacManBot.Games
         int Time { get; set; } // Current turn 
         ulong[] UserId { get; set; } // Players
 
+        ulong OwnerId { get; set; }
+        IUser Owner { get; }
+
         // Discord
         RequestOptions RequestOptions { get; } // Used when modifying the game message
         Action<MessageProperties> UpdateMessage { get; }
@@ -50,12 +53,6 @@ namespace PacManBot.Games
     {
         bool IsInput(IEmote value, ulong userId);
         void DoTurn(IEmote input);
-    }
-
-
-    public interface ISingleplayerGame : IBaseGame
-    {
-        ulong OwnerId { get; set; }
     }
 
     public interface IMultiplayerGame : IBaseGame

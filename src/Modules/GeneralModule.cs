@@ -236,12 +236,12 @@ namespace PacManBot.Modules
         [Summary("Takes a number which can be either an amount of emotes to send or a message ID to react to. Reacts to the command by default.")]
         public async Task BlobDance(ulong number = 0)
         {
-            if (number < 1) await Context.Message.AddReactionAsync(CustomEmoji.Dance, options: Utils.DefaultOptions);
-            else if (number <= 10) await ReplyAsync($"{CustomEmoji.Dance}".Multiply((int)number));
+            if (number < 1) await Context.Message.AddReactionAsync(CustomEmoji.RapidBlobDance, options: Utils.DefaultOptions);
+            else if (number <= 10) await ReplyAsync($"{CustomEmoji.RapidBlobDance}".Multiply((int)number));
             else if (number <= 1000000) await ReplyAsync($"Are you insane?");
             else // Message ID
             {
-                if (await Context.Channel.GetMessageAsync(number) is IUserMessage message) await message.AddReactionAsync(CustomEmoji.Dance, Utils.DefaultOptions);
+                if (await Context.Channel.GetMessageAsync(number) is IUserMessage message) await message.AddReactionAsync(CustomEmoji.RapidBlobDance, Utils.DefaultOptions);
                 else await Context.Message.AddReactionAsync(CustomEmoji.Cross);
             }
         }
@@ -254,7 +254,7 @@ namespace PacManBot.Modules
         {
             foreach (IUserMessage message in Context.Channel.GetCachedMessages(amount))
             {
-                await message.AddReactionAsync(CustomEmoji.Dance, Utils.DefaultOptions);
+                await message.AddReactionAsync(CustomEmoji.RapidBlobDance, Utils.DefaultOptions);
             }
         }
 
