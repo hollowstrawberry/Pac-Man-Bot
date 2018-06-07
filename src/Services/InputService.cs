@@ -106,7 +106,7 @@ namespace PacManBot.Services
             int commandPosition = 0;
             
             if (message.HasMentionPrefix(client.CurrentUser, ref commandPosition) || message.HasStringPrefix($"{prefix} ", ref commandPosition) || message.HasStringPrefix(prefix, ref commandPosition)
-                || context.Channel is IDMChannel || storage.NoPrefixChannels.Contains(message.Id))
+                || context.Channel is IDMChannel || storage.NoPrefixChannels.Contains(message.Channel.Id))
             {
                 var result = await commands.ExecuteAsync(context, commandPosition, provider);
 
