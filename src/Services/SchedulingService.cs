@@ -52,6 +52,7 @@ namespace PacManBot.Services
         }
 
 
+
         public async void CheckConnection(object state)
         {
             if (client.AllShardsConnected()) return;

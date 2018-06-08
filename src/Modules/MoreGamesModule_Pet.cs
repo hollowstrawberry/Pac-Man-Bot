@@ -72,25 +72,6 @@ namespace PacManBot.Modules
         }
 
 
-        // Its own command so it parses the guild user for me
-        [Command("pet user"), Alias("pet u", "clockagotchi user"), Priority(1), HideHelp]
-        [Summary("Checks another person's pet. See **{prefix}pet help** for more info.")]
-        [BetterRequireBotPermission(ChannelPermission.EmbedLinks | ChannelPermission.AddReactions)]
-        public async Task ClockagotchiUser(SocketGuildUser user = null)
-        {
-            if (user == null)
-            {
-                await ReplyAsync("You must specify a user!");
-                return;
-            }
-
-            var pet = storage.GetUserGame<PetGame>(user.Id);
-
-            if (pet == null) await ReplyAsync("This person doesn't have a pet :(", options: Utils.DefaultOptions);
-            else await ReplyAsync(pet.GetContent(), false, pet.GetEmbed(user)?.Build(), Utils.DefaultOptions);
-        }
-
-
         // Its own command so I can apply a usage rate-limit
         [Command("pet pet"), Alias("pet p", "pet pot", "pet pat", "clockagotchi pet"), Priority(1), HideHelp]
         [Summary("Pets your pet.")]
@@ -123,17 +104,51 @@ namespace PacManBot.Modules
         }
 
 
-        [PetCommand("exact", "precise")]
+        [PetCommand("exact", "precise", "decimals", "float", "double")]
         public async Task PetExact(PetGame pet, string args)
         {
-            await ReplyAsync(pet.GetContent(), false, pet.GetEmbed(Context.User as IGuildUser, true)?.Build(), Utils.DefaultOptions);
+            var user = Context.User as SocketGuildUser;
+
+            if (!string.IsNullOrWhiteSpace(args))
+            {
+                var other = await Context.ParseUser(args);
+                if (other != null)
+                {
+                    user = other;
+                    pet = storage.GetUserGame<PetGame>(user.Id);
+                    if (pet == null)
+                    {
+                        await ReplyAsync("This person doesn't have a pet :(", options: Utils.DefaultOptions);
+                        return;
+                    }
+                }
+            }
+
+            await ReplyAsync(pet.GetContent(), false, pet.GetEmbed(user, true)?.Build(), Utils.DefaultOptions);
         }
 
 
         [PetCommand("stats", "achievements", "unlocks")]
         public async Task PetStats(PetGame pet, string args)
         {
-            await ReplyAsync("", false, pet.GetEmbedAchievements(Context.User as IGuildUser)?.Build(), Utils.DefaultOptions);
+            var user = Context.User as SocketGuildUser;
+
+            if (!string.IsNullOrWhiteSpace(args))
+            {
+                var other = await Context.ParseUser(args);
+                if (other != null)
+                {
+                    user = other;
+                    pet = storage.GetUserGame<PetGame>(user.Id);
+                    if (pet == null)
+                    {
+                        await ReplyAsync("This person doesn't have a pet :(", options: Utils.DefaultOptions);
+                        return;
+                    }
+                }
+            }
+
+            await ReplyAsync("", false, pet.GetEmbedAchievements(user)?.Build(), Utils.DefaultOptions);
         }
 
 
@@ -227,6 +242,14 @@ namespace PacManBot.Modules
         }
 
 
+        [PetCommand("help", "h")]
+        public async Task PetHelp(PetGame pet, string args)
+        {
+            var summary = typeof(MoreGamesModule).GetMethod(nameof(PetMaster)).GetCustomAttributes(typeof(SummaryAttribute), false).FirstOrDefault() as SummaryAttribute;
+            await ReplyAsync(summary?.Text.Replace("{prefix}", storage.GetPrefixOrEmpty(Context.Guild)) ?? "Couldn't get help", options: Utils.DefaultOptions);
+        }
+
+
         [PetCommand("top", "rank", "lb", "ranking", "leaderboard", "best")]
         public async Task PetRanking(PetGame pet, string args)
         {
@@ -249,11 +272,27 @@ namespace PacManBot.Modules
         }
 
 
-        [PetCommand("help", "h")]
-        public async Task PetHelp(PetGame pet, string args)
+        [PetCommand("user", "u")]
+        public async Task PetUser(PetGame pet, string args)
         {
-            var summary = typeof(MoreGamesModule).GetMethod(nameof(PetMaster)).GetCustomAttributes(typeof(SummaryAttribute), false).FirstOrDefault() as SummaryAttribute;
-            await ReplyAsync(summary?.Text.Replace("{prefix}", storage.GetPrefixOrEmpty(Context.Guild)) ?? "Couldn't get help", options: Utils.DefaultOptions);
+            if (string.IsNullOrWhiteSpace(args))
+            {
+                await ReplyAsync("You must specify a user!", options: Utils.DefaultOptions);
+                return;
+            }
+
+            var user = await Context.ParseUser(args);
+
+            if (user == null)
+            {
+                await ReplyAsync("Can't find the specified user!", options: Utils.DefaultOptions);
+                return;
+            }
+
+            pet = storage.GetUserGame<PetGame>(user.Id);
+
+            if (pet == null) await ReplyAsync("This person doesn't have a pet :(", options: Utils.DefaultOptions);
+            else await ReplyAsync(pet.GetContent(), false, pet.GetEmbed(user)?.Build(), Utils.DefaultOptions);
         }
 
 
@@ -273,7 +312,7 @@ namespace PacManBot.Modules
         }
 
 
-        [PetCommand("pet")]
+        [PetCommand("pet")] // Only runs if it couldn't run the dedicated command
         public async Task PetPetRatelimited(PetGame pet, string args)
         {
             var now = DateTime.Now;

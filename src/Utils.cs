@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
@@ -218,6 +219,14 @@ namespace PacManBot
                 if (shard.ConnectionState != ConnectionState.Connected) return false;
             }
             return true;
+        }
+
+        
+        public static async Task<SocketGuildUser> ParseUser(this ICommandContext context, string value)
+        {
+            var result = await new UserTypeReader<SocketGuildUser>().ReadAsync(context, value, null);
+            if (result.IsSuccess) return (SocketGuildUser)result.BestMatch;
+            else return null;
         }
 
 
