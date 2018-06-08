@@ -73,7 +73,7 @@ namespace PacManBot.Modules
 
 
         // Its own command so it parses the guild user for me
-        [Command("pet user"), Alias("clockagotchi user"), Priority(1), HideHelp]
+        [Command("pet user"), Alias("pet u", "clockagotchi user"), Priority(1), HideHelp]
         [Summary("Checks another person's pet. See **{prefix}pet help** for more info.")]
         [BetterRequireBotPermission(ChannelPermission.EmbedLinks | ChannelPermission.AddReactions)]
         public async Task ClockagotchiUser(SocketGuildUser user = null)
@@ -92,11 +92,11 @@ namespace PacManBot.Modules
 
 
         // Its own command so I can apply a usage rate-limit
-        [Command("pet pet"), Alias("clockagotchi pet"), Priority(1), HideHelp]
+        [Command("pet pet"), Alias("pet p", "pet pot", "pet pat", "clockagotchi pet"), Priority(1), HideHelp]
         [Summary("Pets your pet.")]
         [BetterRequireBotPermission(ChannelPermission.EmbedLinks | ChannelPermission.AddReactions)]
         [Ratelimit(30, 1, Measure.Minutes), Ratelimit(800, 1, Measure.Hours)]
-        public async Task PetPet()
+        public async Task PetPet([Remainder]string uselessArgs = "")
         {
             var pet = storage.GetUserGame<PetGame>(Context.User.Id);
             if (pet == null)

@@ -154,7 +154,7 @@ namespace PacManBot.Modules
         [Command("waka"), Alias("ping"), Parameters(""), Remarks("Ping? Nah, waka.")]
         [Summary("Tests the ping (server reaction time in milliseconds) and shows other quick stats about the bot at the current moment.\n" +
                  "Did you know the bot responds every time you say \"waka\" in chat? Shhh, it's a secret.")]
-        public async Task Ping([Remainder]string args = "") //Useless args
+        public async Task Ping([Remainder]string uselessArgs = "")
         {
             var stopwatch = Stopwatch.StartNew(); // Measure the time it takes to send a message to chat
             var message = await ReplyAsync($"{CustomEmoji.Loading} Waka", options: Utils.DefaultOptions);
