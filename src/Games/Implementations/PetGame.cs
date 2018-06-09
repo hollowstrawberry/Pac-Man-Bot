@@ -10,7 +10,6 @@ using Discord.Commands;
 using Discord.WebSocket;
 using PacManBot.Constants;
 using PacManBot.Services;
-using static PacManBot.Games.GameUtils;
 
 namespace PacManBot.Games
 {
@@ -355,6 +354,11 @@ namespace PacManBot.Games
                 energy = Math.Min(MaxStat, energy + 1);
                 achievements.timesFed++;
             }
+            else
+            {
+                happiness = Math.Max(0, happiness - 1);
+            }
+
             storage.StoreGame(this);
             return canEat;
         }
@@ -370,6 +374,11 @@ namespace PacManBot.Games
                 energy = Math.Max(0, energy - (energy.Ceiling() == MaxStat ? 5.5 : 5.0)); // It's all for appearance
                 achievements.timesPlayed++;
             }
+            else if (energy.Ceiling() >= 5)
+            {
+                happiness = Math.Max(0, happiness - 1);
+            }
+
             storage.StoreGame(this);
             return canPlay;
         }
@@ -384,6 +393,11 @@ namespace PacManBot.Games
                 hygiene = MaxStat;
                 achievements.timesCleaned++;
             }
+            else
+            {
+                happiness = Math.Max(0, happiness - 1);
+            }
+
             storage.StoreGame(this);
             return canClean;
         }

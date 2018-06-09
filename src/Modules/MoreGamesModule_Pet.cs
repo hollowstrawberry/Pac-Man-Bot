@@ -152,21 +152,21 @@ namespace PacManBot.Modules
         }
 
 
-        [PetCommand("feed", "food", "eat", "hunger")]
+        [PetCommand("feed", "food", "eat", "hunger", "satiation")]
         public async Task PetFeed(PetGame pet, string args)
         {
             if (pet.Feed()) await Context.Message.AddReactionAsync(Bot.Random.Choose(PetGame.FoodEmotes).ToEmoji(), Utils.DefaultOptions);
-            else await ReplyAsync($"{CustomEmoji.Cross} Your pet is already full!");
+            else await ReplyAsync($"{CustomEmoji.Cross} Your pet is already full! (-1 happiness)");
         }
 
 
-        [PetCommand("play", "fun")]
+        [PetCommand("play", "fun", "happy", "happiness")]
         public async Task PetPlay(PetGame pet, string args)
         {
             if (pet.Play()) await Context.Message.AddReactionAsync(Bot.Random.Choose(PetGame.PlayEmotes).ToEmoji(), Utils.DefaultOptions);
             else
             {
-                string message = pet.happiness.Ceiling() == PetGame.MaxStat ? "Your pet doesn't want to play anymore!" : "Your pet is too tired to play! It needs 5 energy or more.";
+                string message = pet.energy.Ceiling() >= 5 ? "Your pet doesn't want to play anymore! (-1 happiness)" : "Your pet is too tired to play! It needs 5 energy or more.";
                 await ReplyAsync($"{CustomEmoji.Cross} {message}", options: Utils.DefaultOptions);
             }
         }
@@ -176,7 +176,7 @@ namespace PacManBot.Modules
         public async Task PetClean(PetGame pet, string args)
         {
             if (pet.Clean()) await Context.Message.AddReactionAsync(Bot.Random.Choose(PetGame.CleanEmotes).ToEmoji(), Utils.DefaultOptions);
-            else await ReplyAsync($"{CustomEmoji.Cross} Your pet is already clean!", options: Utils.DefaultOptions);
+            else await ReplyAsync($"{CustomEmoji.Cross} Your pet is already clean! (-1 happiness)", options: Utils.DefaultOptions);
         }
 
 
@@ -190,7 +190,7 @@ namespace PacManBot.Modules
             }
             else
             {
-                await ReplyAsync(Bot.Random.Choose(PetGame.SleepEmotes) + (pet.asleep ? " Your pet is already sleeping." : "Your pet is now asleep."), options: Utils.DefaultOptions);
+                await ReplyAsync(Bot.Random.Choose(PetGame.SleepEmotes) + (pet.asleep ? " Your pet is already sleeping." : " Your pet is now asleep."), options: Utils.DefaultOptions);
                 if (!pet.asleep) pet.ToggleSleep();
             }
         }

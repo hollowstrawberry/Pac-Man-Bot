@@ -43,7 +43,7 @@ Now with more games to challenge your friends or the bot itself! Use **{prefix}h
 
 "aboutfields":
 "Author|Samrux#3980
-Version|v3.4.6
+Version|v3.4.7
 Library|Discord.Net 2.0 (C#)
 <:discord:409811304103149569> Bot invite|[Click here](https://discordapp.com/oauth2/authorize?client_id=398127484983443468&scope=bot&permissions=355392 \"https://discordapp.com/oauth2/authorize?client_id=398127484983443468&scope=bot&permissions=355392\")
 <:staff:412019879772815361> Pac-Man server|[Click here](https://discord.gg/hGHnfda \"https://discord.gg/hGHnfda\")
@@ -136,7 +136,8 @@ You pet with three hands.{3}
 You pet with four hands...?{4}
 How many hands do you have?{5}
 This is your chance to pet!
-Your pet moves slightly to the left while you're petting it. He apologizes
+Your pet moves slightly to the left while you're petting it. It says sorry.
+Your pet moves slightly to the left while you're petting it. You say sorry.{-1}
 The petting intensifies.{3}
 Your pet intercepts your pet!{0}
 Block!{0}
@@ -225,6 +226,7 @@ Repeating the word \"pet\" so much gets kind of tiresome, but it's still funny.
 You wonder how long it took this bot's developer to write a hundred different petting messages. The developer wonders if you wonder if he wonders if you wonder.{4}
 Your pet is unpettable at the moment, but appreciates the attempt.{0}
 Unknown pet command! Syke. +1 pets{hide}
+As you pet your pet, you wonder if anyone goes out of their way to type the `clockagotchi pet` alias instead. That would be silly.
 __Tip:__ You can also pet in a DM with the bot{0}{dm}
 You pet your pet. Suddenly, the sky opens up, and a milliard pet-angels descend upon you and your pet. They crown you king of pets.{getking} The ceremony and following party lasts three whole days, and there is much joy and petting in the land.{20}
 Royal pet! {10}{king}

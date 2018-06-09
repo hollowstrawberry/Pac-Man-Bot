@@ -103,10 +103,16 @@ namespace PacManBot
             return newArray;
         }
 
-        public static IEnumerable<IEnumerable<T>> Permutations<T>(this IEnumerable<T> list, int length)
+        public static T? FirstOrNull<T>(this IEnumerable<T> list, Func<T, bool> predicate) where T : struct
         {
-            if (length == 1) return list.Select(t => new T[] { t });
-            return Permutations(list, length - 1).SelectMany(t => list, (t1, t2) => t1.Concat(new T[] { t2 }));
+            try
+            {
+                return list.First(predicate);
+            }
+            catch (InvalidOperationException)
+            {
+                return null;
+            }
         }
 
 

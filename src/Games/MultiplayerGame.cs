@@ -17,15 +17,11 @@ namespace PacManBot.Games
         public virtual bool AITurn => State == State.Active && (User(Turn)?.IsBot ?? false);
         public virtual bool AllBots => Enumerable.Range(0, UserId.Length).All(x => User(x)?.IsBot ?? false);
 
-        private Dictionary<ulong, IUser> userCache = new Dictionary<ulong, IUser>();
-
         public IUser User(Player player) => User((int)player);
         public IUser User(int i = 0)
         {
             if (i < 0 || i >= UserId.Length) return null;
-
-            if (!userCache.ContainsKey(UserId[i])) userCache.Add(UserId[i], client.GetUser(UserId[i]));
-            return userCache[UserId[i]];
+            return client.GetUser(UserId[i]);
         }
 
 
@@ -110,7 +106,9 @@ namespace PacManBot.Games
 
         protected string StripPrefix(string value)
         {
-            return value.Replace(storage.GetPrefix(Guild), "").Trim();
+            string prefix = storage.GetPrefix(Guild);
+            if (value.StartsWith(prefix)) return value.Substring(prefix.Length);
+            else return value;
         }
 
 
