@@ -114,11 +114,11 @@ namespace PacManBot.Modules
             catch (Exception e)
             {
                 if (!(e is HttpException || e is TimeoutException)) await logger.Log(LogSeverity.Error, $"{e}");
-                await Context.Message.AddReactionAsync(CustomEmoji.Cross, Utils.DefaultOptions);
+                await Context.Message.AddReactionAsync(CustomEmoji.ECross, Utils.DefaultOptions);
                 return;
             }
 
-            await Context.Message.AddReactionAsync(CustomEmoji.Check, Utils.DefaultOptions);
+            await Context.Message.AddReactionAsync(CustomEmoji.ECheck, Utils.DefaultOptions);
         }
 
 

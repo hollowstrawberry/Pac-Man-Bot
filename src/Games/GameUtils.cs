@@ -24,13 +24,13 @@ namespace PacManBot.Games
         };
         public static readonly string[] GameTexts = new string[]
         {
-            "🤔", "🔣", "🤖", $"{CustomEmoji.Thinkxel}", $"{CustomEmoji.PacMan}", "Hmm...", "Nice move.", "Take this!", "Huh.", "Aha!", "Come on now", "All according to plan",
+            "🤔", "🔣", "🤖", CustomEmoji.Thinkxel, CustomEmoji.PacMan, "Hmm...", "Nice move.", "Take this!", "Huh.", "Aha!", "Come on now", "All according to plan",
             "I think I'm winning this one", "Beep boop", "Boop?", "Interesting...", "Recalculating...", "ERROR: YourSkills not found", "I wish to be a real bot", "That's all you got?",
             "Let's see what happens", "I don't even know what I'm doing", "This is a good time for you to quit", "Curious."
         };
         public static readonly string[] WinTexts = new string[]
         {
-            "👍", $"{CustomEmoji.PacMan}", $"{CustomEmoji.RapidBlobDance}", "Rekt", "Better luck next time", "Beep!", ":)", "Nice", "Muahaha", "You weren't even trying"
+            "👍", CustomEmoji.PacMan, CustomEmoji.RapidBlobDance, "Rekt", "Better luck next time", "Beep!", ":)", "Nice", "Muahaha", "You weren't even trying"
         };
         public static readonly string[] NotWinTexts = new string[]
         {
@@ -138,10 +138,10 @@ namespace PacManBot.Games
         {
             switch (player)
             {
-                case Player.First: return (highlighted ? CustomEmoji.C4redHL : CustomEmoji.C4red).ToString();
-                case Player.Second: return (highlighted ? CustomEmoji.C4blueHL : CustomEmoji.C4blue).ToString();
-                case Player.None: return CustomEmoji.BlackCircle.ToString();
-                default: return CustomEmoji.Staff.ToString();
+                case Player.First: return highlighted ? CustomEmoji.C4redHL : CustomEmoji.C4red;
+                case Player.Second: return highlighted ? CustomEmoji.C4blueHL : CustomEmoji.C4blue;
+                case Player.None: return CustomEmoji.BlackCircle;
+                default: return CustomEmoji.Staff;
             }
         }
 
@@ -149,10 +149,10 @@ namespace PacManBot.Games
         {
             switch (player)
             {
-                case Player.First: return (highlighted ? CustomEmoji.TTTxHL : CustomEmoji.TTTx).ToString();
-                case Player.Second: return (highlighted ? CustomEmoji.TTToHL : CustomEmoji.TTTo).ToString();
+                case Player.First: return highlighted ? CustomEmoji.TTTxHL : CustomEmoji.TTTx;
+                case Player.Second: return highlighted ? CustomEmoji.TTToHL : CustomEmoji.TTTo;
                 case Player.None: return null;
-                default: return CustomEmoji.Staff.ToString();
+                default: return CustomEmoji.Staff;
             }
         }
 

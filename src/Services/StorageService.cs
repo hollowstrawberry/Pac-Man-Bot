@@ -309,7 +309,7 @@ namespace PacManBot.Services
                                 break;
                             }
                         }
-                        game?.SetServices(client, logger, this);
+                        game?.PostDeserialize(client, logger, this);
                         // StoreGame(game); // Update old files
                     }
                     catch (Exception e)

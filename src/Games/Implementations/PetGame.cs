@@ -33,14 +33,14 @@ namespace PacManBot.Games
 
         [DataMember] private string petName = null;
         [DataMember] private string petImageUrl = null;
-        [DataMember] public double satiation { get; private set; } = 15;
-        [DataMember] public double happiness { get; private set; } = 15;
-        [DataMember] public double hygiene { get; private set; } = 15;
-        [DataMember] public double energy { get; private set; } = 15;
-        [DataMember] public bool asleep { get; private set; } = false;
-        [DataMember] public DateTime bornDate { get; private set; }
-        [DataMember] public DateTime lastUpdated { get; private set; }
-        [DataMember] public Achievements achievements { get; private set; } = new Achievements();
+        [DataMember] public double satiation  = 15;
+        [DataMember] public double happiness  = 15;
+        [DataMember] public double hygiene  = 15;
+        [DataMember] public double energy  = 15;
+        [DataMember] public bool asleep  = false;
+        [DataMember] public DateTime bornDate;
+        [DataMember] public DateTime lastUpdated;
+        [DataMember] public Achievements achievements = new Achievements();
 
         [DataMember] public override ulong OwnerId { get { return UserId[0]; } set { UserId = new ulong[] { value }; } }
         [IgnoreDataMember] public DateTime lastPet = DateTime.Now;
@@ -285,7 +285,7 @@ namespace PacManBot.Games
             stats.Append($"**Total actions:** {achievements.TotalActions}\n");
             stats.Append($"**Pettings given:** {achievements.timesPet} (~{PetMessageCountEstimate()} messages)\n");
             stats.Append($"**Time without neglect:** {(DateTime.Now - achievements.lastNeglected).Humanized()}\n");
-            stats.Append($"*(Neglect occurs when all stats reach 0)*\nᅠ");
+            stats.Append($"*(Neglect occurs when all meters reach 0)*\nᅠ");
 
             var achievs = new StringBuilder[] { new StringBuilder(), new StringBuilder() }; // off, on
 
@@ -351,7 +351,7 @@ namespace PacManBot.Games
             if (canEat)
             {
                 satiation = MaxStat;
-                energy = Math.Min(MaxStat, energy + 1);
+                energy = Math.Min(MaxStat, energy + 2);
                 achievements.timesFed++;
             }
             else
@@ -404,7 +404,6 @@ namespace PacManBot.Games
 
         public void ToggleSleep()
         {
-            UpdateStats(store: false);
             asleep = !asleep;
             storage.StoreGame(this);
         }
@@ -487,7 +486,7 @@ namespace PacManBot.Games
         }
 
 
-        public virtual void SetServices(DiscordShardedClient client, LoggingService logger, StorageService storage)
+        public virtual void PostDeserialize(DiscordShardedClient client, LoggingService logger, StorageService storage)
         {
             this.client = client;
             this.logger = logger;

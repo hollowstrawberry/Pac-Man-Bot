@@ -35,7 +35,7 @@ namespace PacManBot.Modules
         [ExampleUsage("uno\nuno @Pac-Man#3944")]
         [Summary("__Tip__: Switching back and forth with DMs to see your cards can be tiresome, so try having your cards open in your phone while you're playing in a computer."
                + "\n\n__**Commands:**__\n"
-               + "\n • **{prefix}uno** - Starts a new Uno game, for up to 10 players. You can specify bots as opponents. Players can join or leave at any time."
+               + "\n • **{prefix}uno** - Starts a new Uno game, for up to 10 players. You can specify players and bots as opponents. Players can join or leave at any time."
                + "\n • **{prefix}uno join** - Join a game or invite a user or bot."
                + "\n • **{prefix}uno leave** - Leave the game or kick a bot or inactive user."
                + "\n • **{prefix}bump** - Move the game to the bottom of the chat."
@@ -44,6 +44,7 @@ namespace PacManBot.Modules
                + "\n • Each player is given 7 cards."
                + "\n • The current turn's player must choose to discard a card that matches either the color, number or type of the last card."
                + "\n • If the player doesn't have any matching card, they will draw another card. If they still can't play they will skip a turn."
+               + "\n • When you only have one card left, __you must say \"uno\"__. If you don't, someone else can call you out by saying \"uno\" __before the next player plays__, and you will draw 2 cards."
                + "\n • The first player to lose all of their cards wins the game."
                + "\n • **Special cards:** *Skip* cards make the next player skip a turn. *Reverse* cards change the turn direction, or act like Skip cards with only two players."
                + " *Draw* cards force the next player to draw cards and skip a turn. *Wild* cards let you choose the color, and will match with any card."
@@ -52,15 +53,7 @@ namespace PacManBot.Modules
         [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
         public async Task StartUno(params SocketGuildUser[] startingPlayers)
         {
-            var users = startingPlayers.Where(x => !x.IsBot).Distinct().ToArray();
-            startingPlayers = Utils.ArrayConcat(new SocketGuildUser[] { Context.User as SocketGuildUser }, startingPlayers.Where(x => x.IsBot).ToArray());
-
-            if (users.Length > 0 && storage.GetGame(Context.Channel.Id) == null)
-            {
-                await ReplyAsync($"{string.Join(", ", users.Select(x => x.Mention))}: You've been invited to play Uno. Type **{storage.GetPrefix(Context.Guild)}uno join** to join.", options: Utils.DefaultOptions);
-            }
-
-            await RunMultiplayerGame<UnoGame>(startingPlayers);
+            await RunMultiplayerGame<UnoGame>(Utils.ArrayConcat(new SocketGuildUser[] { Context.User as SocketGuildUser }, startingPlayers));
         }
 
 
@@ -110,7 +103,7 @@ namespace PacManBot.Modules
             else await MoveGame();
 
             if (Context.BotCan(ChannelPermission.ManageMessages)) await Context.Message.DeleteAsync(options: Utils.DefaultOptions);
-            else await Context.Message.AddReactionAsync(failReason == null ? CustomEmoji.Check : CustomEmoji.Cross, options: Utils.DefaultOptions);
+            else await Context.Message.AddReactionAsync(failReason == null ? CustomEmoji.ECheck : CustomEmoji.ECross, Utils.DefaultOptions);
         }
 
 
@@ -150,7 +143,7 @@ namespace PacManBot.Modules
 
             game.RemovePlayer(user.Id);
             await MoveGame();
-            await Context.Message.AddReactionAsync(CustomEmoji.Check, Utils.DefaultOptions);
+            await Context.Message.AddReactionAsync(CustomEmoji.ECheck, Utils.DefaultOptions);
         }
 
 
@@ -355,7 +348,7 @@ namespace PacManBot.Modules
                 {
                     await ReplyAsync($"Game ended. Score won't be registered.\n**Result:** {pacManGame.score} points in {pacManGame.Time} turns", options: Utils.DefaultOptions);
                 }
-                else await Context.Message.AddReactionAsync(CustomEmoji.Check, Utils.DefaultOptions);
+                else await Context.Message.AddReactionAsync(CustomEmoji.ECheck, Utils.DefaultOptions);
             }
             else await ReplyAsync("You can't cancel this game because someone else is still playing! Try again in a minute.", options: Utils.DefaultOptions);
         }

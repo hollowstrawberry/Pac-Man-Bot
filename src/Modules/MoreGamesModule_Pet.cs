@@ -32,7 +32,7 @@ namespace PacManBot.Modules
             "**{prefix}pet stats** - Check your pet's statistics and achievements\n" +
             "**{prefix}pet name <name>** - Name your pet\n" +
             "**{prefix}pet image <image>** - Give your pet an image\n\n" +
-            "**{prefix}pet feed** - Fills your pet's Satiation and restores 1 Energy\n" +
+            "**{prefix}pet feed** - Fills your pet's Satiation and restores 2 Energy\n" +
             "**{prefix}pet play** - Fills your pet's Happinness and consumes 5 Energy\n" +
             "**{prefix}pet clean** - Fills your pet's Hygiene\n" +
             "**{prefix}pet sleep/wakeup** - Sleep to restore Energy over time\n\n" +
@@ -183,10 +183,12 @@ namespace PacManBot.Modules
         [PetCommand("sleep", "rest", "energy")]
         public async Task PetSleep(PetGame pet, string args)
         {
-            pet.UpdateStats(false);
+            pet.UpdateStats(store: false);
             if (pet.energy.Ceiling() == PetGame.MaxStat && !pet.asleep)
             {
-                await ReplyAsync($"{CustomEmoji.Cross} Your pet is not tired!", options: Utils.DefaultOptions);
+                pet.happiness = Math.Max(0, pet.happiness - 1);
+                storage.StoreGame(pet);
+                await ReplyAsync($"{CustomEmoji.Cross} Your pet is not tired! (-1 happiness)", options: Utils.DefaultOptions);
             }
             else
             {
@@ -213,7 +215,7 @@ namespace PacManBot.Modules
             else
             {
                 pet.PetName = args;
-                await Context.Message.AddReactionAsync(CustomEmoji.Check, Utils.DefaultOptions);
+                await Context.Message.AddReactionAsync(CustomEmoji.ECheck, Utils.DefaultOptions);
             }
         }
 
@@ -231,8 +233,8 @@ namespace PacManBot.Modules
                 try
                 {
                     pet.PetImageUrl = url;
-                    if (url == null) await ReplyAsync($"{CustomEmoji.Check} Pet image reset!", options: Utils.DefaultOptions);
-                    else await Context.Message.AddReactionAsync(CustomEmoji.Check, Utils.DefaultOptions);
+                    if (url == null) await ReplyAsync($"{CustomEmoji.ECheck} Pet image reset!", options: Utils.DefaultOptions);
+                    else await Context.Message.AddReactionAsync(CustomEmoji.ECheck, Utils.DefaultOptions);
                 }
                 catch (FormatException)
                 {
@@ -327,7 +329,7 @@ namespace PacManBot.Modules
             {
                 pet.lastPet = now + TimeSpan.FromMinutes(5.1);
                 var reqOoptions = new RequestOptions { RetryMode = RetryMode.RetryRatelimit, Timeout = 60_000 };
-                await ReplyAsync($"{CustomEmoji.Cross} Because of your uncontrollable petting, PETA sued you and won. You won't be able to pet again for 5 minutes.", options: reqOoptions);
+                await ReplyAsync($"{CustomEmoji.Cross} Because of your uncontrollable petting, PETA sued you and won. You won't be able to pet again for at least 5 minutes.", options: reqOoptions);
             }
         }
     }

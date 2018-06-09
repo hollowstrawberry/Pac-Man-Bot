@@ -135,7 +135,6 @@ namespace PacManBot.Games
 
         public override void DoTurnAI()
         {
-            string debug = "priority";
             var moves = TryCompleteLines(Turn, 4) ?? TryCompleteLines(Turn.OtherPlayer(), 4) ?? // Win or avoid losing
                         TryCompleteFlyingLines(Turn) ?? TryCompleteFlyingLines(Turn.OtherPlayer()); // Forced win / forced lose situations
 
@@ -149,7 +148,6 @@ namespace PacManBot.Games
                 if (lines == null && blocks == null)
                 {
                     moves = TryCompleteLines(Turn, 2) ?? EmptyCells(board); // Next to itself 
-                    debug = "random";
                 }
                 else
                 {
@@ -158,26 +156,13 @@ namespace PacManBot.Games
                     if (blocks != null) combo.AddRange(blocks.GroupBy(x => x).Where(g => g.Count() > 1).Select(g => g.Key)); // Double block
                     if (lines != null && blocks != null) combo.AddRange(lines.Where(x => blocks.Contains(x))); // line + block
 
-                    if (combo.Count > 0)
-                    {
-                        moves = combo;
-                        debug = "combo";
-                    }
-                    else
-                    {
-                        moves = lines ?? blocks;
-                        debug = "threes";
-                    }
+                    if (combo.Count > 0) moves = combo;
+                    else moves = lines ?? blocks;
                 }
             }
 
             Pos choice = Bot.Random.Choose(moves);
             DoTurn($"{(char)('A' + choice.x)}{1 + choice.y}");
-
-            debug += $" {choice.x+1},{choice.y+1} /";
-            foreach (var m in moves) debug += $" {m.x+1},{m.y+1}";
-            logger.Log(LogSeverity.Debug, "AI", debug);
-
         }
 
 

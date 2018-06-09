@@ -36,7 +36,7 @@ namespace PacManBot.Games
 
             LastPlayed = DateTime.Now;
             ChannelId = channelId;
-            UserId = userId;
+            if (userId != null) UserId = userId;
             Turn = Player.First;
             Winner = Player.None;
             Message = "";

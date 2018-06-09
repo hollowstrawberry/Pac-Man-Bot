@@ -70,7 +70,7 @@ namespace PacManBot.Modules
             try
             {
                 storage.SetPrefix(Context.Guild.Id, prefix);
-                await ReplyAsync($"{CustomEmoji.Check} Prefix for this server has been successfully set to '{prefix}'.", options: Utils.DefaultOptions);
+                await ReplyAsync($"{CustomEmoji.ECheck} Prefix for this server has been successfully set to '{prefix}'.", options: Utils.DefaultOptions);
                 await logger.Log(LogSeverity.Info, $"Prefix for server {Context.Guild.Id} set to {prefix}");
             }
             catch (Exception e)

@@ -31,7 +31,7 @@ namespace PacManBot.Games
             { "⬆".ToEmoji(), GameInput.Up },
             { "⬇".ToEmoji(), GameInput.Down },
             { "➡".ToEmoji(), GameInput.Right },
-            { CustomEmoji.Help, GameInput.Help },
+            { CustomEmoji.EHelp, GameInput.Help },
             { "⏭".ToEmoji(), GameInput.Fast }
         };
 
@@ -313,6 +313,9 @@ namespace PacManBot.Games
         }
 
 
+
+
+        // Game methods
 
 
         private PacManGame() : base() { } // Used by JSON deserializing
@@ -642,7 +645,7 @@ namespace PacManBot.Games
             }
             catch (Exception e)
             {
-                logger.Log(LogSeverity.Error, LogSource.Game, $"{e}");
+                logger.Log(LogSeverity.Error, LogSource.Game, $"{e}").GetAwaiter().GetResult();
                 return $"```There was an error displaying the game. {"Make sure your custom map is valid. ".If(custom)}" +
                        $"If this problem persists, please contact the author of the bot using the {storage.GetPrefixOrEmpty(Guild)}feedback command.```";
             }
@@ -685,7 +688,7 @@ namespace PacManBot.Games
         }
 
 
-        public void SetServices(DiscordShardedClient client, LoggingService logger, StorageService storage)
+        public void PostDeserialize(DiscordShardedClient client, LoggingService logger, StorageService storage)
         {
             this.client = client;
             this.logger = logger;
