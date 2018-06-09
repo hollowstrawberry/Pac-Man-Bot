@@ -57,7 +57,7 @@ namespace PacManBot.Modules
         }
 
 
-        [Command("uno help"), Alias("uno h"), Priority(1), HideHelp]
+        [Command("uno help"), Alias("uno h", "uno rules", "uno commands"), Priority(1), HideHelp]
         [Summary("Gives rules and commands for the Uno game.")]
         [RequireContext(ContextType.Guild)]
         public async Task UnoHelp()
