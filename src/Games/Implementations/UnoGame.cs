@@ -273,7 +273,7 @@ namespace PacManBot.Games
             var mentions = playerIds.Skip(1).Where(x => !client.GetUser(x).IsBot).Distinct().Take(9).ToArray();
             if (mentions.Length > 0)
             {
-                Message = $"{string.Join(", ", mentions.Select(x => client.GetUser(x)?.Mention))} You've been invited to play Uno. Type **{storage.GetPrefix(Guild)}uno join** to join.";
+                Message = $"{string.Join(", ", mentions.Select(x => client.GetUser(x)?.Mention))} You've been invited to play Uno. Type `{storage.GetPrefix(Guild)}uno join` to join.";
             }
 
             foreach (ulong id in playerIds.Where(x => !mentions.Contains(x))) AddPlayer(id);
@@ -319,7 +319,7 @@ namespace PacManBot.Games
                     return true;
                 }
 
-                return players.Count >= 2 && userId == User(Turn)?.Id && (value.Contains("auto") || Card.FromString(value, this).HasValue);
+                return players.Count >= 2 && userId == CurrentPlayer.User?.Id && (value.Contains("auto") || Card.FromString(value, this).HasValue);
             }
 
             return false;
@@ -400,14 +400,14 @@ namespace PacManBot.Games
 
             if (card.Type == CardType.Skip || card.Type == CardType.Reverse && players.Count == 2)
             {
-                Message += $"• {User(Turn)?.Username} skips a turn!\n";
+                Message += $"• {CurrentPlayer.User?.Username} skips a turn!\n";
                 Turn = FollowingTurn;
             }
             else if (card.Type == CardType.WildDrawFour || card.Type == CardType.DrawTwo)
             {
                 int amount = card.Type == CardType.WildDrawFour ? 4 : 2;
                 Draw(CurrentPlayer, amount);
-                Message += $"• {User(Turn)?.Username} draws {amount} cards and skips a turn!\n";
+                Message += $"• {CurrentPlayer.User?.Username} draws {amount} cards and skips a turn!\n";
                 Turn = FollowingTurn;
             }
 
@@ -418,12 +418,12 @@ namespace PacManBot.Games
 
                 if (CanPlace(CurrentPlayer.cards.Last()))
                 {
-                    Message += $"• {User(Turn)?.Username} couldn't play and drew a card.\n";
+                    Message += $"• {CurrentPlayer.User?.Username} couldn't play and drew a card.\n";
                     break;
                 }
                 else
                 {
-                    Message += $"• {User(Turn)?.Username} couldn't play, drew a card and skipped a turn.\n";
+                    Message += $"• {CurrentPlayer.User?.Username} couldn't play, drew a card and skipped a turn.\n";
                     Turn = FollowingTurn;
                 }
             }
@@ -495,7 +495,7 @@ namespace PacManBot.Games
                 Title = Winner == Player.None ? $"{(reversed ? "🔼" : "🔽")} {CurrentPlayer.User?.Username}'s turn" : $"🎉 {CurrentPlayer.User?.Username} is the winner! 🎉",
                 Description = description.ToString().Truncate(2047),
                 Color = Card.RgbColor[(int)TopCard.Color],
-                ThumbnailUrl = User(Turn)?.GetAvatarUrl(),
+                ThumbnailUrl = CurrentPlayer.User?.GetAvatarUrl(),
             };
         }
 

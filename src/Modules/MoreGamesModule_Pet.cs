@@ -48,7 +48,7 @@ namespace PacManBot.Modules
 
             if (command == null)
             {
-                await ReplyAsync($"Unknown pet command! Do **{storage.GetPrefixOrEmpty(Context.Guild)}pet help** for help", options: Utils.DefaultOptions);
+                await ReplyAsync($"Unknown pet command! Do `{storage.GetPrefixOrEmpty(Context.Guild)}pet help` for help", options: Utils.DefaultOptions);
             }
             else
             {
@@ -62,7 +62,7 @@ namespace PacManBot.Modules
                     }
                     else
                     {
-                        await ReplyAsync($"You don't have a pet yet! Simply do **{storage.GetPrefixOrEmpty(Context.Guild)}pet** to adopt one.", options: Utils.DefaultOptions);
+                        await ReplyAsync($"You don't have a pet yet! Simply do `{storage.GetPrefixOrEmpty(Context.Guild)}pet` to adopt one.", options: Utils.DefaultOptions);
                         return;
                     }
                 }
@@ -73,16 +73,16 @@ namespace PacManBot.Modules
 
 
         // Its own command so I can apply a usage rate-limit
-        [Command("pet pet"), Alias("pet p", "pet pot", "pet pat", "clockagotchi pet"), Priority(1), HideHelp]
+        [Command("pet pet"), Alias("pet p", "pp", "pet pot", "pet pat", "clockagotchi pet"), Priority(1), HideHelp]
         [Summary("Pets your pet.")]
         [BetterRequireBotPermission(ChannelPermission.EmbedLinks | ChannelPermission.AddReactions)]
-        [Ratelimit(30, 1, Measure.Minutes), Ratelimit(800, 1, Measure.Hours)]
+        [Ratelimit(30, 1, Measure.Minutes), Ratelimit(600, 1, Measure.Hours)]
         public async Task PetPet([Remainder]string uselessArgs = "")
         {
             var pet = storage.GetUserGame<PetGame>(Context.User.Id);
             if (pet == null)
             {
-                await ReplyAsync($"You don't have a pet yet! Simply do **{storage.GetPrefixOrEmpty(Context.Guild)}pet** to adopt one.", options: Utils.DefaultOptions);
+                await ReplyAsync($"You don't have a pet yet! Simply do `{storage.GetPrefixOrEmpty(Context.Guild)}pet` to adopt one.", options: Utils.DefaultOptions);
                 return;
             }
 

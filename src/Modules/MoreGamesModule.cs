@@ -84,7 +84,7 @@ namespace PacManBot.Modules
             var game = storage.GetGame<UnoGame>(Context.Channel.Id);
             if (game == null)
             {
-                await ReplyAsync($"There's no Uno game in this channel! Use **{storage.GetPrefix(Context.Guild)}uno** to start.", options: Utils.DefaultOptions);
+                await ReplyAsync($"There's no Uno game in this channel! Use `{storage.GetPrefix(Context.Guild)}uno` to start.", options: Utils.DefaultOptions);
                 return;
             }
             if (game.UserId.Contains(user.Id))
@@ -94,7 +94,7 @@ namespace PacManBot.Modules
             }
             if (!self && !user.IsBot)
             {
-                await ReplyAsync($"{user.Mention} You're being invited to play {game.Name}. Do **{storage.GetPrefix(Context.Guild)}uno join** to join.", options: Utils.DefaultOptions);
+                await ReplyAsync($"{user.Mention} You're being invited to play {game.Name}. Do `{storage.GetPrefix(Context.Guild)}uno join` to join.", options: Utils.DefaultOptions);
                 return;
             }
 
@@ -123,7 +123,7 @@ namespace PacManBot.Modules
             var game = storage.GetGame<UnoGame>(Context.Channel.Id);
             if (game == null)
             {
-                await ReplyAsync($"There's no Uno game in this channel! Use **{storage.GetPrefix(Context.Guild)}uno** to start.", options: Utils.DefaultOptions);
+                await ReplyAsync($"There's no Uno game in this channel! Use `{storage.GetPrefix(Context.Guild)}uno` to start.", options: Utils.DefaultOptions);
                 return;
             }
             if (!game.UserId.Contains(user.Id))
@@ -153,8 +153,8 @@ namespace PacManBot.Modules
         [Remarks("Play Tic-Tac-Toe with another user or the bot")]
         [Summary("You can choose a guild member to invite as an opponent using a mention, username, nickname or user ID. Otherwise, you'll play against the bot.\n\n"
                + "You play by sending the number of a free cell (1 to 9) in chat while it is your turn, and to win you must make a line of 3 symbols in any direction\n\n"
-               + "Do **{prefix}cancel** to end the game or **{prefix}bump** to move it to the bottom of the chat. The game times out after 5 minutes of inactivity.\n\n"
-               + "You can also make the bot challenge another user or bot with **{prefix}ttt vs <opponent>**")]
+               + "Do `{prefix}cancel` to end the game or `{prefix}bump` to move it to the bottom of the chat. The game times out after 5 minutes of inactivity.\n\n"
+               + "You can also make the bot challenge another user or bot with `{prefix}ttt vs <opponent>`")]
         [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
         public async Task StartTicTacToe(SocketGuildUser opponent = null)
         {
@@ -175,8 +175,8 @@ namespace PacManBot.Modules
         [Summary("You can choose a guild member to invite as an opponent using a mention, username, nickname or user ID. Otherwise, you'll play against the bot.\n\n"
                + "You play by sending the column and row of the cell you want to play, for example, \"C4\". The player who makes the **most lines of 3 symbols** wins. "
                + "However, if a player makes a lines of **4**, they win instantly.\n\n"
-               + "Do **{prefix}cancel** to end the game or **{prefix}bump** to move it to the bottom of the chat. The game times out after 5 minutes of inactivity.\n\n"
-               + "You can also make the bot challenge another user or bot with **{prefix}5ttt vs <opponent>**")]
+               + "Do `{prefix}cancel` to end the game or `{prefix}bump` to move it to the bottom of the chat. The game times out after 5 minutes of inactivity.\n\n"
+               + "You can also make the bot challenge another user or bot with `{prefix}5ttt vs <opponent>`")]
         [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
         public async Task StartTicTacToe5(SocketGuildUser opponent = null)
         {
@@ -196,8 +196,8 @@ namespace PacManBot.Modules
         [Remarks("Play Connect Four with another user or the bot")]
         [Summary("You can choose a guild member to invite as an opponent using a mention, username, nickname or user ID. Otherwise, you'll play against the bot.\n\n"
                + "You play by sending the number of a free cell (1 to 7) in chat while it is your turn, and to win you must make a line of 3 symbols in any direction\n\n"
-               + "Do **{prefix}cancel** to end the game or **{prefix}bump** to move it to the bottom of the chat. The game times out after 5 minutes of inactivity.\n\n"
-               + "You can also make the bot challenge another user or bot with **{prefix}c4 vs <opponent>**")]
+               + "Do `{prefix}cancel` to end the game or `{prefix}bump` to move it to the bottom of the chat. The game times out after 5 minutes of inactivity.\n\n"
+               + "You can also make the bot challenge another user or bot with `{prefix}c4 vs <opponent>`")]
         [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
         public async Task StartConnectFour(SocketGuildUser opponent = null)
         {
@@ -222,8 +222,8 @@ namespace PacManBot.Modules
                 if (otherGame.ChannelId == Context.Channel.Id)
                 {
                     await ReplyAsync(otherGame.UserId.Contains(Context.User.Id) ?
-                        $"You're already playing a game in this channel!\nUse **{storage.GetPrefixOrEmpty(Context.Guild)}cancel** if you want to cancel it." :
-                        $"There is already a different game in this channel!\nWait until it's finished or try doing **{storage.GetPrefixOrEmpty(Context.Guild)}cancel**");
+                        $"You're already playing a game in this channel!\nUse `{storage.GetPrefixOrEmpty(Context.Guild)}cancel` if you want to cancel it." :
+                        $"There is already a different game in this channel!\nWait until it's finished or try doing `{storage.GetPrefixOrEmpty(Context.Guild)}cancel`");
                     return;
                 }
             }

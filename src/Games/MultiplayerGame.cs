@@ -76,7 +76,7 @@ namespace PacManBot.Games
                 }
                 if (Time == 0 && showHelp && UserId.Length > 1 && UserId[0] != UserId[1])
                 {
-                    return $"{User(0).Mention} You were invited to play {Name}.\nChoose an action below, or type **{storage.GetPrefix(Guild)}cancel** if you don't want to play";
+                    return $"{User(0).Mention} You were invited to play {Name}.\nChoose an action below, or type `{storage.GetPrefix(Guild)}cancel` if you don't want to play";
                 }
             }
 

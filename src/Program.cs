@@ -20,22 +20,23 @@ namespace PacManBot
         static async Task Main()
         {
             // Check files
-            if (!File.Exists(BotFile.Config)) throw new Exception($"Missing required file {BotFile.Config}: Bot can't run");
-            if (!File.Exists(BotFile.Contents)) throw new Exception($"Missing required file {BotFile.Contents}: Bot can't run.");
-
-            string[] secondaryFile = new string[] { BotFile.Prefixes, BotFile.Scoreboard, BotFile.WakaExclude };
-            for (int i = 0; i < secondaryFile.Length; i++)
+            foreach (string requiredFile in new string[] { BotFile.Config, BotFile.Contents })
             {
-                if (!File.Exists(secondaryFile[i]))
+                if (!File.Exists(requiredFile)) throw new Exception($"Missing required file {requiredFile}: Bot can't run");
+            }
+            
+            foreach (string secondaryFile in new string[] { BotFile.Prefixes, BotFile.Scoreboard, BotFile.WakaExclude })
+            {
+                if (!File.Exists(secondaryFile))
                 {
-                    File.Create(secondaryFile[i]).Dispose();
-                    Console.WriteLine($"Created missing file \"{secondaryFile[i]}\"");
+                    File.Create(secondaryFile).Dispose();
+                    Console.WriteLine($"Created missing file \"{secondaryFile}\"");
                 }
             }
 
             // Set up congigurations
             var botConfig = JsonConvert.DeserializeObject<BotConfig>(File.ReadAllText(BotFile.Config));
-            if (string.IsNullOrWhiteSpace(botConfig.discordToken)) throw new Exception($"Missing {nameof(botConfig.discordToken)} in {BotFile.Config}");
+            if (string.IsNullOrWhiteSpace(botConfig.discordToken)) throw new Exception($"Missing {nameof(botConfig.discordToken)} in {BotFile.Config}: Bot can't run");
 
             var clientConfig = new DiscordSocketConfig
             {

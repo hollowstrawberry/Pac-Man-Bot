@@ -16,7 +16,7 @@ namespace PacManBot.Modules
         private readonly StorageService storage;
 
 
-        string ErrorMessage => $"Please try again or, if the problem persists, contact the bot author using **{storage.GetPrefixOrEmpty(Context.Guild)}feedback**.";
+        string ErrorMessage => $"Please try again or, if the problem persists, contact the bot author using `{storage.GetPrefixOrEmpty(Context.Guild)}feedback`.";
 
 
         public ModModule(LoggingService logger, StorageService storage)

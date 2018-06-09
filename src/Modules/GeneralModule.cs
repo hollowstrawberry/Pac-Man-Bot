@@ -70,7 +70,7 @@ namespace PacManBot.Modules
             CommandInfo command = commands.Commands.FirstOrDefault(c => c.Aliases.Contains(commandName));
             if (command == null)
             {
-                await ReplyAsync($"Can't find a command with that name. Use **{prefix}help** for a list of commands.");
+                await ReplyAsync($"Can't find a command with that name. Use `{prefix}help` for a list of commands.");
                 return;
             }
 
@@ -118,7 +118,7 @@ namespace PacManBot.Modules
             {
                 Title = $"{CustomEmoji.PacMan} __**Bot Commands**__",
                 Description = (Context.Guild == null ? "No prefix is needed in a DM!" : $"Prefix for this server is '{prefix}'")
-                            + $"\nYou can do **{prefix}help command** for more information about a command.\n*Parameter types: <needed> [optional]*",
+                            + $"\nYou can do `{prefix}help command` for more information about a command.\n*Parameter types: <needed> [optional]*",
                 Color = new Color(241, 195, 15)
             };
 
@@ -177,7 +177,7 @@ namespace PacManBot.Modules
 
         [Command("prefix"), Remarks("Show the current prefix for this server")]
         [Summary("Shows this bot's prefix for this server, even though you can already see it here.\n" +
-                 "You can use the **{prefix}setprefix [prefix]** command to set a prefix if you're an Administrator.")]
+                 "You can use the `{prefix}setprefix [prefix]` command to set a prefix if you're an Administrator.")]
         public async Task GetServerPrefix()
         {
             string reply;
@@ -188,7 +188,7 @@ namespace PacManBot.Modules
             else
             {
                 string prefix = storage.GetPrefix(Context.Guild.Id);
-                reply = $"Prefix for this server is set to '{prefix}'{" (the default)".If(prefix == storage.DefaultPrefix)}. It can be changed with the command **setprefix**.";
+                reply = $"Prefix for this server is set to '{prefix}'{" (the default)".If(prefix == storage.DefaultPrefix)}. It can be changed with the command `setprefix`.";
             }
             await ReplyAsync(reply, options: Utils.DefaultOptions);
         }
@@ -268,7 +268,7 @@ namespace PacManBot.Modules
 
 
         [Command("command"), ExampleUsage("help play"), HideHelp]
-        [Summary("This is not a real command. If you want to see help for a specific command, please do **{prefix}help [command name]**, where \"[command name]\" is the name of a command.")]
+        [Summary("This is not a real command. If you want to see help for a specific command, please do `{prefix}help [command name]`, where \"[command name]\" is the name of a command.")]
         public async Task DoNothing() => await logger.Log(LogSeverity.Info, "Someone tried to do \"<command\"");
     }
 }

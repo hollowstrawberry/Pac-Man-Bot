@@ -49,8 +49,8 @@ namespace PacManBot.Modules
                 if (Context.Channel.Id == game.ChannelId)
                 {
                     await ReplyAsync(game is PacManGame ?
-                        $"There is already a game in this channel!\nYou can use the **{prefix}bump** command to bring it to the bottom of the chat." :
-                        $"There is already a different game in this channel! Try using **{prefix}cancel**", options: Utils.DefaultOptions);
+                        $"There is already a game in this channel!\nYou can use the `{prefix}bump` command to bring it to the bottom of the chat." :
+                        $"There is already a different game in this channel! Try using `{prefix}cancel`", options: Utils.DefaultOptions);
                     return;
                 }
             }
@@ -73,13 +73,13 @@ namespace PacManBot.Modules
             catch (InvalidMapException e) when (customMap != null)
             {
                 await logger.Log(LogSeverity.Debug, LogSource.Game, $"Failed to create custom game: {e.Message}");
-                await ReplyAsync($"The provided map is invalid: {e.Message}.\nUse the **{prefix}custom** command for more info.", options: Utils.DefaultOptions);
+                await ReplyAsync($"The provided map is invalid: {e.Message}.\nUse the `{prefix}custom` command for more info.", options: Utils.DefaultOptions);
                 return;
             }
             catch (Exception e)
             {
                 await logger.Log(LogSeverity.Error, LogSource.Game, $"{e}");
-                await ReplyAsync($"There was an error starting the game. Please try again or contact the author of the bot using **{prefix}feedback**", options: Utils.DefaultOptions);
+                await ReplyAsync($"There was an error starting the game. Please try again or contact the author of the bot using `{prefix}feedback`", options: Utils.DefaultOptions);
                 return;
             }
 
@@ -135,7 +135,7 @@ namespace PacManBot.Modules
         {
             if (min < 1 || max < 1 || max < min)
             {
-                await ReplyAsync($"Invalid range of scores. Try **{storage.GetPrefixOrEmpty(Context.Guild)}help lb** for more info", options: Utils.DefaultOptions);
+                await ReplyAsync($"Invalid range of scores. Try `{storage.GetPrefixOrEmpty(Context.Guild)}help lb` for more info", options: Utils.DefaultOptions);
                 return;
             }
             if (max == null) 

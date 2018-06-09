@@ -252,7 +252,7 @@ namespace PacManBot.Services
 
         private string GetCommandErrorReply(string error, SocketGuild guild)
         {
-            string help = $"Please use **{storage.GetPrefixOrEmpty(guild)}help [command name]** or try again.";
+            string help = $"Please use `{storage.GetPrefixOrEmpty(guild)}help [command name]` or try again.";
 
             if (error.Contains("Bot requires")) return guild == null ? "You need to be in a guild to use this command!"
                                                                      : $"This bot is missing the permission**{Regex.Replace(error.Split(' ').Last(), @"([A-Z])", @" $1")}**!";

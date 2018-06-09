@@ -227,7 +227,7 @@ namespace PacManBot.Games
             var description = new StringBuilder();
 
             string prefix = storage.GetPrefixOrEmpty(owner?.Guild);
-            if (string.IsNullOrWhiteSpace(petName)) description.Append($"Congratulations on your new Clockagotchi!\nUse **{prefix}pet name** to name it and **{prefix}pet help** for more info\n\n");
+            if (string.IsNullOrWhiteSpace(petName)) description.Append($"Congratulations on your new Clockagotchi!\nUse `{prefix}pet name` to name it and `{prefix}pet help` for more info\n\n");
 
             description.Append($"**Name:** {(string.IsNullOrWhiteSpace(petName) ? "*Unnamed*" : PetName)}\n");
 
