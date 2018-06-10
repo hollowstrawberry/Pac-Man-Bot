@@ -46,7 +46,7 @@ namespace PacManBot.Games
         }
 
 
-        public void DoTurn(string input)
+        public void DoInput(string input, ulong userId = 1)
         {
             input = StripPrefix(input).ToUpper();
             int x = input[0] - 'A';
@@ -162,7 +162,7 @@ namespace PacManBot.Games
             }
 
             Pos choice = Bot.Random.Choose(moves);
-            DoTurn($"{(char)('A' + choice.x)}{1 + choice.y}");
+            DoInput($"{(char)('A' + choice.x)}{1 + choice.y}");
         }
 
 

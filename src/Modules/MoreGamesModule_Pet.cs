@@ -25,7 +25,7 @@ namespace PacManBot.Modules
 
 
 
-        [Command("pet"), Alias("clockagotchi"), Parameters("[command]"), Priority(-1)]
+        [Command("pet"), Alias("clockagotchi"), Parameters("[command]"), Priority(-2)]
         [Remarks("Adopt your own pet!")]
         [Summary("**__Pet Commands__**\n\n" +
             "**{prefix}pet** - Check on your pet or adopt if you don't have one\n" +
@@ -75,8 +75,7 @@ namespace PacManBot.Modules
         // Its own command so I can apply a usage rate-limit
         [Command("pet pet"), Alias("pet p", "pp", "pet pot", "pet pat", "clockagotchi pet"), Priority(1), HideHelp]
         [Summary("Pets your pet.")]
-        [BetterRequireBotPermission(ChannelPermission.EmbedLinks | ChannelPermission.AddReactions)]
-        [Ratelimit(30, 1, Measure.Minutes), Ratelimit(600, 1, Measure.Hours)]
+        [Ratelimit(20, 1, Measure.Minutes), Ratelimit(600, 1, Measure.Hours)]
         public async Task PetPet([Remainder]string uselessArgs = "")
         {
             var pet = storage.GetUserGame<PetGame>(Context.User.Id);
@@ -92,6 +91,29 @@ namespace PacManBot.Modules
 
             await ReplyAsync(pet.DoPet(Context), options: Utils.DefaultOptions);
             return;
+        }
+
+        [Command("pet pet"), Alias("pet p", "pp", "pet pot", "pet pat", "clockagotchi pet"), Priority(-1), HideHelp]
+        [Summary("Pets your pet.")]
+        public async Task PetPetRateLimit([Remainder]string uselessArgs = "")
+        {
+            var pet = storage.GetUserGame<PetGame>(Context.User.Id);
+            if (pet == null) return;
+
+            var now = DateTime.Now;
+            if ((now - pet.lastPet) <= TimeSpan.FromSeconds(1)) return;
+            pet.lastPet = now;
+            try
+            {
+                var reqOptions = new RequestOptions { RetryMode = RetryMode.RetryRatelimit, Timeout = 3_000 };
+                await ReplyAsync($"{CustomEmoji.Cross} You're petting too much! Please calm down for a while.", options: reqOptions);
+            }
+            catch (TimeoutException) // Should only happen in extreme cases
+            {
+                pet.lastPet = now + TimeSpan.FromMinutes(5.1);
+                var reqOoptions = new RequestOptions { RetryMode = RetryMode.RetryRatelimit, Timeout = 60_000 };
+                await ReplyAsync($"{CustomEmoji.Cross} Because of your uncontrollable petting, PETA sued you and won. You won't be able to pet again for at least 5 minutes.", options: reqOoptions);
+            }
         }
 
 
@@ -310,26 +332,6 @@ namespace PacManBot.Modules
             {
                 await ReplyAsync($"❗ Are you sure you want to delete {pet.PetName}? It will be gone forever, along with your stats and achievements, and you can't get it back. " +
                     $"Do **{storage.GetPrefixOrEmpty(Context.Guild)}pet release {pet.PetName}** to release.", options: Utils.DefaultOptions);
-            }
-        }
-
-
-        [PetCommand("pet")] // Only runs if it couldn't run the dedicated command
-        public async Task PetPetRatelimited(PetGame pet, string args)
-        {
-            var now = DateTime.Now;
-            if ((now - pet.lastPet) <= TimeSpan.FromSeconds(1)) return;
-            pet.lastPet = now;
-            try
-            {
-                var reqOptions = new RequestOptions { RetryMode = RetryMode.RetryRatelimit, Timeout = 3_000 };
-                await ReplyAsync($"{CustomEmoji.Cross} You're petting too much! Please calm down for a while.", options: reqOptions);
-            }
-            catch (TimeoutException) // Should only happen in extreme cases
-            {
-                pet.lastPet = now + TimeSpan.FromMinutes(5.1);
-                var reqOoptions = new RequestOptions { RetryMode = RetryMode.RetryRatelimit, Timeout = 60_000 };
-                await ReplyAsync($"{CustomEmoji.Cross} Because of your uncontrollable petting, PETA sued you and won. You won't be able to pet again for at least 5 minutes.", options: reqOoptions);
             }
         }
     }

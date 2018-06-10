@@ -195,7 +195,7 @@ namespace PacManBot.Services
 
             await logger.Log(LogSeverity.Verbose, game.Name, $"Input {message.Content} by user {message.Author.FullName()} on channel {message.Channel.FullName()}");
 
-            game.DoTurn(message.Content);
+            game.DoInput(message.Content, message.Author.Id);
             if (game is MultiplayerGame mGame)
             {
                 while(mGame.AITurn) mGame.DoTurnAI();
@@ -227,7 +227,7 @@ namespace PacManBot.Services
 
             await logger.Log(LogSeverity.Verbose, game.Name, $"Input {PacManGame.GameInputs[reaction.Emote].Align(5)} by user {user.FullName()} in channel {channel.FullName()}");
 
-            game.DoTurn(reaction.Emote);
+            game.DoTurn(reaction.Emote, user.Id);
 
             if (game.State != State.Active)
             {

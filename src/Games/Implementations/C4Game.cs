@@ -45,7 +45,7 @@ namespace PacManBot.Games
         }
 
 
-        public void DoTurn(string input)
+        public void DoInput(string input, ulong userId = 1)
         {
             if (State != State.Active) return;
             LastPlayed = DateTime.Now;
@@ -170,7 +170,7 @@ namespace PacManBot.Games
             int leastLoses = moves.Min(x => x.Value);
             var finalOptions = moves.Where(x => x.Value == leastLoses).Select(x => x.Key).ToList();
 
-            DoTurn($"{1 + Bot.Random.Choose(finalOptions)}");
+            DoInput($"{1 + Bot.Random.Choose(finalOptions)}");
         }
 
 

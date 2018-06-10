@@ -91,6 +91,13 @@ namespace PacManBot
             return lists;
         }
 
+        public static void Swap<T>(this IList<T> list, int index1, int index2)
+        {
+            T temp = list[index1];
+            list[index1] = list[index2];
+            list[index2] = temp;
+        }
+
         public static T[] ArrayConcat<T>(params T[][] arrays)
         {
             T[] newArray = new T[arrays.Select(x => x.Length).Sum()];

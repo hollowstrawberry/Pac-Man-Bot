@@ -370,7 +370,7 @@ namespace PacManBot.Games
         }
 
 
-        public void DoTurn(IEmote emote)
+        public void DoTurn(IEmote emote, ulong userId = 1)
         {
             if (State != State.Active) return;
             LastPlayed = DateTime.Now;

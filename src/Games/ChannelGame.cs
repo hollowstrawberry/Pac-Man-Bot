@@ -8,7 +8,7 @@ namespace PacManBot.Games
     public abstract class ChannelGame : BaseGame, IChannelGame
     {
         public virtual ulong ChannelId { get; set; }
-        public virtual ulong MessageId { get; set; }
+        public virtual ulong MessageId { get; set; } = 1;
 
         public ISocketMessageChannel Channel => client.GetChannel(ChannelId) as ISocketMessageChannel;
         public SocketGuild Guild => (client.GetChannel(ChannelId) as SocketGuildChannel)?.Guild;
@@ -21,7 +21,6 @@ namespace PacManBot.Games
             : base(userId, client, logger, storage)
         {
             ChannelId = channelId;
-            MessageId = 1;
         }
     }
 }

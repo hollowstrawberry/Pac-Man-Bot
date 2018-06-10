@@ -43,7 +43,7 @@ namespace PacManBot.Services
         }
 
 
-        public async Task Eval(string code, ShardedCommandContext context)
+        public async Task EvalAsync(string code, ShardedCommandContext context)
         {
             try
             {
@@ -55,7 +55,7 @@ namespace PacManBot.Services
                     code = "await ReplyAsync($\"{" + code + "}\");";
                 }
 
-                string postCode = "\nTask ReplyAsync(string msg) => Context.Channel.SendMessageAsync(msg);";
+                string postCode = "\nTask ReplyAsync(string message = null, bool isTTS = false, Embed embed = null, RequestOptions options = null) => Context.Channel.SendMessageAsync(message, isTTS, embed, options);";
 
                 await CSharpScript.EvaluateAsync(code + postCode, scriptOptions, new ScriptArgs(context, provider, shardedClient, logger, storage));
                 await logger.Log(LogSeverity.Info, $"Successfully executed code in channel {context.Channel.FullName()}:\n{code}");

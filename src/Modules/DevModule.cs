@@ -40,7 +40,7 @@ namespace PacManBot.Modules
             try
             {
                 await Context.Message.AddReactionAsync(CustomEmoji.ELoading, options: Utils.DefaultOptions);
-                await scripting.Eval(code, new ShardedCommandContext(shardedClient, Context.Message));
+                await scripting.EvalAsync(code, new ShardedCommandContext(shardedClient, Context.Message));
                 await Context.Message.AddReactionAsync(CustomEmoji.ECheck, options: Utils.DefaultOptions);
             }
             catch (Exception e)
@@ -187,7 +187,7 @@ namespace PacManBot.Modules
             {
                 try
                 {
-                    if (game.State == State.Active) game.DoTurn(move);
+                    if (game.State == State.Active) game.DoInput(move);
                     else break;
                 }
                 catch (Exception e)

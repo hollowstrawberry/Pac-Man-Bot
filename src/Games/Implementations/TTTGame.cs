@@ -44,7 +44,7 @@ namespace PacManBot.Games
         }
 
 
-        public void DoTurn(string input)
+        public void DoInput(string input, ulong userId = 1)
         {
             int cell = int.Parse(StripPrefix(input)) - 1;
             int y = cell / board.X();
@@ -135,7 +135,7 @@ namespace PacManBot.Games
         public override void DoTurnAI()
         {
             Pos target = TryCompleteLine(Turn) ?? TryCompleteLine(Turn.OtherPlayer()) ?? Bot.Random.Choose(EmptyCells(board)); //Win or block or random
-            DoTurn($"{1 + target.y * board.X() + target.x}");
+            DoInput($"{1 + target.y * board.X() + target.x}");
         }
 
 
