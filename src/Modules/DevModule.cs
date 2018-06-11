@@ -9,7 +9,7 @@ using PacManBot.Services;
 using Discord.Net;
 using PacManBot.Games;
 using PacManBot.Utils;
-using static PacManBot.Games.GameUtils;
+using PacManBot.Extensions;
 
 namespace PacManBot.Modules
 {

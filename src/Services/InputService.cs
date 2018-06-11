@@ -8,7 +8,7 @@ using Discord.Commands;
 using Discord.WebSocket;
 using PacManBot.Games;
 using PacManBot.Utils;
-using static PacManBot.Games.GameUtils;
+using PacManBot.Extensions;
 
 namespace PacManBot.Services
 {
@@ -114,7 +114,7 @@ namespace PacManBot.Services
                 else if (!result.ErrorReason.Contains("Unknown command"))
                 {
                     await logger.Log(LogSeverity.Verbose, $"Command {message} by {message.Author.FullName()} in channel {context.Channel.FullName()} couldn't be executed. {result.ErrorReason}");
-                    string reply = GetCommandErrorReply(result.ErrorReason, context.Guild);
+                    string reply = CommandErrorReply(result.ErrorReason, context.Guild);
                     if (reply != null && context.BotCan(ChannelPermission.SendMessages))
                     {
                         await context.Channel.SendMessageAsync(reply, options: Bot.DefaultOptions);
@@ -225,7 +225,7 @@ namespace PacManBot.Services
             var channel = gameMessage.Channel;
             var guild = (channel as IGuildChannel)?.Guild;
 
-            await logger.Log(LogSeverity.Verbose, game.Name, $"Input {PacManGame.GameInputs[reaction.Emote].Align(5)} by user {user.FullName()} in channel {channel.FullName()}");
+            await logger.Log(LogSeverity.Verbose, game.Name, $"Input {PacManGame.GameInputs[reaction.Emote].ToString().Align(5)} by user {user.FullName()} in channel {channel.FullName()}");
 
             game.Input(reaction.Emote, user.Id);
 
@@ -250,14 +250,13 @@ namespace PacManBot.Services
 
 
 
-        private string GetCommandErrorReply(string error, SocketGuild guild)
+        private string CommandErrorReply(string error, SocketGuild guild)
         {
             string help = $"Please use `{storage.GetPrefixOrEmpty(guild)}help [command name]` or try again.";
 
-            if (error.Contains("Bot requires")) return guild == null ? "You need to be in a guild to use this command!"
-                                                                     : $"This bot is missing the permission**{Regex.Replace(error.Split(' ').Last(), @"([A-Z])", @" $1")}**!";
-            if (error.Contains("User requires")) return guild == null ? "You need to be in a guild to use this command!"
-                                                                      : $"You need the permission**{Regex.Replace(error.Split(' ').Last(), @"([A-Z])", @" $1")}** to use this command!";
+            if (error.Contains("requires") && guild == null) return "You need to be in a guild to use this command!";
+            if (error.Contains("Bot requires")) return $"This bot is missing the permission**{Regex.Replace(error.Split(' ').Last(), @"([A-Z])", @" $1")}**!";
+            if (error.Contains("User requires")) return $"You need the permission**{Regex.Replace(error.Split(' ').Last(), @"([A-Z])", @" $1")}** to use this command!";
             if (error.Contains("User not found")) return $"Can't find the specified user!";
             if (error.Contains("Failed to parse")) return $"Invalid command parameters! {help}";
             if (error.Contains("too few parameters")) return $"Missing command parameters! {help}";

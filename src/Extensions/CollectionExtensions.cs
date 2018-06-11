@@ -3,7 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace PacManBot.Utils
+namespace PacManBot.Extensions
 {
     public static class CollectionExtensions
     {

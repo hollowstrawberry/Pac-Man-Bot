@@ -2,7 +2,8 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using Discord.WebSocket;
-using static PacManBot.Games.GameUtils;
+using PacManBot.Games;
+using PacManBot.Extensions;
 
 namespace PacManBot.Utils
 {

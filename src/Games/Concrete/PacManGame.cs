@@ -6,9 +6,8 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Discord;
 using Discord.WebSocket;
-using PacManBot.Utils;
 using PacManBot.Services;
-using static PacManBot.Games.GameUtils;
+using PacManBot.Extensions;
 
 namespace PacManBot.Games
 {
@@ -25,15 +24,14 @@ namespace PacManBot.Games
     {
         // Constants
 
-        public static readonly Dictionary<IEmote, PacManInput> GameInputs = new Dictionary<IEmote, PacManInput>() // Reaction controls
-        {
+        public static readonly IReadOnlyDictionary<IEmote, PacManInput> GameInputs = new Dictionary<IEmote, PacManInput>() {
             { "⬅".ToEmoji(), PacManInput.Left },
             { "⬆".ToEmoji(), PacManInput.Up },
             { "⬇".ToEmoji(), PacManInput.Down },
             { "➡".ToEmoji(), PacManInput.Right },
             { CustomEmoji.EHelp, PacManInput.Help },
             { "⏭".ToEmoji(), PacManInput.Fast }
-        };
+        }.AsReadOnly();
 
         private static readonly TimeSpan _expiry = TimeSpan.FromDays(7);
 

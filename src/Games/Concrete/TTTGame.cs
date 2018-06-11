@@ -3,9 +3,8 @@ using System.Text;
 using System.Collections.Generic;
 using Discord;
 using Discord.WebSocket;
-using PacManBot.Utils;
 using PacManBot.Services;
-using static PacManBot.Games.GameUtils;
+using PacManBot.Extensions;
 
 namespace PacManBot.Games
 {

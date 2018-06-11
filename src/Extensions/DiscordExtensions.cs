@@ -4,7 +4,7 @@ using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 
-namespace PacManBot.Utils
+namespace PacManBot.Extensions
 {
     public static class DiscordExtensions
     {

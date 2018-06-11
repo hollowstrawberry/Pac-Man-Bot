@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace PacManBot.Utils
+namespace PacManBot.Extensions
 {
     public static class OtherExtensions
     {

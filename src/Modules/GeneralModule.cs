@@ -10,6 +10,7 @@ using Discord.Commands;
 using Discord.WebSocket;
 using PacManBot.Utils;
 using PacManBot.Services;
+using PacManBot.Extensions;
 
 namespace PacManBot.Modules
 {

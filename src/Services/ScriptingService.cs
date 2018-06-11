@@ -6,14 +6,13 @@ using Discord;
 using Discord.Rest;
 using Discord.Commands;
 using Discord.WebSocket;
-using PacManBot.Utils;
+using PacManBot.Extensions;
 
 namespace PacManBot.Services
 {
     public class ScriptingService // Thanks to oatmeal and amibu
     {
         private readonly IServiceProvider provider;
-        private readonly DiscordShardedClient shardedClient;
         private readonly LoggingService logger;
         private readonly StorageService storage;
 
@@ -23,7 +22,6 @@ namespace PacManBot.Services
         public ScriptingService(IServiceProvider provider)
         {
             this.provider = provider;
-            this.shardedClient = provider.Get<DiscordShardedClient>();
             this.logger = provider.Get<LoggingService>();
             this.storage = provider.Get<StorageService>();
 
@@ -31,7 +29,7 @@ namespace PacManBot.Services
                 .WithImports(
                     "System", "System.IO", "System.Threading.Tasks", "System.Collections.Generic", "System.Linq", "System.Text.RegularExpressions", "System.Diagnostics",
                     "Discord", "Discord.Rest", "Discord.Commands", "Discord.WebSocket",
-                    "PacManBot", "PacManBot.Games", "PacManBot.Utils", "PacManBot.Modules", "PacManBot.Services", "PacManBot.Games.GameUtils"
+                    "PacManBot", "PacManBot.Games", "PacManBot.Utils", "PacManBot.Modules", "PacManBot.Services", "PacManBot.Extensions"
                 )
                 .WithReferences(
                     typeof(ShardedCommandContext).Assembly,
@@ -56,7 +54,7 @@ namespace PacManBot.Services
 
                 string postCode = "\nTask ReplyAsync(string message = null, bool isTTS = false, Embed embed = null, RequestOptions options = null) => Context.Channel.SendMessageAsync(message, isTTS, embed, options);";
 
-                await CSharpScript.EvaluateAsync(code + postCode, scriptOptions, new ScriptArgs(context, provider, shardedClient, logger, storage));
+                await CSharpScript.EvaluateAsync(code + postCode, scriptOptions, new ScriptArgs(context, provider, logger, storage));
                 await logger.Log(LogSeverity.Info, $"Successfully executed code in channel {context.Channel.FullName()}:\n{code}");
             }
             finally
@@ -74,15 +72,13 @@ namespace PacManBot.Services
     {
         public readonly ShardedCommandContext Context;
         public readonly IServiceProvider provider;
-        public readonly DiscordShardedClient shardedClient;
         public readonly LoggingService logger;
         public readonly StorageService storage;
 
-        public ScriptArgs(ShardedCommandContext Context, IServiceProvider provider, DiscordShardedClient shardedClient, LoggingService logger, StorageService storage)
+        public ScriptArgs(ShardedCommandContext Context, IServiceProvider provider, LoggingService logger, StorageService storage)
         {
             this.Context = Context;
             this.provider = provider;
-            this.shardedClient = shardedClient;
             this.logger = logger;
             this.storage = storage;
         }

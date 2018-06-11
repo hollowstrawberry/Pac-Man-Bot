@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using Discord;
 using Discord.Commands;
+using PacManBot.Extensions;
 
 namespace PacManBot.Utils
 {

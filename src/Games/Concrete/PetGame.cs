@@ -8,8 +8,8 @@ using System.Runtime.Serialization;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
-using PacManBot.Utils;
 using PacManBot.Services;
+using PacManBot.Extensions;
 
 namespace PacManBot.Games
 {
@@ -110,13 +110,13 @@ namespace PacManBot.Games
             [Achievement("🥇", "Good Care III", "300 Total actions", 7, group: 1)]
             public bool GoodCare3 => TotalActions >= 300;
 
-            [Achievement("<:bronze:453367514550894602>", "Bronze Owner", "3 days without neglect", 10, hideIcon: true, group: 2)]
+            [Achievement(CustomEmoji.BronzeIcon, "Bronze Owner", "3 days without neglect", 10, hideIcon: true, group: 2)]
             public bool BronzeOwner => Attention >= 1;
 
-            [Achievement("<:silver:453367514588774400>", "Silver Owner", "7 days without neglect", 11, hideIcon: true, group: 2)]
+            [Achievement(CustomEmoji.SilverIcon, "Silver Owner", "7 days without neglect", 11, hideIcon: true, group: 2)]
             public bool SilverOwner => Attention >= 2;
 
-            [Achievement("<:gold:453368658303909888>", "Gold Owner", "14 days without neglect", 12, hideIcon: true, group: 2)]
+            [Achievement(CustomEmoji.GoldIcon, "Gold Owner", "14 days without neglect", 12, hideIcon: true, group: 2)]
             public bool GoldOwner => Attention >= 3;
 
             [Achievement("👑", "Pet King", "Be crowned king of pets", 100), DataMember]

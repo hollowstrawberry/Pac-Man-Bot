@@ -1,5 +1,5 @@
 using Discord;
-using PacManBot.Utils;
+using PacManBot.Extensions;
 
 namespace PacManBot
 {

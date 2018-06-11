@@ -2,7 +2,7 @@
 using System.Net;
 using System.Text;
 
-namespace PacManBot.Utils
+namespace PacManBot.Extensions
 {
     public static class StringExtensions
     {
@@ -28,14 +28,13 @@ namespace PacManBot.Utils
         }
 
 
-        public static string Align(this object value, int length, bool right = false)
+        public static string Align(this string value, int length, bool right = false)
         {
-            string str = value.ToString();
-            string fill = new string(' ', Math.Max(0, length - str.Length));
-            return right ? fill + str : str + fill;
+            string fill = new string(' ', Math.Max(0, length - value.Length));
+            return right ? fill + value : value + fill;
         }
 
-        public static string AlignTo(this object value, object guide, bool right = false)
+        public static string AlignTo<T>(this string value, T guide, bool right = false)
         {
             return value.Align(guide.ToString().Length, right);
         }

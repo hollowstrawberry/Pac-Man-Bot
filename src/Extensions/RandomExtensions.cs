@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace PacManBot.Utils
+namespace PacManBot.Extensions
 {
     public static class RandomExtensions
     {

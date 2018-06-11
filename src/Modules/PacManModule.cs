@@ -9,7 +9,7 @@ using Discord.WebSocket;
 using PacManBot.Games;
 using PacManBot.Utils;
 using PacManBot.Services;
-using static PacManBot.Games.GameUtils;
+using PacManBot.Extensions;
 
 namespace PacManBot.Modules
 {
@@ -131,7 +131,7 @@ namespace PacManBot.Modules
         public async Task SendTopScores(int min = 10, int? max = null) => await SendTopScores(TimePeriod.all, min, max);
 
         [Command("leaderboard"), Alias("lb", "l")]
-        public async Task SendTopScores(TimePeriod time, int min = 10, int? max = null)
+        public async Task SendTopScores(TimePeriod period, int min = 10, int? max = null)
         {
             if (min < 1 || max < 1 || max < min)
             {
@@ -148,7 +148,7 @@ namespace PacManBot.Modules
                 else max = min + 9;
             }
 
-            var scores = storage.GetScores(time);
+            var scores = storage.GetScores(period);
 
             if (scores.Count < 1)
             {
@@ -163,14 +163,15 @@ namespace PacManBot.Modules
             }
 
             var content = new StringBuilder();
-            content.Append($"Displaying best scores {time.Humanized()}\nᅠ\n");
+            content.Append($"Displaying best scores {period.Humanized()}\nᅠ\n");
 
+            int maxPosDigits = (min + MaxDisplayedScores).ToString().Length;
+            int maxScoreDigits = scores[min - 1].score.ToString().Length;
             for (int i = min; i < scores.Count() && i <= max && i < min + MaxDisplayedScores; i++)
             {
                 ScoreEntry entry = scores[i - 1]; // The list is always kept sorted so we just go by index
 
-                //Align each element in the line
-                string result = $"`{$"{i}.".AlignTo($"{min + MaxDisplayedScores}.")} {$"({entry.state})".Align(6)} {entry.score.AlignTo(scores[min - 1].score, right: true)} points in {entry.turns} turns";
+                string result = $"`{$"{i}.".Align(maxPosDigits + 1)} {$"({entry.state})".Align(6)} {$"{entry.score}".Align(maxScoreDigits, right: true)} points in {entry.turns} turns";
                 content.Append(result.Align(38) + $"- {entry.GetUsername(shardedClient).Replace("`", "")}`\n");
             }
 

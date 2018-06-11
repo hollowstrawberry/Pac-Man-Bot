@@ -5,10 +5,11 @@ using Discord.Net;
 using Discord.Commands;
 using PacManBot.Utils;
 using PacManBot.Services;
+using PacManBot.Extensions;
 
 namespace PacManBot.Modules
 {
-    [Name("<:staff:412019879772815361>Mod"), Remarks("5")]
+    [Name(CustomEmoji.Staff + "Mod"), Remarks("5")]
     [BetterRequireUserPermission(GuildPermission.ManageMessages)]
     public class ModModule : ModuleBase<SocketCommandContext>
     {

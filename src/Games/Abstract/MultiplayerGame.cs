@@ -1,10 +1,9 @@
-using System;
+﻿using System;
 using System.Linq;
 using Discord;
 using Discord.WebSocket;
-using PacManBot.Utils;
 using PacManBot.Services;
-using static PacManBot.Games.GameUtils;
+using PacManBot.Extensions;
 
 namespace PacManBot.Games
 {
@@ -23,6 +22,30 @@ namespace PacManBot.Games
             if (i < 0 || i >= UserId.Length) return null;
             return client.GetUser(UserId[i]);
         }
+
+
+
+        // AI flavor text
+
+        public static readonly string[] StartTexts = new string[]
+        {
+            "I'll give it a go", "Let's do this", "Dare to defy the gamemaster?", "May the best win", "I was getting bored!", "Maybe you should play with a real person instead",
+            "In need of friends to play with?"
+        };
+        public static readonly string[] GameTexts = new string[]
+        {
+            "🤔", "🔣", "🤖", CustomEmoji.Thinkxel, CustomEmoji.PacMan, "Hmm...", "Nice move.", "Take this!", "Huh.", "Aha!", "Come on now", "All according to plan",
+            "I think I'm winning this one", "Beep boop", "Boop?", "Interesting...", "Recalculating...", "ERROR: YourSkills not found", "I wish to be a real bot", "That's all you got?",
+            "Let's see what happens", "I don't even know what I'm doing", "This is a good time for you to quit", "Curious."
+        };
+        public static readonly string[] WinTexts = new string[]
+        {
+            "👍", CustomEmoji.PacMan, CustomEmoji.RapidBlobDance, "Rekt", "Better luck next time", "Beep!", ":)", "Nice", "Muahaha", "You weren't even trying"
+        };
+        public static readonly string[] NotWinTexts = new string[]
+        {
+            "Oof", "No u", "Foiled again!", "Boo...", "Ack", "Good job!", "gg", "You're good at this", "I let you win, of course"
+        };
 
 
 
