@@ -7,7 +7,6 @@ using Newtonsoft.Json;
 using Discord.Commands;
 using Discord.WebSocket;
 using PacManBot.Services;
-using PacManBot.Constants;
 
 
 //Made by Samrux for fun
@@ -34,7 +33,7 @@ namespace PacManBot
                 }
             }
 
-            // Set up congigurations
+            // Set up configurations
             var botConfig = JsonConvert.DeserializeObject<BotConfig>(File.ReadAllText(BotFile.Config));
             if (string.IsNullOrWhiteSpace(botConfig.discordToken)) throw new Exception($"Missing {nameof(botConfig.discordToken)} in {BotFile.Config}: Bot can't run");
 
@@ -67,7 +66,11 @@ namespace PacManBot
                 .AddSingleton<ScriptingService>();
 
             var provider = services.BuildServiceProvider();
-            foreach (var service in services) provider.GetRequiredService(service.ServiceType);
+            foreach (var service in services)
+            {
+                provider.GetRequiredService(service.ServiceType); // Create instance
+            }
+
 
             await commands.AddModulesAsync(Assembly.GetEntryAssembly(), provider);
 

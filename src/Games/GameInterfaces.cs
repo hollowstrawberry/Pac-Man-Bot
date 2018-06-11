@@ -1,5 +1,4 @@
 using System;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
@@ -17,10 +16,9 @@ namespace PacManBot.Games
         // Game members
         State State { get; set; }
         DateTime LastPlayed { get; set; }
-        int Time { get; set; } // Current turn 
+        int Time { get; set; } // Turn number
         ulong[] UserId { get; set; } // Players
-
-        ulong OwnerId { get; set; }
+        ulong OwnerId { get; set; } // First player
         IUser Owner { get; }
 
         // Discord
@@ -43,17 +41,19 @@ namespace PacManBot.Games
         Task<IUserMessage> GetMessage();
     }
 
+
     public interface IMessagesGame : IChannelGame
     {
         bool IsInput(string value, ulong userId);
-        void DoInput(string input, ulong userId = 1);
+        void Input(string input, ulong userId = 1);
     }
 
     public interface IReactionsGame : IChannelGame
     {
         bool IsInput(IEmote value, ulong userId);
-        void DoTurn(IEmote input, ulong userId = 1);
+        void Input(IEmote input, ulong userId = 1);
     }
+
 
     public interface IMultiplayerGame : IBaseGame
     {
@@ -61,8 +61,10 @@ namespace PacManBot.Games
         Player Winner { get; }
         string Message { get; }
 
-        bool AITurn { get; }
+        bool BotTurn { get; }
         bool AllBots { get; }
+
+        void BotInput();
 
         IUser User(int i = 0);
         IUser User(Player player);
@@ -71,7 +73,7 @@ namespace PacManBot.Games
 
     public interface IStoreableGame : IBaseGame
     {
-        string FilenameKey { get; }
+        string FilenameKey { get; } // Word used to identify the game type in the filename
         void PostDeserialize(DiscordShardedClient client, LoggingService logger, StorageService storage);
     }
 }

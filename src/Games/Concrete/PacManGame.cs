@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Discord;
 using Discord.WebSocket;
-using PacManBot.Constants;
+using PacManBot.Utils;
 using PacManBot.Services;
 using static PacManBot.Games.GameUtils;
 
@@ -25,14 +25,14 @@ namespace PacManBot.Games
     {
         // Constants
 
-        public static readonly Dictionary<IEmote, GameInput> GameInputs = new Dictionary<IEmote, GameInput>() // Reaction controls
+        public static readonly Dictionary<IEmote, PacManInput> GameInputs = new Dictionary<IEmote, PacManInput>() // Reaction controls
         {
-            { "⬅".ToEmoji(), GameInput.Left },
-            { "⬆".ToEmoji(), GameInput.Up },
-            { "⬇".ToEmoji(), GameInput.Down },
-            { "➡".ToEmoji(), GameInput.Right },
-            { CustomEmoji.EHelp, GameInput.Help },
-            { "⏭".ToEmoji(), GameInput.Fast }
+            { "⬅".ToEmoji(), PacManInput.Left },
+            { "⬆".ToEmoji(), PacManInput.Up },
+            { "⬇".ToEmoji(), PacManInput.Down },
+            { "➡".ToEmoji(), PacManInput.Right },
+            { CustomEmoji.EHelp, PacManInput.Help },
+            { "⏭".ToEmoji(), PacManInput.Fast }
         };
 
         private static readonly TimeSpan _expiry = TimeSpan.FromDays(7);
@@ -61,7 +61,7 @@ namespace PacManBot.Games
         [DataMember] private List<Ghost> ghosts;
         [DataMember] private int fruitTimer = 0;
         [DataMember] private Pos fruitSpawnPos; //Where all fruit will spawn
-        [DataMember] private GameInput lastInput = GameInput.None;
+        [DataMember] private PacManInput lastInput = PacManInput.None;
         [DataMember] private bool fastForward = true;
 
 
@@ -130,35 +130,34 @@ namespace PacManBot.Games
 
 
 
-        //Game data types
+        // Types
 
-        public enum GameInput
+        public enum PacManInput
         {
             None, Up, Left, Down, Right, Wait, Help, Fast,
         }
 
-        public enum AiType
+        enum GhostType
         {
             Blinky, Pinky, Inky, Clyde
         }
 
-        public enum AiMode
+        enum GhostMode
         {
             Chase, Scatter, Frightened
         }
 
 
 
-        // Game objects
-
         [DataContract]
-        private class PacMan
+        class PacMan
         {
             [DataMember] public readonly Pos origin; //Position it started at
             [DataMember] public Pos pos; //Position on the map
             [DataMember] public Dir dir = Dir.none; //Direction it's facing
             [DataMember] public int power = 0; //Time left of power mode
             [DataMember] public int ghostStreak = 0; //Ghosts eaten during the current power mode
+
 
             private PacMan() { }
 
@@ -171,21 +170,25 @@ namespace PacManBot.Games
 
 
         [DataContract]
-        private class Ghost
+        class Ghost
         {
+            public PacManGame game;
+
             [DataMember] public readonly Pos origin; //Tile it spawns in
             [DataMember] public readonly Pos corner; //Preferred corner
             [DataMember] public Pos pos; //Position on the map
             [DataMember] public Dir dir; //Direction it's facing
-            [DataMember] public AiType type; //Ghost behavior type
-            [DataMember] public AiMode mode; //Ghost behavior mode
+            [DataMember] public GhostType type; //Ghost behavior type
+            [DataMember] public GhostMode mode; //Ghost behavior mode
             [DataMember] public int pauseTime; //Time remaining until it can move
             [DataMember] public bool exitRight = false; //It will exit the ghost box to the left unless modes have changed
 
+
             private Ghost() { }
 
-            public Ghost(AiType type, Pos pos, Pos? corner) // Had to split pos and origin because of the deserializer
+            public Ghost(GhostType type, Pos pos, Pos? corner, PacManGame game) // Had to split pos and origin because of the deserializer
             {
+                this.game = game;
                 this.type = type;
                 this.pos = pos;
                 this.corner = corner ?? pos;
@@ -193,23 +196,24 @@ namespace PacManBot.Games
                 pauseTime = GhostSpawnPauseTime[(int)type];
             }
 
-            public void AI(PacManGame game)
+
+            public void AI()
             {
                 //Decide mode
-                if (game.pacMan.power <= 1) DecideMode(game);
+                if (game.pacMan.power <= 1) DecideMode();
 
                 if (pauseTime > 0) // In the cage
                 {
                     pos = origin;
                     dir = Dir.none;
                     pauseTime--;
-                    if (JustChangedMode(game, fullCheck: true)) exitRight = true; // Exits to the right if modes changed
+                    if (JustChangedMode(fullCheck: true)) exitRight = true; // Exits to the right if modes changed
                     return;
                 }
 
-                if (mode == AiMode.Frightened && game.Time % 2 == 1) // If frightened, only moves on even turns
+                if (mode == GhostMode.Frightened && game.Time % 2 == 1) // If frightened, only moves on even turns
                 {
-                    if (JustChangedMode(game)) dir = dir.Opposite();
+                    if (JustChangedMode()) dir = dir.Opposite();
                     return;
                 }
 
@@ -218,32 +222,32 @@ namespace PacManBot.Games
 
                 switch (mode)
                 {
-                    case AiMode.Chase: //Normal
+                    case GhostMode.Chase: //Normal
                         switch (type)
                         {
-                            case AiType.Blinky:
+                            case GhostType.Blinky:
                                 target = game.pacMan.pos;
                                 break;
 
-                            case AiType.Pinky:
+                            case GhostType.Pinky:
                                 target = game.pacMan.pos + game.pacMan.dir.OfLength(4); //4 squares ahead
                                 if (game.pacMan.dir == Dir.up) target += Dir.left.OfLength(4); //Intentional bug from the original arcade
                                 break;
 
-                            case AiType.Inky:
+                            case GhostType.Inky:
                                 target = game.pacMan.pos + game.pacMan.dir.OfLength(2); //2 squares ahead
                                 if (game.pacMan.dir == Dir.up) target += Dir.left.OfLength(2); //Intentional bug from the original arcade
-                                target += target - game.ghosts[(int)AiType.Blinky].pos; //Opposite position relative to Blinky
+                                target += target - game.ghosts[(int)GhostType.Blinky].pos; //Opposite position relative to Blinky
                                 break;
 
-                            case AiType.Clyde:
+                            case GhostType.Clyde:
                                 if (Pos.Distance(pos, game.pacMan.pos) > 8) target = game.pacMan.pos;
                                 else target = corner; //When close, gets scared
                                 break;
                         }
                         break;
 
-                    case AiMode.Scatter:
+                    case GhostMode.Scatter:
                         target = corner;
                         break;
                 }
@@ -259,20 +263,20 @@ namespace PacManBot.Games
                 {
                     dir = exitRight ? Dir.right : Dir.left;
                 }
-                else if (JustChangedMode(game))
+                else if (JustChangedMode())
                 {
                     dir = dir.Opposite();
                 }
-                else if (mode == AiMode.Frightened) // Turns randomly at intersections
+                else if (mode == GhostMode.Frightened) // Turns randomly at intersections
                 {
-                    dir = Bot.Random.Choose(AllDirs.Where(p => p != dir.Opposite() && game.NonSolid(pos + p)).ToArray());
+                    dir = Bot.Random.Choose(AllDirs.Where(x => x != dir.Opposite() && game.NonSolid(pos + x)).ToArray());
                 }
                 else //Track target
                 {
                     exitRight = false;
 
                     float distance = float.PositiveInfinity;
-                    foreach (Dir testDir in AllDirs.Where(x => x != dir.Opposite())) //Decides the direction that will get it closest to its target
+                    foreach (Dir testDir in AllDirs.Where(x => x != dir.Opposite()).ToArray()) //Decides the direction that will get it closest to its target
                     {
                         Pos testPos = pos + testDir;
 
@@ -283,7 +287,7 @@ namespace PacManBot.Games
                             dir = testDir;
                             distance = Pos.Distance(testPos, target);
                         }
-                        //Console.WriteLine($"Target: {target.x},{target.y} / Ghost: {pos.x},{pos.y} / Test Dir: {(pos + testDir).x},{(pos + testDir).y} / Test Dist: {Pos.Distance(pos + testDir, target)}"); //For debugging AI
+                        // Console.WriteLine($"{type}: {pos.x},{pos.y} / Target: {target.x},{target.y} / Test Dir: {testDir} / Test Dist: {Pos.Distance(pos + testDir, target)}"); //For debugging AI
                     }
                 }
 
@@ -291,19 +295,21 @@ namespace PacManBot.Games
                 game.map.Wrap(ref pos);
             }
 
-            public void DecideMode(PacManGame game)
+
+            public void DecideMode()
             {
                 if (game.Time < 4 * ScatterCycle  //In set cycles, a set number of turns is spent in scatter mode, up to 4 times
                     && (game.Time < 2 * ScatterCycle && game.Time % ScatterCycle < ScatterTime1
                     || game.Time >= 2 * ScatterCycle && game.Time % ScatterCycle < ScatterTime2)
-                ) { mode = AiMode.Scatter; }
-                else { mode = AiMode.Chase; }
+                ) { mode = GhostMode.Scatter; }
+                else { mode = GhostMode.Chase; }
             }
 
-            private bool JustChangedMode(PacManGame game, bool fullCheck = false) // fullCheck detects changes to other ghosts
+
+            private bool JustChangedMode(bool fullCheck = false) // fullCheck detects changes to other ghosts
             {
                 if (game.Time == 0) return false;
-                if (mode == AiMode.Frightened && !fullCheck) return game.pacMan.power == PowerTime; // Detects the switch to Frightened, but not from it
+                if (mode == GhostMode.Frightened && !fullCheck) return game.pacMan.power == PowerTime; // Detects the switch to Frightened, but not from it
 
                 for (int i = 0; i < 2; i++) if (game.Time == i * ScatterCycle || game.Time == i * ScatterCycle + ScatterTime1) return true;
                 for (int i = 2; i < 4; i++) if (game.Time == i * ScatterCycle || game.Time == i * ScatterCycle + ScatterTime2) return true;
@@ -353,7 +359,7 @@ namespace PacManBot.Games
             {
                 Pos? ghostPos = FindChar(CharGhost);
                 if (!ghostPos.HasValue) break;
-                ghosts.Add(new Ghost((AiType)i, ghostPos.Value, ghostCorners[i]));
+                ghosts.Add(new Ghost((GhostType)i, ghostPos.Value, ghostCorners[i], this));
                 map.SetAt(ghostPos.Value, ' ');
             }
 
@@ -370,23 +376,23 @@ namespace PacManBot.Games
         }
 
 
-        public void DoTurn(IEmote emote, ulong userId = 1)
+        public void Input(IEmote emote, ulong userId = 1)
         {
             if (State != State.Active) return;
             LastPlayed = DateTime.Now;
 
-            GameInput input = GameInputs[emote];
+            PacManInput input = GameInputs[emote];
 
-            if (lastInput == GameInput.Help) // Closes help
+            if (lastInput == PacManInput.Help) // Closes help
             {
-                lastInput = GameInput.None;
+                lastInput = PacManInput.None;
                 return;
             }
 
             lastInput = input;
 
-            if (input == GameInput.Help) return; // Opens help
-            if (input == GameInput.Fast) // Toggle fastforward
+            if (input == PacManInput.Help) return; // Opens help
+            if (input == PacManInput.Fast) // Toggle fastforward
             {
                 fastForward = !fastForward;
                 return;
@@ -398,10 +404,10 @@ namespace PacManBot.Games
             Dir newDir = Dir.none;
             switch (input)
             {
-                case GameInput.Up: newDir = Dir.up; break;
-                case GameInput.Right: newDir = Dir.right; break;
-                case GameInput.Down: newDir = Dir.down; break;
-                case GameInput.Left: newDir = Dir.left; break;
+                case PacManInput.Up: newDir = Dir.up; break;
+                case PacManInput.Right: newDir = Dir.right; break;
+                case PacManInput.Down: newDir = Dir.down; break;
+                case PacManInput.Left: newDir = Dir.left; break;
             }
 
 
@@ -456,7 +462,7 @@ namespace PacManBot.Games
                     if (tile == CharPowerPellet)
                     {
                         pacMan.power += PowerTime;
-                        foreach (Ghost ghost in ghosts) ghost.mode = AiMode.Frightened;
+                        foreach (Ghost ghost in ghosts) ghost.mode = GhostMode.Frightened;
                         continueInput = false;
                     }
 
@@ -474,10 +480,10 @@ namespace PacManBot.Games
                     {
                         if (pacMan.pos == ghost.pos) //Collision
                         {
-                            if (ghost.mode == AiMode.Frightened)
+                            if (ghost.mode == GhostMode.Frightened)
                             {
                                 ghost.pauseTime = 6;
-                                ghost.DecideMode(this); //Removes frightened State
+                                ghost.DecideMode(); //Removes frightened State
                                 score += 200 * (int)Math.Pow(2, pacMan.ghostStreak); //Each ghost gives double the points of the last
                                 pacMan.ghostStreak++;
                             }
@@ -489,7 +495,7 @@ namespace PacManBot.Games
 
                         if (didAI || State != State.Active) break; //Doesn't run AI twice, or if the user already won
 
-                        ghost.AI(this); //Full ghost behavior
+                        ghost.AI(); //Full ghost behavior
                         didAI = true;
                     }
                 }
@@ -513,7 +519,7 @@ namespace PacManBot.Games
                 return "";
             }
 
-            if (lastInput == GameInput.Help)
+            if (lastInput == PacManInput.Help)
             {
                 return storage.BotContent["gamehelp"].Replace("{prefix}", storage.GetPrefixOrEmpty(Guild));
             }
@@ -548,7 +554,7 @@ namespace PacManBot.Games
                 }
                 foreach (Ghost ghost in ghosts)
                 {
-                    displayMap[ghost.pos.x, ghost.pos.y] = (ghost.mode == AiMode.Frightened) ? CharGhostFrightened : GhostAppearance[(int)ghost.type];
+                    displayMap[ghost.pos.x, ghost.pos.y] = (ghost.mode == GhostMode.Frightened) ? CharGhostFrightened : GhostAppearance[(int)ghost.type];
                 }
                 displayMap[pacMan.pos.x, pacMan.pos.y] = (State == State.Lose) ? CharPlayerDead : CharPlayer;
 
@@ -580,8 +586,8 @@ namespace PacManBot.Games
 
                 for (int i = 0; i < ghosts.Count; i++) //Ghost info
                 {
-                    char appearance = (ghosts[i].mode == AiMode.Frightened) ? CharGhostFrightened : GhostAppearance[i];
-                    info[i + 7] = $"│ {appearance} - {(AiType)i}{$": {ghosts[i].dir}".If(ghosts[i].dir != Dir.none)}";
+                    char appearance = (ghosts[i].mode == GhostMode.Frightened) ? CharGhostFrightened : GhostAppearance[i];
+                    info[i + 7] = $"│ {appearance} - {(GhostType)i}{$": {ghosts[i].dir}".If(ghosts[i].dir != Dir.none)}";
                 }
 
                 if (mobileDisplay)
@@ -693,6 +699,8 @@ namespace PacManBot.Games
             this.client = client;
             this.logger = logger;
             this.storage = storage;
+
+            foreach (Ghost ghost in ghosts) ghost.game = this;
         }
     }
 }

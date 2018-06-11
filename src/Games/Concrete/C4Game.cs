@@ -4,7 +4,7 @@ using System.Text;
 using System.Collections.Generic;
 using Discord;
 using Discord.WebSocket;
-using PacManBot.Constants;
+using PacManBot.Utils;
 using PacManBot.Services;
 using static PacManBot.Games.GameUtils;
 
@@ -45,7 +45,7 @@ namespace PacManBot.Games
         }
 
 
-        public void DoInput(string input, ulong userId = 1)
+        public void Input(string input, ulong userId = 1)
         {
             if (State != State.Active) return;
             LastPlayed = DateTime.Now;
@@ -140,7 +140,7 @@ namespace PacManBot.Games
 
 
 
-        public override void DoTurnAI()
+        public override void BotInput()
         {
             var moves = new Dictionary<int, int>(); // Column and amount of possible loses by playing in that column
             var avoidMoves = new List<int>(); // Moves where it can lose right away
@@ -170,7 +170,7 @@ namespace PacManBot.Games
             int leastLoses = moves.Min(x => x.Value);
             var finalOptions = moves.Where(x => x.Value == leastLoses).Select(x => x.Key).ToList();
 
-            DoInput($"{1 + Bot.Random.Choose(finalOptions)}");
+            Input($"{1 + Bot.Random.Choose(finalOptions)}");
         }
 
 

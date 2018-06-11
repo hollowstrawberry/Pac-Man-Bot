@@ -6,9 +6,9 @@ using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using PacManBot.Services;
-using PacManBot.Constants;
 using Discord.Net;
 using PacManBot.Games;
+using PacManBot.Utils;
 using static PacManBot.Games.GameUtils;
 
 namespace PacManBot.Modules
@@ -33,25 +33,79 @@ namespace PacManBot.Modules
 
 
 
+        [Command("setusername"), HideHelp]
+        [Summary("Set the bot's username in all servers.")]
+        public async Task SetUsername([Remainder]string name)
+        {
+            try
+            {
+                await shardedClient.CurrentUser.ModifyAsync(x => x.Username = name, Bot.DefaultOptions);
+            }
+            catch (Exception e)
+            {
+                await Context.Message.AddReactionAsync(CustomEmoji.ECross);
+                throw e;
+            }
+            await Context.Message.AddReactionAsync(CustomEmoji.ECheck, Bot.DefaultOptions);
+        }
+
+
+        [Command("setnickname"), HideHelp]
+        [Summary("Set the bot's nickname in this server.")]
+        [RequireContext(ContextType.Guild)]
+        public async Task SetNickname([Remainder]string name = null)
+        {
+            try
+            {
+                await Context.Guild.CurrentUser.ModifyAsync(x => x.Nickname = name, Bot.DefaultOptions);
+            }
+            catch (Exception e)
+            {
+                await Context.Message.AddReactionAsync(CustomEmoji.ECross);
+                throw e;
+            }
+            await Context.Message.AddReactionAsync(CustomEmoji.ECheck, Bot.DefaultOptions);
+        }
+
+
+        [Command("setavatar"), HideHelp]
+        [Summary("Set the bot's avatar,")]
+        [RequireContext(ContextType.Guild)]
+        public async Task SetAvatar([Remainder]string path)
+        {
+            try
+            {
+                await shardedClient.CurrentUser.ModifyAsync(x => x.Avatar = new Image(path), Bot.DefaultOptions);
+            }
+            catch (Exception e)
+            {
+                await Context.Message.AddReactionAsync(CustomEmoji.ECross);
+                throw e;
+            }
+            await Context.Message.AddReactionAsync(CustomEmoji.ECheck, Bot.DefaultOptions);
+        }
+
+
+
         [Command("run"), Alias("eval", "runasync", "evalasync"), HideHelp]
         [Summary("Run code, super dangerous do not try at home. Developer only.")]
         public async Task ScriptEval([Remainder]string code)
         {
             try
             {
-                await Context.Message.AddReactionAsync(CustomEmoji.ELoading, options: Utils.DefaultOptions);
+                await Context.Message.AddReactionAsync(CustomEmoji.ELoading, Bot.DefaultOptions);
                 await scripting.EvalAsync(code, new ShardedCommandContext(shardedClient, Context.Message));
-                await Context.Message.AddReactionAsync(CustomEmoji.ECheck, options: Utils.DefaultOptions);
+                await Context.Message.AddReactionAsync(CustomEmoji.ECheck, Bot.DefaultOptions);
             }
             catch (Exception e)
             {
                 await ReplyAsync($"```cs\n{e.Message}```");
                 await logger.Log(LogSeverity.Debug, "Eval", $"{e}");
-                await Context.Message.AddReactionAsync(CustomEmoji.ECross, Utils.DefaultOptions);
+                await Context.Message.AddReactionAsync(CustomEmoji.ECross, Bot.DefaultOptions);
             }
             finally
             {
-                await Context.Message.RemoveReactionAsync(CustomEmoji.ELoading, Context.Client.CurrentUser, Utils.DefaultOptions);
+                await Context.Message.RemoveReactionAsync(CustomEmoji.ELoading, Context.Client.CurrentUser, Bot.DefaultOptions);
             }
         }
 
@@ -64,13 +118,13 @@ namespace PacManBot.Modules
             {
                 await shardedClient.GetUser(useriD).SendMessageAsync("```diff\n+The following message was sent to you by this bot's owner." +
                                                                      "\n-To reply to this message, use the 'feedback' command.```\n" + message);
-                await Context.Message.AddReactionAsync(CustomEmoji.ECheck, options: Utils.DefaultOptions);
+                await Context.Message.AddReactionAsync(CustomEmoji.ECheck, Bot.DefaultOptions);
             }
             catch (Exception e)
             {
                 await logger.Log(LogSeverity.Debug, $"{e.Message}");
-                await ReplyAsync($"```{e.Message}```", options: Utils.DefaultOptions);
-                await Context.Message.AddReactionAsync(CustomEmoji.ECross, Utils.DefaultOptions);
+                await ReplyAsync($"```{e.Message}```", options: Bot.DefaultOptions);
+                await Context.Message.AddReactionAsync(CustomEmoji.ECross, Bot.DefaultOptions);
             }
         }
 
@@ -86,12 +140,12 @@ namespace PacManBot.Modules
             catch (Exception e)
             {
                 await logger.Log(LogSeverity.Error, $"{e}");
-                await ReplyAsync(e.Message, options: Utils.DefaultOptions);
+                await ReplyAsync(e.Message, options: Bot.DefaultOptions);
                 return;
             }
 
             await logger.Log(LogSeverity.Info, "Reloaded bot content");
-            await Context.Message.AddReactionAsync(CustomEmoji.ECheck, Utils.DefaultOptions);
+            await Context.Message.AddReactionAsync(CustomEmoji.ECheck, Bot.DefaultOptions);
         }
 
 
@@ -100,7 +154,7 @@ namespace PacManBot.Modules
         public async Task LogSomething([Remainder]string message)
         {
             await logger.Log(LogSeverity.Info, LogSource.Owner, message);
-            await Context.Message.AddReactionAsync(CustomEmoji.ECheck, Utils.DefaultOptions);
+            await Context.Message.AddReactionAsync(CustomEmoji.ECheck, Bot.DefaultOptions);
         }
 
 
@@ -112,7 +166,7 @@ namespace PacManBot.Modules
             GC.WaitForPendingFinalizers();
             GC.Collect();
 
-            await Context.Message.AddReactionAsync(CustomEmoji.ECheck, Utils.DefaultOptions);
+            await Context.Message.AddReactionAsync(CustomEmoji.ECheck, Bot.DefaultOptions);
         }
 
 
@@ -122,12 +176,12 @@ namespace PacManBot.Modules
         {
             try
             {
-                await ReplyAsync($"```{filename.Split('.').Last()}\n{File.ReadAllText(filename).Replace("```", "`​``").Substring(start).Truncate(length)}".Truncate(1997) + "```", options: Utils.DefaultOptions);
+                await ReplyAsync($"```{filename.Split('.').Last()}\n{File.ReadAllText(filename).Replace("```", "`​``").Substring(start).Truncate(length)}".Truncate(1997) + "```", options: Bot.DefaultOptions);
             }
             catch (Exception e)
             {
                 await logger.Log(LogSeverity.Debug, $"{e.Message}");
-                await ReplyAsync($"```{e.Message}```", options: Utils.DefaultOptions);
+                await ReplyAsync($"```{e.Message}```", options: Bot.DefaultOptions);
             }
         }
         [Command("file"), Alias("readfile"), HideHelp]
@@ -140,7 +194,7 @@ namespace PacManBot.Modules
         [Summary("Gets a list of guilds and member counts where this bot is in. Developer only.")]
         public async Task GetGuildMembers()
         {
-            await ReplyAsync(string.Join("\n", shardedClient.Guilds.OrderByDescending(g => g.MemberCount).Select(g => $"{g.Name}: {g.MemberCount}")).Truncate(2000), options: Utils.DefaultOptions);
+            await ReplyAsync(string.Join("\n", shardedClient.Guilds.OrderByDescending(g => g.MemberCount).Select(g => $"{g.Name}: {g.MemberCount}")).Truncate(2000), options: Bot.DefaultOptions);
         }
 
 
@@ -153,7 +207,7 @@ namespace PacManBot.Modules
             {
                 try
                 {
-                    await message.DeleteAsync(Utils.DefaultOptions);
+                    await message.DeleteAsync(Bot.DefaultOptions);
                 }
                 catch (HttpException e)
                 {
@@ -167,7 +221,7 @@ namespace PacManBot.Modules
         [Summary("Say anything. Developer-only version.")]
         public async Task ClearGameMessages([Remainder]string text)
         {
-            await ReplyAsync(text, options: Utils.DefaultOptions);
+            await ReplyAsync(text, options: Bot.DefaultOptions);
         }
 
 
@@ -178,7 +232,7 @@ namespace PacManBot.Modules
             var game = storage.GetGame<IMessagesGame>(Context.Channel.Id);
             if (game == null)
             {
-                await ReplyAsync("How about you start a game first", options: Utils.DefaultOptions);
+                await ReplyAsync("How about you start a game first", options: Bot.DefaultOptions);
                 return;
             }
 
@@ -187,7 +241,7 @@ namespace PacManBot.Modules
             {
                 try
                 {
-                    if (game.State == State.Active) game.DoInput(move);
+                    if (game.State == State.Active) game.Input(move);
                     else break;
                 }
                 catch (Exception e)
@@ -198,19 +252,19 @@ namespace PacManBot.Modules
             }
 
             var msg = await game.GetMessage();
-            if (msg != null) await msg.ModifyAsync(game.UpdateMessage, Utils.DefaultOptions);
-            else msg = await ReplyAsync(game.GetContent(), false, game.GetEmbed()?.Build(), Utils.DefaultOptions);
+            if (msg != null) await msg.ModifyAsync(game.UpdateMessage, Bot.DefaultOptions);
+            else msg = await ReplyAsync(game.GetContent(), false, game.GetEmbed()?.Build(), Bot.DefaultOptions);
 
-            if (game is MultiplayerGame tpGame && tpGame.AITurn)
+            if (game is MultiplayerGame tpGame && tpGame.BotTurn)
             {
-                tpGame.DoTurnAI();
+                tpGame.BotInput();
                 await Task.Delay(1000);
-                await msg.ModifyAsync(game.UpdateMessage, Utils.DefaultOptions);
+                await msg.ModifyAsync(game.UpdateMessage, Bot.DefaultOptions);
             }
 
             if (game.State != State.Active) storage.DeleteGame(game);
 
-            await Context.Message.AddReactionAsync(success ? CustomEmoji.ECheck : CustomEmoji.ECross, Utils.DefaultOptions); 
+            await Context.Message.AddReactionAsync(success ? CustomEmoji.ECheck : CustomEmoji.ECross, Bot.DefaultOptions); 
         }
 
 

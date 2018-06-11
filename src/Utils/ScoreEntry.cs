@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Discord.WebSocket;
 using static PacManBot.Games.GameUtils;
 
-namespace PacManBot.Games
+namespace PacManBot.Utils
 {
     public class ScoreEntry : IComparable<ScoreEntry>
     {

@@ -1,52 +1,15 @@
 using System;
-using System.Text;
-using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using Discord;
 using Discord.Commands;
 
-namespace PacManBot.Modules
+namespace PacManBot.Utils
 {
-    public class CommandHelpInfo
-    {
-        public bool Hidden { get; private set; }
-        public string Remarks { get; private set; }
-        public string Summary { get; private set; }
-        public string Parameters { get; private set; }
-        public string ExampleUsage { get; private set; }
-
-
-        public CommandHelpInfo(CommandInfo command)
-        {
-            Hidden = false;
-            Remarks = command.Remarks ?? "";
-            Summary = command.Summary ?? "";
-            ExampleUsage = "";
-            Parameters = null;
-
-            foreach (var attribute in command.Attributes)
-            {
-                if (attribute is HideHelpAttribute) Hidden = true;
-                else if (attribute is ParametersAttribute parameters) Parameters = parameters.Value;
-                else if (attribute is ExampleUsageAttribute usage) ExampleUsage = "{prefix}" + usage.Value.Replace("\n", "\n{prefix}");
-            }
-
-            if (Parameters == null)
-            {
-                var paramsText = new StringBuilder();
-                foreach (var parameter in command.Parameters)
-                {
-                    paramsText.Append(parameter.IsOptional ? $"[{parameter.Name}] " : $"<{parameter.Name}> ");
-                }
-                Parameters = paramsText.ToString();
-            }
-        }
-    }
-
-
-
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-    class HideHelpAttribute : Attribute { }
+    class HideHelpAttribute : Attribute
+    {
+    }
 
 
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
@@ -72,18 +35,18 @@ namespace PacManBot.Modules
 
 
     // The original preconditions just... didn't work?
-    abstract class BaseBetterRequirePermissionAttribute : PreconditionAttribute
+    abstract class BasePermissionAttribute : PreconditionAttribute
     {
         protected GuildPermission? guildPerms = null;
         protected ChannelPermission? channelPerms = null;
 
 
-        public BaseBetterRequirePermissionAttribute(ChannelPermission channelPerms)
+        public BasePermissionAttribute(ChannelPermission channelPerms)
         {
             this.channelPerms = channelPerms;
         }
 
-        public BaseBetterRequirePermissionAttribute(GuildPermission guildPerms)
+        public BasePermissionAttribute(GuildPermission guildPerms)
         {
             this.guildPerms = guildPerms;
         }
@@ -102,7 +65,7 @@ namespace PacManBot.Modules
             else
             {
                 ChannelPermission currentPerms;
-                if (user == null) currentPerms = Utils.CorrectDmPermissions; // They got these wrong in the library
+                if (user == null) currentPerms = DiscordExtensions.CorrectDmPermissions; // They got these wrong in the library
                 else currentPerms = (ChannelPermission)user.GetPermissions(context.Channel as IGuildChannel).RawValue;
 
                 if (currentPerms.HasFlag(channelPerms)) return PreconditionResult.FromSuccess();
@@ -113,26 +76,27 @@ namespace PacManBot.Modules
 
 
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
-    class BetterRequireBotPermissionAttribute : BaseBetterRequirePermissionAttribute
+    class BetterRequireBotPermissionAttribute : BasePermissionAttribute
     {
         public BetterRequireBotPermissionAttribute(ChannelPermission channelPerms) : base(channelPerms) { }
         public BetterRequireBotPermissionAttribute(GuildPermission guildPerms) : base(guildPerms) { }
 
         public override async Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, CommandInfo command, IServiceProvider services)
-            => CheckPermissions(context, command, context.Guild == null ? null : await context.Guild.GetCurrentUserAsync(), "Bot");
+        {
+            return CheckPermissions(context, command, context.Guild == null ? null : await context.Guild.GetCurrentUserAsync(), "Bot");
+        }
     }
 
 
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
-    class BetterRequireUserPermissionAttribute : BaseBetterRequirePermissionAttribute
+    class BetterRequireUserPermissionAttribute : BasePermissionAttribute
     {
         public BetterRequireUserPermissionAttribute(ChannelPermission channelPerms) : base(channelPerms) { }
         public BetterRequireUserPermissionAttribute(GuildPermission guildPerms) : base(guildPerms) { }
 
-        public override async Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, CommandInfo command, IServiceProvider services)
+        public override Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, CommandInfo command, IServiceProvider services)
         {
-            await Task.Delay(0); // Now please shut up, compiler.
-            return CheckPermissions(context, command, context.User as IGuildUser, "User");
+            return Task.FromResult(CheckPermissions(context, command, context.User as IGuildUser, "User"));
         }
     }
 
@@ -164,11 +128,10 @@ namespace PacManBot.Modules
         public RatelimitAttribute(uint times, double period, Measure measure, RatelimitFlags flags = RatelimitFlags.None)
         {
             invokeLimit = times;
-            noLimitInDMs = (flags & RatelimitFlags.NoLimitInDMs) == RatelimitFlags.NoLimitInDMs;
-            noLimitForAdmins = (flags & RatelimitFlags.NoLimitForAdmins) == RatelimitFlags.NoLimitForAdmins;
-            applyPerGuild = (flags & RatelimitFlags.ApplyPerGuild) == RatelimitFlags.ApplyPerGuild;
+            noLimitInDMs = (flags & RatelimitFlags.NoLimitInDMs) != 0;
+            noLimitForAdmins = (flags & RatelimitFlags.NoLimitForAdmins) != 0;
+            applyPerGuild = (flags & RatelimitFlags.ApplyPerGuild) != 0;
 
-            //TODO: C# 8 candidate switch expression
             switch (measure)
             {
                 case Measure.Days:
@@ -211,7 +174,8 @@ namespace PacManBot.Modules
             }
         }
 
-        private sealed class CommandTimeout
+
+        private class CommandTimeout
         {
             public uint TimesInvoked { get; set; }
             public DateTime FirstInvoke { get; }

@@ -8,11 +8,13 @@ namespace PacManBot.Games
     public abstract class ChannelGame : BaseGame, IChannelGame
     {
         public virtual ulong ChannelId { get; set; }
-        public virtual ulong MessageId { get; set; } = 1;
+        public virtual ulong MessageId { get; set; }
 
         public ISocketMessageChannel Channel => client.GetChannel(ChannelId) as ISocketMessageChannel;
+
         public SocketGuild Guild => (client.GetChannel(ChannelId) as SocketGuildChannel)?.Guild;
-        public async Task<IUserMessage> GetMessage() => (await Channel.GetMessageAsync(MessageId, options: Utils.DefaultOptions)) as IUserMessage;
+
+        public async Task<IUserMessage> GetMessage() => MessageId == 0 ? null : (await Channel.GetMessageAsync(MessageId, options: Bot.DefaultOptions)) as IUserMessage;
 
 
         protected ChannelGame() : base() { }

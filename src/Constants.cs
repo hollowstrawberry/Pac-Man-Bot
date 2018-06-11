@@ -1,7 +1,19 @@
 using Discord;
+using PacManBot.Utils;
 
-namespace PacManBot.Constants
+namespace PacManBot
 {
+    public enum TimePeriod
+    {
+        all = -1,
+        month = 24 * 30,
+        week = 24 * 7,
+        day = 24,
+        a = all, m = month, w = week, d = day //To be parsed from a string
+    }
+
+
+
     public static class BotFile
     {
         public const string
@@ -36,6 +48,7 @@ namespace PacManBot.Constants
             ELoading = Loading.ToEmote(),
             EHelp = Help.ToEmote(),
             ERapidBlobDance = RapidBlobDance.ToEmote();
+
 
         public const string
             Check = "<:check:410612082929565696>",

@@ -1,8 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Discord;
 using Discord.WebSocket;
+using PacManBot.Utils;
 using PacManBot.Services;
 using static PacManBot.Games.GameUtils;
 
@@ -14,7 +14,7 @@ namespace PacManBot.Games
         public virtual Player Winner { get; protected set; }
         public virtual string Message { get; protected set; }
 
-        public virtual bool AITurn => State == State.Active && (User(Turn)?.IsBot ?? false);
+        public virtual bool BotTurn => State == State.Active && (User(Turn)?.IsBot ?? false);
         public virtual bool AllBots => Enumerable.Range(0, UserId.Length).All(x => User(x)?.IsBot ?? false);
 
         public IUser User(Player player) => User((int)player);
@@ -26,7 +26,17 @@ namespace PacManBot.Games
 
 
 
+
         protected MultiplayerGame() : base() { }
+
+
+        public static TGame New<TGame>(ulong channelId, ulong[] userId, DiscordShardedClient client, LoggingService logger, StorageService storage) where TGame : MultiplayerGame
+        {
+            var game = (TGame)Activator.CreateInstance(typeof(TGame), true);
+            game.Create(channelId, userId, client, logger, storage);
+            return game;
+        }
+
 
         public virtual void Create(ulong channelId, ulong[] userId, DiscordShardedClient client, LoggingService logger, StorageService storage)
         {
@@ -42,15 +52,8 @@ namespace PacManBot.Games
             Message = "";
         }
 
-        public static TGame New<TGame>(ulong channelId, ulong[] userId, DiscordShardedClient client, LoggingService logger, StorageService storage) where TGame : MultiplayerGame
-        {
-            TGame game = Activator.CreateInstance<TGame>();
-            game.Create(channelId, userId, client, logger, storage);
-            return game;
-        }
 
-
-        public abstract void DoTurnAI();
+        public abstract void BotInput();
 
 
         public override string GetContent(bool showHelp = true)
@@ -93,6 +96,7 @@ namespace PacManBot.Games
             else if (turn >= 0 && (int)turn < UserId.Length - 1) return (Player)((int)turn + 1);
             else return 0;
         }
+
 
         protected Player PreviousPlayer(Player? turn = null)
         {

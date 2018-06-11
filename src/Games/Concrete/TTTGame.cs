@@ -3,7 +3,7 @@ using System.Text;
 using System.Collections.Generic;
 using Discord;
 using Discord.WebSocket;
-using PacManBot.Constants;
+using PacManBot.Utils;
 using PacManBot.Services;
 using static PacManBot.Games.GameUtils;
 
@@ -44,7 +44,7 @@ namespace PacManBot.Games
         }
 
 
-        public void DoInput(string input, ulong userId = 1)
+        public void Input(string input, ulong userId = 1)
         {
             int cell = int.Parse(StripPrefix(input)) - 1;
             int y = cell / board.X();
@@ -132,10 +132,10 @@ namespace PacManBot.Games
 
 
 
-        public override void DoTurnAI()
+        public override void BotInput()
         {
             Pos target = TryCompleteLine(Turn) ?? TryCompleteLine(Turn.OtherPlayer()) ?? Bot.Random.Choose(EmptyCells(board)); //Win or block or random
-            DoInput($"{1 + target.y * board.X() + target.x}");
+            Input($"{1 + target.y * board.X() + target.x}");
         }
 
 

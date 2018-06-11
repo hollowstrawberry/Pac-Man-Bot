@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using Discord;
 using Discord.WebSocket;
-using PacManBot.Constants;
+using PacManBot.Utils;
 using PacManBot.Services;
 using static PacManBot.Games.GameUtils;
 
@@ -46,7 +46,7 @@ namespace PacManBot.Games
         }
 
 
-        public void DoInput(string input, ulong userId = 1)
+        public void Input(string input, ulong userId = 1)
         {
             input = StripPrefix(input).ToUpper();
             int x = input[0] - 'A';
@@ -133,7 +133,7 @@ namespace PacManBot.Games
         }
 
 
-        public override void DoTurnAI()
+        public override void BotInput()
         {
             var moves = TryCompleteLines(Turn, 4) ?? TryCompleteLines(Turn.OtherPlayer(), 4) ?? // Win or avoid losing
                         TryCompleteFlyingLines(Turn) ?? TryCompleteFlyingLines(Turn.OtherPlayer()); // Forced win / forced lose situations
@@ -162,7 +162,7 @@ namespace PacManBot.Games
             }
 
             Pos choice = Bot.Random.Choose(moves);
-            DoInput($"{(char)('A' + choice.x)}{1 + choice.y}");
+            Input($"{(char)('A' + choice.x)}{1 + choice.y}");
         }
 
 

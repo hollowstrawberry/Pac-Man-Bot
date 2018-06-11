@@ -2,20 +2,18 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using Discord;
-using PacManBot.Constants;
 
 namespace PacManBot.Games
 {
     public static class GameUtils
     {
+        // Constants
+
         public static readonly Player MaxPlayer = Enum.GetValues(typeof(Player)).Cast<Player>().Max();
         public static readonly Color[] PlayerColor = new Color[]
         {
             new Color(221, 46, 68), new Color(85, 172, 238), new Color(120, 177, 89), new Color(253, 203, 88), new Color(170, 142, 214),
         };
-
-
-        // AI match flavor text
 
         public static readonly string[] StartTexts = new string[]
         {
@@ -40,7 +38,26 @@ namespace PacManBot.Games
 
 
 
-        // Data types
+        // Types
+
+        public enum State
+        {
+            Active, Completed, Cancelled, Lose, Win,
+        }
+
+
+        public enum Player
+        {
+            First, Second, Third, Fourth, Fifth, Sixth, Seventh, Eighth, Nineth, Tenth,
+            None = -1, Tie = -2,
+        }
+
+
+        public enum Dir
+        {
+            none, up, left, down, right,
+        }
+
 
         public struct Pos // 2d coordinates
         {
@@ -76,25 +93,6 @@ namespace PacManBot.Games
         }
 
 
-        public enum State
-        {
-            Active, Completed, Cancelled, Lose, Win,
-        }
-
-
-        public enum Player
-        {
-            First, Second, Third, Fourth, Fifth, Sixth, Seventh, Eighth, Nineth, Tenth,
-            None = -1, Tie = -2,
-        }
-
-
-        public enum Dir
-        {
-            none, up, left, down, right,
-        }
-
-
 
 
         // 2d array extension methods
@@ -115,13 +113,14 @@ namespace PacManBot.Games
             board[pos.x, pos.y] = value;
         }
 
-        public static void Wrap<T>(this T[,] board, ref Pos pos) //Wraps the position from one side of the board to the other if it's out of bounds
+        public static void Wrap<T>(this T[,] board, ref Pos pos) // Wraps position if out of bounds
         {
             while (pos.x < 0)          pos.x += board.X();
             while (pos.x >= board.X()) pos.x -= board.X();
             while (pos.y < 0)          pos.y += board.Y();
             while (pos.y >= board.Y()) pos.y -= board.Y();
         }
+
 
 
 
@@ -201,7 +200,7 @@ namespace PacManBot.Games
 
 
 
-        // For Tic-Tac-Toe (expandable) and Connect Four
+        // Used in Tic-Tac-Toe and Connect 4
 
         public static bool FindLines<T>(this T[,] board, T value, int length, List<Pos> result = null)
         {

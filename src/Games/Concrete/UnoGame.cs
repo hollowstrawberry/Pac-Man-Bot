@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 using Discord;
 using Discord.Net;
 using Discord.WebSocket;
-using PacManBot.Constants;
+using PacManBot.Utils;
 using PacManBot.Services;
 using static PacManBot.Games.GameUtils;
 
@@ -34,7 +34,7 @@ namespace PacManBot.Games
 
         public override string Name => "Uno";
         public override TimeSpan Expiry => _expiry;
-        public override bool AITurn => players.Count > 1 && base.AITurn;
+        public override bool BotTurn => players.Count > 1 && base.BotTurn;
         public string FilenameKey => "uno";
         public override bool AllBots => players.All(x => x.User?.IsBot ?? false);
 
@@ -60,8 +60,7 @@ namespace PacManBot.Games
 
 
 
-
-        // Game data types
+        // Types
 
         enum UnoState
         {
@@ -80,8 +79,6 @@ namespace PacManBot.Games
         }
 
 
-
-        // Game objects
 
         [DataContract]
         class UnoPlayer
@@ -120,10 +117,12 @@ namespace PacManBot.Games
             public static readonly Card Wild = new Card(CardType.Wild, CardColor.Black);
             public static readonly Card WildDrawFour = new Card(CardType.WildDrawFour, CardColor.Black);
 
+            public static readonly string[] StrColor = Enumerable.Range(0, 5).Select(x => ((CardColor)x).ToString().ToLower()).ToArray();
+            public static readonly string[] StrType = Enumerable.Range(0, 15).Select(x => ((CardType)x).ToString().ToLower()).ToArray();
             public static readonly Color[] RgbColor = new Color[] {
                 new Color(221, 46, 68), new Color(85, 172, 238), new Color(120, 177, 89), new Color(253, 203, 88), new Color(20, 26, 30),
             };
-            public static readonly string[] TypeEmote = Utils.ArrayConcat(CustomEmoji.NumberCircle, new string[] {
+            public static readonly string[] TypeEmote = CustomEmoji.NumberCircle.Concatenate(new string[] {
                 CustomEmoji.UnoSkip, CustomEmoji.UnoReverse, CustomEmoji.AddTwo, CustomEmoji.AddFour, CustomEmoji.UnoWild
             });
 
@@ -180,54 +179,22 @@ namespace PacManBot.Games
             public static bool IsWild(CardType type) => type == CardType.Wild || type == CardType.WildDrawFour;
 
 
-            public static Card? FromString(string value, UnoGame game)
+            public static Card? Parse(string value, UnoGame game)
             {
                 bool auto = value.Contains("auto");
                 value = value.Replace(" ", "").Replace("auto", "").Replace("uno", "").Replace("draw2", "drawtwo").Replace("draw4", "drawfour");
                 
-                CardColor? color = null;
-                CardType? type = null;
-                
-                for (int c = 0; c < 4; c++)
-                {
-                    string colorStr = ((CardColor)c).ToString().ToLower();
-                    if (value.StartsWith(colorStr) || value.EndsWith(colorStr))
-                    {
-                        color = (CardColor)c;
-                        value = value.Replace(colorStr, "");
-                        break;
-                    }
-                }
-
-                for (int t = 0; t < 15; t++)
-                {
-                    string typeStr = ((CardType)t).ToString().ToLower();
-                    if (value == typeStr || t < 10 && value == t.ToString())
-                    {
-                        type = (CardType)t;
-                        break;
-                    }
-                }
+                CardColor? color = (CardColor?)Enumerable.Range(0, 4).FirstOrNull(x => value.StartsWith(StrColor[x]) || value.EndsWith(StrColor[x]));
+                if (color.HasValue) value = value.Replace(StrColor[(int)color], "");
+                CardType? type = (CardType?)Enumerable.Range(0, 15).FirstOrNull(x => value == StrType[x] || x < 10 && value == x.ToString());
 
                 if (auto)
                 {
                     var cards = game.CurrentPlayer.cards.ToList().Sorted();
 
-                    if (color == null && type == null)
-                    {
-                        if (value != "") return null; // No valid match
-                        else return cards.FirstOrNull(x => x.Color != CardColor.Black && x.Color == game.TopCard.Color && game.CanPlace(x)) ?? cards.FirstOrNull(x => game.CanPlace(x)); // Prioritizes color
-                    }
-                    else if (color == null)
-                    {
-                        return cards.FirstOrNull(x => x.Type == type && game.CanPlace(x));
-                    }
-                    else if (type == null)
-                    {
-                        var match = cards.FirstOrNull(x => x.Color == color && game.CanPlace(x));
-                        if (match == null) type = cards.FirstOrNull(x => x.WildType)?.Type; // Tries for a wild
-                        else return match;
-                    }
+                    if (color == null && type == null) return value == "" ? cards.FirstOrNull(x => game.CanPlace(x)) : null;
+                    else if (color == null) return cards.FirstOrNull(x => x.Type == type && game.CanPlace(x));
+                    else if (type == null) return cards.FirstOrNull(x => x.Color == color && game.CanPlace(x));
                 }
 
                 if (color == null && type.HasValue && IsWild(type.Value)) color = CardColor.Black;
@@ -239,8 +206,8 @@ namespace PacManBot.Games
 
             public int CompareTo(Card other)
             {
-                int result = ((int)Color).CompareTo((int)other.Color);
-                if (result == 0) result = ((int)other.Type).CompareTo(((int)Type));
+                int result = ((int)Color).CompareTo((int)other.Color); // Sorts by color ascending
+                if (result == 0) result = ((int)other.Type).CompareTo(((int)Type)); // Then by type descending
                 return result;
             }
         }
@@ -306,8 +273,8 @@ namespace PacManBot.Games
 
                 if (userId == CurrentPlayer.User?.Id)
                 {
-                    if (Time > 0 && TopCard.Color == CardColor.Black) return Enumerable.Range(0, 4).Any(x => value == ((CardColor)x).ToString().ToLower()); // Wild color
-                    else return value == "draw" || value == "skip" || value.Contains("auto") || Card.FromString(value, this).HasValue;
+                    if (Time > 0 && TopCard.Color == CardColor.Black) return Enumerable.Range(0, 4).Any(x => value == Card.StrColor[x]); // Wild color
+                    else return value == "draw" || value == "skip" || value.Contains("auto") || Card.Parse(value, this).HasValue;
                 }
             }
 
@@ -315,7 +282,7 @@ namespace PacManBot.Games
         }
 
 
-        public void DoInput(string input, ulong userId = 1)
+        public void Input(string input, ulong userId = 1)
         {
             input = StripPrefix(input.ToLower());
             bool calledByAI = CurrentPlayer.User.IsBot;
@@ -328,10 +295,27 @@ namespace PacManBot.Games
                 return;
             }
 
+            // Saying "uno" mechanics
+            else if (input == "uno" || input == "callout")
+            {
+                var forgot = players.FirstOrDefault(x => x.uno == UnoState.Forgot);
+                if (forgot == null) return;
+
+                if (forgot.id == userId) forgot.uno = UnoState.Said;
+                else
+                {
+                    Draw(forgot, 2);
+                    Message = $"• {forgot.User.Username} was called out for not saying Uno and drew 2 cards!\n";
+                    updatedCards.Add(forgot);
+                }
+                storage.StoreGame(this);
+                return;
+            }
+
             // Set wild color (non-bots)
             else if (Time > 0 && TopCard.Color == CardColor.Black)
             {
-                discardPile[0] = new Card(discardPile[0].Type, (CardColor)Enumerable.Range(0, 4).First(x => input == ((CardColor)x).ToString().ToLower()));
+                discardPile[0] = new Card(discardPile[0].Type, (CardColor)Enumerable.Range(0, 4).First(x => input == Card.StrColor[x]));
                 Turn = FollowingTurn;
                 Time++;
                 Message = "";
@@ -367,28 +351,11 @@ namespace PacManBot.Games
                 }
             }
 
-            // Saying "uno" mechanics
-            else if (input == "uno" || input == "callout")
-            {
-                var forgot = players.FirstOrDefault(x => x.uno == UnoState.Forgot);
-                if (forgot == null) return;
-
-                if (forgot.id == userId) forgot.uno = UnoState.Said;
-                else
-                {
-                    Draw(forgot, 2);
-                    Message = $"• {forgot.User.Username} was called out for not saying Uno and drew 2 cards!\n";
-                    updatedCards.Add(forgot);
-                }
-                storage.StoreGame(this);
-                return;
-            }
-
             // Checking and playing a card
             else
             {
                 Card card;
-                var tryCard = Card.FromString(input, this);
+                var tryCard = Card.Parse(input, this);
 
                 if (tryCard.HasValue) card = tryCard.Value;
                 else
@@ -487,7 +454,7 @@ namespace PacManBot.Games
         }
 
 
-        public override void DoTurnAI()
+        public override void BotInput()
         {
             string input = "draw";
 
@@ -511,14 +478,14 @@ namespace PacManBot.Games
                 if (CurrentPlayer.cards.Count == 2 && !Bot.Random.OneIn(10)) input += "uno"; // Sometimes "forgets" to say uno
             }
 
-                            var forgot = players.FirstOrDefault(x => x.uno == UnoState.Forgot);
-                if (forgot != null && (forgot.User.IsBot || !Bot.Random.OneIn(3))) // Sometimes calls out
-                {
-                    Draw(forgot, 2);
-                    Message += $"• {forgot.User.Username} was called out for not saying Uno and drew 2 cards!\n";
-                }
+            var forgot = players.FirstOrDefault(x => x.uno == UnoState.Forgot);
+            if (forgot != null && (forgot.User.IsBot || !Bot.Random.OneIn(3))) // Sometimes calls out
+            {
+                Draw(forgot, 2);
+                Message += $"• {forgot.User.Username} was called out for not saying Uno and drew 2 cards!\n";
+            }
 
-            DoInput(input);
+            Input(input);
         }
 
         private static CardColor HighestColor(List<Card> cards)
@@ -630,7 +597,7 @@ namespace PacManBot.Games
             if (player.message == null) resend = true;
             else
             {
-                try { player.message.ModifyAsync(m => m.Embed = embed.Build(), Utils.DefaultOptions).GetAwaiter().GetResult(); }
+                try { player.message.ModifyAsync(m => m.Embed = embed.Build(), Bot.DefaultOptions).GetAwaiter().GetResult(); }
                 catch (HttpException) { resend = true; }
             }
 
@@ -638,7 +605,7 @@ namespace PacManBot.Games
             {
                 try
                 {
-                    player.message = player.User.SendMessageAsync("", false, embed.Build(), options: Utils.DefaultOptions).GetAwaiter().GetResult();
+                    player.message = player.User.SendMessageAsync("", false, embed.Build(), options: Bot.DefaultOptions).GetAwaiter().GetResult();
                 }
                 catch (HttpException e) when (e.DiscordCode == 50007) // Can't send DMs
                 {

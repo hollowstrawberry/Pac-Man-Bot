@@ -43,7 +43,7 @@ Now with more games to challenge your friends or the bot itself! Use **{prefix}h
 
 "aboutfields":
 "Author|Samrux#3980
-Version|v3.4.9
+Version|v3.5
 Library|Discord.Net 2.0 (C#)
 <:discord:409811304103149569> Bot invite|[Click here](https://discordapp.com/oauth2/authorize?client_id=398127484983443468&scope=bot&permissions=355392 \"https://discordapp.com/oauth2/authorize?client_id=398127484983443468&scope=bot&permissions=355392\")
 <:staff:412019879772815361> Pac-Man server|[Click here](https://discord.gg/hGHnfda \"https://discord.gg/hGHnfda\")
@@ -84,7 +84,7 @@ To start a custom game, send **{prefix}play \\`\\`\\`map\\`\\`\\`** or **{prefix
  `O`: Pac-Man
  `G`: Ghosts, up to 4
  `-`: Ghost box door
- `·●`: Pellets
+ `.` and `o`: Pellet and Super Pellet
  `$`: Fruit (left tile)
  `~`: A pellet, but ghosts can't move here from below
  `_`: Empty, but ghosts can't move here from below
@@ -103,6 +103,7 @@ VOICE_STATE_UPDATE",
 
 "noprefix":
 "412090002722390018,412090039686660097,412091054326677504,453703895668097034",
+
 
 
 "petting":
@@ -227,6 +228,7 @@ You wonder how long it took this bot's developer to write a hundred different pe
 Your pet is unpettable at the moment, but appreciates the attempt.{0}
 Unknown pet command! Syke. +1 pets{hide}
 As you pet your pet, you wonder if anyone goes out of their way to type the `clockagotchi pet` alias instead. That would be silly.
+<:check:410612082929565696> You're petting too little! Keep going.
 __Tip:__ You can also pet in a DM with the bot{0}{dm}
 You pet your pet. Suddenly, the sky opens up, and a milliard pet-angels descend upon you and your pet. They crown you king of pets.{getking} The ceremony and following party lasts three whole days, and there is much joy and petting in the land.{20}
 Royal pet! {10}{king}
@@ -237,6 +239,7 @@ As the king of pets, you order your royal scientists to further study petting. T
 As the king of pets, you instruct your petting minions to pet your pet. Their numbers and loving force are no match.{25}{king}
 You make a large dinner for your pet, and invite nobles from all over to participate. You pet all evening.{30}{king}
 As the king of pets, you take a day off. Petting is hard sometimes.{0}{king}",
+
 
 "superpetting":
 "You perform a super pet.{10}

@@ -5,8 +5,8 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Runtime.Serialization;
 using Discord;
-using Discord.Rest;
 using Discord.WebSocket;
+using PacManBot.Utils;
 using PacManBot.Services;
 
 namespace PacManBot
@@ -26,8 +26,11 @@ namespace PacManBot
 
     public class Bot
     {
-        public static RestApplication AppInfo { get; private set; }
-        public static readonly CustomRandom Random = new CustomRandom();
+        public static readonly ThreadSafeRandom Random = new ThreadSafeRandom();
+        public static readonly RequestOptions DefaultOptions = new RequestOptions() {
+            RetryMode = RetryMode.RetryRatelimit,
+            Timeout = 10000
+        };
 
         private BotConfig botConfig;
         private DiscordShardedClient client;
@@ -57,7 +60,6 @@ namespace PacManBot
         {
             await client.LoginAsync(TokenType.Bot, botConfig.discordToken);
             await client.StartAsync();
-            AppInfo = await client.GetApplicationInfoAsync();
         }
 
 

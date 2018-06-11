@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Discord;
@@ -6,54 +6,37 @@ using Discord.Net;
 using Discord.Commands;
 using Discord.WebSocket;
 using PacManBot.Games;
-using PacManBot.Services;
-using PacManBot.Constants;
+using PacManBot.Utils;
 using static PacManBot.Games.GameUtils;
 
 namespace PacManBot.Modules
 {
-    [Name("👾More Games"), Remarks("2")]
-    public partial class MoreGamesModule : ModuleBase<SocketCommandContext>
+    partial class MoreGamesModule
     {
-        private readonly DiscordShardedClient shardedClient;
-        private readonly LoggingService logger;
-        private readonly StorageService storage;
-
-
-        public MoreGamesModule(DiscordShardedClient shardedClient, LoggingService logger, StorageService storage)
-        {
-            this.shardedClient = shardedClient;
-            this.logger = logger;
-            this.storage = storage;
-        }
-
-
-
-
         [Command("uno"), Parameters("[players]"), Priority(-1)]
         [Remarks("Play Uno with up to 10 friends and bots")]
         [ExampleUsage("uno\nuno @Pac-Man#3944")]
         [Summary("__Tip__: Switching back and forth with DMs to see your cards can be tiresome, so try having your cards open in your phone while you're playing in a computer."
-               + "\n\n__**Commands:**__\n"
-               + "\n • **{prefix}uno** - Starts a new Uno game, for up to 10 players. You can specify players and bots as opponents. Players can join or leave at any time."
-               + "\n • **{prefix}uno join** - Join a game or invite a user or bot."
-               + "\n • **{prefix}uno leave** - Leave the game or kick a bot or inactive user."
-               + "\n • **{prefix}bump** - Move the game to the bottom of the chat."
-               + "\n • **{prefix}cancel** - End the game in the current channel."
-               + "\nᅠ{division}\n__**Rules:**__\n"
-               + "\n • Each player is given 7 cards."
-               + "\n • The current turn's player must choose to discard a card that matches either the color, number or type of the last card."
-               + "\n • If the player doesn't have any matching card, or they don't want to discard any of their cards, they can say \"**draw**\" to draw a card. That card will be discarded immediately if possible."
-               + "\n • When you only have one card left, __you must say \"uno\"__. If you don't, someone else can call you out by saying \"uno\" __before the next player plays__, and you will draw 2 cards."
-               + "\n • The first player to lose all of their cards wins the game."
-               + "\n • **Special cards:** *Skip* cards make the next player skip a turn. *Reverse* cards change the turn direction, or act like Skip cards with only two players."
-               + " *Draw* cards force the next player to draw cards and skip a turn. *Wild* cards let you choose the color, and will match with any card."
-               + "\nᅠ")]
+       + "\n\n__**Commands:**__\n"
+       + "\n • **{prefix}uno** - Starts a new Uno game, for up to 10 players. You can specify players and bots as opponents. Players can join or leave at any time."
+       + "\n • **{prefix}uno join** - Join a game or invite a user or bot."
+       + "\n • **{prefix}uno leave** - Leave the game or kick a bot or inactive user."
+       + "\n • **{prefix}bump** - Move the game to the bottom of the chat."
+       + "\n • **{prefix}cancel** - End the game in the current channel."
+       + "\nᅠ{division}\n__**Rules:**__\n"
+       + "\n • Each player is given 7 cards."
+       + "\n • The current turn's player must choose to discard a card that matches either the color, number or type of the last card."
+       + "\n • If the player doesn't have any matching card, or they don't want to discard any of their cards, they can say \"**draw**\" to draw a card. That card will be discarded immediately if possible."
+       + "\n • When you only have one card left, __you must say \"uno\"__. If you don't, someone else can call you out by saying \"uno\" __before the next player plays__, and you will draw 2 cards."
+       + "\n • The first player to lose all of their cards wins the game."
+       + "\n • **Special cards:** *Skip* cards make the next player skip a turn. *Reverse* cards change the turn direction, or act like Skip cards with only two players."
+       + " *Draw* cards force the next player to draw cards and skip a turn. *Wild* cards let you choose the color, and will match with any card."
+       + "\nᅠ")]
         [RequireContext(ContextType.Guild)]
         [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
         public async Task StartUno(params SocketGuildUser[] startingPlayers)
         {
-            await RunMultiplayerGame<UnoGame>(Utils.ArrayConcat(new SocketGuildUser[] { Context.User as SocketGuildUser }, startingPlayers));
+            await RunMultiplayerGame<UnoGame>(new SocketGuildUser[] { Context.User as SocketGuildUser }.Concatenate(startingPlayers));
         }
 
 
@@ -63,7 +46,7 @@ namespace PacManBot.Modules
         public async Task UnoHelp()
         {
             var summary = typeof(MoreGamesModule).GetMethod(nameof(StartUno)).GetCustomAttributes(typeof(SummaryAttribute), false).FirstOrDefault() as SummaryAttribute;
-            await ReplyAsync(summary?.Text.Replace("{prefix}", storage.GetPrefix(Context.Guild)).Replace("{division}", "") ?? "Couldn't get help", options: Utils.DefaultOptions);
+            await ReplyAsync(summary?.Text.Replace("{prefix}", storage.GetPrefix(Context.Guild)).Replace("{division}", "") ?? "Couldn't get help", options: Bot.DefaultOptions);
         }
 
 
@@ -84,26 +67,26 @@ namespace PacManBot.Modules
             var game = storage.GetGame<UnoGame>(Context.Channel.Id);
             if (game == null)
             {
-                await ReplyAsync($"There's no Uno game in this channel! Use `{storage.GetPrefix(Context.Guild)}uno` to start.", options: Utils.DefaultOptions);
+                await ReplyAsync($"There's no Uno game in this channel! Use `{storage.GetPrefix(Context.Guild)}uno` to start.", options: Bot.DefaultOptions);
                 return;
             }
             if (game.UserId.Contains(user.Id))
             {
-                await ReplyAsync($"{(self ? "You're" : "They're")} already playing!", options: Utils.DefaultOptions);
+                await ReplyAsync($"{(self ? "You're" : "They're")} already playing!", options: Bot.DefaultOptions);
                 return;
             }
             if (!self && !user.IsBot)
             {
-                await ReplyAsync($"{user.Mention} You're being invited to play {game.Name}. Do `{storage.GetPrefix(Context.Guild)}uno join` to join.", options: Utils.DefaultOptions);
+                await ReplyAsync($"{user.Mention} You're being invited to play {game.Name}. Do `{storage.GetPrefix(Context.Guild)}uno join` to join.", options: Bot.DefaultOptions);
                 return;
             }
 
             string failReason = game.AddPlayer(user.Id);
-            if (failReason != null) await ReplyAsync($"{user.Mention} {"You ".If(self)}can't join this game: {failReason}", options: Utils.DefaultOptions);
+            if (failReason != null) await ReplyAsync($"{user.Mention} {"You ".If(self)}can't join this game: {failReason}", options: Bot.DefaultOptions);
             else await MoveGame();
 
-            if (Context.BotCan(ChannelPermission.ManageMessages)) await Context.Message.DeleteAsync(options: Utils.DefaultOptions);
-            else await Context.Message.AddReactionAsync(failReason == null ? CustomEmoji.ECheck : CustomEmoji.ECross, Utils.DefaultOptions);
+            if (Context.BotCan(ChannelPermission.ManageMessages)) await Context.Message.DeleteAsync(options: Bot.DefaultOptions);
+            else await Context.Message.AddReactionAsync(failReason == null ? CustomEmoji.ECheck : CustomEmoji.ECross, Bot.DefaultOptions);
         }
 
 
@@ -123,12 +106,12 @@ namespace PacManBot.Modules
             var game = storage.GetGame<UnoGame>(Context.Channel.Id);
             if (game == null)
             {
-                await ReplyAsync($"There's no Uno game in this channel! Use `{storage.GetPrefix(Context.Guild)}uno` to start.", options: Utils.DefaultOptions);
+                await ReplyAsync($"There's no Uno game in this channel! Use `{storage.GetPrefix(Context.Guild)}uno` to start.", options: Bot.DefaultOptions);
                 return;
             }
             if (!game.UserId.Contains(user.Id))
             {
-                await ReplyAsync($"{(self ? "You're" : "They're")} not playing!", options: Utils.DefaultOptions);
+                await ReplyAsync($"{(self ? "You're" : "They're")} not playing!", options: Bot.DefaultOptions);
                 return;
             }
             if (game.UserId.Length <= 2)
@@ -143,7 +126,7 @@ namespace PacManBot.Modules
 
             game.RemovePlayer(user.Id);
             await MoveGame();
-            await Context.Message.AddReactionAsync(CustomEmoji.ECheck, Utils.DefaultOptions);
+            await Context.Message.AddReactionAsync(CustomEmoji.ECheck, Bot.DefaultOptions);
         }
 
 
@@ -161,6 +144,7 @@ namespace PacManBot.Modules
             await RunMultiplayerGame<TTTGame>(opponent ?? (IUser)Context.Client.CurrentUser, Context.User);
         }
 
+
         [Command("tictactoe vs"), Alias("ttt vs", "tic vs"), Priority(1), HideHelp]
         [Summary("Make the bot challenge a user... or another bot")]
         [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
@@ -168,6 +152,8 @@ namespace PacManBot.Modules
         {
             await RunMultiplayerGame<TTTGame>(opponent, Context.Client.CurrentUser);
         }
+
+
 
 
         [Command("5ttt"), Alias("ttt5", "5tictactoe", "5tic"), Priority(-1)]
@@ -183,6 +169,7 @@ namespace PacManBot.Modules
             await RunMultiplayerGame<TTT5Game>(opponent ?? (IUser)Context.Client.CurrentUser, Context.User);
         }
 
+
         [Command("5ttt vs"), Alias("ttt5 vs", "5tictactoe vs", "5tic vs"), Priority(1), HideHelp]
         [Summary("Make the bot challenge a user... or another bot")]
         [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
@@ -190,6 +177,8 @@ namespace PacManBot.Modules
         {
             await RunMultiplayerGame<TTT5Game>(opponent, Context.Client.CurrentUser);
         }
+
+
 
 
         [Command("connect4"), Alias("c4", "four"), Priority(-1)]
@@ -204,6 +193,7 @@ namespace PacManBot.Modules
             await RunMultiplayerGame<C4Game>(opponent ?? (IUser)Context.Client.CurrentUser, Context.User);
         }
 
+
         [Command("connect4 vs"), Alias("c4 vs", "four vs"), Priority(1), HideHelp]
         [Summary("Make the bot challenge a user... or another bot")]
         [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
@@ -211,6 +201,8 @@ namespace PacManBot.Modules
         {
             await RunMultiplayerGame<C4Game>(opponent, Context.Client.CurrentUser);
         }
+
+
 
 
 
@@ -232,14 +224,14 @@ namespace PacManBot.Modules
 
             TGame game = MultiplayerGame.New<TGame>(Context.Channel.Id, playerIds, shardedClient, logger, storage);
 
-            while (!game.AllBots && game.AITurn) game.DoTurnAI();
+            while (!game.AllBots && game.BotTurn) game.BotInput();
 
             storage.AddGame(game);
 
             IUserMessage gameMessage;
             try
             {
-                gameMessage = await ReplyAsync(game.GetContent(), false, game.GetEmbed()?.Build(), Utils.DefaultOptions);
+                gameMessage = await ReplyAsync(game.GetContent(), false, game.GetEmbed()?.Build(), Bot.DefaultOptions);
             }
             catch (HttpException e)
             {
@@ -255,7 +247,7 @@ namespace PacManBot.Modules
                 {
                     try
                     {
-                        game.DoTurnAI();
+                        game.BotInput();
                         if (game.MessageId != gameMessage.Id) gameMessage = await game.GetMessage();
                         game.CancelRequests();
                         if (gameMessage != null) await gameMessage.ModifyAsync(game.UpdateMessage, game.RequestOptions);
@@ -273,7 +265,7 @@ namespace PacManBot.Modules
                     try
                     {
                         if (gameMessage.Id != game.MessageId) gameMessage = await game.GetMessage();
-                        if (gameMessage != null) await gameMessage.ModifyAsync(game.UpdateMessage, Utils.DefaultOptions);
+                        if (gameMessage != null) await gameMessage.ModifyAsync(game.UpdateMessage, Bot.DefaultOptions);
                     }
                     catch (HttpException) { } // Something happened to the message, we can ignore it
                     return;
@@ -281,76 +273,6 @@ namespace PacManBot.Modules
             }
 
             if (storage.Games.Contains(game)) storage.DeleteGame(game); // When playing against the bot
-        }
-
-
-
-
-        [Command("bump"), Alias("b", "refresh", "r", "move")]
-        [Remarks("Move any game to the bottom of the chat")]
-        [Summary("Moves the current game's message in this channel to the bottom of the chat, deleting the old one."
-               + "This is useful if the game got lost in a sea of other messages, or if the game stopped responding")]
-        [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks | ChannelPermission.AddReactions)]
-        private async Task MoveGame()
-        {
-            var game = storage.GetGame(Context.Channel.Id);
-            if (game == null)
-            {
-                await ReplyAsync("There is no active game in this channel!", options: Utils.DefaultOptions);
-                return;
-            }
-
-            try
-            {
-                var gameMessage = await game.GetMessage();
-                if (gameMessage != null) await gameMessage.DeleteAsync(Utils.DefaultOptions); // Old message
-            }
-            catch (HttpException) { } // Something happened to the message, can ignore it
-
-            var message = await ReplyAsync(game.GetContent(), false, game.GetEmbed()?.Build(), Utils.DefaultOptions);
-            game.MessageId = message.Id;
-
-            if (game is PacManGame pacManGame) await PacManModule.AddControls(pacManGame, message);
-        }
-
-
-        [Command("cancel"), Alias("end")]
-        [Remarks("Cancel any game you're playing. Always usable by moderators")]
-        [Summary("Cancels the current game in this channel, but only if you started or if nobody has played in over a minute. Always usable by users with the Manage Messages permission.")]
-        [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks | ChannelPermission.AddReactions)]
-        public async Task CancelGame()
-        {
-            var game = storage.GetGame(Context.Channel.Id);
-            if (game == null)
-            {
-                await ReplyAsync("There is no active game in this channel!", options: Utils.DefaultOptions);
-                return;
-            }
-
-            if (game.UserId.Contains(Context.User.Id) || Context.UserCan(ChannelPermission.ManageMessages) || DateTime.Now - game.LastPlayed > TimeSpan.FromSeconds(60)
-                || game is MultiplayerGame tpGame && tpGame.AllBots)
-            {
-                game.State = State.Cancelled;
-                storage.DeleteGame(game);
-
-                try
-                {
-                    var gameMessage = await game.GetMessage();
-                    if (gameMessage != null)
-                    {
-                        await gameMessage.ModifyAsync(game.UpdateMessage, Utils.DefaultOptions);
-                        if (game is PacManGame && Context.BotCan(ChannelPermission.ManageMessages)) await gameMessage.RemoveAllReactionsAsync(Utils.DefaultOptions);
-                    }
-                }
-                catch (HttpException) { } // Something happened to the message, we can ignore it
-
-                if (game is PacManGame pacManGame && Context.Guild != null)
-                {
-                    await ReplyAsync($"Game ended. Score won't be registered.\n**Result:** {pacManGame.score} points in {pacManGame.Time} turns", options: Utils.DefaultOptions);
-                }
-                else await Context.Message.AddReactionAsync(CustomEmoji.ECheck, Utils.DefaultOptions);
-            }
-            else await ReplyAsync("You can't cancel this game because someone else is still playing! Try again in a minute.", options: Utils.DefaultOptions);
         }
     }
 }

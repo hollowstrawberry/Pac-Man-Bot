@@ -7,7 +7,7 @@ using Discord.Net;
 using Discord.Commands;
 using Discord.WebSocket;
 using PacManBot.Games;
-using PacManBot.Constants;
+using PacManBot.Utils;
 using static PacManBot.Games.GameUtils;
 
 namespace PacManBot.Services
@@ -117,7 +117,7 @@ namespace PacManBot.Services
                     string reply = GetCommandErrorReply(result.ErrorReason, context.Guild);
                     if (reply != null && context.BotCan(ChannelPermission.SendMessages))
                     {
-                        await context.Channel.SendMessageAsync(reply, options: Utils.DefaultOptions);
+                        await context.Channel.SendMessageAsync(reply, options: Bot.DefaultOptions);
                     }
 
                     return true;
@@ -130,17 +130,17 @@ namespace PacManBot.Services
 
         private async Task<bool> AutoresponseAsync(SocketUserMessage message)
         {
-            if (!(message.Channel is SocketGuildChannel gChannel) || !storage.WakaExclude.Contains($"{gChannel.Guild.Id}") || Bot.AppInfo?.Owner.Id == message.Author.Id)
+            if (!(message.Channel is SocketGuildChannel gChannel) || !storage.WakaExclude.Contains($"{gChannel.Guild.Id}") || storage.AppInfo?.Owner.Id == message.Author.Id)
             {
                 if (waka.IsMatch(message.Content))
                 {
-                    await message.Channel.SendMessageAsync("waka", options: Utils.DefaultOptions);
+                    await message.Channel.SendMessageAsync("waka", options: Bot.DefaultOptions);
                     await logger.Log(LogSeverity.Verbose, $"Waka at {message.Channel.FullName()}");
                     return true;
                 }
                 else if (message.Content == "sudo neat")
                 {
-                    await message.Channel.SendMessageAsync("neat", options: Utils.DefaultOptions);
+                    await message.Channel.SendMessageAsync("neat", options: Bot.DefaultOptions);
                     return true;
                 }
             }
@@ -195,10 +195,10 @@ namespace PacManBot.Services
 
             await logger.Log(LogSeverity.Verbose, game.Name, $"Input {message.Content} by user {message.Author.FullName()} on channel {message.Channel.FullName()}");
 
-            game.DoInput(message.Content, message.Author.Id);
+            game.Input(message.Content, message.Author.Id);
             if (game is MultiplayerGame mGame)
             {
-                while(mGame.AITurn) mGame.DoTurnAI();
+                while(mGame.BotTurn) mGame.BotInput();
             }
             if (game.State != State.Active) storage.DeleteGame(game);
 
@@ -208,13 +208,13 @@ namespace PacManBot.Services
             if (gameMessage != null && message.Channel.BotCan(ChannelPermission.ManageMessages))
             {
                 await gameMessage.ModifyAsync(game.UpdateMessage, requestOptions);
-                await message.DeleteAsync(Utils.DefaultOptions);
+                await message.DeleteAsync(Bot.DefaultOptions);
             }
             else
             {
                 var newMsg = await gameMessage.Channel.SendMessageAsync(game.GetContent(), false, game.GetEmbed()?.Build(), requestOptions);
                 game.MessageId = newMsg.Id;
-                if (gameMessage != null) await gameMessage.DeleteAsync(Utils.DefaultOptions);
+                if (gameMessage != null) await gameMessage.DeleteAsync(Bot.DefaultOptions);
             }
         }
 
@@ -227,7 +227,7 @@ namespace PacManBot.Services
 
             await logger.Log(LogSeverity.Verbose, game.Name, $"Input {PacManGame.GameInputs[reaction.Emote].Align(5)} by user {user.FullName()} in channel {channel.FullName()}");
 
-            game.DoTurn(reaction.Emote, user.Id);
+            game.Input(reaction.Emote, user.Id);
 
             if (game.State != State.Active)
             {
@@ -239,7 +239,7 @@ namespace PacManBot.Services
                 }
                 if (channel.BotCan(ChannelPermission.ManageMessages))
                 {
-                    await gameMessage.RemoveAllReactionsAsync(Utils.DefaultOptions);
+                    await gameMessage.RemoveAllReactionsAsync(Bot.DefaultOptions);
                 }
             }
 

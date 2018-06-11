@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using PacManBot.Utils;
 using PacManBot.Services;
-using PacManBot.Constants;
 
 namespace PacManBot.Modules
 {
@@ -56,7 +56,7 @@ namespace PacManBot.Modules
                 embed.AddField(splice[0], splice[1], true);
             }
 
-            await ReplyAsync("", false, embed.Build(), Utils.DefaultOptions);
+            await ReplyAsync("", false, embed.Build(), Bot.DefaultOptions);
         }
 
 
@@ -104,7 +104,7 @@ namespace PacManBot.Modules
 
             if (helpInfo.ExampleUsage != "") embed.AddField("Example Usage", helpInfo.ExampleUsage.Replace("{prefix}", prefix), false);
 
-            await ReplyAsync("", false, embed.Build(), Utils.DefaultOptions);
+            await ReplyAsync("", false, embed.Build(), Bot.DefaultOptions);
         }
 
 
@@ -127,7 +127,7 @@ namespace PacManBot.Modules
                 var moduleText = new StringBuilder(); //Text under the module title in the embed block
                 List<string> previousCommands = new List<string>(); //Storing the command names so they can't repeat
 
-                foreach (var command in module.Commands) //Go through all commands
+                foreach (var command in module.Commands.OrderBy(c => c.Priority)) //Go through all commands
                 {
                     var helpInfo = new CommandHelpInfo(command);
 
@@ -147,7 +147,7 @@ namespace PacManBot.Modules
                 if (moduleText.Length > 0) embed.AddField(module.Name, moduleText.ToString(), false);
             }
 
-            await ReplyAsync("", false, embed.Build(), Utils.DefaultOptions); //Send the built embed
+            await ReplyAsync("", false, embed.Build(), Bot.DefaultOptions); //Send the built embed
         }
 
 
@@ -157,7 +157,7 @@ namespace PacManBot.Modules
         public async Task Ping([Remainder]string uselessArgs = "")
         {
             var stopwatch = Stopwatch.StartNew(); // Measure the time it takes to send a message to chat
-            var message = await ReplyAsync($"{CustomEmoji.Loading} Waka", options: Utils.DefaultOptions);
+            var message = await ReplyAsync($"{CustomEmoji.Loading} Waka", options: Bot.DefaultOptions);
             stopwatch.Stop();
 
             int shardGames = 0;
@@ -171,7 +171,7 @@ namespace PacManBot.Modules
 
             string content = $"{CustomEmoji.PacMan} Waka in `{(int)stopwatch.ElapsedMilliseconds}`ms **|** {shardedClient.Guilds.Count} total guilds, {storage.Games.Count} total active games";
             if (shardedClient.Shards.Count > 1) content += $"```css\nShard {Context.Client.ShardId + 1}/{shardedClient.Shards.Count} controlling {Context.Client.Guilds.Count} guilds and {shardGames} games```";
-            await message.ModifyAsync(m => m.Content = content, Utils.DefaultOptions);                   
+            await message.ModifyAsync(m => m.Content = content, Bot.DefaultOptions);                   
         }
 
 
@@ -190,7 +190,7 @@ namespace PacManBot.Modules
                 string prefix = storage.GetPrefix(Context.Guild.Id);
                 reply = $"Prefix for this server is set to '{prefix}'{" (the default)".If(prefix == storage.DefaultPrefix)}. It can be changed with the command `setprefix`.";
             }
-            await ReplyAsync(reply, options: Utils.DefaultOptions);
+            await ReplyAsync(reply, options: Bot.DefaultOptions);
         }
 
 
@@ -202,14 +202,14 @@ namespace PacManBot.Modules
             try
             {
                 File.AppendAllText(BotFile.FeedbackLog, $"[{Context.User.FullName()}] {message}\n\n");
-                await ReplyAsync($"{CustomEmoji.ECheck} Message sent. Thank you!", options: Utils.DefaultOptions);
-                var app = await Context.Client.GetApplicationInfoAsync(Utils.DefaultOptions);
-                await app.Owner.SendMessageAsync($"```diff\n+Feedback received: {Context.User.FullName()}```\n{message}".Truncate(1999), options: Utils.DefaultOptions);
+                await ReplyAsync($"{CustomEmoji.ECheck} Message sent. Thank you!", options: Bot.DefaultOptions);
+                var app = await Context.Client.GetApplicationInfoAsync(Bot.DefaultOptions);
+                await app.Owner.SendMessageAsync($"```diff\n+Feedback received: {Context.User.FullName()}```\n{message}".Truncate(1999), options: Bot.DefaultOptions);
             }
             catch (Exception e)
             {
                 await logger.Log(LogSeverity.Error, $"{e}");
-                await ReplyAsync("Oops, I didn't catch that, please try again. Maybe the dev screwed up", options: Utils.DefaultOptions);
+                await ReplyAsync("Oops, I didn't catch that, please try again. Maybe the dev screwed up", options: Bot.DefaultOptions);
             }
         }
 
@@ -236,13 +236,13 @@ namespace PacManBot.Modules
         [Summary("Takes a number which can be either an amount of emotes to send or a message ID to react to. Reacts to the command by default.")]
         public async Task BlobDance(ulong number = 0)
         {
-            if (number < 1) await Context.Message.AddReactionAsync(CustomEmoji.ERapidBlobDance, options: Utils.DefaultOptions);
-            else if (number <= 10) await ReplyAsync(CustomEmoji.RapidBlobDance.Multiply((int)number), options: Utils.DefaultOptions);
+            if (number < 1) await Context.Message.AddReactionAsync(CustomEmoji.ERapidBlobDance, options: Bot.DefaultOptions);
+            else if (number <= 10) await ReplyAsync(CustomEmoji.RapidBlobDance.Multiply((int)number), options: Bot.DefaultOptions);
             else if (number <= 1000000) await ReplyAsync($"Are you insane?");
             else // Message ID
             {
-                if (await Context.Channel.GetMessageAsync(number) is IUserMessage message) await message.AddReactionAsync(CustomEmoji.ERapidBlobDance, Utils.DefaultOptions);
-                else await Context.Message.AddReactionAsync(CustomEmoji.ECross, Utils.DefaultOptions);
+                if (await Context.Channel.GetMessageAsync(number) is IUserMessage message) await message.AddReactionAsync(CustomEmoji.ERapidBlobDance, Bot.DefaultOptions);
+                else await Context.Message.AddReactionAsync(CustomEmoji.ECross, Bot.DefaultOptions);
             }
         }
 
@@ -254,16 +254,16 @@ namespace PacManBot.Modules
         {
             foreach (IUserMessage message in Context.Channel.GetCachedMessages(amount))
             {
-                await message.AddReactionAsync(CustomEmoji.ERapidBlobDance, Utils.DefaultOptions);
+                await message.AddReactionAsync(CustomEmoji.ERapidBlobDance, Bot.DefaultOptions);
             }
         }
 
 
         [Command("neat"), HideHelp, Summary("Neat")]
-        public async Task Neat() => await ReplyAsync("neat", options: Utils.DefaultOptions);
+        public async Task Neat() => await ReplyAsync("neat", options: Bot.DefaultOptions);
 
         [Command("nice"), HideHelp, Summary("Neat")]
-        public async Task Nice() => await ReplyAsync("nice", options: Utils.DefaultOptions);
+        public async Task Nice() => await ReplyAsync("nice", options: Bot.DefaultOptions);
 
 
 

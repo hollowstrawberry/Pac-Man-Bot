@@ -3,41 +3,46 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Reflection;
-using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using Microsoft.Extensions.Configuration;
 using Discord;
+using Discord.Rest;
 using Discord.WebSocket;
 using PacManBot.Games;
-using PacManBot.Constants;
+using PacManBot.Utils;
 
 namespace PacManBot.Services
 {
     public class StorageService
     {
-        private readonly DiscordShardedClient client;
-        private readonly LoggingService logger;
-        private readonly Dictionary<ulong, string> prefixes;
-        private readonly List<ScoreEntry> scoreEntries;
-        private readonly List<IChannelGame> games; // Channel-specific games
-        private readonly List<IBaseGame> userGames; // Non-channel specific games
+        private static readonly IReadOnlyDictionary<string, Type> StoreableGameTypes = GetStoreableGameTypes();
 
-        private readonly JsonSerializerSettings gameJsonSettings = new JsonSerializerSettings {
+        private static readonly JsonSerializerSettings GameJsonSettings = new JsonSerializerSettings {
             ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
         };
-        private static readonly Dictionary<string, Type> StoreableGamesTypes = GetStoreableGameTypes();
+
+
+        private readonly DiscordShardedClient client;
+        private readonly LoggingService logger;
+
+        private readonly Dictionary<ulong, string> prefixes;
+        private readonly List<ScoreEntry> scoreEntries;
+        private readonly List<IChannelGame> games;
+        private readonly List<IBaseGame> userGames;
 
         public string WakaExclude { get; private set; }
         public IReadOnlyList<IChannelGame> Games { get; private set; }
         public IReadOnlyList<IBaseGame> UserGames { get; private set; }
 
-        public IConfigurationRoot BotContent { get; private set; } = null;
         public string DefaultPrefix { get; private set; }
+        public ulong[] NoPrefixChannels { get; private set; }
         public string[] PettingMessages { get; private set; }
         public string[] SuperPettingMessages { get; private set; }
-        public ulong[] NoPrefixChannels { get; private set; }
-
+        public IConfigurationRoot BotContent { get; private set; }
+        public RestApplication AppInfo { get; private set; }
 
 
         public StorageService(DiscordShardedClient client, LoggingService logger, BotConfig config)
@@ -46,6 +51,7 @@ namespace PacManBot.Services
             this.logger = logger;
 
             DefaultPrefix = config.defaultPrefix;
+            BotContent = null;
             prefixes = new Dictionary<ulong, string>();
             scoreEntries = new List<ScoreEntry>();
             games = new List<IChannelGame>();
@@ -59,7 +65,10 @@ namespace PacManBot.Services
             LoadPrefixes();
             LoadScoreboard();
             LoadGames();
+
+            client.LoggedIn += LoadAppInfo;
         }
+
 
 
 
@@ -67,11 +76,11 @@ namespace PacManBot.Services
         {
             return (prefixes.ContainsKey(serverId)) ? prefixes[serverId] : DefaultPrefix;
         }
+
         public string GetPrefix(IGuild guild = null)
         {
             return (guild == null) ? DefaultPrefix : GetPrefix(guild.Id);
         }
-
 
         public string GetPrefixOrEmpty(IGuild guild)
         {
@@ -124,6 +133,21 @@ namespace PacManBot.Services
 
 
 
+
+        public IChannelGame GetGame(ulong channelId)
+            => games.FirstOrDefault(g => g.ChannelId == channelId);
+
+        public TGame GetGame<TGame>(ulong channelId) where TGame : IChannelGame
+            => (TGame)games.FirstOrDefault(g => g.ChannelId == channelId && g is TGame);
+
+
+        public IBaseGame GetUserGame(ulong channelId)
+            => games.FirstOrDefault(g => g.ChannelId == channelId);
+
+        public TGame GetUserGame<TGame>(ulong userId) where TGame : IBaseGame
+            => (TGame)userGames.FirstOrDefault(g => g.OwnerId == userId && g is TGame);
+
+
         public void AddGame(IChannelGame game)
         {
             games.Add(game);
@@ -166,24 +190,19 @@ namespace PacManBot.Services
             }
         }
 
+
+        public static string GameFile(IStoreableGame game)
+        {
+            ulong id = game is ChannelGame cGame ? cGame.ChannelId : game.UserId[0];
+            return $"{BotFile.GameFolder}{game.FilenameKey}{id}{BotFile.GameExtension}";
+        }
+
+
         public void StoreGame(IStoreableGame game)
         {
             File.WriteAllText(GameFile(game), JsonConvert.SerializeObject(game), Encoding.UTF8);
         }
 
-
-        public IChannelGame GetGame(ulong channelId)
-            => games.FirstOrDefault(g => g.ChannelId == channelId);
-
-        public TGame GetGame<TGame>(ulong channelId) where TGame : IChannelGame
-            => (TGame)games.FirstOrDefault(g => g.ChannelId == channelId && g is TGame);
-
-
-        public IBaseGame GetUserGame(ulong channelId)
-            => games.FirstOrDefault(g => g.ChannelId == channelId);
-
-        public TGame GetUserGame<TGame>(ulong userId) where TGame : IBaseGame
-            => (TGame)userGames.FirstOrDefault(g => g.OwnerId == userId && g is TGame);
 
 
 
@@ -199,9 +218,9 @@ namespace PacManBot.Services
         }
 
 
-        public IReadOnlyList<ScoreEntry> GetScores(Utils.TimePeriod period = Utils.TimePeriod.all)
+        public IReadOnlyList<ScoreEntry> GetScores(TimePeriod period = TimePeriod.all)
         {
-            if (period == Utils.TimePeriod.all) return scoreEntries.AsReadOnly();
+            if (period == TimePeriod.all) return scoreEntries.AsReadOnly();
 
             var date = DateTime.Now;
             return scoreEntries.Where(s => (date - s.date).TotalHours <= (int)period).ToList().AsReadOnly();
@@ -279,7 +298,6 @@ namespace PacManBot.Services
         }
 
 
-
         private void LoadGames()
         {
             if (!Directory.Exists(BotFile.GameFolder))
@@ -298,19 +316,12 @@ namespace PacManBot.Services
                 {
                     try
                     {
-                        IStoreableGame game = null;
-                        foreach (var type in StoreableGamesTypes)
-                        {
-                            if (file.Contains(type.Key))
-                            {
-                                game = (IStoreableGame)JsonConvert.DeserializeObject(File.ReadAllText(file), type.Value, gameJsonSettings);
-                                if (game is ChannelGame cGame) games.Add(cGame);
-                                else userGames.Add(game);
-                                break;
-                            }
-                        }
+                        Type gameType = StoreableGameTypes.First(x => file.Contains(x.Key)).Value;
+                        var game = (IStoreableGame)JsonConvert.DeserializeObject(File.ReadAllText(file), gameType, GameJsonSettings);
                         game?.PostDeserialize(client, logger, this);
-                        // StoreGame(game); // Update old files
+
+                        if (game is ChannelGame cGame) games.Add(cGame);
+                        else userGames.Add(game);
                     }
                     catch (Exception e)
                     {
@@ -326,20 +337,23 @@ namespace PacManBot.Services
         }
 
 
-        public static string GameFile(IStoreableGame game)
+        private async Task LoadAppInfo()
         {
-            ulong id = game is ChannelGame cGame ? cGame.ChannelId : game.UserId[0];
-            return $"{BotFile.GameFolder}{game.FilenameKey}{id}{BotFile.GameExtension}";
+            AppInfo = await client.GetApplicationInfoAsync(Bot.DefaultOptions);
+            client.LoggedIn -= LoadAppInfo;
         }
 
 
-        private static Dictionary<string, Type> GetStoreableGameTypes()
+
+
+        private static IReadOnlyDictionary<string, Type> GetStoreableGameTypes()
         {
             return Assembly.GetAssembly(typeof(IStoreableGame)).GetTypes()
                 .Where(t => t.IsClass && !t.IsAbstract && t.GetInterfaces().Contains(typeof(IStoreableGame)))
                 .Select(x => KeyValuePair.Create(((IStoreableGame)Activator.CreateInstance(x, true)).FilenameKey, x))
                 .OrderByDescending(x => x.Key.Length)
-                .ToDictionary(x => x.Key, x => x.Value);
+                .AsDictionary()
+                .AsReadOnly();
         }
     }
 }

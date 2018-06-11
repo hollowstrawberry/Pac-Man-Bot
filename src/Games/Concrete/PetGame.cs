@@ -8,7 +8,7 @@ using System.Runtime.Serialization;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
-using PacManBot.Constants;
+using PacManBot.Utils;
 using PacManBot.Services;
 
 namespace PacManBot.Games
@@ -16,6 +16,8 @@ namespace PacManBot.Games
     [DataContract]
     public class PetGame : BaseGame, IStoreableGame
     {
+        // Constants
+
         public static readonly string[] FoodEmotes = new string[] { "🍌", "🍎", "🍊", "🍕", "🌮", "🍩", "🍪", "🍐", "🍉", "🍇", "🍑", "🍧", "🍫", "🥕", "🍼" };
         public static readonly string[] PlayEmotes = new string[] { "⚽", "🏀", "🏈", "🎾", "🏓", "🎨", "🎤", "🎭", "🏐", "🎣", };
         public static readonly string[] CleanEmotes = new string[] { "💧", "🚿", "🛁", "🚽", "🚰", "💦", "👣", "💩", "✨" };
@@ -25,11 +27,8 @@ namespace PacManBot.Games
         public const string PetAmountPattern = @"{-?[0-9]+}";
         public const int MaxStat = 20;
 
-        public override string Name => "Clockagotchi";
-        public override TimeSpan Expiry => TimeSpan.MaxValue;
-        public string FilenameKey => "pet";
 
-        public double TotalStats => satiation + happiness + hygiene + energy;
+        // Fields
 
         [DataMember] private string petName = null;
         [DataMember] private string petImageUrl = null;
@@ -42,9 +41,17 @@ namespace PacManBot.Games
         [DataMember] public DateTime lastUpdated;
         [DataMember] public Achievements achievements = new Achievements();
 
+
+        // Properties
+
         [DataMember] public override ulong OwnerId { get { return UserId[0]; } set { UserId = new ulong[] { value }; } }
         [IgnoreDataMember] public DateTime lastPet = DateTime.Now;
 
+        public override string Name => "Clockagotchi";
+        public override TimeSpan Expiry => TimeSpan.MaxValue;
+        public string FilenameKey => "pet";
+
+        public double TotalStats => satiation + happiness + hygiene + energy;
         public int TimesPet => achievements.timesPet;
 
         public string PetName
@@ -63,7 +70,7 @@ namespace PacManBot.Games
             set
             {
                 string url = value?.Trim('<', '>');
-                if (url == null || Utils.IsImageUrl(url))
+                if (url == null || url.IsImageUrl())
                 {
                     petImageUrl = url;
                 }
@@ -74,16 +81,21 @@ namespace PacManBot.Games
 
 
 
+        // Types
 
         [DataContract]
         public class Achievements
         {
+            public Achievements() { }
+
             [DataMember] public uint timesFed = 0;
             [DataMember] public uint timesPlayed = 0;
             [DataMember] public uint timesCleaned = 0;
             [DataMember] public int timesPet = 0;
-            [DataMember] public DateTime lastNeglected = default;
             [DataMember] public uint Attention = 0;
+            [DataMember] public DateTime lastNeglected = default;
+
+            public uint TotalActions => timesFed + timesPlayed + timesCleaned;
 
 
             [Achievement("🎖", "At Home", "Give your pet a name and image", 1), DataMember]
@@ -117,12 +129,6 @@ namespace PacManBot.Games
             public bool PetGod { get; set; } = false;
 
 
-            public uint TotalActions => timesFed + timesPlayed + timesCleaned;
-
-
-            public Achievements() { }
-
-
             public void DoChecks(PetGame pet)
             {
                 if (lastNeglected == default) lastNeglected = pet.bornDate; //old pets
@@ -136,10 +142,11 @@ namespace PacManBot.Games
                 else if (days >= 3 && Attention < 1) Attention = 1;
             }
 
+
             public List<AchievementAttribute> GetList()
             {
                 return GetType().GetProperties()
-                    .Select(x => x.GetCustomAttribute<AchievementAttribute>()?.WithObtained((bool)x.GetMethod.Invoke(this, new object[] { })))
+                    .Select(x => x.GetCustomAttribute<AchievementAttribute>()?.WithObtained((bool)x.GetMethod.Invoke(this, new object[0])))
                     .Where(x => x != null).ToList().Sorted();
             }
 
@@ -164,7 +171,7 @@ namespace PacManBot.Games
         }
 
 
-        [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, Inherited = false, AllowMultiple = false)]
+        [AttributeUsage(AttributeTargets.Property)]
         public class AchievementAttribute : Attribute, IComparable<AchievementAttribute>
         {
             public string Icon { get; private set; }
@@ -174,7 +181,16 @@ namespace PacManBot.Games
             public int Group { get; private set; }
             public bool HideIcon { get; private set; }
 
-            public bool Obtained { get; private set; }
+            private bool? _obtained = null;
+            public bool Obtained
+            {
+                get
+                {
+                    if (_obtained == null) throw new InvalidOperationException($"Obtained value not set. Use {nameof(WithObtained)}");
+                    return _obtained.Value;
+                }
+            }
+
 
             public AchievementAttribute(string icon, string name, string description, int position, bool hideIcon = false, int group = 0)
             {
@@ -186,15 +202,13 @@ namespace PacManBot.Games
                 Group = group;
             }
 
-            private AchievementAttribute(AchievementAttribute old, bool obtained) : this(old.Icon, old.Name, old.Description, old.Position, old.HideIcon, old.Group)
-            {
-                Obtained = obtained;
-            }
-
             public AchievementAttribute WithObtained(bool obtained)
             {
-                return new AchievementAttribute(this, obtained);
+                var clone = (AchievementAttribute)MemberwiseClone();
+                clone._obtained = obtained;
+                return clone;
             }
+
 
             public int CompareTo(AchievementAttribute other)
             {
@@ -205,6 +219,8 @@ namespace PacManBot.Games
 
 
 
+        // Game methods
+
         private PetGame() { } // Used in serialization
 
         public PetGame(string name, ulong ownerId, DiscordShardedClient client, LoggingService logger, StorageService storage)
@@ -214,8 +230,6 @@ namespace PacManBot.Games
             bornDate = DateTime.Now;
             lastUpdated = DateTime.Now;
         }
-
-
 
 
         public override EmbedBuilder GetEmbed(bool showHelp = true) => GetEmbed(null);
@@ -343,6 +357,8 @@ namespace PacManBot.Games
         }
 
 
+
+
         public bool Feed()
         {
             UpdateStats(store: false);
@@ -362,6 +378,7 @@ namespace PacManBot.Games
             storage.StoreGame(this);
             return canEat;
         }
+
 
         public bool Play()
         {
@@ -383,6 +400,7 @@ namespace PacManBot.Games
             return canPlay;
         }
 
+
         public bool Clean()
         {
             UpdateStats(store: false);
@@ -401,6 +419,7 @@ namespace PacManBot.Games
             storage.StoreGame(this);
             return canClean;
         }
+
 
         public void ToggleSleep()
         {
@@ -486,14 +505,6 @@ namespace PacManBot.Games
         }
 
 
-        public virtual void PostDeserialize(DiscordShardedClient client, LoggingService logger, StorageService storage)
-        {
-            this.client = client;
-            this.logger = logger;
-            this.storage = storage;
-        }
-
-
         public int PetMessageCountEstimate()
         {
             double sum = 0;
@@ -506,12 +517,23 @@ namespace PacManBot.Games
         }
 
 
+
+        public void PostDeserialize(DiscordShardedClient client, LoggingService logger, StorageService storage)
+        {
+            this.client = client;
+            this.logger = logger;
+            this.storage = storage;
+        }
+
+
+
+
         public static double AveragePets(StorageService storage, bool king, bool super, bool god)
         {
             double sumNormal = 0;
             double sumSuper = 0;
 
-            string[] allMessages = super ? Utils.ArrayConcat(storage.PettingMessages, storage.SuperPettingMessages) : storage.PettingMessages;
+            string[] allMessages = super ? storage.PettingMessages.Concatenate(storage.SuperPettingMessages) : storage.PettingMessages;
             int lines = allMessages.Length;
             int superIndex = storage.PettingMessages.Length;
 

@@ -7,7 +7,7 @@ using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using PacManBot.Games;
-using PacManBot.Constants;
+using PacManBot.Utils;
 
 namespace PacManBot.Modules
 {
@@ -25,7 +25,7 @@ namespace PacManBot.Modules
 
 
 
-        [Command("pet"), Alias("clockagotchi"), Parameters("[command]"), Priority(-2)]
+        [Command("pet"), Alias("clockagotchi"), Parameters("[command]"), Priority(-4)]
         [Remarks("Adopt your own pet!")]
         [Summary("**__Pet Commands__**\n\n" +
             "**{prefix}pet** - Check on your pet or adopt if you don't have one\n" +
@@ -48,7 +48,7 @@ namespace PacManBot.Modules
 
             if (command == null)
             {
-                await ReplyAsync($"Unknown pet command! Do `{storage.GetPrefixOrEmpty(Context.Guild)}pet help` for help", options: Utils.DefaultOptions);
+                await ReplyAsync($"Unknown pet command! Do `{storage.GetPrefixOrEmpty(Context.Guild)}pet help` for help", options: Bot.DefaultOptions);
             }
             else
             {
@@ -62,7 +62,7 @@ namespace PacManBot.Modules
                     }
                     else
                     {
-                        await ReplyAsync($"You don't have a pet yet! Simply do `{storage.GetPrefixOrEmpty(Context.Guild)}pet` to adopt one.", options: Utils.DefaultOptions);
+                        await ReplyAsync($"You don't have a pet yet! Simply do `{storage.GetPrefixOrEmpty(Context.Guild)}pet` to adopt one.", options: Bot.DefaultOptions);
                         return;
                     }
                 }
@@ -81,7 +81,7 @@ namespace PacManBot.Modules
             var pet = storage.GetUserGame<PetGame>(Context.User.Id);
             if (pet == null)
             {
-                await ReplyAsync($"You don't have a pet yet! Simply do `{storage.GetPrefixOrEmpty(Context.Guild)}pet` to adopt one.", options: Utils.DefaultOptions);
+                await ReplyAsync($"You don't have a pet yet! Simply do `{storage.GetPrefixOrEmpty(Context.Guild)}pet` to adopt one.", options: Bot.DefaultOptions);
                 return;
             }
 
@@ -89,7 +89,7 @@ namespace PacManBot.Modules
             if ((now - pet.lastPet) <= TimeSpan.FromSeconds(1)) return;
             pet.lastPet = now;
 
-            await ReplyAsync(pet.DoPet(Context), options: Utils.DefaultOptions);
+            await ReplyAsync(pet.DoPet(Context), options: Bot.DefaultOptions);
             return;
         }
 
@@ -122,7 +122,7 @@ namespace PacManBot.Modules
         [PetCommand("")]
         public async Task Pet(PetGame pet, string args)
         {
-            await ReplyAsync(pet.GetContent(), false, pet.GetEmbed(Context.User as IGuildUser)?.Build(), Utils.DefaultOptions);
+            await ReplyAsync(pet.GetContent(), false, pet.GetEmbed(Context.User as IGuildUser)?.Build(), Bot.DefaultOptions);
         }
 
 
@@ -140,13 +140,13 @@ namespace PacManBot.Modules
                     pet = storage.GetUserGame<PetGame>(user.Id);
                     if (pet == null)
                     {
-                        await ReplyAsync("This person doesn't have a pet :(", options: Utils.DefaultOptions);
+                        await ReplyAsync("This person doesn't have a pet :(", options: Bot.DefaultOptions);
                         return;
                     }
                 }
             }
 
-            await ReplyAsync(pet.GetContent(), false, pet.GetEmbed(user, true)?.Build(), Utils.DefaultOptions);
+            await ReplyAsync(pet.GetContent(), false, pet.GetEmbed(user, true)?.Build(), Bot.DefaultOptions);
         }
 
 
@@ -164,20 +164,20 @@ namespace PacManBot.Modules
                     pet = storage.GetUserGame<PetGame>(user.Id);
                     if (pet == null)
                     {
-                        await ReplyAsync("This person doesn't have a pet :(", options: Utils.DefaultOptions);
+                        await ReplyAsync("This person doesn't have a pet :(", options: Bot.DefaultOptions);
                         return;
                     }
                 }
             }
 
-            await ReplyAsync("", false, pet.GetEmbedAchievements(user)?.Build(), Utils.DefaultOptions);
+            await ReplyAsync("", false, pet.GetEmbedAchievements(user)?.Build(), Bot.DefaultOptions);
         }
 
 
         [PetCommand("feed", "food", "eat", "hunger", "satiation")]
         public async Task PetFeed(PetGame pet, string args)
         {
-            if (pet.Feed()) await Context.Message.AddReactionAsync(Bot.Random.Choose(PetGame.FoodEmotes).ToEmoji(), Utils.DefaultOptions);
+            if (pet.Feed()) await Context.Message.AddReactionAsync(Bot.Random.Choose(PetGame.FoodEmotes).ToEmoji(), Bot.DefaultOptions);
             else await ReplyAsync($"{CustomEmoji.Cross} Your pet is already full! (-1 happiness)");
         }
 
@@ -185,11 +185,11 @@ namespace PacManBot.Modules
         [PetCommand("play", "fun", "happy", "happiness")]
         public async Task PetPlay(PetGame pet, string args)
         {
-            if (pet.Play()) await Context.Message.AddReactionAsync(Bot.Random.Choose(PetGame.PlayEmotes).ToEmoji(), Utils.DefaultOptions);
+            if (pet.Play()) await Context.Message.AddReactionAsync(Bot.Random.Choose(PetGame.PlayEmotes).ToEmoji(), Bot.DefaultOptions);
             else
             {
                 string message = pet.energy.Ceiling() >= 5 ? "Your pet doesn't want to play anymore! (-1 happiness)" : "Your pet is too tired to play! It needs 5 energy or more.";
-                await ReplyAsync($"{CustomEmoji.Cross} {message}", options: Utils.DefaultOptions);
+                await ReplyAsync($"{CustomEmoji.Cross} {message}", options: Bot.DefaultOptions);
             }
         }
 
@@ -197,8 +197,8 @@ namespace PacManBot.Modules
         [PetCommand("clean", "hygiene", "wash")]
         public async Task PetClean(PetGame pet, string args)
         {
-            if (pet.Clean()) await Context.Message.AddReactionAsync(Bot.Random.Choose(PetGame.CleanEmotes).ToEmoji(), Utils.DefaultOptions);
-            else await ReplyAsync($"{CustomEmoji.Cross} Your pet is already clean! (-1 happiness)", options: Utils.DefaultOptions);
+            if (pet.Clean()) await Context.Message.AddReactionAsync(Bot.Random.Choose(PetGame.CleanEmotes).ToEmoji(), Bot.DefaultOptions);
+            else await ReplyAsync($"{CustomEmoji.Cross} Your pet is already clean! (-1 happiness)", options: Bot.DefaultOptions);
         }
 
 
@@ -210,11 +210,11 @@ namespace PacManBot.Modules
             {
                 pet.happiness = Math.Max(0, pet.happiness - 1);
                 storage.StoreGame(pet);
-                await ReplyAsync($"{CustomEmoji.Cross} Your pet is not tired! (-1 happiness)", options: Utils.DefaultOptions);
+                await ReplyAsync($"{CustomEmoji.Cross} Your pet is not tired! (-1 happiness)", options: Bot.DefaultOptions);
             }
             else
             {
-                await ReplyAsync(Bot.Random.Choose(PetGame.SleepEmotes) + (pet.asleep ? " Your pet is already sleeping." : " Your pet is now asleep."), options: Utils.DefaultOptions);
+                await ReplyAsync(Bot.Random.Choose(PetGame.SleepEmotes) + (pet.asleep ? " Your pet is already sleeping." : " Your pet is now asleep."), options: Bot.DefaultOptions);
                 if (!pet.asleep) pet.ToggleSleep();
             }
         }
@@ -224,7 +224,7 @@ namespace PacManBot.Modules
         public async Task PetWake(PetGame pet, string args)
         {
             pet.UpdateStats(false);
-            await ReplyAsync(pet.asleep ? "🌅 You wake up your pet." : "🌅 Your pet is already awake.", options: Utils.DefaultOptions);
+            await ReplyAsync(pet.asleep ? "🌅 You wake up your pet." : "🌅 Your pet is already awake.", options: Bot.DefaultOptions);
             if (pet.asleep) pet.ToggleSleep();
         }
 
@@ -232,12 +232,12 @@ namespace PacManBot.Modules
         [PetCommand("name")]
         public async Task PetName(PetGame pet, string args)
         {
-            if (string.IsNullOrWhiteSpace(args)) await ReplyAsync($"{CustomEmoji.Cross} Please specify a name!", options: Utils.DefaultOptions);
-            else if (args.Length > 32) await ReplyAsync($"{CustomEmoji.Cross} Pet name can't go above 32 characters!", options: Utils.DefaultOptions);
+            if (string.IsNullOrWhiteSpace(args)) await ReplyAsync($"{CustomEmoji.Cross} Please specify a name!", options: Bot.DefaultOptions);
+            else if (args.Length > 32) await ReplyAsync($"{CustomEmoji.Cross} Pet name can't go above 32 characters!", options: Bot.DefaultOptions);
             else
             {
                 pet.PetName = args;
-                await Context.Message.AddReactionAsync(CustomEmoji.ECheck, Utils.DefaultOptions);
+                await Context.Message.AddReactionAsync(CustomEmoji.ECheck, Bot.DefaultOptions);
             }
         }
 
@@ -248,19 +248,19 @@ namespace PacManBot.Modules
             string url = args != null ? args : Context.Message.Attachments.FirstOrDefault()?.Url;
             if (url == null && pet.PetImageUrl == null)
             {
-                await ReplyAsync($"{CustomEmoji.Cross} Please specify an image!", options: Utils.DefaultOptions);
+                await ReplyAsync($"{CustomEmoji.Cross} Please specify an image!", options: Bot.DefaultOptions);
             }
             else
             {
                 try
                 {
                     pet.PetImageUrl = url;
-                    if (url == null) await ReplyAsync($"{CustomEmoji.ECheck} Pet image reset!", options: Utils.DefaultOptions);
-                    else await Context.Message.AddReactionAsync(CustomEmoji.ECheck, Utils.DefaultOptions);
+                    if (url == null) await ReplyAsync($"{CustomEmoji.ECheck} Pet image reset!", options: Bot.DefaultOptions);
+                    else await Context.Message.AddReactionAsync(CustomEmoji.ECheck, Bot.DefaultOptions);
                 }
                 catch (FormatException)
                 {
-                    await ReplyAsync($"{CustomEmoji.Cross} Invalid image link!\nYou can try uploading the image yourself.", options: Utils.DefaultOptions);
+                    await ReplyAsync($"{CustomEmoji.Cross} Invalid image link!\nYou can try uploading the image yourself.", options: Bot.DefaultOptions);
                 }
             }
         }
@@ -270,7 +270,7 @@ namespace PacManBot.Modules
         public async Task PetHelp(PetGame pet, string args)
         {
             var summary = typeof(MoreGamesModule).GetMethod(nameof(PetMaster)).GetCustomAttributes(typeof(SummaryAttribute), false).FirstOrDefault() as SummaryAttribute;
-            await ReplyAsync(summary?.Text.Replace("{prefix}", storage.GetPrefixOrEmpty(Context.Guild)) ?? "Couldn't get help", options: Utils.DefaultOptions);
+            await ReplyAsync(summary?.Text.Replace("{prefix}", storage.GetPrefixOrEmpty(Context.Guild)) ?? "Couldn't get help", options: Bot.DefaultOptions);
         }
 
 
@@ -291,7 +291,7 @@ namespace PacManBot.Modules
                 pos++;
             }
 
-            await ReplyAsync(ranking.ToString().Truncate(1999), options: Utils.DefaultOptions);
+            await ReplyAsync(ranking.ToString().Truncate(1999), options: Bot.DefaultOptions);
 
         }
 
@@ -301,7 +301,7 @@ namespace PacManBot.Modules
         {
             if (string.IsNullOrWhiteSpace(args))
             {
-                await ReplyAsync("You must specify a user!", options: Utils.DefaultOptions);
+                await ReplyAsync("You must specify a user!", options: Bot.DefaultOptions);
                 return;
             }
 
@@ -309,14 +309,14 @@ namespace PacManBot.Modules
 
             if (user == null)
             {
-                await ReplyAsync("Can't find the specified user!", options: Utils.DefaultOptions);
+                await ReplyAsync("Can't find the specified user!", options: Bot.DefaultOptions);
                 return;
             }
 
             pet = storage.GetUserGame<PetGame>(user.Id);
 
-            if (pet == null) await ReplyAsync("This person doesn't have a pet :(", options: Utils.DefaultOptions);
-            else await ReplyAsync(pet.GetContent(), false, pet.GetEmbed(user)?.Build(), Utils.DefaultOptions);
+            if (pet == null) await ReplyAsync("This person doesn't have a pet :(", options: Bot.DefaultOptions);
+            else await ReplyAsync(pet.GetContent(), false, pet.GetEmbed(user)?.Build(), Bot.DefaultOptions);
         }
 
 
@@ -326,12 +326,12 @@ namespace PacManBot.Modules
             if (string.IsNullOrWhiteSpace(pet.PetName) || args?.SanitizeMarkdown().SanitizeMentions() == pet.PetName)
             {
                 storage.DeleteUserGame(pet);
-                await ReplyAsync($"Goodbye {(string.IsNullOrWhiteSpace(pet.PetName) ? pet.Name : pet.PetName)}!", options: Utils.DefaultOptions);
+                await ReplyAsync($"Goodbye {(string.IsNullOrWhiteSpace(pet.PetName) ? pet.Name : pet.PetName)}!", options: Bot.DefaultOptions);
             }
             else
             {
                 await ReplyAsync($"❗ Are you sure you want to delete {pet.PetName}? It will be gone forever, along with your stats and achievements, and you can't get it back. " +
-                    $"Do **{storage.GetPrefixOrEmpty(Context.Guild)}pet release {pet.PetName}** to release.", options: Utils.DefaultOptions);
+                    $"Do **{storage.GetPrefixOrEmpty(Context.Guild)}pet release {pet.PetName}** to release.", options: Bot.DefaultOptions);
             }
         }
     }
