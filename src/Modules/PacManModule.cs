@@ -13,7 +13,7 @@ using PacManBot.Extensions;
 
 namespace PacManBot.Modules
 {
-    [Name("🎮Pac-Man"), Remarks("1")]
+    [Name("🎮Pac-Man"), Remarks("2")]
     public class PacManModule : ModuleBase<SocketCommandContext>
     {
         private readonly DiscordShardedClient shardedClient;
@@ -32,7 +32,7 @@ namespace PacManBot.Modules
 
 
 
-        [Command("play"), Alias("pacman", "p", "start"), Remarks("Start a new game in this channel"), Parameters("[mobile] [\\`\\`\\`custom map\\`\\`\\`]")]
+        [Command("play"), Alias("pacman", "p", "start"), Remarks("Start a new game in this channel"), Parameters("[mobile] [map]")]
         [Summary("Starts a new Pac-Man game, unless there is already a game in this channel.\nAdding \"mobile\" or \"m\" after the command will begin the game in *Mobile Mode*, "
                + "which uses simple characters that will work in phones. Use **{prefix}display** to change mode later.\n\nIf you add a valid customized map "
                + "between \\`\\`\\`triple backticks\\`\\`\\`, it will start a custom game using that map instead. For more information about custom games, use the **{prefix}custom** command.\n\n"
@@ -122,7 +122,7 @@ namespace PacManBot.Modules
         }
 
 
-        [Command("leaderboard"), Alias("lb", "l"), Parameters("[period] [start] [end]")]
+        [Command("top"), Alias("leaderboard", "lb", "l"), Parameters("[period] [range]")]
         [Remarks("Global Leaderboard scores"), ExampleUsage("leaderboard 5\nlb month 11 30")]
         [Summary("By default, displays the top 10 Pac-Man scores of all time from the Global Leaderboard of all servers.\n"
                + "You can specify the [period] to display scores from: all/month/week/day (a/m/w/d are also valid). "
@@ -130,7 +130,7 @@ namespace PacManBot.Modules
                + "Only 20 scores may be displayed at once. If given just one number, it will be taken as the start if it's above 20, or as the end otherwise.")]
         public async Task SendTopScores(int min = 10, int? max = null) => await SendTopScores(TimePeriod.all, min, max);
 
-        [Command("leaderboard"), Alias("lb", "l")]
+        [Command("leaderboard"), Alias("leaderboard", "lb", "l"), HideHelp]
         public async Task SendTopScores(TimePeriod period, int min = 10, int? max = null)
         {
             if (min < 1 || max < 1 || max < min)
@@ -196,13 +196,13 @@ namespace PacManBot.Modules
                + "\nYou can also specify a time period to display scores from: all/month/week/day (a/m/w/d are also valid)")]
         public async Task SendPersonalBest(SocketGuildUser guildUser = null) => await SendPersonalBest(TimePeriod.all, (guildUser ?? Context.User).Id);
 
-        [Command("score"), Alias("sc", "s")]
+        [Command("score"), Alias("sc", "s"), HideHelp]
         public async Task SendPersonalBest(TimePeriod time, SocketGuildUser guildUser = null) => await SendPersonalBest(time, (guildUser ?? Context.User).Id);
 
-        [Command("score"), Alias("sc", "s")]
+        [Command("score"), Alias("sc", "s"), HideHelp]
         public async Task SendPersonalBest(ulong userId) => await SendPersonalBest(TimePeriod.all, userId);
 
-        [Command("score"), Alias("sc", "s")]
+        [Command("score"), Alias("sc", "s"), HideHelp]
         public async Task SendPersonalBest(TimePeriod time, ulong userId)
         {
             var scores = storage.GetScores(time);

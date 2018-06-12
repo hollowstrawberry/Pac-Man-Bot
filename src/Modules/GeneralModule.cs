@@ -3,8 +3,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Diagnostics;
-using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
@@ -14,7 +14,7 @@ using PacManBot.Extensions;
 
 namespace PacManBot.Modules
 {
-    [Name("📁General"), Remarks("3")]
+    [Name("📁General"), Remarks("1")]
     public class GeneralModule : ModuleBase<SocketCommandContext>
     {
         private readonly DiscordShardedClient shardedClient;
@@ -109,9 +109,17 @@ namespace PacManBot.Modules
         }
 
 
-        [Command("help"), Alias("h", "commands")]
+
+        [Command("help"), Alias("h", "commands"), HideHelp]
         [BetterRequireBotPermission(ChannelPermission.EmbedLinks)]
-        public async Task SendAllHelp()
+        public async Task SendAllHelpNoRemarks() => await SendAllHelp(false);
+
+        [Command("helpfull"), Alias("hf", "commandsfull")]
+        [BetterRequireBotPermission(ChannelPermission.EmbedLinks)]
+        public async Task SendAllHelpWithRemarks() => await SendAllHelp(true);
+
+
+        public async Task SendAllHelp(bool showRemarks)
         {
             string prefix = storage.GetPrefix(Context.Guild).If(Context.Guild != null);
 
@@ -119,33 +127,32 @@ namespace PacManBot.Modules
             {
                 Title = $"{CustomEmoji.PacMan} __**Bot Commands**__",
                 Description = (Context.Guild == null ? "No prefix is needed in a DM!" : $"Prefix for this server is '{prefix}'")
-                            + $"\nYou can do `{prefix}help command` for more information about a command.\n*Parameter types: <needed> [optional]*",
+                            + $"\nYou can do **{prefix}help command** for more information about a command.\n\nParameters: [optional] <needed>",
                 Color = new Color(241, 195, 15)
             };
 
             foreach (var module in commands.Modules.OrderBy(m => m.Remarks))
             {
                 var moduleText = new StringBuilder(); //Text under the module title in the embed block
-                List<string> previousCommands = new List<string>(); //Storing the command names so they can't repeat
 
                 foreach (var command in module.Commands.OrderBy(c => c.Priority)) //Go through all commands
                 {
                     var helpInfo = new CommandHelpInfo(command);
 
-                    if (!helpInfo.Hidden && !previousCommands.Contains(command.Name))
+                    if (!helpInfo.Hidden)
                     {
-                        var prec = await command.CheckPreconditionsAsync(Context);
-                        if (!prec.IsSuccess) continue;
+                        var conditions = await command.CheckPreconditionsAsync(Context);
+                        if (!conditions.IsSuccess) continue;
 
                         moduleText.Append($"**{command.Name} {helpInfo.Parameters}**");
-                        if (helpInfo.Remarks != "") moduleText.Append($" — *{helpInfo.Remarks}*");
+                        if (showRemarks && helpInfo.Remarks != "") moduleText.Append($" — *{helpInfo.Remarks}*");
                         moduleText.Append('\n');
-
-                        previousCommands.Add(command.Name);
                     }
                 }
 
-                if (moduleText.Length > 0) embed.AddField(module.Name, moduleText.ToString(), false);
+                if (!showRemarks && module.Name.Contains("Pac-Man")) moduleText.Append("**bump**\n**cancel**\n");
+
+                if (moduleText.Length > 0) embed.AddField(module.Name, moduleText.ToString(), true);
             }
 
             await ReplyAsync("", false, embed.Build(), Bot.DefaultOptions); //Send the built embed
@@ -195,9 +202,67 @@ namespace PacManBot.Modules
         }
 
 
+        [Command("invite"), Alias("inv"), Remarks("Invite this bot to your server")]
+        [Summary("Shows a fancy embed block with the bot's invite link. I'd show it right now too, since you're already here, but I really want you to see that fancy embed.")]
+        [BetterRequireBotPermission(ChannelPermission.EmbedLinks)]
+        public async Task SendBotInvite()
+        {
+            var embed = new EmbedBuilder()
+            {
+                Title = "Bot invite link",
+                Color = new Color(241, 195, 15),
+                ThumbnailUrl = Context.Client.CurrentUser.GetAvatarUrl(ImageFormat.Auto, 128),
+                Fields = new List<EmbedFieldBuilder>
+                {
+                    new EmbedFieldBuilder
+                    {
+                        Name = $"➡ <{storage.BotContent["shortinvite"]}>",
+                        Value = "Thanks for inviting Pac-Man Bot!",
+                    },
+                },
+            };
+
+            await ReplyAsync("", false, embed.Build());
+        }
+
+
+        [Command("server"), Alias("support"), Remarks("Support server link")]
+        [Summary(CustomEmoji.Staff + " Link to the Pac-Man discord server")]
+        [BetterRequireBotPermission(ChannelPermission.EmbedLinks)]
+        public async Task SendBotServer()
+        {
+            var embed = new EmbedBuilder()
+            {
+                Title = $"{CustomEmoji.Staff} Pac-Man Bot Support server",
+                Url = $"https://discord.gg/hGHnfda",
+                Description = "We'll be happy to see you there!",
+                Color = new Color(241, 195, 15),
+                ThumbnailUrl = shardedClient.GetGuild(409803292219277313).IconUrl,
+            };
+            await ReplyAsync("", false, embed.Build());
+        }
+
+
+        [Command("github"), Alias("git"), Remarks("GitHub repository link")]
+        [Summary(CustomEmoji.GitHub + "Link to Pac-Man's GitHub repository. I welcome contributions!")]
+        [BetterRequireBotPermission(ChannelPermission.EmbedLinks)]
+        public async Task SendBotGitHub()
+        {
+            var embed = new EmbedBuilder()
+            {
+                Title = $"{CustomEmoji.GitHub} Pac-Man Bot GitHub repository",
+                Url = "https://github.com/Samrux/Pac-Man-Bot",
+                Description = "Contributions welcome!",
+                Color = new Color(241, 195, 15),
+                ThumbnailUrl = "https://cdn.discordapp.com/attachments/412090039686660097/455914771179503633/GitHub.png",
+            };
+
+            await ReplyAsync("", false, embed.Build());
+        }
+
+
         [Command("feedback"), Alias("suggestion", "bug"), Remarks("Send a message to the bot's developer")]
-        [Summary("Whatever text you write after this command will be sent directly to the bot's developer. "
-               + "You may receive an answer through the bot in a DM.")]
+        [Summary("Whatever text you write after this command will be sent directly to the bot's developer. You may receive an answer through the bot in a DM.")]
         public async Task SendFeedback([Remainder]string message)
         {
             try
@@ -212,22 +277,6 @@ namespace PacManBot.Modules
                 await logger.Log(LogSeverity.Error, $"{e}");
                 await ReplyAsync("Oops, I didn't catch that, please try again. Maybe the dev screwed up", options: Bot.DefaultOptions);
             }
-        }
-
-
-        [Command("invite"), Alias("inv"), Remarks("Invite this bot to your server")]
-        [Summary("Shows a fancy embed block with the bot's invite link. I'd show it right now too, since you're already here, but I really want you to see that fancy embed.")]
-        [BetterRequireBotPermission(ChannelPermission.EmbedLinks)]
-        public async Task SendBotInvite()
-        {
-            var embed = new EmbedBuilder()
-            {
-                Title = "Bot invite link",
-                Color = new Color(241, 195, 15),
-                ThumbnailUrl = Context.Client.CurrentUser.GetAvatarUrl(ImageFormat.Auto, 128)
-            };
-            embed.AddField($"➡ <{storage.BotContent["shortinvite"]}>", "*Thanks for inviting Pac-Man Bot!*", false);
-            await ReplyAsync("", false, embed.Build());
         }
 
 

@@ -12,7 +12,7 @@ using PacManBot.Extensions;
 
 namespace PacManBot.Modules
 {
-    [Name("👾More Games"), Remarks("2")]
+    [Name("👾More Games"), Remarks("3")]
     public partial class MoreGamesModule : ModuleBase<SocketCommandContext>
     {
         private readonly DiscordShardedClient shardedClient;

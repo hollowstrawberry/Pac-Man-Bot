@@ -47,6 +47,7 @@ namespace PacManBot
             ECross = Cross.ToEmote(),
             ELoading = Loading.ToEmote(),
             EHelp = Help.ToEmote(),
+            EGitHub = GitHub.ToEmote(),
             ERapidBlobDance = RapidBlobDance.ToEmote();
 
 

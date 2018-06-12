@@ -186,7 +186,7 @@ namespace PacManBot.Games
             {
                 get
                 {
-                    if (_obtained == null) throw new InvalidOperationException($"Obtained value not set. Use {nameof(WithObtained)}");
+                    if (!_obtained.HasValue) throw new InvalidOperationException($"Obtained value not set. Use {nameof(WithObtained)}");
                     return _obtained.Value;
                 }
             }
@@ -204,9 +204,8 @@ namespace PacManBot.Games
 
             public AchievementAttribute WithObtained(bool obtained)
             {
-                var clone = (AchievementAttribute)MemberwiseClone();
-                clone._obtained = obtained;
-                return clone;
+                _obtained = obtained;
+                return this;
             }
 
 
