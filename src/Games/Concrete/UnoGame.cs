@@ -59,22 +59,45 @@ namespace PacManBot.Games
 
 
 
+
         // Types
 
         enum UnoState
         {
-            None, Said, Forgot, NotCalledOut,
+            None,
+            Said,
+            Forgot,
+            NotCalledOut,
         }
+
 
         enum CardColor
         {
-            Red, Blue, Green, Yellow, Black,
+            Red,
+            Blue,
+            Green,
+            Yellow,
+            Black,
         }
+
 
         enum CardType
         {
-            Zero, One, Two, Three, Four, Five, Six, Seven, Eight, Nine,
-            Skip, Reverse, DrawTwo, WildDrawFour, Wild,
+            Zero,
+            One,
+            Two,
+            Three,
+            Four,
+            Five,
+            Six,
+            Seven,
+            Eight,
+            Nine,
+            Skip,
+            Reverse,
+            DrawTwo,
+            WildDrawFour,
+            Wild,
         }
 
 
@@ -126,10 +149,23 @@ namespace PacManBot.Games
             });
 
 
+
             [DataMember] public CardType Type { get; private set; }
             [DataMember] public CardColor Color { get; private set; }
 
             public bool WildType => IsWild(Type);
+            public int CardsToDraw
+            {
+                get
+                {
+                    switch (Type)
+                    {
+                        case CardType.DrawTwo: return 2;
+                        case CardType.WildDrawFour: return 4;
+                        default: return 0;
+                    }
+                }
+            }
 
 
             public Card(CardType Type, CardColor Color)
@@ -144,7 +180,6 @@ namespace PacManBot.Games
                 if (WildType && Color != CardColor.Black) return new Card(Type, CardColor.Black);
                 else return this;
             }
-
 
             public override string ToString()
             {
@@ -174,15 +209,21 @@ namespace PacManBot.Games
                 return card.ToString();
             }
 
+            public int CompareTo(Card other)
+            {
+                int result = ((int)Color).CompareTo((int)other.Color); // Sorts by color ascending
+                if (result == 0) result = ((int)other.Type).CompareTo(((int)Type)); // Then by type descending
+                return result;
+            }
+
 
             public static bool IsWild(CardType type) => type == CardType.Wild || type == CardType.WildDrawFour;
-
 
             public static Card? Parse(string value, UnoGame game)
             {
                 bool auto = value.Contains("auto");
                 value = value.Replace(" ", "").Replace("auto", "").Replace("uno", "").Replace("draw2", "drawtwo").Replace("draw4", "drawfour");
-                
+
                 CardColor? color = (CardColor?)Enumerable.Range(0, 4).FirstOrNull(x => value.StartsWith(StrColor[x]) || value.EndsWith(StrColor[x]));
                 if (color.HasValue) value = value.Replace(StrColor[(int)color], "");
                 CardType? type = (CardType?)Enumerable.Range(0, 15).FirstOrNull(x => value == StrType[x] || x < 10 && value == x.ToString());
@@ -200,14 +241,6 @@ namespace PacManBot.Games
 
                 if (type.HasValue && color.HasValue) return new Card(type.Value, color.Value);
                 else return null;
-            }
-
-
-            public int CompareTo(Card other)
-            {
-                int result = ((int)Color).CompareTo((int)other.Color); // Sorts by color ascending
-                if (result == 0) result = ((int)other.Type).CompareTo(((int)Type)); // Then by type descending
-                return result;
             }
         }
 
@@ -245,10 +278,11 @@ namespace PacManBot.Games
             var mentions = playerIds.Skip(1).Where(x => !client.GetUser(x).IsBot).Distinct().Take(9).ToArray();
             foreach (ulong id in playerIds.Where(x => !mentions.Contains(x))) AddPlayer(id);
 
-            if (players.Count > 1) Message = $"• First card is {TopCard}\n";
-
-            Time = -1;
-            DiscardedCardLogic();
+            if (players.Count > 1)
+            {
+                Message = $"• First card is {TopCard}\n";
+                ApplyCardEffect();
+            }
 
             if (mentions.Length > 0)
             {
@@ -272,7 +306,7 @@ namespace PacManBot.Games
 
                 if (userId == CurrentPlayer.User?.Id)
                 {
-                    if (Time > 0 && TopCard.Color == CardColor.Black) return Enumerable.Range(0, 4).Any(x => value == Card.StrColor[x]); // Wild color
+                    if (Time > 1 && TopCard.Color == CardColor.Black) return Enumerable.Range(0, 4).Any(x => value == Card.StrColor[x]); // Wild color
                     else return value == "draw" || value == "skip" || value.Contains("auto") || Card.Parse(value, this).HasValue;
                 }
             }
@@ -312,18 +346,11 @@ namespace PacManBot.Games
             }
 
             // Set wild color (non-bots)
-            else if (Time > 0 && TopCard.Color == CardColor.Black)
+            else if (Time > 1 && TopCard.Color == CardColor.Black)
             {
                 discardPile[0] = new Card(TopCard.Type, (CardColor)Enumerable.Range(0, 4).First(x => input == Card.StrColor[x]));
-                Turn = FollowingTurn;
-                Time++;
                 Message = "";
-
-                if (TopCard.Type == CardType.WildDrawFour)
-                {
-                    Draw(PlayerAt(FollowingTurn), 4);
-                    Message += $"• {PlayerAt(FollowingTurn).User?.Username} draws 4 cards and skips a turn!\n";
-                }
+                ApplyCardEffect();
             }
 
             // Drawing a card
@@ -342,8 +369,7 @@ namespace PacManBot.Games
                     CurrentPlayer.cards.Pop();
                     discardPile.Insert(0, drawn);
 
-                    if (drawn.Color == CardColor.Black) Message += $"• {CurrentPlayer.User?.Mention} choose a color: red/blue/green/yellow\n";
-                    else DiscardedCardLogic();
+                    ApplyCardEffect();
                 }
                 else
                 {
@@ -404,7 +430,7 @@ namespace PacManBot.Games
                     return;
                 }
 
-                DiscardedCardLogic();
+                ApplyCardEffect();
             }
 
             updatedCards.Add(CurrentPlayer);
@@ -418,43 +444,43 @@ namespace PacManBot.Games
         }
 
 
-        private void DiscardedCardLogic()
+        private void ApplyCardEffect()
         {
-            if (TopCard.Type == CardType.Reverse)
-            {
-                reversed = !reversed;
-                if (players.Count > 2) Message += $"• Now going {(reversed ? "backwards" : "forwards")}!\n";
-            }
+            var card = TopCard;
 
-            Time++;
-            if (Time > 0) // Ignores turn at the start of the game
+            if (Time++ > 0)
             {
-                if (TopCard.Color == CardColor.Black)
+                if (card.Color == CardColor.Black)
                 {
                     Message += $"• {CurrentPlayer.User?.Mention} choose a color: red/blue/green/yellow\n";
                     return;
                 }
-                else
-                {
+
+                Turn = FollowingTurn;
+            }
+
+
+            switch (card.Type)
+            {
+                case CardType.Skip:
+                case CardType.Reverse when players.Count == 2:
+                    Message += $"• {CurrentPlayer.User?.Username} skips a turn!\n";
                     Turn = FollowingTurn;
-                }
-            }
+                    Time++;
+                    break;
 
-            if (players.Count <= 1) return;
+                case CardType.Reverse:
+                    reversed = !reversed;
+                    Message += $"• Now going {(reversed ? "backwards" : "forwards")}!\n";
+                    break;
 
-            if (TopCard.Type == CardType.Skip || TopCard.Type == CardType.Reverse && players.Count == 2)
-            {
-                Message += $"• {CurrentPlayer.User?.Username} skips a turn!\n";
-                Turn = FollowingTurn;
-                Time++;
-            }
-            else if (TopCard.Type == CardType.WildDrawFour || TopCard.Type == CardType.DrawTwo)
-            {
-                int amount = TopCard.Type == CardType.WildDrawFour ? 4 : 2;
-                Draw(CurrentPlayer, amount);
-                Message += $"• {CurrentPlayer.User?.Username} draws {amount} cards and skips a turn!\n";
-                Turn = FollowingTurn;
-                Time++;
+                case CardType.DrawTwo:
+                case CardType.WildDrawFour:
+                    Draw(CurrentPlayer, card.CardsToDraw);
+                    Message += $"• {CurrentPlayer.User?.Username} draws {card.CardsToDraw} cards and skips a turn!\n";
+                    Turn = FollowingTurn;
+                    Time++;
+                    break;
             }
         }
 
