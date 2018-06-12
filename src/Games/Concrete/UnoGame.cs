@@ -314,10 +314,16 @@ namespace PacManBot.Games
             // Set wild color (non-bots)
             else if (Time > 0 && TopCard.Color == CardColor.Black)
             {
-                discardPile[0] = new Card(discardPile[0].Type, (CardColor)Enumerable.Range(0, 4).First(x => input == Card.StrColor[x]));
+                discardPile[0] = new Card(TopCard.Type, (CardColor)Enumerable.Range(0, 4).First(x => input == Card.StrColor[x]));
                 Turn = FollowingTurn;
                 Time++;
                 Message = "";
+
+                if (TopCard.Type == CardType.WildDrawFour)
+                {
+                    Draw(PlayerAt(FollowingTurn), 4);
+                    Message += $"• {PlayerAt(FollowingTurn).User?.Username} draws 4 cards and skips a turn!\n";
+                }
             }
 
             // Drawing a card
