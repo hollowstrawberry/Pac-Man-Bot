@@ -122,15 +122,16 @@ namespace PacManBot.Modules
         }
 
 
-        [Command("top"), Alias("leaderboard", "lb", "l"), Parameters("[period] [range]")]
-        [Remarks("Global Leaderboard scores"), ExampleUsage("leaderboard 5\nlb month 11 30")]
+        [Command("top"), Alias("leaderboard", "lb"), Parameters("[period] [range]")]
+        [Remarks("Global Leaderboard scores"), ExampleUsage("top 5\ntop month 11 30")]
         [Summary("By default, displays the top 10 Pac-Man scores of all time from the Global Leaderboard of all servers.\n"
                + "You can specify the [period] to display scores from: all/month/week/day (a/m/w/d are also valid). "
-               + "You can also specify a range of scores from [start] to [end], where those are two positive numbers.\n"
-               + "Only 20 scores may be displayed at once. If given just one number, it will be taken as the start if it's above 20, or as the end otherwise.")]
+               + "You can also specify a [range] of scores with two positive whole numbers (start and end).\n"
+               + "Only 20 scores may be displayed at once.")]
         public async Task SendTopScores(int min = 10, int? max = null) => await SendTopScores(TimePeriod.all, min, max);
 
-        [Command("leaderboard"), Alias("leaderboard", "lb", "l"), HideHelp]
+
+        [Command("top"), Alias("leaderboard", "lb"), HideHelp]
         public async Task SendTopScores(TimePeriod period, int min = 10, int? max = null)
         {
             if (min < 1 || max < 1 || max < min)
