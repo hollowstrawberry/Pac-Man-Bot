@@ -56,22 +56,23 @@ namespace PacManBot.Utils
 
         protected PreconditionResult CheckPermissions(ICommandContext context, CommandInfo command, IGuildUser user, string name)
         {
-            if (guildPerms != null)
+            if (guildPerms.HasValue)
             {
                 if (user == null) return PreconditionResult.FromError($"{name} requires guild permissions but is not in a guild");
-                GuildPermission currentPerms = (GuildPermission)user.GuildPermissions.RawValue;
+                var neededPerms = guildPerms.Value;
+                var currentPerms = (GuildPermission)user.GuildPermissions.RawValue;
 
                 if (currentPerms.HasFlag(guildPerms)) return PreconditionResult.FromSuccess();
-                else return PreconditionResult.FromError($"{name} requires guild permission {(guildPerms ^ currentPerms) & guildPerms}");
+                else return PreconditionResult.FromError($"{name} requires guild permission {neededPerms.MissingFrom(currentPerms)}");
             }
             else
             {
-                ChannelPermission currentPerms;
-                if (user == null) currentPerms = DiscordExtensions.CorrectDmPermissions; // They got these wrong in the library
-                else currentPerms = (ChannelPermission)user.GetPermissions(context.Channel as IGuildChannel).RawValue;
+                var neededPerms = channelPerms.Value;
+                var currentPerms = user == null ? DiscordExtensions.CorrectDmPermissions // They got these wrong in the library
+                                : (ChannelPermission)user.GetPermissions(context.Channel as IGuildChannel).RawValue;
 
                 if (currentPerms.HasFlag(channelPerms)) return PreconditionResult.FromSuccess();
-                else return PreconditionResult.FromError($"{name} requires guild permission {(channelPerms ^ currentPerms) & channelPerms}");
+                else return PreconditionResult.FromError($"{name} requires guild permission {neededPerms.MissingFrom(currentPerms)}");
             }
         }
     }

@@ -238,7 +238,7 @@ namespace PacManBot.Modules
                 pet.timesPetSinceTimerStart = 0;
             }
 
-            int limit = Context.Guild == null ? 20 : 5;
+            int limit = Context.Guild == null ? 15 : 5;
             if (pet.timesPetSinceTimerStart >= limit)
             {
                 await ReplyAsync($"{CustomEmoji.Cross} That's enough petting! Try again in a minute"

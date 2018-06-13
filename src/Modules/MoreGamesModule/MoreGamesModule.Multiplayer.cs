@@ -27,7 +27,7 @@ namespace PacManBot.Modules
        + "\n • Each player is given 7 cards."
        + "\n • The current turn's player must choose to discard a card that matches either the color, number or type of the last card."
        + "\n • If the player doesn't have any matching card, or they don't want to discard any of their cards, they can say \"**draw**\" to draw a card. That card will be discarded immediately if possible."
-       + "\n • When you only have one card left, __you must say \"uno\"__. If you don't, someone else can call you out by saying \"uno\" __before the next player plays__, and you will draw 2 cards."
+       + "\n • When you only have one card left, you must say \"**uno**\" (You can add it to your card like \"red4 uno\", or you can say it directly after if you forget). If you forget, someone else can say \"uno\" to call you out before the next player plays, and you will draw 2 cards."
        + "\n • The first player to lose all of their cards wins the game."
        + "\n • **Special cards:** *Skip* cards make the next player skip a turn. *Reverse* cards change the turn direction, or act like Skip cards with only two players."
        + " *Draw* cards force the next player to draw cards and skip a turn. *Wild* cards let you choose the color, and will match with any card."

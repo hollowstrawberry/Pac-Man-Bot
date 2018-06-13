@@ -17,7 +17,7 @@ namespace PacManBot.Extensions
 
         public static Color Color(this Player player)
         {
-            if (player >= 0 && player <= Enum<Player>.MaxValue) return PlayerColor[(int)player];
+            if (player >= 0 && player <= EnumTraits<Player>.MaxValue) return PlayerColor[(int)player];
             else if (player == Player.Tie) return PlayerColor[(int)Player.Third];
             else return new Color(150, 150, 150);
         }

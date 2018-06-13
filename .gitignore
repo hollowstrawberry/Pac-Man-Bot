@@ -9,6 +9,7 @@
 
 # Folders
 .vs/
+.vscode/
 obj/
 bin/**/logs/
 bin/**/games/

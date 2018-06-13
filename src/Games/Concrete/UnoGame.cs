@@ -37,7 +37,7 @@ namespace PacManBot.Games
         public string FilenameKey => "uno";
         public override bool AllBots => players.All(x => x.User?.IsBot ?? false);
 
-        private Card TopCard => discardPile[0];
+        private Card TopCard { get { return discardPile[0]; } set { discardPile[0] = value; } }
         private UnoPlayer CurrentPlayer => players[(int)Turn];
         private UnoPlayer PlayerAt(Player turn) => players[(int)turn];
         private Player FollowingTurn => reversed ? PreviousPlayer() : NextPlayer();
@@ -233,9 +233,9 @@ namespace PacManBot.Games
                 {
                     var cards = game.CurrentPlayer.cards.ToList().Sorted();
 
-                    if (color == null && type == null) return value == "" ? cards.FirstOrNull(x => game.CanPlace(x)) : null;
-                    else if (color == null) return cards.FirstOrNull(x => x.Type == type && game.CanPlace(x));
-                    else if (type == null) return cards.FirstOrNull(x => x.Color == color && game.CanPlace(x));
+                    if (color == null && type == null) return value == "" ? cards.FirstOrNull(x => game.CanDiscard(x)) : null;
+                    else if (color == null) return cards.FirstOrNull(x => x.Type == type && game.CanDiscard(x));
+                    else if (type == null) return cards.FirstOrNull(x => x.Color == color && game.CanDiscard(x));
                 }
 
                 if (color == null && type.HasValue && IsWild(type.Value)) color = CardColor.Black;
@@ -285,8 +285,6 @@ namespace PacManBot.Games
                 ApplyCardEffect();
             }
 
-            Time = 1;
-
             if (mentions.Length > 0)
             {
                 string invite = $"{string.Join(", ", mentions.Select(x => client.GetUser(x)?.Mention))} You've been invited to play Uno. Type `{storage.GetPrefix(Guild)}uno join` to join.\n";
@@ -309,7 +307,7 @@ namespace PacManBot.Games
 
                 if (userId == CurrentPlayer.User?.Id)
                 {
-                    if (Time > 1 && TopCard.Color == CardColor.Black) return Enum.TryParse<CardColor>(value, true, out _); // Wild color
+                    if (Time > 0 && TopCard.Color == CardColor.Black) return Enum.TryParse<CardColor>(value, true, out _); // Wild color
                     else return value == "draw" || value == "skip" || value.Contains("auto") || Card.Parse(value, this).HasValue;
                 }
             }
@@ -349,29 +347,30 @@ namespace PacManBot.Games
             }
 
             // Set wild color (non-bots)
-            else if (Time > 1 && TopCard.Color == CardColor.Black)
+            else if (Time > 0 && TopCard.Color == CardColor.Black)
             {
-                discardPile[0] = new Card(TopCard.Type, Enum.Parse<CardColor>(input, true));
+                TopCard = new Card(TopCard.Type, Enum.Parse<CardColor>(input, true));
                 Message = "";
                 ApplyCardEffect();
             }
 
             // Drawing a card
-            else if (input == "draw" || input == "skip" || input == "auto" && CurrentPlayer.cards.All(x => !CanPlace(x)))
+            else if (input == "draw" || input == "skip" || input == "auto" && CurrentPlayer.cards.All(x => !CanDiscard(x)))
             {
+                UnoState previousUno = CurrentPlayer.uno;
                 CancelCallouts();
                 Draw(CurrentPlayer, 1);
 
                 var drawn = CurrentPlayer.cards.Last();
-                if (CanPlace(drawn))
+                if (CanDiscard(drawn))
                 {
                     if (!CurrentPlayer.User.IsBot) Message = "";
                     else if (drawn.Color == CardColor.Black) drawn = new Card(drawn.Type, HighestColor(CurrentPlayer.cards));
 
+                    CurrentPlayer.uno = previousUno;
                     Message += $"• {CurrentPlayer.User?.Username} drew and placed {drawn}\n";
                     CurrentPlayer.cards.Pop();
-                    discardPile.Insert(0, drawn);
-
+                    Discard(drawn);
                     ApplyCardEffect();
                 }
                 else
@@ -381,7 +380,6 @@ namespace PacManBot.Games
                     updatedCards.Add(CurrentPlayer);
                     Message += $"• {CurrentPlayer.User?.Username} drew a card and skipped a turn.\n";
                     Turn = FollowingTurn;
-                    Time++;
                 }
             }
 
@@ -404,7 +402,7 @@ namespace PacManBot.Games
                     Message = $"Oops, you don't have that card!";
                     return;
                 }
-                else if (!CanPlace(card))
+                else if (!CanDiscard(card))
                 {
                     Message = $"Oops, that card doesn't match the type or color!";
                     return;
@@ -416,7 +414,7 @@ namespace PacManBot.Games
                 if (!CurrentPlayer.User.IsBot) updatedCards.Add(CurrentPlayer);
 
                 CurrentPlayer.cards.Remove(card.NormalizeColor());
-                discardPile.Insert(0, card);
+                Discard(card);
 
                 CancelCallouts();
 
@@ -447,52 +445,11 @@ namespace PacManBot.Games
         }
 
 
-        private void ApplyCardEffect()
-        {
-            var card = TopCard;
-
-            if (Time++ > 0)
-            {
-                if (card.Color == CardColor.Black)
-                {
-                    Message += $"• {CurrentPlayer.User?.Mention} choose a color: red/blue/green/yellow\n";
-                    return;
-                }
-
-                Turn = FollowingTurn;
-            }
-
-
-            switch (card.Type)
-            {
-                case CardType.Skip:
-                case CardType.Reverse when players.Count == 2:
-                    Message += $"• {CurrentPlayer.User?.Username} skips a turn!\n";
-                    Turn = FollowingTurn;
-                    Time++;
-                    break;
-
-                case CardType.Reverse:
-                    reversed = !reversed;
-                    Message += $"• Now going {(reversed ? "backwards" : "forwards")}!\n";
-                    break;
-
-                case CardType.DrawTwo:
-                case CardType.WildDrawFour:
-                    Draw(CurrentPlayer, card.CardsToDraw);
-                    Message += $"• {CurrentPlayer.User?.Username} draws {card.CardsToDraw} cards and skips a turn!\n";
-                    Turn = FollowingTurn;
-                    Time++;
-                    break;
-            }
-        }
-
-
         public override void BotInput()
         {
             string input = "draw";
 
-            var playable = CurrentPlayer.cards.Where(x => CanPlace(x)).ToList();
+            var playable = CurrentPlayer.cards.Where(x => CanDiscard(x)).ToList();
 
             if (playable.Count > 0)
             {
@@ -568,18 +525,16 @@ namespace PacManBot.Games
 
 
 
-        private bool CanPlace(Card card)
+        private bool CanDiscard(Card card)
         {
             return card.WildType || TopCard.Color == card.Color || TopCard.Type == card.Type || TopCard.Color == CardColor.Black; // The black TopCard can only happen at the start
         }
 
 
-        private void CancelCallouts()
+        private void Discard(Card card)
         {
-            foreach (var player in players)
-            {
-                if (player.uno == UnoState.Forgot) player.uno = UnoState.NotCalledOut;
-            }
+            discardPile.Insert(0, card);
+            Time++;
         }
 
 
@@ -604,6 +559,57 @@ namespace PacManBot.Games
         }
 
 
+        private void ApplyCardEffect()
+        {
+            var card = TopCard;
+
+            if (Time > 0 && card.Color == CardColor.Black)
+            {
+                Message += $"• {CurrentPlayer.User?.Mention} choose a color: red/blue/green/yellow\n";
+                return;
+            }
+
+
+            switch (card.Type)
+            {
+                case CardType.Skip:
+                case CardType.Reverse when players.Count == 2:
+                    Turn = FollowingTurn;
+                    Message += $"• {CurrentPlayer.User?.Username} skips a turn!\n";
+                    break;
+
+                case CardType.Reverse:
+                    reversed = !reversed;
+                    Message += $"• Now going {(reversed ? "backwards" : "forwards")}!\n";
+                    break;
+
+                case CardType.DrawTwo:
+                case CardType.WildDrawFour:
+                    Turn = FollowingTurn;
+                    Draw(CurrentPlayer, card.CardsToDraw);
+                    Message += $"• {CurrentPlayer.User?.Username} draws {card.CardsToDraw} cards and skips a turn!\n";
+                    break;
+            }
+
+            if (Time > 0)
+            {
+                Turn = FollowingTurn;
+            }
+        }
+
+
+        private void CancelCallouts()
+        {
+            foreach (var player in players)
+            {
+                if (player.uno == UnoState.Forgot)
+                    player.uno = UnoState.NotCalledOut;
+            }
+        }
+
+
+
+
         private void SendCards(UnoPlayer player)
         {
             if (player.User == null || player.User.IsBot) return;
@@ -620,12 +626,12 @@ namespace PacManBot.Games
             var embed = new EmbedBuilder
             {
                 Title = $"{Name} game in #{Channel.Name}{(Guild == null ? "" : $" ({Guild.Name})")}",
-                Description = "Send the name of a card in the game's channel to discard that card.\nIf you don't have any matching card or don't want to play, say \"draw\" instead.\nYou can also use \"auto\" instead of a color/number/both.\nᅠ",
-                Color = Time == 0 ? default(Color?) : Card.RgbColor[(int)TopCard.Color],
+                Description = "Send the name of a card in the game's channel to discard that card.\nIf you can't or don't want to choose any card, say \"draw\" instead.\nYou can also use \"auto\" instead of a color/number/both.\nᅠ",
+                Color = Card.RgbColor[(int)TopCard.Color],
             };
 
             embed.AddField("Your cards", cardList.Truncate(1023));
-            if (Time > 0) embed.AddField("Top of the pile", TopCard);
+           embed.AddField("Top of the pile", TopCard);
 
             bool resend = false;
             if (player.message == null) resend = true;
