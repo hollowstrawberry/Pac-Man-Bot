@@ -229,7 +229,6 @@ Your pet is unpettable at the moment, but appreciates the attempt.{0}
 Unknown pet command! Syke. +1 pets{hide}
 As you pet your pet, you wonder if anyone goes out of their way to type the `clockagotchi pet` alias instead. That would be silly.
 <:check:410612082929565696> You're petting too little! Keep going.
-__Tip:__ You can also pet in a DM with the bot{0}{dm}
 You pet your pet. Suddenly, the sky opens up, and a milliard pet-angels descend upon you and your pet. They crown you king of pets.{getking} The ceremony and following party lasts three whole days, and there is much joy and petting in the land.{20}
 Royal pet! {10}{king}
 Royal pet! Your pet is delighted. {10}{king}

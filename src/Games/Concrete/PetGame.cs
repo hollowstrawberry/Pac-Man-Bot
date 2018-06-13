@@ -429,7 +429,7 @@ namespace PacManBot.Games
         }
 
 
-        public string DoPet(SocketCommandContext context)
+        public string DoPet()
         {
             string pet;
             int amount;
@@ -460,7 +460,6 @@ namespace PacManBot.Games
                 }
 
             } while (pet.Contains("{king}") && !achievements.PetKing
-                    || pet.Contains("{dm}") && context.Guild == null
                     || amount < 0 && (achievements.timesPet + amount < 0 || achievements.SuperPetting && achievements.timesPet + amount < 1000));
 
 
@@ -476,9 +475,8 @@ namespace PacManBot.Games
             else if (!achievements.PetGod && achievements.PetKing && achievements.timesPet >= 10000)
             {
                 achievements.PetGod = true;
-                string name = (context.User as IGuildUser)?.Nickname ?? Owner?.Username ?? "???";
                 pet = "👼 Having petted 10,000 times, and having lived a long and just life as Pet King, you and your pet ascend into the realm of the pet-angels.\n\n" +
-                      $"After arriving to their heavenly dominion, some angels begin chanting: *\"{name.SanitizeMarkdown()}, {PetName}\"*. " +
+                      $"After arriving to their heavenly dominion, some angels begin chanting: *\"{Owner?.Username.SanitizeMarkdown() ?? "Owner"}, {PetName}\"*. " +
                       $"Soon more and more join them, until ten billion voices act in unison. A blinding glare falls upon the pedestal you stand on. " +
                       "Your entire being slowly fades away, morphing into something else, something like... __pure petting energy__.\n" +
                       "The sounds of grand bells and trumpets fill the realm. You have been chosen as a new **Pet God**.\n\n" +

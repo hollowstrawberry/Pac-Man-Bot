@@ -247,7 +247,7 @@ namespace PacManBot.Modules
             else
             {
                 pet.timesPetSinceTimerStart += 1;
-                await ReplyAsync(pet.DoPet(Context), options: Bot.DefaultOptions);
+                await ReplyAsync(pet.DoPet(), options: Bot.DefaultOptions);
             }
         }
 
