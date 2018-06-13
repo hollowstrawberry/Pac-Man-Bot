@@ -39,7 +39,6 @@ namespace PacManBot.Modules
             "**{prefix}pet sleep/wakeup** - Sleep to restore Energy over time\n\n" +
             "**{prefix}pet help** - This list of commands\n" +
             "**{prefix}pet pet** - Pet your pet\n" +
-            "**{prefix}pet top** - Pet ranking\n" +
             "**{prefix}pet user <user>** - See another person's pet\n" +
             "**{prefix}pet release** - Gives your pet to a loving family that will take care of it (Deletes pet forever)")]
         [BetterRequireBotPermission(ChannelPermission.EmbedLinks | ChannelPermission.AddReactions)]
@@ -71,52 +70,6 @@ namespace PacManBot.Modules
                 await (Task)command.Invoke(this, new object[] { pet, args });
             }
         }
-
-
-        // Its own command so I can apply a usage rate-limit
-        [Command("pet pet"), Alias("pet p", "pp", "pet pot", "pet pat", "clockagotchi pet"), Priority(1), HideHelp]
-        [Summary("Pets your pet.")]
-        [Ratelimit(20, 1, Measure.Minutes), Ratelimit(600, 1, Measure.Hours)]
-        public async Task PetPet([Remainder]string uselessArgs = "")
-        {
-            var pet = storage.GetUserGame<PetGame>(Context.User.Id);
-            if (pet == null)
-            {
-                await ReplyAsync($"You don't have a pet yet! Simply do `{storage.GetPrefixOrEmpty(Context.Guild)}pet` to adopt one.", options: Bot.DefaultOptions);
-                return;
-            }
-
-            var now = DateTime.Now;
-            if ((now - pet.lastPet) <= TimeSpan.FromSeconds(1)) return;
-            pet.lastPet = now;
-
-            await ReplyAsync(pet.DoPet(Context), options: Bot.DefaultOptions);
-            return;
-        }
-
-        [Command("pet pet"), Alias("pet p", "pp", "pet pot", "pet pat", "clockagotchi pet"), Priority(-1), HideHelp]
-        [Summary("Pets your pet.")]
-        public async Task PetPetRateLimit([Remainder]string uselessArgs = "")
-        {
-            var pet = storage.GetUserGame<PetGame>(Context.User.Id);
-            if (pet == null) return;
-
-            var now = DateTime.Now;
-            if ((now - pet.lastPet) <= TimeSpan.FromSeconds(1)) return;
-            pet.lastPet = now;
-            try
-            {
-                var reqOptions = new RequestOptions { RetryMode = RetryMode.RetryRatelimit, Timeout = 3_000 };
-                await ReplyAsync($"{CustomEmoji.Cross} You're petting too much! Please calm down for a while.", options: reqOptions);
-            }
-            catch (TimeoutException) // Should only happen in extreme cases
-            {
-                pet.lastPet = now + TimeSpan.FromMinutes(5.1);
-                var reqOoptions = new RequestOptions { RetryMode = RetryMode.RetryRatelimit, Timeout = 60_000 };
-                await ReplyAsync($"{CustomEmoji.Cross} Because of your uncontrollable petting, PETA sued you and won. You won't be able to pet again for at least 5 minutes.", options: reqOoptions);
-            }
-        }
-
 
 
 
@@ -275,25 +228,27 @@ namespace PacManBot.Modules
         }
 
 
-        [PetCommand("top", "rank", "lb", "ranking", "leaderboard", "best")]
-        public async Task PetRanking(PetGame pet, string args)
+        [PetCommand("pet", "pat", "pot", "p", "clockagotchi")]
+        public async Task PetPet(PetGame pet, string args)
         {
-            var pets = storage.UserGames.Select(x => x as PetGame).Where(x => x != null).OrderByDescending(x => x.TimesPet);
-
-            int pos = 1;
-            var ranking = new StringBuilder();
-            ranking.Append($"**Out of {pets.Count()} pets:**\n");
-            foreach (var p in pets.Take(10))
+            var now = DateTime.Now;
+            if ((now - pet.petTimerStart) > TimeSpan.FromMinutes(1))
             {
-                ranking.Append($"\n**{pos}.** {p.TimesPet} pettings - ");
-                if (args == "id") ranking.Append($"{p.OwnerId} ");
-                else ranking.Append($"`{p.Owner?.Username.Replace("`", "´") ?? "Unknown"}'s {p.PetName.Replace("`", "´")}` ");
-                ranking.Append(string.Join(' ', p.achievements.GetIcons(showHidden: true, highest: true)));
-                pos++;
+                pet.petTimerStart = now;
+                pet.timesPetSinceTimerStart = 0;
             }
 
-            await ReplyAsync(ranking.ToString().Truncate(1999), options: Bot.DefaultOptions);
-
+            int limit = Context.Guild == null ? 20 : 5;
+            if (pet.timesPetSinceTimerStart >= limit)
+            {
+                await ReplyAsync($"{CustomEmoji.Cross} That's enough petting! Try again in a minute"
+                    + (Context.Guild == null ? "." : ", or pet in a DM with the bot."), options: Bot.DefaultOptions);
+            }
+            else
+            {
+                pet.timesPetSinceTimerStart += 1;
+                await ReplyAsync(pet.DoPet(Context), options: Bot.DefaultOptions);
+            }
         }
 
 
@@ -335,5 +290,38 @@ namespace PacManBot.Modules
                     $"Do **{storage.GetPrefixOrEmpty(Context.Guild)}pet release {pet.PetName}** to release.", options: Bot.DefaultOptions);
             }
         }
+
+
+
+
+
+
+
+        // You know, my intention when first creating this bot months ago was
+        // to make a fun bot that produced the least amount of spam possible.
+        // It was a huge mistake from my part to explicitly incentivize spamming.
+        // I'm removing the petting leaderboard, and adding more restrictions to petting.
+        // Pet on, my pet gods. Pet on. /s
+
+        //[PetCommand("top", "rank", "lb", "ranking", "leaderboard", "best")]
+        //public async Task PetRanking(PetGame pet, string args)
+        //{
+        //    var pets = storage.UserGames.Select(x => x as PetGame).Where(x => x != null).OrderByDescending(x => x.TimesPet);
+
+        //    int pos = 1;
+        //    var ranking = new StringBuilder();
+        //    ranking.Append($"**Out of {pets.Count()} pets:**\n");
+        //    foreach (var p in pets.Take(10))
+        //    {
+        //        ranking.Append($"\n**{pos}.** {p.TimesPet} pettings - ");
+        //        if (args == "id") ranking.Append($"{p.OwnerId} ");
+        //        else ranking.Append($"`{p.Owner?.Username.Replace("`", "´") ?? "Unknown"}'s {p.PetName.Replace("`", "´")}` ");
+        //        ranking.Append(string.Join(' ', p.achievements.GetIcons(showHidden: true, highest: true)));
+        //        pos++;
+        //    }
+
+        //    await ReplyAsync(ranking.ToString().Truncate(1999), options: Bot.DefaultOptions);
+
+        //}
     }
 }

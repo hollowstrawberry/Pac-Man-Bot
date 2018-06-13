@@ -1,14 +1,12 @@
-﻿using System;
-using System.Linq;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Discord;
 using PacManBot.Games;
+using PacManBot.Utils;
 
 namespace PacManBot.Extensions
 {
     public static class GameExtensions
     {
-        public static readonly Player MaxPlayer = Enum.GetValues(typeof(Player)).Cast<Player>().Max();
         public static readonly Color[] PlayerColor = new Color[]
         {
             new Color(221, 46, 68), new Color(85, 172, 238), new Color(120, 177, 89), new Color(253, 203, 88), new Color(170, 142, 214),
@@ -19,7 +17,7 @@ namespace PacManBot.Extensions
 
         public static Color Color(this Player player)
         {
-            if (player >= 0 && player <= MaxPlayer) return PlayerColor[(int)player];
+            if (player >= 0 && player <= Enum<Player>.MaxValue) return PlayerColor[(int)player];
             else if (player == Player.Tie) return PlayerColor[(int)Player.Third];
             else return new Color(150, 150, 150);
         }

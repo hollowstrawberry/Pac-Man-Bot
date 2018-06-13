@@ -226,6 +226,7 @@ namespace PacManBot.Games
 
                 CardColor? color = (CardColor?)Enumerable.Range(0, 4).FirstOrNull(x => value.StartsWith(StrColor[x]) || value.EndsWith(StrColor[x]));
                 if (color.HasValue) value = value.Replace(StrColor[(int)color], "");
+
                 CardType? type = (CardType?)Enumerable.Range(0, 15).FirstOrNull(x => value == StrType[x] || x < 10 && value == x.ToString());
 
                 if (auto)
@@ -284,6 +285,8 @@ namespace PacManBot.Games
                 ApplyCardEffect();
             }
 
+            Time = 1;
+
             if (mentions.Length > 0)
             {
                 string invite = $"{string.Join(", ", mentions.Select(x => client.GetUser(x)?.Mention))} You've been invited to play Uno. Type `{storage.GetPrefix(Guild)}uno join` to join.\n";
@@ -306,7 +309,7 @@ namespace PacManBot.Games
 
                 if (userId == CurrentPlayer.User?.Id)
                 {
-                    if (Time > 1 && TopCard.Color == CardColor.Black) return Enumerable.Range(0, 4).Any(x => value == Card.StrColor[x]); // Wild color
+                    if (Time > 1 && TopCard.Color == CardColor.Black) return Enum.TryParse<CardColor>(value, true, out _); // Wild color
                     else return value == "draw" || value == "skip" || value.Contains("auto") || Card.Parse(value, this).HasValue;
                 }
             }
@@ -348,7 +351,7 @@ namespace PacManBot.Games
             // Set wild color (non-bots)
             else if (Time > 1 && TopCard.Color == CardColor.Black)
             {
-                discardPile[0] = new Card(TopCard.Type, (CardColor)Enumerable.Range(0, 4).First(x => input == Card.StrColor[x]));
+                discardPile[0] = new Card(TopCard.Type, Enum.Parse<CardColor>(input, true));
                 Message = "";
                 ApplyCardEffect();
             }

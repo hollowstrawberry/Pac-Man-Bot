@@ -41,11 +41,13 @@ namespace PacManBot.Games
         [DataMember] public DateTime lastUpdated;
         [DataMember] public Achievements achievements = new Achievements();
 
+        public DateTime petTimerStart = DateTime.MinValue;
+        public int timesPetSinceTimerStart = 0;
+
 
         // Properties
 
         [DataMember] public override ulong OwnerId { get { return UserId[0]; } set { UserId = new ulong[] { value }; } }
-        [IgnoreDataMember] public DateTime lastPet = DateTime.Now;
 
         public override string Name => "Clockagotchi";
         public override TimeSpan Expiry => TimeSpan.MaxValue;
@@ -296,7 +298,7 @@ namespace PacManBot.Games
             stats.Append($"**Times played:** {achievements.timesPlayed}\n");
             stats.Append($"**Times cleaned:** {achievements.timesCleaned}\n");
             stats.Append($"**Total actions:** {achievements.TotalActions}\n");
-            stats.Append($"**Pettings given:** {achievements.timesPet} (~{PetMessageCountEstimate()} messages)\n");
+            stats.Append($"**Pettings given:** {achievements.timesPet}\n");
             stats.Append($"**Time without neglect:** {(DateTime.Now - achievements.lastNeglected).Humanized()}\n");
             stats.Append($"*(Neglect occurs when all meters reach 0)*\nᅠ");
 
@@ -502,18 +504,7 @@ namespace PacManBot.Games
 
             return pet;
         }
-
-
-        public int PetMessageCountEstimate()
-        {
-            double sum = 0;
-
-            sum += Math.Min(1000, achievements.timesPet) / AveragePets(storage, achievements.PetKing, false, false);
-            if (achievements.timesPet > 1000) sum += Math.Min(9000, achievements.timesPet - 1000) / AveragePets(storage, achievements.PetKing, true, false);
-            if (achievements.timesPet > 10000) sum += (achievements.timesPet - 10000) / AveragePets(storage, achievements.PetKing, true, true);
-
-            return (int)sum;
-        }
+        
 
 
 
@@ -522,44 +513,6 @@ namespace PacManBot.Games
             this.client = client;
             this.logger = logger;
             this.storage = storage;
-        }
-
-
-
-
-        public static double AveragePets(StorageService storage, bool king, bool super, bool god)
-        {
-            double sumNormal = 0;
-            double sumSuper = 0;
-
-            string[] allMessages = super ? storage.PettingMessages.Concatenate(storage.SuperPettingMessages) : storage.PettingMessages;
-            int lines = allMessages.Length;
-            int superIndex = storage.PettingMessages.Length;
-
-            for (int i = 0; i < allMessages.Length; i++)
-            {
-                if (!king && allMessages[i].Contains("{king}")) lines--;
-                else
-                {
-                    double pets;
-                    var match = Regex.Match(allMessages[i], PetAmountPattern);
-                    if (match.Success)
-                    {
-                        pets = int.Parse(match.Value.Trim('{', '}'));
-                    }
-                    else pets = 1;
-
-                    if (pets <= 0 && god) pets = pets == 0 ? 100 : -10 * pets;
-
-                    if (i >= superIndex) sumSuper += pets;
-                    else sumNormal += pets;
-                }
-            }
-
-            if (sumSuper > 0) sumNormal *= 0.75;
-            sumSuper *= 0.25;
-
-            return sumNormal / storage.PettingMessages.Length + sumSuper / storage.SuperPettingMessages.Length;
         }
     }
 }
