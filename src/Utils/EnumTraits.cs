@@ -10,6 +10,7 @@ namespace PacManBot.Utils
         static EnumTraits()
         {
             Type = typeof(TEnum);
+            UnderlyingType = Enum.GetUnderlyingType(Type);
             Values = Enum.GetValues(Type).Cast<TEnum>().Distinct().ToList().AsReadOnly();
             MinValue = Values.Min();
             MaxValue = Values.Max();
@@ -20,6 +21,7 @@ namespace PacManBot.Utils
 
         // I don't use almost any of these but they're fun to have around
         public static Type Type { get; }
+        public static Type UnderlyingType { get; }
         public static IReadOnlyList<TEnum> Values { get; }
         public static TEnum MinValue { get; }
         public static TEnum MaxValue { get; }

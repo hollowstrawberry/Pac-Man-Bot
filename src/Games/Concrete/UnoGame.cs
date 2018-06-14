@@ -6,6 +6,7 @@ using System.Runtime.Serialization;
 using Discord;
 using Discord.Net;
 using Discord.WebSocket;
+using PacManBot.Utils;
 using PacManBot.Services;
 using PacManBot.Extensions;
 
@@ -219,16 +220,19 @@ namespace PacManBot.Games
 
             public static bool IsWild(CardType type) => type == CardType.Wild || type == CardType.WildDrawFour;
 
+
+            public static IReadOnlyDictionary<string, string> ParseReplacements = new Dictionary<string, string>{
+                { " ", "" }, { "auto", "" }, { "uno", "" }, { "draw2", "drawtwo" }, { "draw4", "drawfour" },
+            }.AsReadOnly();
+
             public static Card? Parse(string value, UnoGame game)
             {
                 bool auto = value.Contains("auto");
-                value = value.Replace(" ", "").Replace("auto", "").Replace("uno", "").Replace("draw2", "drawtwo").Replace("draw4", "drawfour");
+                value = value.ReplaceMany(ParseReplacements);
 
-                CardColor? color = (CardColor?)Enumerable.Range(0, 4).FirstOrNull(x => value.StartsWith(StrColor[x]) || value.EndsWith(StrColor[x]));
-                if (color.HasValue) value = value.Replace(StrColor[(int)color], "");
-
-                CardType? type = (CardType?)Enumerable.Range(0, 15).FirstOrNull(x => value == StrType[x] || x < 10 && value == x.ToString());
-
+                CardColor? color = EnumTraits<CardColor>.Values.FirstOrNull(x => value.EndsOrStartsWith(x.ToString().ToLower()));
+                CardType? type = EnumTraits<CardType>.Values.FirstOrNull(x => value.EndsOrStartsWith(x.ToString().ToLower())
+                                                                        || x <= CardType.Nine && value.EndsOrStartsWith(((int)x).ToString()));
                 if (auto)
                 {
                     var cards = game.CurrentPlayer.cards.ToList().Sorted();
@@ -276,8 +280,8 @@ namespace PacManBot.Games
                 discardPile.Add(drawPile.Pop());
             }
 
-            var mentions = playerIds.Skip(1).Where(x => !client.GetUser(x).IsBot).Distinct().Take(9).ToArray();
-            foreach (ulong id in playerIds.Where(x => !mentions.Contains(x))) AddPlayer(id);
+            var users = playerIds.Skip(1).Where(x => !client.GetUser(x).IsBot).Distinct().Take(9).ToArray();
+            foreach (ulong id in playerIds.Where(x => !users.Contains(x))) AddPlayer(id);
 
             if (players.Count > 1)
             {
@@ -285,9 +289,10 @@ namespace PacManBot.Games
                 ApplyCardEffect();
             }
 
-            if (mentions.Length > 0)
+            if (users.Length > 0)
             {
-                string invite = $"{string.Join(", ", mentions.Select(x => client.GetUser(x)?.Mention))} You've been invited to play Uno. Type `{storage.GetPrefix(Guild)}uno join` to join.\n";
+                var mentions = users.Select(x => client.GetUser(x)?.Mention);
+                string invite = $"{string.Join(", ", mentions)} You've been invited to play Uno. Type `{storage.GetPrefix(Guild)}uno join` to join.\n";
                 Message = invite + Message;
             }
         }
@@ -329,7 +334,7 @@ namespace PacManBot.Games
                 return;
             }
 
-            // Saying "uno" mechanics
+            // Saying "uno" mechanics (non-bots)
             else if (input == "uno" || input == "callout")
             {
                 var forgot = players.FirstOrDefault(x => x.uno == UnoState.Forgot);
@@ -338,9 +343,8 @@ namespace PacManBot.Games
                 if (forgot.id == userId) forgot.uno = UnoState.Said;
                 else
                 {
-                    Draw(forgot, 2);
-                    Message = $"• {forgot.User.Username} was called out for not saying Uno and drew 2 cards!\n";
-                    updatedCards.Add(forgot);
+                    Message = "";
+                    Callout(forgot);
                 }
                 storage.StoreGame(this);
                 return;
@@ -393,7 +397,8 @@ namespace PacManBot.Games
                 else
                 {
                     if (input.Contains("auto")) Message = $"Oops, \"auto\" found no valid matches.";
-                    else logger.Log(LogSeverity.Error, Name, $"Unexpected invalid card \"{input}\" from {CurrentPlayer.User.FullName()} in {Channel.FullName()}");
+                    else logger.Log(LogSeverity.Error, Name,
+                        $"Unexpected invalid card \"{input}\" from {CurrentPlayer.User.FullName()} in {Channel.FullName()}");
                     return;
                 }
 
@@ -463,7 +468,10 @@ namespace PacManBot.Games
                     choice = Bot.Random.Choose(noWilds.Count > 0 ? noWilds : playable); // Leaves wilds for last
                 }
 
-                if (choice.Color == CardColor.Black && CurrentPlayer.cards.Count > 1) choice = new Card(choice.Type, HighestColor(CurrentPlayer.cards));
+                if (choice.Color == CardColor.Black && CurrentPlayer.cards.Count > 1)
+                {
+                    choice = new Card(choice.Type, HighestColor(CurrentPlayer.cards));
+                }
 
                 input = choice.ToString();
                 if (CurrentPlayer.cards.Count == 2 && !Bot.Random.OneIn(10)) input += "uno"; // Sometimes "forgets" to say uno
@@ -472,8 +480,7 @@ namespace PacManBot.Games
             var forgot = players.FirstOrDefault(x => x.uno == UnoState.Forgot);
             if (forgot != null && (forgot.User.IsBot || !Bot.Random.OneIn(3))) // Sometimes calls out
             {
-                Draw(forgot, 2);
-                Message += $"• {forgot.User.Username} was called out for not saying Uno and drew 2 cards!\n";
+                Callout(forgot);
             }
 
             Input(input);
@@ -500,16 +507,24 @@ namespace PacManBot.Games
             for (int i = 0; i < players.Count; i++)
             {
                 string pre = i == (int)Turn ? "+ " : Winner != Player.None ? "- " : "";
-                description.Append($"{pre}{players[i].User?.Username}" + $" - {players[i].cards.Count}🃏{$" Uno!".If(players[i].uno == UnoState.Said)}".If(players[i].cards.Count > 0) + "\n");
+                description.Append($"{pre}{players[i].User?.Username}");
+                if (players[i].cards.Count > 0) description.Append($" - {players[i].cards.Count}🃏{$" Uno!".If(players[i].uno == UnoState.Said)}");
             }
-            description.Append($"```\n{TopCard.ToStringBig()}\n");
+            description.Append($"\n```\n{TopCard.ToStringBig()}\n");
 
-            if (State == State.Active) description.Append($"ᅠ\nSay the name of a card to discard it or \"draw\" to skip a turn.\nYour cards are shown in a DM, say \"cards\" to resend.\nUse **{prefix}uno join** to join the game.\nUse **{prefix}uno help** for rules and more commands.");
+            if (State == State.Active)
+            {
+                description.Append(
+                    $"ᅠ\nSay the name of a card to discard it or \"draw\" to skip a turn." +
+                    $"\nYour cards are shown in a DM, say \"cards\" to resend." +
+                    $"\nUse **{prefix}uno join** to join the game.\nUse **{prefix}uno help** for rules and more commands.");
+            }
 
 
             return new EmbedBuilder()
             {
-                Title = Winner == Player.None ? $"{(reversed ? "🔼" : "🔽")} {CurrentPlayer.User?.Username}'s turn" : $"🎉 {CurrentPlayer.User?.Username} is the winner! 🎉",
+                Title = Winner == Player.None ? $"{(reversed ? "🔼" : "🔽")} {CurrentPlayer.User?.Username}'s turn"
+                                              : $"🎉 {CurrentPlayer.User?.Username} is the winner! 🎉",
                 Description = description.ToString().Truncate(2047),
                 Color = Card.RgbColor[(int)TopCard.Color],
                 ThumbnailUrl = CurrentPlayer.User?.GetAvatarUrl(),
@@ -519,7 +534,7 @@ namespace PacManBot.Games
 
         public override string GetContent(bool showHelp = true)
         {
-            return State == State.Cancelled ? "" : Message?.Truncate(1999);
+            return State == State.Cancelled ? "" : Message?.TruncateStart(1999);
         }
 
 
@@ -527,7 +542,7 @@ namespace PacManBot.Games
 
         private bool CanDiscard(Card card)
         {
-            return card.WildType || TopCard.Color == card.Color || TopCard.Type == card.Type || TopCard.Color == CardColor.Black; // The black TopCard can only happen at the start
+            return card.WildType || TopCard.Color == card.Color || TopCard.Type == card.Type || TopCard.Color == CardColor.Black;
         }
 
 
@@ -598,6 +613,14 @@ namespace PacManBot.Games
         }
 
 
+        private void Callout(UnoPlayer player)
+        {
+            Draw(player, 2);
+            Message += $"• {player.User.Username} was called out for not saying Uno and drew 2 cards!\n";
+            updatedCards.Add(player);
+        }
+
+
         private void CancelCallouts()
         {
             foreach (var player in players)
@@ -626,7 +649,9 @@ namespace PacManBot.Games
             var embed = new EmbedBuilder
             {
                 Title = $"{Name} game in #{Channel.Name}{(Guild == null ? "" : $" ({Guild.Name})")}",
-                Description = "Send the name of a card in the game's channel to discard that card.\nIf you can't or don't want to choose any card, say \"draw\" instead.\nYou can also use \"auto\" instead of a color/number/both.\nᅠ",
+                Description = "Send the name of a card in the game's channel to discard that card." +
+                              "\nIf you can't or don't want to choose any card, say \"draw\" instead." +
+                              "\nYou can also use \"auto\" instead of a color/number/both.\nᅠ",
                 Color = Card.RgbColor[(int)TopCard.Color],
             };
 

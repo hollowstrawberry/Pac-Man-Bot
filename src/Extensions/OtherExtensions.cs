@@ -17,12 +17,6 @@ namespace PacManBot.Extensions
         }
 
 
-        public static T MissingFrom<T>(this T requiredFlags, T currentFlags) where T : struct, Enum
-        {
-            return (T)(object)(((int)(object)requiredFlags ^ (int)(object)currentFlags) & (int)(object)requiredFlags);
-        }
-
-
         public static string Humanized(this TimeSpan span)
         {
             int days = (int)span.TotalDays, hours = span.Hours, minutes = span.Minutes;

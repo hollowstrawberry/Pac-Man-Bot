@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Text;
 
@@ -18,6 +19,20 @@ namespace PacManBot.Extensions
         }
 
 
+        public static string TruncateStart(this string text, int maxLength)
+        {
+            return text.Substring(Math.Max(0, text.Length - maxLength));
+        }
+
+
+        public static string ReplaceMany(this string text, IEnumerable<KeyValuePair<string, string>> replacements)
+        {
+            var sb = new StringBuilder(text);
+            foreach (var rep in replacements) sb.Replace(rep.Key, rep.Value);
+            return sb.ToString();
+        }
+
+
         public static string Multiply(this string value, int amount)
         {
             if (amount == 1) return value;
@@ -34,9 +49,20 @@ namespace PacManBot.Extensions
             return right ? fill + value : value + fill;
         }
 
-        public static string AlignTo<T>(this string value, T guide, bool right = false)
+        public static string AlignTo(this string value, object guide, bool right = false)
         {
             return value.Align(guide.ToString().Length, right);
+        }
+
+
+        public static bool EndsOrStartsWith(this string text, string value)
+        {
+            return text.StartsWith(value) || text.EndsWith(value);
+        }
+
+        public static bool EndsOrStartsWith(this string text, string value, StringComparison comparisonType)
+        {
+            return text.StartsWith(value, comparisonType) || text.EndsWith(value, comparisonType);
         }
 
 

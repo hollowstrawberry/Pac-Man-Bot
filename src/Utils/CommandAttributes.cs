@@ -59,20 +59,18 @@ namespace PacManBot.Utils
             if (guildPerms.HasValue)
             {
                 if (user == null) return PreconditionResult.FromError($"{name} requires guild permissions but is not in a guild");
-                var neededPerms = guildPerms.Value;
                 var currentPerms = (GuildPermission)user.GuildPermissions.RawValue;
 
                 if (currentPerms.HasFlag(guildPerms)) return PreconditionResult.FromSuccess();
-                else return PreconditionResult.FromError($"{name} requires guild permission {neededPerms.MissingFrom(currentPerms)}");
+                else return PreconditionResult.FromError($"{name} requires guild permission {(guildPerms ^ currentPerms) & guildPerms}");
             }
             else
             {
-                var neededPerms = channelPerms.Value;
                 var currentPerms = user == null ? DiscordExtensions.CorrectDmPermissions // They got these wrong in the library
-                                : (ChannelPermission)user.GetPermissions(context.Channel as IGuildChannel).RawValue;
+                                                : (ChannelPermission)user.GetPermissions(context.Channel as IGuildChannel).RawValue;
 
                 if (currentPerms.HasFlag(channelPerms)) return PreconditionResult.FromSuccess();
-                else return PreconditionResult.FromError($"{name} requires guild permission {neededPerms.MissingFrom(currentPerms)}");
+                else return PreconditionResult.FromError($"{name} requires guild permission {(channelPerms ^ currentPerms) & channelPerms}");
             }
         }
     }
