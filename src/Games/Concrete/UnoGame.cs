@@ -97,8 +97,8 @@ namespace PacManBot.Games
             Skip,
             Reverse,
             DrawTwo,
-            WildDrawFour,
             Wild,
+            WildDrawFour,
         }
 
 
@@ -147,7 +147,7 @@ namespace PacManBot.Games
                 CustomEmoji.RedSquare, CustomEmoji.BlueSquare, CustomEmoji.GreenSquare, CustomEmoji.YellowSquare, CustomEmoji.BlackSquare,
             };
             public static readonly string[] TypeEmote = CustomEmoji.NumberCircle.Concatenate(new string[] {
-                CustomEmoji.UnoSkip, CustomEmoji.UnoReverse, CustomEmoji.AddTwo, CustomEmoji.AddFour, CustomEmoji.UnoWild
+                CustomEmoji.UnoSkip, CustomEmoji.UnoReverse, CustomEmoji.AddTwo, CustomEmoji.UnoWild, CustomEmoji.AddFour
             });
 
 
@@ -231,9 +231,11 @@ namespace PacManBot.Games
                 bool auto = value.Contains("auto");
                 value = value.ReplaceMany(ParseReplacements);
 
-                CardColor? color = EnumTraits<CardColor>.Values.FirstOrNull(x => value.EndsOrStartsWith(x.ToString().ToLower()));
-                CardType? type = EnumTraits<CardType>.Values.FirstOrNull(x => value.EndsOrStartsWith(x.ToString().ToLower())
-                                                                        || x <= CardType.Nine && value.EndsOrStartsWith(((int)x).ToString()));
+                CardColor? color = EnumTraits<CardColor>.Values
+                    .FirstOrNull(x => value.EndsOrStartsWith(x.ToString().ToLower()));
+                CardType? type = EnumTraits<CardType>.Values.ToList().Reversed()
+                    .FirstOrNull(x => value.EndsOrStartsWith(x.ToString().ToLower()) || x <= CardType.Nine && value.EndsOrStartsWith(((int)x).ToString()));
+
                 if (auto)
                 {
                     var cards = game.CurrentPlayer.cards.ToList().Sorted();
@@ -399,8 +401,7 @@ namespace PacManBot.Games
                 else
                 {
                     if (input.Contains("auto")) Message = $"Oops, \"auto\" found no valid matches.";
-                    else logger.Log(LogSeverity.Error, Name,
-                        $"Unexpected invalid card \"{input}\" from {CurrentPlayer.User.FullName()} in {Channel.FullName()}");
+                    else throw new FormatException($"Unexpected invalid card \"{input}\" from {CurrentPlayer.User.FullName()} in {Channel.FullName()}");
                     return;
                 }
 
