@@ -29,7 +29,7 @@ namespace PacManBot.Modules
 
 
 
-        [Command("bump"), Alias("b", "refresh", "r", "move")]
+        [Command("bump"), Alias("b", "refresh", "r", "move"), Priority(2)]
         [Remarks("Move any game to the bottom of the chat")]
         [Summary("Moves the current game's message in this channel to the bottom of the chat, deleting the old one."
                + "This is useful if the game got lost in a sea of other messages, or if the game stopped responding")]
@@ -57,7 +57,7 @@ namespace PacManBot.Modules
         }
 
 
-        [Command("cancel"), Alias("end")]
+        [Command("cancel"), Alias("end"), Priority(2)]
         [Remarks("Cancel any game you're playing. Always usable by moderators")]
         [Summary("Cancels the current game in this channel, but only if you started or if nobody has played in over a minute. Always usable by users with the Manage Messages permission.")]
         [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks | ChannelPermission.AddReactions)]

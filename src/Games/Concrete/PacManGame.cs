@@ -74,7 +74,7 @@ namespace PacManBot.Games
         [DataMember] public override int Time { get; set; }
         [DataMember] public override ulong MessageId { get; set; }
         [DataMember] public override ulong ChannelId { get; set; }
-        [DataMember] public override ulong OwnerId { get { return UserId[0]; } set { UserId = new ulong[] { value }; } }
+        [DataMember] public override ulong OwnerId { get => UserId[0]; set => UserId = new ulong[] { value }; }
 
         [DataMember] private string FullMap //Converts map between char[,] and string
         {

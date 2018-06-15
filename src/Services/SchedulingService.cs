@@ -75,15 +75,21 @@ namespace PacManBot.Services
         public void DeleteOldGames(object state)
         {
             var now = DateTime.Now;
-            int previousCount = storage.Games.Count;
+            int count = 0;
 
             foreach (var game in storage.Games.Where(g => (now - g.LastPlayed) > g.Expiry).ToArray())
             {
+                count++;
                 storage.DeleteGame(game);
             }
 
-            int removed = previousCount - storage.Games.Count;
-            if (removed > 0) logger.Log(LogSeverity.Info, LogSource.Scheduling, $"Removed {removed} expired game{"s".If(removed > 1)}");
+            foreach (var game in storage.UserGames.Where(g => (now - g.LastPlayed) > g.Expiry).ToArray())
+            {
+                count++;
+                storage.DeleteUserGame(game);
+            }
+
+            if (count > 0) logger.Log(LogSeverity.Info, LogSource.Scheduling, $"Removed {count} expired game{"s".If(count > 1)}");
         }
     }
 }

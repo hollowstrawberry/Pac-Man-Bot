@@ -40,6 +40,27 @@ namespace PacManBot
     }
 
 
+    public static class Colors
+    {
+        public static readonly Color
+            // Discord emotes color scheme
+            Red = new Color(221, 46, 68),
+            Blue = new Color(85, 172, 238),
+            Green = new Color(120, 177, 89),
+            Yellow = new Color(253, 203, 88),
+            Purple = new Color(170, 142, 214),
+            Orange = new Color(244, 144, 12),
+            White = new Color(230, 231, 232),
+            Black = new Color(41, 47, 51),
+
+            // Custom colors
+            Gray = new Color(150, 150, 150),
+            PureWhite = new Color(255, 255, 255),
+            DarkBlack = new Color(20, 26, 30),
+            PacManYellow = new Color(241, 195, 15);
+    }
+
+
     public static class CustomEmoji
     {
         public static readonly Emote
@@ -80,7 +101,15 @@ namespace PacManBot
             AddTwo = "<:plus2:452172078599241739>",
             AddFour = "<:plus4:452196173898448897>",
             UnoWild = "<:colors:452172078028947457>",
-            
+
+            RedSquare = "<:redsq:452165349719277579>",
+            BlueSquare = "<:bluesq:452165349790580746>",
+            GreenSquare = "<:greensq:452165350155616257>",
+            YellowSquare = "<:yellowsq:452165350184976384>",
+            OrangeSquare = "<:ornsq:456684646554664972>",
+            WhiteSquare = "<:whsq:456684646403538946>",
+            BlackSquare = "<:blacksq:452196173026164739>",
+
             BronzeIcon = "<:bronze:453367514550894602>",
             SilverIcon = "<:silver:453367514588774400>",
             GoldIcon = "<:gold:453368658303909888>";
@@ -107,15 +136,6 @@ namespace PacManBot
             "<:circleC:446196339471024129>",
             "<:circleD:446196339450314753>",
             "<:circleE:446196339987054592>",
-        };
-
-        public static readonly string[] ColorSquare = new string[]
-        {
-            "<:redsq:452165349719277579>",
-            "<:bluesq:452165349790580746>",
-            "<:greensq:452165350155616257>",
-            "<:yellowsq:452165350184976384>",
-            "<:blacksq:452196173026164739>",
         };
     }
 }

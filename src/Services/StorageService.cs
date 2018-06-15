@@ -319,7 +319,7 @@ namespace PacManBot.Services
                     {
                         Type gameType = StoreableGameTypes.First(x => file.Contains(x.Key)).Value;
                         var game = (IStoreableGame)JsonConvert.DeserializeObject(File.ReadAllText(file), gameType, GameJsonSettings);
-                        game?.PostDeserialize(client, logger, this);
+                        game.PostDeserialize(client, logger, this);
 
                         if (game is ChannelGame cGame) games.Add(cGame);
                         else userGames.Add(game);
@@ -327,7 +327,6 @@ namespace PacManBot.Services
                     catch (Exception e)
                     {
                         logger.Log(LogSeverity.Error, LogSource.Storage, $"Couldn't load game at {file}: {(firstFail ? e.ToString() : e.Message)}");
-                        Console.ReadLine();
                         fail++;
                         firstFail = false;
                     }

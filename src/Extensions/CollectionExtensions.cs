@@ -37,6 +37,24 @@ namespace PacManBot.Extensions
         }
 
 
+        public static int LoopedIndex<T>(this IList<T> list, int index)
+        {
+            while (index >= list.Count) index -= list.Count;
+            while (index < 0) index += list.Count;
+            return index;
+        }
+
+
+        public static void Shift<T>(this IList<T> list, int amount)
+        {
+            var old = list.ToArray();
+            for (int i = 0; i < list.Count; i++) // Shifts stickers
+            {
+                list[i] = old[old.LoopedIndex(i + amount)];
+            }
+        }
+
+
         public static List<List<T>> Split<T>(this List<T> list, int size)
         {
             var lists = new List<List<T>>();

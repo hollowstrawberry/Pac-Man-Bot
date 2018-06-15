@@ -45,7 +45,7 @@ namespace PacManBot.Modules
             {
                 Title = $"{CustomEmoji.PacMan} __**Pac-Man Bot**__",
                 Description = description,
-                Color = new Color(241, 195, 15)
+                Color = Colors.PacManYellow,
             };
             embed.AddField("Total guilds", $"{shardedClient.Guilds.Count}", true);
             embed.AddField("Total active games", $"{storage.Games.Where(g => !(g is Games.PetGame)).Count()}", true);
@@ -80,8 +80,8 @@ namespace PacManBot.Modules
 
             var embed = new EmbedBuilder()
             {
-                Title = $"{CustomEmoji.PacMan} __Command__: {prefix}{command.Name}",
-                Color = new Color(241, 195, 15)
+                Title = $"__Command__: {prefix}{command.Name}",
+                Color = Colors.PacManYellow
             };
 
             if (helpInfo.Hidden) embed.AddField("Hidden command", "*Are you a wizard?*", true);
@@ -128,7 +128,7 @@ namespace PacManBot.Modules
                 Title = $"{CustomEmoji.PacMan} __**Bot Commands**__",
                 Description = (Context.Guild == null ? "No prefix is needed in a DM!" : $"Prefix for this server is '{prefix}'")
                             + $"\nYou can do **{prefix}help command** for more information about a command.\n\nParameters: [optional] <needed>",
-                Color = new Color(241, 195, 15)
+                Color = Colors.PacManYellow
             };
 
             foreach (var module in commands.Modules.OrderBy(m => m.Remarks))
@@ -210,7 +210,7 @@ namespace PacManBot.Modules
             var embed = new EmbedBuilder()
             {
                 Title = "Bot invite link",
-                Color = new Color(241, 195, 15),
+                Color = Colors.PacManYellow,
                 ThumbnailUrl = Context.Client.CurrentUser.GetAvatarUrl(ImageFormat.Auto, 128),
                 Fields = new List<EmbedFieldBuilder>
                 {
@@ -236,7 +236,7 @@ namespace PacManBot.Modules
                 Title = $"{CustomEmoji.Staff} Pac-Man Bot Support server",
                 Url = $"https://discord.gg/hGHnfda",
                 Description = "We'll be happy to see you there!",
-                Color = new Color(241, 195, 15),
+                Color = Colors.PacManYellow,
                 ThumbnailUrl = shardedClient.GetGuild(409803292219277313).IconUrl,
             };
             await ReplyAsync("", false, embed.Build());
@@ -253,7 +253,7 @@ namespace PacManBot.Modules
                 Title = $"{CustomEmoji.GitHub} Pac-Man Bot GitHub repository",
                 Url = "https://github.com/Samrux/Pac-Man-Bot",
                 Description = "Contributions welcome!",
-                Color = new Color(241, 195, 15),
+                Color = Colors.PacManYellow,
                 ThumbnailUrl = "https://cdn.discordapp.com/attachments/412090039686660097/455914771179503633/GitHub.png",
             };
 

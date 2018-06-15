@@ -38,7 +38,7 @@ namespace PacManBot.Games
         public string FilenameKey => "uno";
         public override bool AllBots => players.All(x => x.User?.IsBot ?? false);
 
-        private Card TopCard { get { return discardPile[0]; } set { discardPile[0] = value; } }
+        private Card TopCard { get => discardPile[0]; set => discardPile[0] = value; }
         private UnoPlayer CurrentPlayer => players[(int)Turn];
         private UnoPlayer PlayerAt(Player turn) => players[(int)turn];
         private Player FollowingTurn => reversed ? PreviousPlayer() : NextPlayer();
@@ -54,8 +54,8 @@ namespace PacManBot.Games
 
         public override ulong[] UserId
         {
-            get { return players.Select(x => x.id).ToArray(); }
-            set { throw new InvalidOperationException("Use AddPlayer and RemovePlayer instead"); }
+            get => players.Select(x => x.id).ToArray();
+            set => throw new InvalidOperationException("Use AddPlayer and RemovePlayer instead");
         }
 
 
@@ -140,10 +140,11 @@ namespace PacManBot.Games
             public static readonly Card Wild = new Card(CardType.Wild, CardColor.Black);
             public static readonly Card WildDrawFour = new Card(CardType.WildDrawFour, CardColor.Black);
 
-            public static readonly string[] StrColor = Enumerable.Range(0, 5).Select(x => ((CardColor)x).ToString().ToLower()).ToArray();
-            public static readonly string[] StrType = Enumerable.Range(0, 15).Select(x => ((CardType)x).ToString().ToLower()).ToArray();
-            public static readonly Color[] RgbColor = new Color[] {
-                new Color(221, 46, 68), new Color(85, 172, 238), new Color(120, 177, 89), new Color(253, 203, 88), new Color(20, 26, 30),
+            public static readonly Color[] ColorRgb = new Color[] {
+                Colors.Red, Colors.Blue, Colors.Green, Colors.Yellow, Colors.DarkBlack,
+            };
+            public static readonly string[] ColorEmote = new string[] {
+                CustomEmoji.RedSquare, CustomEmoji.BlueSquare, CustomEmoji.GreenSquare, CustomEmoji.YellowSquare, CustomEmoji.BlackSquare,
             };
             public static readonly string[] TypeEmote = CustomEmoji.NumberCircle.Concatenate(new string[] {
                 CustomEmoji.UnoSkip, CustomEmoji.UnoReverse, CustomEmoji.AddTwo, CustomEmoji.AddFour, CustomEmoji.UnoWild
@@ -200,7 +201,7 @@ namespace PacManBot.Games
                     for (int x = 0; x < 3; x++)
                     {
                         if (x == 1 && y == 2) card.Append(TypeEmote[(int)Type]);
-                        else card.Append(CustomEmoji.ColorSquare[(int)Color]);
+                        else card.Append(Card.ColorEmote[(int)Color]);
                     }
                     card.Append('\n');
                 }
@@ -323,6 +324,7 @@ namespace PacManBot.Games
 
         public void Input(string input, ulong userId = 1)
         {
+            LastPlayed = DateTime.Now;
             input = StripPrefix(input.ToLower());
             bool calledByAI = CurrentPlayer.User.IsBot;
 
@@ -509,6 +511,7 @@ namespace PacManBot.Games
                 string pre = i == (int)Turn ? "+ " : Winner != Player.None ? "- " : "";
                 description.Append($"{pre}{players[i].User?.Username}");
                 if (players[i].cards.Count > 0) description.Append($" - {players[i].cards.Count}🃏{$" Uno!".If(players[i].uno == UnoState.Said)}");
+                description.Append('\n');
             }
             description.Append($"\n```\n{TopCard.ToStringBig()}\n");
 
@@ -526,7 +529,7 @@ namespace PacManBot.Games
                 Title = Winner == Player.None ? $"{(reversed ? "🔼" : "🔽")} {CurrentPlayer.User?.Username}'s turn"
                                               : $"🎉 {CurrentPlayer.User?.Username} is the winner! 🎉",
                 Description = description.ToString().Truncate(2047),
-                Color = Card.RgbColor[(int)TopCard.Color],
+                Color = Card.ColorRgb[(int)TopCard.Color],
                 ThumbnailUrl = CurrentPlayer.User?.GetAvatarUrl(),
             };
         }
@@ -642,7 +645,7 @@ namespace PacManBot.Games
             string cardList = "";
             foreach (var group in cardsByColor)
             {
-                cardList += $"{CustomEmoji.ColorSquare[(int)group.Key]} {string.Join(", ", group)}\n";
+                cardList += $"{Card.ColorEmote[(int)group.Key]} {string.Join(", ", group)}\n";
             }
             cardList += "ᅠ";
 
@@ -652,7 +655,7 @@ namespace PacManBot.Games
                 Description = "Send the name of a card in the game's channel to discard that card." +
                               "\nIf you can't or don't want to choose any card, say \"draw\" instead." +
                               "\nYou can also use \"auto\" instead of a color/number/both.\nᅠ",
-                Color = Card.RgbColor[(int)TopCard.Color],
+                Color = Card.ColorRgb[(int)TopCard.Color],
             };
 
             embed.AddField("Your cards", cardList.Truncate(1023));

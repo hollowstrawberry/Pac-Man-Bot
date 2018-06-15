@@ -6,7 +6,6 @@ using System.Reflection;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Discord;
-using Discord.Commands;
 using Discord.WebSocket;
 using PacManBot.Services;
 using PacManBot.Extensions;
@@ -47,18 +46,20 @@ namespace PacManBot.Games
 
         // Properties
 
-        [DataMember] public override ulong OwnerId { get { return UserId[0]; } set { UserId = new ulong[] { value }; } }
+        [DataMember] public override ulong OwnerId { get => UserId[0]; set => UserId = new ulong[] { value }; }
 
         public override string Name => "Clockagotchi";
-        public override TimeSpan Expiry => TimeSpan.MaxValue;
+        public override TimeSpan Expiry => TimeSpan.FromDays(60);
         public string FilenameKey => "pet";
+
+        public override DateTime LastPlayed { get => lastUpdated; set => lastUpdated = value; }
 
         public double TotalStats => satiation + happiness + hygiene + energy;
         public int TimesPet => achievements.timesPet;
 
         public string PetName
         {
-            get { return petName; }
+            get => petName;
             set
             {
                 petName = value?.SanitizeMarkdown().SanitizeMentions().Trim('<', '>');
@@ -68,7 +69,7 @@ namespace PacManBot.Games
 
         public string PetImageUrl
         {
-            get { return petImageUrl; }
+            get => petImageUrl;
             set
             {
                 string url = value?.Trim('<', '>');

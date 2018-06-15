@@ -184,7 +184,7 @@ namespace PacManBot.Modules
             {
                 Title = $"🏆 __**Pac-Man Global Leaderboard**__ 🏆",
                 Description = content.ToString().Truncate(2047),
-                Color = new Color(241, 195, 15)
+                Color = Colors.PacManYellow
             };
 
             await ReplyAsync("", false, embed.Build(), Bot.DefaultOptions);
@@ -215,7 +215,7 @@ namespace PacManBot.Modules
                     {
                         Title = $"🏆 __**Pac-Man Global Leaderboard**__ 🏆",
                         Description = $"Highest score {time.Humanized()}:\n{scores[i].ToStringSimpleScoreboard(shardedClient, i + 1)}",
-                        Color = new Color(241, 195, 15)
+                        Color = Colors.PacManYellow
                     };
 
                     await ReplyAsync("", false, embed.Build(), Bot.DefaultOptions);
@@ -235,7 +235,7 @@ namespace PacManBot.Modules
             string message = storage.BotContent["customhelp"].Replace("{prefix}", storage.GetPrefixOrEmpty(Context.Guild));
             string[] links = storage.BotContent["customlinks"].Split('\n').Where(s => s.Contains("|")).ToArray();
 
-            var embed = new EmbedBuilder() { Color = new Color(241, 195, 15) };
+            var embed = new EmbedBuilder() { Color = Colors.PacManYellow };
             for (int i = 0; i < links.Length; i++)
             {
                 embed.AddField(links[i].Split('|')[0], $"[Click here]({links[i].Split('|')[1]} \"{links[i].Split('|')[1]}\")", true);
