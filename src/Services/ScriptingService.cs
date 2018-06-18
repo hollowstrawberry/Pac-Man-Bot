@@ -5,7 +5,6 @@ using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Discord;
 using Discord.Rest;
 using Discord.Commands;
-using Discord.WebSocket;
 using PacManBot.Extensions;
 
 namespace PacManBot.Services
@@ -22,12 +21,13 @@ namespace PacManBot.Services
         public ScriptingService(IServiceProvider provider)
         {
             this.provider = provider;
-            this.logger = provider.Get<LoggingService>();
-            this.storage = provider.Get<StorageService>();
+            logger = provider.Get<LoggingService>();
+            storage = provider.Get<StorageService>();
 
             scriptOptions = ScriptOptions.Default
                 .WithImports(
-                    "System", "System.IO", "System.Threading.Tasks", "System.Collections.Generic", "System.Linq", "System.Text.RegularExpressions", "System.Diagnostics",
+                    "System", "System.IO", "System.Linq", "System.Diagnostics", "System.Threading.Tasks",
+                    "System.Collections.Generic", "System.Text.RegularExpressions",
                     "Discord", "Discord.Rest", "Discord.Commands", "Discord.WebSocket",
                     "PacManBot", "PacManBot.Games", "PacManBot.Utils", "PacManBot.Modules", "PacManBot.Services", "PacManBot.Extensions"
                 )
@@ -52,7 +52,8 @@ namespace PacManBot.Services
                     code = "await ReplyAsync($\"{" + code + "}\");";
                 }
 
-                string postCode = "\nTask ReplyAsync(string message = null, bool isTTS = false, Embed embed = null, RequestOptions options = null) => Context.Channel.SendMessageAsync(message, isTTS, embed, options);";
+                string postCode = "\nTask ReplyAsync(string message = null, bool isTTS = false, Embed embed = null, RequestOptions options = null) " +
+                                  "=> Context.Channel.SendMessageAsync(message, isTTS, embed, options);";
 
                 await CSharpScript.EvaluateAsync(code + postCode, scriptOptions, new ScriptArgs(context, provider, logger, storage));
                 await logger.Log(LogSeverity.Info, $"Successfully executed code in channel {context.Channel.FullName()}:\n{code}");

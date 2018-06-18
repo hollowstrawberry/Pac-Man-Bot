@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using Discord.Commands;
 
-namespace PacManBot.Utils
+namespace PacManBot.Modules
 {
     public class CommandHelpInfo
     {

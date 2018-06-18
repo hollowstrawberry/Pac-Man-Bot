@@ -14,12 +14,14 @@ namespace PacManBot.Games
 
         public SocketGuild Guild => (client.GetChannel(ChannelId) as SocketGuildChannel)?.Guild;
 
-        public async Task<IUserMessage> GetMessage() => MessageId == 0 ? null : (await Channel.GetMessageAsync(MessageId, options: Bot.DefaultOptions)) as IUserMessage;
+        public async Task<IUserMessage> GetMessage() => MessageId == 0 ? null
+            : (await Channel.GetMessageAsync(MessageId, options: Bot.DefaultOptions)) as IUserMessage;
 
 
         protected ChannelGame() : base() { }
 
-        protected ChannelGame(ulong channelId, ulong[] userId, DiscordShardedClient client, LoggingService logger, StorageService storage)
+        protected ChannelGame(ulong channelId, ulong[] userId,
+                              DiscordShardedClient client, LoggingService logger, StorageService storage)
             : base(userId, client, logger, storage)
         {
             ChannelId = channelId;

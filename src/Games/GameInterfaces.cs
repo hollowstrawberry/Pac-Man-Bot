@@ -17,8 +17,6 @@ namespace PacManBot.Games
         DateTime LastPlayed { get; set; }
         int Time { get; set; } // Turn number
         ulong[] UserId { get; set; } // Players
-        ulong OwnerId { get; set; } // First player
-        IUser Owner { get; }
 
         // Discord
         RequestOptions RequestOptions { get; } // Used when modifying the game message
@@ -27,6 +25,13 @@ namespace PacManBot.Games
         string GetContent(bool showHelp = true);
         EmbedBuilder GetEmbed(bool showHelp = true);
         void CancelRequests(); // Cancels previous game message edits
+    }
+
+
+    public interface IUserGame : IBaseGame
+    {
+        ulong OwnerId { get; }
+        IUser Owner { get; }
     }
 
 

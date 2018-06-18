@@ -32,14 +32,15 @@ namespace PacManBot.Services
         private readonly Dictionary<ulong, string> prefixes;
         private readonly List<ScoreEntry> scoreEntries;
         private readonly List<IChannelGame> games;
-        private readonly List<IBaseGame> userGames;
+        private readonly List<IUserGame> userGames;
 
         public string WakaExclude { get; private set; }
         public IReadOnlyList<IChannelGame> Games { get; private set; }
-        public IReadOnlyList<IBaseGame> UserGames { get; private set; }
+        public IReadOnlyList<IUserGame> UserGames { get; private set; }
 
         public string DefaultPrefix { get; private set; }
         public ulong[] NoPrefixChannels { get; private set; }
+        public ulong[] BannedChannels { get; private set; }
         public string[] PettingMessages { get; private set; }
         public string[] SuperPettingMessages { get; private set; }
         public IConfigurationRoot BotContent { get; private set; }
@@ -56,7 +57,7 @@ namespace PacManBot.Services
             prefixes = new Dictionary<ulong, string>();
             scoreEntries = new List<ScoreEntry>();
             games = new List<IChannelGame>();
-            userGames = new List<IBaseGame>();
+            userGames = new List<IUserGame>();
 
             Games = games.AsReadOnly();
             UserGames = userGames.AsReadOnly();
@@ -135,73 +136,49 @@ namespace PacManBot.Services
 
 
 
-        public IChannelGame GetGame(ulong channelId)
+        public IChannelGame GetChannelGame(ulong channelId)
             => games.FirstOrDefault(g => g.ChannelId == channelId);
 
-        public TGame GetGame<TGame>(ulong channelId) where TGame : IChannelGame
+        public TGame GetChannelGame<TGame>(ulong channelId) where TGame : IChannelGame
             => (TGame)games.FirstOrDefault(g => g.ChannelId == channelId && g is TGame);
 
 
-        public IBaseGame GetUserGame(ulong channelId)
-            => games.FirstOrDefault(g => g.ChannelId == channelId);
+        public IUserGame GetUserGame(ulong userId)
+            => userGames.FirstOrDefault(g => g.OwnerId == userId);
 
-        public TGame GetUserGame<TGame>(ulong userId) where TGame : IBaseGame
+        public TGame GetUserGame<TGame>(ulong userId) where TGame : IUserGame
             => (TGame)userGames.FirstOrDefault(g => g.OwnerId == userId && g is TGame);
 
 
-        public void AddGame(IChannelGame game)
+        public void AddGame(IBaseGame game)
         {
-            games.Add(game);
+            if (game is IUserGame uGame) userGames.Add(uGame);
+            else if (game is IChannelGame cGame) games.Add(cGame);
         }
 
 
-        public void AddUserGame(IBaseGame game)
-        {
-            userGames.Add(game);
-        }
-
-
-        public void DeleteGame(IChannelGame game)
+        public void DeleteGame(IBaseGame game)
         {
             try
             {
                 game.CancelRequests();
-                if (game is IStoreableGame sGame && File.Exists(GameFile(sGame))) File.Delete(GameFile(sGame));
-                games.Remove(game);
-                logger.Log(LogSeverity.Verbose, LogSource.Storage, $"Removed {game.GetType().Name} at {game.ChannelId}");
+                if (game is IStoreableGame sGame && File.Exists(sGame.GameFile())) File.Delete(sGame.GameFile());
+
+                if (game is IUserGame uGame) userGames.Remove(uGame);
+                else if (game is IChannelGame cGame) games.Remove(cGame);
+
+                logger.Log(LogSeverity.Verbose, LogSource.Storage, $"Removed {game.GetType().Name} at {game.IdentifierId()}");
             }
             catch (Exception e)
             {
-                logger.Log(LogSeverity.Error, LogSource.Storage, $"Trying to remove game at {game.ChannelId}: {e}");
+                logger.Log(LogSeverity.Error, LogSource.Storage, $"Trying to remove game at {game.IdentifierId()}: {e}");
             }
-        }
-
-
-        public void DeleteUserGame(IBaseGame game)
-        {
-            try
-            {
-                game.CancelRequests();
-                userGames.Remove(game);
-                logger.Log(LogSeverity.Verbose, LogSource.Storage, $"Removed {game.GetType().Name} for {game.OwnerId}");
-            }
-            catch (Exception e)
-            {
-                logger.Log(LogSeverity.Error, LogSource.Storage, $"Trying to remove user game for {game.OwnerId}: {e}");
-            }
-        }
-
-
-        public static string GameFile(IStoreableGame game)
-        {
-            ulong id = game is ChannelGame cGame ? cGame.ChannelId : game.UserId[0];
-            return $"{BotFile.GameFolder}{game.FilenameKey}{id}{BotFile.GameExtension}";
         }
 
 
         public void StoreGame(IStoreableGame game)
         {
-            File.WriteAllText(GameFile(game), JsonConvert.SerializeObject(game), Encoding.UTF8);
+            File.WriteAllText(game.GameFile(), JsonConvert.SerializeObject(game), Encoding.UTF8);
         }
 
 
@@ -232,12 +209,16 @@ namespace PacManBot.Services
 
         public void LoadBotContent()
         {
-            if (BotContent == null) BotContent = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile(BotFile.Contents).Build();
+            if (BotContent == null)
+            {
+                BotContent = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile(BotFile.Contents).Build();
+            }
             else BotContent.Reload();
 
             PettingMessages = BotContent["petting"].Split('\n', StringSplitOptions.RemoveEmptyEntries);
             SuperPettingMessages = BotContent["superpetting"].Split('\n', StringSplitOptions.RemoveEmptyEntries);
             NoPrefixChannels = BotContent["noprefix"].Split(',').Select(x => ulong.Parse(x)).ToArray();
+            BannedChannels = BotContent["banned"].Split(',').Select(x => ulong.Parse(x)).ToArray();
             logger.LoadLogExclude(this);
         }
 
@@ -321,8 +302,8 @@ namespace PacManBot.Services
                         var game = (IStoreableGame)JsonConvert.DeserializeObject(File.ReadAllText(file), gameType, GameJsonSettings);
                         game.PostDeserialize(client, logger, this);
 
-                        if (game is ChannelGame cGame) games.Add(cGame);
-                        else userGames.Add(game);
+                        if (game is IUserGame uGame) userGames.Add(uGame);
+                        else if (game is IChannelGame cGame) games.Add(cGame);
                     }
                     catch (Exception e)
                     {

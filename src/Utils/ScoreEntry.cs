@@ -38,13 +38,15 @@ namespace PacManBot.Utils
 
         public override string ToString()
         {
-            return $"{state} {score} {turns} {userId} \"{username.Replace('"', '“')}\" \"{date.ToString("o")}\" \"{channel.Replace('"', '“')}\"";
+            return $"{state} {score} {turns} {userId} " +
+                   $"\"{username.Replace('"', '“')}\" \"{date.ToString("o")}\" \"{channel.Replace('"', '“')}\"";
         }
 
 
         public string ToStringSimpleScoreboard(DiscordShardedClient client, int position)
         {
-            return $"{position}. ({state}) {score} points in {turns} turns by user {GetUsername(client).SanitizeMarkdown().SanitizeMentions()}";
+            return $"{position}. ({state}) {score} points in {turns} turns by user " +
+                   $"{GetUsername(client).SanitizeMarkdown().SanitizeMentions()}";
         }
 
 

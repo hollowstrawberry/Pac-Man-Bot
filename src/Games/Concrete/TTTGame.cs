@@ -10,14 +10,13 @@ namespace PacManBot.Games
 {
     public class TTTGame : MultiplayerGame, IMessagesGame
     {
+        public override string Name => "Tic-Tac-Toe";
+        public override TimeSpan Expiry => TimeSpan.FromHours(1);
+
         private const int Size = 3;
-        private static readonly TimeSpan _expiry = TimeSpan.FromHours(1);
 
         private Player[,] board;
         private List<Pos> highlighted;
-
-        public override string Name => "Tic-Tac-Toe";
-        public override TimeSpan Expiry => _expiry;
 
 
         public override void Create(ulong channelId, ulong[] userId, DiscordShardedClient client, LoggingService logger, StorageService storage)

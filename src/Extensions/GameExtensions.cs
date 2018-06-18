@@ -12,6 +12,25 @@ namespace PacManBot.Extensions
         };
 
 
+
+
+        // Games
+
+        public static ulong IdentifierId(this IBaseGame game)
+        {
+            return game is IUserGame userGame ? userGame.OwnerId :
+                   game is IChannelGame channelGame ? channelGame.ChannelId :
+                   game.UserId[0];
+        }
+
+
+        public static string GameFile(this IStoreableGame game)
+        {
+            return $"{BotFile.GameFolder}{game.FilenameKey}{game.IdentifierId()}{BotFile.GameExtension}";
+        }
+
+
+
         // Game enums
 
         public static Color Color(this Player player)
@@ -81,12 +100,16 @@ namespace PacManBot.Extensions
         }
 
 
-        public static Pos OfLength(this Dir dir, int num)
+        public static Pos ToPos(this Dir dir, int length = 1)
         {
-            if (num < 0) num = 0;
-            Pos pos = new Pos(0, 0);
-            for (int i = 0; i < num; i++) pos += dir;
-            return pos;
+            switch (dir)
+            {
+                case Dir.up: return new Pos(0, -length);
+                case Dir.down: return new Pos(0, +length);
+                case Dir.left: return new Pos(-length, 0);
+                case Dir.right: return new Pos(+length, 0);
+                default: return Pos.Origin;
+            }
         }
 
 

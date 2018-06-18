@@ -1,11 +1,10 @@
 using System;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 using Discord;
 using Discord.Commands;
 using PacManBot.Extensions;
 
-namespace PacManBot.Utils
+namespace PacManBot.Modules
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
     public class HideHelpAttribute : Attribute
@@ -82,7 +81,9 @@ namespace PacManBot.Utils
         public BetterRequireBotPermissionAttribute(ChannelPermission channelPerms) : base(channelPerms) { }
         public BetterRequireBotPermissionAttribute(GuildPermission guildPerms) : base(guildPerms) { }
 
-        public override async Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, CommandInfo command, IServiceProvider services)
+
+        public override async Task<PreconditionResult> CheckPermissionsAsync(
+            ICommandContext context, CommandInfo command, IServiceProvider services)
         {
             return CheckPermissions(context, command, context.Guild == null ? null : await context.Guild.GetCurrentUserAsync(), "Bot");
         }
@@ -95,7 +96,9 @@ namespace PacManBot.Utils
         public BetterRequireUserPermissionAttribute(ChannelPermission channelPerms) : base(channelPerms) { }
         public BetterRequireUserPermissionAttribute(GuildPermission guildPerms) : base(guildPerms) { }
 
-        public override Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, CommandInfo command, IServiceProvider services)
+
+        public override Task<PreconditionResult> CheckPermissionsAsync(
+            ICommandContext context, CommandInfo command, IServiceProvider services)
         {
             return Task.FromResult(CheckPermissions(context, command, context.User as IGuildUser, "User"));
         }

@@ -12,15 +12,13 @@ namespace PacManBot.Games
 {
     public class TTT5Game : MultiplayerGame, IMessagesGame
     {
-        private static readonly TimeSpan _expiry = TimeSpan.FromHours(1);
+        public override string Name => "5-Tic-Tac-Toe";
+        public override TimeSpan Expiry => TimeSpan.FromHours(1);
+
 
         private Player[,] board;
         private List<Pos> highlighted = new List<Pos>();
-        private int[] threes = new int[] { -1, -1 };
-
-        public override string Name => "5-Tic-Tac-Toe";
-        public override TimeSpan Expiry => _expiry;
-
+        private readonly int[] threes = new int[] { -1, -1 };
 
 
         public override void Create(ulong channelId, ulong[] userId, DiscordShardedClient client, LoggingService logger, StorageService storage)
@@ -77,7 +75,9 @@ namespace PacManBot.Games
 
             for (int i = 0; i < UserId.Length; i++)
             {
-                description.Append($"{"►".If(i == (int)Turn)}{((Player)i).Symbol()} {$"{threes[i]} lines".If(threes[i] >= 0)} - {User((Player)i).NameandNum().SanitizeMarkdown()}\n");
+                if (i == (int)Turn) description.Append("►");
+                description.Append($"{((Player)i).Symbol()} {$"{threes[i]} lines".If(threes[i] >= 0)} - " +
+                                   $"{User((Player)i).NameandNum().SanitizeMarkdown()}\n");
             }
 
             description.Append("ᅠ\n");
@@ -97,7 +97,8 @@ namespace PacManBot.Games
             if (State == State.Active)
             {
                 description.Append($"ᅠ\nSay a column and row to place an {(Turn == Player.First ? "X" : "O")} in that cell (Example: B4)");
-                description.Append("\nTo win you must make **more lines of three** than your opponent,\nbut if someone makes a line of **four**, they **win instantly**!");
+                description.Append("\nTo win you must make **more lines of three** than your opponent,\n" +
+                                   "but if someone makes a line of **four**, they **win instantly**!");
             }
 
 
@@ -303,6 +304,7 @@ namespace PacManBot.Games
             }
             return full;
         }
+
 
         private bool FullRow(int y)
         {

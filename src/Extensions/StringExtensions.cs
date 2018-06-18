@@ -7,7 +7,7 @@ namespace PacManBot.Extensions
 {
     public static class StringExtensions
     {
-        public static string If(this string text, bool condition) // Helps with complex text concatenation
+        public static string If(this string text, bool condition) // Helps with long text concatenation
         {
             return condition ? text : "";
         }

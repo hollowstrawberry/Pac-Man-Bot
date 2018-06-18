@@ -23,13 +23,13 @@ namespace PacManBot.Services
         public readonly Regex waka = new Regex(@"^(w+a+k+a+\W*)+$", RegexOptions.IgnoreCase);
 
 
-        public InputService(DiscordShardedClient client, CommandService commands, StorageService storage, LoggingService logger, IServiceProvider provider)
+        public InputService(IServiceProvider provider)
         {
-            this.client = client;
-            this.commands = commands;
-            this.storage = storage;
-            this.logger = logger;
             this.provider = provider;
+            client = provider.Get<DiscordShardedClient>();
+            commands = provider.Get<CommandService>();
+            storage = provider.Get<StorageService>();
+            logger = provider.Get<LoggingService>();
 
             //Events
             client.MessageReceived += OnMessageReceived;
@@ -66,6 +66,12 @@ namespace PacManBot.Services
         {
             try //I have to wrap discarded async methods in a try block so that exceptions don't go silent
             {
+                if (storage.BannedChannels.Contains(genericMessage.Channel.Id)) // After a little bot-breaking incident
+                {
+                    if (genericMessage.Channel is IGuildChannel guildChannel) await guildChannel.Guild.LeaveAsync();
+                    return;
+                }
+
                 if (client.CurrentUser != null && genericMessage is SocketUserMessage message
                     && !message.Author.IsBot && message.Channel.BotCan(ChannelPermission.SendMessages))
                 {
@@ -105,7 +111,8 @@ namespace PacManBot.Services
             string prefix = storage.GetPrefix(context.Guild);
             int commandPosition = 0;
             
-            if (message.HasMentionPrefix(client.CurrentUser, ref commandPosition) || message.HasStringPrefix($"{prefix} ", ref commandPosition) || message.HasStringPrefix(prefix, ref commandPosition)
+            if (message.HasMentionPrefix(client.CurrentUser, ref commandPosition)
+                || message.HasStringPrefix($"{prefix} ", ref commandPosition) || message.HasStringPrefix(prefix, ref commandPosition)
                 || context.Channel is IDMChannel || storage.NoPrefixChannels.Contains(message.Channel.Id))
             {
                 var result = await commands.ExecuteAsync(context, commandPosition, provider);
@@ -113,7 +120,10 @@ namespace PacManBot.Services
                 if (result.IsSuccess) return true;
                 else if (!result.ErrorReason.Contains("Unknown command"))
                 {
-                    await logger.Log(LogSeverity.Verbose, $"Command {message} by {message.Author.FullName()} in channel {context.Channel.FullName()} couldn't be executed. {result.ErrorReason}");
+                    await logger.Log(LogSeverity.Verbose, LogSource.Command,
+                                     $"\"{message}\" by {message.Author.FullName()} in {context.Channel.FullName()} " +
+                                     $"couldn't be executed. {result.ErrorReason}");
+
                     string reply = CommandErrorReply(result.ErrorReason, context.Guild);
                     if (reply != null && context.BotCan(ChannelPermission.SendMessages))
                     {
@@ -130,7 +140,8 @@ namespace PacManBot.Services
 
         private async Task<bool> AutoresponseAsync(SocketUserMessage message)
         {
-            if (!(message.Channel is SocketGuildChannel gChannel) || !storage.WakaExclude.Contains($"{gChannel.Guild.Id}") || storage.AppInfo?.Owner.Id == message.Author.Id)
+            if (!(message.Channel is SocketGuildChannel gChannel) || !storage.WakaExclude.Contains($"{gChannel.Guild.Id}")
+                || storage.AppInfo?.Owner.Id == message.Author.Id)
             {
                 if (waka.IsMatch(message.Content))
                 {
@@ -151,7 +162,7 @@ namespace PacManBot.Services
 
         private async Task<bool> MessageGameInputAsync(SocketUserMessage message)
         {
-            var game = storage.GetGame<IMessagesGame>(message.Channel.Id);
+            var game = storage.GetChannelGame<IMessagesGame>(message.Channel.Id);
             if (game == null || !game.IsInput(message.Content, message.Author.Id)) return false;
 
             try
@@ -161,7 +172,8 @@ namespace PacManBot.Services
             catch (Exception e) when (e is OperationCanceledException || e is TimeoutException) { }
             catch (HttpException e)
             {
-                await logger.Log(LogSeverity.Warning, LogSource.Game, $"During {game.GetType().Name} input in {game.ChannelId}: {e.Message}");
+                await logger.Log(LogSeverity.Warning, LogSource.Game,
+                                 $"During {game.GetType().Name} input in {game.ChannelId}: {e.Message}");
             }
 
             return true;
@@ -170,7 +182,7 @@ namespace PacManBot.Services
 
         private async Task<bool> ReactionGameInputAsync(Cacheable<IUserMessage, ulong> messageData, ISocketMessageChannel channel, SocketReaction reaction)
         {
-            var game = storage.GetGame<IReactionsGame>(channel.Id);
+            var game = storage.GetChannelGame<IReactionsGame>(channel.Id);
             if (game == null || game.MessageId != reaction.MessageId || !game.IsInput(reaction.Emote, reaction.UserId)) return false;
 
             try
@@ -180,7 +192,7 @@ namespace PacManBot.Services
             catch (Exception e) when (e is OperationCanceledException || e is TimeoutException) { }
             catch (HttpException e)
             {
-                await logger.Log(LogSeverity.Warning, LogSource.Game, $"During Pac-Man input in {game.ChannelId}: {e.Message}");
+                await logger.Log(LogSeverity.Warning, game.Name, $"During input in {game.ChannelId}: {e.Message}");
             }
 
             return true;
@@ -193,7 +205,8 @@ namespace PacManBot.Services
         {
             var gameMessage = await game.GetMessage();
 
-            await logger.Log(LogSeverity.Verbose, game.Name, $"Input {message.Content} by user {message.Author.FullName()} on channel {message.Channel.FullName()}");
+            await logger.Log(LogSeverity.Verbose, game.Name,
+                             $"Input {message.Content} by {message.Author.FullName()} in {message.Channel.FullName()}");
 
             game.Input(message.Content, message.Author.Id);
             if (game is MultiplayerGame mGame)
@@ -225,7 +238,9 @@ namespace PacManBot.Services
             var channel = gameMessage.Channel;
             var guild = (channel as IGuildChannel)?.Guild;
 
-            await logger.Log(LogSeverity.Verbose, game.Name, $"Input {PacManGame.GameInputs[reaction.Emote].ToString().Align(5)} by user {user.FullName()} in channel {channel.FullName()}");
+            await logger.Log(LogSeverity.Verbose, game.Name, 
+                             $"Input {PacManGame.GameInputs[reaction.Emote].ToString().Align(5)} " +
+                             $"by {user.FullName()} in {channel.FullName()}");
 
             game.Input(reaction.Emote, user.Id);
 
@@ -235,7 +250,8 @@ namespace PacManBot.Services
 
                 if (game is PacManGame pmGame && pmGame.State != State.Cancelled && !pmGame.custom)
                 {
-                    storage.AddScore(new ScoreEntry(pmGame.State, pmGame.score, pmGame.Time, user.Id, user.NameandNum(), DateTime.Now, $"{guild?.Name}/{channel.Name}"));
+                    storage.AddScore(new ScoreEntry(pmGame.State, pmGame.score, pmGame.Time, user.Id,
+                                                    user.NameandNum(), DateTime.Now, $"{guild?.Name}/{channel.Name}"));
                 }
                 if (channel.BotCan(ChannelPermission.ManageMessages))
                 {

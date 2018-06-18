@@ -13,17 +13,27 @@ using PacManBot.Extensions;
 namespace PacManBot.Games
 {
     [DataContract]
-    public class PetGame : BaseGame, IStoreableGame
+    public class PetGame : BaseGame, IUserGame, IStoreableGame
     {
         // Constants
 
-        public static readonly string[] FoodEmotes = new string[] { "🍌", "🍎", "🍊", "🍕", "🌮", "🍩", "🍪", "🍐", "🍉", "🍇", "🍑", "🍧", "🍫", "🥕", "🍼" };
-        public static readonly string[] PlayEmotes = new string[] { "⚽", "🏀", "🏈", "🎾", "🏓", "🎨", "🎤", "🎭", "🏐", "🎣", };
-        public static readonly string[] CleanEmotes = new string[] { "💧", "🚿", "🛁", "🚽", "🚰", "💦", "👣", "💩", "✨" };
-        public static readonly string[] SleepEmotes = new string[] { "💤", "🛏", "🌃", "🌠", "🌙", "🌜" };
-        public static readonly string[] BannerUrl = new string[] { null, "https://cdn.discordapp.com/attachments/412314001414815751/448939830433415189/copperbanner.png", "https://cdn.discordapp.com/attachments/412314001414815751/448939834354958370/silverbanner.png", "https://cdn.discordapp.com/attachments/412314001414815751/448939832102617090/goldbanner.png" };
+        public override string Name => "Clockagotchi";
+        public override TimeSpan Expiry => TimeSpan.FromDays(60);
+        public string FilenameKey => "pet";
 
-        public const string PetAmountPattern = @"{-?[0-9]+}";
+
+        public static readonly string[] FoodEmotes = { "🍌", "🍎", "🍊", "🍕", "🌮", "🍩", "🍪", "🍐", "🍉", "🍇", "🍑", "🍧", "🍫", "🥕", "🍼" };
+        public static readonly string[] PlayEmotes = { "⚽", "🏀", "🏈", "🎾", "🏓", "🎨", "🎤", "🎭", "🏐", "🎣", };
+        public static readonly string[] CleanEmotes = { "💧", "🚿", "🛁", "🚽", "🚰", "💦", "👣", "💩", "✨" };
+        public static readonly string[] SleepEmotes = { "💤", "🛏", "🌃", "🌠", "🌙", "🌜" };
+
+        public static readonly string[] BannerUrl = {
+            null,
+            "https://cdn.discordapp.com/attachments/412314001414815751/448939830433415189/copperbanner.png",
+            "https://cdn.discordapp.com/attachments/412314001414815751/448939834354958370/silverbanner.png",
+            "https://cdn.discordapp.com/attachments/412314001414815751/448939832102617090/goldbanner.png"
+        };
+
         public const int MaxStat = 20;
 
 
@@ -40,18 +50,13 @@ namespace PacManBot.Games
         [DataMember] public DateTime lastUpdated;
         [DataMember] public Achievements achievements = new Achievements();
 
-        public DateTime petTimerStart = DateTime.MinValue;
+        public DateTime petTimerStart = DateTime.MinValue; // For a limit to pets per minute
         public int timesPetSinceTimerStart = 0;
 
 
         // Properties
 
-        [DataMember] public override ulong OwnerId { get => UserId[0]; set => UserId = new ulong[] { value }; }
-
-        public override string Name => "Clockagotchi";
-        public override TimeSpan Expiry => TimeSpan.FromDays(60);
-        public string FilenameKey => "pet";
-
+        [DataMember] public override ulong OwnerId { get => base.OwnerId; protected set => base.OwnerId = value; }
         public override DateTime LastPlayed { get => lastUpdated; set => lastUpdated = value; }
 
         public double TotalStats => satiation + happiness + hygiene + energy;
@@ -85,6 +90,52 @@ namespace PacManBot.Games
 
 
         // Types
+
+        [AttributeUsage(AttributeTargets.Property)]
+        public class AchievementAttribute : Attribute, IComparable<AchievementAttribute>
+        {
+            public string Icon { get; private set; }
+            public string Name { get; private set; }
+            public string Description { get; private set; }
+            public int Position { get; private set; }
+            public int Group { get; private set; }
+            public bool HideIcon { get; private set; }
+
+            private bool? obtained = null;
+
+            public bool Obtained
+            {
+                get
+                {
+                    if (!obtained.HasValue) throw new InvalidOperationException($"Obtained value not set. Use {nameof(WithObtained)}");
+                    return obtained.Value;
+                }
+            }
+
+
+            public AchievementAttribute(string icon, string name, string description, int position, bool hideIcon = false, int group = 0)
+            {
+                Icon = icon;
+                Name = name;
+                Description = description;
+                Position = position;
+                HideIcon = hideIcon;
+                Group = group;
+            }
+
+            public AchievementAttribute WithObtained(bool obtained)
+            {
+                this.obtained = obtained;
+                return this;
+            }
+
+
+            public int CompareTo(AchievementAttribute other)
+            {
+                return Position.CompareTo(other.Position);
+            }
+        }
+
 
         [DataContract]
         public class Achievements
@@ -174,51 +225,6 @@ namespace PacManBot.Games
         }
 
 
-        [AttributeUsage(AttributeTargets.Property)]
-        public class AchievementAttribute : Attribute, IComparable<AchievementAttribute>
-        {
-            public string Icon { get; private set; }
-            public string Name { get; private set; }
-            public string Description { get; private set; }
-            public int Position { get; private set; }
-            public int Group { get; private set; }
-            public bool HideIcon { get; private set; }
-
-            private bool? _obtained = null;
-            public bool Obtained
-            {
-                get
-                {
-                    if (!_obtained.HasValue) throw new InvalidOperationException($"Obtained value not set. Use {nameof(WithObtained)}");
-                    return _obtained.Value;
-                }
-            }
-
-
-            public AchievementAttribute(string icon, string name, string description, int position, bool hideIcon = false, int group = 0)
-            {
-                Icon = icon;
-                Name = name;
-                Description = description;
-                Position = position;
-                HideIcon = hideIcon;
-                Group = group;
-            }
-
-            public AchievementAttribute WithObtained(bool obtained)
-            {
-                _obtained = obtained;
-                return this;
-            }
-
-
-            public int CompareTo(AchievementAttribute other)
-            {
-                return Position.CompareTo(other.Position);
-            }
-        }
-
-
 
 
         // Game methods
@@ -243,7 +249,8 @@ namespace PacManBot.Games
             var description = new StringBuilder();
 
             string prefix = storage.GetPrefixOrEmpty(owner?.Guild);
-            if (string.IsNullOrWhiteSpace(petName)) description.Append($"Congratulations on your new Clockagotchi!\nUse `{prefix}pet name` to name it and `{prefix}pet help` for more info\n\n");
+            if (string.IsNullOrWhiteSpace(petName)) description.Append($"Congratulations on your new Clockagotchi!\n" +
+                                                                       $"Use `{prefix}pet name` to name it and `{prefix}pet help` for more info\n\n");
 
             description.Append($"**Name:** {(string.IsNullOrWhiteSpace(petName) ? "*Unnamed*" : PetName)}\n");
 
@@ -446,7 +453,7 @@ namespace PacManBot.Games
                 }
                 else pet = Bot.Random.Choose(storage.PettingMessages);
 
-                var match = Regex.Match(pet, PetAmountPattern);
+                var match = Regex.Match(pet, @"{-?[0-9]+}");
                 if (match.Success)
                 {
                     amount = int.Parse(match.Value.Trim('{', '}'));

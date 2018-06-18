@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Net;
 using Discord.Commands;
-using PacManBot.Utils;
 using PacManBot.Services;
 using PacManBot.Extensions;
 
@@ -11,41 +10,34 @@ namespace PacManBot.Modules
 {
     [Name(CustomEmoji.Staff + "Mod"), Remarks("5")]
     [BetterRequireUserPermission(GuildPermission.ManageMessages)]
-    public class ModModule : ModuleBase<SocketCommandContext>
+    public class ModModule : PacManBotModuleBase
     {
-        private readonly LoggingService logger;
-        private readonly StorageService storage;
+        public ModModule(LoggingService logger, StorageService storage) : base(logger, storage) { }
 
 
-        string ErrorMessage => $"Please try again or, if the problem persists, contact the bot author using `{storage.GetPrefixOrEmpty(Context.Guild)}feedback`.";
-
-
-        public ModModule(LoggingService logger, StorageService storage)
-        {
-            this.logger = logger;
-            this.storage = storage;
-        }
-
+        string ErrorMessage => $"Please try again or, if the problem persists, contact the bot author using `{Prefix}feedback`.";
 
 
         [Command("say"), Remarks("Make the bot say anything")]
         [Summary("Repeats back the message provided. Only users with the Manage Messages permission can use this command.")]
-        public async Task Say([Remainder]string message) => await ReplyAsync(message.SanitizeMentions(), options: Bot.DefaultOptions);
+        public async Task Say([Remainder]string message)
+            => await ReplyAsync(message.SanitizeMentions());
 
 
         [Command("clear"), Alias("cl"), Remarks("Clear this bot's messages and commands")]
-        [Summary("Clears all commands and messages for *this bot only*, from the last [amount] messages, or the last 10 messages by default.\n"
-               + "Only users with the Manage Messages permission can use this command.")]
+        [Summary("Clears all commands and messages for *this bot only*, from the last [amount] messages, or the last 10 messages by default.\n" +
+                 "Only users with the Manage Messages permission can use this command.")]
         [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory)]
-        public async Task ClearGameMessages(int amount = 10)
+        public async Task ClearCommandMessages(int amount = 10)
         {
             foreach (IMessage message in await Context.Channel.GetMessagesAsync(amount).FlattenAsync())
             {
                 try
                 {
-                    if (message.Author.Id == Context.Client.CurrentUser.Id || message.Content.StartsWith(storage.GetPrefix(Context.Guild)) && Context.BotCan(ChannelPermission.ManageMessages))
+                    if (message.Author.Id == Context.Client.CurrentUser.Id
+                        || message.Content.StartsWith(Prefix) && Context.BotCan(ChannelPermission.ManageMessages))
                     {
-                        await message.DeleteAsync(Bot.DefaultOptions);
+                        await message.DeleteAsync(DefaultOptions);
                     }
                 }
                 catch (Exception e) when (e is HttpException || e is TimeoutException)
@@ -57,27 +49,27 @@ namespace PacManBot.Modules
 
 
         [Command("setprefix"), Remarks("Set a custom prefix for this server (Admin)")]
-        [Summary("Change the custom prefix for this server. Only server Administrators can use this command.\n"
-               + "Prefixes can't contain these characters: \\* \\_ \\~ \\` \\\\")]
+        [Summary("Change the custom prefix for this server. Only server Administrators can use this command.\n" +
+                 "Prefixes can't contain these characters: \\* \\_ \\~ \\` \\\\")]
         [BetterRequireUserPermission(GuildPermission.Administrator)]
         public async Task SetServerPrefix(string prefix)
         {
             if (prefix.ContainsAny("*", "_", "~", "`", "\\"))
             {
-                await ReplyAsync($"{CustomEmoji.Cross} The prefix can't contain markdown special characters: *_~\\`\\\\", options: Bot.DefaultOptions);
+                await ReplyAsync($"{CustomEmoji.Cross} The prefix can't contain markdown special characters: *_~\\`\\\\");
                 return;
             }
 
             try
             {
                 storage.SetPrefix(Context.Guild.Id, prefix);
-                await ReplyAsync($"{CustomEmoji.ECheck} Prefix for this server has been successfully set to '{prefix}'.", options: Bot.DefaultOptions);
+                await ReplyAsync($"{CustomEmoji.Check} Prefix for this server has been successfully set to `{prefix}`");
                 await logger.Log(LogSeverity.Info, $"Prefix for server {Context.Guild.Id} set to {prefix}");
             }
             catch (Exception e)
             {
                 await logger.Log(LogSeverity.Error, $"{e}");
-                await ReplyAsync($"{CustomEmoji.Cross} There was a problem setting the prefix. {ErrorMessage}", options: Bot.DefaultOptions);
+                await ReplyAsync($"{CustomEmoji.Cross} There was a problem setting the prefix. {ErrorMessage}");
             }
         }
 
@@ -89,12 +81,12 @@ namespace PacManBot.Modules
             try
             {
                 bool nowaka = storage.ToggleWaka(Context.Guild.Id);
-                await ReplyAsync($"{CustomEmoji.Check} \"Waka\" responses turned **{(nowaka ? "ON" : "OFF")}** in this server.", options: Bot.DefaultOptions);
+                await ReplyAsync($"{CustomEmoji.Check} \"Waka\" responses turned **{(nowaka ? "ON" : "OFF")}** in this server.");
             }
             catch (Exception e)
             {
                 await logger.Log(LogSeverity.Error, $"{e}");
-                await ReplyAsync($"{CustomEmoji.Cross} Oops, something went wrong. {ErrorMessage}", options: Bot.DefaultOptions);
+                await ReplyAsync($"{CustomEmoji.Cross} Oops, something went wrong. {ErrorMessage}");
             }
         }
     }

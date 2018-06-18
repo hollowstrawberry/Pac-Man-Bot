@@ -86,7 +86,7 @@ namespace PacManBot.Services
             foreach (var game in storage.UserGames.Where(g => (now - g.LastPlayed) > g.Expiry).ToArray())
             {
                 count++;
-                storage.DeleteUserGame(game);
+                storage.DeleteGame(game);
             }
 
             if (count > 0) logger.Log(LogSeverity.Info, LogSource.Scheduling, $"Removed {count} expired game{"s".If(count > 1)}");

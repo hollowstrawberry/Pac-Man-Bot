@@ -20,7 +20,11 @@ namespace PacManBot.Extensions
         public static string Humanized(this TimeSpan span)
         {
             int days = (int)span.TotalDays, hours = span.Hours, minutes = span.Minutes;
-            string result = $"{days} day{"s".If(days > 1)}, ".If(days > 0) + $"{hours} hour{"s".If(hours > 1)}, ".If(hours > 0) + $"{minutes} minute{"s".If(minutes > 1)}".If(minutes > 0);
+
+            string result = $"{days} day{"s".If(days > 1)}, ".If(days > 0)
+                          + $"{hours} hour{"s".If(hours > 1)}, ".If(hours > 0)
+                          + $"{minutes} minute{"s".If(minutes > 1)}".If(minutes > 0);
+
             return result != "" ? result : "Just now";
         }
 

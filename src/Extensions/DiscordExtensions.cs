@@ -23,11 +23,17 @@ namespace PacManBot.Extensions
         }
 
 
-        public static async Task<SocketGuildUser> ParseUser(this ICommandContext context, string value)
+        public static async Task<SocketGuildUser> ParseUserAsync(this ICommandContext context, string value)
         {
             var result = await new UserTypeReader<SocketGuildUser>().ReadAsync(context, value, null);
             if (result.IsSuccess) return (SocketGuildUser)result.BestMatch;
             else return null;
+        }
+
+
+        public static async Task AutoReactAsync(this IUserMessage message, bool success = true)
+        {
+            await message.AddReactionAsync(success ? CustomEmoji.ECheck : CustomEmoji.ECross, Bot.DefaultOptions);
         }
 
 

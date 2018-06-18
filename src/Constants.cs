@@ -34,6 +34,7 @@ namespace PacManBot
         public const string
             Bot = "Bot",
             Game = "Game",
+            Command = "Command",
             Storage = "Storage",
             Scheduling = "Scheduling",
             Owner = "Owner";

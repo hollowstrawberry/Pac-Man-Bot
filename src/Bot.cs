@@ -100,7 +100,7 @@ namespace PacManBot
 
         private Task OnChannelDestroyed(SocketChannel channel)
         {
-            var game = storage.GetGame(channel.Id);
+            var game = storage.GetChannelGame(channel.Id);
             if (game != null) storage.DeleteGame(game);
 
             return Task.CompletedTask;
@@ -130,7 +130,8 @@ namespace PacManBot
                             if (string.IsNullOrWhiteSpace(botConfig.httpToken[i])) continue;
 
                             string requesturi = "https://" + website[i] + $"/api/bots/{client.CurrentUser.Id}/stats";
-                            var content = new StringContent($"{{\"server_count\": {guilds}}}", System.Text.Encoding.UTF8, "application/json");
+                            var content = new StringContent($"{{\"server_count\": {guilds}}}",
+                                                            System.Text.Encoding.UTF8, "application/json");
                             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(botConfig.httpToken[i]);
                             var response = await httpClient.PostAsync(requesturi, content);
 

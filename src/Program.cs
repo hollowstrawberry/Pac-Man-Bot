@@ -35,7 +35,10 @@ namespace PacManBot
 
             // Set up configurations
             var botConfig = JsonConvert.DeserializeObject<BotConfig>(File.ReadAllText(BotFile.Config));
-            if (string.IsNullOrWhiteSpace(botConfig.discordToken)) throw new Exception($"Missing {nameof(botConfig.discordToken)} in {BotFile.Config}: Bot can't run");
+            if (string.IsNullOrWhiteSpace(botConfig.discordToken))
+            {
+                throw new Exception($"Missing {nameof(botConfig.discordToken)} in {BotFile.Config}: Bot can't run");
+            }
 
             var clientConfig = new DiscordSocketConfig
             {

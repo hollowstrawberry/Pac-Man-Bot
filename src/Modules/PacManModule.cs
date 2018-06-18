@@ -14,43 +14,32 @@ using PacManBot.Extensions;
 namespace PacManBot.Modules
 {
     [Name("🎮Pac-Man"), Remarks("2")]
-    public class PacManModule : ModuleBase<SocketCommandContext>
+    public class PacManModule : PacManBotModuleBase
     {
-        private readonly DiscordShardedClient shardedClient;
-        private readonly LoggingService logger;
-        private readonly StorageService storage;
+        public PacManModule(LoggingService logger, StorageService storage) : base(logger, storage) { }
+
 
         private const int MaxDisplayedScores = 20;
 
 
-        public PacManModule(DiscordShardedClient shardedClient, LoggingService logger, StorageService storage)
-        {
-            this.shardedClient = shardedClient;
-            this.logger = logger;
-            this.storage = storage;
-        }
-
-
-
         [Command("play"), Alias("pacman", "p", "start"), Remarks("Start a new game in this channel"), Parameters("[mobile] [map]")]
-        [Summary("Starts a new Pac-Man game, unless there is already a game in this channel.\nAdding \"mobile\" or \"m\" after the command will begin the game in *Mobile Mode*, "
-               + "which uses simple characters that will work in phones. Use **{prefix}display** to change mode later.\n\nIf you add a valid customized map "
-               + "between \\`\\`\\`triple backticks\\`\\`\\`, it will start a custom game using that map instead. For more information about custom games, use the **{prefix}custom** command.\n\n"
-               + "Use **{prefix}bump** to move the game message to the bottom of the chat. Use **{prefix}cancel** to end the game. ")]
-        [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.AddReactions | ChannelPermission.EmbedLinks)]
+        [Summary("Starts a new Pac-Man game, unless there is already a game in this channel.\nAdding \"mobile\" or \"m\" " +
+                 "after the command will begin the game in *Mobile Mode*, which uses simple characters that will work in phones. " +
+                 "Use **{prefix}display** to change mode later.\n\nIf you add a valid customized map between \\`\\`\\`triple backticks\\`\\`\\`, " +
+                 "it will start a custom game using that map instead. For more information about custom games, use the **{prefix}custom** command.\n\n" +
+                 "Use **{prefix}bump** to move the game message to the bottom of the chat. Use **{prefix}cancel** to end the game. ")]
+        [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.EmbedLinks |
+                                    ChannelPermission.UseExternalEmojis | ChannelPermission.AddReactions)]
         public async Task StartGameInstance([Remainder]string args = "")
         {
             if (!Context.BotCan(ChannelPermission.SendMessages)) return;
-
-            string prefix = storage.GetPrefixOrEmpty(Context.Guild);
 
             foreach (var game in storage.Games)
             {
                 if (Context.Channel.Id == game.ChannelId)
                 {
-                    await ReplyAsync(game is PacManGame ?
-                        $"There is already a game in this channel!\nYou can use the `{prefix}bump` command to bring it to the bottom of the chat." :
-                        $"There is already a different game in this channel! Try using `{prefix}cancel`", options: Bot.DefaultOptions);
+                    await ReplyAsync($"There is already a game in this channel!\nYou can use `{Prefix}bump` to bring it to the bottom, " +
+                                     $"Or `{Prefix}cancel` to delete it.");
                     return;
                 }
             }
@@ -68,38 +57,39 @@ namespace PacManBot.Modules
             PacManGame newGame;
             try
             {
-                newGame = new PacManGame(Context.Channel.Id, Context.User.Id, customMap, mobile, shardedClient, logger, storage);
+                newGame = new PacManGame(Context.Channel.Id, Context.User.Id, customMap, mobile, Context.Client, logger, storage);
             }
             catch (InvalidMapException e) when (customMap != null)
             {
                 await logger.Log(LogSeverity.Debug, LogSource.Game, $"Failed to create custom game: {e.Message}");
-                await ReplyAsync($"The provided map is invalid: {e.Message}.\nUse the `{prefix}custom` command for more info.", options: Bot.DefaultOptions);
+                await ReplyAsync($"The provided map is invalid: {e.Message}.\nUse the `{Prefix}custom` command for more info.");
                 return;
             }
             catch (Exception e)
             {
                 await logger.Log(LogSeverity.Error, LogSource.Game, $"{e}");
-                await ReplyAsync($"There was an error starting the game. Please try again or contact the author of the bot using `{prefix}feedback`", options: Bot.DefaultOptions);
+                await ReplyAsync($"There was an error starting the game. Please try again or contact the author of the bot using `{Prefix}feedback`");
                 return;
             }
 
             storage.AddGame(newGame);
 
-            var gameMessage = await ReplyAsync(preMessage + newGame.GetContent(showHelp: false) + "```diff\n+Starting game```", options: Bot.DefaultOptions); //Output the game
+            var gameMessage = await ReplyAsync(preMessage + newGame.GetContent(showHelp: false) + "```diff\n+Starting game```");
             newGame.MessageId = gameMessage.Id;
 
             await AddControls(newGame, gameMessage);
         }
 
 
+
         [Command("changedisplay"), Alias("display"), Remarks("Switch between normal and mobile display")]
         [Summary("A Pac-Man game can either be in normal or mobile mode. Using this command will switch modes for the current game in this channel")]
         public async Task ChangeGameDisplay()
         {
-            var game = storage.GetGame<PacManGame>(Context.Channel.Id);
+            var game = storage.GetChannelGame<PacManGame>(Context.Channel.Id);
             if (game == null)
             {
-                await ReplyAsync("There is no active Pac-Man game in this channel!", options: Bot.DefaultOptions);
+                await ReplyAsync("There is no active Pac-Man game in this channel!");
                 return;
             }
 
@@ -114,12 +104,13 @@ namespace PacManBot.Modules
             catch (Exception e)
             {
                 if (!(e is HttpException || e is TimeoutException)) await logger.Log(LogSeverity.Error, $"{e}");
-                await Context.Message.AddReactionAsync(CustomEmoji.ECross, Bot.DefaultOptions);
+                await AutoReactAsync(false);
                 return;
             }
 
-            await Context.Message.AddReactionAsync(CustomEmoji.ECheck, Bot.DefaultOptions);
+            await AutoReactAsync();
         }
+
 
 
         [Command("top"), Alias("leaderboard", "lb"), Parameters("[period] [range]")]
@@ -128,7 +119,8 @@ namespace PacManBot.Modules
                + "You can specify the [period] to display scores from: all/month/week/day (a/m/w/d are also valid). "
                + "You can also specify a [range] of scores with two positive whole numbers (start and end).\n"
                + "Only 20 scores may be displayed at once.")]
-        public async Task SendTopScores(int min = 10, int? max = null) => await SendTopScores(TimePeriod.all, min, max);
+        public async Task SendTopScores(int min = 10, int? max = null)
+            => await SendTopScores(TimePeriod.all, min, max);
 
 
         [Command("top"), Alias("leaderboard", "lb"), HideHelp]
@@ -136,7 +128,7 @@ namespace PacManBot.Modules
         {
             if (min < 1 || max < 1 || max < min)
             {
-                await ReplyAsync($"Invalid range of scores. Try `{storage.GetPrefixOrEmpty(Context.Guild)}help lb` for more info", options: Bot.DefaultOptions);
+                await ReplyAsync($"Invalid range of scores. Try `{Prefix}help lb` for more info");
                 return;
             }
             if (max == null) 
@@ -153,13 +145,13 @@ namespace PacManBot.Modules
 
             if (scores.Count < 1)
             {
-                await ReplyAsync("There are no registered scores within this period!", options: Bot.DefaultOptions);
+                await ReplyAsync("There are no registered scores within this period!");
                 return;
             }
 
             if (min > scores.Count)
             {
-                await ReplyAsync("No scores found within the specified range.", options: Bot.DefaultOptions);
+                await ReplyAsync("No scores found within the specified range.");
                 return;
             }
 
@@ -168,16 +160,17 @@ namespace PacManBot.Modules
 
             int maxPosDigits = (min + MaxDisplayedScores).ToString().Length;
             int maxScoreDigits = scores[min - 1].score.ToString().Length;
-            for (int i = min; i < scores.Count() && i <= max && i < min + MaxDisplayedScores; i++)
+            for (int i = min; i <= scores.Count() && i <= max && i < min + MaxDisplayedScores; i++)
             {
                 ScoreEntry entry = scores[i - 1]; // The list is always kept sorted so we just go by index
 
-                string result = $"`{$"{i}.".Align(maxPosDigits + 1)} {$"({entry.state})".Align(6)} {$"{entry.score}".Align(maxScoreDigits, right: true)} points in {entry.turns} turns";
-                content.Append(result.Align(38) + $"- {entry.GetUsername(shardedClient).Replace("`", "")}`\n");
+                string result = $"`{$"{i}.".Align(maxPosDigits + 1)} {$"({entry.state})".Align(6)} " +
+                                $"{$"{entry.score}".Align(maxScoreDigits, right: true)} points in {entry.turns} turns";
+                content.Append(result.Align(38) + $"- {entry.GetUsername(Context.Client).Replace("`", "")}`\n");
             }
 
-            content.Append(max - min >= MaxDisplayedScores && max < scores.Count ? $"*Only {MaxDisplayedScores} scores may be displayed at once*"
-                           : max >= scores.Count ? "*No more scores could be found*" : "");
+            if (max - min >= MaxDisplayedScores && max < scores.Count) content.Append($"*Only {MaxDisplayedScores} scores may be displayed at once*");
+            else if (max >= scores.Count) content.Append("*No more scores could be found*");
 
 
             var embed = new EmbedBuilder()
@@ -187,21 +180,25 @@ namespace PacManBot.Modules
                 Color = Colors.PacManYellow
             };
 
-            await ReplyAsync("", false, embed.Build(), Bot.DefaultOptions);
+            await ReplyAsync(embed);
         }
 
 
         [Command("score"), Alias("sc", "s"), Parameters("[period] [user]")]
         [ExampleUsage("score d\nsc week @Samrux#3980"), Remarks("See your or a person's top score")]
-        [Summary("See your highest Pac-Man score of all time in the *Global Leaderboard* of all servers. You can specify a user in your guild using their name, mention or ID, to see their score instead."
-               + "\nYou can also specify a time period to display scores from: all/month/week/day (a/m/w/d are also valid)")]
-        public async Task SendPersonalBest(SocketGuildUser guildUser = null) => await SendPersonalBest(TimePeriod.all, (guildUser ?? Context.User).Id);
+        [Summary("See your highest Pac-Man score of all time in the *Global Leaderboard* of all servers. " +
+                 "You can specify a user in your guild using their name, mention or ID, to see their score instead." +
+                 "\nYou can also specify a time period to display scores from: all/month/week/day (a/m/w/d are also valid)")]
+        public async Task SendPersonalBest(SocketGuildUser guildUser = null)
+            => await SendPersonalBest(TimePeriod.all, (guildUser ?? Context.User).Id);
 
         [Command("score"), Alias("sc", "s"), HideHelp]
-        public async Task SendPersonalBest(TimePeriod time, SocketGuildUser guildUser = null) => await SendPersonalBest(time, (guildUser ?? Context.User).Id);
+        public async Task SendPersonalBest(TimePeriod time, SocketGuildUser guildUser = null)
+            => await SendPersonalBest(time, (guildUser ?? Context.User).Id);
 
         [Command("score"), Alias("sc", "s"), HideHelp]
-        public async Task SendPersonalBest(ulong userId) => await SendPersonalBest(TimePeriod.all, userId);
+        public async Task SendPersonalBest(ulong userId)
+            => await SendPersonalBest(TimePeriod.all, userId);
 
         [Command("score"), Alias("sc", "s"), HideHelp]
         public async Task SendPersonalBest(TimePeriod time, ulong userId)
@@ -214,16 +211,16 @@ namespace PacManBot.Modules
                     var embed = new EmbedBuilder()
                     {
                         Title = $"🏆 __**Pac-Man Global Leaderboard**__ 🏆",
-                        Description = $"Highest score {time.Humanized()}:\n{scores[i].ToStringSimpleScoreboard(shardedClient, i + 1)}",
+                        Description = $"Highest score {time.Humanized()}:\n{scores[i].ToStringSimpleScoreboard(Context.Client, i + 1)}",
                         Color = Colors.PacManYellow
                     };
 
-                    await ReplyAsync("", false, embed.Build(), Bot.DefaultOptions);
+                    await ReplyAsync(embed);
                     return;
                 }
             }
 
-            await ReplyAsync(time == TimePeriod.all ? "No scores registered for this user!" : "No scores registered during that time!", options: Bot.DefaultOptions);
+            await ReplyAsync(time == TimePeriod.all ? "No scores registered for this user!" : "No scores registered during that time!");
         }
 
 
@@ -241,7 +238,7 @@ namespace PacManBot.Modules
                 embed.AddField(links[i].Split('|')[0], $"[Click here]({links[i].Split('|')[1]} \"{links[i].Split('|')[1]}\")", true);
             }
 
-            await ReplyAsync(message, false, embed.Build(), Bot.DefaultOptions);
+            await ReplyAsync(message, embed);
         }
 
 
@@ -254,7 +251,7 @@ namespace PacManBot.Modules
                 foreach (IEmote input in PacManGame.GameInputs.Keys)
                 {
                     if (game.State != State.Active) break;
-                    await message.AddReactionAsync(input, Bot.DefaultOptions);
+                    await message.AddReactionAsync(input, DefaultOptions);
                 }
 
                 await message.ModifyAsync(game.UpdateMessage, requestOptions); //Restore display to normal

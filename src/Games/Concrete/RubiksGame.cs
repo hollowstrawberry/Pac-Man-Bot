@@ -1,22 +1,27 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
 using Discord;
 using Discord.WebSocket;
 using PacManBot.Services;
 using PacManBot.Extensions;
-using System.Collections.Generic;
 
 namespace PacManBot.Games
 {
     [DataContract]
-    public class RubiksGame : BaseGame, IStoreableGame
+    public class RubiksGame : ChannelGame, IUserGame, IStoreableGame
     {
-        private static readonly Regex TurnPattern = new Regex(@"^([FURLDB]W?|[MESXYZ])'*[0-9]?'*$");
+        // Constants
 
-        private static readonly string[] ColorEmoji = new string[] {
+        public override string Name => "Rubik's Cube";
+        public override TimeSpan Expiry => TimeSpan.FromDays(7);
+        public string FilenameKey => "rubik";
+
+
+        private static readonly string[] ColorEmoji = {
             CustomEmoji.GreenSquare, CustomEmoji.WhiteSquare, CustomEmoji.RedSquare,
             CustomEmoji.OrangeSquare, CustomEmoji.YellowSquare, CustomEmoji.BlueSquare,
         };
@@ -34,6 +39,10 @@ namespace PacManBot.Games
 
         }.AsReadOnly();
 
+
+        // Fields
+
+        private IReadOnlyDictionary<char, Face> allFaces;
         [DataMember] public bool showHelp = true;
         [DataMember] private Face front;
         [DataMember] private Face up;
@@ -42,20 +51,17 @@ namespace PacManBot.Games
         [DataMember] private Face down;
         [DataMember] private Face back;
 
-        public IUserMessage message = null;
-        private IReadOnlyDictionary<char, Face> allFaces;
-
-
-        public override string Name => "Rubik's Cube";
-        public override TimeSpan Expiry => TimeSpan.FromDays(7);
-        public string FilenameKey => "rubik";
+        // Properties
 
         [DataMember] public override int Time { get; set; }
         [DataMember] public override DateTime LastPlayed { get; set; }
-        [DataMember] public override ulong OwnerId { get => UserId[0]; set => UserId = new ulong[] { value }; }
+        [DataMember] public override ulong OwnerId { get => base.OwnerId; protected set => base.OwnerId = value; }
+        [DataMember] public override ulong ChannelId { get => base.ChannelId; set => base.ChannelId = value; }
+        [DataMember] public override ulong MessageId { get => base.MessageId; set => base.MessageId = value; }
 
 
 
+        // Types
 
         enum Sticker
         {
@@ -75,6 +81,7 @@ namespace PacManBot.Games
             Down = 4,
             Left = 6,
         }
+
 
 
         [DataContract]
@@ -153,10 +160,11 @@ namespace PacManBot.Games
 
 
 
+
         private RubiksGame() { }
 
-        public RubiksGame(ulong ownerId, DiscordShardedClient client, LoggingService logger, StorageService storage)
-            : base(new ulong[] { ownerId }, client, logger, storage)
+        public RubiksGame(ulong channelId, ulong ownerId, DiscordShardedClient client, LoggingService logger, StorageService storage)
+            : base(channelId, new ulong[] { ownerId }, client, logger, storage)
         {
             front = new Face(Sticker.Green);
             up    = new Face(Sticker.White);
@@ -168,12 +176,11 @@ namespace PacManBot.Games
             ConnectFaces();
         }
 
-
-
+        
         public bool DoMoves(string input)
         {
             List<string> sequence = input.ToUpper().Split(' ', StringSplitOptions.RemoveEmptyEntries).ToList();
-            if (sequence.Any(x => !TurnPattern.IsMatch(x))) return false;
+            if (sequence.Any(x => !Regex.IsMatch(x, @"^([FURLDB]W?|[MESXYZ])'*[0-9]?'*$"))) return false;
 
             Time += sequence.Count;
             LastPlayed = DateTime.Now;
@@ -212,12 +219,13 @@ namespace PacManBot.Games
 
         public void Scramble()
         {
+            int amount = 40;
             var faces = allFaces.Keys.ToList();
-            var adds = new string[] { "", "'", "2" };
-            var moves = string.Join(" ", Enumerable.Range(0, 40).Select(x => Bot.Random.Choose(faces) + Bot.Random.Choose(adds)));
+            var modifiers = new string[] { "", "'", "2" };
+            var moves = string.Join(" ", Enumerable.Range(0, amount).Select(x => Bot.Random.Choose(faces) + Bot.Random.Choose(modifiers)));
 
+            Time = -amount; // Done before so it saves the game at 0
             if (!DoMoves(moves)) throw new Exception("Invalid generated shuffle sequence");
-            Time = 0;
         }
 
 
@@ -275,7 +283,7 @@ namespace PacManBot.Games
 
 
 
-        public override EmbedBuilder GetEmbed(bool showHelp) => GetEmbed(null);
+        public override EmbedBuilder GetEmbed(bool ignored) => GetEmbed(null);
 
         public EmbedBuilder GetEmbed(IGuild guild)
         {
@@ -320,7 +328,6 @@ namespace PacManBot.Games
 
             return embed;
         }
-
 
 
 

@@ -7,12 +7,6 @@ namespace PacManBot.Extensions
 {
     public static class CollectionExtensions
     {
-        public static T Last<T>(this IList<T> list)
-        {
-            return list[list.Count - 1];
-        }
-
-
         public static T Pop<T>(this IList<T> list)
         {
             var popped = list[list.Count - 1];
@@ -48,7 +42,7 @@ namespace PacManBot.Extensions
         public static void Shift<T>(this IList<T> list, int amount)
         {
             var old = list.ToArray();
-            for (int i = 0; i < list.Count; i++) // Shifts stickers
+            for (int i = 0; i < list.Count; i++)
             {
                 list[i] = old[old.LoopedIndex(i + amount)];
             }
@@ -93,6 +87,12 @@ namespace PacManBot.Extensions
             }
 
             return newArray;
+        }
+
+
+        public static T[] Concatenate<T>(this T[] first, params T[] second)
+        {
+            return first.Concatenate(new T[][] { second });
         }
 
 

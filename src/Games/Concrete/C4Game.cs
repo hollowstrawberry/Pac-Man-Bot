@@ -11,14 +11,14 @@ namespace PacManBot.Games
 {
     public class C4Game : MultiplayerGame, IMessagesGame
     {
+        public override string Name => "Connect Four";
+        public override TimeSpan Expiry => TimeSpan.FromHours(1);
+
         private const int Columns = 7, Rows = 6;
-        private static readonly TimeSpan _expiry = TimeSpan.FromHours(1);
+
 
         private Player[,] board;
         private List<Pos> highlighted;
-
-        public override string Name => "Connect Four";
-        public override TimeSpan Expiry => _expiry;
 
 
         public override void Create(ulong channelId, ulong[] userId, DiscordShardedClient client, LoggingService logger, StorageService storage)
@@ -52,7 +52,7 @@ namespace PacManBot.Games
             int column = int.Parse(StripPrefix(input)) - 1;
             if (!AvailableColumns(board).Contains(column)) return; // Column is full
 
-            PlacePiece(board, column, Turn);
+            DropPiece(board, column, Turn);
 
             Time++;
 
@@ -79,7 +79,8 @@ namespace PacManBot.Games
 
             for (int i = 0; i < 2; i++)
             {
-                description.Append($"{"►".If(i == (int)Turn)}{((Player)i).Circle()} - {User((Player)i).NameandNum().SanitizeMarkdown()}\n");
+                if (i == (int)Turn) description.Append("►");
+                description.Append($"{((Player)i).Circle()} - {User((Player)i).NameandNum().SanitizeMarkdown()}\n");
             }
 
             description.Append("ᅠ\n");
@@ -130,7 +131,7 @@ namespace PacManBot.Games
             foreach (int column in AvailableColumns(board)) // Checks that all possible configurations result in a tie
             {
                 var tempBoard = (Player[,])board.Clone();
-                PlacePiece(tempBoard, column, turn);
+                DropPiece(tempBoard, column, turn);
                 if (FindWinner(tempBoard, turn, time + 1) || !IsTie(tempBoard, turn, time + 1)) return false;
             }
 
@@ -144,21 +145,29 @@ namespace PacManBot.Games
             var moves = new Dictionary<int, int>(); // Column and amount of possible loses by playing in that column
             var avoidMoves = new List<int>(); // Moves where it can lose right away
 
-            foreach (int column in AvailableColumns(board)) // All moves it can make
+            var columns = AvailableColumns(board);
+            if (columns.Count == 1)
             {
-                var tempBoard = (Player[,])board.Clone();
-                PlacePiece(tempBoard, column, Turn);
-
-                if (FindWinner(tempBoard, Turn, Time + 1)) // Can win in 1 move
+                moves.Add(columns[0], 0);
+            }
+            else
+            {
+                foreach (int column in columns) // All moves it can make
                 {
-                    moves = new Dictionary<int, int> { { column, 0 } };
-                    avoidMoves = new List<int>();
-                    break;
+                    var tempBoard = (Player[,])board.Clone();
+                    DropPiece(tempBoard, column, Turn);
+
+                    if (FindWinner(tempBoard, Turn, Time + 1)) // Can win in 1 move
+                    {
+                        moves = new Dictionary<int, int> { { column, 0 } };
+                        avoidMoves = new List<int>();
+                        break;
+                    }
+
+                    moves.Add(column, MayLoseCount(tempBoard, Turn, Turn.OtherPlayer(), Time + 1, depth: 3));
+
+                    if (MayLoseCount(tempBoard, Turn, Turn.OtherPlayer(), Time + 1, depth: 1) > 0) avoidMoves.Add(column); // Can lose right away
                 }
-
-                moves.Add(column, MayLoseCount(tempBoard, Turn, Turn.OtherPlayer(), Time + 1, depth: 3));
-
-                if (MayLoseCount(tempBoard, Turn, Turn.OtherPlayer(), Time + 1, depth: 1) > 0) avoidMoves.Add(column); // Can lose right away
             }
 
             if (avoidMoves.Count < moves.Count)
@@ -173,6 +182,8 @@ namespace PacManBot.Games
         }
 
 
+
+
         private static int MayLoseCount(Player[,] board, Player player, Player turn, int time, int depth)
         {
             int count = 0;
@@ -182,7 +193,7 @@ namespace PacManBot.Games
             foreach (int column in AvailableColumns(board))
             {
                 var tempBoard = (Player[,])board.Clone();
-                PlacePiece(tempBoard, column, turn);
+                DropPiece(tempBoard, column, turn);
 
                 if (turn != player && FindWinner(tempBoard, turn, time + 1)) // Loses to opponent
                 {
@@ -198,7 +209,8 @@ namespace PacManBot.Games
         }
 
 
-        private static void PlacePiece(Player[,] board, int column, Player player)
+
+        private static void DropPiece(Player[,] board, int column, Player player)
         {
             for (int row = Rows - 1; row >= 0; row--)
             {
