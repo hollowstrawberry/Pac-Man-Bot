@@ -11,15 +11,15 @@ using PacManBot.Extensions;
 namespace PacManBot.Commands
 {
     [Name("👾More Games"), Remarks("3")]
-    public partial class MoreGamesModule : PacManBotModuleBase
+    public partial class MoreGamesModule : BaseCustomModule
     {
-        public MoreGamesModule(LoggingService logger, StorageService storage) : base(logger, storage) { }
+        public MoreGamesModule(IServiceProvider services) : base(services) { }
 
 
         [Command("bump"), Alias("b", "refresh", "r", "move"), Priority(2)]
         [Remarks("Move any game to the bottom of the chat")]
-        [Summary("Moves the current game's message in this channel to the bottom of the chat, deleting the old one."
-               + "This is useful if the game got lost in a sea of other messages, or if the game stopped responding")]
+        [Summary("Moves the current game's message in this channel to the bottom of the chat, deleting the old one." +
+                 "This is useful if the game got lost in a sea of other messages, or if the game stopped responding")]
         [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.EmbedLinks |
                                     ChannelPermission.UseExternalEmojis | ChannelPermission.AddReactions)]
         private async Task MoveGame()

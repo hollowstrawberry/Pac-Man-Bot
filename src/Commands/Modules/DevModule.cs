@@ -13,13 +13,13 @@ namespace PacManBot.Commands
 {
     [Name("Developer"), Remarks("0")]
     [RequireOwner, BetterRequireBotPermission(ChannelPermission.AddReactions)]
-    public class DevModule : PacManBotModuleBase
+    public class DevModule : BaseCustomModule
     {
         private readonly ScriptingService scripting;
 
-        public DevModule(LoggingService logger, StorageService storage, ScriptingService scripting) : base(logger, storage)
+        public DevModule(IServiceProvider services) : base(services)
         {
-            this.scripting = scripting;
+            scripting = services.Get<ScriptingService>();
         }
 
 
@@ -217,9 +217,9 @@ namespace PacManBot.Commands
 
         [Command("sudo say"), Alias("sudosay"), HideHelp]
         [Summary("Say anything. Developer-only version.")]
-        public async Task ClearGameMessages([Remainder]string text)
+        public async Task ClearGameMessages([Remainder]string message)
         {
-            await ReplyAsync(text);
+            await GetModule<ModModule>().Say(message);
         }
 
 

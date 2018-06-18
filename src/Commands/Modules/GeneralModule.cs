@@ -7,19 +7,18 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using Discord;
 using Discord.Commands;
-using PacManBot.Services;
 using PacManBot.Extensions;
 
 namespace PacManBot.Commands
 {
     [Name("📁General"), Remarks("1")]
-    public class GeneralModule : PacManBotModuleBase
+    public class GeneralModule : BaseCustomModule
     {
         private readonly CommandService commands;
 
-        public GeneralModule(CommandService commands, LoggingService logger, StorageService storage) : base (logger, storage)
+        public GeneralModule(IServiceProvider services) : base(services)
         {
-            this.commands = commands;
+            commands = services.Get<CommandService>();
         }
 
 

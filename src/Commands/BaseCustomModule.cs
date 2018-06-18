@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using PacManBot.Services;
@@ -6,20 +7,22 @@ using PacManBot.Extensions;
 
 namespace PacManBot.Commands
 {
-    public abstract class PacManBotModuleBase : ModuleBase<ShardedCommandContext>
+    public abstract class BaseCustomModule : ModuleBase<ShardedCommandContext>
     {
         protected static readonly RequestOptions DefaultOptions = Bot.DefaultOptions;
 
+        protected readonly IServiceProvider services;
         protected readonly LoggingService logger;
         protected readonly StorageService storage;
-        
+
         protected string Prefix { get; private set; }
         protected string AbsolutePrefix { get; private set; }
 
-        protected PacManBotModuleBase(LoggingService logger, StorageService storage) : base()
+        protected BaseCustomModule(IServiceProvider services)
         {
-            this.logger = logger;
-            this.storage = storage;
+            this.services = services;
+            logger = services.Get<LoggingService>();
+            storage = services.Get<StorageService>();
         }
 
 
@@ -53,5 +56,11 @@ namespace PacManBot.Commands
 
         protected async Task AutoReactAsync(bool success = true)
             => await Context.Message.AutoReactAsync(success);
+
+
+        protected TModule GetModule<TModule>() where TModule : BaseCustomModule
+        {
+            return ModuleBuilder<TModule>.Create(Context, services);
+        }
     }
 }

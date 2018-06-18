@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Net;
@@ -10,9 +11,9 @@ namespace PacManBot.Commands
 {
     [Name(CustomEmoji.Staff + "Mod"), Remarks("5")]
     [BetterRequireUserPermission(GuildPermission.ManageMessages)]
-    public class ModModule : PacManBotModuleBase
+    public class ModModule : BaseCustomModule
     {
-        public ModModule(LoggingService logger, StorageService storage) : base(logger, storage) { }
+        public ModModule(IServiceProvider services) : base(services) { }
 
 
         string ErrorMessage => $"Please try again or, if the problem persists, contact the bot author using `{Prefix}feedback`.";
@@ -24,25 +25,32 @@ namespace PacManBot.Commands
             => await ReplyAsync(message.SanitizeMentions());
 
 
-        [Command("clear"), Alias("cl"), Remarks("Clear this bot's messages and commands")]
+        [Command("clear"), Alias("clean", "cl"), Remarks("Clear this bot's messages and commands")]
         [Summary("Clears all commands and messages for *this bot only*, from the last [amount] messages, or the last 10 messages by default.\n" +
                  "Only users with the Manage Messages permission can use this command.")]
         [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory)]
         public async Task ClearCommandMessages(int amount = 10)
         {
-            foreach (IMessage message in await Context.Channel.GetMessagesAsync(amount).FlattenAsync())
+            int _ = 0;
+            bool canDelete = Context.BotCan(ChannelPermission.ManageMessages);
+
+            var messages = (await Context.Channel.GetMessagesAsync(amount).FlattenAsync())
+                .Select(x => x as IUserMessage).Where(x => x != null)
+                .Where(x => x.Author.Id == Context.Client.CurrentUser.Id
+                     || canDelete &&
+                        (x.Content.StartsWith(AbsolutePrefix) && !x.Content.StartsWith("<@")
+                        || x.HasMentionPrefix(Context.Client.CurrentUser, ref _)));
+
+            foreach (var message in messages)
             {
                 try
                 {
-                    if (message.Author.Id == Context.Client.CurrentUser.Id
-                        || message.Content.StartsWith(Prefix) && Context.BotCan(ChannelPermission.ManageMessages))
-                    {
-                        await message.DeleteAsync(DefaultOptions);
-                    }
+                    await message.DeleteAsync(DefaultOptions);
                 }
                 catch (Exception e) when (e is HttpException || e is TimeoutException)
                 {
-                    await logger.Log(LogSeverity.Warning, $"Couldn't delete message {message.Id} in {Context.Channel.FullName()}: {e.Message}");
+                    await logger.Log(LogSeverity.Warning,
+                                     $"Couldn't delete message {message.Id} in {Context.Channel.FullName()}: {e.Message}");
                 }
             }
         }
@@ -75,7 +83,8 @@ namespace PacManBot.Commands
 
 
         [Command("togglewaka"), Remarks("Toggle \"waka\" autoresponse from the bot")]
-        [Summary("The bot normally responds every time a message contains purely multiples of \"waka\", unless it's turned off server-wide using this command. Requires the user to be a Moderator.")]
+        [Summary("The bot normally responds every time a message contains purely multiples of \"waka\", " +
+                 "unless it's turned off server-wide using this command. Requires the user to be a Moderator.")]
         public async Task ToggleWakaResponse()
         {
             try

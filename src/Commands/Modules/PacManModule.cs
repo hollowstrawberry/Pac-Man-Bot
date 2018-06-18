@@ -14,9 +14,9 @@ using PacManBot.Extensions;
 namespace PacManBot.Commands
 {
     [Name("🎮Pac-Man"), Remarks("2")]
-    public class PacManModule : PacManBotModuleBase
+    public class PacManModule : BaseCustomModule
     {
-        public PacManModule(LoggingService logger, StorageService storage) : base(logger, storage) { }
+        public PacManModule(IServiceProvider services) : base(services) { }
 
 
         private const int MaxDisplayedScores = 20;
@@ -240,6 +240,8 @@ namespace PacManBot.Commands
 
             await ReplyAsync(message, embed);
         }
+
+
 
 
         public static async Task AddControls(PacManGame game, IUserMessage message)
