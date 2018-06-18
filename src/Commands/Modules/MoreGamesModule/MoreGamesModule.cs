@@ -8,7 +8,7 @@ using PacManBot.Games;
 using PacManBot.Services;
 using PacManBot.Extensions;
 
-namespace PacManBot.Modules
+namespace PacManBot.Commands
 {
     [Name("👾More Games"), Remarks("3")]
     public partial class MoreGamesModule : PacManBotModuleBase

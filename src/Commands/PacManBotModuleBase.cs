@@ -4,7 +4,7 @@ using Discord.Commands;
 using PacManBot.Services;
 using PacManBot.Extensions;
 
-namespace PacManBot.Modules
+namespace PacManBot.Commands
 {
     public abstract class PacManBotModuleBase : ModuleBase<ShardedCommandContext>
     {

@@ -29,7 +29,7 @@ namespace PacManBot.Services
                     "System", "System.IO", "System.Linq", "System.Diagnostics", "System.Threading.Tasks",
                     "System.Collections.Generic", "System.Text.RegularExpressions",
                     "Discord", "Discord.Rest", "Discord.Commands", "Discord.WebSocket",
-                    "PacManBot", "PacManBot.Games", "PacManBot.Utils", "PacManBot.Modules", "PacManBot.Services", "PacManBot.Extensions"
+                    "PacManBot", "PacManBot.Games", "PacManBot.Utils", "PacManBot.Commands", "PacManBot.Services", "PacManBot.Extensions"
                 )
                 .WithReferences(
                     typeof(ShardedCommandContext).Assembly,

@@ -4,7 +4,7 @@ using Discord;
 using Discord.Commands;
 using PacManBot.Extensions;
 
-namespace PacManBot.Modules
+namespace PacManBot.Commands
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
     public class HideHelpAttribute : Attribute

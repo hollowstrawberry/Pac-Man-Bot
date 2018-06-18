@@ -10,7 +10,7 @@ using Discord.Commands;
 using PacManBot.Services;
 using PacManBot.Extensions;
 
-namespace PacManBot.Modules
+namespace PacManBot.Commands
 {
     [Name("📁General"), Remarks("1")]
     public class GeneralModule : PacManBotModuleBase

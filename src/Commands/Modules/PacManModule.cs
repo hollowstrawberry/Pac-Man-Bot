@@ -11,7 +11,7 @@ using PacManBot.Utils;
 using PacManBot.Services;
 using PacManBot.Extensions;
 
-namespace PacManBot.Modules
+namespace PacManBot.Commands
 {
     [Name("🎮Pac-Man"), Remarks("2")]
     public class PacManModule : PacManBotModuleBase

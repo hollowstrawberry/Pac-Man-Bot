@@ -9,7 +9,7 @@ using Discord.Net;
 using PacManBot.Games;
 using PacManBot.Extensions;
 
-namespace PacManBot.Modules
+namespace PacManBot.Commands
 {
     [Name("Developer"), Remarks("0")]
     [RequireOwner, BetterRequireBotPermission(ChannelPermission.AddReactions)]
