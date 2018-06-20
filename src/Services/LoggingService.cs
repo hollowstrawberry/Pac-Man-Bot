@@ -48,13 +48,13 @@ namespace PacManBot.Services
             {
                 try
                 {
-                    File.AppendAllTextAsync(LogFile, $"{logText}\n"); //Write the log text to a file
+                    File.AppendAllTextAsync(LogFile, $"{logText}\n"); // Write the log text to a file
                     break;
                 }
                 catch (IOException) when (i < WriteAttempts) { Task.Delay(2); }
             }
 
-            return Console.Out.WriteLineAsync(logText); //Write the log text to the console
+            return Console.Out.WriteLineAsync(logText); // Write the log text to the console
         }
         public Task Log(LogSeverity severity, string message) => Log(new LogMessage(severity, LogSource.Bot, message));
         public Task Log(LogSeverity severity, string source, string message) => Log(new LogMessage(severity, source, message));

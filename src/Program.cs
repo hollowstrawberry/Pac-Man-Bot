@@ -9,8 +9,8 @@ using Discord.WebSocket;
 using PacManBot.Services;
 
 
-//Made by Samrux for fun
-//GitHub repo: https://github.com/Samrux/Pac-Man-Bot
+// Made by Samrux for fun
+// GitHub repo: https://github.com/Samrux/Pac-Man-Bot
 
 namespace PacManBot
 {

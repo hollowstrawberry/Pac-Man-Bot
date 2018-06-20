@@ -49,7 +49,7 @@ namespace PacManBot
             logger = services.Get<LoggingService>();
             storage = services.Get<StorageService>();
 
-            //Events
+            // Events
             client.ShardReady += OnShardReady;
             client.JoinedGuild += OnJoinedGuild;
             client.LeftGuild += OnLeftGuild;

@@ -15,11 +15,11 @@ namespace PacManBot.Commands
     [Name("📁General"), Remarks("1")]
     public class GeneralModule : BaseCustomModule
     {
-        private readonly CommandService commands;
+        public CommandService Commands { get; }
 
         public GeneralModule(IServiceProvider services) : base(services)
         {
-            commands = services.Get<CommandService>();
+            Commands = services.Get<CommandService>();
         }
 
 
@@ -29,8 +29,8 @@ namespace PacManBot.Commands
         [BetterRequireBotPermission(ChannelPermission.EmbedLinks)]
         public async Task SendBotInfo()
         {
-            string description = storage.BotContent["about"].Replace("{prefix}", Prefix);
-            var fields = storage.BotContent["aboutfields"].Split('\n').Where(s => s.Contains("|")).ToArray();
+            string description = Storage.BotContent["about"].Replace("{prefix}", Prefix);
+            var fields = Storage.BotContent["aboutfields"].Split('\n').Where(s => s.Contains("|")).ToArray();
 
             var embed = new EmbedBuilder
             {
@@ -39,7 +39,7 @@ namespace PacManBot.Commands
                 Color = Colors.PacManYellow,
             };
             embed.AddField("Total guilds", $"{Context.Client.Guilds.Count}", true);
-            embed.AddField("Total active games", $"{storage.Games.Count}", true);
+            embed.AddField("Total active games", $"{Storage.Games.Count}", true);
             embed.AddField("Latency", $"{Context.Client.Latency}ms", true);
 
             foreach (var field in fields.Select(x => x.Split('|')))
@@ -56,7 +56,7 @@ namespace PacManBot.Commands
         [BetterRequireBotPermission(ChannelPermission.EmbedLinks)]
         public async Task SendCommandHelp([Remainder]string commandName)
         {
-            CommandInfo command = commands.Commands.FirstOrDefault(c => c.Aliases.Contains(commandName));
+            CommandInfo command = Commands.Commands.FirstOrDefault(c => c.Aliases.Contains(commandName));
             if (command == null)
             {
                 await ReplyAsync($"Can't find a command with that name. Use `{Prefix}help` for a list of commands.");
@@ -117,7 +117,7 @@ namespace PacManBot.Commands
                 Color = Colors.PacManYellow
             };
 
-            foreach (var module in commands.Modules.OrderBy(m => m.Remarks))
+            foreach (var module in Commands.Modules.OrderBy(m => m.Remarks))
             {
                 var moduleText = new StringBuilder();
 
@@ -156,14 +156,14 @@ namespace PacManBot.Commands
             stopwatch.Stop();
 
             string content = $"{CustomEmoji.PacMan} Waka in `{(int)stopwatch.ElapsedMilliseconds}`ms **|** " +
-                             $"{Context.Client.Guilds.Count} total guilds, {storage.Games.Count} total active games";
+                             $"{Context.Client.Guilds.Count} total guilds, {Storage.Games.Count} total active games";
 
             if (Context.Client.Shards.Count > 1)
             {
                 var shard = Context.Client.GetShardFor(Context.Guild);
 
                 int shardGames = 0;
-                foreach (var game in storage.Games)
+                foreach (var game in Storage.Games)
                 {
                     if (game.Guild != null && shard.Guilds.Contains(game.Guild) || game.Guild == null && shard.ShardId == 0)
                     {
@@ -179,13 +179,13 @@ namespace PacManBot.Commands
         }
 
 
-        [Command("prefix"), Remarks("Show the current prefix for this server")]
+        [Command("prefix"), HideHelp]
         [Summary("Shows this bot's prefix for this server, even though you can already see it here.\n" +
                  "You can use the `{prefix}setprefix [prefix]` command to set a prefix if you're an Administrator.")]
         public async Task GetServerPrefix()
         {
             await ReplyAsync(Context.Guild == null ? "You can use commands without any prefix in a DM with me!"
-                : $"Prefix for this server is set to `{Prefix}`{" (the default)".If(Prefix == storage.DefaultPrefix)}. " +
+                : $"Prefix for this server is set to `{Prefix}`{" (the default)".If(Prefix == Storage.DefaultPrefix)}. " +
                   $"It can be changed using the command `{Prefix}setprefix`");
         }
 
@@ -201,11 +201,12 @@ namespace PacManBot.Commands
                 Title = "Bot invite link",
                 Color = Colors.PacManYellow,
                 ThumbnailUrl = Context.Client.CurrentUser.GetAvatarUrl(),
+                Url = Storage.BotContent["shortinvite"],
                 Fields = new List<EmbedFieldBuilder>
                 {
                     new EmbedFieldBuilder
                     {
-                        Name = $"➡ <{storage.BotContent["shortinvite"]}>",
+                        Name = $"➡ <{Storage.BotContent["shortinvite"]}>",
                         Value = "Thanks for inviting Pac-Man Bot!",
                     },
                 },
@@ -222,9 +223,9 @@ namespace PacManBot.Commands
         {
             var embed = new EmbedBuilder()
             {
-                Title = $"{CustomEmoji.Staff} Pac-Man Bot Support server",
+                Title = "Pac-Man Bot Support server",
                 Url = "https://discord.gg/hGHnfda",
-                Description = "We'll be happy to see you there!",
+                Description = $"{CustomEmoji.Staff} We'll be happy to see you there!",
                 Color = Colors.PacManYellow,
                 ThumbnailUrl = Context.Client.GetGuild(409803292219277313).IconUrl,
             };
@@ -240,9 +241,9 @@ namespace PacManBot.Commands
         {
             var embed = new EmbedBuilder()
             {
-                Title = $"{CustomEmoji.GitHub} Pac-Man Bot GitHub repository",
+                Title = "Pac-Man Bot GitHub repository",
                 Url = "https://github.com/Samrux/Pac-Man-Bot",
-                Description = "Contributions welcome!",
+                Description = $"{CustomEmoji.GitHub} Contributions welcome!",
                 Color = Colors.PacManYellow,
                 ThumbnailUrl = "https://cdn.discordapp.com/attachments/412090039686660097/455914771179503633/GitHub.png",
             };
@@ -261,11 +262,11 @@ namespace PacManBot.Commands
                 File.AppendAllText(BotFile.FeedbackLog, $"[{Context.User.FullName()}] {message}\n\n");
                 await ReplyAsync($"{CustomEmoji.Check} Message sent. Thank you!");
                 string content = $"```diff\n+Feedback received: {Context.User.FullName()}```\n{message}".Truncate(2000);
-                await storage.AppInfo.Owner.SendMessageAsync(content, options: DefaultOptions);
+                await Storage.AppInfo.Owner.SendMessageAsync(content, options: DefaultOptions);
             }
             catch (Exception e)
             {
-                await logger.Log(LogSeverity.Error, $"{e}");
+                await Logger.Log(LogSeverity.Error, $"{e}");
                 await ReplyAsync("Oops, I didn't catch that, please try again. Maybe the developer screwed up");
             }
         }
@@ -298,7 +299,8 @@ namespace PacManBot.Commands
         [BetterRequireBotPermission(ChannelPermission.AddReactions)]
         public async Task SpamDance(int amount = 5)
         {
-            foreach (SocketUserMessage message in Context.Channel.GetCachedMessages(amount).Where(x => x is SocketUserMessage))
+            var messages = await Context.Channel.GetMessagesAsync(Math.Min(amount, 10)).FlattenAsync();
+            foreach (SocketUserMessage message in messages.Where(x => x is SocketUserMessage))
             {
                 await message.AddReactionAsync(CustomEmoji.ERapidBlobDance, DefaultOptions);
             }
@@ -316,6 +318,6 @@ namespace PacManBot.Commands
         [Command("command"), ExampleUsage("help play"), HideHelp]
         [Summary("This is not a real command. If you want to see help for a specific command, please do `{prefix}help [command name]`, " +
                  "where \"[command name]\" is the name of a command.")]
-        public async Task DoNothing() => await logger.Log(LogSeverity.Info, "Someone tried to do \"<command\"");
+        public async Task DoNothing() => await Logger.Log(LogSeverity.Info, "Someone tried to do \"<command\"");
     }
 }

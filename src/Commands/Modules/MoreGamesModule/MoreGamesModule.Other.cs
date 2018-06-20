@@ -19,12 +19,12 @@ namespace PacManBot.Commands
                  "\n**{prefix}rubik showguide** - Toggle the help displayed below the cube. For pros.")]
         public async Task RubiksCube([Remainder] string input = "")
         {
-            var cube = storage.GetUserGame<RubiksGame>(Context.User.Id);
+            var cube = Storage.GetUserGame<RubiksGame>(Context.User.Id);
 
             if (cube == null)
             {
-                cube = new RubiksGame(Context.Channel.Id, Context.User.Id, Context.Client, logger, storage);
-                storage.AddGame(cube);
+                cube = new RubiksGame(Context.Channel.Id, Context.User.Id, Context.Client, Logger, Storage);
+                Storage.AddGame(cube);
             }
 
             bool removeOld = false;
@@ -59,8 +59,8 @@ namespace PacManBot.Commands
 
 
                 case "reset":
-                    storage.DeleteGame(cube);
-                    await Context.Message.AutoReactAsync();
+                    Storage.DeleteGame(cube);
+                    await AutoReactAsync();
                     return;
 
 

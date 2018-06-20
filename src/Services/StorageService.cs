@@ -33,18 +33,20 @@ namespace PacManBot.Services
         private readonly List<ScoreEntry> scoreEntries;
         private readonly List<IChannelGame> games;
         private readonly List<IUserGame> userGames;
+        private readonly List<ulong> noAutoresponse;
 
-        public string WakaExclude { get; private set; }
         public IReadOnlyList<IChannelGame> Games { get; }
         public IReadOnlyList<IUserGame> UserGames { get;  }
+        public IReadOnlyList<ulong> NoAutoresponse { get; }
 
         public string DefaultPrefix { get; }
+        public RestApplication AppInfo { get; private set; }
+
+        public IConfigurationRoot BotContent { get; private set; }
         public ulong[] NoPrefixChannels { get; private set; }
         public ulong[] BannedChannels { get; private set; }
         public string[] PettingMessages { get; private set; }
         public string[] SuperPettingMessages { get; private set; }
-        public IConfigurationRoot BotContent { get; private set; }
-        public RestApplication AppInfo { get; private set; }
 
 
         public StorageService(DiscordShardedClient client, LoggingService logger, BotConfig config)
@@ -58,9 +60,11 @@ namespace PacManBot.Services
             scoreEntries = new List<ScoreEntry>();
             games = new List<IChannelGame>();
             userGames = new List<IUserGame>();
+            noAutoresponse = new List<ulong>();
 
             Games = games.AsReadOnly();
             UserGames = userGames.AsReadOnly();
+            NoAutoresponse = noAutoresponse.AsReadOnly();
 
             LoadBotContent();
             LoadWakaExclude();
@@ -75,19 +79,15 @@ namespace PacManBot.Services
 
 
         public string GetPrefix(ulong serverId)
-        {
-            return prefixes.ContainsKey(serverId) ? prefixes[serverId] : DefaultPrefix;
-        }
+            => prefixes.ContainsKey(serverId) ? prefixes[serverId] : DefaultPrefix;
+
 
         public string GetPrefix(IGuild guild = null)
-        {
-            return guild == null ? DefaultPrefix : GetPrefix(guild.Id);
-        }
+            => GetPrefix(guild?.Id ?? 0);
+
 
         public string GetPrefixOrEmpty(IGuild guild)
-        {
-            return guild == null ? "" : GetPrefix(guild.Id);
-        }
+            => guild == null ? "" : GetPrefix(guild.Id);
 
 
         public void SetPrefix(ulong guildId, string prefix)
@@ -116,35 +116,19 @@ namespace PacManBot.Services
         }
 
 
-        public bool ToggleWaka(ulong guildId)
-        {
-            bool nowaka = WakaExclude.Contains($"{guildId}");
-            if (nowaka)
-            {
-                WakaExclude = WakaExclude.Replace($"{guildId} ", "");
-                File.WriteAllText(BotFile.WakaExclude, WakaExclude);
-            }
-            else
-            {
-                WakaExclude += $"{guildId} ";
-                File.AppendAllText(BotFile.WakaExclude, $"{guildId} ");
-            }
-
-            return nowaka;
-        }
-
-
 
 
         public IChannelGame GetChannelGame(ulong channelId)
             => games.FirstOrDefault(g => g.ChannelId == channelId);
 
-        public TGame GetChannelGame<TGame>(ulong channelId) where TGame : IChannelGame
-            => (TGame)games.FirstOrDefault(g => g.ChannelId == channelId && g is TGame);
-
 
         public IUserGame GetUserGame(ulong userId)
             => userGames.FirstOrDefault(g => g.OwnerId == userId);
+
+
+        public TGame GetChannelGame<TGame>(ulong channelId) where TGame : IChannelGame
+            => (TGame)games.FirstOrDefault(g => g.ChannelId == channelId && g is TGame);
+
 
         public TGame GetUserGame<TGame>(ulong userId) where TGame : IUserGame
             => (TGame)userGames.FirstOrDefault(g => g.OwnerId == userId && g is TGame);
@@ -192,7 +176,7 @@ namespace PacManBot.Services
 
             int index = scoreEntries.BinarySearch(entry);
             if (index < 0) index = ~index;
-            scoreEntries.Insert(index, entry); //Adds entry in sorted position
+            scoreEntries.Insert(index, entry); // Adds entry in sorted position
         }
 
 
@@ -207,25 +191,60 @@ namespace PacManBot.Services
 
 
 
+        public bool ToggleAutoresponse(ulong guildId)
+        {
+            bool wasExcluded = noAutoresponse.Contains(guildId);
+            if (wasExcluded)
+            {
+                noAutoresponse.Remove(guildId);
+                File.WriteAllText(BotFile.WakaExclude, File.ReadAllText(BotFile.WakaExclude).Replace($"{guildId} ", ""));
+            }
+            else
+            {
+                noAutoresponse.Add(guildId);
+                File.AppendAllText(BotFile.WakaExclude, $"{guildId} ");
+            }
+
+            return wasExcluded;
+        }
+
+
+
+
+        // Load
+
         public void LoadBotContent()
         {
             if (BotContent == null)
             {
                 BotContent = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile(BotFile.Contents).Build();
             }
-            else BotContent.Reload();
+            else
+            {
+                BotContent.Reload();
+            }
 
-            PettingMessages = BotContent["petting"].Split('\n', StringSplitOptions.RemoveEmptyEntries);
-            SuperPettingMessages = BotContent["superpetting"].Split('\n', StringSplitOptions.RemoveEmptyEntries);
             NoPrefixChannels = BotContent["noprefix"].Split(',').Select(ulong.Parse).ToArray();
             BannedChannels = BotContent["banned"].Split(',').Select(ulong.Parse).ToArray();
+            PettingMessages = BotContent["petting"].Split('\n', StringSplitOptions.RemoveEmptyEntries);
+            SuperPettingMessages = BotContent["superpetting"].Split('\n', StringSplitOptions.RemoveEmptyEntries);
+
             logger.LoadLogExclude(this);
         }
 
 
         private void LoadWakaExclude()
         {
-            WakaExclude = File.Exists(BotFile.WakaExclude) ? File.ReadAllText(BotFile.WakaExclude) : "";
+            try
+            {
+                noAutoresponse.AddRange(File.ReadAllText(BotFile.WakaExclude)
+                                        .Split(' ', StringSplitOptions.RemoveEmptyEntries)
+                                        .Select(ulong.Parse));
+            }
+            catch (FormatException)
+            {
+                logger.Log(LogSeverity.Error, LogSource.Storage, $"Invalid {BotFile.WakaExclude} file");
+            }
         }
 
 
@@ -252,7 +271,7 @@ namespace PacManBot.Services
             }
 
             logger.Log(LogSeverity.Info, LogSource.Storage,
-                       $"Loaded {prefixes.Count} custom prefixes from {BotFile.Prefixes}{$" with {fail} errors".If(fail > 0)}.");
+                       $"Loaded {prefixes.Count} custom prefixes from {BotFile.Prefixes}{$" with {fail} errors".If(fail > 0)}");
         }
 
 

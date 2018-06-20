@@ -2,32 +2,45 @@
 using System.Linq;
 using System.Reflection;
 using Discord.Commands;
+using ParameterInfo = System.Reflection.ParameterInfo; // Disambiguation
 
 namespace PacManBot.Commands
 {
-    // This class is a small utility I made for fun
-    // I don't think it has any valid use cases,
-    // But it'd be very useful if you ever wanted to
-    // call a command from a different module.
+    // This class is a small utility I made for fun.
+    // It's very useful if you ever want to call a command's method from a different module.
+    // The only valid use case so far in my opinion is from within an evaluated script.
+
+    // The first time the class is accessed for the given generic types,
+    // the static constructor is executed and stores the necessary info to create that module type in the future.
 
     public static class ModuleBuilder<TModule, TContext>
         where TModule : ModuleBase<TContext>
         where TContext : class, ICommandContext
     {
-        public static Type ModuleType { get; }
-        public static ConstructorInfo Constructor { get; }
-        public static System.Reflection.ParameterInfo[] ConstructorParameters { get; }
-        public static PropertyInfo Context { get; }
-        public static MethodInfo BeforeExecute { get; }
+        private static Type ModuleType { get; }
+        private static ConstructorInfo Constructor { get; set; }
+        private static ParameterInfo[] ConstructorParameters { get; set; }
+        private static PropertyInfo Context { get; }
+        private static MethodInfo BeforeExecute { get; }
+
 
         static ModuleBuilder()
         {
             ModuleType = typeof(TModule);
-            Constructor = ModuleType.GetConstructors().First();
-            ConstructorParameters = Constructor.GetParameters();
+            SetConstructor(ModuleType.GetConstructors().First());
             Context = ModuleType.GetProperty("Context").DeclaringType.GetProperty("Context");
             BeforeExecute = ModuleType.GetRuntimeMethods().First(x => x.Name == "BeforeExecute");
         }
+
+
+        static void SetConstructor(ConstructorInfo constructor)
+        {
+            if (constructor.DeclaringType != ModuleType) throw new ArgumentException("Constructor does not match the generic type");
+
+            Constructor = constructor;
+            ConstructorParameters = Constructor.GetParameters();
+        }
+
 
 
         public static TModule Create(TContext context, IServiceProvider provider, bool beforeExecute = true)
@@ -39,15 +52,6 @@ namespace PacManBot.Commands
             if (beforeExecute) BeforeExecute.Invoke(module, new object[] { null });
 
             return module;
-        }
-    }
-
-
-    public static class ModuleBuilder<TModule> where TModule : BaseCustomModule
-    {
-        public static TModule Create(ShardedCommandContext context, IServiceProvider services)
-        {
-            return ModuleBuilder<TModule, ShardedCommandContext>.Create(context, services);
         }
     }
 }

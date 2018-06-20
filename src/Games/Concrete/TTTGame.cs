@@ -132,7 +132,7 @@ namespace PacManBot.Games
 
         public override void BotInput()
         {
-            //Win or block or random
+            // Win or block or random
             Pos target = TryCompleteLine(Turn) ?? TryCompleteLine(Turn.OtherPlayer()) ?? Bot.Random.Choose(EmptyCells(board));
             Input($"{1 + target.y * board.X() + target.x}");
         }

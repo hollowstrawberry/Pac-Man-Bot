@@ -33,7 +33,7 @@ namespace PacManBot.Commands
         {
             if (!Context.BotCan(ChannelPermission.SendMessages)) return;
 
-            if (storage.Games.Any(game => Context.Channel.Id == game.ChannelId))
+            if (Storage.Games.Any(game => Context.Channel.Id == game.ChannelId))
             {
                 await ReplyAsync($"There is already a game in this channel!\nYou can use `{Prefix}bump` to bring it to the bottom, " +
                                  $"Or `{Prefix}cancel` to delete it.");
@@ -53,23 +53,23 @@ namespace PacManBot.Commands
             PacManGame newGame;
             try
             {
-                newGame = new PacManGame(Context.Channel.Id, Context.User.Id, customMap, mobile, Context.Client, logger, storage);
+                newGame = new PacManGame(Context.Channel.Id, Context.User.Id, customMap, mobile, Context.Client, Logger, Storage);
             }
             catch (InvalidMapException e) when (customMap != null)
             {
-                await logger.Log(LogSeverity.Debug, LogSource.Game, $"Failed to create custom game: {e.Message}");
+                await Logger.Log(LogSeverity.Debug, LogSource.Game, $"Failed to create custom game: {e.Message}");
                 await ReplyAsync($"The provided map is invalid: {e.Message}.\nUse the `{Prefix}custom` command for more info.");
                 return;
             }
             catch (Exception e)
             {
-                await logger.Log(LogSeverity.Error, LogSource.Game, $"{e}");
+                await Logger.Log(LogSeverity.Error, LogSource.Game, $"{e}");
                 await ReplyAsync("There was an error starting the game. " +
                                  $"Please try again or contact the author of the bot using `{Prefix}feedback`");
                 return;
             }
 
-            storage.AddGame(newGame);
+            Storage.AddGame(newGame);
 
             var gameMessage = await ReplyAsync(preMessage + newGame.GetContent(showHelp: false) + "```diff\n+Starting game```");
             newGame.MessageId = gameMessage.Id;
@@ -84,7 +84,7 @@ namespace PacManBot.Commands
                  "for the current game in this channel")]
         public async Task ChangeGameDisplay()
         {
-            var game = storage.GetChannelGame<PacManGame>(Context.Channel.Id);
+            var game = Storage.GetChannelGame<PacManGame>(Context.Channel.Id);
             if (game == null)
             {
                 await ReplyAsync("There is no active Pac-Man game in this channel!");
@@ -101,7 +101,7 @@ namespace PacManBot.Commands
             catch (OperationCanceledException) { }
             catch (Exception e)
             {
-                if (!(e is HttpException || e is TimeoutException)) await logger.Log(LogSeverity.Error, $"{e}");
+                if (!(e is HttpException || e is TimeoutException)) await Logger.Log(LogSeverity.Error, $"{e}");
                 await AutoReactAsync(false);
                 return;
             }
@@ -131,7 +131,7 @@ namespace PacManBot.Commands
             }
             if (max == null) 
             {
-                if (min <= MaxDisplayedScores) //Takes a single number as the max if less than the limit
+                if (min <= MaxDisplayedScores) // Takes a single number as the max if less than the limit
                 {
                     max = min;
                     min = 1;
@@ -139,7 +139,7 @@ namespace PacManBot.Commands
                 else max = min + 9;
             }
 
-            var scores = storage.GetScores(period);
+            var scores = Storage.GetScores(period);
 
             if (scores.Count < 1)
             {
@@ -201,7 +201,7 @@ namespace PacManBot.Commands
         [Command("score"), Alias("sc", "s"), HideHelp]
         public async Task SendPersonalBest(TimePeriod time, ulong userId)
         {
-            var scores = storage.GetScores(time);
+            var scores = Storage.GetScores(time);
             for (int i = 0; i < scores.Count; i++)
             {
                 if (scores[i].userId == userId) // The list is always kept sorted so the first match is the highest score
@@ -227,8 +227,8 @@ namespace PacManBot.Commands
         [BetterRequireBotPermission(ChannelPermission.EmbedLinks)]
         public async Task SayCustomMapHelp()
         {
-            string message = storage.BotContent["customhelp"].Replace("{prefix}", storage.GetPrefixOrEmpty(Context.Guild));
-            string[] links = storage.BotContent["customlinks"].Split('\n').Where(s => s.Contains("|")).ToArray();
+            string message = Storage.BotContent["customhelp"].Replace("{prefix}", Storage.GetPrefixOrEmpty(Context.Guild));
+            string[] links = Storage.BotContent["customlinks"].Split('\n').Where(s => s.Contains("|")).ToArray();
 
             var embed = new EmbedBuilder { Color = Colors.PacManYellow };
             foreach (var link in links.Select(x => x.Split('|')))
@@ -254,7 +254,7 @@ namespace PacManBot.Commands
                     await message.AddReactionAsync(input, DefaultOptions);
                 }
 
-                await message.ModifyAsync(game.UpdateMessage, requestOptions); //Restore display to normal
+                await message.ModifyAsync(game.UpdateMessage, requestOptions); // Restore display to normal
             }
             catch (Exception e) when (e is HttpException || e is TimeoutException || e is OperationCanceledException) { } // Ignore
         }

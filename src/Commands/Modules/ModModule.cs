@@ -15,7 +15,7 @@ namespace PacManBot.Commands
         public ModModule(IServiceProvider services) : base(services) { }
 
 
-        string ErrorMessage => $"Please try again or, if the problem persists, contact the bot author using `{Prefix}feedback`.";
+        string ContactMessage => $"Please try again or, if the problem persists, contact the bot author using `{Prefix}feedback`.";
 
 
         [Command("say"), Remarks("Make the bot say anything")]
@@ -36,9 +36,9 @@ namespace PacManBot.Commands
             var messages = (await Context.Channel.GetMessagesAsync(amount).FlattenAsync())
                 .Select(x => x as IUserMessage).Where(x => x != null)
                 .Where(x => x.Author.Id == Context.Client.CurrentUser.Id
-                     || canDelete &&
-                        (x.Content.StartsWith(AbsolutePrefix) && !x.Content.StartsWith("<@")
-                        || x.HasMentionPrefix(Context.Client.CurrentUser, ref _)));
+                       || canDelete &&
+                          (x.Content.StartsWith(AbsolutePrefix) && !x.Content.StartsWith("<@")
+                           || x.HasMentionPrefix(Context.Client.CurrentUser, ref _)));
 
             foreach (var message in messages)
             {
@@ -48,7 +48,7 @@ namespace PacManBot.Commands
                 }
                 catch (Exception e) when (e is HttpException || e is TimeoutException)
                 {
-                    await logger.Log(LogSeverity.Warning,
+                    await Logger.Log(LogSeverity.Warning,
                                      $"Couldn't delete message {message.Id} in {Context.Channel.FullName()}: {e.Message}");
                 }
             }
@@ -66,35 +66,41 @@ namespace PacManBot.Commands
                 await ReplyAsync($"{CustomEmoji.Cross} The prefix can't contain markdown special characters: *_~\\`\\\\");
                 return;
             }
+            if (prefix.Length > 32)
+            {
+                await ReplyAsync($"{CustomEmoji.Cross} Prefix can't be bigger than 32 characters");
+                return;
+            }
 
             try
             {
-                storage.SetPrefix(Context.Guild.Id, prefix);
+                Storage.SetPrefix(Context.Guild.Id, prefix);
                 await ReplyAsync($"{CustomEmoji.Check} Prefix for this server has been successfully set to `{prefix}`");
-                await logger.Log(LogSeverity.Info, $"Prefix for server {Context.Guild.Id} set to {prefix}");
+                await Logger.Log(LogSeverity.Info, $"Prefix for server {Context.Guild.Id} set to {prefix}");
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                await logger.Log(LogSeverity.Error, $"{e}");
-                await ReplyAsync($"{CustomEmoji.Cross} There was a problem setting the prefix. {ErrorMessage}");
+                await ReplyAsync($"{CustomEmoji.Cross} There was a problem setting the prefix. {ContactMessage}");
+                throw;
             }
         }
 
 
         [Command("togglewaka"), Remarks("Toggle \"waka\" autoresponse from the bot")]
         [Summary("The bot normally responds every time a message contains purely multiples of \"waka\", " +
-                 "unless it's turned off server-wide using this command. Requires the user to be a Moderator.")]
+                 "unless it's turned off server-wide using this command. Requires the user to have the Manage Messages permission.")]
         public async Task ToggleWakaResponse()
         {
             try
             {
-                bool nowaka = storage.ToggleWaka(Context.Guild.Id);
-                await ReplyAsync($"{CustomEmoji.Check} \"Waka\" responses turned **{(nowaka ? "ON" : "OFF")}** in this server.");
+                bool waka = Storage.ToggleAutoresponse(Context.Guild.Id);
+                await ReplyAsync($"{CustomEmoji.Check} Autoresponses turned **{(waka ? "ON" : "OFF")}** in this server.");
+                await Logger.Log(LogSeverity.Info, $"Autoresponses turned {(waka ? "on" : "off")} in {Context.Guild.Id}");
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                await logger.Log(LogSeverity.Error, $"{e}");
-                await ReplyAsync($"{CustomEmoji.Cross} Oops, something went wrong. {ErrorMessage}");
+                await ReplyAsync($"{CustomEmoji.Cross} Oops, something went wrong. {ContactMessage}");
+                throw;
             }
         }
     }

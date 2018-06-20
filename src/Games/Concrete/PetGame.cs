@@ -183,7 +183,7 @@ namespace PacManBot.Games
 
             public void DoChecks(PetGame pet)
             {
-                if (lastNeglected == default) lastNeglected = pet.bornDate; //old pets
+                if (lastNeglected == default) lastNeglected = pet.bornDate;
                 else if (pet.TotalStats == 0) lastNeglected = DateTime.Now;
                 double days = (DateTime.Now - lastNeglected).TotalDays;
 

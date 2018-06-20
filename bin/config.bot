@@ -3,7 +3,7 @@
 
   "shardCount": 1,
   "clientLogLevel": "Verbose",
-  "commandLogLevel": "Verbose",
+  "commandLogLevel": "Info",
   "messageCacheSize": 100,
 
   "discordToken": "",

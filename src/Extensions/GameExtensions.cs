@@ -196,7 +196,7 @@ namespace PacManBot.Extensions
                 line = new List<Pos>();
             }
 
-            for (int d = length - 1; d <= board.Y() + board.X() - length; d++) //Top-to-left diagonals
+            for (int d = length - 1; d <= board.Y() + board.X() - length; d++) // Top-to-left diagonals
             {
                 for (int x, y = 0; y <= d; y++)
                 {
@@ -208,7 +208,7 @@ namespace PacManBot.Extensions
                 line = new List<Pos>();
             }
 
-            for (int d = length - 1; d <= board.Y() + board.X() - length; d++) //Top-to-right diagonals
+            for (int d = length - 1; d <= board.Y() + board.X() - length; d++) // Top-to-right diagonals
             {
                 for (int x, y = 0; y <= d; y++)
                 {

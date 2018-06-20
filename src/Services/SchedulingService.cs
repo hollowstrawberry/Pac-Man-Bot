@@ -31,7 +31,7 @@ namespace PacManBot.Services
             timers.Append(checkConnection);
             timers.Append(deleteOldGames);
 
-            //Events
+            // Events
             client.ShardConnected += OnShardConnected;
         }
 

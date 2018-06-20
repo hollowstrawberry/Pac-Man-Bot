@@ -51,13 +51,13 @@ namespace PacManBot.Commands
             }
             else
             {
-                var pet = storage.GetUserGame<PetGame>(Context.User.Id);
+                var pet = Storage.GetUserGame<PetGame>(Context.User.Id);
                 if (pet == null)
                 {
                     if (commandName == "")
                     {
-                        pet = new PetGame("", Context.User.Id, Context.Client, logger, storage);
-                        storage.AddGame(pet);
+                        pet = new PetGame("", Context.User.Id, Context.Client, Logger, Storage);
+                        Storage.AddGame(pet);
                     }
                     else
                     {
@@ -90,7 +90,7 @@ namespace PacManBot.Commands
                 if (other != null)
                 {
                     user = other;
-                    pet = storage.GetUserGame<PetGame>(user.Id);
+                    pet = Storage.GetUserGame<PetGame>(user.Id);
                     if (pet == null)
                     {
                         await ReplyAsync("This person doesn't have a pet :(");
@@ -114,7 +114,7 @@ namespace PacManBot.Commands
                 if (other != null)
                 {
                     user = other;
-                    pet = storage.GetUserGame<PetGame>(user.Id);
+                    pet = Storage.GetUserGame<PetGame>(user.Id);
                     if (pet == null)
                     {
                         await ReplyAsync("This person doesn't have a pet :(");
@@ -163,7 +163,7 @@ namespace PacManBot.Commands
             if (pet.energy.Ceiling() == PetGame.MaxStat && !pet.asleep)
             {
                 pet.happiness = Math.Max(0, pet.happiness - 1);
-                storage.StoreGame(pet);
+                Storage.StoreGame(pet);
                 await ReplyAsync($"{CustomEmoji.Cross} Your pet is not tired! (-1 happiness)");
             }
             else
@@ -274,7 +274,7 @@ namespace PacManBot.Commands
                 return;
             }
 
-            pet = storage.GetUserGame<PetGame>(user.Id);
+            pet = Storage.GetUserGame<PetGame>(user.Id);
 
             if (pet == null) await ReplyAsync("This person doesn't have a pet :(");
             else await ReplyAsync(pet.GetContent(), pet.GetEmbed(user));
@@ -286,7 +286,7 @@ namespace PacManBot.Commands
         {
             if (string.IsNullOrWhiteSpace(pet.PetName) || args?.SanitizeMarkdown().SanitizeMentions() == pet.PetName)
             {
-                storage.DeleteGame(pet);
+                Storage.DeleteGame(pet);
                 await ReplyAsync($"Goodbye {(string.IsNullOrWhiteSpace(pet.PetName) ? pet.Name : pet.PetName)}!");
             }
             else

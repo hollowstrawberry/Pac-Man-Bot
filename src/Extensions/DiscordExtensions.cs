@@ -12,11 +12,17 @@ namespace PacManBot.Extensions
         public const ChannelPermission CorrectDmPermissions = (ChannelPermission)37080128;
 
 
-        // Misc
+        // Discord objects
 
         public static bool AllShardsConnected(this DiscordShardedClient client)
         {
             return client.Shards.All(shard => shard.ConnectionState == ConnectionState.Connected);
+        }
+
+
+        public static ISocketMessageChannel GetMessageChannel(this BaseSocketClient client, ulong id)
+        {
+            return client.GetChannel(id) as ISocketMessageChannel;
         }
 
 
@@ -27,21 +33,39 @@ namespace PacManBot.Extensions
         }
 
 
+        public static async Task<IUserMessage> GetUserMessageAsync(this ISocketMessageChannel channel, ulong id)
+        {
+            return await channel.GetMessageAsync(id, options: Bot.DefaultOptions) as IUserMessage;
+        }
+
+
         public static async Task AutoReactAsync(this IUserMessage message, bool success = true)
         {
             await message.AddReactionAsync(success ? CustomEmoji.ECheck : CustomEmoji.ECross, Bot.DefaultOptions);
         }
 
 
-        public static string SanitizeMentions(this string text)
+        public static string NameAndGuild(this IChannel channel)
         {
-            return text.Replace("@", "@​"); // Zero-width space
+            return $"{(channel is IGuildChannel gchannel ? $"{gchannel.Guild.Name}/" : "")}{channel.Name}";
         }
 
 
-        public static string SanitizeMarkdown(this string text)
+        public static string FullName(this IChannel channel)
         {
-            return Regex.Replace(text, @"([\\*_`~])", "\\$1"); // Backslash in front
+            return $"{channel.NameAndGuild()} ({channel.Id})";
+        }
+
+
+        public static string NameandNum(this IUser user)
+        {
+            return $"{user.Username}#{user.Discriminator}";
+        }
+
+
+        public static string FullName(this IUser user)
+        {
+            return $"{user.NameandNum()} ({user.Id})";
         }
 
 
@@ -80,35 +104,19 @@ namespace PacManBot.Extensions
 
 
 
-        // Names
+        // String utilities
 
-        public static string NameAndGuild(this IChannel channel)
+        public static string SanitizeMentions(this string text)
         {
-            return $"{(channel is IGuildChannel gchannel ? $"{gchannel.Guild.Name}/" : "")}{channel.Name}";
+            return text.Replace("@", "@​"); // Zero-width space
         }
 
 
-        public static string FullName(this IChannel channel)
+        public static string SanitizeMarkdown(this string text)
         {
-            return $"{channel.NameAndGuild()} ({channel.Id})";
+            return Regex.Replace(text, @"([\\*_`~])", "\\$1"); // Backslash in front
         }
 
-
-        public static string NameandNum(this IUser user)
-        {
-            return $"{user.Username}#{user.Discriminator}";
-        }
-
-
-        public static string FullName(this IUser user)
-        {
-            return $"{user.NameandNum()} ({user.Id})";
-        }
-
-
-
-
-        // Emotes
 
         public static Emote ToEmote(this string text)
         {

@@ -31,7 +31,7 @@ namespace PacManBot.Services
             storage = provider.Get<StorageService>();
             logger = provider.Get<LoggingService>();
 
-            //Events
+            // Events
             client.MessageReceived += OnMessageReceived;
             client.ReactionAdded += OnReactionAdded;
             client.ReactionRemoved += OnReactionRemoved;
@@ -64,7 +64,7 @@ namespace PacManBot.Services
 
         private async Task OnMessageReceivedAsync(SocketMessage genericMessage)
         {
-            try //I have to wrap discarded async methods in a try block so that exceptions don't go silent
+            try // I have to wrap discarded async methods in a try block so that exceptions don't go silent
             {
                 if (storage.BannedChannels.Contains(genericMessage.Channel.Id)) // After a little bot-breaking incident
                 {
@@ -89,7 +89,7 @@ namespace PacManBot.Services
         private async Task OnReactionChangedAsync(Cacheable<IUserMessage, ulong> messageData, ISocketMessageChannel channel, SocketReaction reaction)
         {
             try
-            { //Maybe someone will one day make a bot that plays this bot
+            {   // Maybe someone will one day make a bot that plays this bot
                 if (client.CurrentUser != null && reaction.UserId != client.CurrentUser.Id)
                 {
                     await ReactionGameInputAsync(messageData, channel, reaction);
@@ -140,7 +140,7 @@ namespace PacManBot.Services
 
         private async Task<bool> AutoresponseAsync(SocketUserMessage message)
         {
-            if (!(message.Channel is SocketGuildChannel gChannel) || !storage.WakaExclude.Contains($"{gChannel.Guild.Id}")
+            if (!(message.Channel is SocketGuildChannel gChannel) || !storage.NoAutoresponse.Contains(gChannel.Guild.Id)
                 || storage.AppInfo?.Owner.Id == message.Author.Id)
             {
                 if (waka.IsMatch(message.Content))

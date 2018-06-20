@@ -61,7 +61,7 @@ namespace PacManBot.Commands
                 var currentPerms = (GuildPermission)user.GuildPermissions.RawValue;
 
                 return currentPerms.HasFlag(guildPerms)
-                    ? PreconditionResult.FromSuccess()
+                    ? PreconditionResult.FromSuccess()                                 //This gets the perms that are missing
                     : PreconditionResult.FromError($"{name} requires guild permission {(guildPerms ^ currentPerms) & guildPerms}");
             }
             else

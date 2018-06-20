@@ -5,6 +5,7 @@ using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Discord;
 using Discord.Rest;
 using Discord.Commands;
+using PacManBot.Commands;
 using PacManBot.Extensions;
 
 namespace PacManBot.Services
@@ -13,7 +14,6 @@ namespace PacManBot.Services
     {
         private readonly IServiceProvider provider;
         private readonly LoggingService logger;
-
         private readonly ScriptOptions scriptOptions;
 
 
@@ -38,47 +38,26 @@ namespace PacManBot.Services
         }
 
 
-        public async Task EvalAsync(string code, ShardedCommandContext context)
+        public async Task EvalAsync(string code, BaseCustomModule module)
         {
             try
             {
                 code = code.Trim(' ', '`', '\n');
-                if (code.StartsWith("cs\n")) code = code.Remove(0, 3); //C# code block in Discord
+                if (code.StartsWith("cs\n")) code = code.Remove(0, 3); // C# code block in Discord
 
-                if (!code.Contains(";")) //Treats a single expression as a message to send in chat
+                if (!code.Contains(";")) // Treats a single expression as a message to send in chat
                 {
                     code = "await ReplyAsync($\"{" + code + "}\");";
                 }
 
-                string postCode = "\nTask ReplyAsync(string message = null, bool isTTS = false, Embed embed = null, RequestOptions options = null) " +
-                                  "=> Context.Channel.SendMessageAsync(message, isTTS, embed, options);";
-
-                await CSharpScript.EvaluateAsync(code + postCode, scriptOptions, new ScriptArgs(provider, context));
-                await logger.Log(LogSeverity.Info, $"Successfully executed code in channel {context.Channel.FullName()}:\n{code}");
+                await CSharpScript.EvaluateAsync(code, scriptOptions, module);
+                await logger.Log(LogSeverity.Info, $"Successfully executed code in channel {module.Context.Channel.FullName()}:\n{code}");
             }
             finally
             {
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
                 GC.Collect();
-            }
-        }
-
-
-
-        private class ScriptArgs : EventArgs
-        {
-            private readonly ShardedCommandContext Context;
-            private readonly IServiceProvider provider;
-            private readonly LoggingService logger;
-            private readonly StorageService storage;
-
-            public ScriptArgs(IServiceProvider provider, ShardedCommandContext context)
-            {
-                this.provider = provider;
-                Context = context;
-                logger = provider.Get<LoggingService>();
-                storage = provider.Get<StorageService>();
             }
         }
     }
