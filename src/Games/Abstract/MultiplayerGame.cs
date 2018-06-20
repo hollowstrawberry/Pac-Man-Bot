@@ -27,37 +27,33 @@ namespace PacManBot.Games
 
         // AI flavor text
 
-        public static readonly string[] StartTexts = new string[]
-        {
+        public static readonly string[] StartTexts = {
             "I'll give it a go", "Let's do this", "Dare to defy the gamemaster?", "May the best win", "I was getting bored!",
             "Maybe you should play with a real person instead", "In need of friends to play with?"
         };
-        public static readonly string[] GameTexts = new string[]
-        {
+        public static readonly string[] GameTexts = {
             "🤔", "🔣", "🤖", CustomEmoji.Thinkxel, CustomEmoji.PacMan, "Hmm...", "Nice move.", "Take this!", "Huh.", "Aha!",
             "Come on now", "All according to plan", "I think I'm winning this one", "Beep boop", "Boop?", "Interesting...",
             "Recalculating...", "ERROR: YourSkills not found", "I wish to be a real bot", "That's all you got?",
             "Let's see what happens", "I don't even know what I'm doing", "This is a good time for you to quit", "Curious."
         };
-        public static readonly string[] WinTexts = new string[]
-        {
+        public static readonly string[] WinTexts = {
             "👍", CustomEmoji.PacMan, CustomEmoji.RapidBlobDance, "Rekt", "Better luck next time", "Beep!", ":)", "Nice",
             "Muahaha", "You weren't even trying"
         };
-        public static readonly string[] NotWinTexts = new string[]
-        {
+        public static readonly string[] NotWinTexts = {
             "Oof", "No u", "Foiled again!", "Boo...", "Ack", "Good job!", "gg", "You're good at this", "I let you win, of course"
         };
 
 
 
-
-        protected MultiplayerGame() : base() { }
-
+        // Methods
 
         public static TGame New<TGame>(ulong channelId, ulong[] userId,
             DiscordShardedClient client, LoggingService logger, StorageService storage) where TGame : MultiplayerGame
         {
+            if (typeof(TGame).IsAbstract) throw new ArgumentException("Cannot instatiate abstract class");
+
             var game = (TGame)Activator.CreateInstance(typeof(TGame), true);
             game.Create(channelId, userId, client, logger, storage);
             return game;
@@ -131,25 +127,24 @@ namespace PacManBot.Games
             if (turn == null) turn = Turn;
 
             if (turn == Player.Tie) return Player.Tie;
-            else if (turn > 0 && (int)turn < UserId.Length) return (Player)((int)turn - 1);
-            else return (Player)(UserId.Length - 1);
+            if (turn > 0 && (int)turn < UserId.Length) return (Player)((int)turn - 1);
+            return (Player)(UserId.Length - 1);
         }
 
 
         protected string StripPrefix(string value)
         {
             string prefix = storage.GetPrefix(Guild);
-            if (value.StartsWith(prefix)) return value.Substring(prefix.Length);
-            else return value;
+            return value.StartsWith(prefix) ? value.Substring(prefix.Length) : value;
         }
 
 
         protected string EmbedTitle()
         {
-            return (Winner == Player.None) ? $"{Turn.ToStringColor()} Player's turn" :
-                Winner == Player.Tie ? "It's a tie!" :
-                UserId[0] != UserId[1] ? $"{Turn} is the winner!" :
-                UserId[0] == client.CurrentUser.Id ? "I win!" : "A winner is you!"; // These two are for laughs
+            return Winner == Player.None ? $"{Turn.ToStringColor()} Player's turn" :
+                   Winner == Player.Tie ? "It's a tie!" :
+                   UserId[0] != UserId[1] ? $"{Turn} is the winner!" :
+                   UserId[0] == client.CurrentUser.Id ? "I win!" : "A winner is you!"; // These two are for laughs
         }
     }
 }

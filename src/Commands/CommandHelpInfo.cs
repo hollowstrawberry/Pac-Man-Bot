@@ -5,11 +5,11 @@ namespace PacManBot.Commands
 {
     public class CommandHelpInfo
     {
-        public bool Hidden { get; private set; }
-        public string Remarks { get; private set; }
-        public string Summary { get; private set; }
-        public string Parameters { get; private set; }
-        public string ExampleUsage { get; private set; }
+        public bool Hidden { get; }
+        public string Remarks { get; }
+        public string Summary { get; }
+        public string Parameters { get; }
+        public string ExampleUsage { get; }
 
 
         public CommandHelpInfo(CommandInfo command)
@@ -22,9 +22,18 @@ namespace PacManBot.Commands
 
             foreach (var attribute in command.Attributes)
             {
-                if (attribute is HideHelpAttribute) Hidden = true;
-                else if (attribute is ParametersAttribute parameters) Parameters = parameters.Value;
-                else if (attribute is ExampleUsageAttribute usage) ExampleUsage = "{prefix}" + usage.Value.Replace("\n", "\n{prefix}");
+                switch (attribute)
+                {
+                    case HideHelpAttribute _:
+                        Hidden = true;
+                        break;
+                    case ParametersAttribute parameters:
+                        Parameters = parameters.Value;
+                        break;
+                    case ExampleUsageAttribute usage:
+                        ExampleUsage = "{prefix}" + usage.Value.Replace("\n", "\n{prefix}");
+                        break;
+                }
             }
 
             if (Parameters == null)

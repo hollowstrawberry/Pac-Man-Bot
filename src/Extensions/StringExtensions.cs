@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Text;
 
@@ -37,7 +38,7 @@ namespace PacManBot.Extensions
         {
             if (amount == 1) return value;
 
-            StringBuilder sb = new StringBuilder(amount * value.Length);
+            var sb = new StringBuilder(amount * value.Length);
             for (int i = 0; i < amount; i++) sb.Append(value);
             return sb.ToString();
         }
@@ -68,20 +69,12 @@ namespace PacManBot.Extensions
 
         public static bool ContainsAny(this string text, params string[] values)
         {
-            foreach (string value in values)
-            {
-                if (text.Contains(value)) return true;
-            }
-            return false;
+            return values.Any(text.Contains);
         }
 
         public static bool ContainsAny(this string text, params char[] values)
         {
-            foreach (char value in values)
-            {
-                if (text.Contains(value.ToString())) return true;
-            }
-            return false;
+            return values.Select(x => x.ToString()).Any(text.Contains);
         }
 
 

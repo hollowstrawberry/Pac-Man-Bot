@@ -5,11 +5,11 @@ namespace PacManBot
 {
     public enum TimePeriod
     {
-        all = -1,
-        month = 24 * 30,
-        week = 24 * 7,
-        day = 24,
-        a = all, m = month, w = week, d = day //To be parsed from a string
+        All = -1,
+        Month = 24 * 30,
+        Week = 24 * 7,
+        Day = 24,
+        A = All, M = Month, W = Week, D = Day //To be parsed from a string
     }
 
 
@@ -116,7 +116,7 @@ namespace PacManBot
             GoldIcon = "<:gold:453368658303909888>";
 
 
-        public static readonly string[] NumberCircle = new string[]
+        public static readonly string[] NumberCircle =
         {
             "<:0circle:445021371127562280>",
             "<:1circle:445021372356231186>",
@@ -130,7 +130,7 @@ namespace PacManBot
             "<:9circle:445021373245554699>",
         };
 
-        public static readonly string[] LetterCircle = new string[]
+        public static readonly string[] LetterCircle =
         {
             "<:circleA:446196337831313409>",
             "<:circleB:446196339660029952>",

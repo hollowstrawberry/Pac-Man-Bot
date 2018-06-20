@@ -5,7 +5,7 @@ namespace PacManBot.Utils
 {
     public class ThreadSafeRandom : Random
     {
-        private RNGCryptoServiceProvider crypto;
+        private readonly RNGCryptoServiceProvider crypto;
 
         public ThreadSafeRandom()
         {
@@ -50,7 +50,7 @@ namespace PacManBot.Utils
 
         public override double NextDouble()
         {
-            return BitConverter.ToUInt64(NextBytes(8), 0) / (1 << 11) / (Double)(1UL << 53); // Voodoo magic
+            return BitConverter.ToUInt64(NextBytes(8), 0) / (1 << 11) / (double)(1UL << 53); // Voodoo magic
         }
 
 

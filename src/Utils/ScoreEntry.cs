@@ -39,7 +39,7 @@ namespace PacManBot.Utils
         public override string ToString()
         {
             return $"{state} {score} {turns} {userId} " +
-                   $"\"{username.Replace('"', '“')}\" \"{date.ToString("o")}\" \"{channel.Replace('"', '“')}\"";
+                   $"\"{username.Replace('"', '“')}\" \"{date:o}\" \"{channel.Replace('"', '“')}\"";
         }
 
 

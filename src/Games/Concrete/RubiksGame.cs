@@ -27,15 +27,15 @@ namespace PacManBot.Games
         };
 
         private static readonly IReadOnlyDictionary<string, string[]> ComplexMoves = new Dictionary<string, string[]> {
-            { "M", new string[]{ "R", "L'", "X'", } },
-            { "E", new string[]{ "U", "D'", "Y'", } },
-            { "S", new string[]{ "F", "B'", "Z'", } },
-            { "RW", new string[]{ "L", "X" } },
-            { "UW", new string[]{ "D", "Y" } },
-            { "FW", new string[]{ "B", "Z" } },
-            { "LW", new string[]{ "R", "X'" } },
-            { "DW", new string[]{ "U", "Y'" } },
-            { "BW", new string[]{ "F", "Z'" } },
+            { "M", new[] { "R", "L'", "X'", } },
+            { "E", new[] { "U", "D'", "Y'", } },
+            { "S", new[] { "F", "B'", "Z'", } },
+            { "RW", new[] { "L", "X" } },
+            { "UW", new[] { "D", "Y" } },
+            { "FW", new[] { "B", "Z" } },
+            { "LW", new[] { "R", "X'" } },
+            { "DW", new[] { "U", "Y'" } },
+            { "BW", new[] { "F", "Z'" } },
 
         }.AsReadOnly();
 
@@ -63,7 +63,7 @@ namespace PacManBot.Games
 
         // Types
 
-        enum Sticker
+        private enum Sticker
         {
             Green,
             White,
@@ -74,7 +74,7 @@ namespace PacManBot.Games
         }
 
 
-        enum Edge // Start index of the 3 stickers connected at that edge
+        private enum Edge // Start index of the 3 stickers connected at that edge
         {
             Up = 0,
             Right = 2,
@@ -85,7 +85,7 @@ namespace PacManBot.Games
 
 
         [DataContract]
-        class Face
+        private class Face
         {
             [DataMember] public Sticker center;
             [DataMember] public Sticker[] stickers;
@@ -109,14 +109,14 @@ namespace PacManBot.Games
 
                 stickers.Shift(-2 * amount);
 
-                Sticker[] sideStickers = new Sticker[12];
-                Face[] adjacentFaces = connections.Keys.ToArray();
+                var sideStickers = new Sticker[12];
+                var adjacentFaces = connections.Keys.ToArray();
 
                 for (int i = 0; i < adjacentFaces.Length; i++)
                 {
                     for (int j = 0; j < 3; j++)
                     {
-                        var face = adjacentFaces[i];
+                        Face face = adjacentFaces[i];
                         int index = stickers.LoopedIndex((int)connections[face] + j);
                         sideStickers[i*3 + j] = face.stickers[index];
                     }
@@ -128,7 +128,7 @@ namespace PacManBot.Games
                 {
                     for (int j = 0; j < 3; j++)
                     {
-                        var face = adjacentFaces[i];
+                        Face face = adjacentFaces[i];
                         int index = stickers.LoopedIndex((int)connections[face] + j);
                         face.stickers[index] = sideStickers[i*3 + j];
                     }
@@ -164,7 +164,7 @@ namespace PacManBot.Games
         private RubiksGame() { }
 
         public RubiksGame(ulong channelId, ulong ownerId, DiscordShardedClient client, LoggingService logger, StorageService storage)
-            : base(channelId, new ulong[] { ownerId }, client, logger, storage)
+            : base(channelId, new[] { ownerId }, client, logger, storage)
         {
             front = new Face(Sticker.Green);
             up    = new Face(Sticker.White);
@@ -219,9 +219,9 @@ namespace PacManBot.Games
 
         public void Scramble()
         {
-            int amount = 40;
+            const int amount = 40;
             var faces = allFaces.Keys.ToList();
-            var modifiers = new string[] { "", "'", "2" };
+            var modifiers = new[] { "", "'", "2" };
             var moves = string.Join(" ", Enumerable.Range(0, amount).Select(x => Bot.Random.Choose(faces) + Bot.Random.Choose(modifiers)));
 
             Time = -amount; // Done before so it saves the game at 0
@@ -242,21 +242,21 @@ namespace PacManBot.Games
             switch (letter)
             {
                 case 'X':
-                    axis = new Face[] { front, down, back, up };
+                    axis = new[] { front, down, back, up };
                     back.stickers.Shift(4);
                     clockwise = left;
                     counterClockwise = right;
                     break;
 
                 case 'Y':
-                    axis = new Face[] { front, right, back, left };
+                    axis = new[] { front, right, back, left };
                     clockwise = down;
                     counterClockwise = up;
                     break;
 
                 case 'Z':
-                    axis = new Face[] { up, left, down, right };
-                    foreach (var face in axis) face.stickers.Shift(-2 * amount);
+                    axis = new[] { up, left, down, right };
+                    foreach (Face face in axis) face.stickers.Shift(-2 * amount);
                     clockwise = back;
                     counterClockwise = front;
                     break;
@@ -283,18 +283,18 @@ namespace PacManBot.Games
 
 
 
-        public override EmbedBuilder GetEmbed(bool ignored) => GetEmbed(null);
+        public override EmbedBuilder GetEmbed(bool _ = true) => GetEmbed(null);
 
         public EmbedBuilder GetEmbed(IGuild guild)
         {
             var description = new StringBuilder();
 
-            var rowsFront = front.Rows();
-            var rowsUp = up.Rows();
-            var rowsRight = right.Rows();
-            var rowsLeft = left.Rows();
-            var rowsDown = down.Rows();
-            var rowsBack = back.Rows();
+            string[] rowsFront = front.Rows();
+            string[] rowsUp = up.Rows();
+            string[] rowsRight = right.Rows();
+            string[] rowsLeft = left.Rows();
+            string[] rowsDown = down.Rows();
+            string[] rowsBack = back.Rows();
             string emptyRow = CustomEmoji.Empty.Multiply(3);
 
             for (int i = 0; i < 3; i++)

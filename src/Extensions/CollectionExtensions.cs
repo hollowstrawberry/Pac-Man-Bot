@@ -76,7 +76,7 @@ namespace PacManBot.Extensions
 
         public static T[] Concatenate<T>(this T[] first, params T[][] others)
         {
-            T[] newArray = new T[first.Length + others.Select(x => x.Length).Sum()];
+            var newArray = new T[first.Length + others.Select(x => x.Length).Sum()];
             Array.Copy(first, 0, newArray, 0, first.Length);
 
             int startIndex = first.Length;
@@ -92,7 +92,7 @@ namespace PacManBot.Extensions
 
         public static T[] Concatenate<T>(this T[] first, params T[] second)
         {
-            return first.Concatenate(new T[][] { second });
+            return first.Concatenate(new[] { second });
         }
 
 

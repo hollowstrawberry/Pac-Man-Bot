@@ -12,10 +12,10 @@ namespace PacManBot.Commands
 {
     public partial class MoreGamesModule
     {
-        [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
+        [AttributeUsage(AttributeTargets.Method)]
         class PetCommandAttribute : Attribute
         {
-            public string[] Names { get; private set; }
+            public string[] Names { get; }
             public PetCommandAttribute(params string[] names)
             {
                 Names = names;
@@ -201,7 +201,8 @@ namespace PacManBot.Commands
         [PetCommand("image", "url")]
         public async Task PetImage(PetGame pet, string args)
         {
-            string url = args != null ? args : Context.Message.Attachments.FirstOrDefault()?.Url;
+            string url = args ?? Context.Message.Attachments.FirstOrDefault()?.Url;
+
             if (url == null && pet.PetImageUrl == null)
             {
                 await ReplyAsync($"{CustomEmoji.Cross} Please specify an image! You can use a link or upload your own.");
@@ -236,7 +237,7 @@ namespace PacManBot.Commands
         public async Task PetPet(PetGame pet, string args)
         {
             var now = DateTime.Now;
-            if ((now - pet.petTimerStart) > TimeSpan.FromMinutes(1))
+            if (now - pet.petTimerStart > TimeSpan.FromMinutes(1))
             {
                 pet.petTimerStart = now;
                 pet.timesPetSinceTimerStart = 0;

@@ -19,12 +19,12 @@ namespace PacManBot
         static async Task Main()
         {
             // Check files
-            foreach (string requiredFile in new string[] { BotFile.Config, BotFile.Contents })
+            foreach (string requiredFile in new[] { BotFile.Config, BotFile.Contents })
             {
                 if (!File.Exists(requiredFile)) throw new Exception($"Missing required file {requiredFile}: Bot can't run");
             }
             
-            foreach (string secondaryFile in new string[] { BotFile.Prefixes, BotFile.Scoreboard, BotFile.WakaExclude })
+            foreach (string secondaryFile in new[] { BotFile.Prefixes, BotFile.Scoreboard, BotFile.WakaExclude })
             {
                 if (!File.Exists(secondaryFile))
                 {

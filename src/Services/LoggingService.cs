@@ -10,23 +10,17 @@ namespace PacManBot.Services
 {
     public class LoggingService
     {
-        private readonly DiscordShardedClient client;
-        private readonly CommandService commands;
-
-        private string[] logExclude = null;
+        private string[] logExclude;
 
         private const int WriteAttempts = 1000;
         public const string LogDirectory = "logs/";
-        public string LogFile => $"{LogDirectory}{DateTime.Now.ToString("yyyy-MM-dd")}.txt";
+        public string LogFile => $"{LogDirectory}{DateTime.Now:yyyy-MM-dd}.txt";
 
 
         public LoggingService(DiscordShardedClient client, CommandService commands)
         {
-            this.client = client;
-            this.commands = commands;
-
-            this.client.Log += Log;
-            this.commands.Log += Log;
+            client.Log += Log;
+            commands.Log += Log;
         }
 
 
@@ -47,7 +41,7 @@ namespace PacManBot.Services
                 return Task.CompletedTask;
             }
 
-            string logText = $"{DateTime.Now.ToString("hh:mm:ss")} [{message.Severity}] " +
+            string logText = $"{DateTime.Now:hh:mm:ss} [{message.Severity}] " +
                              $"{message.Source.Replace("Shard #", "Gateway")}: {message.Message}{message.Exception}";
 
             for (int i = 0; i <= WriteAttempts; ++i)

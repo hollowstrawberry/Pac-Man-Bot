@@ -6,16 +6,16 @@ using PacManBot.Extensions;
 
 namespace PacManBot.Commands
 {
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Method)]
     public class HideHelpAttribute : Attribute
     {
     }
 
 
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Method)]
     public class ParametersAttribute : Attribute
     {
-        public string Value { get; private set; }
+        public string Value { get; }
         public ParametersAttribute(string value)
         {
             Value = value;
@@ -23,10 +23,10 @@ namespace PacManBot.Commands
     }
 
 
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Method)]
     public class ExampleUsageAttribute : Attribute
     {
-        public string Value { get; private set; }
+        public string Value { get; }
         public ExampleUsageAttribute(string value)
         {
             Value = value;
@@ -38,16 +38,16 @@ namespace PacManBot.Commands
     // The original preconditions just... didn't work?
     public abstract class BasePermissionAttribute : PreconditionAttribute
     {
-        protected GuildPermission? guildPerms = null;
-        protected ChannelPermission? channelPerms = null;
+        protected GuildPermission? guildPerms;
+        protected ChannelPermission? channelPerms;
 
 
-        public BasePermissionAttribute(ChannelPermission channelPerms)
+        protected BasePermissionAttribute(ChannelPermission channelPerms)
         {
             this.channelPerms = channelPerms;
         }
 
-        public BasePermissionAttribute(GuildPermission guildPerms)
+        protected BasePermissionAttribute(GuildPermission guildPerms)
         {
             this.guildPerms = guildPerms;
         }
@@ -60,16 +60,19 @@ namespace PacManBot.Commands
                 if (user == null) return PreconditionResult.FromError($"{name} requires guild permissions but is not in a guild");
                 var currentPerms = (GuildPermission)user.GuildPermissions.RawValue;
 
-                if (currentPerms.HasFlag(guildPerms)) return PreconditionResult.FromSuccess();
-                else return PreconditionResult.FromError($"{name} requires guild permission {(guildPerms ^ currentPerms) & guildPerms}");
+                return currentPerms.HasFlag(guildPerms)
+                    ? PreconditionResult.FromSuccess()
+                    : PreconditionResult.FromError($"{name} requires guild permission {(guildPerms ^ currentPerms) & guildPerms}");
             }
             else
             {
-                var currentPerms = user == null ? DiscordExtensions.CorrectDmPermissions // They got these wrong in the library
-                                                : (ChannelPermission)user.GetPermissions(context.Channel as IGuildChannel).RawValue;
+                var currentPerms = user == null
+                    ? DiscordExtensions.CorrectDmPermissions // They got these wrong in the library
+                    : (ChannelPermission)user.GetPermissions(context.Channel as IGuildChannel).RawValue;
 
-                if (currentPerms.HasFlag(channelPerms)) return PreconditionResult.FromSuccess();
-                else return PreconditionResult.FromError($"{name} requires guild permission {(channelPerms ^ currentPerms) & channelPerms}");
+                return currentPerms.HasFlag(channelPerms)
+                    ? PreconditionResult.FromSuccess()
+                    : PreconditionResult.FromError($"{name} requires guild permission {(channelPerms ^ currentPerms) & channelPerms}");
             }
         }
     }

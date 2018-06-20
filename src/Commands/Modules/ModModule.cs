@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Net;
 using Discord.Commands;
-using PacManBot.Services;
 using PacManBot.Extensions;
 
 namespace PacManBot.Commands
@@ -26,8 +25,8 @@ namespace PacManBot.Commands
 
 
         [Command("clear"), Alias("clean", "cl"), Remarks("Clear this bot's messages and commands")]
-        [Summary("Clears all commands and messages for *this bot only*, from the last [amount] messages, or the last 10 messages by default.\n" +
-                 "Only users with the Manage Messages permission can use this command.")]
+        [Summary("Clears all commands and messages for *this bot only*, from the last [amount] messages, " +
+                 "or the last 10 messages by default.\nOnly users with the Manage Messages permission can use this command.")]
         [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory)]
         public async Task ClearCommandMessages(int amount = 10)
         {

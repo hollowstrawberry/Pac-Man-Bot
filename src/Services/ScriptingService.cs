@@ -13,7 +13,6 @@ namespace PacManBot.Services
     {
         private readonly IServiceProvider provider;
         private readonly LoggingService logger;
-        private readonly StorageService storage;
 
         private readonly ScriptOptions scriptOptions;
 
@@ -22,11 +21,10 @@ namespace PacManBot.Services
         {
             this.provider = provider;
             logger = provider.Get<LoggingService>();
-            storage = provider.Get<StorageService>();
 
             scriptOptions = ScriptOptions.Default
                 .WithImports(
-                    "System", "System.IO", "System.Linq", "System.Diagnostics", "System.Threading.Tasks",
+                    "System", "System.IO", "System.Text", "System.Linq", "System.Diagnostics", "System.Threading.Tasks",
                     "System.Collections.Generic", "System.Text.RegularExpressions",
                     "Discord", "Discord.Rest", "Discord.Commands", "Discord.WebSocket",
                     "PacManBot", "PacManBot.Games", "PacManBot.Utils", "PacManBot.Commands", "PacManBot.Services", "PacManBot.Extensions"
@@ -55,7 +53,7 @@ namespace PacManBot.Services
                 string postCode = "\nTask ReplyAsync(string message = null, bool isTTS = false, Embed embed = null, RequestOptions options = null) " +
                                   "=> Context.Channel.SendMessageAsync(message, isTTS, embed, options);";
 
-                await CSharpScript.EvaluateAsync(code + postCode, scriptOptions, new ScriptArgs(context, provider, logger, storage));
+                await CSharpScript.EvaluateAsync(code + postCode, scriptOptions, new ScriptArgs(provider, context));
                 await logger.Log(LogSeverity.Info, $"Successfully executed code in channel {context.Channel.FullName()}:\n{code}");
             }
             finally
@@ -65,23 +63,23 @@ namespace PacManBot.Services
                 GC.Collect();
             }
         }
-    }
 
 
 
-    public class ScriptArgs : EventArgs
-    {
-        public readonly ShardedCommandContext Context;
-        public readonly IServiceProvider provider;
-        public readonly LoggingService logger;
-        public readonly StorageService storage;
-
-        public ScriptArgs(ShardedCommandContext Context, IServiceProvider provider, LoggingService logger, StorageService storage)
+        private class ScriptArgs : EventArgs
         {
-            this.Context = Context;
-            this.provider = provider;
-            this.logger = logger;
-            this.storage = storage;
+            private readonly ShardedCommandContext Context;
+            private readonly IServiceProvider provider;
+            private readonly LoggingService logger;
+            private readonly StorageService storage;
+
+            public ScriptArgs(IServiceProvider provider, ShardedCommandContext context)
+            {
+                this.provider = provider;
+                Context = context;
+                logger = provider.Get<LoggingService>();
+                storage = provider.Get<StorageService>();
+            }
         }
     }
 }

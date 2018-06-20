@@ -28,13 +28,13 @@ namespace PacManBot.Commands
 
             var playerIds = players.Select(x => x.Id).ToArray();
 
-            TGame game = MultiplayerGame.New<TGame>(Context.Channel.Id, playerIds, Context.Client, logger, storage);
+            var game = MultiplayerGame.New<TGame>(Context.Channel.Id, playerIds, Context.Client, logger, storage);
 
             while (!game.AllBots && game.BotTurn) game.BotInput();
 
             storage.AddGame(game);
 
-            IUserMessage gameMessage = await ReplyAsync(game.GetContent(), game.GetEmbed());
+            var gameMessage = await ReplyAsync(game.GetContent(), game.GetEmbed());
             game.MessageId = gameMessage.Id;
 
             while (game.State == State.Active)
@@ -171,7 +171,7 @@ namespace PacManBot.Commands
         [RequireContext(ContextType.Guild)]
         [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
         public async Task StartUno(params SocketGuildUser[] startingPlayers)
-            => await RunMultiplayerGame<UnoGame>(new SocketGuildUser[] { Context.User as SocketGuildUser }.Concatenate(startingPlayers));
+            => await RunMultiplayerGame<UnoGame>(new[] { Context.User as SocketGuildUser }.Concatenate(startingPlayers));
 
 
         [Command("uno help"), Alias("uno h", "uno rules", "uno commands"), Priority(1), HideHelp]

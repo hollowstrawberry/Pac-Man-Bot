@@ -28,17 +28,17 @@ namespace PacManBot
     public class Bot
     {
         public static readonly ThreadSafeRandom Random = new ThreadSafeRandom();
-        public static readonly RequestOptions DefaultOptions = new RequestOptions() {
+        public static readonly RequestOptions DefaultOptions = new RequestOptions {
             RetryMode = RetryMode.RetryRatelimit,
             Timeout = 10000
         };
 
-        private BotConfig botConfig;
-        private DiscordShardedClient client;
-        private LoggingService logger;
-        private StorageService storage;
+        private readonly BotConfig botConfig;
+        private readonly DiscordShardedClient client;
+        private readonly LoggingService logger;
+        private readonly StorageService storage;
 
-        private int shardsReady = 0;
+        private int shardsReady;
         private DateTime lastGuildCountUpdate = DateTime.MinValue;
 
 
@@ -124,7 +124,7 @@ namespace PacManBot
 
                     using (var httpClient = new HttpClient())
                     {
-                        string[] website = { $"bots.discord.pw", $"discordbots.org" };
+                        string[] website = { "bots.discord.pw", "discordbots.org" };
                         for (int i = 0; i < website.Length && i < botConfig.httpToken.Length; i++)
                         {
                             if (string.IsNullOrWhiteSpace(botConfig.httpToken[i])) continue;

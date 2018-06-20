@@ -28,10 +28,12 @@ namespace PacManBot.Extensions
 
         public static T Choose<T>(this Random random, IList<T> values)
         {
-            if (values.Count == 0) return default;
-            if (values.Count == 1) return values[0];
-
-            return values[random.Next(values.Count)];
+            switch (values.Count)
+            {
+                case 0: return default;
+                case 1: return values[0];
+                default: return values[random.Next(values.Count)];
+            }
         }
 
 

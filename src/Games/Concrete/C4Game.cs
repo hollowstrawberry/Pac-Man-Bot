@@ -101,7 +101,7 @@ namespace PacManBot.Games
                 description.Append('\n');
             }
 
-            if (State == State.Active) description.Append($"ᅠ\n*Say the number of a column (1 to 7) to place a piece*");
+            if (State == State.Active) description.Append("ᅠ\n*Say the number of a column (1 to 7) to place a piece*");
 
 
             return new EmbedBuilder()
@@ -225,7 +225,7 @@ namespace PacManBot.Games
 
         private static List<int> AvailableColumns(Player[,] board)
         {
-            List<int> available = new List<int>();
+            var available = new List<int>();
             for (int x = 0; x < Columns; x++)
             {
                 bool full = true;

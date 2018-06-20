@@ -225,7 +225,7 @@ namespace PacManBot.Services
             }
             else
             {
-                var newMsg = await gameMessage.Channel.SendMessageAsync(game.GetContent(), false, game.GetEmbed()?.Build(), requestOptions);
+                var newMsg = await message.Channel.SendMessageAsync(game.GetContent(), false, game.GetEmbed()?.Build(), requestOptions);
                 game.MessageId = newMsg.Id;
                 if (gameMessage != null) await gameMessage.DeleteAsync(Bot.DefaultOptions);
             }
@@ -273,12 +273,12 @@ namespace PacManBot.Services
             if (error.Contains("requires") && guild == null) return "You need to be in a guild to use this command!";
             if (error.Contains("Bot requires")) return $"This bot is missing the permission**{Regex.Replace(error.Split(' ').Last(), @"([A-Z])", @" $1")}**!";
             if (error.Contains("User requires")) return $"You need the permission**{Regex.Replace(error.Split(' ').Last(), @"([A-Z])", @" $1")}** to use this command!";
-            if (error.Contains("User not found")) return $"Can't find the specified user!";
+            if (error.Contains("User not found")) return "Can't find the specified user!";
             if (error.Contains("Failed to parse")) return $"Invalid command parameters! {help}";
             if (error.Contains("too few parameters")) return $"Missing command parameters! {help}";
             if (error.Contains("too many parameters")) return $"Too many parameters! {help}";
-            if (error.Contains("must be used in a guild")) return $"You need to be in a guild to use this command!";
-            if (error.Contains("Timeout")) return $"You're using that command too much. Please try again later.";
+            if (error.Contains("must be used in a guild")) return "You need to be in a guild to use this command!";
+            if (error.Contains("Timeout")) return "You're using that command too much. Please try again later.";
 
             return null;
         }

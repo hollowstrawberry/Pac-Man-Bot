@@ -33,9 +33,9 @@ namespace PacManBot.Extensions
         {
             switch (period)
             {
-                case TimePeriod.month: return "in the last 30 days";
-                case TimePeriod.week: return "in the last 7 days";
-                case TimePeriod.day: return "in the last 24 hours";
+                case TimePeriod.Month: return "in the last 30 days";
+                case TimePeriod.Week: return "in the last 7 days";
+                case TimePeriod.Day: return "in the last 24 hours";
                 default: return "of all time";
             }
         }

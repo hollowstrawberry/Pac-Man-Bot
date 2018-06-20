@@ -7,7 +7,7 @@ namespace PacManBot.Extensions
 {
     public static class GameExtensions
     {
-        public static readonly Color[] PlayerColor = new Color[] {
+        public static readonly Color[] PlayerColor = {
             Colors.Red, Colors.Blue, Colors.Green, Colors.Yellow, Colors.Purple, Colors.Orange,
         };
 
@@ -18,9 +18,12 @@ namespace PacManBot.Extensions
 
         public static ulong IdentifierId(this IBaseGame game)
         {
-            return game is IUserGame userGame ? userGame.OwnerId :
-                   game is IChannelGame channelGame ? channelGame.ChannelId :
-                   game.UserId[0];
+            switch (game)
+            {
+                case IUserGame userGame: return userGame.OwnerId;
+                case IChannelGame channelGame: return channelGame.ChannelId;
+                default: return game.UserId[0];
+            }
         }
 
 
@@ -36,8 +39,8 @@ namespace PacManBot.Extensions
         public static Color Color(this Player player)
         {
             if (player >= 0 && player <= EnumTraits<Player>.MaxValue) return PlayerColor[(int)player];
-            else if (player == Player.Tie) return Colors.Green;
-            else return Colors.Gray;
+            if (player == Player.Tie) return Colors.Green;
+            return Colors.Gray;
         }
 
 
@@ -47,7 +50,7 @@ namespace PacManBot.Extensions
             {
                 case Player.First:  return highlighted ? CustomEmoji.C4redHL : CustomEmoji.C4red;
                 case Player.Second: return highlighted ? CustomEmoji.C4blueHL : CustomEmoji.C4blue;
-                case Player.None: return CustomEmoji.BlackCircle;
+                case Player.None:   return CustomEmoji.BlackCircle;
                 default: return CustomEmoji.Staff;
             }
         }
@@ -59,7 +62,7 @@ namespace PacManBot.Extensions
             {
                 case Player.First:  return highlighted ? CustomEmoji.TTTxHL : CustomEmoji.TTTx;
                 case Player.Second: return highlighted ? CustomEmoji.TTToHL : CustomEmoji.TTTo;
-                case Player.None: return null;
+                case Player.None:   return null;
                 default: return CustomEmoji.Staff;
             }
         }
@@ -90,12 +93,12 @@ namespace PacManBot.Extensions
         {
             switch (dir)
             {
-                case Dir.up:    return Dir.down;
-                case Dir.down:  return Dir.up;
-                case Dir.left:  return Dir.right;
-                case Dir.right: return Dir.left;
+                case Dir.Up:    return Dir.Down;
+                case Dir.Down:  return Dir.Up;
+                case Dir.Left:  return Dir.Right;
+                case Dir.Right: return Dir.Left;
 
-                default: return Dir.none;
+                default: return Dir.None;
             }
         }
 
@@ -104,10 +107,10 @@ namespace PacManBot.Extensions
         {
             switch (dir)
             {
-                case Dir.up: return new Pos(0, -length);
-                case Dir.down: return new Pos(0, +length);
-                case Dir.left: return new Pos(-length, 0);
-                case Dir.right: return new Pos(+length, 0);
+                case Dir.Up:    return new Pos(0, -length);
+                case Dir.Down:  return new Pos(0, +length);
+                case Dir.Left:  return new Pos(-length, 0);
+                case Dir.Right: return new Pos(+length, 0);
                 default: return Pos.Origin;
             }
         }

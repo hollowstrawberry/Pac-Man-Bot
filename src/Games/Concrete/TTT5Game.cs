@@ -17,8 +17,8 @@ namespace PacManBot.Games
 
 
         private Player[,] board;
-        private List<Pos> highlighted = new List<Pos>();
-        private readonly int[] threes = new int[] { -1, -1 };
+        private readonly List<Pos> highlighted = new List<Pos>();
+        private readonly int[] threes = { -1, -1 };
 
 
         public override void Create(ulong channelId, ulong[] userId, DiscordShardedClient client, LoggingService logger, StorageService storage)
@@ -116,20 +116,17 @@ namespace PacManBot.Games
         {
             if (Time < 7) return Player.None;
             if (board.FindLines(Turn, 4, highlighted)) return Turn;
-
             if (Time < board.Length) return Player.None;
-            else // Game over, count threees
-            {
-                for (int i = 0; i < 2; i++)
-                {
-                    var lines = new List<Pos>();
-                    board.FindLines((Player)i, 3, lines);
-                    threes[i] = lines.Count / 3;
-                    highlighted.AddRange(lines);
-                }
 
-                return threes[0] > threes[1] ? Player.First : threes[0] < threes[1] ? Player.Second : Player.Tie;
+            for (int i = 0; i < 2; i++)
+            {
+                var lines = new List<Pos>();
+                board.FindLines((Player)i, 3, lines);
+                threes[i] = lines.Count / 3;
+                highlighted.AddRange(lines);
             }
+
+            return threes[0] > threes[1] ? Player.First : threes[0] < threes[1] ? Player.Second : Player.Tie;
         }
 
 
@@ -243,9 +240,9 @@ namespace PacManBot.Games
 
         private List<Pos> TryCompleteFlyingLines(Player player) // A flying line is when there is a line of 3 in the center with the extremes empty
         {
-            uint count = 0;
-            List<Pos> matches = new List<Pos>();
-            Pos? missing = null;
+            uint count;
+            Pos? missing;
+            var matches = new List<Pos>();
 
 
             void CheckCell(Pos pos)
@@ -319,7 +316,7 @@ namespace PacManBot.Games
 
         private static List<Pos> EmptyCells(Player[,] board)
         {
-            List<Pos> empty = new List<Pos>();
+            var empty = new List<Pos>();
             for (int y = 0; y < board.Y(); y++)
             {
                 for (int x = 0; x < board.X(); x++)

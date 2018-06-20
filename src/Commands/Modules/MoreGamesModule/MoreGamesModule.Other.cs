@@ -60,7 +60,6 @@ namespace PacManBot.Commands
 
                 case "reset":
                     storage.DeleteGame(cube);
-                    cube = null;
                     await Context.Message.AutoReactAsync();
                     return;
 
@@ -100,7 +99,7 @@ namespace PacManBot.Commands
             if (removeOld && oldMessage != null && oldMessage.Channel.Id == Context.Channel.Id)
             {
                 try { await oldMessage.DeleteAsync(DefaultOptions); }
-                catch (HttpException) {;}
+                catch (HttpException) { }
             }
         }
     }

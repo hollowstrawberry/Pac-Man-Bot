@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using Discord;
 using Discord.Commands;
+using Discord.WebSocket;
 using PacManBot.Extensions;
 
 namespace PacManBot.Commands
@@ -29,22 +30,21 @@ namespace PacManBot.Commands
         public async Task SendBotInfo()
         {
             string description = storage.BotContent["about"].Replace("{prefix}", Prefix);
-            string[] fields = storage.BotContent["aboutfields"].Split('\n').Where(s => s.Contains("|")).ToArray();
+            var fields = storage.BotContent["aboutfields"].Split('\n').Where(s => s.Contains("|")).ToArray();
 
-            var embed = new EmbedBuilder()
+            var embed = new EmbedBuilder
             {
                 Title = $"{CustomEmoji.PacMan} __**Pac-Man Bot**__",
                 Description = description,
                 Color = Colors.PacManYellow,
             };
             embed.AddField("Total guilds", $"{Context.Client.Guilds.Count}", true);
-            embed.AddField("Total active games", $"{storage.Games.Where(g => !(g is Games.PetGame)).Count()}", true);
+            embed.AddField("Total active games", $"{storage.Games.Count}", true);
             embed.AddField("Latency", $"{Context.Client.Latency}ms", true);
 
-            for (int i = 0; i < fields.Length; i++)
+            foreach (var field in fields.Select(x => x.Split('|')))
             {
-                string[] splice = fields[i].Split('|');
-                embed.AddField(splice[0], splice[1], true);
+                embed.AddField(field[0], field[1], true);
             }
 
             await ReplyAsync(embed);
@@ -66,7 +66,7 @@ namespace PacManBot.Commands
             var helpInfo = new CommandHelpInfo(command);
 
 
-            var embed = new EmbedBuilder()
+            var embed = new EmbedBuilder
             {
                 Title = $"__Command__: {Prefix}{command.Name}",
                 Color = Colors.PacManYellow
@@ -87,11 +87,11 @@ namespace PacManBot.Commands
             {
                 foreach (string section in helpInfo.Summary.Replace("{prefix}", Prefix).Split("\n\n\n"))
                 {
-                    embed.AddField("Summary", section + "ᅠ", false);
+                    embed.AddField("Summary", section + "ᅠ");
                 }
             }
 
-            if (helpInfo.ExampleUsage != "") embed.AddField("Example Usage", helpInfo.ExampleUsage.Replace("{prefix}", Prefix), false);
+            if (helpInfo.ExampleUsage != "") embed.AddField("Example Usage", helpInfo.ExampleUsage.Replace("{prefix}", Prefix));
 
             await ReplyAsync(embed);
         }
@@ -200,7 +200,7 @@ namespace PacManBot.Commands
             {
                 Title = "Bot invite link",
                 Color = Colors.PacManYellow,
-                ThumbnailUrl = Context.Client.CurrentUser.GetAvatarUrl(ImageFormat.Auto, 128),
+                ThumbnailUrl = Context.Client.CurrentUser.GetAvatarUrl(),
                 Fields = new List<EmbedFieldBuilder>
                 {
                     new EmbedFieldBuilder
@@ -223,7 +223,7 @@ namespace PacManBot.Commands
             var embed = new EmbedBuilder()
             {
                 Title = $"{CustomEmoji.Staff} Pac-Man Bot Support server",
-                Url = $"https://discord.gg/hGHnfda",
+                Url = "https://discord.gg/hGHnfda",
                 Description = "We'll be happy to see you there!",
                 Color = Colors.PacManYellow,
                 ThumbnailUrl = Context.Client.GetGuild(409803292219277313).IconUrl,
@@ -274,17 +274,18 @@ namespace PacManBot.Commands
 
 
         [Command("party"), Alias("blob", "dance"), HideHelp]
-        [Summary("Takes a number which can be either an amount of emotes to send or a message ID to react to. Reacts to the command by default.")]
+        [Summary("Takes a number which can be either an amount of emotes to send or a message ID to react to. " +
+                 "Reacts to the command by default.")]
         public async Task BlobDance(ulong number = 0)
         {
             if (number < 1) await Context.Message.AddReactionAsync(CustomEmoji.ERapidBlobDance, DefaultOptions);
             else if (number <= 10) await ReplyAsync(CustomEmoji.RapidBlobDance.Multiply((int)number));
-            else if (number <= 1000000) await ReplyAsync($"Are you insane?");
+            else if (number <= 1000000) await ReplyAsync("Are you insane?");
             else // Message ID
             {
                 if (await Context.Channel.GetMessageAsync(number) is IUserMessage message)
                 {
-                    await message?.AddReactionAsync(CustomEmoji.ERapidBlobDance, DefaultOptions);
+                    await message.AddReactionAsync(CustomEmoji.ERapidBlobDance, DefaultOptions);
                 }
                 else await AutoReactAsync(false);
             }
@@ -297,7 +298,7 @@ namespace PacManBot.Commands
         [BetterRequireBotPermission(ChannelPermission.AddReactions)]
         public async Task SpamDance(int amount = 5)
         {
-            foreach (IUserMessage message in Context.Channel.GetCachedMessages(amount))
+            foreach (SocketUserMessage message in Context.Channel.GetCachedMessages(amount).Where(x => x is SocketUserMessage))
             {
                 await message.AddReactionAsync(CustomEmoji.ERapidBlobDance, DefaultOptions);
             }

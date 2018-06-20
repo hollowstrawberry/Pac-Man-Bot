@@ -35,10 +35,10 @@ namespace PacManBot.Services
         private readonly List<IUserGame> userGames;
 
         public string WakaExclude { get; private set; }
-        public IReadOnlyList<IChannelGame> Games { get; private set; }
-        public IReadOnlyList<IUserGame> UserGames { get; private set; }
+        public IReadOnlyList<IChannelGame> Games { get; }
+        public IReadOnlyList<IUserGame> UserGames { get;  }
 
-        public string DefaultPrefix { get; private set; }
+        public string DefaultPrefix { get; }
         public ulong[] NoPrefixChannels { get; private set; }
         public ulong[] BannedChannels { get; private set; }
         public string[] PettingMessages { get; private set; }
@@ -76,17 +76,17 @@ namespace PacManBot.Services
 
         public string GetPrefix(ulong serverId)
         {
-            return (prefixes.ContainsKey(serverId)) ? prefixes[serverId] : DefaultPrefix;
+            return prefixes.ContainsKey(serverId) ? prefixes[serverId] : DefaultPrefix;
         }
 
         public string GetPrefix(IGuild guild = null)
         {
-            return (guild == null) ? DefaultPrefix : GetPrefix(guild.Id);
+            return guild == null ? DefaultPrefix : GetPrefix(guild.Id);
         }
 
         public string GetPrefixOrEmpty(IGuild guild)
         {
-            return (guild == null) ? "" : GetPrefix(guild.Id);
+            return guild == null ? "" : GetPrefix(guild.Id);
         }
 
 
@@ -196,9 +196,9 @@ namespace PacManBot.Services
         }
 
 
-        public IReadOnlyList<ScoreEntry> GetScores(TimePeriod period = TimePeriod.all)
+        public IReadOnlyList<ScoreEntry> GetScores(TimePeriod period = TimePeriod.All)
         {
-            if (period == TimePeriod.all) return scoreEntries.AsReadOnly();
+            if (period == TimePeriod.All) return scoreEntries.AsReadOnly();
 
             var date = DateTime.Now;
             return scoreEntries.Where(s => (date - s.date).TotalHours <= (int)period).ToList().AsReadOnly();
@@ -217,8 +217,8 @@ namespace PacManBot.Services
 
             PettingMessages = BotContent["petting"].Split('\n', StringSplitOptions.RemoveEmptyEntries);
             SuperPettingMessages = BotContent["superpetting"].Split('\n', StringSplitOptions.RemoveEmptyEntries);
-            NoPrefixChannels = BotContent["noprefix"].Split(',').Select(x => ulong.Parse(x)).ToArray();
-            BannedChannels = BotContent["banned"].Split(',').Select(x => ulong.Parse(x)).ToArray();
+            NoPrefixChannels = BotContent["noprefix"].Split(',').Select(ulong.Parse).ToArray();
+            BannedChannels = BotContent["banned"].Split(',').Select(ulong.Parse).ToArray();
             logger.LoadLogExclude(this);
         }
 
@@ -239,10 +239,10 @@ namespace PacManBot.Services
                 if (lines[i].StartsWith('#') || string.IsNullOrWhiteSpace(lines[i])) continue;
                 string[] data = lines[i].Split(' '); // Splits into guild ID and prefix
 
-                if (data.Length == 2 && ulong.TryParse(data[0], out ulong ID))
+                if (data.Length == 2 && ulong.TryParse(data[0], out ulong id))
                 {
                     string prefix = data[1];
-                    prefixes.Add(ID, prefix);
+                    prefixes.Add(id, prefix);
                 }
                 else
                 {
@@ -251,7 +251,8 @@ namespace PacManBot.Services
                 }
             }
 
-            logger.Log(LogSeverity.Info, LogSource.Storage, $"Loaded {prefixes.Count} custom prefixes from {BotFile.Prefixes}{$" with {fail} errors".If(fail > 0)}.");
+            logger.Log(LogSeverity.Info, LogSource.Storage,
+                       $"Loaded {prefixes.Count} custom prefixes from {BotFile.Prefixes}{$" with {fail} errors".If(fail > 0)}.");
         }
 
 
@@ -276,7 +277,8 @@ namespace PacManBot.Services
             }
 
             scoreEntries.Sort(); // The list will stay sorted as new elements will be added in sorted position
-            logger.Log(LogSeverity.Info, LogSource.Storage, $"Loaded {scoreEntries.Count} scoreboard entries from {BotFile.Scoreboard}{$" with {fail} errors".If(fail > 0)}.");
+            logger.Log(LogSeverity.Info, LogSource.Storage,
+                       $"Loaded {scoreEntries.Count} scoreboard entries from {BotFile.Scoreboard}{$" with {fail} errors".If(fail > 0)}.");
         }
 
 
@@ -307,14 +309,16 @@ namespace PacManBot.Services
                     }
                     catch (Exception e)
                     {
-                        logger.Log(LogSeverity.Error, LogSource.Storage, $"Couldn't load game at {file}: {(firstFail ? e.ToString() : e.Message)}");
+                        logger.Log(LogSeverity.Error, LogSource.Storage,
+                                   $"Couldn't load game at {file}: {(firstFail ? e.ToString() : e.Message)}");
                         fail++;
                         firstFail = false;
                     }
                 }
             }
 
-            logger.Log(LogSeverity.Info, LogSource.Storage, $"Loaded {games.Count + userGames.Count} games from previous session{$" with {fail} errors".If(fail > 0)}.");
+            logger.Log(LogSeverity.Info, LogSource.Storage,
+                       $"Loaded {games.Count + userGames.Count} games from previous session{$" with {fail} errors".If(fail > 0)}.");
         }
 
 

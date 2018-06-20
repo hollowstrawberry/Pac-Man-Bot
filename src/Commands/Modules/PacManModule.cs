@@ -8,7 +8,6 @@ using Discord.Commands;
 using Discord.WebSocket;
 using PacManBot.Games;
 using PacManBot.Utils;
-using PacManBot.Services;
 using PacManBot.Extensions;
 
 namespace PacManBot.Commands
@@ -34,14 +33,11 @@ namespace PacManBot.Commands
         {
             if (!Context.BotCan(ChannelPermission.SendMessages)) return;
 
-            foreach (var game in storage.Games)
+            if (storage.Games.Any(game => Context.Channel.Id == game.ChannelId))
             {
-                if (Context.Channel.Id == game.ChannelId)
-                {
-                    await ReplyAsync($"There is already a game in this channel!\nYou can use `{Prefix}bump` to bring it to the bottom, " +
-                                     $"Or `{Prefix}cancel` to delete it.");
-                    return;
-                }
+                await ReplyAsync($"There is already a game in this channel!\nYou can use `{Prefix}bump` to bring it to the bottom, " +
+                                 $"Or `{Prefix}cancel` to delete it.");
+                return;
             }
 
             string[] argSplice = args.Split("```");
@@ -68,7 +64,8 @@ namespace PacManBot.Commands
             catch (Exception e)
             {
                 await logger.Log(LogSeverity.Error, LogSource.Game, $"{e}");
-                await ReplyAsync($"There was an error starting the game. Please try again or contact the author of the bot using `{Prefix}feedback`");
+                await ReplyAsync("There was an error starting the game. " +
+                                 $"Please try again or contact the author of the bot using `{Prefix}feedback`");
                 return;
             }
 
@@ -83,7 +80,8 @@ namespace PacManBot.Commands
 
 
         [Command("changedisplay"), Alias("display"), Remarks("Switch between normal and mobile display")]
-        [Summary("A Pac-Man game can either be in normal or mobile mode. Using this command will switch modes for the current game in this channel")]
+        [Summary("A Pac-Man game can either be in normal or mobile mode. Using this command will switch modes " +
+                 "for the current game in this channel")]
         public async Task ChangeGameDisplay()
         {
             var game = storage.GetChannelGame<PacManGame>(Context.Channel.Id);
@@ -120,7 +118,7 @@ namespace PacManBot.Commands
                + "You can also specify a [range] of scores with two positive whole numbers (start and end).\n"
                + "Only 20 scores may be displayed at once.")]
         public async Task SendTopScores(int min = 10, int? max = null)
-            => await SendTopScores(TimePeriod.all, min, max);
+            => await SendTopScores(TimePeriod.All, min, max);
 
 
         [Command("top"), Alias("leaderboard", "lb"), HideHelp]
@@ -160,7 +158,7 @@ namespace PacManBot.Commands
 
             int maxPosDigits = (min + MaxDisplayedScores).ToString().Length;
             int maxScoreDigits = scores[min - 1].score.ToString().Length;
-            for (int i = min; i <= scores.Count() && i <= max && i < min + MaxDisplayedScores; i++)
+            for (int i = min; i <= scores.Count && i <= max && i < min + MaxDisplayedScores; i++)
             {
                 ScoreEntry entry = scores[i - 1]; // The list is always kept sorted so we just go by index
 
@@ -175,7 +173,7 @@ namespace PacManBot.Commands
 
             var embed = new EmbedBuilder()
             {
-                Title = $"🏆 __**Pac-Man Global Leaderboard**__ 🏆",
+                Title = "🏆 __**Pac-Man Global Leaderboard**__ 🏆",
                 Description = content.ToString().Truncate(2047),
                 Color = Colors.PacManYellow
             };
@@ -190,7 +188,7 @@ namespace PacManBot.Commands
                  "You can specify a user in your guild using their name, mention or ID, to see their score instead." +
                  "\nYou can also specify a time period to display scores from: all/month/week/day (a/m/w/d are also valid)")]
         public async Task SendPersonalBest(SocketGuildUser guildUser = null)
-            => await SendPersonalBest(TimePeriod.all, (guildUser ?? Context.User).Id);
+            => await SendPersonalBest(TimePeriod.All, (guildUser ?? Context.User).Id);
 
         [Command("score"), Alias("sc", "s"), HideHelp]
         public async Task SendPersonalBest(TimePeriod time, SocketGuildUser guildUser = null)
@@ -198,7 +196,7 @@ namespace PacManBot.Commands
 
         [Command("score"), Alias("sc", "s"), HideHelp]
         public async Task SendPersonalBest(ulong userId)
-            => await SendPersonalBest(TimePeriod.all, userId);
+            => await SendPersonalBest(TimePeriod.All, userId);
 
         [Command("score"), Alias("sc", "s"), HideHelp]
         public async Task SendPersonalBest(TimePeriod time, ulong userId)
@@ -208,9 +206,9 @@ namespace PacManBot.Commands
             {
                 if (scores[i].userId == userId) // The list is always kept sorted so the first match is the highest score
                 {
-                    var embed = new EmbedBuilder()
+                    var embed = new EmbedBuilder
                     {
-                        Title = $"🏆 __**Pac-Man Global Leaderboard**__ 🏆",
+                        Title = "🏆 __**Pac-Man Global Leaderboard**__ 🏆",
                         Description = $"Highest score {time.Humanized()}:\n{scores[i].ToStringSimpleScoreboard(Context.Client, i + 1)}",
                         Color = Colors.PacManYellow
                     };
@@ -220,7 +218,7 @@ namespace PacManBot.Commands
                 }
             }
 
-            await ReplyAsync(time == TimePeriod.all ? "No scores registered for this user!" : "No scores registered during that time!");
+            await ReplyAsync(time == TimePeriod.All ? "No scores registered for this user!" : "No scores registered during that time!");
         }
 
 
@@ -232,10 +230,10 @@ namespace PacManBot.Commands
             string message = storage.BotContent["customhelp"].Replace("{prefix}", storage.GetPrefixOrEmpty(Context.Guild));
             string[] links = storage.BotContent["customlinks"].Split('\n').Where(s => s.Contains("|")).ToArray();
 
-            var embed = new EmbedBuilder() { Color = Colors.PacManYellow };
-            for (int i = 0; i < links.Length; i++)
+            var embed = new EmbedBuilder { Color = Colors.PacManYellow };
+            foreach (var link in links.Select(x => x.Split('|')))
             {
-                embed.AddField(links[i].Split('|')[0], $"[Click here]({links[i].Split('|')[1]} \"{links[i].Split('|')[1]}\")", true);
+                embed.AddField(link[0], $"[Click here]({link[1]} \"{link[1]}\")", true);
             }
 
             await ReplyAsync(message, embed);
@@ -250,7 +248,7 @@ namespace PacManBot.Commands
             {
                 var requestOptions = game.RequestOptions; // So the edit can be cancelled
 
-                foreach (IEmote input in PacManGame.GameInputs.Keys)
+                foreach (var input in PacManGame.GameInputs.Keys)
                 {
                     if (game.State != State.Active) break;
                     await message.AddReactionAsync(input, DefaultOptions);
@@ -258,7 +256,7 @@ namespace PacManBot.Commands
 
                 await message.ModifyAsync(game.UpdateMessage, requestOptions); //Restore display to normal
             }
-            catch (Exception e) when (e is HttpException || e is TimeoutException || e is OperationCanceledException) { } // We can ignore these
+            catch (Exception e) when (e is HttpException || e is TimeoutException || e is OperationCanceledException) { } // Ignore
         }
     }
 }

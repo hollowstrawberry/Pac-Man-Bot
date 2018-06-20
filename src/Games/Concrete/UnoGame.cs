@@ -26,10 +26,10 @@ namespace PacManBot.Games
         private static readonly Card Wild = new Card(CardType.Wild, CardColor.Black);
         private static readonly Card WildDrawFour = new Card(CardType.WildDrawFour, CardColor.Black);
 
-        private static readonly Color[] RgbCardColor = new Color[] {
+        private static readonly Color[] RgbCardColor = {
             Colors.Red, Colors.Blue, Colors.Green, Colors.Yellow, Colors.DarkBlack,
         };
-        private static readonly string[] CardColorEmote = new string[] {
+        private static readonly string[] CardColorEmote = {
             CustomEmoji.RedSquare, CustomEmoji.BlueSquare, CustomEmoji.GreenSquare, CustomEmoji.YellowSquare, CustomEmoji.BlackSquare,
         };
         private static readonly string[] CardTypeEmote = CustomEmoji.NumberCircle.Concatenate(
@@ -42,7 +42,7 @@ namespace PacManBot.Games
         [DataMember] private List<UnoPlayer> players = new List<UnoPlayer>();
         [DataMember] private List<Card> drawPile = new List<Card>();
         [DataMember] private List<Card> discardPile = new List<Card>();
-        [DataMember] private bool reversed = false;
+        [DataMember] private bool reversed;
         [IgnoreDataMember] private List<UnoPlayer> updatedCards = new List<UnoPlayer>();
 
 
@@ -75,7 +75,7 @@ namespace PacManBot.Games
 
         // Types
 
-        enum UnoState
+        private enum UnoState
         {
             None,
             Said,
@@ -84,7 +84,7 @@ namespace PacManBot.Games
         }
 
 
-        enum CardColor
+        private enum CardColor
         {
             Red,
             Blue,
@@ -94,7 +94,7 @@ namespace PacManBot.Games
         }
 
 
-        enum CardType
+        private enum CardType
         {
             Zero,
             One,
@@ -116,17 +116,17 @@ namespace PacManBot.Games
 
 
         [DataContract]
-        class UnoPlayer
+        private class UnoPlayer
         {
             [DataMember] public readonly ulong id;
             [DataMember] public List<Card> cards = new List<Card>();
             [DataMember] public UnoState uno = UnoState.None;
 
             public DiscordShardedClient client;
-            public IUserMessage message = null;
-            private IUser user = null;
+            public IUserMessage message;
+            private IUser user;
 
-            public IUser User => user == null ? (user = client.GetUser(id)) : user;
+            public IUser User => user ?? (user = client.GetUser(id));
 
 
             private UnoPlayer() { } // Used in serialization
@@ -134,13 +134,14 @@ namespace PacManBot.Games
             public UnoPlayer(ulong id, DiscordShardedClient client)
             {
                 this.id = id;
+                this.client = client;
                 user = client.GetUser(id);
             }
         }
 
 
         [DataContract]
-        struct Card : IComparable<Card>
+        private struct Card : IComparable<Card>
         {
             [DataMember] public CardType Type { get; private set; }
             [DataMember] public CardColor Color { get; private set; }
@@ -158,17 +159,15 @@ namespace PacManBot.Games
 
             public Card NormalizeColor()
             {
-                if (WildType && Color != CardColor.Black) return new Card(Type, CardColor.Black);
-                else return this;
+                return WildType && Color != CardColor.Black ? new Card(Type, CardColor.Black) : this;
             }
 
             public override string ToString()
             {
-                string typeStr = Type > CardType.Nine ? $"{Type}" : $"{((int)Type)}";
+                string typeStr = Type > CardType.Nine ? $"{Type}" : $"{(int)Type}";
                 string colorStr = Color == CardColor.Black ? "" : Color.ToString();
 
-                if (WildType) return $"{typeStr} {colorStr}";
-                else return colorStr + typeStr;
+                return WildType ? $"{typeStr} {colorStr}" : colorStr + typeStr;
             }
 
             public string ToStringBig()
@@ -185,7 +184,7 @@ namespace PacManBot.Games
                     sb.Append('\n');
                 }
                 sb.Append($"{CustomEmoji.Empty}".Multiply(2));
-                sb.Append(this.ToString());
+                sb.Append(ToString());
 
                 return sb.ToString();
             }
@@ -214,9 +213,9 @@ namespace PacManBot.Games
                 {
                     var cards = game.CurrentPlayer.cards.ToList().Sorted();
 
-                    if (color == null && type == null) return value == "" ? cards.FirstOrNull(x => game.CanDiscard(x)) : null;
-                    else if (color == null) return cards.FirstOrNull(x => x.Type == type && game.CanDiscard(x));
-                    else if (type == null) return cards.FirstOrNull(x => x.Color == color && game.CanDiscard(x));
+                    if (color == null && type == null) return value == "" ? cards.FirstOrNull(game.CanDiscard) : null;
+                    if (color == null) return cards.FirstOrNull(x => x.Type == type && game.CanDiscard(x));
+                    if (type == null) return cards.FirstOrNull(x => x.Color == color && game.CanDiscard(x));
                 }
 
                 if (color == null && type.HasValue && IsWild(type.Value)) color = CardColor.Black;
@@ -225,7 +224,7 @@ namespace PacManBot.Games
                 else return null;
             }
 
-            private static IReadOnlyDictionary<string, string> ParseReplacements = new Dictionary<string, string>{
+            private static readonly IReadOnlyDictionary<string, string> ParseReplacements = new Dictionary<string, string>{
                 { " ", "" }, { "auto", "" }, { "uno", "" }, { "draw2", "drawtwo" }, { "draw4", "drawfour" },
             }.AsReadOnly();
         }
@@ -308,7 +307,7 @@ namespace PacManBot.Games
         {
             LastPlayed = DateTime.Now;
             input = StripPrefix(input.ToLower());
-            bool calledByAI = CurrentPlayer.User.IsBot;
+            bool calledByAi = CurrentPlayer.User.IsBot;
 
 
             // Send cards
@@ -380,19 +379,19 @@ namespace PacManBot.Games
                 if (tryCard.HasValue) card = tryCard.Value;
                 else
                 {
-                    if (input.Contains("auto")) Message = $"Oops, \"auto\" found no valid matches.";
+                    if (input.Contains("auto")) Message = "Oops, \"auto\" found no valid matches.";
                     else throw new FormatException($"Unexpected invalid card \"{input}\" from {CurrentPlayer.User.FullName()} in {Channel.FullName()}");
                     return;
                 }
 
                 if (!CurrentPlayer.cards.Contains(card.NormalizeColor()))
                 {
-                    Message = $"Oops, you don't have that card!";
+                    Message = "Oops, you don't have that card!";
                     return;
                 }
                 else if (!CanDiscard(card))
                 {
-                    Message = $"Oops, that card doesn't match the type or color!";
+                    Message = "Oops, that card doesn't match the type or color!";
                     return;
                 }
 
@@ -424,7 +423,7 @@ namespace PacManBot.Games
 
             updatedCards.Add(CurrentPlayer);
 
-            if (!calledByAI || !CurrentPlayer.User.IsBot)
+            if (!calledByAi || !CurrentPlayer.User.IsBot)
             {
                 storage.StoreGame(this);
                 foreach (var player in updatedCards.Distinct().Where(x => !x.User.IsBot)) SendCards(player);
@@ -436,8 +435,7 @@ namespace PacManBot.Games
         public override void BotInput()
         {
             string input = "draw";
-
-            var playable = CurrentPlayer.cards.Where(x => CanDiscard(x)).ToList();
+            var playable = CurrentPlayer.cards.Where(CanDiscard).ToList();
 
             if (playable.Count > 0)
             {
@@ -491,7 +489,7 @@ namespace PacManBot.Games
             {
                 string pre = i == (int)Turn ? "+ " : Winner != Player.None ? "- " : "";
                 description.Append($"{pre}{players[i].User?.Username}");
-                if (players[i].cards.Count > 0) description.Append($" - {players[i].cards.Count}🃏{$" Uno!".If(players[i].uno == UnoState.Said)}");
+                if (players[i].cards.Count > 0) description.Append($" - {players[i].cards.Count}🃏{" Uno!".If(players[i].uno == UnoState.Said)}");
                 description.Append('\n');
             }
             description.Append($"\n```\n{TopCard.ToStringBig()}\n");
@@ -499,16 +497,18 @@ namespace PacManBot.Games
             if (State == State.Active)
             {
                 description.Append(
-                    $"ᅠ\nSay the name of a card to discard it or \"draw\" to skip a turn." +
-                    $"\nYour cards are shown in a DM, say \"cards\" to resend." +
+                    "ᅠ\nSay the name of a card to discard it or \"draw\" to skip a turn." +
+                    "\nYour cards are shown in a DM, say \"cards\" to resend." +
                     $"\nUse **{prefix}uno join** to join the game.\nUse **{prefix}uno help** for rules and more commands.");
             }
 
 
             return new EmbedBuilder()
             {
-                Title = Winner == Player.None ? $"{(reversed ? "🔼" : "🔽")} {CurrentPlayer.User?.Username}'s turn"
-                                              : $"🎉 {CurrentPlayer.User?.Username} is the winner! 🎉",
+                Title = Winner == Player.None
+                    ? $"{(reversed ? "🔼" : "🔽")} {CurrentPlayer.User?.Username}'s turn"
+                    : $"🎉 {CurrentPlayer.User?.Username} is the winner! 🎉",
+
                 Description = description.ToString().Truncate(2047),
                 Color = RgbCardColor[(int)TopCard.Color],
                 ThumbnailUrl = CurrentPlayer.User?.GetAvatarUrl(),
@@ -609,8 +609,7 @@ namespace PacManBot.Games
         {
             foreach (var player in players)
             {
-                if (player.uno == UnoState.Forgot)
-                    player.uno = UnoState.NotCalledOut;
+                if (player.uno == UnoState.Forgot) player.uno = UnoState.NotCalledOut;
             }
         }
 

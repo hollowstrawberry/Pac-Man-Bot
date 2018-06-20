@@ -33,10 +33,10 @@ namespace PacManBot.Commands
                 await Context.Client.CurrentUser.ModifyAsync(x => x.Username = name, DefaultOptions);
                 await AutoReactAsync();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 await AutoReactAsync(false);
-                throw e;
+                throw;
             }
         }
 
@@ -51,10 +51,10 @@ namespace PacManBot.Commands
                 await Context.Guild.CurrentUser.ModifyAsync(x => x.Nickname = name, DefaultOptions);
                 await AutoReactAsync();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 await AutoReactAsync(false);
-                throw e;
+                throw;
             }
         }
 
@@ -69,10 +69,10 @@ namespace PacManBot.Commands
                 await Context.Client.CurrentUser.ModifyAsync(x => x.Avatar = new Image(path), DefaultOptions);
                 await AutoReactAsync();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 await AutoReactAsync(false);
-                throw e;
+                throw;
             }
         }
 
@@ -136,7 +136,6 @@ namespace PacManBot.Commands
             {
                 await logger.Log(LogSeverity.Error, $"Failed to load bot content: {e}");
                 await ReplyAsync($"```{e.Message}```");
-                return;
             }
         }
 
@@ -168,8 +167,8 @@ namespace PacManBot.Commands
         {
             try
             {
-                string content = $"```{filename.Split('.').Last()}\n{File.ReadAllText(filename).Replace("```", "`​``").Substring(start).Truncate(length)}";
-                await ReplyAsync(content.Truncate(1997) + "```");
+                string content = File.ReadAllText(filename).Replace("```", "`​``").Substring(start).Truncate(length);
+                await ReplyAsync($"```{filename.Split('.').Last()}\n{content}".Truncate(1997) + "```");
             }
             catch (Exception e)
             {
@@ -201,7 +200,7 @@ namespace PacManBot.Commands
         [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.ManageMessages)]
         public async Task ClearAllMessages(int amount = 10)
         {
-            foreach (IMessage message in await Context.Channel.GetMessagesAsync(amount, options: DefaultOptions).FlattenAsync())
+            foreach (var message in await Context.Channel.GetMessagesAsync(amount, options: DefaultOptions).FlattenAsync())
             {
                 try
                 {
@@ -209,7 +208,8 @@ namespace PacManBot.Commands
                 }
                 catch (HttpException e)
                 {
-                    await logger.Log(LogSeverity.Warning, $"Couldn't delete message {message.Id} in {Context.Channel.FullName()}: {e.Message}");
+                    await logger.Log(LogSeverity.Warning,
+                                     $"Couldn't delete message {message.Id} in {Context.Channel.FullName()}: {e.Message}");
                 }
             }
         }

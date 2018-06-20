@@ -15,10 +15,7 @@ namespace PacManBot.Services
         private readonly StorageService storage;
         private readonly LoggingService logger;
 
-        public List<Timer> timers; // If for some reason I ever want to schedule anything remotely using eval
-        private readonly Timer checkConnection;
-        private readonly Timer deleteOldGames;
-
+        public List<Timer> timers;
         private CancellationTokenSource cancelShutdown = new CancellationTokenSource();
 
 
@@ -28,10 +25,9 @@ namespace PacManBot.Services
             this.storage = storage;
             this.logger = logger;
 
-            checkConnection = new Timer(new TimerCallback(CheckConnection), null, TimeSpan.FromMinutes(5), TimeSpan.FromMinutes(5));
-            deleteOldGames = new Timer(new TimerCallback(DeleteOldGames), null, TimeSpan.Zero, TimeSpan.FromMinutes(30));
-
             timers = new List<Timer>();
+            var checkConnection = new Timer(CheckConnection, null, TimeSpan.FromMinutes(5), TimeSpan.FromMinutes(5));
+            var deleteOldGames = new Timer(DeleteOldGames, null, TimeSpan.Zero, TimeSpan.FromMinutes(30));
             timers.Append(checkConnection);
             timers.Append(deleteOldGames);
 
@@ -77,13 +73,13 @@ namespace PacManBot.Services
             var now = DateTime.Now;
             int count = 0;
 
-            foreach (var game in storage.Games.Where(g => (now - g.LastPlayed) > g.Expiry).ToArray())
+            foreach (var game in storage.Games.Where(g => now - g.LastPlayed > g.Expiry).ToArray())
             {
                 count++;
                 storage.DeleteGame(game);
             }
 
-            foreach (var game in storage.UserGames.Where(g => (now - g.LastPlayed) > g.Expiry).ToArray())
+            foreach (var game in storage.UserGames.Where(g => now - g.LastPlayed > g.Expiry).ToArray())
             {
                 count++;
                 storage.DeleteGame(game);

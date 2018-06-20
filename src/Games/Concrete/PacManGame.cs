@@ -13,7 +13,7 @@ namespace PacManBot.Games
 {
     public class InvalidMapException : Exception
     {
-        public InvalidMapException() : base() { }
+        public InvalidMapException() { }
         public InvalidMapException(string message) : base(message) { }
         public InvalidMapException(string message, Exception inner) : base(message, inner) { }
     }
@@ -41,24 +41,24 @@ namespace PacManBot.Games
         private const int PowerTime = 20, ScatterCycle = 100, ScatterTime1 = 30, ScatterTime2 = 20;
         private const char CharPlayer = 'O', CharFruit = '$', CharGhost = 'G', CharSoftWall = '_', CharSoftWallPellet = '~'; // Read from map
         private const char CharDoor = '-', CharPellet = '·', CharPowerPellet = '●', CharPlayerDead = 'X', CharGhostFrightened = 'E'; // Displayed
-        private readonly static char[] GhostAppearance = { 'B', 'P', 'I', 'C' };
-        private readonly static int[] GhostSpawnPauseTime = { 0, 3, 15, 35 };
-        private readonly static Dir[] AllDirs = { Dir.up, Dir.left, Dir.down, Dir.right }; // Order of preference when deciding direction
+        private static readonly char[] GhostAppearance = { 'B', 'P', 'I', 'C' };
+        private static readonly int[] GhostSpawnPauseTime = { 0, 3, 15, 35 };
+        private static readonly Dir[] AllDirs = { Dir.Up, Dir.Left, Dir.Down, Dir.Right }; // Order of preference when deciding direction
 
 
         // Fields
 
-        [DataMember] public bool custom = false;
-        [DataMember] public bool mobileDisplay = false;
-        [DataMember] public int score = 0;
+        [DataMember] public bool custom;
+        [DataMember] public bool mobileDisplay;
+        [DataMember] public int score;
 
         private char[,] map;
         [DataMember] private readonly int maxPellets;
         [DataMember] private int pellets;
-        [DataMember] private int oldScore = 0;
+        [DataMember] private int oldScore;
         [DataMember] private PacMan pacMan;
         [DataMember] private List<Ghost> ghosts;
-        [DataMember] private int fruitTimer = 0;
+        [DataMember] private int fruitTimer;
         [DataMember] private Pos fruitSpawnPos; //Where all fruit will spawn
         [DataMember] private PacManInput lastInput = PacManInput.None;
         [DataMember] private bool fastForward = true;
@@ -73,7 +73,7 @@ namespace PacManBot.Games
         [DataMember] public override ulong ChannelId { get; set; }
         [DataMember] public override ulong OwnerId { get => base.OwnerId; protected set => base.OwnerId = value; }
 
-        private Pos FruitSecondPos => fruitSpawnPos + Dir.right; //Second tile which fruit will also occupy
+        private Pos FruitSecondPos => fruitSpawnPos + Dir.Right; //Second tile which fruit will also occupy
         private int FruitTrigger1 => maxPellets - 70; //Amount of pellets remaining needed to spawn fruit
         private int FruitTrigger2 => maxPellets - 170;
         private int FruitScore => (pellets > FruitTrigger2) ? 1000 : 2000;
@@ -141,7 +141,7 @@ namespace PacManBot.Games
         }
 
 
-        enum GhostType
+        private enum GhostType
         {
             Blinky,
             Pinky,
@@ -150,7 +150,7 @@ namespace PacManBot.Games
         }
 
 
-        enum GhostMode
+        private enum GhostMode
         {
             Chase,
             Scatter,
@@ -160,13 +160,13 @@ namespace PacManBot.Games
 
 
         [DataContract]
-        class PacMan
+        private class PacMan
         {
             [DataMember] public readonly Pos origin; //Position it started at
             [DataMember] public Pos pos; //Position on the map
-            [DataMember] public Dir dir = Dir.none; //Direction it's facing
-            [DataMember] public int power = 0; //Time left of power mode
-            [DataMember] public int ghostStreak = 0; //Ghosts eaten during the current power mode
+            [DataMember] public Dir dir = Dir.None; //Direction it's facing
+            [DataMember] public int power; //Time left of power mode
+            [DataMember] public int ghostStreak; //Ghosts eaten during the current power mode
 
 
             private PacMan() { }
@@ -180,7 +180,7 @@ namespace PacManBot.Games
 
 
         [DataContract]
-        class Ghost
+        private class Ghost
         {
             [DataMember] public readonly Pos origin; //Tile it spawns in
             [DataMember] public readonly Pos corner; //Preferred corner
@@ -189,7 +189,7 @@ namespace PacManBot.Games
             [DataMember] public GhostType type; //Ghost behavior type
             [DataMember] public GhostMode mode; //Ghost behavior mode
             [DataMember] public int pauseTime; //Time remaining until it can move
-            [DataMember] public bool exitRight = false; //It will exit the ghost box to the left unless modes have changed
+            [DataMember] public bool exitRight; //It will exit the ghost box to the left unless modes have changed
 
             public char Appearance => mode == GhostMode.Frightened ? CharGhostFrightened : GhostAppearance[(int)type];
 
@@ -212,11 +212,11 @@ namespace PacManBot.Games
         // Game methods
 
 
-        private PacManGame() : base() { } // Used by JSON deserializing
+        private PacManGame() { } // Used by JSON deserializing
 
-        public PacManGame(ulong ChannelId, ulong ownerId, string newMap, bool mobileDisplay,
+        public PacManGame(ulong channelId, ulong ownerId, string newMap, bool mobileDisplay,
                           DiscordShardedClient client, LoggingService logger, StorageService storage)
-            : base(ChannelId, new ulong[] { ownerId }, client, logger, storage)
+            : base(channelId, new[] { ownerId }, client, logger, storage)
         {
             this.mobileDisplay = mobileDisplay;
 
@@ -224,7 +224,7 @@ namespace PacManBot.Games
             if (newMap == null) newMap = storage.BotContent["map"];
             else custom = true;
 
-            FullMap = newMap; //Converts string into char[,]
+            FullMap = newMap; // Converts string into char[,]
 
             maxPellets = newMap.Count(c => c == CharPellet || c == CharPowerPellet || c == CharSoftWallPellet);
             pellets = maxPellets;
@@ -238,7 +238,7 @@ namespace PacManBot.Games
             if (fruitSpawnPos.x >= 0) map.SetAt(fruitSpawnPos, ' ');
 
             ghosts = new List<Ghost>();
-            Pos[] ghostCorners = new Pos[] { //Matches original game
+            Pos[] ghostCorners = { // Matches original game
                 new Pos(map.X() - 3, -3),
                 new Pos(2, -3),
                 new Pos(map.X() - 1, map.Y()),
@@ -290,13 +290,13 @@ namespace PacManBot.Games
             oldScore = score;
             bool continueInput = true;
 
-            Dir newDir = Dir.none;
+            Dir newDir = Dir.None;
             switch (input)
             {
-                case PacManInput.Up: newDir = Dir.up; break;
-                case PacManInput.Right: newDir = Dir.right; break;
-                case PacManInput.Down: newDir = Dir.down; break;
-                case PacManInput.Left: newDir = Dir.left; break;
+                case PacManInput.Up:    newDir = Dir.Up; break;
+                case PacManInput.Right: newDir = Dir.Right; break;
+                case PacManInput.Down:  newDir = Dir.Down; break;
+                case PacManInput.Left:  newDir = Dir.Left; break;
             }
 
 
@@ -308,7 +308,7 @@ namespace PacManBot.Games
                 consecutive++;
 
                 //Player
-                if (newDir != Dir.none)
+                if (newDir != Dir.None)
                 {
                     pacMan.dir = newDir;
                     if (NonSolid(pacMan.pos + newDir)) pacMan.pos += newDir;
@@ -364,7 +364,7 @@ namespace PacManBot.Games
                 //Ghosts
                 foreach (Ghost ghost in ghosts)
                 {
-                    bool didAI = false;
+                    bool didAi = false;
                     while (true) // Checks player collision before and after AI
                     {
                         if (pacMan.pos == ghost.pos) // Collision
@@ -379,13 +379,13 @@ namespace PacManBot.Games
                             else State = State.Lose;
 
                             continueInput = false;
-                            didAI = true;
+                            didAi = true;
                         }
 
-                        if (didAI || State != State.Active) break; // Doesn't run AI twice, or if the user already won
+                        if (didAi || State != State.Active) break; // Doesn't run AI twice, or if the user already won
 
-                        GhostAI(ghost); // Full ghost behavior
-                        didAI = true;
+                        GhostAi(ghost); // Full ghost behavior
+                        didAi = true;
                     }
                 }
 
@@ -416,8 +416,8 @@ namespace PacManBot.Games
 
             try
             {
-                StringBuilder display = new StringBuilder(); //The final display in string form
-                char[,] displayMap = (char[,])map.Clone(); //The display array to modify
+                var display = new StringBuilder(); //The final display in string form
+                var displayMap = (char[,])map.Clone(); //The display array to modify
 
                 //Scan replacements
                 for (int y = 0; y < map.Y(); y++)
@@ -446,7 +446,7 @@ namespace PacManBot.Games
                 {
                     displayMap[ghost.pos.x, ghost.pos.y] = ghost.Appearance;
                 }
-                displayMap[pacMan.pos.x, pacMan.pos.y] = (State == State.Lose) ? CharPlayerDead : CharPlayer;
+                displayMap[pacMan.pos.x, pacMan.pos.y] = State == State.Lose ? CharPlayerDead : CharPlayer;
 
                 //Converts 2d array to string
                 for (int y = 0; y < displayMap.Y(); y++)
@@ -459,14 +459,13 @@ namespace PacManBot.Games
                 }
 
                 //Add text to the side
-                string[] info =
-                {
+                string[] info = {
                     $"┌{"───< Mobile Mode >───┐".If(mobileDisplay)}",
                     $"│ {"#".If(!mobileDisplay)}Time: {Time}",
                     $"│ {"#".If(!mobileDisplay)}Score: {score}{$" +{score - oldScore}".If(score - oldScore != 0)}",
                     $"│ {$"{"#".If(!mobileDisplay)}Power: {pacMan.power}".If(pacMan.power > 0)}",
                     $"│ ",
-                    $"│ {CharPlayer} - Pac-Man{$": {pacMan.dir}".If(pacMan.dir != Dir.none)}",
+                    $"│ {CharPlayer} - Pac-Man{$": {pacMan.dir.ToString().ToLower()}".If(pacMan.dir != Dir.None)}",
                     $"│ ",
                     $"│ ", " │ ", " │ ", " │ ", //7-10: ghosts
                     $"│ ",
@@ -476,7 +475,8 @@ namespace PacManBot.Games
 
                 for (int i = 0; i < ghosts.Count; i++)
                 {
-                    info[i + 7] = $"│ {ghosts[i].Appearance} - {(GhostType)i}{$": {ghosts[i].dir}".If(ghosts[i].dir != Dir.none)}";
+                    info[i + 7] = $"│ {ghosts[i].Appearance} - {(GhostType)i}"
+                                + $": {ghosts[i].dir.ToString().ToLower()}".If(ghosts[i].dir != Dir.None);
                 }
 
                 if (mobileDisplay)
@@ -524,7 +524,7 @@ namespace PacManBot.Games
                     switch (State)
                     {
                         case State.Win: display.Append("\n+You won!"); break;
-                        case State.Lose: display.Append("\n-You lost!"); ; break;
+                        case State.Lose: display.Append("\n-You lost!"); break;
                         case State.Cancelled: display.Append($"\n-Game has been ended.{" Score not saved".If(!custom)}"); break;
                     }
                     if (custom) display.Append("\n*** Custom game: Score won't be registered. ***");
@@ -543,7 +543,8 @@ namespace PacManBot.Games
             {
                 logger.Log(LogSeverity.Error, LogSource.Game, $"{e}").GetAwaiter().GetResult();
                 return $"```There was an error displaying the game. {"Make sure your custom map is valid. ".If(custom)}" +
-                       $"If this problem persists, please contact the author of the bot using the {storage.GetPrefixOrEmpty(Guild)}feedback command.```";
+                       $"If this problem persists, please contact the author of the bot using the " +
+                       $"{storage.GetPrefixOrEmpty(Guild)}feedback command.```";
             }
         }
 
@@ -557,7 +558,7 @@ namespace PacManBot.Games
 
 
 
-        private void GhostAI(Ghost ghost)
+        private void GhostAi(Ghost ghost)
         {
             //Decide mode
             if (pacMan.power <= 1) ghost.mode = CurrentGhostMode();
@@ -565,7 +566,7 @@ namespace PacManBot.Games
             if (ghost.pauseTime > 0) // In the cage
             {
                 ghost.pos = ghost.origin;
-                ghost.dir = Dir.none;
+                ghost.dir = Dir.None;
                 ghost.pauseTime--;
                 if (JustChangedGhostMode(ghost, fullCheck: true)) ghost.exitRight = true;
                 return;
@@ -591,18 +592,17 @@ namespace PacManBot.Games
 
                         case GhostType.Pinky:
                             target = pacMan.pos + pacMan.dir.ToPos(4);
-                            if (pacMan.dir == Dir.up) target += Dir.left.ToPos(4); //Intentional bug from the original arcade
+                            if (pacMan.dir == Dir.Up) target += Dir.Left.ToPos(4); // Intentional bug from the original arcade
                             break;
 
                         case GhostType.Inky:
                             target = pacMan.pos + pacMan.dir.ToPos(2);
-                            if (pacMan.dir == Dir.up) target += Dir.left.ToPos(2); //Intentional bug from the original arcade
+                            if (pacMan.dir == Dir.Up) target += Dir.Left.ToPos(2); // Intentional bug from the original arcade
                             target += target - ghosts[(int)GhostType.Blinky].pos; // Opposite position relative to Blinky
                             break;
 
                         case GhostType.Clyde:
-                            if (Pos.Distance(ghost.pos, pacMan.pos) > 8) target = pacMan.pos;
-                            else target = ghost.corner; // Gets scared when close
+                            target = Pos.Distance(ghost.pos, pacMan.pos) > 8 ? pacMan.pos : ghost.corner; // Gets scared if too close
                             break;
                     }
                     break;
@@ -613,15 +613,15 @@ namespace PacManBot.Games
             }
 
 
-            //Decide movement
+            // Decide movement
 
-            if (map.At(ghost.pos) == CharDoor || map.At(ghost.pos + Dir.up) == CharDoor) // Exiting the cage
+            if (map.At(ghost.pos) == CharDoor || map.At(ghost.pos + Dir.Up) == CharDoor) // Exiting the cage
             {
-                ghost.dir = Dir.up;
+                ghost.dir = Dir.Up;
             }
-            else if (ghost.dir == Dir.up && map.At(ghost.pos + Dir.down) == CharDoor) // Getting away from the cage
+            else if (ghost.dir == Dir.Up && map.At(ghost.pos + Dir.Down) == CharDoor) // Getting away from the cage
             {
-                ghost.dir = ghost.exitRight ? Dir.right : Dir.left;
+                ghost.dir = ghost.exitRight ? Dir.Right : Dir.Left;
             }
             else if (JustChangedGhostMode(ghost))
             {
@@ -631,7 +631,7 @@ namespace PacManBot.Games
             {
                 ghost.dir = Bot.Random.Choose(AllDirs.Where(x => x != ghost.dir.Opposite() && NonSolid(ghost.pos + x)).ToArray());
             }
-            else //Track target
+            else // Track target
             {
                 ghost.exitRight = false;
 
@@ -640,7 +640,7 @@ namespace PacManBot.Games
                 {
                     Pos testPos = ghost.pos + testDir;
 
-                    if (testDir == Dir.up && (map.At(testPos) == CharSoftWall || map.At(testPos) == CharSoftWallPellet)) continue;
+                    if (testDir == Dir.Up && (map.At(testPos) == CharSoftWall || map.At(testPos) == CharSoftWallPellet)) continue;
 
                     if (NonSolid(testPos) && Pos.Distance(testPos, target) < distance)
                     {
@@ -674,7 +674,7 @@ namespace PacManBot.Games
             for (int i = 0; i < 2; i++) if (Time == i * ScatterCycle || Time == i * ScatterCycle + ScatterTime1) return true;
             for (int i = 2; i < 4; i++) if (Time == i * ScatterCycle || Time == i * ScatterCycle + ScatterTime2) return true;
 
-            return fullCheck ? pacMan.power == PowerTime : false;
+            return fullCheck && pacMan.power == PowerTime;
         }
 
 
@@ -704,7 +704,7 @@ namespace PacManBot.Games
         private bool NonSolid(int x, int y) => NonSolid(new Pos(x, y));
         private bool NonSolid(Pos pos) //Defines which tiles in the map entities can move through
         {
-            char ch = map.At(pos, wrap: true);
+            char ch = map.At(pos);
             return (ch == ' ' || ch == CharPellet || ch == CharPowerPellet || ch == CharSoftWall || ch == CharSoftWallPellet);
         }
 

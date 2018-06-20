@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using Discord;
 using Discord.Commands;
@@ -15,19 +16,14 @@ namespace PacManBot.Extensions
 
         public static bool AllShardsConnected(this DiscordShardedClient client)
         {
-            foreach (var shard in client.Shards)
-            {
-                if (shard.ConnectionState != ConnectionState.Connected) return false;
-            }
-            return true;
+            return client.Shards.All(shard => shard.ConnectionState == ConnectionState.Connected);
         }
 
 
         public static async Task<SocketGuildUser> ParseUserAsync(this ICommandContext context, string value)
         {
             var result = await new UserTypeReader<SocketGuildUser>().ReadAsync(context, value, null);
-            if (result.IsSuccess) return (SocketGuildUser)result.BestMatch;
-            else return null;
+            return result.IsSuccess ? (SocketGuildUser)result.BestMatch : null;
         }
 
 
@@ -55,20 +51,29 @@ namespace PacManBot.Extensions
 
         public static bool BotCan(this IChannel channel, ChannelPermission permission)
         {
-            ChannelPermission perms = channel is IGuildChannel gchannel ? (ChannelPermission)gchannel.Guild.GetCurrentUserAsync().Result.GetPermissions(gchannel).RawValue : CorrectDmPermissions;
+            var perms = channel is IGuildChannel gchannel
+                ? (ChannelPermission)gchannel.Guild.GetCurrentUserAsync().Result.GetPermissions(gchannel).RawValue
+                : CorrectDmPermissions;
+
             return perms.HasFlag(permission);
         }
 
         public static bool BotCan(this SocketCommandContext context, ChannelPermission permission)
         {
-            ChannelPermission perms = context.Guild == null ? CorrectDmPermissions : (ChannelPermission)context.Guild.CurrentUser.GetPermissions(context.Channel as IGuildChannel).RawValue;
+            var perms = context.Guild != null
+                ? (ChannelPermission)context.Guild.CurrentUser.GetPermissions(context.Channel as IGuildChannel).RawValue
+                : CorrectDmPermissions;
+
             return perms.HasFlag(permission);
         }
 
 
         public static bool UserCan(this SocketCommandContext context, ChannelPermission permission)
         {
-            ChannelPermission perms = context.Guild == null ? CorrectDmPermissions : (ChannelPermission)context.Guild.GetUser(context.User.Id).GetPermissions(context.Channel as IGuildChannel).RawValue;
+            var perms = context.Guild != null
+                ? (ChannelPermission)context.Guild.GetUser(context.User.Id).GetPermissions(context.Channel as IGuildChannel).RawValue
+                : CorrectDmPermissions;
+
             return perms.HasFlag(permission);
         }
 
@@ -79,7 +84,7 @@ namespace PacManBot.Extensions
 
         public static string NameAndGuild(this IChannel channel)
         {
-            return $"{((channel is IGuildChannel gchannel) ? $"{gchannel.Guild.Name}/" : "")}{channel.Name}";
+            return $"{(channel is IGuildChannel gchannel ? $"{gchannel.Guild.Name}/" : "")}{channel.Name}";
         }
 
 
@@ -107,8 +112,7 @@ namespace PacManBot.Extensions
 
         public static Emote ToEmote(this string text)
         {
-            if (!Emote.TryParse(text, out Emote emote)) return null;
-            return emote;
+            return Emote.TryParse(text, out var emote) ? emote : null;
         }
 
 

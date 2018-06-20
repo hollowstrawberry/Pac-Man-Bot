@@ -94,7 +94,7 @@ namespace PacManBot.Games
 
             if (State == State.Active) description.Append($"ᅠ\n*Say the number of a cell (1 to 9) to place an {(Turn == Player.First ? "X" : "O")}*");
 
-            return new EmbedBuilder()
+            return new EmbedBuilder
             {
                 Title = EmbedTitle(),
                 Description = description.ToString(),
@@ -132,49 +132,52 @@ namespace PacManBot.Games
 
         public override void BotInput()
         {
-            Pos target = TryCompleteLine(Turn) ?? TryCompleteLine(Turn.OtherPlayer()) ?? Bot.Random.Choose(EmptyCells(board)); //Win or block or random
+            //Win or block or random
+            Pos target = TryCompleteLine(Turn) ?? TryCompleteLine(Turn.OtherPlayer()) ?? Bot.Random.Choose(EmptyCells(board));
             Input($"{1 + target.y * board.X() + target.x}");
         }
 
 
         private Pos? TryCompleteLine(Player player)
         {
-            uint count = 0;
-            Pos? missing = null;
+            uint count;
+            Pos? missing;
 
             for (int y = 0; y < 3; y++) // Rows
             {
+                count = 0;
+                missing = null;
                 for (int x = 0; x < 3; x++)
                 {
                     if (board[x, y] == player) count++;
                     else if (board[x, y] == Player.None) missing = new Pos(x, y);
                     if (count == 2 && missing != null) return missing;
                 }
-                count = 0;
-                missing = null;
             }
 
             for (int x = 0; x < 3; x++) // Columns
             {
+                count = 0;
+                missing = null;
                 for (int y = 0; y < 3; y++)
                 {
                     if (board[x, y] == player) count++;
                     else if (board[x, y] == Player.None) missing = new Pos(x, y);
                     if (count == 2 && missing != null) return missing;
                 }
-                count = 0;
-                missing = null;
             }
 
+            count = 0;
+            missing = null;
             for (int d = 0; d < 3; d++) // Top-to-right diagonal
             {
                 if (board[d, d] == player) count++;
                 else if (board[d, d] == Player.None) missing = new Pos(d, d);
                 if (count == 2 && missing != null) return missing;
             }
+
             count = 0;
             missing = null;
-
             for (int d = 0; d < 3; d++) // Top-to-left diagonal
             {
                 if (board[2 - d, d] == player) count++;
@@ -188,7 +191,7 @@ namespace PacManBot.Games
 
         private static List<Pos> EmptyCells(Player[,] board)
         {
-            List<Pos> empty = new List<Pos>();
+            var empty = new List<Pos>();
             for (int y = 0; y < board.Y(); y++)
             {
                 for (int x = 0; x < board.X(); x++)

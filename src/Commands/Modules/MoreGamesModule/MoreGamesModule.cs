@@ -5,7 +5,6 @@ using Discord;
 using Discord.Net;
 using Discord.Commands;
 using PacManBot.Games;
-using PacManBot.Services;
 using PacManBot.Extensions;
 
 namespace PacManBot.Commands
@@ -85,7 +84,10 @@ namespace PacManBot.Commands
                 {
                     await ReplyAsync($"Game ended. Score won't be registered.\n**Result:** {pacManGame.score} points in {pacManGame.Time} turns");
                 }
-                else await Context.Message.AutoReactAsync();
+                else
+                {
+                    await Context.Message.AutoReactAsync();
+                }
             }
             else
             {
