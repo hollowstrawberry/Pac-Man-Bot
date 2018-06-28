@@ -19,4 +19,4 @@ If you would like to run and host this bot yourself, and would like to be able t
 The `config.bot` and `contents.bot` files in `bin/` are necessary for the bot to run.  
 There is also the linux release branch, which I use with the public bot and always has the latest version.
 
-![Alt](https://raw.githubusercontent.com/Samrux/Pac-Man-Bot/master/bin/Icon.ico)
+![Alt](https://raw.githubusercontent.com/Samrux/Pac-Man-Bot/master/_Resources/Avatar.png)
