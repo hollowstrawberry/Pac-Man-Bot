@@ -14,9 +14,9 @@ If Pac-Man isn't your thing, there are several other minigames:
 [**Support server here**](https://discord.gg/hGHnfda)  
 
 
-You can compile this bot yourself using an IDE such as Visual Studio or Rider, or using the Publish.bat batch file. You will need to include the NuGet Source for the Discord.Net beta, [link here](https://www.myget.org/F/discord-net/api/v3/index.json).  
+You can compile this bot yourself using an IDE such as Visual Studio or Rider, or using the Publish.bat batch file. It uses C# 7.3. You will need to include the NuGet Source for the Discord.Net beta, [copy link](https://www.myget.org/F/discord-net/api/v3/index.json).  
 If you would like to run and host this bot yourself, and would like to be able to use the bot's custom emotes, please send me a message.  
 The `config.bot` and `contents.bot` files in `bin/` are necessary for the bot to run.  
 There is also the linux release branch, which I use with the public bot and always has the latest version.
 
-![Alt](https://raw.githubusercontent.com/Samrux/Pac-Man-Bot/master/bin/Icon.ico)
+![Alt](https://raw.githubusercontent.com/Samrux/Pac-Man-Bot/master/_Resources/Avatar.png)
