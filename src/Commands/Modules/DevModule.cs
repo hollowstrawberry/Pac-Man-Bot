@@ -8,6 +8,7 @@ using PacManBot.Services;
 using Discord.Net;
 using PacManBot.Games;
 using PacManBot.Extensions;
+using Microsoft.CodeAnalysis.Scripting;
 
 namespace PacManBot.Commands
 {
@@ -82,22 +83,27 @@ namespace PacManBot.Commands
         [Summary("Run code, super dangerous do not try at home. Developer only.")]
         public async Task ScriptEval([Remainder]string code)
         {
+            code = code.Trim(' ', '`', '\n');
+            if (code.StartsWith("cs\n")) code = code.Remove(0, 3); // C# code block in Discord
+
+            await Context.Message.AddReactionAsync(CustomEmoji.ELoading, DefaultOptions);
+
+            object result;
             try
             {
-                await Context.Message.AddReactionAsync(CustomEmoji.ELoading, DefaultOptions);
-                await Scripting.EvalAsync(code, this);
-                await AutoReactAsync();
+                result = await Scripting.EvalAsync(code, this);
+                await Logger.Log(LogSeverity.Debug, LogSource.Eval, $"Successfully executed:\n {code}");
+                await AutoReactAsync(true);
             }
             catch (Exception e)
             {
-                await Logger.Log(LogSeverity.Debug, "Eval", $"{e}");
+                result = e.Message;
+                await Logger.Log(LogSeverity.Debug, LogSource.Eval, $"{e}");
                 await AutoReactAsync(false);
-                await ReplyAsync($"```cs\n{e.Message}```");
             }
-            finally
-            {
-                await Context.Message.RemoveReactionAsync(CustomEmoji.ELoading, Context.Client.CurrentUser, DefaultOptions);
-            }
+
+            await Context.Message.RemoveReactionAsync(CustomEmoji.ELoading, Context.Client.CurrentUser, DefaultOptions);
+            if (result != null) await ReplyAsync($"```{result}".Truncate(1997) + "```");
         }
 
 

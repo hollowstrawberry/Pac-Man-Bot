@@ -29,7 +29,7 @@ namespace PacManBot.Utils
 
         public override int Next()
         {
-            return BitConverter.ToInt32(NextBytes(4), 0) & 0x7FFFFFFF; // Mask so that it's always positive
+            return BitConverter.ToInt32(NextBytes(4), 0) & 0x7FFFFFFF; // Mask the most significant bit so that it's always positive
         }
 
 

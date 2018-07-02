@@ -65,6 +65,7 @@ namespace PacManBot.Commands
 
 
                 case "scramble":
+                case "shuffle":
                     cube.Scramble();
                     removeOld = true;
                     break;
@@ -83,7 +84,8 @@ namespace PacManBot.Commands
                     {
                         if (!cube.DoMoves(input))
                         {
-                            await ReplyAsync($"{CustomEmoji.Cross} Invalid sequence of moves. Try **{Prefix}rubik notation** for help.");
+                            await ReplyAsync($"{CustomEmoji.Cross} Invalid sequence of moves. " +
+                                             $"Do **{Prefix}rubik help** for commands.");
                             return;
                         }
                     }

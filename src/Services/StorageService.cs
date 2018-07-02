@@ -297,7 +297,7 @@ namespace PacManBot.Services
 
             scoreEntries.Sort(); // The list will stay sorted as new elements will be added in sorted position
             logger.Log(LogSeverity.Info, LogSource.Storage,
-                       $"Loaded {scoreEntries.Count} scoreboard entries from {BotFile.Scoreboard}{$" with {fail} errors".If(fail > 0)}.");
+                       $"Loaded {scoreEntries.Count} scoreboard entries from {BotFile.Scoreboard}{$" with {fail} errors".If(fail > 0)}");
         }
 
 

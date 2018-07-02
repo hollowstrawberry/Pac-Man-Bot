@@ -37,7 +37,8 @@ namespace PacManBot
             Command = "Command",
             Storage = "Storage",
             Scheduling = "Scheduling",
-            Owner = "Owner";
+            Owner = "Owner",
+            Eval = "Eval";
     }
 
 
