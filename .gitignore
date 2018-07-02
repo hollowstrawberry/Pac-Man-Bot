@@ -15,6 +15,7 @@ bin/**/logs/
 bin/**/games/
 bin/Debug/
 bin/Release/
+bin/_Backup
 
 # Files
 bin/*/**/config.bot
