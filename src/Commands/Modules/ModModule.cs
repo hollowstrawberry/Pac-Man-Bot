@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Net;
 using Discord.Commands;
+using PacManBot.Constants;
 using PacManBot.Extensions;
 
 namespace PacManBot.Commands

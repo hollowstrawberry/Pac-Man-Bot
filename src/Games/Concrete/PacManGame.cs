@@ -7,6 +7,7 @@ using System.Runtime.Serialization;
 using Discord;
 using Discord.WebSocket;
 using PacManBot.Services;
+using PacManBot.Constants;
 using PacManBot.Extensions;
 
 namespace PacManBot.Games
@@ -253,7 +254,7 @@ namespace PacManBot.Games
             }
 
             storage.StoreGame(this);
-            if (custom) File.AppendAllText(BotFile.CustomMapLog, newMap);
+            if (custom) File.AppendAllText(Files.CustomMapLog, newMap);
         }
 
 

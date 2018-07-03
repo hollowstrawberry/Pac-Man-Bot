@@ -2,6 +2,7 @@
 using Discord;
 using PacManBot.Games;
 using PacManBot.Utils;
+using PacManBot.Constants;
 
 namespace PacManBot.Extensions
 {
@@ -29,7 +30,7 @@ namespace PacManBot.Extensions
 
         public static string GameFile(this IStoreableGame game)
         {
-            return $"{BotFile.GameFolder}{game.FilenameKey}{game.IdentifierId()}{BotFile.GameExtension}";
+            return $"{Files.GameFolder}{game.FilenameKey}{game.IdentifierId()}{Files.GameExtension}";
         }
 
 

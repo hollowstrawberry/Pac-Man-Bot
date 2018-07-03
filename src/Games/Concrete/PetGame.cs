@@ -8,6 +8,7 @@ using System.Runtime.Serialization;
 using Discord;
 using Discord.WebSocket;
 using PacManBot.Services;
+using PacManBot.Constants;
 using PacManBot.Extensions;
 
 namespace PacManBot.Games

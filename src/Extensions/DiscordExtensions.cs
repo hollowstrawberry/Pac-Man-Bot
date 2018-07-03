@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using PacManBot.Constants;
 
 namespace PacManBot.Extensions
 {

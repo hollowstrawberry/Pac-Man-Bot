@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Discord.Net;
 using Discord.Commands;
 using PacManBot.Games;
-using PacManBot.Extensions;
+using PacManBot.Constants;
 
 namespace PacManBot.Commands
 {

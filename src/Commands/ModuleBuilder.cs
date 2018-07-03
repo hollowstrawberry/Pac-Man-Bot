@@ -33,7 +33,7 @@ namespace PacManBot.Commands
         }
 
 
-        static void SetConstructor(ConstructorInfo constructor)
+        public static void SetConstructor(ConstructorInfo constructor)
         {
             if (constructor.DeclaringType != ModuleType) throw new ArgumentException("Constructor does not match the generic type");
 

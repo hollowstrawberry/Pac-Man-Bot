@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Discord;
 using Discord.WebSocket;
 using PacManBot.Services;
+using PacManBot.Constants;
 using PacManBot.Extensions;
 
 namespace PacManBot.Games

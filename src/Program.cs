@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using Discord.Commands;
 using Discord.WebSocket;
 using PacManBot.Services;
+using PacManBot.Constants;
 
 
 // Made by Samrux for fun
@@ -19,25 +20,17 @@ namespace PacManBot
         static async Task Main()
         {
             // Check files
-            foreach (string requiredFile in new[] { BotFile.Config, BotFile.Contents })
+            foreach (string requiredFile in new[] { Files.Config, Files.Contents })
             {
                 if (!File.Exists(requiredFile)) throw new Exception($"Missing required file {requiredFile}: Bot can't run");
             }
             
-            foreach (string secondaryFile in new[] { BotFile.Prefixes, BotFile.Scoreboard, BotFile.WakaExclude })
-            {
-                if (!File.Exists(secondaryFile))
-                {
-                    File.Create(secondaryFile).Dispose();
-                    Console.WriteLine($"Created missing file \"{secondaryFile}\"");
-                }
-            }
 
             // Set up configurations
-            var botConfig = JsonConvert.DeserializeObject<BotConfig>(File.ReadAllText(BotFile.Config));
+            var botConfig = JsonConvert.DeserializeObject<BotConfig>(File.ReadAllText(Files.Config));
             if (string.IsNullOrWhiteSpace(botConfig.discordToken))
             {
-                throw new Exception($"Missing {nameof(botConfig.discordToken)} in {BotFile.Config}: Bot can't run");
+                throw new Exception($"Missing {nameof(botConfig.discordToken)} in {Files.Config}: Bot can't run");
             }
 
             var clientConfig = new DiscordSocketConfig

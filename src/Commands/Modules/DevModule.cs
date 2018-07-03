@@ -7,8 +7,8 @@ using Discord.Commands;
 using PacManBot.Services;
 using Discord.Net;
 using PacManBot.Games;
+using PacManBot.Constants;
 using PacManBot.Extensions;
-using Microsoft.CodeAnalysis.Scripting;
 
 namespace PacManBot.Commands
 {
@@ -134,7 +134,7 @@ namespace PacManBot.Commands
         {
             try
             {
-                Storage.LoadBotContent();
+                Storage.LoadContent();
                 await Logger.Log(LogSeverity.Info, "Reloaded bot content");
                 await AutoReactAsync();
             }

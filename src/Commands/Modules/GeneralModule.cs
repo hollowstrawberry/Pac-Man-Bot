@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using PacManBot.Constants;
 using PacManBot.Extensions;
 
 namespace PacManBot.Commands
@@ -259,7 +260,7 @@ namespace PacManBot.Commands
         {
             try
             {
-                File.AppendAllText(BotFile.FeedbackLog, $"[{Context.User.FullName()}] {message}\n\n");
+                File.AppendAllText(Files.FeedbackLog, $"[{Context.User.FullName()}] {message}\n\n");
                 await ReplyAsync($"{CustomEmoji.Check} Message sent. Thank you!");
                 string content = $"```diff\n+Feedback received: {Context.User.FullName()}```\n{message}".Truncate(2000);
                 await Storage.AppInfo.Owner.SendMessageAsync(content, options: DefaultOptions);

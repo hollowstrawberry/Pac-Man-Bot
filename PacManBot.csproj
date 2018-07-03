@@ -23,26 +23,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="_Emotes\**" />
+    <None Include="bin\config.json" />
+    <None Include="bin\contents.json" />
     <Compile Remove="_Screenshots\**" />
-    <EmbeddedResource Remove="_Emotes\**" />
-    <EmbeddedResource Remove="_Screenshots\**" />
-    <None Include="bin\config.bot" />
-    <None Include="bin\contents.bot" />
-    <None Remove="_Emotes\**" />
+    <Compile Remove="_Resources\**" />
     <None Remove="_Screenshots\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Remove="CommandHandler.cs" />
-    <Compile Remove="Constants.cs" />
-    <Compile Remove="LoggingService.cs" />
-    <Compile Remove="Program.cs" />
-    <Compile Remove="ReactionHandler.cs" />
-    <Compile Remove="ScriptingService.cs" />
-    <Compile Remove="StartupService.cs" />
-    <Compile Remove="StorageService.cs" />
-    <Compile Remove="Utils.cs" />
+    <None Remove="_Resources\**" />
+    <EmbeddedResource Remove="_Screenshots\**" />
+    <EmbeddedResource Remove="_Resources\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -56,21 +44,22 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Discord.Net" Version="2.0.0-beta2-00969" />
-    <PackageReference Include="Discord.Net.Commands" Version="2.0.0-beta2-00969" />
-    <PackageReference Include="Discord.Net.Core" Version="2.0.0-beta2-00969" />
-    <PackageReference Include="Discord.Net.Rest" Version="2.0.0-beta2-00969" />
+    <PackageReference Include="Discord.Net" Version="2.0.0-beta2-00970" />
+    <PackageReference Include="Discord.Net.Commands" Version="2.0.0-beta2-00970" />
+    <PackageReference Include="Discord.Net.Core" Version="2.0.0-beta2-00970" />
+    <PackageReference Include="Discord.Net.Rest" Version="2.0.0-beta2-00970" />
     <PackageReference Include="Discord.Net.Rpc" Version="2.0.0-beta-00860" />
-    <PackageReference Include="Discord.Net.Webhook" Version="2.0.0-beta2-00969" />
-    <PackageReference Include="Discord.Net.WebSocket" Version="2.0.0-beta2-00969" />
+    <PackageReference Include="Discord.Net.Webhook" Version="2.0.0-beta2-00970" />
+    <PackageReference Include="Discord.Net.WebSocket" Version="2.0.0-beta2-00970" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="2.8.2" />
     <PackageReference Include="Microsoft.CodeAnalysis.Scripting" Version="2.8.2" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.1.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.1.1" />
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.108" />
   </ItemGroup>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="::copy &quot;bin\contents.bot&quot; &quot;bin/Debug/netcoreapp2.0/contents.bot&quot;" />
+    <Exec Command="::copy &quot;bin\contents.bot&quot; &quot;bin/Debug/netcoreapp2.0/contents.json&quot;" />
   </Target>
 
 </Project>

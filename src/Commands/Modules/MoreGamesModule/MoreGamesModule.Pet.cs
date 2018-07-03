@@ -6,6 +6,7 @@ using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using PacManBot.Games;
+using PacManBot.Constants;
 using PacManBot.Extensions;
 
 namespace PacManBot.Commands
