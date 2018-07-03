@@ -3,6 +3,6 @@
 set RUNTIME=linux-x64
 dotnet publish PacManBot.csproj --runtime %RUNTIME% --configuration Release --self-contained
 copy "bin\contents.json" "bin\Release\netcoreapp2.0\%RUNTIME%\publish\contents.json"
-del /Q "bin\Release\netcoreapp2.0\%RUNTIME%\*"
+::del /Q "bin\Release\netcoreapp2.0\%RUNTIME%\*"
 
 pause

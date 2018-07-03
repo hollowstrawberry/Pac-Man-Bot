@@ -9,10 +9,6 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>bin\</OutputPath>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>bin\Debug</OutputPath>
     <LangVersion>7.3</LangVersion>
   </PropertyGroup>
@@ -20,11 +16,10 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <OutputPath>bin\Release</OutputPath>
     <LangVersion>7.3</LangVersion>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="bin\config.json" />
-    <None Include="bin\contents.json" />
     <Compile Remove="_Screenshots\**" />
     <Compile Remove="_Resources\**" />
     <None Remove="_Screenshots\**" />
@@ -53,9 +48,9 @@
     <PackageReference Include="Discord.Net.WebSocket" Version="2.0.0-beta2-00970" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="2.8.2" />
     <PackageReference Include="Microsoft.CodeAnalysis.Scripting" Version="2.8.2" />
+    <PackageReference Include="Microsoft.Data.SQLite" Version="2.1.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.1.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.1.1" />
-    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.108" />
   </ItemGroup>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">

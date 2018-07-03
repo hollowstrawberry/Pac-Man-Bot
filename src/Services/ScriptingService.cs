@@ -15,7 +15,7 @@ namespace PacManBot.Services
             scriptOptions = ScriptOptions.Default
                 .WithImports(
                     "System", "System.IO", "System.Text", "System.Linq", "System.Reflection", "System.Diagnostics",
-                    "System.Data.SQLite", "System.Threading.Tasks", "System.Collections.Generic", "System.Text.RegularExpressions",
+                    "Microsoft.Data.Sqlite", "System.Threading.Tasks", "System.Collections.Generic", "System.Text.RegularExpressions",
                     "Discord", "Discord.Rest", "Discord.Commands", "Discord.WebSocket",
                     "PacManBot", "PacManBot.Games", "PacManBot.Utils", "PacManBot.Commands", "PacManBot.Services", "PacManBot.Extensions"
                 )

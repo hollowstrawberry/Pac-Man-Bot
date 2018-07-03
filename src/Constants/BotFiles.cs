@@ -5,7 +5,7 @@
         public const string
             Config = "config.json",
             Contents = "contents.json",
-            Database = "database.sqlite",
+            Database = "database.Sqlite",
             FeedbackLog = "logs/feedback.txt",
             CustomMapLog = "logs/custom.txt",
             GameFolder = "games/",

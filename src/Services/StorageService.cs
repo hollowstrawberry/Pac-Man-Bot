@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Reflection;
-using System.Data.SQLite;
+using Microsoft.Data.Sqlite;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
@@ -49,8 +49,8 @@ namespace PacManBot.Services
         public string[] SuperPettingMessages { get; private set; }
 
 
-        public SQLiteConnection NewDatabaseConnection
-            => new SQLiteConnection($"Data Source={Files.Database}; Version=3;");
+        public SqliteConnection NewDatabaseConnection
+            => new SqliteConnection($"Data Source={Files.Database};");
 
 
 
@@ -88,7 +88,7 @@ namespace PacManBot.Services
             {
                 connection.Open();
                 string sql = $"SELECT prefix FROM prefixes WHERE id={guildId} LIMIT 1";
-                var command = new SQLiteCommand(sql, connection);
+                var command = new SqliteCommand(sql, connection);
                 prefix = (string)command.ExecuteScalar() ?? DefaultPrefix;
                 cachedPrefixes.TryAdd(guildId, prefix);
                 return prefix;
@@ -113,7 +113,7 @@ namespace PacManBot.Services
             {
                 connection.Open();
 
-                new SQLiteCommand(sql, connection)
+                new SqliteCommand(sql, connection)
                     .WithParameter("@id", guildId)
                     .WithParameter("@prefix", prefix)
                     .ExecuteNonQuery();
@@ -131,7 +131,7 @@ namespace PacManBot.Services
             {
                 connection.Open();
 
-                var command = new SQLiteCommand("SELECT * FROM noautoresponse WHERE id=@id LIMIT 1", connection)
+                var command = new SqliteCommand("SELECT * FROM noautoresponse WHERE id=@id LIMIT 1", connection)
                     .WithParameter("@id", guildId);
                 allows = command.ExecuteScalar() == null;
                 cachedAllowsAutoresponse.TryAdd(guildId, allows);
@@ -145,20 +145,20 @@ namespace PacManBot.Services
             using (var connection = NewDatabaseConnection)
             {
                 connection.Open();
-                new SQLiteCommand("BEGIN", connection).ExecuteNonQuery();
+                new SqliteCommand("BEGIN", connection).ExecuteNonQuery();
 
-                int changed = new SQLiteCommand("DELETE FROM noautoresponse WHERE id=@id", connection)
+                int changed = new SqliteCommand("DELETE FROM noautoresponse WHERE id=@id", connection)
                     .WithParameter("@id", guildId)
                     .ExecuteNonQuery();
 
                 if (changed == 0)
                 {
-                    new SQLiteCommand("INSERT INTO noautoresponse VALUES (@id)", connection)
+                    new SqliteCommand("INSERT INTO noautoresponse VALUES (@id)", connection)
                         .WithParameter("@id", guildId)
                         .ExecuteNonQuery();
                 }
 
-                new SQLiteCommand("END", connection).ExecuteNonQuery();
+                new SqliteCommand("END", connection).ExecuteNonQuery();
                 return changed != 0;
             }
         }
@@ -175,7 +175,7 @@ namespace PacManBot.Services
                 connection.Open();
 
                 string sql = "INSERT INTO scoreboard VALUES (@score, @userid, @state, @turns, @username, @channel, @date)";
-                new SQLiteCommand(sql, connection)
+                new SqliteCommand(sql, connection)
                     .WithParameter("@score", entry.score)
                     .WithParameter("@userid", entry.userId)
                     .WithParameter("@state", entry.state)
@@ -204,7 +204,7 @@ namespace PacManBot.Services
             {
                 connection.Open();
 
-                var command = new SQLiteCommand(sql, connection)
+                var command = new SqliteCommand(sql, connection)
                     .WithParameter("@amount", amount)
                     .WithParameter("@start", start)
                     .WithParameter("@userid", userId)
@@ -287,7 +287,7 @@ namespace PacManBot.Services
         {
             if (!File.Exists(Files.Database))
             {
-                SQLiteConnection.CreateFile(Files.Database);
+                File.Create(Files.Database);
                 logger.Log(LogSeverity.Info, LogSource.Storage, "Creating database");
             }
 
@@ -301,7 +301,7 @@ namespace PacManBot.Services
                     "noautoresponse (id BIGINT PRIMARY KEY)",
                 })
                 {
-                    new SQLiteCommand($"CREATE TABLE IF NOT EXISTS {table}", connection).ExecuteNonQuery();
+                    new SqliteCommand($"CREATE TABLE IF NOT EXISTS {table}", connection).ExecuteNonQuery();
                 }
             }
         }
