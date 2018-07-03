@@ -3,16 +3,18 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Reflection;
+using System.Data.SQLite;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using Newtonsoft.Json;
+using System.Collections.Concurrent;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using Discord;
 using Discord.Rest;
 using Discord.WebSocket;
 using PacManBot.Games;
 using PacManBot.Utils;
+using PacManBot.Constants;
 using PacManBot.Extensions;
 
 namespace PacManBot.Services
@@ -29,15 +31,13 @@ namespace PacManBot.Services
         private readonly DiscordShardedClient client;
         private readonly LoggingService logger;
 
-        private readonly Dictionary<ulong, string> prefixes;
-        private readonly List<ScoreEntry> scoreEntries;
+        private readonly ConcurrentDictionary<ulong, string> cachedPrefixes;
+        private readonly ConcurrentDictionary<ulong, bool> cachedAllowsAutoresponse;
         private readonly List<IChannelGame> games;
         private readonly List<IUserGame> userGames;
-        private readonly List<ulong> noAutoresponse;
 
         public IReadOnlyList<IChannelGame> Games { get; }
         public IReadOnlyList<IUserGame> UserGames { get;  }
-        public IReadOnlyList<ulong> NoAutoresponse { get; }
 
         public string DefaultPrefix { get; }
         public RestApplication AppInfo { get; private set; }
@@ -49,6 +49,11 @@ namespace PacManBot.Services
         public string[] SuperPettingMessages { get; private set; }
 
 
+        public SQLiteConnection NewDatabaseConnection
+            => new SQLiteConnection($"Data Source={Files.Database}; Version=3;");
+
+
+
         public StorageService(DiscordShardedClient client, LoggingService logger, BotConfig config)
         {
             this.client = client;
@@ -56,20 +61,17 @@ namespace PacManBot.Services
 
             DefaultPrefix = config.defaultPrefix;
             BotContent = null;
-            prefixes = new Dictionary<ulong, string>();
-            scoreEntries = new List<ScoreEntry>();
+            cachedPrefixes = new ConcurrentDictionary<ulong, string>();
+            cachedAllowsAutoresponse = new ConcurrentDictionary<ulong, bool>();
+
             games = new List<IChannelGame>();
             userGames = new List<IUserGame>();
-            noAutoresponse = new List<ulong>();
 
             Games = games.AsReadOnly();
             UserGames = userGames.AsReadOnly();
-            NoAutoresponse = noAutoresponse.AsReadOnly();
 
-            LoadBotContent();
-            LoadWakaExclude();
-            LoadPrefixes();
-            LoadScoreboard();
+            SetupDatabase();
+            LoadContent();
             LoadGames();
 
             client.LoggedIn += LoadAppInfo;
@@ -78,13 +80,23 @@ namespace PacManBot.Services
 
 
 
-        public string GetPrefix(ulong serverId)
-            => prefixes.ContainsKey(serverId) ? prefixes[serverId] : DefaultPrefix;
+        public string GetPrefix(ulong guildId)
+        {
+            if (cachedPrefixes.TryGetValue(guildId, out string prefix)) return prefix;
 
+            using (var connection = NewDatabaseConnection)
+            {
+                connection.Open();
+                string sql = $"SELECT prefix FROM prefixes WHERE id={guildId} LIMIT 1";
+                var command = new SQLiteCommand(sql, connection);
+                prefix = (string)command.ExecuteScalar() ?? DefaultPrefix;
+                cachedPrefixes.TryAdd(guildId, prefix);
+                return prefix;
+            }
+        }
 
         public string GetPrefix(IGuild guild = null)
-            => GetPrefix(guild?.Id ?? 0);
-
+            => guild == null ? DefaultPrefix : GetPrefix(guild.Id);
 
         public string GetPrefixOrEmpty(IGuild guild)
             => guild == null ? "" : GetPrefix(guild.Id);
@@ -92,29 +104,132 @@ namespace PacManBot.Services
 
         public void SetPrefix(ulong guildId, string prefix)
         {
-            if (prefixes.ContainsKey(guildId))
-            {
-                string replace = "";
+            cachedPrefixes[guildId] = prefix;
 
-                if (prefix == DefaultPrefix)
-                {
-                    prefixes.Remove(guildId);
-                }
-                else
-                {
-                    prefixes[guildId] = prefix;
-                    replace = $"{guildId} {Regex.Escape(prefix)}\n";
-                }
+            string sql = "DELETE FROM prefixes WHERE id=@id;";
+            if (prefix != DefaultPrefix) sql += "INSERT INTO prefixes VALUES (@id, @prefix);";
 
-                File.WriteAllText(BotFile.Prefixes, Regex.Replace(File.ReadAllText(BotFile.Prefixes), $@"{guildId}.*\n", replace));
-            }
-            else if (prefix != DefaultPrefix)
+            using (var connection = NewDatabaseConnection)
             {
-                prefixes.Add(guildId, prefix);
-                File.AppendAllText(BotFile.Prefixes, $"{guildId} {prefix}\n");
+                connection.Open();
+
+                new SQLiteCommand(sql, connection)
+                    .WithParameter("@id", guildId)
+                    .WithParameter("@prefix", prefix)
+                    .ExecuteNonQuery();
             }
         }
 
+
+
+
+        public bool AllowsAutoresponse(ulong guildId)
+        {
+            if (cachedAllowsAutoresponse.TryGetValue(guildId, out bool allows)) return allows;
+
+            using (var connection = NewDatabaseConnection)
+            {
+                connection.Open();
+
+                var command = new SQLiteCommand("SELECT * FROM noautoresponse WHERE id=@id LIMIT 1", connection)
+                    .WithParameter("@id", guildId);
+                allows = command.ExecuteScalar() == null;
+                cachedAllowsAutoresponse.TryAdd(guildId, allows);
+                return allows;
+            }
+        }
+
+
+        public bool ToggleAutoresponse(ulong guildId)
+        {
+            using (var connection = NewDatabaseConnection)
+            {
+                connection.Open();
+                new SQLiteCommand("BEGIN", connection).ExecuteNonQuery();
+
+                int changed = new SQLiteCommand("DELETE FROM noautoresponse WHERE id=@id", connection)
+                    .WithParameter("@id", guildId)
+                    .ExecuteNonQuery();
+
+                if (changed == 0)
+                {
+                    new SQLiteCommand("INSERT INTO noautoresponse VALUES (@id)", connection)
+                        .WithParameter("@id", guildId)
+                        .ExecuteNonQuery();
+                }
+
+                new SQLiteCommand("END", connection).ExecuteNonQuery();
+                return changed != 0;
+            }
+        }
+
+
+
+
+        public void AddScore(ScoreEntry entry)
+        {
+            logger.Log(LogSeverity.Info, LogSource.Storage, $"New scoreboard entry: {entry}");
+
+            using (var connection = NewDatabaseConnection)
+            {
+                connection.Open();
+
+                string sql = "INSERT INTO scoreboard VALUES (@score, @userid, @state, @turns, @username, @channel, @date)";
+                new SQLiteCommand(sql, connection)
+                    .WithParameter("@score", entry.score)
+                    .WithParameter("@userid", entry.userId)
+                    .WithParameter("@state", entry.state)
+                    .WithParameter("@turns", entry.turns)
+                    .WithParameter("@username", entry.username)
+                    .WithParameter("@channel", entry.channel)
+                    .WithParameter("@date", entry.date)
+                    .ExecuteNonQuery();
+            }
+        }
+
+
+        public IReadOnlyList<ScoreEntry> GetScores(TimePeriod period, int amount = 1, int start = 0, ulong? userId = null)
+        {
+            var conditions = new List<string>();
+            if (period != TimePeriod.All) conditions.Add($"date>=@date");
+            if (userId != null) conditions.Add($"userid=@userid");
+
+            string sql = "SELECT * FROM scoreboard " +
+             (conditions.Count == 0 ? "" : $"WHERE {string.Join(" AND ", conditions)} ") +
+             "ORDER BY score DESC LIMIT @amount OFFSET @start";
+
+            var scores = new List<ScoreEntry>();
+
+            using (var connection = NewDatabaseConnection)
+            {
+                connection.Open();
+
+                var command = new SQLiteCommand(sql, connection)
+                    .WithParameter("@amount", amount)
+                    .WithParameter("@start", start)
+                    .WithParameter("@userid", userId)
+                    .WithParameter("@date", DateTime.Now - TimeSpan.FromHours((int)period));
+
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        int score = reader.GetInt32(0);
+                        ulong id = (ulong)reader.GetInt64(1);
+                        State state = (State)reader.GetInt32(2);
+                        int turns = reader.GetInt32(3);
+                        string name = reader.GetString(4);
+                        string channel = reader.GetString(5);
+                        DateTime date = reader.GetDateTime(6);
+
+                        scores.Add(new ScoreEntry(score, id, state, turns, name, channel, date));
+                    }
+                }
+            }
+
+            return scores.AsReadOnly();
+        }
+        
 
 
 
@@ -168,56 +283,35 @@ namespace PacManBot.Services
 
 
 
-        public void AddScore(ScoreEntry entry)
+        private void SetupDatabase()
         {
-            string scoreString = entry.ToString();
-            logger.Log(LogSeverity.Info, LogSource.Storage, $"New scoreboard entry: {scoreString}");
-            File.AppendAllText(BotFile.Scoreboard, $"\n{scoreString}");
-
-            int index = scoreEntries.BinarySearch(entry);
-            if (index < 0) index = ~index;
-            scoreEntries.Insert(index, entry); // Adds entry in sorted position
-        }
-
-
-        public IReadOnlyList<ScoreEntry> GetScores(TimePeriod period = TimePeriod.All)
-        {
-            if (period == TimePeriod.All) return scoreEntries.AsReadOnly();
-
-            var date = DateTime.Now;
-            return scoreEntries.Where(s => (date - s.date).TotalHours <= (int)period).ToList().AsReadOnly();
-        }
-
-
-
-
-        public bool ToggleAutoresponse(ulong guildId)
-        {
-            bool wasExcluded = noAutoresponse.Contains(guildId);
-            if (wasExcluded)
+            if (!File.Exists(Files.Database))
             {
-                noAutoresponse.Remove(guildId);
-                File.WriteAllText(BotFile.WakaExclude, File.ReadAllText(BotFile.WakaExclude).Replace($"{guildId} ", ""));
-            }
-            else
-            {
-                noAutoresponse.Add(guildId);
-                File.AppendAllText(BotFile.WakaExclude, $"{guildId} ");
+                SQLiteConnection.CreateFile(Files.Database);
+                logger.Log(LogSeverity.Info, LogSource.Storage, "Creating database");
             }
 
-            return wasExcluded;
+            using (var connection = NewDatabaseConnection)
+            {
+                connection.Open();
+
+                foreach (string table in new[] {
+                    "prefixes (id BIGINT PRIMARY KEY, prefix TEXT)",
+                    "scoreboard (score INT, userid BIGINT, state INT, turns INT, username TEXT, channel TEXT, date DATETIME)",
+                    "noautoresponse (id BIGINT PRIMARY KEY)",
+                })
+                {
+                    new SQLiteCommand($"CREATE TABLE IF NOT EXISTS {table}", connection).ExecuteNonQuery();
+                }
+            }
         }
 
 
-
-
-        // Load
-
-        public void LoadBotContent()
+        public void LoadContent()
         {
             if (BotContent == null)
             {
-                BotContent = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile(BotFile.Contents).Build();
+                BotContent = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile(Files.Contents).Build();
             }
             else
             {
@@ -233,89 +327,21 @@ namespace PacManBot.Services
         }
 
 
-        private void LoadWakaExclude()
-        {
-            try
-            {
-                noAutoresponse.AddRange(File.ReadAllText(BotFile.WakaExclude)
-                                        .Split(' ', StringSplitOptions.RemoveEmptyEntries)
-                                        .Select(ulong.Parse));
-            }
-            catch (FormatException)
-            {
-                logger.Log(LogSeverity.Error, LogSource.Storage, $"Invalid {BotFile.WakaExclude} file");
-            }
-        }
-
-
-        private void LoadPrefixes()
-        {
-            uint fail = 0;
-
-            string[] lines = File.ReadAllLines(BotFile.Prefixes);
-            for (int i = 0; i < lines.Length; i++)
-            {
-                if (lines[i].StartsWith('#') || string.IsNullOrWhiteSpace(lines[i])) continue;
-                string[] data = lines[i].Split(' '); // Splits into guild ID and prefix
-
-                if (data.Length == 2 && ulong.TryParse(data[0], out ulong id))
-                {
-                    string prefix = data[1];
-                    prefixes.Add(id, prefix);
-                }
-                else
-                {
-                    logger.Log(LogSeverity.Error, LogSource.Storage, $"Invalid entry in {BotFile.Prefixes} at line {i}");
-                    fail++;
-                }
-            }
-
-            logger.Log(LogSeverity.Info, LogSource.Storage,
-                       $"Loaded {prefixes.Count} custom prefixes from {BotFile.Prefixes}{$" with {fail} errors".If(fail > 0)}");
-        }
-
-
-        private void LoadScoreboard()
-        {
-            uint fail = 0;
-
-            string[] lines = File.ReadAllLines(BotFile.Scoreboard);
-            for (int i = 0; i < lines.Length; i++)
-            {
-                if (lines[i].StartsWith('#')) continue;
-
-                if (ScoreEntry.TryParse(lines[i], out ScoreEntry newEntry))
-                {
-                    scoreEntries.Add(newEntry);
-                }
-                else
-                {
-                    logger.Log(LogSeverity.Error, LogSource.Storage, $"Invalid entry in {BotFile.Scoreboard} at line {i}");
-                    fail++;
-                }
-            }
-
-            scoreEntries.Sort(); // The list will stay sorted as new elements will be added in sorted position
-            logger.Log(LogSeverity.Info, LogSource.Storage,
-                       $"Loaded {scoreEntries.Count} scoreboard entries from {BotFile.Scoreboard}{$" with {fail} errors".If(fail > 0)}");
-        }
-
-
         private void LoadGames()
         {
-            if (!Directory.Exists(BotFile.GameFolder))
+            if (!Directory.Exists(Files.GameFolder))
             {
-                Directory.CreateDirectory(BotFile.GameFolder);
-                logger.Log(LogSeverity.Warning, LogSource.Storage, $"Created missing directory \"{BotFile.GameFolder}\"");
+                Directory.CreateDirectory(Files.GameFolder);
+                logger.Log(LogSeverity.Warning, LogSource.Storage, $"Created missing directory \"{Files.GameFolder}\"");
                 return;
             }
 
             uint fail = 0;
             bool firstFail = true;
 
-            foreach (string file in Directory.GetFiles(BotFile.GameFolder))
+            foreach (string file in Directory.GetFiles(Files.GameFolder))
             {
-                if (file.EndsWith(BotFile.GameExtension))
+                if (file.EndsWith(Files.GameExtension))
                 {
                     try
                     {
@@ -337,7 +363,7 @@ namespace PacManBot.Services
             }
 
             logger.Log(LogSeverity.Info, LogSource.Storage,
-                       $"Loaded {games.Count + userGames.Count} games from previous session{$" with {fail} errors".If(fail > 0)}.");
+                       $"Loaded {games.Count + userGames.Count} games{$" with {fail} errors".If(fail > 0)}");
         }
 
 
@@ -347,7 +373,7 @@ namespace PacManBot.Services
             client.LoggedIn -= LoadAppInfo;
         }
 
-
+        
 
 
         private static IReadOnlyDictionary<string, Type> GetStoreableGameTypes()

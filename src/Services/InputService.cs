@@ -8,6 +8,7 @@ using Discord.Commands;
 using Discord.WebSocket;
 using PacManBot.Games;
 using PacManBot.Utils;
+using PacManBot.Constants;
 using PacManBot.Extensions;
 
 namespace PacManBot.Services
@@ -140,7 +141,7 @@ namespace PacManBot.Services
 
         private async Task<bool> AutoresponseAsync(SocketUserMessage message)
         {
-            if (!(message.Channel is SocketGuildChannel gChannel) || !storage.NoAutoresponse.Contains(gChannel.Guild.Id)
+            if (!(message.Channel is SocketGuildChannel gChannel) || storage.AllowsAutoresponse(gChannel.Guild.Id)
                 || storage.AppInfo?.Owner.Id == message.Author.Id)
             {
                 if (waka.IsMatch(message.Content))
@@ -250,8 +251,8 @@ namespace PacManBot.Services
 
                 if (game is PacManGame pmGame && pmGame.State != State.Cancelled && !pmGame.custom)
                 {
-                    storage.AddScore(new ScoreEntry(pmGame.State, pmGame.score, pmGame.Time, user.Id,
-                                                    user.NameandNum(), DateTime.Now, $"{guild?.Name}/{channel.Name}"));
+                    storage.AddScore(new ScoreEntry(pmGame.score, user.Id, pmGame.State, pmGame.Time,
+                        user.NameandNum(), $"{guild?.Name}/{channel.Name}", DateTime.Now));
                 }
                 if (channel.BotCan(ChannelPermission.ManageMessages))
                 {

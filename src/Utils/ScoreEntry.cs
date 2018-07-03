@@ -18,7 +18,7 @@ namespace PacManBot.Utils
         public string channel;
 
 
-        public ScoreEntry(State state, int score, int turns, ulong userId, string username, DateTime date, string channel)
+        public ScoreEntry(int score, ulong userId, State state, int turns, string username, string channel, DateTime date)
         {
             this.state = state;
             this.score = score;
@@ -32,50 +32,16 @@ namespace PacManBot.Utils
 
         public string GetUsername(DiscordShardedClient client)
         {
-            return client.GetUser(userId)?.NameandNum() ?? username ?? "Unknown";
+            return client?.GetUser(userId)?.NameandNum() ?? username ?? "Unknown";
         }
 
 
-        public override string ToString()
-        {
-            return $"{state} {score} {turns} {userId} " +
-                   $"\"{username.Replace('"', '“')}\" \"{date:o}\" \"{channel.Replace('"', '“')}\"";
-        }
+        public override string ToString() => ToString(null);
 
-
-        public string ToStringSimpleScoreboard(DiscordShardedClient client, int position)
+        public string ToString(DiscordShardedClient client)
         {
-            return $"{position}. ({state}) {score} points in {turns} turns by user " +
+            return $"({state}) {score} points in {turns} turns by user " +
                    $"{GetUsername(client).SanitizeMarkdown().SanitizeMentions()}";
-        }
-
-
-        public static bool TryParse(string value, out ScoreEntry entry)
-        {
-            var splice = new List<string>(value.Split(' ', 5)); // state, score, turns, userId, (rest)
-
-            if (splice.Count == 5)
-            {
-                splice.AddRange(splice[4].Split('"').Where(s => !string.IsNullOrWhiteSpace(s)));  // username, date, guild
-                splice.RemoveAt(4);
-
-                if (splice.Count == 7
-                    && Enum.TryParse(splice[0], out State state)
-                    && int.TryParse(splice[1], out int score)
-                    && int.TryParse(splice[2], out int turns)
-                    && ulong.TryParse(splice[3], out ulong userId)
-                    && DateTime.TryParse(splice[5], out DateTime date)
-                ){
-                    string username = splice[4].Replace('“', '"');
-                    string channel = splice[6].Replace('“', '"');
-
-                    entry = new ScoreEntry(state, score, turns, userId, username, date, channel);
-                    return true;
-                }
-            }
-
-            entry = null;
-            return false;
         }
 
 

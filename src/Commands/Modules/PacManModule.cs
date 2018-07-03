@@ -8,6 +8,7 @@ using Discord.Commands;
 using Discord.WebSocket;
 using PacManBot.Games;
 using PacManBot.Utils;
+using PacManBot.Constants;
 using PacManBot.Extensions;
 
 namespace PacManBot.Commands
@@ -124,11 +125,6 @@ namespace PacManBot.Commands
         [Command("top"), Alias("leaderboard", "lb"), HideHelp]
         public async Task SendTopScores(TimePeriod period, int min = 10, int? max = null)
         {
-            if (min < 1 || max < 1 || max < min)
-            {
-                await ReplyAsync($"Invalid range of scores. Try `{Prefix}help lb` for more info");
-                return;
-            }
             if (max == null) 
             {
                 if (min <= MaxDisplayedScores) // Takes a single number as the max if less than the limit
@@ -138,37 +134,44 @@ namespace PacManBot.Commands
                 }
                 else max = min + 9;
             }
-
-            var scores = Storage.GetScores(period);
-
-            if (scores.Count < 1)
+            if (min < 1 || max < 1 || max < min)
             {
-                await ReplyAsync("There are no registered scores within this period!");
+                await ReplyAsync($"Invalid range of scores. Try `{Prefix}help lb` for more info");
                 return;
             }
 
-            if (min > scores.Count)
+            int amount = Math.Min(MaxDisplayedScores, (int)max - min + 1);
+
+            var scores = Storage.GetScores(period, amount, min - 1);
+
+            if (scores.Count == 0)
             {
-                await ReplyAsync("No scores found within the specified range.");
+                await ReplyAsync($"No scores found in this range{" and period".If(period != TimePeriod.All)}.");
                 return;
             }
 
             var content = new StringBuilder();
             content.Append($"Displaying best scores {period.Humanized()}\nᅠ\n");
 
-            int maxPosDigits = (min + MaxDisplayedScores).ToString().Length;
-            int maxScoreDigits = scores[min - 1].score.ToString().Length;
-            for (int i = min; i <= scores.Count && i <= max && i < min + MaxDisplayedScores; i++)
+            int maxPosDigits = max.ToString().Length;
+            int maxScoreDigits = scores[0].score.ToString().Length;
+            for (int i = 0; i < scores.Count; i++)
             {
-                ScoreEntry entry = scores[i - 1]; // The list is always kept sorted so we just go by index
+                ScoreEntry entry = scores[i];
 
-                string result = $"`{$"{i}.".Align(maxPosDigits + 1)} {$"({entry.state})".Align(6)} " +
+                string result = $"`{$"{min + i}.".Align(maxPosDigits+1)} {$"({entry.state})".Align(6)} " +
                                 $"{$"{entry.score}".Align(maxScoreDigits, right: true)} points in {entry.turns} turns";
-                content.Append(result.Align(38) + $"- {entry.GetUsername(Context.Client).Replace("`", "")}`\n");
+                content.AppendLine(result.Align(38) + $"- {entry.GetUsername(Context.Client).Replace("`", "")}`");
             }
 
-            if (max - min >= MaxDisplayedScores && max < scores.Count) content.Append($"*Only {MaxDisplayedScores} scores may be displayed at once*");
-            else if (max >= scores.Count) content.Append("*No more scores could be found*");
+            if (max - min + 1 > MaxDisplayedScores)
+            {
+                content.AppendLine($"*Only {MaxDisplayedScores} scores may be displayed at once*");
+            }
+            if (scores.Count < amount)
+            {
+                content.AppendLine("*No more scores could be found*");
+            }
 
 
             var embed = new EmbedBuilder()
@@ -201,21 +204,20 @@ namespace PacManBot.Commands
         [Command("score"), Alias("sc", "s"), HideHelp]
         public async Task SendPersonalBest(TimePeriod time, ulong userId)
         {
-            var scores = Storage.GetScores(time);
-            for (int i = 0; i < scores.Count; i++)
-            {
-                if (scores[i].userId == userId) // The list is always kept sorted so the first match is the highest score
-                {
-                    var embed = new EmbedBuilder
-                    {
-                        Title = "🏆 __**Pac-Man Global Leaderboard**__ 🏆",
-                        Description = $"Highest score {time.Humanized()}:\n{scores[i].ToStringSimpleScoreboard(Context.Client, i + 1)}",
-                        Color = Colors.PacManYellow
-                    };
+            var scores = Storage.GetScores(time, 1, 0, userId);
 
-                    await ReplyAsync(embed);
-                    return;
-                }
+            if (scores.Count > 0)
+            {
+                var embed = new EmbedBuilder
+                {
+                    Title = "🏆 __**Pac-Man Global Leaderboard**__ 🏆",
+                    Description = $"Highest score {time.Humanized()}:\n" +
+                                    scores.First().ToString(Context.Client),
+                    Color = Colors.PacManYellow
+                };
+
+                await ReplyAsync(embed);
+                return;
             }
 
             await ReplyAsync(time == TimePeriod.All ? "No scores registered for this user!" : "No scores registered during that time!");
