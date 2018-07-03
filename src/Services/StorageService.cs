@@ -227,6 +227,7 @@ namespace PacManBot.Services
                 }
             }
 
+            logger.Log(LogSeverity.Info, LogSource.Storage, $"Grabbed {scores.Count} score entries");
             return scores.AsReadOnly();
         }
         
