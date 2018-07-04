@@ -74,13 +74,17 @@ namespace PacManBot.Services
             var now = DateTime.Now;
             int count = 0;
 
-            foreach (var game in storage.Games.Where(g => now - g.LastPlayed > g.Expiry).ToArray())
+            foreach (var game in storage.GamesEnumerable
+                .Where(g => now - g.LastPlayed > g.Expiry)
+                .ToArray())
             {
                 count++;
                 storage.DeleteGame(game);
             }
 
-            foreach (var game in storage.UserGames.Where(g => now - g.LastPlayed > g.Expiry).ToArray())
+            foreach (var game in storage.UserGamesEnumerable
+                .Where(g => now - g.LastPlayed > g.Expiry)
+                .ToArray())
             {
                 count++;
                 storage.DeleteGame(game);

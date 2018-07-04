@@ -25,7 +25,7 @@ namespace PacManBot.Commands
 
 
 
-        [Command("about"), Alias("a", "info"), Remarks("About this bot")]
+        [Command("about"), Alias("info"), Remarks("About this bot")]
         [Summary("Shows relevant information, data and links about Pac-Man Bot.")]
         [BetterRequireBotPermission(ChannelPermission.EmbedLinks)]
         public async Task SendBotInfo()
@@ -40,7 +40,7 @@ namespace PacManBot.Commands
                 Color = Colors.PacManYellow,
             };
             embed.AddField("Total guilds", $"{Context.Client.Guilds.Count}", true);
-            embed.AddField("Total active games", $"{Storage.Games.Count}", true);
+            embed.AddField("Total active games", $"{Storage.GamesEnumerable.Count()}", true);
             embed.AddField("Latency", $"{Context.Client.Latency}ms", true);
 
             foreach (var field in fields.Select(x => x.Split('|')))
@@ -86,7 +86,9 @@ namespace PacManBot.Commands
 
             if (helpInfo.Summary != "")
             {
-                foreach (string section in helpInfo.Summary.Replace("{prefix}", Prefix).Split("\n\n\n"))
+                foreach (string section in helpInfo.Summary
+                    .Replace("{prefix}", Prefix)
+                    .Split("\n\n\n"))
                 {
                     embed.AddField("Summary", section + "ᅠ");
                 }
@@ -113,8 +115,9 @@ namespace PacManBot.Commands
             var embed = new EmbedBuilder()
             {
                 Title = $"{CustomEmoji.PacMan} __**Bot Commands**__",
-                Description = (Context.Guild == null ? "No prefix is needed in a DM!" : $"Prefix for this server is '{Prefix}'")
-                            + $"\nYou can do **{Prefix}help command** for more information about a command.\n\nParameters: [optional] <needed>",
+                Description = (Prefix == "" ? "No prefix is needed in this channel!" : $"Prefix for this server is '{Prefix}'")
+                            + $"\nYou can do **{Prefix}help command** for more information about a command.\n\n"
+                            + $"Parameters: [optional] <needed>",
                 Color = Colors.PacManYellow
             };
 
@@ -157,14 +160,14 @@ namespace PacManBot.Commands
             stopwatch.Stop();
 
             string content = $"{CustomEmoji.PacMan} Waka in `{(int)stopwatch.ElapsedMilliseconds}`ms **|** " +
-                             $"{Context.Client.Guilds.Count} total guilds, {Storage.Games.Count} total active games";
+                             $"{Context.Client.Guilds.Count} total guilds, {Storage.GamesEnumerable.Count()} total active games";
 
             if (Context.Client.Shards.Count > 1)
             {
                 var shard = Context.Client.GetShardFor(Context.Guild);
 
                 int shardGames = 0;
-                foreach (var game in Storage.Games)
+                foreach (var game in Storage.GamesEnumerable)
                 {
                     if (game.Guild != null && shard.Guilds.Contains(game.Guild) || game.Guild == null && shard.ShardId == 0)
                     {
@@ -182,12 +185,27 @@ namespace PacManBot.Commands
 
         [Command("prefix"), HideHelp]
         [Summary("Shows this bot's prefix for this server, even though you can already see it here.\n" +
-                 "You can use the `{prefix}setprefix [prefix]` command to set a prefix if you're an Administrator.")]
+                 "You can use the **{prefix}setprefix** command to set a prefix if you're an Administrator.")]
         public async Task GetServerPrefix()
         {
-            await ReplyAsync(Context.Guild == null ? "You can use commands without any prefix in a DM with me!"
-                : $"Prefix for this server is set to `{Prefix}`{" (the default)".If(Prefix == Storage.DefaultPrefix)}. " +
-                  $"It can be changed using the command `{Prefix}setprefix`");
+            string message;
+            if (Context.Guild == null)
+            {
+                message = "You can use commands without any prefix in a DM with me!";
+            }
+            else
+            {
+                message = $"Prefix for this server is set to `{AbsolutePrefix}`" +
+                          " (the default)".If(AbsolutePrefix == Storage.DefaultPrefix) +
+                          $". It can be changed using the command `{Prefix}setprefix`";
+                if (Storage.NoPrefixChannel(Context.Channel.Id))
+                {
+                    message += "\n\nThis channel is in **No Prefix mode**, and using the prefix is unnecessary.\n" +
+                               "Use `help noprefixchannel` for more info.";
+                }
+            }
+
+            await ReplyAsync(message);
         }
 
 

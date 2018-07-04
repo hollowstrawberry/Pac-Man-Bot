@@ -15,15 +15,13 @@ namespace PacManBot.Commands
     {
         private async Task RunMultiplayerGame<TGame>(params IUser[] players) where TGame : MultiplayerGame
         {
-            foreach (var otherGame in Storage.Games)
+            var existingGame = Storage.GetChannelGame(Context.Channel.Id);
+            if (existingGame != null)
             {
-                if (otherGame.ChannelId == Context.Channel.Id)
-                {
-                    await ReplyAsync(otherGame.UserId.Contains(Context.User.Id) ?
-                        $"You're already playing a game in this channel!\nUse `{Prefix}cancel` if you want to cancel it." :
-                        $"There is already a different game in this channel!\nWait until it's finished or try doing `{Prefix}cancel`");
-                    return;
-                }
+                await ReplyAsync(existingGame.UserId.Contains(Context.User.Id) ?
+                    $"You're already playing a game in this channel!\nUse `{Prefix}cancel` if you want to cancel it." :
+                    $"There is already a different game in this channel!\nWait until it's finished or try doing `{Prefix}cancel`");
+                return;
             }
 
             var playerIds = players.Select(x => x.Id).ToArray();
@@ -68,7 +66,7 @@ namespace PacManBot.Commands
                 }
             }
 
-            if (Storage.Games.Contains(game)) Storage.DeleteGame(game); // When playing against the bot
+            Storage.DeleteGame(game); // It's removed here when playing against the bot
         }
 
 

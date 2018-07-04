@@ -261,8 +261,16 @@ namespace PacManBot.Games
                 discardPile.Add(drawPile.Pop());
             }
 
-            var users = playerIds.Skip(1).Where(x => !client.GetUser(x).IsBot).Distinct().Take(9).ToArray();
-            foreach (ulong id in playerIds.Where(x => !users.Contains(x))) AddPlayer(id);
+            var users = playerIds.Skip(1)
+                .Where(x => !client.GetUser(x).IsBot)
+                .Distinct()
+                .Take(9)
+                .ToArray();
+
+            foreach (ulong id in playerIds.Where(x => !users.Contains(x)))
+            {
+                AddPlayer(id);
+            }
 
             if (players.Count > 1)
             {
@@ -273,7 +281,8 @@ namespace PacManBot.Games
             if (users.Length > 0)
             {
                 var mentions = users.Select(x => client.GetUser(x)?.Mention);
-                string invite = $"{string.Join(", ", mentions)} You've been invited to play Uno. Type `{storage.GetPrefix(Guild)}uno join` to join.\n";
+                string invite = $"{string.Join(", ", mentions)} You've been invited to play Uno. " +
+                                $"Type `{storage.GetPrefix(Guild)}uno join` to join.\n";
                 Message = invite + Message;
             }
 
@@ -427,7 +436,12 @@ namespace PacManBot.Games
             if (!calledByAi || !CurrentPlayer.User.IsBot)
             {
                 storage.StoreGame(this);
-                foreach (var player in updatedCards.Distinct().Where(x => !x.User.IsBot)) SendCards(player);
+                foreach (var player in updatedCards
+                    .Distinct()
+                    .Where(x => !x.User.IsBot))
+                {
+                    SendCards(player);
+                }
                 updatedCards = new List<UnoPlayer>();
             }
         }

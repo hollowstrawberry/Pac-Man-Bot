@@ -1,9 +1,10 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Net;
 using Discord.Commands;
+using Discord.WebSocket;
 using PacManBot.Constants;
 using PacManBot.Extensions;
 
@@ -56,22 +57,26 @@ namespace PacManBot.Commands
         }
 
 
-        [Command("setprefix"), Remarks("Set a custom prefix for this server (Admin)")]
-        [Summary("Change the custom prefix for this server. Only server Administrators can use this command.\n" +
+        [Command("setprefix"), Remarks("Set a custom prefix for this server")]
+        [Summary("Change the custom prefix for this server. Requires the user to have the Manage Guild permission.\n" +
                  "Prefixes can't contain these characters: \\* \\_ \\~ \\` \\\\")]
-        [BetterRequireUserPermission(GuildPermission.Administrator)]
+        [BetterRequireUserPermission(GuildPermission.ManageGuild)]
         public async Task SetServerPrefix(string prefix)
         {
-            if (prefix.ContainsAny("*", "_", "~", "`", "\\"))
+            string error = null;
+            if (string.IsNullOrWhiteSpace(prefix))
+                error = $"The guild prefix can't be empty. If you don't want a prefix in a channel, check out `{Prefix}togglenoprefix`";
+            else if (prefix.ContainsAny("*", "_", "~", "`", "\\"))
+                error = "The prefix can't contain markdown special characters: *_~\\`\\\\";
+            else if (prefix.Length > 32)
+                error = "Prefix can't be bigger than 32 characters";
+
+            if (error != null)
             {
-                await ReplyAsync($"{CustomEmoji.Cross} The prefix can't contain markdown special characters: *_~\\`\\\\");
+                await ReplyAsync($"{CustomEmoji.Cross} {error}");
                 return;
             }
-            if (prefix.Length > 32)
-            {
-                await ReplyAsync($"{CustomEmoji.Cross} Prefix can't be bigger than 32 characters");
-                return;
-            }
+
 
             try
             {
@@ -87,9 +92,10 @@ namespace PacManBot.Commands
         }
 
 
-        [Command("togglewaka"), Remarks("Toggle \"waka\" autoresponse from the bot")]
+        [Command("togglewaka"), Remarks("Turn off bot autoresponses in the server")]
         [Summary("The bot normally responds every time a message contains purely multiples of \"waka\", " +
-                 "unless it's turned off server-wide using this command. Requires the user to have the Manage Messages permission.")]
+                 "unless it's turned off server-wide using this command. Requires the user to have the Manage Guild permission.")]
+        [BetterRequireUserPermission(GuildPermission.ManageGuild)]
         public async Task ToggleWakaResponse()
         {
             try
@@ -97,6 +103,59 @@ namespace PacManBot.Commands
                 bool waka = Storage.ToggleAutoresponse(Context.Guild.Id);
                 await ReplyAsync($"{CustomEmoji.Check} Autoresponses turned **{(waka ? "ON" : "OFF")}** in this server.");
                 await Logger.Log(LogSeverity.Info, $"Autoresponses turned {(waka ? "on" : "off")} in {Context.Guild.Id}");
+            }
+            catch (Exception)
+            {
+                await ReplyAsync($"{CustomEmoji.Cross} Oops, something went wrong. {ContactMessage}");
+                throw;
+            }
+        }
+
+
+        [Command("togglenoprefix"), Alias("toggleprefix"), Parameters("[channel id]")]
+        [Remarks("Put a channel in \"No Prefix mode\"")]
+        [Summary("When used by a user with the Manage Channels permission, toggles a channel between " +
+                 "**Normal** mode and **No Prefix** mode.\nIn No Prefix mode, all commands will work without " +
+                 "the need to use a prefix such as \"<\".\nIf the channel id is not specified, you will be" +
+                 "asked to confirm the change for the current channel.\n\n" +
+                 "**Warning!** This can result in a lot of unnecessary spam. Only use this if you're sure. " +
+                 "It's a good idea only in dedicated channels, for example named \"#pacman\" or \"#botspam\"")]
+        [BetterRequireUserPermission(GuildPermission.ManageChannels)]
+        public async Task ToggleNoPrefix([Remainder]string arg = "")
+        {
+            bool specified = ulong.TryParse(arg, out ulong channelId) && Context.Guild.TextChannels.Any(x => x.Id == channelId);
+            if (!specified) channelId = Context.Channel.Id;
+
+            var channel = specified ? Context.Guild.GetTextChannel(channelId) : (SocketTextChannel)Context.Channel;
+
+            try
+            {
+                if (Storage.NoPrefixChannel(channelId))
+                {
+                    Storage.ToggleNoPrefix(channelId);
+                    await ReplyAsync(
+                        $"{CustomEmoji.Check} The {channel.Mention} channel is back to **Normal mode** " +
+                        $"(Prefix: `{AbsolutePrefix}`)");
+                }
+                else
+                {
+                    if (specified)
+                    {
+                        Storage.ToggleNoPrefix(channelId);
+                        await ReplyAsync(
+                            $"{CustomEmoji.Check} The {channel.Mention} channel is now in **No Prefix mode**. " +
+                            $"All commands will work without any prefix.\nTo revert to normal, use `togglenoprefix` again.");
+                    }
+                    else
+                    {
+                        await ReplyAsync(
+                            $"❗__**Warning**__\nYou're about to set this channel to **No Prefix mode**.\n" +
+                            $"All commands will work without the need of a prefix such as `{Prefix}`\n" +
+                            $"This can lead to a lot of *unnecessary spam*. It's a good idea only in " +
+                            $"dedicated channels, for example named \"#pacman\" or \"#botspam\".\n\n" +
+                            $"To set this channel to No Prefix mode, please do `{Prefix}togglenoprefix {channelId}`");
+                    }
+                }
             }
             catch (Exception)
             {

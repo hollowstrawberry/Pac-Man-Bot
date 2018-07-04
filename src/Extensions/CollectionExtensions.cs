@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
 
 namespace PacManBot.Extensions
@@ -106,6 +107,12 @@ namespace PacManBot.Extensions
             {
                 return null;
             }
+        }
+
+
+        public static bool TryRemove<TKey, TValue>(this ConcurrentDictionary<TKey, TValue> dict, TKey key)
+        {
+            return dict.TryRemove(key, out _);
         }
 
 

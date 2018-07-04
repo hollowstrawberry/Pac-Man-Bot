@@ -30,23 +30,21 @@ namespace PacManBot.Services
 
         private readonly DiscordShardedClient client;
         private readonly LoggingService logger;
-
+        private readonly ConcurrentDictionary<ulong, IChannelGame> games;
+        private readonly ConcurrentDictionary<(ulong, Type), IUserGame> userGames;
         private readonly ConcurrentDictionary<ulong, string> cachedPrefixes;
         private readonly ConcurrentDictionary<ulong, bool> cachedAllowsAutoresponse;
-        private readonly List<IChannelGame> games;
-        private readonly List<IUserGame> userGames;
+        private readonly ConcurrentDictionary<ulong, bool> cachedNoPrefixChannel;
 
-        public IReadOnlyList<IChannelGame> Games { get; }
-        public IReadOnlyList<IUserGame> UserGames { get;  }
+        public IEnumerable<IChannelGame> GamesEnumerable => games.Select(x => x.Value);
+        public IEnumerable<IUserGame> UserGamesEnumerable => userGames.Select(x => x.Value);
 
         public string DefaultPrefix { get; }
         public RestApplication AppInfo { get; private set; }
-
         public IConfigurationRoot BotContent { get; private set; }
-        public ulong[] NoPrefixChannels { get; private set; }
-        public ulong[] BannedChannels { get; private set; }
         public string[] PettingMessages { get; private set; }
         public string[] SuperPettingMessages { get; private set; }
+        public ulong[] BannedChannels { get; private set; }
 
 
         public SqliteConnection NewDatabaseConnection
@@ -63,12 +61,9 @@ namespace PacManBot.Services
             BotContent = null;
             cachedPrefixes = new ConcurrentDictionary<ulong, string>();
             cachedAllowsAutoresponse = new ConcurrentDictionary<ulong, bool>();
-
-            games = new List<IChannelGame>();
-            userGames = new List<IUserGame>();
-
-            Games = games.AsReadOnly();
-            UserGames = userGames.AsReadOnly();
+            cachedNoPrefixChannel = new ConcurrentDictionary<ulong, bool>();
+            games = new ConcurrentDictionary<ulong, IChannelGame>();
+            userGames = new ConcurrentDictionary<(ulong, Type), IUserGame>();
 
             SetupDatabase();
             LoadContent();
@@ -87,12 +82,14 @@ namespace PacManBot.Services
             using (var connection = NewDatabaseConnection)
             {
                 connection.Open();
-                string sql = $"SELECT prefix FROM prefixes WHERE id={guildId} LIMIT 1";
-                var command = new SqliteCommand(sql, connection);
+                var command = new SqliteCommand($"SELECT prefix FROM prefixes WHERE id=@id LIMIT 1", connection)
+                    .WithParameter("@id", guildId);
+
                 prefix = (string)command.ExecuteScalar() ?? DefaultPrefix;
-                cachedPrefixes.TryAdd(guildId, prefix);
-                return prefix;
             }
+
+            cachedPrefixes.TryAdd(guildId, prefix);
+            return prefix;
         }
 
         public string GetPrefix(IGuild guild = null)
@@ -142,16 +139,18 @@ namespace PacManBot.Services
 
         public bool ToggleAutoresponse(ulong guildId)
         {
+            cachedAllowsAutoresponse[guildId] = !cachedAllowsAutoresponse[guildId];
+
             using (var connection = NewDatabaseConnection)
             {
                 connection.Open();
                 new SqliteCommand("BEGIN", connection).ExecuteNonQuery();
 
-                int changed = new SqliteCommand("DELETE FROM noautoresponse WHERE id=@id", connection)
+                int rows = new SqliteCommand("DELETE FROM noautoresponse WHERE id=@id", connection)
                     .WithParameter("@id", guildId)
                     .ExecuteNonQuery();
 
-                if (changed == 0)
+                if (rows == 0)
                 {
                     new SqliteCommand("INSERT INTO noautoresponse VALUES (@id)", connection)
                         .WithParameter("@id", guildId)
@@ -159,7 +158,52 @@ namespace PacManBot.Services
                 }
 
                 new SqliteCommand("END", connection).ExecuteNonQuery();
-                return changed != 0;
+                return rows != 0;
+            }
+        }
+
+
+
+
+        public bool NoPrefixChannel(ulong channelId)
+        {
+            if (cachedNoPrefixChannel.TryGetValue(channelId, out bool noPrefixMode)) return noPrefixMode;
+
+            using (var connection = NewDatabaseConnection)
+            {
+                connection.Open();
+
+                var command = new SqliteCommand("SELECT * FROM noprefix WHERE id=@id LIMIT 1", connection)
+                    .WithParameter("@id", channelId);
+                noPrefixMode = command.ExecuteScalar() != null;
+                cachedNoPrefixChannel.TryAdd(channelId, noPrefixMode);
+                return noPrefixMode;
+            }
+        }
+
+
+        public bool ToggleNoPrefix(ulong channelId)
+        {
+            cachedNoPrefixChannel[channelId] = !cachedNoPrefixChannel[channelId];
+
+            using (var connection = NewDatabaseConnection)
+            {
+                connection.Open();
+                new SqliteCommand("BEGIN", connection).ExecuteNonQuery();
+
+                int rows = new SqliteCommand("DELETE FROM noprefix WHERE id=@id", connection)
+                    .WithParameter("@id", channelId)
+                    .ExecuteNonQuery();
+
+                if (rows == 0)
+                {
+                    new SqliteCommand("INSERT INTO noprefix VALUES (@id)", connection)
+                        .WithParameter("@id", channelId)
+                        .ExecuteNonQuery();
+                }
+
+                new SqliteCommand("END", connection).ExecuteNonQuery();
+                return rows != 0;
             }
         }
 
@@ -230,30 +274,26 @@ namespace PacManBot.Services
             logger.Log(LogSeverity.Info, LogSource.Storage, $"Grabbed {scores.Count} score entries");
             return scores.AsReadOnly();
         }
-        
+
 
 
 
         public IChannelGame GetChannelGame(ulong channelId)
-            => games.FirstOrDefault(g => g.ChannelId == channelId);
+            => games.TryGetValue(channelId, out var game) ? game : null;
 
 
-        public IUserGame GetUserGame(ulong userId)
-            => userGames.FirstOrDefault(g => g.OwnerId == userId);
+        public TGame GetChannelGame<TGame>(ulong channelId) where TGame : class, IChannelGame
+            => GetChannelGame(channelId) as TGame;
 
 
-        public TGame GetChannelGame<TGame>(ulong channelId) where TGame : IChannelGame
-            => (TGame)games.FirstOrDefault(g => g.ChannelId == channelId && g is TGame);
-
-
-        public TGame GetUserGame<TGame>(ulong userId) where TGame : IUserGame
-            => (TGame)userGames.FirstOrDefault(g => g.OwnerId == userId && g is TGame);
+        public TGame GetUserGame<TGame>(ulong userId) where TGame : class, IUserGame
+            => userGames.TryGetValue((userId, typeof(TGame)), out var game) ? (TGame)game : null;
 
 
         public void AddGame(IBaseGame game)
         {
-            if (game is IUserGame uGame) userGames.Add(uGame);
-            else if (game is IChannelGame cGame) games.Add(cGame);
+            if (game is IUserGame uGame) userGames.TryAdd((uGame.OwnerId, uGame.GetType()), uGame);
+            else if (game is IChannelGame cGame) games.TryAdd(cGame.ChannelId, cGame);
         }
 
 
@@ -264,10 +304,11 @@ namespace PacManBot.Services
                 game.CancelRequests();
                 if (game is IStoreableGame sGame && File.Exists(sGame.GameFile())) File.Delete(sGame.GameFile());
 
-                if (game is IUserGame uGame) userGames.Remove(uGame);
-                else if (game is IChannelGame cGame) games.Remove(cGame);
+                bool success = false;
+                if (game is IUserGame uGame) success = userGames.TryRemove((uGame.OwnerId, uGame.GetType()));
+                else if (game is IChannelGame cGame) success = games.TryRemove(cGame.ChannelId);
 
-                logger.Log(LogSeverity.Verbose, LogSource.Storage, $"Removed {game.GetType().Name} at {game.IdentifierId()}");
+                if (success) logger.Log(LogSeverity.Verbose, LogSource.Storage, $"Removed {game.GetType().Name} at {game.IdentifierId()}");
             }
             catch (Exception e)
             {
@@ -300,6 +341,7 @@ namespace PacManBot.Services
                     "prefixes (id BIGINT PRIMARY KEY, prefix TEXT)",
                     "scoreboard (score INT, userid BIGINT, state INT, turns INT, username TEXT, channel TEXT, date DATETIME)",
                     "noautoresponse (id BIGINT PRIMARY KEY)",
+                    "noprefix (id BIGINT PRIMARY KEY)"
                 })
                 {
                     new SqliteCommand($"CREATE TABLE IF NOT EXISTS {table}", connection).ExecuteNonQuery();
@@ -319,7 +361,6 @@ namespace PacManBot.Services
                 BotContent.Reload();
             }
 
-            NoPrefixChannels = BotContent["noprefix"].Split(',').Select(ulong.Parse).ToArray();
             BannedChannels = BotContent["banned"].Split(',').Select(ulong.Parse).ToArray();
             PettingMessages = BotContent["petting"].Split('\n', StringSplitOptions.RemoveEmptyEntries);
             SuperPettingMessages = BotContent["superpetting"].Split('\n', StringSplitOptions.RemoveEmptyEntries);
@@ -350,8 +391,8 @@ namespace PacManBot.Services
                         var game = (IStoreableGame)JsonConvert.DeserializeObject(File.ReadAllText(file), gameType, GameJsonSettings);
                         game.PostDeserialize(client, logger, this);
 
-                        if (game is IUserGame uGame) userGames.Add(uGame);
-                        else if (game is IChannelGame cGame) games.Add(cGame);
+                        if (game is IUserGame uGame) userGames.TryAdd((uGame.OwnerId, uGame.GetType()), uGame);
+                        else if (game is IChannelGame cGame) games.TryAdd(cGame.ChannelId, cGame);
                     }
                     catch (Exception e)
                     {

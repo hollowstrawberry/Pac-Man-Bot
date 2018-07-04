@@ -3,11 +3,13 @@ using System.Security.Cryptography;
 
 namespace PacManBot.Utils
 {
-    public class ThreadSafeRandom : Random
+    // A wrapper for System.Security.Cryptography.RNGCryptoServiceProvider with methods
+    // from System.Random for ease of use. Main objectives are good randomness and thread-safety.
+    public class ConcurrentRandom : Random
     {
         private readonly RNGCryptoServiceProvider crypto;
 
-        public ThreadSafeRandom()
+        public ConcurrentRandom()
         {
             crypto = new RNGCryptoServiceProvider();
         }

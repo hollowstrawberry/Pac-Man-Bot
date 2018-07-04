@@ -4,9 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
-using PacManBot.Services;
 using Discord.Net;
 using PacManBot.Games;
+using PacManBot.Services;
 using PacManBot.Constants;
 using PacManBot.Extensions;
 
@@ -206,7 +206,9 @@ namespace PacManBot.Commands
         [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.ManageMessages)]
         public async Task ClearAllMessages(int amount = 10)
         {
-            foreach (var message in await Context.Channel.GetMessagesAsync(amount, options: DefaultOptions).FlattenAsync())
+            foreach (var message in await Context.Channel
+                .GetMessagesAsync(amount, options: DefaultOptions)
+                .FlattenAsync())
             {
                 try
                 {

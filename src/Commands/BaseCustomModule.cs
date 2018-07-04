@@ -30,8 +30,8 @@ namespace PacManBot.Commands
 
         protected override void BeforeExecute(CommandInfo command)
         {
-            Prefix = Storage.GetPrefixOrEmpty(Context.Guild);
-            AbsolutePrefix = string.IsNullOrEmpty(Prefix) ? Storage.DefaultPrefix : Prefix;
+            AbsolutePrefix = Storage.GetPrefix(Context.Guild);
+            Prefix = Context.Guild == null || Storage.NoPrefixChannel(Context.Channel.Id) ? "" : AbsolutePrefix;
         }
 
 

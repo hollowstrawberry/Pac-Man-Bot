@@ -27,7 +27,7 @@ namespace PacManBot
 
     public class Bot
     {
-        public static readonly ThreadSafeRandom Random = new ThreadSafeRandom();
+        public static readonly ConcurrentRandom Random = new ConcurrentRandom();
         public static readonly RequestOptions DefaultOptions = new RequestOptions {
             RetryMode = RetryMode.RetryRatelimit,
             Timeout = 10000
@@ -89,7 +89,9 @@ namespace PacManBot
         {
             _ = UpdateGuildCountAsync();
 
-            foreach (var game in storage.Games.Where(g => g.Guild?.Id == guild.Id).ToArray())
+            foreach (var game in storage.GamesEnumerable
+                .Where(g => g.Guild?.Id == guild.Id)
+                .ToArray())
             {
                 storage.DeleteGame(game);
             }

@@ -34,10 +34,12 @@ namespace PacManBot.Commands
         {
             if (!Context.BotCan(ChannelPermission.SendMessages)) return;
 
-            if (Storage.Games.Any(game => Context.Channel.Id == game.ChannelId))
+            var existingGame = Storage.GetChannelGame(Context.Channel.Id);
+            if (existingGame != null)
             {
-                await ReplyAsync($"There is already a game in this channel!\nYou can use `{Prefix}bump` to bring it to the bottom, " +
-                                 $"Or `{Prefix}cancel` to delete it.");
+                await ReplyAsync(existingGame.UserId.Contains(Context.User.Id) ?
+                    $"You're already playing a game in this channel!\nUse `{Prefix}cancel` if you want to cancel it." :
+                    $"There is already a different game in this channel!\nWait until it's finished or try doing `{Prefix}cancel`");
                 return;
             }
 
