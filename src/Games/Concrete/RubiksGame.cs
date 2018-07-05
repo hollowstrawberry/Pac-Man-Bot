@@ -269,7 +269,6 @@ namespace PacManBot.Games
             var stickers = axis.Select(f => f.stickers).ToArray();
             centers.Shift(amount);
             stickers.Shift(amount);
-
             for (int i = 0; i < axis.Length; i++)
             {
                 axis[i].center = centers[i];

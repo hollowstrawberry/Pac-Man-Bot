@@ -44,7 +44,7 @@ namespace PacManBot.Games
         [DataMember] private List<Card> drawPile = new List<Card>();
         [DataMember] private List<Card> discardPile = new List<Card>();
         [DataMember] private bool reversed;
-        [IgnoreDataMember] private List<UnoPlayer> updatedCards = new List<UnoPlayer>();
+        [IgnoreDataMember] private List<UnoPlayer> updatedPlayers = new List<UnoPlayer>();
 
 
         // Properties
@@ -261,29 +261,25 @@ namespace PacManBot.Games
                 discardPile.Add(drawPile.Pop());
             }
 
-            var users = playerIds.Skip(1)
-                .Where(x => !client.GetUser(x).IsBot)
-                .Distinct()
-                .Take(9)
-                .ToArray();
 
-            foreach (ulong id in playerIds.Where(x => !users.Contains(x)))
+            playerIds = playerIds.Distinct().Take(10).ToArray();
+            var toInviteIds = playerIds.Skip(1).Where(x => !client.GetUser(x).IsBot);
+            var toAddIds = playerIds.Where(x => !toInviteIds.Contains(x));
+
+            if (toInviteIds.Count() > 0)
             {
-                AddPlayer(id);
+                var mentions = toInviteIds.Select(x => client.GetUser(x)?.Mention);
+                string inviteMsg = $"{string.Join(", ", mentions)} You've been invited to play Uno. " +
+                                   $"Type `{storage.GetPrefix(Guild)}uno join` to join.\n";
+                Message = inviteMsg;
             }
+
+            foreach (ulong id in toAddIds) AddPlayer(id);
 
             if (players.Count > 1)
             {
-                Message = $"• First card is {TopCard}\n";
+                Message += $"• First card is {TopCard}\n";
                 ApplyCardEffect();
-            }
-
-            if (users.Length > 0)
-            {
-                var mentions = users.Select(x => client.GetUser(x)?.Mention);
-                string invite = $"{string.Join(", ", mentions)} You've been invited to play Uno. " +
-                                $"Type `{storage.GetPrefix(Guild)}uno join` to join.\n";
-                Message = invite + Message;
             }
 
             storage.StoreGame(this);
@@ -374,7 +370,7 @@ namespace PacManBot.Games
                 {
                     if (!CurrentPlayer.User.IsBot) Message = "";
 
-                    updatedCards.Add(CurrentPlayer);
+                    updatedPlayers.Add(CurrentPlayer);
                     Message += $"• {CurrentPlayer.User?.Username} drew a card and skipped a turn.\n";
                     Turn = FollowingTurn;
                 }
@@ -408,7 +404,7 @@ namespace PacManBot.Games
                 if (CurrentPlayer.User.IsBot && !AllBots) Message += $"• {CurrentPlayer.User?.Username} plays {card}\n";
                 else Message = "";
 
-                if (!CurrentPlayer.User.IsBot) updatedCards.Add(CurrentPlayer);
+                if (!CurrentPlayer.User.IsBot) updatedPlayers.Add(CurrentPlayer);
 
                 CurrentPlayer.cards.Remove(card.NormalizeColor());
                 Discard(card);
@@ -431,18 +427,16 @@ namespace PacManBot.Games
                 ApplyCardEffect();
             }
 
-            updatedCards.Add(CurrentPlayer);
+            updatedPlayers.Add(CurrentPlayer);
 
             if (!calledByAi || !CurrentPlayer.User.IsBot)
             {
                 storage.StoreGame(this);
-                foreach (var player in updatedCards
-                    .Distinct()
-                    .Where(x => !x.User.IsBot))
+                foreach (var player in updatedPlayers.Distinct().Where(x => !x.User.IsBot))
                 {
                     SendCards(player);
                 }
-                updatedCards = new List<UnoPlayer>();
+                updatedPlayers = new List<UnoPlayer>();
             }
         }
 
@@ -616,7 +610,7 @@ namespace PacManBot.Games
         {
             Draw(player, 2);
             Message += $"• {player.User.Username} was called out for not saying Uno and drew 2 cards!\n";
-            updatedCards.Add(player);
+            updatedPlayers.Add(player);
         }
 
 

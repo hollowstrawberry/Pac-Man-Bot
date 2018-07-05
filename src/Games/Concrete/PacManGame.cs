@@ -637,9 +637,7 @@ namespace PacManBot.Games
                 ghost.exitRight = false;
 
                 float distance = float.PositiveInfinity;
-                foreach (Dir testDir in AllDirs
-                    .Where(x => x != ghost.dir.Opposite())
-                    .ToArray())
+                foreach (Dir testDir in AllDirs.Where(x => x != ghost.dir.Opposite()).ToArray())
                 {
                     Pos testPos = ghost.pos + testDir;
 

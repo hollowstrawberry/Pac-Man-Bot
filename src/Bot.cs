@@ -89,9 +89,7 @@ namespace PacManBot
         {
             _ = UpdateGuildCountAsync();
 
-            foreach (var game in storage.GamesEnumerable
-                .Where(g => g.Guild?.Id == guild.Id)
-                .ToArray())
+            foreach (var game in storage.GamesEnumerable.Where(g => g.Guild?.Id == guild.Id).ToArray())
             {
                 storage.DeleteGame(game);
             }

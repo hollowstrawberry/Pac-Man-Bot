@@ -32,17 +32,19 @@ namespace PacManBot.Commands
         [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory)]
         public async Task ClearCommandMessages(int amount = 10)
         {
-            int _ = 0;
-            bool canDelete = Context.BotCan(ChannelPermission.ManageMessages);
-
             var messages = (await Context.Channel.GetMessagesAsync(amount).FlattenAsync())
-                .Select(x => x as IUserMessage).Where(x => x != null)
-                .Where(x => x.Author.Id == Context.Client.CurrentUser.Id
-                       || canDelete &&
-                          (x.Content.StartsWith(AbsolutePrefix) && !x.Content.StartsWith("<@")
-                           || x.HasMentionPrefix(Context.Client.CurrentUser, ref _)));
+                .Select(x => x as IUserMessage).Where(x => x != null);
 
-            foreach (var message in messages)
+            var toDelete = messages.Where(x => x.Author.Id == Context.Client.CurrentUser.Id);
+
+            if (Context.BotCan(ChannelPermission.ManageMessages))
+            {
+                int _ = 0;
+                toDelete.Concat(messages.Where(x => x.Content.StartsWith(AbsolutePrefix) && !x.Content.StartsWith("<@")
+                                               || x.HasMentionPrefix(Context.Client.CurrentUser, ref _)));
+            }
+
+            foreach (var message in toDelete)
             {
                 try
                 {

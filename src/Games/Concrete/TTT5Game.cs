@@ -150,9 +150,18 @@ namespace PacManBot.Games
                 else
                 {
                     var combo = new List<Pos>();
-                    if (lines != null) combo.AddRange(lines.GroupBy(x => x).Where(g => g.Count() > 1).Select(g => g.Key)); // Double line
-                    if (blocks != null) combo.AddRange(blocks.GroupBy(x => x).Where(g => g.Count() > 1).Select(g => g.Key)); // Double block
-                    if (lines != null && blocks != null) combo.AddRange(lines.Where(x => blocks.Contains(x))); // line + block
+                    if (lines != null)
+                    {
+                        combo.AddRange(lines.GroupBy(x => x).Where(g => g.Count() > 1).Select(g => g.Key)); // Double line
+                    }
+                    if (blocks != null)
+                    {
+                        combo.AddRange(blocks.GroupBy(x => x).Where(g => g.Count() > 1).Select(g => g.Key)); // Double block
+                    }
+                    if (lines != null && blocks != null)
+                    {
+                        combo.AddRange(lines.Where(x => blocks.Contains(x))); // line + block
+                    }
 
                     if (combo.Count > 0) moves = combo;
                     else moves = lines ?? blocks;

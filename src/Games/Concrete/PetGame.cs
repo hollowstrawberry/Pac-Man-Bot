@@ -198,6 +198,8 @@ namespace PacManBot.Games
 
             public List<AchievementAttribute> GetList()
             {
+                // Grab all of this object's properties with the achievement attribute, 
+                // assigning whether they've been obtained by the current instance
                 return GetType().GetProperties()
                     .Select(x => x.GetCustomAttribute<AchievementAttribute>()?.WithObtained((bool)x.GetMethod.Invoke(this, new object[0])))
                     .Where(x => x != null).ToList().Sorted();
