@@ -34,30 +34,6 @@ namespace PacManBot.Games
     }
 
 
-    public interface IChannelGame : IBaseGame
-    {
-        ulong MessageId { get; set; }
-        ulong ChannelId { get; set; }
-
-        ISocketMessageChannel Channel { get; }
-        SocketGuild Guild { get; }
-        Task<IUserMessage> GetMessage();
-    }
-
-
-    public interface IMessagesGame : IChannelGame
-    {
-        bool IsInput(string value, ulong userId);
-        void Input(string input, ulong userId = 1);
-    }
-
-    public interface IReactionsGame : IChannelGame
-    {
-        bool IsInput(IEmote value, ulong userId);
-        void Input(IEmote input, ulong userId = 1);
-    }
-
-
     public interface IMultiplayerGame : IBaseGame
     {
         Player Turn { get; }
@@ -78,5 +54,30 @@ namespace PacManBot.Games
     {
         string FilenameKey { get; } // Word used to identify the game type in the filename
         void PostDeserialize(IServiceProvider services);
+    }
+
+
+    public interface IChannelGame : IBaseGame
+    {
+        ulong MessageId { get; set; }
+        ulong ChannelId { get; set; }
+
+        ISocketMessageChannel Channel { get; }
+        SocketGuild Guild { get; }
+        Task<IUserMessage> GetMessage();
+    }
+
+
+    public interface IMessagesGame : IChannelGame
+    {
+        bool IsInput(string value, ulong userId);
+        void Input(string input, ulong userId = 1);
+    }
+
+
+    public interface IReactionsGame : IChannelGame
+    {
+        bool IsInput(IEmote value, ulong userId);
+        void Input(IEmote input, ulong userId = 1);
     }
 }
