@@ -2,7 +2,6 @@ using System;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
-using PacManBot.Services;
 
 namespace PacManBot.Games
 {
@@ -78,6 +77,6 @@ namespace PacManBot.Games
     public interface IStoreableGame : IBaseGame
     {
         string FilenameKey { get; } // Word used to identify the game type in the filename
-        void PostDeserialize(DiscordShardedClient client, LoggingService logger, StorageService storage);
+        void PostDeserialize(IServiceProvider services);
     }
 }

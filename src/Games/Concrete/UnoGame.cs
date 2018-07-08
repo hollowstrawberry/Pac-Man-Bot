@@ -7,7 +7,6 @@ using Discord;
 using Discord.Net;
 using Discord.WebSocket;
 using PacManBot.Utils;
-using PacManBot.Services;
 using PacManBot.Constants;
 using PacManBot.Extensions;
 
@@ -19,7 +18,7 @@ namespace PacManBot.Games
         // Constants
 
         public override string Name => "Uno";
-        public override TimeSpan Expiry => TimeSpan.FromDays(2);
+        public override TimeSpan Expiry => TimeSpan.FromDays(7);
         public string FilenameKey => "uno";
 
         private const int CardsPerPlayer = 7;
@@ -67,8 +66,8 @@ namespace PacManBot.Games
         public override bool AllBots => players.All(x => x.User?.IsBot ?? false);
         public override ulong[] UserId
         {
-            get => players.Select(x => x.id).ToArray();
-            set => throw new InvalidOperationException("Use AddPlayer and RemovePlayer instead");
+            get => players?.Select(x => x.id).ToArray();
+            set => throw new InvalidOperationException($"Use {nameof(AddPlayer)} and {nameof(RemovePlayer)} instead");
         }
 
 
@@ -132,11 +131,11 @@ namespace PacManBot.Games
 
             private UnoPlayer() { } // Used in serialization
 
-            public UnoPlayer(ulong id, DiscordShardedClient client)
+            public UnoPlayer(IUser user, DiscordShardedClient client)
             {
-                this.id = id;
+                id = user.Id;
+                this.user = user;
                 this.client = client;
-                user = client.GetUser(id);
             }
         }
 
@@ -236,9 +235,9 @@ namespace PacManBot.Games
         // Game methods
 
 
-        public override void Create(ulong channelId, ulong[] playerIds, DiscordShardedClient client, LoggingService logger, StorageService storage)
+        protected override void Initialize(ulong channelId, SocketUser[] players, IServiceProvider services)
         {
-            base.Create(channelId, null, client, logger, storage);
+            base.Initialize(channelId, null, services);
 
             // Make deck
             for (int color = 0; color < 4; color++)
@@ -262,21 +261,21 @@ namespace PacManBot.Games
             }
 
 
-            playerIds = playerIds.Distinct().Take(10).ToArray();
-            var toInviteIds = playerIds.Skip(1).Where(x => !client.GetUser(x).IsBot);
-            var toAddIds = playerIds.Where(x => !toInviteIds.Contains(x));
+            players = players.Distinct().Take(10).ToArray();
+            var toInvite = players.Skip(1).Where(x => !x.IsBot);
+            var toAdd = players.Where(x => !toInvite.Contains(x));
 
-            if (toInviteIds.Count() > 0)
+            if (toInvite.Count() > 0)
             {
-                var mentions = toInviteIds.Select(x => client.GetUser(x)?.Mention);
+                var mentions = toInvite.Select(x => x.Mention);
                 string inviteMsg = $"{string.Join(", ", mentions)} You've been invited to play Uno. " +
                                    $"Type `{storage.GetPrefix(Guild)}uno join` to join.\n";
                 Message = inviteMsg;
             }
 
-            foreach (ulong id in toAddIds) AddPlayer(id);
+            foreach (var player in toAdd) AddPlayer(player);
 
-            if (players.Count > 1)
+            if (players.Length > 1)
             {
                 Message += $"• First card is {TopCard}\n";
                 ApplyCardEffect();
@@ -674,12 +673,12 @@ namespace PacManBot.Games
 
 
 
-        public string AddPlayer(ulong id)
+        public string AddPlayer(IUser user)
         {
             if (players.Count == 10) return "The game is full!";
-            if (UserId.Contains(id)) return "You're already playing!";
+            if (players.Any(x => x.id == user.Id)) return "You're already playing!";
 
-            var player = new UnoPlayer(id, client);
+            var player = new UnoPlayer(user, client);
             players.Add(player);
             Draw(player, CardsPerPlayer);
             SendCards(player);
@@ -688,7 +687,7 @@ namespace PacManBot.Games
         }
 
 
-        public void RemovePlayer(ulong id) => RemovePlayer(players.First(x => x.id == id));
+        public void RemovePlayer(IUser user) => RemovePlayer(players.First(x => x.id == user.Id));
         private void RemovePlayer(UnoPlayer player)
         {
             drawPile.AddRange(player.cards);
@@ -700,11 +699,9 @@ namespace PacManBot.Games
 
 
 
-        public void PostDeserialize(DiscordShardedClient client, LoggingService logger, StorageService storage)
+        public void PostDeserialize(IServiceProvider services)
         {
-            this.client = client;
-            this.logger = logger;
-            this.storage = storage;
+            SetServices(services);
 
             foreach (var player in players) player.client = client;
         }

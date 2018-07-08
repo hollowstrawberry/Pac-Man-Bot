@@ -57,7 +57,7 @@ namespace PacManBot.Commands
                 {
                     if (commandName == "")
                     {
-                        pet = new PetGame("", Context.User.Id, Context.Client, Logger, Storage);
+                        pet = new PetGame("", Context.User.Id, Services);
                         Storage.AddGame(pet);
                     }
                     else

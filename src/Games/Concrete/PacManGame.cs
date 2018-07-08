@@ -5,8 +5,6 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Discord;
-using Discord.WebSocket;
-using PacManBot.Services;
 using PacManBot.Constants;
 using PacManBot.Extensions;
 
@@ -215,9 +213,8 @@ namespace PacManBot.Games
 
         private PacManGame() { } // Used by JSON deserializing
 
-        public PacManGame(ulong channelId, ulong ownerId, string newMap, bool mobileDisplay,
-                          DiscordShardedClient client, LoggingService logger, StorageService storage)
-            : base(channelId, new[] { ownerId }, client, logger, storage)
+        public PacManGame(ulong channelId, ulong ownerId, string newMap, bool mobileDisplay, IServiceProvider services)
+            : base(channelId, new[] { ownerId }, services)
         {
             this.mobileDisplay = mobileDisplay;
 
@@ -710,11 +707,9 @@ namespace PacManBot.Games
         }
 
 
-        public void PostDeserialize(DiscordShardedClient client, LoggingService logger, StorageService storage)
+        public void PostDeserialize(IServiceProvider services)
         {
-            this.client = client;
-            this.logger = logger;
-            this.storage = storage;
+            SetServices(services);
         }
     }
 }

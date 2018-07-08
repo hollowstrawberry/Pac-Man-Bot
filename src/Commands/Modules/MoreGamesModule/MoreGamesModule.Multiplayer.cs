@@ -13,31 +13,26 @@ namespace PacManBot.Commands
 {
     public partial class MoreGamesModule
     {
-        private async Task RunMultiplayerGame<TGame>(params IUser[] players) where TGame : MultiplayerGame
+        private async Task RunMultiplayerGame<TGame>(params SocketUser[] players) where TGame : MultiplayerGame
         {
             var existingGame = Storage.GetChannelGame(Context.Channel.Id);
             if (existingGame != null)
             {
-                await ReplyAsync(existingGame.UserId.Contains(Context.User.Id) ?
-                    $"You're already playing a game in this channel!\nUse `{Prefix}cancel` if you want to cancel it." :
-                    $"There is already a different game in this channel!\nWait until it's finished or try doing `{Prefix}cancel`");
+                await ReplyAsync(existingGame.UserId.Contains(Context.User.Id)
+                    ? $"You're already playing a game in this channel!\nUse `{Prefix}cancel` if you want to cancel it."
+                    : $"There is already a different game in this channel!\nWait until it's finished or try doing `{Prefix}cancel`");
                 return;
             }
 
-            var playerIds = players.Select(x => x.Id).ToArray();
-
-            var game = MultiplayerGame.New<TGame>(Context.Channel.Id, playerIds, Context.Client, Logger, Storage);
-
-            while (!game.AllBots && game.BotTurn) game.BotInput();
-
+            var game = MultiplayerGame.CreateNew<TGame>(Context.Channel.Id, players, Services);
             Storage.AddGame(game);
-
+            while (!game.AllBots && game.BotTurn) game.BotInput(); // When a bot starts
             var gameMessage = await ReplyAsync(game.GetContent(), game.GetEmbed());
             game.MessageId = gameMessage.Id;
 
-            while (game.State == State.Active)
+            if (game.AllBots)
             {
-                if (game.AllBots)
+                while (game.State == State.Active)
                 {
                     try
                     {
@@ -50,23 +45,9 @@ namespace PacManBot.Commands
 
                     await Task.Delay(Bot.Random.Next(1000, 2001));
                 }
-                else await Task.Delay(5000);
 
-                if ((DateTime.Now - game.LastPlayed) > game.Expiry)
-                {
-                    game.State = State.Cancelled;
-                    Storage.DeleteGame(game);
-                    try
-                    {
-                        if (gameMessage.Id != game.MessageId) gameMessage = await game.GetMessage();
-                        if (gameMessage != null) await gameMessage.ModifyAsync(game.UpdateMessage, DefaultOptions);
-                    }
-                    catch (HttpException) { } // Something happened to the message, we can ignore it
-                    return;
-                }
+                Storage.DeleteGame(game);
             }
-
-            Storage.DeleteGame(game); // It's removed here when playing against the bot
         }
 
 
@@ -84,7 +65,7 @@ namespace PacManBot.Commands
                  "You can also make the bot challenge another user or bot with `{prefix}ttt vs <opponent>`")]
         [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
         public async Task StartTicTacToe(SocketGuildUser opponent = null)
-            => await RunMultiplayerGame<TTTGame>(opponent ?? (IUser)Context.Client.CurrentUser, Context.User);
+            => await RunMultiplayerGame<TTTGame>(opponent ?? (SocketUser)Context.Client.CurrentUser, Context.User);
 
 
         [Command("tictactoe vs"), Alias("ttt vs", "tic vs"), Priority(1), HideHelp]
@@ -106,7 +87,7 @@ namespace PacManBot.Commands
                  "You can also make the bot challenge another user or bot with `{prefix}5ttt vs <opponent>`")]
         [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
         public async Task StartTicTacToe5(SocketGuildUser opponent = null)
-            => await RunMultiplayerGame<TTT5Game>(opponent ?? (IUser)Context.Client.CurrentUser, Context.User);
+            => await RunMultiplayerGame<TTT5Game>((SocketUser)opponent ?? Context.Client.CurrentUser, Context.User);
 
 
         [Command("5ttt vs"), Alias("ttt5 vs", "5tictactoe vs", "5tic vs"), Priority(1), HideHelp]
@@ -128,7 +109,7 @@ namespace PacManBot.Commands
                  "You can also make the bot challenge another user or bot with `{prefix}c4 vs <opponent>`")]
         [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
         public async Task StartConnectFour(SocketGuildUser opponent = null)
-            => await RunMultiplayerGame<C4Game>(opponent ?? (IUser)Context.Client.CurrentUser, Context.User);
+            => await RunMultiplayerGame<C4Game>(opponent ?? (SocketUser)Context.Client.CurrentUser, Context.User);
 
 
         [Command("connect4 vs"), Alias("c4 vs", "four vs"), Priority(1), HideHelp]
@@ -213,7 +194,7 @@ namespace PacManBot.Commands
                 return;
             }
 
-            string failReason = game.AddPlayer(user.Id);
+            string failReason = game.AddPlayer(user);
 
             if (failReason != null) await ReplyAsync($"{user.Mention} {"You ".If(self)}can't join this game: {failReason}");
             else await MoveGame();
@@ -257,7 +238,7 @@ namespace PacManBot.Commands
                 await ReplyAsync("To remove another user they have to be inactive for at least 1 minute during their turn.");
             }
 
-            game.RemovePlayer(user.Id);
+            game.RemovePlayer(user);
             await MoveGame();
             await AutoReactAsync();
         }

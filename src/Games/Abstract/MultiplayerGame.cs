@@ -2,7 +2,6 @@
 using System.Linq;
 using Discord;
 using Discord.WebSocket;
-using PacManBot.Services;
 using PacManBot.Constants;
 using PacManBot.Extensions;
 
@@ -50,27 +49,24 @@ namespace PacManBot.Games
 
         // Methods
 
-        public static TGame New<TGame>(ulong channelId, ulong[] userId,
-            DiscordShardedClient client, LoggingService logger, StorageService storage) where TGame : MultiplayerGame
+        public static TGame CreateNew<TGame>(ulong channelId, SocketUser[] players, IServiceProvider services)
+            where TGame : MultiplayerGame
         {
             if (typeof(TGame).IsAbstract) throw new ArgumentException("Cannot instatiate abstract class");
 
             var game = (TGame)Activator.CreateInstance(typeof(TGame), true);
-            game.Create(channelId, userId, client, logger, storage);
+            game.Initialize(channelId, players, services);
             return game;
         }
 
 
-        public virtual void Create(ulong channelId, ulong[] userId,
-            DiscordShardedClient client, LoggingService logger, StorageService storage)
+        protected virtual void Initialize(ulong channelId, SocketUser[] players, IServiceProvider services)
         {
-            this.client = client;
-            this.logger = logger;
-            this.storage = storage;
+            SetServices(services);
 
-            LastPlayed = DateTime.Now;
             ChannelId = channelId;
-            if (userId != null) UserId = userId;
+            if (players != null) UserId = players.Select(x => x.Id).ToArray();
+            LastPlayed = DateTime.Now;
             Turn = Player.First;
             Winner = Player.None;
             Message = "";

@@ -5,8 +5,6 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 using Discord;
-using Discord.WebSocket;
-using PacManBot.Services;
 using PacManBot.Constants;
 using PacManBot.Extensions;
 
@@ -164,8 +162,8 @@ namespace PacManBot.Games
 
         private RubiksGame() { }
 
-        public RubiksGame(ulong channelId, ulong ownerId, DiscordShardedClient client, LoggingService logger, StorageService storage)
-            : base(channelId, new[] { ownerId }, client, logger, storage)
+        public RubiksGame(ulong channelId, ulong ownerId, IServiceProvider services)
+            : base(channelId, new[] { ownerId }, services)
         {
             front = new Face(Sticker.Green);
             up    = new Face(Sticker.White);
@@ -365,11 +363,11 @@ namespace PacManBot.Games
         }
 
 
-        public void PostDeserialize(DiscordShardedClient client, LoggingService logger, StorageService storage)
+
+
+        public void PostDeserialize(IServiceProvider services)
         {
-            this.client = client;
-            this.logger = logger;
-            this.storage = storage;
+            SetServices(services);
 
             ConnectFaces();
         }

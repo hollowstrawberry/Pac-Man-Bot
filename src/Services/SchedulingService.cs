@@ -4,7 +4,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Discord;
+using Discord.Net;
 using Discord.WebSocket;
+using PacManBot.Games;
 using PacManBot.Constants;
 using PacManBot.Extensions;
 
@@ -26,11 +28,11 @@ namespace PacManBot.Services
             this.storage = storage;
             this.logger = logger;
 
-            timers = new List<Timer>();
-            var checkConnection = new Timer(CheckConnection, null, TimeSpan.FromMinutes(5), TimeSpan.FromMinutes(5));
-            var deleteOldGames = new Timer(DeleteOldGames, null, TimeSpan.Zero, TimeSpan.FromMinutes(30));
-            timers.Append(checkConnection);
-            timers.Append(deleteOldGames);
+            timers = new List<Timer>
+            {
+                new Timer(CheckConnection, null, TimeSpan.FromMinutes(5), TimeSpan.FromMinutes(5)),
+                new Timer(DeleteOldGames, null, TimeSpan.Zero, TimeSpan.FromSeconds(5))
+            };
 
             // Events
             client.ShardConnected += OnShardConnected;
@@ -69,7 +71,7 @@ namespace PacManBot.Services
         }
 
 
-        public void DeleteOldGames(object state)
+        public async void DeleteOldGames(object state)
         {
             var now = DateTime.Now;
             int count = 0;
@@ -77,16 +79,32 @@ namespace PacManBot.Services
             foreach (var game in storage.GamesEnumerable.Where(g => now - g.LastPlayed > g.Expiry).ToArray())
             {
                 count++;
+                game.State = State.Cancelled;
                 storage.DeleteGame(game);
+
+                if (client?.LoginState == LoginState.LoggedIn)
+                {
+                    try
+                    {
+                        var gameMessage = await game.GetMessage();
+                        if (gameMessage != null) await gameMessage.ModifyAsync(game.UpdateMessage, Bot.DefaultOptions);
+                    }
+                    catch (HttpException) { } // Something happened to the message, we can ignore it
+                }
             }
 
             foreach (var game in storage.UserGamesEnumerable.Where(g => now - g.LastPlayed > g.Expiry).ToArray())
             {
                 count++;
+                game.State = State.Cancelled;
                 storage.DeleteGame(game);
             }
 
-            if (count > 0) logger.Log(LogSeverity.Info, LogSource.Scheduling, $"Removed {count} expired game{"s".If(count > 1)}");
+
+            if (count > 0)
+            {
+                await logger.Log(LogSeverity.Info, LogSource.Scheduling, $"Removed {count} expired game{"s".If(count > 1)}");
+            }
         }
     }
 }

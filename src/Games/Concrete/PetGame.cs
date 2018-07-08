@@ -6,8 +6,6 @@ using System.Reflection;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Discord;
-using Discord.WebSocket;
-using PacManBot.Services;
 using PacManBot.Constants;
 using PacManBot.Extensions;
 
@@ -19,7 +17,7 @@ namespace PacManBot.Games
         // Constants
 
         public override string Name => "Clockagotchi";
-        public override TimeSpan Expiry => TimeSpan.FromDays(60);
+        public override TimeSpan Expiry => TimeSpan.FromDays(30);
         public string FilenameKey => "pet";
 
 
@@ -232,8 +230,8 @@ namespace PacManBot.Games
 
         private PetGame() { } // Used in serialization
 
-        public PetGame(string name, ulong ownerId, DiscordShardedClient client, LoggingService logger, StorageService storage)
-            : base(new[] { ownerId }, client, logger, storage)
+        public PetGame(string name, ulong ownerId, IServiceProvider services)
+            : base(new[] { ownerId }, services)
         {
             petName = name;
             bornDate = DateTime.Now;
@@ -515,15 +513,13 @@ namespace PacManBot.Games
 
             return pet;
         }
-        
 
 
 
-        public void PostDeserialize(DiscordShardedClient client, LoggingService logger, StorageService storage)
+
+        public void PostDeserialize(IServiceProvider services)
         {
-            this.client = client;
-            this.logger = logger;
-            this.storage = storage;
+            SetServices(services);
         }
     }
 }

@@ -5,7 +5,6 @@ using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using Discord;
 using Discord.WebSocket;
-using PacManBot.Services;
 using PacManBot.Constants;
 using PacManBot.Extensions;
 
@@ -14,7 +13,7 @@ namespace PacManBot.Games
     public class TTT5Game : MultiplayerGame, IMessagesGame
     {
         public override string Name => "5-Tic-Tac-Toe";
-        public override TimeSpan Expiry => TimeSpan.FromHours(1);
+        public override TimeSpan Expiry => TimeSpan.FromMinutes(60);
 
 
         private Player[,] board;
@@ -22,9 +21,9 @@ namespace PacManBot.Games
         private readonly int[] threes = { -1, -1 };
 
 
-        public override void Create(ulong channelId, ulong[] userId, DiscordShardedClient client, LoggingService logger, StorageService storage)
+        protected override void Initialize(ulong channelId, SocketUser[] players, IServiceProvider services)
         {
-            base.Create(channelId, userId, client, logger, storage);
+            base.Initialize(channelId, players, services);
 
             board = new Player[5, 5];
             for (int x = 0; x < 5; x++)

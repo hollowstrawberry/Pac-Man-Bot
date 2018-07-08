@@ -1,6 +1,4 @@
 using System;
-using System.Linq;
-using System.Collections.Generic;
 using Discord.WebSocket;
 using PacManBot.Games;
 using PacManBot.Extensions;
@@ -9,21 +7,21 @@ namespace PacManBot.Utils
 {
     public class ScoreEntry : IComparable<ScoreEntry>
     {
-        public State state;
         public int score;
-        public int turns;
         public ulong userId;
+        public State state;
+        public int turns;
         public string username;
-        public DateTime date;
         public string channel;
+        public DateTime date;
 
 
-        public ScoreEntry(int score, ulong userId, State state, int turns, string username, string channel, DateTime date)
+        public ScoreEntry(int score, ulong userid, State state, int turns, string username, string channel, DateTime date)
         {
             this.state = state;
             this.score = score;
             this.turns = turns;
-            this.userId = userId;
+            this.userId = userid;
             this.username = username;
             this.date = date;
             this.channel = channel;

@@ -1,7 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
-using PacManBot.Services;
 using PacManBot.Extensions;
 
 namespace PacManBot.Games
@@ -20,8 +20,8 @@ namespace PacManBot.Games
 
         protected ChannelGame() { }
 
-        protected ChannelGame(ulong channelId, ulong[] userId, DiscordShardedClient client, LoggingService logger, StorageService storage)
-            : base(userId, client, logger, storage)
+        protected ChannelGame(ulong channelId, ulong[] userIds, IServiceProvider services)
+            : base(userIds, services)
         {
             ChannelId = channelId;
         }

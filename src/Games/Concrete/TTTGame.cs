@@ -3,7 +3,6 @@ using System.Text;
 using System.Collections.Generic;
 using Discord;
 using Discord.WebSocket;
-using PacManBot.Services;
 using PacManBot.Constants;
 using PacManBot.Extensions;
 
@@ -12,7 +11,7 @@ namespace PacManBot.Games
     public class TTTGame : MultiplayerGame, IMessagesGame
     {
         public override string Name => "Tic-Tac-Toe";
-        public override TimeSpan Expiry => TimeSpan.FromHours(1);
+        public override TimeSpan Expiry => TimeSpan.FromMinutes(60);
 
         private const int Size = 3;
 
@@ -20,9 +19,9 @@ namespace PacManBot.Games
         private List<Pos> highlighted;
 
 
-        public override void Create(ulong channelId, ulong[] userId, DiscordShardedClient client, LoggingService logger, StorageService storage)
+        protected override void Initialize(ulong channelId, SocketUser[] players, IServiceProvider services)
         {
-            base.Create(channelId, userId, client, logger, storage);
+            base.Initialize(channelId, players, services);
 
             highlighted = new List<Pos>();
             board = new Player[Size,Size];

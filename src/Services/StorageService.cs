@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Discord;
 using Discord.Rest;
@@ -302,11 +303,20 @@ namespace PacManBot.Services
             try
             {
                 game.CancelRequests();
-                if (game is IStoreableGame sGame && File.Exists(sGame.GameFile())) File.Delete(sGame.GameFile());
+                if (game is IStoreableGame sGame && File.Exists(sGame.GameFile()))
+                {
+                    File.Delete(sGame.GameFile());
+                }
 
                 bool success = false;
-                if (game is IUserGame uGame) success = userGames.TryRemove((uGame.OwnerId, uGame.GetType()));
-                else if (game is IChannelGame cGame) success = games.TryRemove(cGame.ChannelId);
+                if (game is IUserGame uGame)
+                {
+                    success = userGames.TryRemove((uGame.OwnerId, uGame.GetType()));
+                }
+                else if (game is IChannelGame cGame)
+                {
+                    success = games.TryRemove(cGame.ChannelId);
+                }
 
                 if (success) logger.Log(LogSeverity.Verbose, LogSource.Storage, $"Removed {game.GetType().Name} at {game.IdentifierId()}");
             }
@@ -381,6 +391,12 @@ namespace PacManBot.Services
             uint fail = 0;
             bool firstFail = true;
 
+            IServiceProvider gameServices = new ServiceCollection()
+                .AddSingleton(this)
+                .AddSingleton(client)
+                .AddSingleton(logger)
+                .BuildServiceProvider();
+
             foreach (string file in Directory.GetFiles(Files.GameFolder))
             {
                 if (file.EndsWith(Files.GameExtension))
@@ -389,7 +405,7 @@ namespace PacManBot.Services
                     {
                         Type gameType = StoreableGameTypes.First(x => file.Contains(x.Key)).Value;
                         var game = (IStoreableGame)JsonConvert.DeserializeObject(File.ReadAllText(file), gameType, GameJsonSettings);
-                        game.PostDeserialize(client, logger, this);
+                        game.PostDeserialize(gameServices);
 
                         if (game is IUserGame uGame) userGames.TryAdd((uGame.OwnerId, uGame.GetType()), uGame);
                         else if (game is IChannelGame cGame) games.TryAdd(cGame.ChannelId, cGame);

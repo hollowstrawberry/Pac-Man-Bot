@@ -56,7 +56,7 @@ namespace PacManBot.Commands
             PacManGame newGame;
             try
             {
-                newGame = new PacManGame(Context.Channel.Id, Context.User.Id, customMap, mobile, Context.Client, Logger, Storage);
+                newGame = new PacManGame(Context.Channel.Id, Context.User.Id, customMap, mobile, Services);
             }
             catch (InvalidMapException e) when (customMap != null)
             {

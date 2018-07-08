@@ -39,16 +39,22 @@ namespace PacManBot.Games
 
         protected BaseGame() { }
 
-        protected BaseGame(ulong[] userId, DiscordShardedClient client, LoggingService logger, StorageService storage)
+        protected BaseGame(ulong[] userIds, IServiceProvider services)
         {
-            this.client = client;
-            this.logger = logger;
-            this.storage = storage;
-            UserId = userId;
+            SetServices(services);
+            UserId = userIds;
 
             State = State.Active;
             Time = 0;
             LastPlayed = DateTime.Now;
+        }
+
+
+        protected virtual void SetServices(IServiceProvider services)
+        {
+            client = services.Get<DiscordShardedClient>();
+            logger = services.Get<LoggingService>();
+            storage = services.Get<StorageService>();
         }
 
 

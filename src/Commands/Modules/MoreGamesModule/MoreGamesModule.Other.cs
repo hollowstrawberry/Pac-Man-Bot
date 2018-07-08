@@ -23,7 +23,7 @@ namespace PacManBot.Commands
 
             if (cube == null)
             {
-                cube = new RubiksGame(Context.Channel.Id, Context.User.Id, Context.Client, Logger, Storage);
+                cube = new RubiksGame(Context.Channel.Id, Context.User.Id, Services);
                 Storage.AddGame(cube);
             }
 

@@ -15,8 +15,8 @@ namespace PacManBot
     [DataContract]
     public class BotConfig
     {
-        [DataMember] public readonly string defaultPrefix = "<";
         [DataMember] public readonly string discordToken;
+        [DataMember] public readonly string defaultPrefix = "<";
         [DataMember] public readonly string[] httpToken = { };
         [DataMember] public readonly int shardCount = 1;
         [DataMember] public readonly int messageCacheSize = 100;
