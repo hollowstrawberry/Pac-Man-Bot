@@ -82,7 +82,7 @@ namespace PacManBot.Commands
                 default:
                     if (!string.IsNullOrEmpty(input))
                     {
-                        if (!cube.DoMoves(input))
+                        if (!cube.TryDoMoves(input))
                         {
                             await ReplyAsync($"{CustomEmoji.Cross} Invalid sequence of moves. " +
                                              $"Do **{Prefix}rubik help** for commands.");

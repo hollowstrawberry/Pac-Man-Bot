@@ -20,37 +20,37 @@ namespace PacManBot.Games
         public string FilenameKey => "rubik";
 
 
+        private const string SolvedCube = "000000000111111111222222222333333333444444444555555555";
+
+        private const int // Starting index of each face in the cube array
+            Front = 0 * 9,
+            Up    = 1 * 9,
+            Right = 2 * 9,
+            Left  = 3 * 9,
+            Down  = 4 * 9,
+            Back  = 5 * 9;
+
+        private static readonly IReadOnlyList<RawMove> AllMoves = CreateMoves();
+
         private static readonly string[] ColorEmoji = {
             CustomEmoji.GreenSquare, CustomEmoji.WhiteSquare, CustomEmoji.RedSquare,
             CustomEmoji.OrangeSquare, CustomEmoji.YellowSquare, CustomEmoji.BlueSquare,
         };
 
-        private static readonly IReadOnlyDictionary<string, string[]> ComplexMoves = new Dictionary<string, string[]> {
-            { "M", new[] { "R", "L'", "X'", } },
-            { "E", new[] { "U", "D'", "Y'", } },
-            { "S", new[] { "F", "B'", "Z'", } },
-            { "RW", new[] { "L", "X" } },
-            { "UW", new[] { "D", "Y" } },
-            { "FW", new[] { "B", "Z" } },
-            { "LW", new[] { "R", "X'" } },
-            { "DW", new[] { "U", "Y'" } },
-            { "BW", new[] { "F", "Z'" } },
 
-        }.AsReadOnly();
+        
 
+        /// <summary>An array of all stickers of the cube, grouped by face.</summary>
+        public Sticker[] cube;
 
-        // Fields
-
-        private IReadOnlyDictionary<char, Face> allFaces;
         [DataMember] public bool showHelp = true;
-        [DataMember] private Face front;
-        [DataMember] private Face up;
-        [DataMember] private Face right;
-        [DataMember] private Face left;
-        [DataMember] private Face down;
-        [DataMember] private Face back;
 
-        // Properties
+        /// <summary>The cube array in raw string form, to be stored and loaded.</summary>
+        [DataMember] public string RawCube
+        {
+            get => string.Join("", cube.Select(x => (int)x));
+            set => cube = value.Select(x => (Sticker)int.Parse(x.ToString())).ToArray();
+        }
 
         [DataMember] public override int Time { get; set; }
         [DataMember] public override DateTime LastPlayed { get; set; }
@@ -60,9 +60,10 @@ namespace PacManBot.Games
 
 
 
+
         // Types
 
-        private enum Sticker
+        public enum Sticker
         {
             Green,
             White,
@@ -73,90 +74,84 @@ namespace PacManBot.Games
         }
 
 
-        private enum Edge // Start index of the 3 stickers connected at that edge
+        /// <summary>An object that represents a transformation to perform on the sticker array.</summary>
+        private class RawMove
         {
-            Up = 0,
-            Right = 2,
-            Down = 4,
-            Left = 6,
+            /// <summary>The string that represents the move.</summary>
+            public string Key { get; }
+
+            /// <summary>A list of sticker index cycles, where in each cycle the value at one index
+            /// is replaced by the value at the next index.</summary>
+            public IReadOnlyList<IReadOnlyList<int>> Cycles { get; }
+
+
+            private RawMove() { }
+
+            public RawMove(string key, params int[][] cycles)
+            {
+                Key = key.ToUpperInvariant();
+
+                var safeCycles = new List<int[]>();
+                foreach (var cycle in cycles)
+                {
+                    if (cycle.Distinct().Count() != cycle.Length
+                        || cycle.Any(x => safeCycles.Any(y => y.Contains(x))))
+                    {
+                        throw new InvalidOperationException("Cycle values must be unique");
+                    }
+
+                    safeCycles.Add(cycle);
+                }
+
+                Cycles = safeCycles.AsReadOnly();
+            }
         }
 
 
-
-        [DataContract]
-        private class Face
+        /// <summary></summary>
+        public class Move
         {
-            [DataMember] public Sticker center;
-            [DataMember] public Sticker[] stickers;
-            public IReadOnlyDictionary<Face, Edge> connections;
+            private RawMove baseMove;
+            private int repeat;
+            private bool reverse;
 
-            private Face() { }
+            private Move() { }
 
-            public Face(Sticker color)
+
+            public void Apply(Sticker[] cube)
             {
-                center = color;
-                stickers = new Sticker[8];
-                for (int i = 0; i < stickers.Length; i++) stickers[i] = color;
-            }
-
-
-            public void Turn(int amount)
-            {
-                amount = amount % 4; // Unnecessary turns
-                if (Math.Abs(amount) == 3) amount /= -3; // 3 turns = 1 turn in opposite direction
-
-
-                stickers.Shift(-2 * amount);
-
-                var sideStickers = new Sticker[12];
-                var adjacentFaces = connections.Keys.ToArray();
-
-                for (int i = 0; i < adjacentFaces.Length; i++)
+                var oldCube = (Sticker[])cube.Clone();
+                for (int i = 0; i < cube.Length; i++)
                 {
-                    for (int j = 0; j < 3; j++)
+                    int position = i;
+                    var cycle = baseMove.Cycles.FirstOrDefault(x => x.Contains(i))?.ToList();
+                    if (cycle != null)
                     {
-                        Face face = adjacentFaces[i];
-                        int index = stickers.LoopedIndex((int)connections[face] + j);
-                        sideStickers[i*3 + j] = face.stickers[index];
+                        position = cycle.GetAtLooped(cycle.IndexOf(i) + (reverse ? +repeat : -repeat));
                     }
-                }
 
-                sideStickers.Shift(3 * amount);
-
-                for (int i = 0; i < adjacentFaces.Length; i++)
-                {
-                    for (int j = 0; j < 3; j++)
-                    {
-                        Face face = adjacentFaces[i];
-                        int index = stickers.LoopedIndex((int)connections[face] + j);
-                        face.stickers[index] = sideStickers[i*3 + j];
-                    }
+                    cube[i] = oldCube[position];
                 }
             }
+            
 
-
-            public string[] Rows()
+            public static bool TryParse(string value, out Move move)
             {
-                var rows = new string[3];
+                move = new Move();
 
-                for (int i = 0; i < 3; i++) rows[0] += ColorEmoji[(int)stickers[i]];
+                var match = Regex.Match(value, @"^([A-Z]+)([0-9]{0,3})('{0,10})$");
+                if (!match.Success) return false;
 
-                rows[1] += ColorEmoji[(int)stickers[7]];
-                rows[1] += ColorEmoji[(int)center];
-                rows[1] += ColorEmoji[(int)stickers[3]];
+                move.baseMove = AllMoves.FirstOrDefault(x => x.Key == match.Groups[1].Value);
+                if (move.baseMove == null) return false;
 
-                for (int i = 6; i > 3; i--) rows[2] += ColorEmoji[(int)stickers[i]];
+                move.repeat = match.Groups[2].Length == 0 ? 1 : int.Parse(match.Groups[2].Value);
+                move.reverse = match.Groups[3].Length % 2 != 0;
 
-                return rows;
-            }
-
-
-            public override string ToString()
-            {
-                return string.Join('\n', Rows());
+                return true;
             }
         }
-
+        
 
 
 
@@ -165,50 +160,24 @@ namespace PacManBot.Games
         public RubiksGame(ulong channelId, ulong ownerId, IServiceProvider services)
             : base(channelId, new[] { ownerId }, services)
         {
-            front = new Face(Sticker.Green);
-            up    = new Face(Sticker.White);
-            right = new Face(Sticker.Red);
-            left  = new Face(Sticker.Orange);
-            down  = new Face(Sticker.Yellow);
-            back  = new Face(Sticker.Blue);
-
-            ConnectFaces();
+            RawCube = SolvedCube;
+            storage.StoreGame(this);
         }
 
         
-        public bool DoMoves(string input)
+        public bool TryDoMoves(string input)
         {
-            List<string> sequence = input.ToUpper().Split(' ', StringSplitOptions.RemoveEmptyEntries).ToList();
-            if (sequence.Any(x => !Regex.IsMatch(x, @"^([FURLDB]W?|[MESXYZ])'*[0-9]?'*$"))) return false;
+            var sequence = new List<Move>();
 
-            Time += sequence.Count;
-            LastPlayed = DateTime.Now;
-
-            for (int i = 0; i < sequence.Count; i++) // Replaces middle moves by their equivalent in other moves
+            foreach (string splice in input.ToUpper().Split(' ', StringSplitOptions.RemoveEmptyEntries))
             {
-                string move = sequence[i];
-                foreach (var replacement in ComplexMoves)
-                {
-                    if (move.StartsWith(replacement.Key))
-                    {
-                        sequence.RemoveAt(i);
-                        foreach (string rep in replacement.Value)
-                        {
-                            sequence.Insert(i, move.Replace(replacement.Key, rep));
-                        }
-                    }
-                }
+                if (Move.TryParse(splice, out var move)) sequence.Add(move);
+                else return false;
             }
-
-            foreach (string move in sequence)
+            
+            foreach (var move in sequence)
             {
-                var amountMatch = Regex.Match(move, @"[1-9]");
-                if (!amountMatch.Success || !int.TryParse(amountMatch.Value, out int amount)) amount = 1;
-
-                if (move.Count(x => x == '\'') % 2 == 1) amount *= -1; // Counterclockwise
-
-                if (allFaces.ContainsKey(move[0])) allFaces[move[0]].Turn(amount);
-                else RotateCube(move[0], amount);
+                move.Apply(cube);
             }
 
             storage.StoreGame(this);
@@ -219,80 +188,28 @@ namespace PacManBot.Games
         public void Scramble()
         {
             const int amount = 40;
-            var faces = allFaces.Keys.ToList();
+            var turns = new string[] { "F", "U", "R", "L", "D", "B", };
             var modifiers = new[] { "", "'", "2" };
-            var moves = string.Join(" ", Enumerable.Range(0, amount).Select(x => Bot.Random.Choose(faces) + Bot.Random.Choose(modifiers)));
+            var moves = string.Join(" ",
+                Enumerable.Range(0, amount).Select(x => Bot.Random.Choose(turns) + Bot.Random.Choose(modifiers)));
 
             Time = -amount; // Done before so it saves the game at 0
-            if (!DoMoves(moves)) throw new Exception("Invalid generated shuffle sequence");
+            if (!TryDoMoves(moves)) throw new Exception("Invalid generated shuffle sequence");
         }
 
-
-        private void RotateCube(char letter, int amount)
-        {
-            amount = amount % 4;
-            if (Math.Abs(amount) == 3) amount /= -3;
-            if (amount == 0) return;
-
-            Face[] axis;
-            Face clockwise;
-            Face counterClockwise;
-
-            switch (letter)
-            {
-                case 'X':
-                    axis = new[] { front, down, back, up };
-                    back.stickers.Shift(4);
-                    clockwise = left;
-                    counterClockwise = right;
-                    break;
-
-                case 'Y':
-                    axis = new[] { front, right, back, left };
-                    clockwise = down;
-                    counterClockwise = up;
-                    break;
-
-                case 'Z':
-                    axis = new[] { up, left, down, right };
-                    foreach (Face face in axis) face.stickers.Shift(-2 * amount);
-                    clockwise = back;
-                    counterClockwise = front;
-                    break;
-
-                default: throw new ArgumentException(nameof(letter));
-            }
-
-            var centers = axis.Select(f => f.center).ToArray();
-            var stickers = axis.Select(f => f.stickers).ToArray();
-            centers.Shift(amount);
-            stickers.Shift(amount);
-            for (int i = 0; i < axis.Length; i++)
-            {
-                axis[i].center = centers[i];
-                axis[i].stickers = stickers[i];
-            }
-
-            if (letter == 'X') back.stickers.Shift(4);
-
-            clockwise.stickers.Shift(2 * amount);
-            counterClockwise.stickers.Shift(-2 * amount);
-        }
-
-
-
+        
         public override EmbedBuilder GetEmbed(bool _ = true) => GetEmbed(null);
 
         public EmbedBuilder GetEmbed(IGuild guild)
         {
             var description = new StringBuilder();
 
-            string[] rowsFront = front.Rows();
-            string[] rowsUp = up.Rows();
-            string[] rowsRight = right.Rows();
-            string[] rowsLeft = left.Rows();
-            string[] rowsDown = down.Rows();
-            string[] rowsBack = back.Rows();
+            string[] rowsFront = GetFaceRows(Front);
+            string[] rowsUp    = GetFaceRows(Up);
+            string[] rowsRight = GetFaceRows(Right);
+            string[] rowsLeft  = GetFaceRows(Left);
+            string[] rowsDown  = GetFaceRows(Down);
+            string[] rowsBack  = GetFaceRows(Back);
             string emptyRow = CustomEmoji.Empty.Multiply(3);
 
             for (int i = 0; i < 3; i++)
@@ -314,7 +231,7 @@ namespace PacManBot.Games
             var embed = new EmbedBuilder
             {
                 Title = $"{Owner?.Username}'s Rubik's Cube",
-                Description = description.ToString(),
+                Description = description.ToString().Truncate(2048),
                 Color = Colors.Black,
             };
 
@@ -328,38 +245,137 @@ namespace PacManBot.Games
         }
 
 
-
-        private void ConnectFaces()
+        public string[] GetFaceRows(int faceIndex)
         {
-            front.connections = new Dictionary<Face, Edge> {
-                {up, Edge.Down }, { left, Edge.Right }, { down, Edge.Up }, { right, Edge.Left },
-            }.AsReadOnly();
+            var emojis = Enumerable.Range(faceIndex, 9)
+                .Select(x => ColorEmoji[(int)cube[x]])
+                .ToList();
 
-            back.connections = new Dictionary<Face, Edge> {
-                {up, Edge.Up }, { right, Edge.Right }, { down, Edge.Down }, { left, Edge.Left },
-            }.AsReadOnly();
-
-            up.connections = new Dictionary<Face, Edge> {
-                {front, Edge.Up }, { right, Edge.Up }, { back, Edge.Up }, { left, Edge.Up },
-            }.AsReadOnly();
-
-            down.connections = new Dictionary<Face, Edge> {
-                {front, Edge.Down }, { left, Edge.Down }, { back, Edge.Down }, { right, Edge.Down },
-            }.AsReadOnly();
-
-            right.connections = new Dictionary<Face, Edge> {
-                {up, Edge.Right }, { front, Edge.Right }, { down, Edge.Right }, { back, Edge.Left },
-            }.AsReadOnly();
-
-            left.connections = new Dictionary<Face, Edge> {
-                {up, Edge.Left }, { back, Edge.Right }, { down, Edge.Left }, { front, Edge.Left },
-            }.AsReadOnly();
+            string[] rows = emojis.Split(3).Select(x => string.Join("", x)).ToArray();
+            return rows;
+        }
 
 
-            allFaces = new Dictionary<char, Face>{
-                { 'F', front }, { 'U', up }, { 'R', right },
-                { 'L', left }, { 'D', down }, { 'B', back },
-            }.AsReadOnly();
+
+
+        private static IReadOnlyList<RawMove> CreateMoves()
+        {
+            var cyclesF = new[]
+            {
+                new[] { Front+0, Front+2, Front+8, Front+6 },
+                new[] { Front+1, Front+5, Front+7, Front+3 },
+                new[] { Down+2, Left+8, Up+6, Right+0 },
+                new[] { Down+1, Left+5, Up+7, Right+3 },
+                new[] { Down+0, Left+2, Up+8, Right+6 },
+            };
+
+            var cyclesB = new[]
+            {
+                new[] { Back+0, Back+2, Back+8, Back+6 },
+                new[] { Back+1, Back+5, Back+7, Back+3 },
+                new[] { Down+8, Right+2, Up+0, Left+6 },
+                new[] { Down+7, Right+5, Up+1, Left+3 },
+                new[] { Down+6, Right+8, Up+2, Left+0 },
+            };
+
+            var cyclesS = new[]
+            {
+                new[] { Down+5, Right+1, Up+3, Left+7 },
+                new[] { Down+4, Right+4, Up+4, Left+4 },
+                new[] { Down+3, Right+7, Up+5, Left+1 },
+            };
+
+            var cyclesU = new[]
+            {
+                new[] { Up+0, Up+2, Up+8, Up+6 },
+                new[] { Up+1, Up+5, Up+7, Up+3 },
+                new[] { Front+0, Left+0, Back+0, Right+0 },
+                new[] { Front+1, Left+1, Back+1, Right+1 },
+                new[] { Front+2, Left+2, Back+2, Right+2 },
+            };
+
+            var cyclesD = new[]
+            {
+                new[] { Down+0, Down+2, Down+8, Down+6 },
+                new[] { Down+1, Down+5, Down+7, Down+3 },
+                new[] { Front+6, Right+6, Back+6, Left+6 },
+                new[] { Front+7, Right+7, Back+7, Left+7 },
+                new[] { Front+8, Right+8, Back+8, Left+8 },
+            };
+
+            var cyclesE = new[]
+            {
+                new[] { Front+3, Right+3, Back+3, Left+3 },
+                new[] { Front+4, Right+4, Back+4, Left+4 },
+                new[] { Front+5, Right+5, Back+5, Left+5 },
+            };
+
+            var cyclesR = new[]
+            {
+                new[] { Right+0, Right+2, Right+8, Right+6 },
+                new[] { Right+1, Right+5, Right+7, Right+3 },
+                new[] { Front+2, Up+2, Back+6, Down+2 },
+                new[] { Front+5, Up+5, Back+3, Down+5 },
+                new[] { Front+8, Up+8, Back+0, Down+8 },
+            };
+
+            var cyclesL = new[]
+            {
+                new[] { Left+0, Left+2, Left+8, Left+6 },
+                new[] { Left+1, Left+5, Left+7, Left+3 },
+                new[] { Front+0, Down+0, Back+8, Up+0 },
+                new[] { Front+3, Down+3, Back+5, Up+3 },
+                new[] { Front+6, Down+6, Back+2, Up+6 },
+            };
+
+            var cyclesM = new[]
+            {
+                new[] { Front+1, Down+1, Back+7, Up+1 },
+                new[] { Front+4, Down+4, Back+4, Up+4 },
+                new[] { Front+7, Down+7, Back+1, Up+7 },
+            };
+
+
+            var moves = new List<RawMove>
+            {
+                new RawMove("F", cyclesF),
+                new RawMove("U", cyclesU),
+                new RawMove("R", cyclesR),
+                new RawMove("L", cyclesL),
+                new RawMove("D", cyclesD),
+                new RawMove("B", cyclesB),
+
+                new RawMove("M", cyclesM),
+                new RawMove("S", cyclesS),
+                new RawMove("E", cyclesE),
+
+                new RawMove("Fw", cyclesF.Concatenate(cyclesS.Select(x => x.Reverse().ToArray()).ToArray())),
+                new RawMove("Uw", cyclesU.Concatenate(cyclesE.Select(x => x.Reverse().ToArray()).ToArray())),
+                new RawMove("Rw", cyclesR.Concatenate(cyclesM.Select(x => x.Reverse().ToArray()).ToArray())),
+                new RawMove("Lw", cyclesL.Concatenate(cyclesM)),
+                new RawMove("Dw", cyclesD.Concatenate(cyclesE)),
+                new RawMove("Bw", cyclesB.Concatenate(cyclesS)),
+
+                new RawMove("x", cyclesR.Concatenate(
+                    cyclesM.Select(x => x.Reverse().ToArray()).ToArray(),
+                    cyclesL.Select(x => x.Reverse().ToArray()).ToArray())),
+
+                new RawMove("y", cyclesU.Concatenate(
+                    cyclesE.Select(x => x.Reverse().ToArray()).ToArray(),
+                    cyclesD.Select(x => x.Reverse().ToArray()).ToArray())),
+
+                new RawMove("z", cyclesF.Concatenate(
+                    cyclesS.Select(x => x.Reverse().ToArray()).ToArray(),
+                    cyclesB.Select(x => x.Reverse().ToArray()).ToArray())),
+
+
+                new RawMove("Tperm", new[] {
+                    new[] { Left+1, Right+1 }, new[] { Up+3, Up+5 }, // Edges
+                    new[] { Front+2, Right+2 }, new[] { Back+0, Right+0 }, new[] { Up+2, Up+8 } // Corners
+                }),
+            };
+
+            return moves.AsReadOnly();
         }
 
 
@@ -368,8 +384,6 @@ namespace PacManBot.Games
         public void PostDeserialize(IServiceProvider services)
         {
             SetServices(services);
-
-            ConnectFaces();
         }
     }
 }
