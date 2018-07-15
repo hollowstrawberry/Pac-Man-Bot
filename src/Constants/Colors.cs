@@ -2,6 +2,9 @@
 
 namespace PacManBot.Constants
 {
+    /// <summary>
+    /// Contains the color scheme used by the bot, often in embeds.
+    /// </summary>
     public static class Colors
     {
         public static readonly Color

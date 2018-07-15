@@ -5,6 +5,9 @@ using PacManBot.Extensions;
 
 namespace PacManBot.Utils
 {
+    /// <summary>
+    /// An entry in the <see cref="PacManGame"/> leaderboard.
+    /// </summary>
     public class ScoreEntry : IComparable<ScoreEntry>
     {
         public int score;
@@ -30,7 +33,7 @@ namespace PacManBot.Utils
 
         public string GetUsername(DiscordShardedClient client)
         {
-            return client?.GetUser(userId)?.NameandNum() ?? username ?? "Unknown";
+            return client?.GetUser(userId)?.NameandDisc() ?? username ?? "Unknown";
         }
 
 

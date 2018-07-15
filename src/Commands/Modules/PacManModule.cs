@@ -99,7 +99,7 @@ namespace PacManBot.Commands
             {
                 game.CancelRequests();
                 var gameMessage = await game.GetMessage();
-                if (gameMessage != null) await gameMessage.ModifyAsync(game.UpdateMessage, game.RequestOptions);
+                if (gameMessage != null) await gameMessage.ModifyAsync(game.GetMessageUpdate(), game.GetRequestOptions());
             }
             catch (OperationCanceledException) { }
             catch (Exception e)
@@ -161,9 +161,9 @@ namespace PacManBot.Commands
             {
                 ScoreEntry entry = scores[i];
 
-                string result = $"`{$"{min + i}.".Align(maxPosDigits+1)} {$"({entry.state})".Align(6)} " +
-                                $"{$"{entry.score}".Align(maxScoreDigits, right: true)} points in {entry.turns} turns";
-                content.AppendLine(result.Align(38) + $"- {entry.GetUsername(Context.Client).Replace("`", "")}`");
+                string result = $"`{$"{min + i}.".PadRight(maxPosDigits+1)} {$"({entry.state})".PadRight(6)} " +
+                                $"{$"{entry.score}".PadLeft(maxScoreDigits)} points in {entry.turns} turns";
+                content.AppendLine(result.PadRight(38) + $"- {entry.GetUsername(Context.Client).Replace("`", "")}`");
             }
 
             if (max - min + 1 > MaxDisplayedScores)
@@ -250,7 +250,7 @@ namespace PacManBot.Commands
         {
             try
             {
-                var requestOptions = game.RequestOptions; // So the edit can be cancelled
+                var requestOptions = game.GetRequestOptions(); // So the edit can be cancelled
 
                 foreach (var input in PacManGame.GameInputs.Keys)
                 {
@@ -258,7 +258,7 @@ namespace PacManBot.Commands
                     await message.AddReactionAsync(input, DefaultOptions);
                 }
 
-                await message.ModifyAsync(game.UpdateMessage, requestOptions); // Restore display to normal
+                await message.ModifyAsync(game.GetMessageUpdate(), requestOptions); // Restore display to normal
             }
             catch (Exception e) when (e is HttpException || e is TimeoutException || e is OperationCanceledException) { } // Ignore
         }

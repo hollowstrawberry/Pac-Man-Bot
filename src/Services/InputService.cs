@@ -13,6 +13,9 @@ using PacManBot.Extensions;
 
 namespace PacManBot.Services
 {
+    /// <summary>
+    /// Manages all external input coming from Discord, used in commands and games.
+    /// </summary>
     public class InputService
     {
         private readonly DiscordShardedClient client;
@@ -105,6 +108,7 @@ namespace PacManBot.Services
 
 
 
+        /// <summary>Tries to find and execute a command, returns whether it is successful.</summary>
         private async Task<bool> CommandAsync(SocketUserMessage message)
         {
             var context = new ShardedCommandContext(client, message);
@@ -139,6 +143,7 @@ namespace PacManBot.Services
         }
 
 
+        /// <summary>Tries to find special messages to respond to, returns whether it is successful.</summary>
         private async Task<bool> AutoresponseAsync(SocketUserMessage message)
         {
             if (!(message.Channel is SocketGuildChannel gChannel) || storage.AllowsAutoresponse(gChannel.Guild.Id)
@@ -161,6 +166,7 @@ namespace PacManBot.Services
         }
 
 
+        /// <summary>Tries to find a game and execute message input, returns whether it is successful.</summary>
         private async Task<bool> MessageGameInputAsync(SocketUserMessage message)
         {
             var game = storage.GetChannelGame<IMessagesGame>(message.Channel.Id);
@@ -181,6 +187,7 @@ namespace PacManBot.Services
         }
 
 
+        /// <summary>Tries to find a game and execute reaction input, returns whether it is successful.</summary>
         private async Task<bool> ReactionGameInputAsync(Cacheable<IUserMessage, ulong> messageData, ISocketMessageChannel channel, SocketReaction reaction)
         {
             var game = storage.GetChannelGame<IReactionsGame>(channel.Id);
@@ -217,11 +224,11 @@ namespace PacManBot.Services
             if (game.State != State.Active) storage.DeleteGame(game);
 
             game.CancelRequests();
-            var requestOptions = game.RequestOptions;
+            var requestOptions = game.GetRequestOptions();
 
             if (gameMessage != null && message.Channel.BotCan(ChannelPermission.ManageMessages))
             {
-                await gameMessage.ModifyAsync(game.UpdateMessage, requestOptions);
+                await gameMessage.ModifyAsync(game.GetMessageUpdate(), requestOptions);
                 await message.DeleteAsync(Bot.DefaultOptions);
             }
             else
@@ -240,7 +247,7 @@ namespace PacManBot.Services
             var guild = (channel as IGuildChannel)?.Guild;
 
             await logger.Log(LogSeverity.Verbose, game.Name, 
-                             $"Input {PacManGame.GameInputs[reaction.Emote].ToString().Align(5)} " +
+                             $"Input {PacManGame.GameInputs[reaction.Emote].ToString().PadRight(5)} " +
                              $"by {user.FullName()} in {channel.FullName()}");
 
             game.Input(reaction.Emote, user.Id);
@@ -252,7 +259,7 @@ namespace PacManBot.Services
                 if (game is PacManGame pmGame && pmGame.State != State.Cancelled && !pmGame.custom)
                 {
                     storage.AddScore(new ScoreEntry(pmGame.score, user.Id, pmGame.State, pmGame.Time,
-                        user.NameandNum(), $"{guild?.Name}/{channel.Name}", DateTime.Now));
+                        user.NameandDisc(), $"{guild?.Name}/{channel.Name}", DateTime.Now));
                 }
                 if (channel.BotCan(ChannelPermission.ManageMessages))
                 {
@@ -261,7 +268,7 @@ namespace PacManBot.Services
             }
 
             game.CancelRequests();
-            await gameMessage.ModifyAsync(game.UpdateMessage, game.RequestOptions);
+            await gameMessage.ModifyAsync(game.GetMessageUpdate(), game.GetRequestOptions());
         }
 
 

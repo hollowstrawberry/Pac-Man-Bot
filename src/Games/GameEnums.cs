@@ -1,5 +1,6 @@
 namespace PacManBot.Games
 {
+    /// <summary>Indicates whether a <see cref="IBaseGame"/> is ongoing, or the reason that it has ended for.</summary>
     public enum State
     {
         Active,
@@ -10,6 +11,7 @@ namespace PacManBot.Games
     }
 
 
+    /// <summary>The player of a <see cref="MultiplayerGame"/>.</summary>
     public enum Player
     {
         First, Second, Third, Fourth, Fifth, Sixth, Seventh, Eighth, Nineth, Tenth,
@@ -18,6 +20,7 @@ namespace PacManBot.Games
     }
 
 
+    /// <summary>The four cardinal directions, useful with <see cref="Pos"/>.</summary>
     public enum Dir
     {
         None,

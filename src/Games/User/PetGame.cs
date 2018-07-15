@@ -40,10 +40,10 @@ namespace PacManBot.Games
 
         [DataMember] private string petName;
         [DataMember] private string petImageUrl;
-        [DataMember] public double satiation  = 15;
-        [DataMember] public double happiness  = 15;
-        [DataMember] public double hygiene  = 15;
-        [DataMember] public double energy  = 15;
+        [DataMember] public double satiation = 15;
+        [DataMember] public double happiness = 15;
+        [DataMember] public double hygiene = 15;
+        [DataMember] public double energy = 15;
         [DataMember] public bool asleep;
         [DataMember] public DateTime bornDate;
         [DataMember] public DateTime lastUpdated;
@@ -77,7 +77,7 @@ namespace PacManBot.Games
             set
             {
                 string url = value?.Trim('<', '>');
-                if (url == null || url.IsImageUrl())
+                if (url == null || url.HttpCheckImageUrl())
                 {
                     petImageUrl = url;
                 }

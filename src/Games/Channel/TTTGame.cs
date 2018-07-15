@@ -19,6 +19,8 @@ namespace PacManBot.Games
         private List<Pos> highlighted;
 
 
+        private TTTGame() { }
+
         protected override void Initialize(ulong channelId, SocketUser[] players, IServiceProvider services)
         {
             base.Initialize(channelId, players, services);
@@ -77,7 +79,7 @@ namespace PacManBot.Games
 
             for (int i = 0; i < UserId.Length; i++)
             {
-                description.Append($"{"►".If(i == (int)Turn)}{((Player)i).Symbol()} - {User((Player)i).NameandNum().SanitizeMarkdown()}\n");
+                description.Append($"{"►".If(i == (int)Turn)}{((Player)i).Symbol()} - {User((Player)i).NameandDisc().SanitizeMarkdown()}\n");
             }
 
             description.Append("ᅠ\n");

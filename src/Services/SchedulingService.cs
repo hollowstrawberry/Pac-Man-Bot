@@ -12,6 +12,9 @@ using PacManBot.Extensions;
 
 namespace PacManBot.Services
 {
+    /// <summary>
+    /// Routinely executes specific actions such as connection checks.
+    /// </summary>
     public class SchedulingService
     {
         private readonly DiscordShardedClient client;
@@ -87,7 +90,7 @@ namespace PacManBot.Services
                     try
                     {
                         var gameMessage = await game.GetMessage();
-                        if (gameMessage != null) await gameMessage.ModifyAsync(game.UpdateMessage, Bot.DefaultOptions);
+                        if (gameMessage != null) await gameMessage.ModifyAsync(game.GetMessageUpdate(), Bot.DefaultOptions);
                     }
                     catch (HttpException) { } // Something happened to the message, we can ignore it
                 }

@@ -70,7 +70,7 @@ namespace PacManBot.Commands
                     var gameMessage = await game.GetMessage();
                     if (gameMessage != null)
                     {
-                        await gameMessage.ModifyAsync(game.UpdateMessage, DefaultOptions);
+                        await gameMessage.ModifyAsync(game.GetMessageUpdate(), DefaultOptions);
 
                         if (game is PacManGame && Context.BotCan(ChannelPermission.ManageMessages))
                         {

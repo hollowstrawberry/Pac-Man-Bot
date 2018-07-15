@@ -20,6 +20,9 @@ using PacManBot.Extensions;
 
 namespace PacManBot.Services
 {
+    /// <summary>
+    /// Manages all runtime and long-term data the bot utilizes concurrently.
+    /// </summary>
     public class StorageService
     {
         private static readonly IReadOnlyDictionary<string, Type> StoreableGameTypes = GetStoreableGameTypes();
@@ -48,7 +51,7 @@ namespace PacManBot.Services
         public ulong[] BannedChannels { get; private set; }
 
 
-        public SqliteConnection NewDatabaseConnection
+        public SqliteConnection NewDatabaseConnection()
             => new SqliteConnection($"Data Source={Files.Database};");
 
 
@@ -80,7 +83,7 @@ namespace PacManBot.Services
         {
             if (cachedPrefixes.TryGetValue(guildId, out string prefix)) return prefix;
 
-            using (var connection = NewDatabaseConnection)
+            using (var connection = NewDatabaseConnection())
             {
                 connection.Open();
                 var command = new SqliteCommand($"SELECT prefix FROM prefixes WHERE id=@id LIMIT 1", connection)
@@ -107,7 +110,7 @@ namespace PacManBot.Services
             string sql = "DELETE FROM prefixes WHERE id=@id;";
             if (prefix != DefaultPrefix) sql += "INSERT INTO prefixes VALUES (@id, @prefix);";
 
-            using (var connection = NewDatabaseConnection)
+            using (var connection = NewDatabaseConnection())
             {
                 connection.Open();
 
@@ -125,7 +128,7 @@ namespace PacManBot.Services
         {
             if (cachedAllowsAutoresponse.TryGetValue(guildId, out bool allows)) return allows;
 
-            using (var connection = NewDatabaseConnection)
+            using (var connection = NewDatabaseConnection())
             {
                 connection.Open();
 
@@ -142,7 +145,7 @@ namespace PacManBot.Services
         {
             cachedAllowsAutoresponse[guildId] = !cachedAllowsAutoresponse[guildId];
 
-            using (var connection = NewDatabaseConnection)
+            using (var connection = NewDatabaseConnection())
             {
                 connection.Open();
                 new SqliteCommand("BEGIN", connection).ExecuteNonQuery();
@@ -170,7 +173,7 @@ namespace PacManBot.Services
         {
             if (cachedNoPrefixChannel.TryGetValue(channelId, out bool noPrefixMode)) return noPrefixMode;
 
-            using (var connection = NewDatabaseConnection)
+            using (var connection = NewDatabaseConnection())
             {
                 connection.Open();
 
@@ -187,7 +190,7 @@ namespace PacManBot.Services
         {
             cachedNoPrefixChannel[channelId] = !cachedNoPrefixChannel[channelId];
 
-            using (var connection = NewDatabaseConnection)
+            using (var connection = NewDatabaseConnection())
             {
                 connection.Open();
                 new SqliteCommand("BEGIN", connection).ExecuteNonQuery();
@@ -215,7 +218,7 @@ namespace PacManBot.Services
         {
             logger.Log(LogSeverity.Info, LogSource.Storage, $"New scoreboard entry: {entry}");
 
-            using (var connection = NewDatabaseConnection)
+            using (var connection = NewDatabaseConnection())
             {
                 connection.Open();
 
@@ -245,7 +248,7 @@ namespace PacManBot.Services
 
             var scores = new List<ScoreEntry>();
 
-            using (var connection = NewDatabaseConnection)
+            using (var connection = NewDatabaseConnection())
             {
                 connection.Open();
 
@@ -343,7 +346,7 @@ namespace PacManBot.Services
                 logger.Log(LogSeverity.Info, LogSource.Storage, "Creating database");
             }
 
-            using (var connection = NewDatabaseConnection)
+            using (var connection = NewDatabaseConnection())
             {
                 connection.Open();
 

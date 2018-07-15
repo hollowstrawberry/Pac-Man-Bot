@@ -5,7 +5,11 @@ using Microsoft.CodeAnalysis.CSharp.Scripting;
 
 namespace PacManBot.Services
 {
-    public class ScriptingService // Thanks to oatmeal and amibu
+    /// <summary>
+    /// Executes code and returns the result, garbage-collecting afterwards, using predefined options.
+    /// Thank you to oatmeal and amibu
+    /// </summary>
+    public class ScriptingService
     {
         private readonly ScriptOptions scriptOptions;
 

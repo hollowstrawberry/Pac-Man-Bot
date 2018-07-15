@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 using PacManBot.Constants;
 
@@ -6,18 +7,17 @@ namespace PacManBot.Extensions
 {
     public static class OtherExtensions
     {
-        public static T Get<T>(this IServiceProvider provider) // I thought the long name was ugly
-        {
-            return provider.GetRequiredService<T>();
-        }
+        /// <summary>Gets a service of type <typeparamref name="T"/> from the <see cref="IServiceProvider"/>. 
+        /// Throws an exception if one is not found. I didn't like the long name of the original.</summary>
+        [DebuggerStepThrough]
+        public static T Get<T>(this IServiceProvider provider) => provider.GetRequiredService<T>();
 
 
-        public static int Ceiling(this double num)
-        {
-            return (int)Math.Ceiling(num);
-        }
+        /// <summary>Returns the given number rounded up to the nearest <see cref="int"/>.</summary>
+        public static int Ceiling(this double num) => (int)Math.Ceiling(num);
 
 
+        /// <summary>Converts a <see cref="TimeSpan"/>into a string listing the days, hours and minutes.<summary>
         public static string Humanized(this TimeSpan span)
         {
             int days = (int)span.TotalDays, hours = span.Hours, minutes = span.Minutes;
@@ -30,6 +30,7 @@ namespace PacManBot.Extensions
         }
 
 
+        /// <summary>Gets a string that explains the timeframe when an event occured given a <see cref="TimePeriod"/>.</summary>
         public static string Humanized(this TimePeriod period)
         {
             switch (period)

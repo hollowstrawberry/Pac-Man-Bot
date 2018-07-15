@@ -5,6 +5,8 @@ namespace PacManBot.Extensions
 {
     public static class RandomExtensions
     {
+        /// <summary>Returns a random floating-point number that is greater than or equal to 0.0, 
+        /// and less than <paramref name="max"/>.</summary>
         public static double NextDouble(this Random random, double max)
         {
             if (max < 0) throw new ArgumentOutOfRangeException(nameof(max));
@@ -14,18 +16,22 @@ namespace PacManBot.Extensions
         }
 
 
+        /// <summary>Returns a random floating-point number that is greater than or equal to <paramref name="min"/>, 
+        /// and less than <paramref name="max"/>.</summary>
         public static double NextDouble(this Random random, double min, double max)
         {
             return random.NextDouble(max - min) + min;
         }
 
 
+        /// <summary>Returns true with a one in <paramref name="amount"/> chance, otherwise false.</summary>
         public static bool OneIn(this Random random, int amount)
         {
             return random.Next(amount) == 0;
         }
 
 
+        /// <summary>Returns a random element from the given list.</summary>
         public static T Choose<T>(this Random random, IList<T> values)
         {
             switch (values.Count)
@@ -37,6 +43,7 @@ namespace PacManBot.Extensions
         }
 
 
+        /// <summary>Performs a fair Fisher-Yates style shuffling on the given list's elements.</summary>
         public static void Shuffle<T>(this Random random, IList<T> list)
         {
             int n = list.Count - 1;

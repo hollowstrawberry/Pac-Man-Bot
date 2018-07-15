@@ -15,6 +15,9 @@ using PacManBot.Constants;
 
 namespace PacManBot
 {
+    /// <summary>
+    /// Sets up configurations and services before starting the bot.
+    /// </summary>
     public static class Program
     {
         static async Task Main()

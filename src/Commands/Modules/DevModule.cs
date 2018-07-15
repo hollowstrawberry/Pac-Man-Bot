@@ -258,14 +258,14 @@ namespace PacManBot.Commands
             }
 
             var msg = await game.GetMessage();
-            if (msg != null) await msg.ModifyAsync(game.UpdateMessage, DefaultOptions);
+            if (msg != null) await msg.ModifyAsync(game.GetMessageUpdate(), DefaultOptions);
             else msg = await ReplyAsync(game.GetContent(), game.GetEmbed());
 
             if (game is MultiplayerGame tpGame && tpGame.BotTurn)
             {
                 tpGame.BotInput();
                 await Task.Delay(1000);
-                await msg.ModifyAsync(game.UpdateMessage, DefaultOptions);
+                await msg.ModifyAsync(game.GetMessageUpdate(), DefaultOptions);
             }
 
             if (game.State != State.Active) Storage.DeleteGame(game);

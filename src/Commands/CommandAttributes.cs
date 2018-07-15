@@ -6,12 +6,16 @@ using PacManBot.Extensions;
 
 namespace PacManBot.Commands
 {
+    /// <summary>
+    /// When present, indicates that this command should not be visible.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Method)]
-    public class HideHelpAttribute : Attribute
-    {
-    }
+    public class HideHelpAttribute : Attribute { }
 
 
+    /// <summary>
+    /// Overrides the automatic parameters displayed for this command.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Method)]
     public class ParametersAttribute : Attribute
     {
@@ -23,6 +27,9 @@ namespace PacManBot.Commands
     }
 
 
+    /// <summary>
+    /// Provides example usage of a command. Use "{prefix}" to refer to the guild prefix.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Method)]
     public class ExampleUsageAttribute : Attribute
     {
@@ -35,7 +42,10 @@ namespace PacManBot.Commands
 
 
 
-    // The original preconditions just... didn't work?
+
+    /// <summary>
+    /// The original preconditions from Discord.Net just didn't work for some reason.
+    /// </summary>
     public abstract class BasePermissionAttribute : PreconditionAttribute
     {
         protected GuildPermission? guildPerms;
@@ -78,6 +88,9 @@ namespace PacManBot.Commands
     }
 
 
+    /// <summary>
+    /// Indicates this command can't run unless the bot has the specified permissions.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
     public class BetterRequireBotPermissionAttribute : BasePermissionAttribute
     {
@@ -93,6 +106,9 @@ namespace PacManBot.Commands
     }
 
 
+    /// <summary>
+    /// Indicates this command can't run unless the user calling it has the specified permissions.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
     public class BetterRequireUserPermissionAttribute : BasePermissionAttribute
     {

@@ -9,6 +9,9 @@ using PacManBot.Extensions;
 
 namespace PacManBot.Services
 {
+    /// <summary>
+    /// Receives and logs messages from everywhere in the bot, to the console and on disk.
+    /// </summary>
     public class LoggingService
     {
         private string[] logExclude;

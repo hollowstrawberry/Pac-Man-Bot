@@ -5,6 +5,10 @@ using PacManBot.Extensions;
 
 namespace PacManBot.Utils
 {
+    /// <summary>
+    /// Maintains a runtime cache of many traits about an enum, after the first access for that enum type.
+    /// </summary>
+    /// <typeparam name="TEnum">The enum type whose traits you want to check.</typeparam>
     public static class EnumTraits<TEnum> where TEnum : struct, Enum
     {
         static EnumTraits()
@@ -19,13 +23,28 @@ namespace PacManBot.Utils
         }
 
 
-        // I don't use almost any of these but they're fun to have around
+
+        // I don't really use almost any of these but they're fun to have around
+
+        /// <summary>The <see cref="System.Type"/> of the enum.</summary>
         public static Type Type { get; }
+
+        /// <summary>The underlying <see cref="System.Type"/> behind the enum.</summary>
         public static Type UnderlyingType { get; }
+
+        /// <summary>All distinct values contained in the enum.</summary>
         public static IReadOnlyList<TEnum> Values { get; }
+
+        /// <summary>The minimum value of the enum.</summary>
         public static TEnum MinValue { get; }
+
+        /// <summary>The maximum value of the enum.</summary>
         public static TEnum MaxValue { get; }
+
+        /// <summary>All value names contained in the enum.</summary>
         public static IReadOnlyList<string> Names { get; }
+
+        /// <summary>A dictionary containing all names and corresponding values contained in the enum.</summary>
         public static IReadOnlyDictionary<string, int> Dictionary { get; }
     }
 }

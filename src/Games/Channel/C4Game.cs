@@ -21,6 +21,8 @@ namespace PacManBot.Games
         private List<Pos> highlighted;
 
 
+        private C4Game() { }
+
         protected override void Initialize(ulong channelId, SocketUser[] players, IServiceProvider services)
         {
             base.Initialize(channelId, players, services);
@@ -80,7 +82,7 @@ namespace PacManBot.Games
             for (int i = 0; i < 2; i++)
             {
                 if (i == (int)Turn) description.Append("►");
-                description.Append($"{((Player)i).Circle()} - {User((Player)i).NameandNum().SanitizeMarkdown()}\n");
+                description.Append($"{((Player)i).Circle()} - {User((Player)i).NameandDisc().SanitizeMarkdown()}\n");
             }
 
             description.Append("ᅠ\n");

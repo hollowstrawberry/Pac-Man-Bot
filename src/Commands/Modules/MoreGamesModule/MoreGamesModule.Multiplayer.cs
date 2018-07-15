@@ -39,7 +39,7 @@ namespace PacManBot.Commands
                         game.BotInput();
                         if (game.MessageId != gameMessage.Id) gameMessage = await game.GetMessage();
                         game.CancelRequests();
-                        if (gameMessage != null) await gameMessage.ModifyAsync(game.UpdateMessage, game.RequestOptions);
+                        if (gameMessage != null) await gameMessage.ModifyAsync(game.GetMessageUpdate(), game.GetRequestOptions());
                     }
                     catch (Exception e) when (e is OperationCanceledException || e is TimeoutException || e is HttpException) { }
 

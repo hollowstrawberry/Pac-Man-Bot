@@ -202,12 +202,12 @@ namespace PacManBot.Games
             public static Card? Parse(string value, UnoGame game)
             {
                 bool auto = value.Contains("auto");
-                value = value.ReplaceMany(ParseReplacements);
+                value = value.ReplaceMany((" ", ""), ("auto", ""), ("uno", ""), ("draw2", "drawtwo"), ("draw4", "drawfour"));
 
                 CardColor? color = EnumTraits<CardColor>.Values
-                    .FirstOrNull(x => value.EndsOrStartsWith(x.ToString().ToLower()));
+                    .FirstOrNull(x => value.StartsOrEndsWith(x.ToString().ToLower()));
                 CardType? type = EnumTraits<CardType>.Values.ToList().Reversed()
-                    .FirstOrNull(x => value.EndsOrStartsWith(x.ToString().ToLower()) || x <= CardType.Nine && value.EndsOrStartsWith(((int)x).ToString()));
+                    .FirstOrNull(x => value.StartsOrEndsWith(x.ToString().ToLower()) || x <= CardType.Nine && value.StartsOrEndsWith(((int)x).ToString()));
 
                 if (auto)
                 {
@@ -223,10 +223,6 @@ namespace PacManBot.Games
                 if (type.HasValue && color.HasValue) return new Card(type.Value, color.Value);
                 else return null;
             }
-
-            private static readonly IReadOnlyDictionary<string, string> ParseReplacements = new Dictionary<string, string>{
-                { " ", "" }, { "auto", "" }, { "uno", "" }, { "draw2", "drawtwo" }, { "draw4", "drawfour" },
-            }.AsReadOnly();
         }
 
 
@@ -234,6 +230,7 @@ namespace PacManBot.Games
 
         // Game methods
 
+        private UnoGame() { }
 
         protected override void Initialize(ulong channelId, SocketUser[] players, IServiceProvider services)
         {

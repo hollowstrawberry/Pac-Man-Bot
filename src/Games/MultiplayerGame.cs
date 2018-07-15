@@ -9,14 +9,27 @@ namespace PacManBot.Games
 {
     public abstract class MultiplayerGame : ChannelGame, IMultiplayerGame
     {
+        /// <summary>The current <see cref="Player"/> whose turn it is.</summary>
         public virtual Player Turn { get; protected set; }
+
+        /// <summary>This game's winner. <see cref="Player.None"/> if none.</summary>
         public virtual Player Winner { get; protected set; }
+
+        /// <summary>The message displayed at the top of this game.</summary>
         public virtual string Message { get; protected set; }
 
+
+        /// <summary>Whether the current turn belongs to a bot.</summary>
         public virtual bool BotTurn => State == State.Active && (User(Turn)?.IsBot ?? false);
+
+        /// <summary>Whether this game's players are all bots.</summary>
         public virtual bool AllBots => Enumerable.Range(0, UserId.Length).All(x => User(x)?.IsBot ?? false);
 
+
+        /// <summary>Retrieves the user corresponding to a <see cref="Player"/>. Null if unreachable or not found.</summary>
         public IUser User(Player player) => User((int)player);
+
+        /// <summary>Retrieves the user at the specified index. Null if unreachable or not found.</summary>
         public IUser User(int i = 0)
         {
             if (i < 0 || i >= UserId.Length) return null;
@@ -49,6 +62,7 @@ namespace PacManBot.Games
 
         // Methods
 
+        /// <summary>Creates a new instance of <typeparamref name="TGame"/> with the specified channel and players.</summary>
         public static TGame CreateNew<TGame>(ulong channelId, SocketUser[] players, IServiceProvider services)
             where TGame : MultiplayerGame
         {
@@ -60,6 +74,8 @@ namespace PacManBot.Games
         }
 
 
+        /// <summary>Performs the work of a constructor after this game instance is created using
+        /// <see cref="CreateNew{TGame}(ulong, SocketUser[], IServiceProvider)"/>.</summary>
         protected virtual void Initialize(ulong channelId, SocketUser[] players, IServiceProvider services)
         {
             SetServices(services);
@@ -73,9 +89,11 @@ namespace PacManBot.Games
         }
 
 
+        /// <summary>Executes automatic AI input, assuming it is a bot's turn.</summary>
         public abstract void BotInput();
 
 
+        /// <summary>Default string content of a multiplayer game message. Displays flavor text in AI matches.</summary>
         public override string GetContent(bool showHelp = true)
         {
             if (State != State.Cancelled && UserId.Count(id => id == client.CurrentUser.Id) == 1)
@@ -108,7 +126,7 @@ namespace PacManBot.Games
         }
 
 
-
+        /// <summary>Returns the next player in order, looping back to the first if necessary.</summary>
         protected Player NextPlayer(Player? turn = null)
         {
             if (turn == null) turn = Turn;
@@ -119,6 +137,7 @@ namespace PacManBot.Games
         }
 
 
+        /// <summary>Returns the previous player in order, loopingback to the last if necessary.</summary>
         protected Player PreviousPlayer(Player? turn = null)
         {
             if (turn == null) turn = Turn;
@@ -129,6 +148,7 @@ namespace PacManBot.Games
         }
 
 
+        /// <summary>Used to remove the guild prefix from game input, as it is to be ignored.</summary>
         protected string StripPrefix(string value)
         {
             string prefix = storage.GetPrefix(Guild);
@@ -136,6 +156,7 @@ namespace PacManBot.Games
         }
 
 
+        /// <summary>Default title of a multiplayer game embed, displaying the current turn/winner.</summary>
         protected string EmbedTitle()
         {
             return Winner == Player.None ? $"{Turn.ToStringColor()} Player's turn" :

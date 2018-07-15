@@ -3,6 +3,9 @@ using PacManBot.Extensions;
 
 namespace PacManBot.Constants
 {
+    /// <summary>
+    /// All custom emoji that this bot has access to from the Pac-Man support server.
+    /// </summary>
     public static class CustomEmoji
     {
         public static readonly Emote

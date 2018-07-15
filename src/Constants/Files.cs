@@ -1,5 +1,8 @@
 ﻿namespace PacManBot.Constants
 {
+    /// <summary>
+    /// Files used by this bot.
+    /// </summary>
     public static class Files
     {
         public const string

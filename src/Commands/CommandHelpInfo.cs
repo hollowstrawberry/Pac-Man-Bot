@@ -3,6 +3,9 @@ using Discord.Commands;
 
 namespace PacManBot.Commands
 {
+    /// <summary>
+    /// Gathers information about a command through its custom attributes.
+    /// </summary>
     public class CommandHelpInfo
     {
         public bool Hidden { get; }

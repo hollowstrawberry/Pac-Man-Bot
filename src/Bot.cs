@@ -25,6 +25,9 @@ namespace PacManBot
     }
 
 
+    /// <summary>
+    /// Starts this Discord bot and handles most events fired by the Discord.Net API.
+    /// </summary>
     public class Bot
     {
         public static readonly ConcurrentRandom Random = new ConcurrentRandom();
