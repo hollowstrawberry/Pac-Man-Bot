@@ -4,6 +4,9 @@ using Discord.WebSocket;
 
 namespace PacManBot.Games
 {
+    /// <summary>
+    /// The interface for channel-specific games, giving access to channel, guild and message members.
+    /// </summary>
     public interface IChannelGame : IBaseGame
     {
         /// <summary>Discord snowflake ID of the channel where this game is taking place in.</summary>
@@ -21,25 +24,5 @@ namespace PacManBot.Games
 
         /// <summary>Retrieves this game's latest message.</summary>
         Task<IUserMessage> GetMessage();
-    }
-
-
-    public interface IMessagesGame : IChannelGame
-    {
-        /// <summary>Whether the given value is a valid input given the player sending it.</summary>
-        bool IsInput(string value, ulong userId);
-
-        /// <summary>Executes an input expected to be valid, specifying the player sending it if necessary.</summary>
-        void Input(string input, ulong userId = 1);
-    }
-
-
-    public interface IReactionsGame : IChannelGame
-    {
-        /// <summary>Whether the given value is a valid input given the player sending it.</summary>
-        bool IsInput(IEmote value, ulong userId);
-
-        /// <summary>Executes an input expected to be valid, specifying the player sending it if necessary.</summary>
-        void Input(IEmote input, ulong userId = 1);
     }
 }

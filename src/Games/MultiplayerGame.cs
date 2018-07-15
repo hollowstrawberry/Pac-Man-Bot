@@ -7,6 +7,11 @@ using PacManBot.Extensions;
 
 namespace PacManBot.Games
 {
+    /// <summary>
+    /// A specialized type of game that is channel-based and allows for inter-player mechanics as well as AI.
+    /// Implements <see cref="IMultiplayerGame"/>.<para/>
+    /// Instances of its subclasses must be created using <see cref="CreateNew{TGame}(ulong, SocketUser[], IServiceProvider)"/>.
+    /// </summary>
     public abstract class MultiplayerGame : ChannelGame, IMultiplayerGame
     {
         /// <summary>The current <see cref="Player"/> whose turn it is.</summary>
@@ -60,6 +65,7 @@ namespace PacManBot.Games
 
 
 
+
         // Methods
 
         /// <summary>Creates a new instance of <typeparamref name="TGame"/> with the specified channel and players.</summary>
@@ -74,7 +80,7 @@ namespace PacManBot.Games
         }
 
 
-        /// <summary>Performs the work of a constructor after this game instance is created using
+        /// <summary>Does the job of a constructor after this game instance is created using
         /// <see cref="CreateNew{TGame}(ulong, SocketUser[], IServiceProvider)"/>.</summary>
         protected virtual void Initialize(ulong channelId, SocketUser[] players, IServiceProvider services)
         {

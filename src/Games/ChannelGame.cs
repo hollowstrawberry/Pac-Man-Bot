@@ -6,6 +6,9 @@ using PacManBot.Extensions;
 
 namespace PacManBot.Games
 {
+    /// <summary>
+    /// A type of game that takes place in a specific channel. Implements <see cref="IChannelGame"/>.
+    /// </summary>
     public abstract class ChannelGame : BaseGame, IChannelGame
     {
         /// <summary>Discord snowflake ID of the channel where this game is taking place in.</summary>

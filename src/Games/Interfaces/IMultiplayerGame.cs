@@ -2,6 +2,9 @@ using Discord;
 
 namespace PacManBot.Games
 {
+    /// <summary>
+    /// The interface for multiplayer games, giving access to player and AI members.
+    /// </summary>
     public interface IMultiplayerGame : IBaseGame
     {
         /// <summary>The current <see cref="Player"/> whose turn it is.</summary>

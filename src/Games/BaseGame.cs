@@ -7,6 +7,9 @@ using PacManBot.Extensions;
 
 namespace PacManBot.Games
 {
+    /// <summary>
+    /// The base all games inherit from. Implements <see cref="IBaseGame"/>.
+    /// </summary>
     public abstract class BaseGame : IBaseGame
     {
         protected DiscordShardedClient client;
