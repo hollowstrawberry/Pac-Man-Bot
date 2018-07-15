@@ -43,7 +43,7 @@ namespace PacManBot.Games
         /// <summary>An array of all stickers of the cube, grouped by face.</summary>
         public Sticker[] cube;
 
-        [DataMember] public bool showHelp = true;
+        [DataMember] public bool ShowHelp { get; set; } = true;
 
         /// <summary>The cube array in raw string form, to be stored and loaded.</summary>
         [DataMember] public string RawCube
@@ -74,14 +74,15 @@ namespace PacManBot.Games
         }
 
 
-        /// <summary>An object that represents a transformation to perform on the sticker array.</summary>
+        /// <summary>An object that represents a transformation to perform on the cube,
+        /// based on stickers that need to cycle with one another.</summary>
         private class RawMove
         {
-            /// <summary>The string that represents the move.</summary>
+            /// <summary>The string that identifies the move.</summary>
             public string Key { get; }
 
             /// <summary>A list of sticker index cycles, where in each cycle the value at one index
-            /// is replaced by the value at the next index.</summary>
+            /// replaces the value at the next index.</summary>
             public IReadOnlyList<IReadOnlyList<int>> Cycles { get; }
 
 
@@ -108,7 +109,7 @@ namespace PacManBot.Games
         }
 
 
-        /// <summary></summary>
+        /// <summary>A move that can be applied to the cube.</summary>
         public class Move
         {
             private RawMove baseMove;
@@ -116,6 +117,14 @@ namespace PacManBot.Games
             private bool reverse;
 
             private Move() { }
+
+            public Move(string key, int repeat, bool reverse) // Unused at the moment
+            {
+                this.repeat = repeat;
+                this.reverse = reverse;
+                baseMove = AllMoves.FirstOrDefault(x => x.Key == key);
+                if (baseMove == null) throw new ArgumentException("Key doesn't match any existing built-in move.", nameof(key));
+            }
 
 
             public void Apply(Sticker[] cube)
@@ -135,18 +144,23 @@ namespace PacManBot.Games
             }
             
 
+
             public static bool TryParse(string value, out Move move)
             {
-                move = new Move();
+                move = null;
 
                 var match = Regex.Match(value, @"^([A-Z]+)([0-9]{0,3})('{0,10})$");
                 if (!match.Success) return false;
 
-                move.baseMove = AllMoves.FirstOrDefault(x => x.Key == match.Groups[1].Value);
-                if (move.baseMove == null) return false;
+                var baseMove = AllMoves.FirstOrDefault(x => x.Key == match.Groups[1].Value);
+                if (baseMove == null) return false;
 
-                move.repeat = match.Groups[2].Length == 0 ? 1 : int.Parse(match.Groups[2].Value);
-                move.reverse = match.Groups[3].Length % 2 != 0;
+                move = new Move
+                {
+                    baseMove = baseMove,
+                    repeat = match.Groups[2].Length == 0 ? 1 : int.Parse(match.Groups[2].Value),
+                    reverse = match.Groups[3].Length % 2 != 0
+                };
 
                 return true;
             }
@@ -235,7 +249,7 @@ namespace PacManBot.Games
                 Color = Colors.Black,
             };
 
-            if (showHelp)
+            if (ShowHelp)
             {
                 string prefix = storage.GetPrefixOrEmpty(guild);
                 embed.AddField("Faces", $"```css\n  U\nL F R B\n  D```Do **{prefix}rubik moves** for help controlling the cube.");
@@ -260,8 +274,7 @@ namespace PacManBot.Games
 
         private static IReadOnlyList<RawMove> CreateMoves()
         {
-            var cyclesF = new[]
-            {
+            var cyclesF = new[] {
                 new[] { Front+0, Front+2, Front+8, Front+6 },
                 new[] { Front+1, Front+5, Front+7, Front+3 },
                 new[] { Down+2, Left+8, Up+6, Right+0 },
@@ -269,8 +282,7 @@ namespace PacManBot.Games
                 new[] { Down+0, Left+2, Up+8, Right+6 },
             };
 
-            var cyclesB = new[]
-            {
+            var cyclesB = new[] {
                 new[] { Back+0, Back+2, Back+8, Back+6 },
                 new[] { Back+1, Back+5, Back+7, Back+3 },
                 new[] { Down+8, Right+2, Up+0, Left+6 },
@@ -278,15 +290,13 @@ namespace PacManBot.Games
                 new[] { Down+6, Right+8, Up+2, Left+0 },
             };
 
-            var cyclesS = new[]
-            {
+            var cyclesS = new[] {
                 new[] { Down+5, Right+1, Up+3, Left+7 },
                 new[] { Down+4, Right+4, Up+4, Left+4 },
                 new[] { Down+3, Right+7, Up+5, Left+1 },
             };
 
-            var cyclesU = new[]
-            {
+            var cyclesU = new[] {
                 new[] { Up+0, Up+2, Up+8, Up+6 },
                 new[] { Up+1, Up+5, Up+7, Up+3 },
                 new[] { Front+0, Left+0, Back+0, Right+0 },
@@ -294,8 +304,7 @@ namespace PacManBot.Games
                 new[] { Front+2, Left+2, Back+2, Right+2 },
             };
 
-            var cyclesD = new[]
-            {
+            var cyclesD = new[] {
                 new[] { Down+0, Down+2, Down+8, Down+6 },
                 new[] { Down+1, Down+5, Down+7, Down+3 },
                 new[] { Front+6, Right+6, Back+6, Left+6 },
@@ -303,15 +312,13 @@ namespace PacManBot.Games
                 new[] { Front+8, Right+8, Back+8, Left+8 },
             };
 
-            var cyclesE = new[]
-            {
+            var cyclesE = new[] {
                 new[] { Front+3, Right+3, Back+3, Left+3 },
                 new[] { Front+4, Right+4, Back+4, Left+4 },
                 new[] { Front+5, Right+5, Back+5, Left+5 },
             };
 
-            var cyclesR = new[]
-            {
+            var cyclesR = new[] {
                 new[] { Right+0, Right+2, Right+8, Right+6 },
                 new[] { Right+1, Right+5, Right+7, Right+3 },
                 new[] { Front+2, Up+2, Back+6, Down+2 },
@@ -319,8 +326,7 @@ namespace PacManBot.Games
                 new[] { Front+8, Up+8, Back+0, Down+8 },
             };
 
-            var cyclesL = new[]
-            {
+            var cyclesL = new[] {
                 new[] { Left+0, Left+2, Left+8, Left+6 },
                 new[] { Left+1, Left+5, Left+7, Left+3 },
                 new[] { Front+0, Down+0, Back+8, Up+0 },
@@ -328,8 +334,7 @@ namespace PacManBot.Games
                 new[] { Front+6, Down+6, Back+2, Up+6 },
             };
 
-            var cyclesM = new[]
-            {
+            var cyclesM = new[] {
                 new[] { Front+1, Down+1, Back+7, Up+1 },
                 new[] { Front+4, Down+4, Back+4, Up+4 },
                 new[] { Front+7, Down+7, Back+1, Up+7 },
@@ -373,6 +378,14 @@ namespace PacManBot.Games
                     new[] { Left+1, Right+1 }, new[] { Up+3, Up+5 }, // Edges
                     new[] { Front+2, Right+2 }, new[] { Back+0, Right+0 }, new[] { Up+2, Up+8 } // Corners
                 }),
+
+                //new RawMove("sexy", new[] {
+                //    new[] { }
+                //});
+
+                //new RawMove("superflip", new[] {
+                //    new[] { }
+                //});
             };
 
             return moves.AsReadOnly();

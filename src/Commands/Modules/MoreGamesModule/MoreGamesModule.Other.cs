@@ -72,8 +72,8 @@ namespace PacManBot.Commands
 
 
                 case "showguide":
-                    cube.showHelp = !cube.showHelp;
-                    if (cube.showHelp) await AutoReactAsync();
+                    cube.ShowHelp = !cube.ShowHelp;
+                    if (cube.ShowHelp) await AutoReactAsync();
                     else await ReplyAsync("❗ You just disabled the help displayed below the cube.\n" +
                                           "Consider re-enabling it if you're not used to the game.");
                     break;
