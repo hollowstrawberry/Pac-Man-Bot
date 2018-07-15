@@ -374,18 +374,31 @@ namespace PacManBot.Games
                     cyclesB.Select(x => x.Reverse().ToArray()).ToArray())),
 
 
+                // I don't know what I'll do with these but it seemed fun to add algorithm shorthands
+
                 new RawMove("Tperm", new[] {
                     new[] { Left+1, Right+1 }, new[] { Up+3, Up+5 }, // Edges
                     new[] { Front+2, Right+2 }, new[] { Back+0, Right+0 }, new[] { Up+2, Up+8 } // Corners
                 }),
 
-                //new RawMove("sexy", new[] {
-                //    new[] { }
-                //});
+                new RawMove("sexy", new[] { // R U R' U'
+                    new[] { Down+2, Front+2, Front+8, Up+8, Right+6, Right+0 }, // Corner swap and rotation
+                    new[] { Right+2, Back+2, Back+0, Left+0, Up+2, Up+0 }, // Corner swap and rotation
+                    new[] { Front+5, Up+5, Up+1 }, new[] { Right+3, Right+1, Back+1 }, // Edge cycle
+                }),
 
-                //new RawMove("superflip", new[] {
-                //    new[] { }
-                //});
+                new RawMove("lsexy", new[] { // L' U' L U
+                    new[] { Down+0, Front+0, Front+6, Up+6, Left+8, Left+2 }, // Corner swap and rotation
+                    new[] { Left+0, Back+0, Back+2, Right+2, Up+0, Up+2 }, // Corner swap and rotation
+                    new[] { Front+3, Up+3, Up+1 }, new[] { Left+5, Left+1, Back+1 }, // Edge cycle
+                }),
+
+                new RawMove("superflip", new[] { // Flip all edges
+                    new[] { Front+1, Up+7 }, new[] { Front+5, Right+3 }, new[] { Front+7, Down+1 }, new[] { Front+3, Left+5 },
+                    new[] { Back+1, Up+1 }, new[] { Back+5, Left+3 }, new[] { Back+7, Down+7 }, new[] { Back+3, Right+5 },
+                    new[] { Right+1, Up+5 }, new[] { Right+7, Down+5 },
+                    new[] { Left+1, Up+3 }, new[] { Left+7, Down+3 },
+                }),
             };
 
             return moves.AsReadOnly();
