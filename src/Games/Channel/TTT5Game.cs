@@ -16,7 +16,7 @@ namespace PacManBot.Games
         public override TimeSpan Expiry => TimeSpan.FromMinutes(60);
 
 
-        private Player[,] board;
+        private Board<Player> board;
         private readonly List<Pos> highlighted = new List<Pos>();
         private readonly int[] threes = { -1, -1 };
 
@@ -27,14 +27,8 @@ namespace PacManBot.Games
         {
             base.Initialize(channelId, players, services);
 
-            board = new Player[5, 5];
-            for (int x = 0; x < 5; x++)
-            {
-                for (int y = 0; y < 5; y++)
-                {
-                    board[x, y] = Player.None;
-                }
-            }
+            board = new Board<Player>(5, 5, false);
+            board.Fill(Player.None);
         }
 
 
@@ -84,9 +78,9 @@ namespace PacManBot.Games
 
             description.Append("ᅠ\n");
 
-            for (int y = Winner == Player.None ? -1 : 0; y < board.Y(); y++)
+            for (int y = Winner == Player.None ? -1 : 0; y < board.Height; y++)
             {
-                for (int x = Winner == Player.None ? -1 : 0; x < board.X(); x++)
+                for (int x = Winner == Player.None ? -1 : 0; x < board.Width; x++)
                 {
                     if (y < 0 && x < 0) description.Append(CustomEmoji.Empty);
                     else if (y < 0) description.Append(FullColumn(x) ? CustomEmoji.Empty : CustomEmoji.LetterCircle[x]);
@@ -181,10 +175,12 @@ namespace PacManBot.Games
             Pos? missing = null;
 
 
-            void CheckCell(Pos pos)
+            void CheckCell(int x, int y)
             {
-                if (board.At(pos) == player) count++; // Consecutive symbols
-                else if (board.At(pos) == Player.None) // Find a gap
+                Pos pos = new Pos(x, y);
+
+                if (board[pos] == player) count++; // Consecutive symbols
+                else if (board[pos] == Player.None) // Find a gap
                 {
                     if (missing != null) count = 0; // There was already a gap, line is broken
                     missing = pos;
@@ -199,46 +195,46 @@ namespace PacManBot.Games
             }
 
 
-            for (int y = 0; y < board.Y(); y++) // Rows
+            for (int y = 0; y < board.Height; y++) // Rows
             {
-                for (int x = 0; x < board.X(); x++)
+                for (int x = 0; x < board.Width; x++)
                 {
-                    CheckCell(new Pos(x, y));
+                    CheckCell(x, y);
                 }
                 count = 0;
                 missing = null;
             }
 
-            for (int x = 0; x < board.X(); x++) // Columns
+            for (int x = 0; x < board.Width; x++) // Columns
             {
-                for (int y = 0; y < board.Y(); y++)
+                for (int y = 0; y < board.Height; y++)
                 {
-                    CheckCell(new Pos(x, y));
+                    CheckCell(x, y);
                 }
                 count = 0;
                 missing = null;
             }
 
-            for (int d = length - 1; d <= board.Y() + board.X() - length; d++) // Top-to-left diagonals
+            for (int d = length - 1; d <= board.Height + board.Width - length; d++) // Top-to-left diagonals
             {
                 for (int x, y = 0; y <= d; y++)
                 {
-                    if (y < board.Y() && (x = d - y) < board.X())
+                    if (y < board.Height && (x = d - y) < board.Width)
                     {
-                        CheckCell(new Pos(x, y));
+                        CheckCell(x, y);
                     }
                 }
                 count = 0;
                 missing = null;
             }
 
-            for (int d = length - 1; d <= board.Y() + board.X() - length; d++) // Top-to-right diagonals
+            for (int d = length - 1; d <= board.Height + board.Width - length; d++) // Top-to-right diagonals
             {
                 for (int x, y = 0; y <= d; y++)
                 {
-                    if (y < board.Y() && (x = board.X() - 1 - d + y) >= 0)
+                    if (y < board.Height && (x = board.Width - 1 - d + y) >= 0)
                     {
-                        CheckCell(new Pos(x, y));
+                        CheckCell(x, y);
                     }
                 }
                 count = 0;
@@ -256,47 +252,48 @@ namespace PacManBot.Games
             var matches = new List<Pos>();
 
 
-            void CheckCell(Pos pos)
+            void CheckCell(int x, int y)
             {
-                if (board.At(pos) == player) count++; // Consecutive symbols
-                else if (board.At(pos) == Player.None) missing = pos; // Find a gap
+                Pos pos = new Pos(x, y);
+                if (board[pos] == player) count++; // Consecutive symbols
+                else if (board[pos] == Player.None) missing = pos; // Find a gap
 
                 if (count == 2 && missing.HasValue) matches.Add(missing.Value);
             }
 
 
-            for (int y = 0; y < board.Y(); y++) // Rows
+            for (int y = 0; y < board.Height; y++) // Rows
             {
                 count = 0;
                 missing = null;
-                if (board[0, y] != Player.None || board[board.X() - 1, y] != Player.None) continue;
+                if (board[0, y] != Player.None || board[board.Width - 1, y] != Player.None) continue;
 
-                for (int x = 1; x < board.X() - 1; x++) CheckCell(new Pos(x, y));
+                for (int x = 1; x < board.Width - 1; x++) CheckCell(x, y);
             }
 
-            for (int x = 0; x < board.X(); x++) // Columns
+            for (int x = 0; x < board.Width; x++) // Columns
             {
                 count = 0;
                 missing = null;
-                if (board[x, 0] != Player.None || board[x, board.Y() - 1] != Player.None) continue;
+                if (board[x, 0] != Player.None || board[x, board.Height - 1] != Player.None) continue;
 
-                for (int y = 1; y < board.Y() - 1; y++) CheckCell(new Pos(x, y));
+                for (int y = 1; y < board.Height - 1; y++) CheckCell(x, y);
             }
 
-            if (board[0, 0] == Player.None && board[board.X() - 1, board.Y() - 1] == Player.None)
+            if (board[0, 0] == Player.None && board[board.Width - 1, board.Height - 1] == Player.None)
             {
                 count = 0;
                 missing = null;
 
-                for (int d = 1; d < board.X() - 1; d++) CheckCell(new Pos(d, d));
+                for (int d = 1; d < board.Width - 1; d++) CheckCell(d, d);
             }
 
-            if (board[board.X() - 1, 0] == Player.None && board[0, board.Y() - 1] == Player.None)
+            if (board[board.Width - 1, 0] == Player.None && board[0, board.Height - 1] == Player.None)
             {
                 count = 0;
                 missing = null;
 
-                for (int d = 1; d < board.X() - 1; d++) CheckCell(new Pos(board.X() - 1 - d, d));
+                for (int d = 1; d < board.Width - 1; d++) CheckCell(board.Width - 1 - d, d);
             }
             
             return matches.Count > 0 ? matches : null;
@@ -306,7 +303,7 @@ namespace PacManBot.Games
         private bool FullColumn(int x)
         {
             bool full = true;
-            for (int y = 0; y < board.Y(); y++)
+            for (int y = 0; y < board.Height; y++)
             {
                 if (board[x, y] == Player.None) full = false;
             }
@@ -317,7 +314,7 @@ namespace PacManBot.Games
         private bool FullRow(int y)
         {
             bool full = true;
-            for (int x = 0; x < board.X(); x++)
+            for (int x = 0; x < board.Width; x++)
             {
                 if (board[x, y] == Player.None) full = false;
             }
@@ -325,12 +322,12 @@ namespace PacManBot.Games
         }
 
 
-        private static List<Pos> EmptyCells(Player[,] board)
+        private static List<Pos> EmptyCells(Board<Player> board)
         {
             var empty = new List<Pos>();
-            for (int y = 0; y < board.Y(); y++)
+            for (int y = 0; y < board.Height; y++)
             {
-                for (int x = 0; x < board.X(); x++)
+                for (int x = 0; x < board.Width; x++)
                 {
                     if (board[x, y] == Player.None) empty.Add(new Pos(x, y));
                 }

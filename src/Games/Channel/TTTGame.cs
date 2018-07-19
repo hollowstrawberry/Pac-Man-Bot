@@ -15,7 +15,7 @@ namespace PacManBot.Games
 
         private const int Size = 3;
 
-        private Player[,] board;
+        private Board<Player> board;
         private List<Pos> highlighted;
 
 
@@ -26,14 +26,8 @@ namespace PacManBot.Games
             base.Initialize(channelId, players, services);
 
             highlighted = new List<Pos>();
-            board = new Player[Size,Size];
-            for (int x = 0; x < Size; x++)
-            {
-                for (int y = 0; y < Size; y++)
-                {
-                    board[x, y] = Player.None;
-                }
-            }
+            board = new Board<Player>(3, 3, false);
+            board.Fill(Player.None);
         }
 
 
@@ -47,8 +41,8 @@ namespace PacManBot.Games
         public void Input(string input, ulong userId = 1)
         {
             int cell = int.Parse(StripPrefix(input)) - 1;
-            int y = cell / board.X();
-            int x = cell % board.X();
+            int y = cell / board.Width;
+            int x = cell % board.Width;
 
             if (State != State.Active || board[x, y] != Player.None) return;
 
@@ -84,12 +78,12 @@ namespace PacManBot.Games
 
             description.Append("ᅠ\n");
 
-            for (int y = 0; y < board.Y(); y++)
+            for (int y = 0; y < board.Height; y++)
             {
-                for (int x = 0; x < board.X(); x++)
+                for (int x = 0; x < board.Width; x++)
                 {
                     description.Append(board[x, y].Symbol(highlighted.Contains(new Pos(x, y))) ??
-                        (State == State.Active ? $"{CustomEmoji.NumberCircle[1 + board.X()*y + x]}" : Player.None.Circle()));
+                        (State == State.Active ? $"{CustomEmoji.NumberCircle[1 + board.Width*y + x]}" : Player.None.Circle()));
                 }
                 description.Append('\n');
             }
@@ -106,23 +100,23 @@ namespace PacManBot.Games
         }
 
 
-        private static bool FindWinner(Player[,] board, Player player, List<Pos> highlighted = null)
+        private static bool FindWinner(Board<Player> board, Player player, List<Pos> highlighted = null)
         {
             return board.FindLines(player, 3, highlighted);
         }
 
 
-        private static bool IsTie(Player[,] board, Player turn, int time)
+        private static bool IsTie(Board<Player> board, Player turn, int time)
         {
-            if (time < board.X() * board.Y() - 3) return false;
-            else if (time == board.X()*board.Y()) return true;
+            if (time < board.Length - 3) return false;
+            else if (time == board.Length) return true;
 
             turn = turn.OtherPlayer();
 
             foreach (Pos pos in EmptyCells(board)) // Checks that all possible configurations result in a tie
             {
-                var tempBoard = (Player[,])board.Clone();
-                tempBoard.SetAt(pos, turn);
+                var tempBoard = board.Copy();
+                tempBoard[pos] = turn;
                 if (FindWinner(tempBoard, turn) || !IsTie(tempBoard, turn, time + 1)) return false;
             }
 
@@ -136,7 +130,7 @@ namespace PacManBot.Games
         {
             // Win or block or random
             Pos target = TryCompleteLine(Turn) ?? TryCompleteLine(Turn.OtherPlayer()) ?? Bot.Random.Choose(EmptyCells(board));
-            Input($"{1 + target.y * board.X() + target.x}");
+            Input($"{1 + target.y * board.Width + target.x}");
         }
 
 
@@ -191,12 +185,12 @@ namespace PacManBot.Games
         }
 
 
-        private static List<Pos> EmptyCells(Player[,] board)
+        private static List<Pos> EmptyCells(Board<Player> board)
         {
             var empty = new List<Pos>();
-            for (int y = 0; y < board.Y(); y++)
+            for (int y = 0; y < board.Height; y++)
             {
-                for (int x = 0; x < board.X(); x++)
+                for (int x = 0; x < board.Width; x++)
                 {
                     if (board[x, y] == Player.None) empty.Add(new Pos(x, y));
                 }

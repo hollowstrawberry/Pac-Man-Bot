@@ -37,6 +37,10 @@ namespace PacManBot.Games
             { "⏭".ToEmoji(), PacManInput.Fast }
         }.AsReadOnly();
 
+                private static readonly IReadOnlyList<char> NonSolidChars = new List<char> {
+            ' ', CharPellet, CharPowerPellet, CharSoftWall, CharSoftWallPellet
+        }.AsReadOnly();
+
         private const int PowerTime = 20, ScatterCycle = 100, ScatterTime1 = 30, ScatterTime2 = 20;
         private const char CharPlayer = 'O', CharFruit = '$', CharGhost = 'G', CharSoftWall = '_', CharSoftWallPellet = '~'; // Read from map
         private const char CharDoor = '-', CharPellet = '·', CharPowerPellet = '●', CharPlayerDead = 'X', CharGhostFrightened = 'E'; // Displayed
@@ -51,7 +55,7 @@ namespace PacManBot.Games
         [DataMember] public bool mobileDisplay;
         [DataMember] public int score;
 
-        private char[,] map;
+        private Board<char> map;
         [DataMember] private readonly int maxPellets;
         [DataMember] private int pellets;
         [DataMember] private int oldScore;
@@ -82,6 +86,8 @@ namespace PacManBot.Games
         [DataMember]
         private string FullMap // Converts map between char[,] and string
         {
+            get => map.ToString();
+
             set
             {
                 if (value.Length > 1500)
@@ -105,20 +111,6 @@ namespace PacManBot.Games
                         map[x, y] = lines[y][x];
                     }
                 }
-            }
-
-            get
-            {
-                var stringMap = new StringBuilder();
-                for (int y = 0; y < map.Y(); y++)
-                {
-                    if (y > 0) stringMap.Append('\n');
-                    for (int x = 0; x < map.X(); x++)
-                    {
-                        stringMap.Append(map[x, y]);
-                    }
-                }
-                return stringMap.ToString();
             }
         }
 
@@ -230,24 +222,24 @@ namespace PacManBot.Games
             // Game objects
             Pos playerPos = FindChar(CharPlayer).GetValueOrDefault();
             pacMan = new PacMan(playerPos);
-            map.SetAt(pacMan.pos, ' ');
+            map[pacMan.pos] = ' ';
 
             fruitSpawnPos = FindChar(CharFruit) ?? new Pos(-1, -1);
-            if (fruitSpawnPos.x >= 0) map.SetAt(fruitSpawnPos, ' ');
+            if (fruitSpawnPos.x >= 0) map[fruitSpawnPos] = ' ';
 
             ghosts = new List<Ghost>();
             Pos[] ghostCorners = { // Matches original game
-                new Pos(map.X() - 3, -3),
+                new Pos(map.Width - 3, -3),
                 new Pos(2, -3),
-                new Pos(map.X() - 1, map.Y()),
-                new Pos(0, map.Y())
+                new Pos(map.Width - 1, map.Height),
+                new Pos(0, map.Height)
             };
             for (int i = 0; i < 4; i++)
             {
                 Pos? ghostPos = FindChar(CharGhost);
                 if (!ghostPos.HasValue) break;
                 ghosts.Add(new Ghost((GhostType)i, ghostPos.Value, ghostCorners[i]));
-                map.SetAt(ghostPos.Value, ' ');
+                map[ghostPos.Value] = ' ';
             }
 
             storage.StoreGame(this);
@@ -335,7 +327,7 @@ namespace PacManBot.Games
                 }
 
                 // Pellet collision
-                char tile = map.At(pacMan.pos);
+                char tile = map[pacMan.pos];
                 if (tile == CharPellet || tile == CharPowerPellet || tile == CharSoftWallPellet)
                 {
                     pellets--;
@@ -414,22 +406,21 @@ namespace PacManBot.Games
 
             try
             {
-                var display = new StringBuilder(); // The final display in string form
-                var displayMap = (char[,])map.Clone(); // The display array to modify
+                var mapCopy = map.Copy(); // The map to modify
 
                 // Scan replacements
-                for (int y = 0; y < map.Y(); y++)
+                for (int y = 0; y < map.Height; y++)
                 {
-                    for (int x = 0; x < map.X(); x++)
+                    for (int x = 0; x < map.Width; x++)
                     {
-                        if (displayMap[x, y] == CharSoftWall) displayMap[x, y] = ' ';
-                        else if (displayMap[x, y] == CharSoftWallPellet) displayMap[x, y] = CharPellet;
+                        if (mapCopy[x, y] == CharSoftWall) mapCopy[x, y] = ' ';
+                        else if (mapCopy[x, y] == CharSoftWallPellet) mapCopy[x, y] = CharPellet;
 
                         if (mobileDisplay) // Mode with simplified characters
                         {
-                            if (!NonSolid(x, y) && displayMap[x, y] != CharDoor) displayMap[x, y] = '#'; // Walls
-                            else if (displayMap[x, y] == CharPellet) displayMap[x, y] = '.'; // Pellets
-                            else if (displayMap[x, y] == CharPowerPellet) displayMap[x, y] = 'o'; // Power pellets
+                            if (!NonSolid(x, y) && mapCopy[x, y] != CharDoor) mapCopy[x, y] = '#'; // Walls
+                            else if (mapCopy[x, y] == CharPellet) mapCopy[x, y] = '.'; // Pellets
+                            else if (mapCopy[x, y] == CharPowerPellet) mapCopy[x, y] = 'o'; // Power pellets
                         }
                     }
                 }
@@ -437,24 +428,18 @@ namespace PacManBot.Games
                 // Adds fruit, ghosts and player
                 if (fruitTimer > 0)
                 {
-                    displayMap[fruitSpawnPos.x, fruitSpawnPos.y] = FruitChar;
-                    displayMap[FruitSecondPos.x, FruitSecondPos.y] = FruitChar;
+                    mapCopy[fruitSpawnPos] = FruitChar;
+                    mapCopy[FruitSecondPos] = FruitChar;
                 }
                 foreach (Ghost ghost in ghosts)
                 {
-                    displayMap[ghost.pos.x, ghost.pos.y] = ghost.Appearance;
+                    mapCopy[ghost.pos] = ghost.Appearance;
                 }
-                displayMap[pacMan.pos.x, pacMan.pos.y] = State == State.Lose ? CharPlayerDead : CharPlayer;
+                mapCopy[pacMan.pos] = State == State.Lose ? CharPlayerDead : CharPlayer;
 
-                // Converts 2d array to string
-                for (int y = 0; y < displayMap.Y(); y++)
-                {
-                    for (int x = 0; x < displayMap.X(); x++)
-                    {
-                        display.Append(displayMap[x, y]);
-                    }
-                    display.Append('\n');
-                }
+
+                var display = new StringBuilder(mapCopy.ToString()); // The final display in string form
+
 
                 // Add text to the side
                 string[] info = {
@@ -483,9 +468,9 @@ namespace PacManBot.Games
                 }
                 else
                 {
-                    for (int i = 0; i < info.Length && i < map.Y(); i++) // Insert info
+                    for (int i = 0; i < info.Length && i < map.Height; i++) // Insert info
                     {
-                        int insertIndex = (i + 1) * displayMap.X(); // Skips ahead a certain amount of lines
+                        int insertIndex = (i + 1) * mapCopy.Width; // Skips ahead a certain amount of lines
                         for (int j = i - 1; j >= 0; j--) insertIndex += info[j].Length + 2; // Takes into account the added line length of previous info
                         display.Insert(insertIndex, $" {info[i]}");
                     }
@@ -613,11 +598,11 @@ namespace PacManBot.Games
 
             // Decide movement
 
-            if (map.At(ghost.pos) == CharDoor || map.At(ghost.pos + Dir.Up) == CharDoor) // Exiting the cage
+            if (map[ghost.pos] == CharDoor || map[ghost.pos + Dir.Up] == CharDoor) // Exiting the cage
             {
                 ghost.dir = Dir.Up;
             }
-            else if (ghost.dir == Dir.Up && map.At(ghost.pos + Dir.Down) == CharDoor) // Getting away from the cage
+            else if (ghost.dir == Dir.Up && map[ghost.pos + Dir.Down] == CharDoor) // Getting away from the cage
             {
                 ghost.dir = ghost.exitRight ? Dir.Right : Dir.Left;
             }
@@ -627,7 +612,8 @@ namespace PacManBot.Games
             }
             else if (ghost.mode == GhostMode.Frightened) // Turns randomly at intersections
             {
-                ghost.dir = Bot.Random.Choose(AllDirs.Where(x => x != ghost.dir.Opposite() && NonSolid(ghost.pos + x)).ToArray());
+                var dirs = AllDirs.Where(x => x != ghost.dir.Opposite() && NonSolid(ghost.pos + x)).ToArray();
+                ghost.dir = Bot.Random.Choose(dirs);
             }
             else // Track target
             {
@@ -638,7 +624,7 @@ namespace PacManBot.Games
                 {
                     Pos testPos = ghost.pos + testDir;
 
-                    if (testDir == Dir.Up && (map.At(testPos) == CharSoftWall || map.At(testPos) == CharSoftWallPellet)) continue;
+                    if (testDir == Dir.Up && (map[testPos] == CharSoftWall || map[testPos] == CharSoftWallPellet)) continue;
 
                     if (NonSolid(testPos) && Pos.Distance(testPos, target) < distance)
                     {
@@ -680,9 +666,9 @@ namespace PacManBot.Games
 
         private Pos? FindChar(char c, int index = 0) // Finds the specified character instance in the map
         {
-            for (int y = 0; y < map.Y(); y++)
+            for (int y = 0; y < map.Height; y++)
             {
-                for (int x = 0; x < map.X(); x++)
+                for (int x = 0; x < map.Width; x++)
                 {
                     if (map[x, y] == c)
                     {
@@ -700,11 +686,8 @@ namespace PacManBot.Games
 
 
         private bool NonSolid(int x, int y) => NonSolid(new Pos(x, y));
-        private bool NonSolid(Pos pos) // Defines which tiles in the map entities can move through
-        {
-            char ch = map.At(pos);
-            return (ch == ' ' || ch == CharPellet || ch == CharPowerPellet || ch == CharSoftWall || ch == CharSoftWallPellet);
-        }
+
+        private bool NonSolid(Pos pos) => NonSolidChars.Contains(map[pos]);
 
 
         public void PostDeserialize(IServiceProvider services)

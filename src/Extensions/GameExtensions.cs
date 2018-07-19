@@ -133,64 +133,20 @@ namespace PacManBot.Extensions
 
 
 
-        // 2d arrays
-
-        /// <summary>Returns the horizontal length of a 2d array.</summary>
-        public static int X<T>(this T[,] board) => board.GetLength(0);
-
-        /// <summary>Returns the vertical length of a 2d array.</summary>
-        public static int Y<T>(this T[,] board) => board.GetLength(1);
+        // Board
 
 
         /// <summary>
-        /// Returns the value at the specified coordinates in a 2d array. 
-        /// If <paramref name="wrap"/> is true, the coordinates will wrap around instead of
-        /// throwing an error when they are out of bounds.
+        /// Finds all horizontal, vertical, and diagonal lines consisted of values equal to the specified value, 
+        /// inside a board.
         /// </summary>
-        public static T At<T>(this T[,] board, Pos pos, bool wrap = true)
-        {
-            if (wrap) board.Wrap(ref pos);
-            return board[pos.x, pos.y];
-        }
-
-
-        /// <summary>
-        /// Sets a value at the specified coordinates in a 2d array. 
-        /// If <paramref name="wrap"/> is true, the coordinates will wrap around instead of
-        /// throwing an error when they are out of bounds.
-        /// </summary>
-        public static void SetAt<T>(this T[,] board, Pos pos, T value, bool wrap = true)
-        {
-            if (wrap) board.Wrap(ref pos);
-            board[pos.x, pos.y] = value;
-        }
-
-
-        /// <summary>If the given coordinates are out of bounds for the given 2d array, 
-        /// they will be adjusted to wrap around, coming from the other side, until they are in bounds.</summary>
-        public static void Wrap<T>(this T[,] board, ref Pos pos)
-        {
-            pos.x %= board.X();
-            if (pos.x < 0) pos.x += board.X();
-
-            pos.y %= board.Y();
-            if (pos.y < 0) pos.y += board.Y();
-        }
-
-
-
-        /// <summary>
-        /// Finds all horizontal, vertical, and diagonal lines consisted of values equal to the provided value,
-        /// inside a 2d array. The positions of the lines will be stored inside <paramref name="result"/>, and the return value
-        /// indicates if any lines were found. Lines with length exceeding the one provided won't be counted more than once.
-        /// To be used in games such as Tic-Tac-Toe and Connect 4.
-        /// </summary>
+        /// <remarks>To be used in games such as Tic-Tac-Toe and Connect 4.</remarks>
         /// <param name="board">The board to find lines in.</param>
         /// <param name="value">The value to find lines of.</param>
-        /// <param name="length">The expected line length. Lines exceeding this length won't be counted more than once.</param>
+        /// <param name="length">The required minimum length. Lines exceeding this length will only be counted once.</param>
         /// <param name="result">The list where the positions of found lines will be stored, if provided.</param>
         /// <returns>Whether any lines were found.</returns>
-        public static bool FindLines<T>(this T[,] board, T value, int length, List<Pos> result = null)
+        public static bool FindLines<T>(this Board<T> board, T value, int length, List<Pos> result = null)
         {
             bool win = false;
             List<Pos> line = new List<Pos>();
@@ -198,7 +154,7 @@ namespace PacManBot.Extensions
 
             void CheckCell(Pos pos)
             {
-                if (board.At(pos).Equals(value))
+                if (board[pos].Equals(value))
                 {
                     line.Add(pos);
 
@@ -219,29 +175,29 @@ namespace PacManBot.Extensions
             }
 
 
-            for (int y = 0; y < board.Y(); y++) // Horizontals
+            for (int y = 0; y < board.Height; y++) // Horizontals
             {
-                for (int x = 0; x < board.X(); x++)
+                for (int x = 0; x < board.Width; x++)
                 {
                     CheckCell(new Pos(x, y));
                 }
                 line = new List<Pos>();
             }
 
-            for (int x = 0; x < board.X(); x++) // Verticals
+            for (int x = 0; x < board.Width; x++) // Verticals
             {
-                for (int y = 0; y < board.Y(); y++)
+                for (int y = 0; y < board.Height; y++)
                 {
                     CheckCell(new Pos(x, y));
                 }
                 line = new List<Pos>();
             }
 
-            for (int d = length - 1; d <= board.Y() + board.X() - length; d++) // Top-to-left diagonals
+            for (int d = length - 1; d <= board.Width + board.Height - length; d++) // Top-to-left diagonals
             {
                 for (int x, y = 0; y <= d; y++)
                 {
-                    if (y < board.Y() && (x = d - y) < board.X())
+                    if (y < board.Height && (x = d - y) < board.Width)
                     {
                         CheckCell(new Pos(x, y));
                     }
@@ -249,11 +205,11 @@ namespace PacManBot.Extensions
                 line = new List<Pos>();
             }
 
-            for (int d = length - 1; d <= board.Y() + board.X() - length; d++) // Top-to-right diagonals
+            for (int d = length - 1; d <= board.Width + board.Height - length; d++) // Top-to-right diagonals
             {
                 for (int x, y = 0; y <= d; y++)
                 {
-                    if (y < board.Y() && (x = board.X() - 1 - d + y) >= 0)
+                    if (y < board.Height && (x = board.Width - 1 - d + y) >= 0)
                     {
                         CheckCell(new Pos(x, y));
                     }
