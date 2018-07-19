@@ -163,11 +163,11 @@ namespace PacManBot.Games
 
 
         /// <summary>Default title of a multiplayer game embed, displaying the current turn/winner.</summary>
-        protected string EmbedTitle()
+        protected string ColorEmbedTitle()
         {
             return Winner == Player.None ? $"{Turn.ToStringColor()} Player's turn" :
                    Winner == Player.Tie ? "It's a tie!" :
-                   UserId[0] != UserId[1] ? $"{Turn} is the winner!" :
+                   UserId[0] != UserId[1] ? $"{Turn.ToStringColor()} is the winner!" :
                    UserId[0] == client.CurrentUser.Id ? "I win!" : "A winner is you!"; // These two are for laughs
         }
     }

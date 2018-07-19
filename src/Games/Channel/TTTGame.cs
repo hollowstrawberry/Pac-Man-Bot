@@ -98,7 +98,7 @@ namespace PacManBot.Games
 
             return new EmbedBuilder
             {
-                Title = EmbedTitle(),
+                Title = ColorEmbedTitle(),
                 Description = description.ToString(),
                 Color = Turn.Color(),
                 ThumbnailUrl = Winner == Player.None ? Turn.Symbol().ToEmote()?.Url : User(Winner)?.GetAvatarUrl(),

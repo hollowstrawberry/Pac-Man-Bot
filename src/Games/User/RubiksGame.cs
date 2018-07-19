@@ -291,9 +291,9 @@ namespace PacManBot.Games
             };
 
             var cyclesS = new[] {
-                new[] { Down+5, Right+1, Up+3, Left+7 },
-                new[] { Down+4, Right+4, Up+4, Left+4 },
-                new[] { Down+3, Right+7, Up+5, Left+1 },
+                new[] { Down+5, Left+7, Up+3, Right+1 },
+                new[] { Down+4, Left+4, Up+4, Right+4 },
+                new[] { Down+3, Left+1, Up+5, Right+7 },
             };
 
             var cyclesU = new[] {
@@ -354,12 +354,13 @@ namespace PacManBot.Games
                 new RawMove("S", cyclesS),
                 new RawMove("E", cyclesE),
 
-                new RawMove("Fw", cyclesF.Concatenate(cyclesS.Select(x => x.Reverse().ToArray()).ToArray())),
+                // Why in heck are wide moves so inconsistent in orientation
+                new RawMove("Bw", cyclesB.Concatenate(cyclesS.Select(x => x.Reverse().ToArray()).ToArray())),
                 new RawMove("Uw", cyclesU.Concatenate(cyclesE.Select(x => x.Reverse().ToArray()).ToArray())),
                 new RawMove("Rw", cyclesR.Concatenate(cyclesM.Select(x => x.Reverse().ToArray()).ToArray())),
                 new RawMove("Lw", cyclesL.Concatenate(cyclesM)),
                 new RawMove("Dw", cyclesD.Concatenate(cyclesE)),
-                new RawMove("Bw", cyclesB.Concatenate(cyclesS)),
+                new RawMove("Fw", cyclesF.Concatenate(cyclesS)),
 
                 new RawMove("x", cyclesR.Concatenate(
                     cyclesM.Select(x => x.Reverse().ToArray()).ToArray(),
