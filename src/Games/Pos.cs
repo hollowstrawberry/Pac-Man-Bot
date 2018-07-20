@@ -3,7 +3,7 @@ using PacManBot.Extensions;
 
 namespace PacManBot.Games
 {
-    /// <summary>2d coordinates. Useful in pair with <see cref="GameExtensions"/> to manipulate game boards/maps.</summary>
+    /// <summary>A position in a <see cref="Board{T}"/>, expressed as x and y coordinates.</summary>
     public struct Pos
     {
         public int x;

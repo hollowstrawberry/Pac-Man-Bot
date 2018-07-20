@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Discord;
 using PacManBot.Constants;
-using Newtonsoft.Json.Linq;
 
 namespace PacManBot.Games
 {
