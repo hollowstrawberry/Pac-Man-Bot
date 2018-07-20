@@ -3,6 +3,9 @@ using Discord;
 
 namespace PacManBot.Games
 {
+    /// <summary>
+    /// The interface all games derive from.
+    /// </summary>
     public interface IBaseGame
     {
         /// <summary>The displayed name of this game.</summary>

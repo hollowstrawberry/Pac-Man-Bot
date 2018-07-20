@@ -3,7 +3,8 @@ using Discord;
 namespace PacManBot.Games
 {
     /// <summary>
-    /// The interface for user-specific games. Has prevalence over <see cref="IChannelGame"/>.
+    /// The interface for user-specific games.
+    /// Has prevalence over <see cref="IChannelGame"/> when sorting between the two.
     /// </summary>
     public interface IUserGame : IBaseGame
     {
