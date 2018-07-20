@@ -277,7 +277,7 @@ namespace PacManBot.Games
                 ApplyCardEffect();
             }
 
-            storage.StoreGame(this);
+            games.Save(this);
         }
 
 
@@ -330,7 +330,7 @@ namespace PacManBot.Games
                     Message = "";
                     Callout(forgot);
                 }
-                storage.StoreGame(this);
+                games.Save(this);
                 return;
             }
 
@@ -426,7 +426,7 @@ namespace PacManBot.Games
 
             if (!calledByAi || !CurrentPlayer.User.IsBot)
             {
-                storage.StoreGame(this);
+                games.Save(this);
                 foreach (var player in updatedPlayers.Distinct().Where(x => !x.User.IsBot))
                 {
                     SendCards(player);

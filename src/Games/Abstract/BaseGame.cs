@@ -15,6 +15,7 @@ namespace PacManBot.Games
         protected DiscordShardedClient client;
         protected StorageService storage;
         protected LoggingService logger;
+        protected GameService games;
 
         /// <summary>A <see cref="CancellationTokenSource"/> used to manage previous game tasks such as 
         /// ongoing Discord message editions to prevent them from piling up when new ones come in.</summary>
@@ -74,6 +75,7 @@ namespace PacManBot.Games
             client = services.Get<DiscordShardedClient>();
             logger = services.Get<LoggingService>();
             storage = services.Get<StorageService>();
+            games = services.Get<GameService>();
         }
 
 

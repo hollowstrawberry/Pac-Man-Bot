@@ -22,6 +22,7 @@ namespace PacManBot.Services
         private readonly CommandService commands;
         private readonly StorageService storage;
         private readonly LoggingService logger;
+        private readonly GameService games;
         private readonly IServiceProvider provider;
 
         public readonly Regex waka = new Regex(@"^(w+a+k+a+\W*)+$", RegexOptions.IgnoreCase);
@@ -34,6 +35,7 @@ namespace PacManBot.Services
             commands = provider.Get<CommandService>();
             storage = provider.Get<StorageService>();
             logger = provider.Get<LoggingService>();
+            games = provider.Get<GameService>();
 
             // Events
             client.MessageReceived += OnMessageReceived;
@@ -169,7 +171,7 @@ namespace PacManBot.Services
         /// <summary>Tries to find a game and execute message input, returns whether it is successful.</summary>
         private async Task<bool> MessageGameInputAsync(SocketUserMessage message)
         {
-            var game = storage.GetChannelGame<IMessagesGame>(message.Channel.Id);
+            var game = games.GetForChannel<IMessagesGame>(message.Channel.Id);
             if (game == null || !game.IsInput(message.Content, message.Author.Id)) return false;
 
             try
@@ -190,7 +192,7 @@ namespace PacManBot.Services
         /// <summary>Tries to find a game and execute reaction input, returns whether it is successful.</summary>
         private async Task<bool> ReactionGameInputAsync(Cacheable<IUserMessage, ulong> messageData, ISocketMessageChannel channel, SocketReaction reaction)
         {
-            var game = storage.GetChannelGame<IReactionsGame>(channel.Id);
+            var game = games.GetForChannel<IReactionsGame>(channel.Id);
             if (game == null || game.MessageId != reaction.MessageId || !game.IsInput(reaction.Emote, reaction.UserId)) return false;
 
             try
@@ -221,7 +223,7 @@ namespace PacManBot.Services
             {
                 while(mGame.BotTurn) mGame.BotInput();
             }
-            if (game.State != State.Active) storage.DeleteGame(game);
+            if (game.State != State.Active) games.Remove(game);
 
             game.CancelRequests();
             var requestOptions = game.GetRequestOptions();
@@ -254,7 +256,7 @@ namespace PacManBot.Services
 
             if (game.State != State.Active)
             {
-                storage.DeleteGame(game);
+                games.Remove(game);
 
                 if (game is PacManGame pmGame && pmGame.State != State.Cancelled && !pmGame.custom)
                 {

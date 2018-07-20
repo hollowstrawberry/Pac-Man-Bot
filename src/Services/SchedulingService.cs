@@ -20,16 +20,18 @@ namespace PacManBot.Services
         private readonly DiscordShardedClient client;
         private readonly StorageService storage;
         private readonly LoggingService logger;
+        private readonly GameService games;
 
         public List<Timer> timers;
         private CancellationTokenSource cancelShutdown = new CancellationTokenSource();
 
 
-        public SchedulingService(DiscordShardedClient client, StorageService storage, LoggingService logger)
+        public SchedulingService(DiscordShardedClient client, StorageService storage, LoggingService logger, GameService games)
         {
             this.client = client;
             this.storage = storage;
             this.logger = logger;
+            this.games = games;
 
             timers = new List<Timer>
             {
@@ -79,11 +81,11 @@ namespace PacManBot.Services
             var now = DateTime.Now;
             int count = 0;
 
-            foreach (var game in storage.GamesEnumerable.Where(g => now - g.LastPlayed > g.Expiry).ToArray())
+            foreach (var game in games.AllChannelGames.Where(g => now - g.LastPlayed > g.Expiry).ToArray())
             {
                 count++;
                 game.State = State.Cancelled;
-                storage.DeleteGame(game);
+                games.Remove(game);
 
                 if (client?.LoginState == LoginState.LoggedIn)
                 {
@@ -96,11 +98,11 @@ namespace PacManBot.Services
                 }
             }
 
-            foreach (var game in storage.UserGamesEnumerable.Where(g => now - g.LastPlayed > g.Expiry).ToArray())
+            foreach (var game in games.AllUserGames.Where(g => now - g.LastPlayed > g.Expiry).ToArray())
             {
                 count++;
                 game.State = State.Cancelled;
-                storage.DeleteGame(game);
+                games.Remove(game);
             }
 
 

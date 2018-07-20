@@ -15,7 +15,7 @@ namespace PacManBot.Commands
     {
         private async Task RunMultiplayerGame<TGame>(params SocketUser[] players) where TGame : MultiplayerGame
         {
-            var existingGame = Storage.GetChannelGame(Context.Channel.Id);
+            var existingGame = Games.GetForChannel(Context.Channel.Id);
             if (existingGame != null)
             {
                 await ReplyAsync(existingGame.UserId.Contains(Context.User.Id)
@@ -25,7 +25,7 @@ namespace PacManBot.Commands
             }
 
             var game = MultiplayerGame.CreateNew<TGame>(Context.Channel.Id, players, Services);
-            Storage.AddGame(game);
+            Games.Add(game);
             while (!game.AllBots && game.BotTurn) game.BotInput(); // When a bot starts
             var gameMessage = await ReplyAsync(game.GetContent(), game.GetEmbed());
             game.MessageId = gameMessage.Id;
@@ -46,7 +46,7 @@ namespace PacManBot.Commands
                     await Task.Delay(Bot.Random.Next(1000, 2001));
                 }
 
-                Storage.DeleteGame(game);
+                Games.Remove(game);
             }
         }
 
@@ -177,7 +177,7 @@ namespace PacManBot.Commands
                 user = Context.User as SocketGuildUser;
             }
 
-            var game = Storage.GetChannelGame<UnoGame>(Context.Channel.Id);
+            var game = Games.GetForChannel<UnoGame>(Context.Channel.Id);
             if (game == null)
             {
                 await ReplyAsync($"There's no Uno game in this channel! Use `{Prefix}uno` to start.");
@@ -217,7 +217,7 @@ namespace PacManBot.Commands
                 user = Context.User as SocketGuildUser;
             }
 
-            var game = Storage.GetChannelGame<UnoGame>(Context.Channel.Id);
+            var game = Games.GetForChannel<UnoGame>(Context.Channel.Id);
             if (game == null)
             {
                 await ReplyAsync($"There's no Uno game in this channel! Use `{Prefix}uno` to start.");

@@ -364,7 +364,7 @@ namespace PacManBot.Games
 
             achievements.DoChecks(this);
             lastUpdated = now;
-            if (store) storage.StoreGame(this);
+            if (store) games.Save(this);
         }
 
 
@@ -386,7 +386,7 @@ namespace PacManBot.Games
                 happiness = Math.Max(0, happiness - 1);
             }
 
-            storage.StoreGame(this);
+            games.Save(this);
             return canEat;
         }
 
@@ -407,7 +407,7 @@ namespace PacManBot.Games
                 happiness = Math.Max(0, happiness - 1);
             }
 
-            storage.StoreGame(this);
+            games.Save(this);
             return canPlay;
         }
 
@@ -427,7 +427,7 @@ namespace PacManBot.Games
                 happiness = Math.Max(0, happiness - 1);
             }
 
-            storage.StoreGame(this);
+            games.Save(this);
             return canClean;
         }
 
@@ -435,7 +435,7 @@ namespace PacManBot.Games
         public void ToggleSleep()
         {
             asleep = !asleep;
-            storage.StoreGame(this);
+            games.Save(this);
         }
 
 
@@ -505,7 +505,7 @@ namespace PacManBot.Games
                 king = true;
             }
 
-            storage.StoreGame(this);
+            games.Save(this);
 
             pet = Regex.Replace(pet, @"{.*}", "");
             if ((amount == 0) == hide || godEffect) pet = pet.Trim(' ') + $" ({"👼 ".If(godEffect)}{amount:+0;-#} pets)";

@@ -18,14 +18,17 @@ namespace PacManBot.Commands
         public static readonly RequestOptions DefaultOptions = Bot.DefaultOptions;
 
 
-        /// <summary>Provides all of this program's services.</summary>
+        /// <summary>All of this program's services, if necessary for whatever reason.</summary>
         public IServiceProvider Services { get; }
 
         /// <summary>Logs everything in the console and on disk.</summary>
         public LoggingService Logger { get; }
 
-        /// <summary></summary>
+        /// <summary>Allowss access to data from the bot.</summary>
         public StorageService Storage { get; }
+
+        /// <summary>Allows access to active games.</summary>
+        public GameService Games { get; }
 
         /// <summary>The relative prefix used in this context. Might be empty in DMs and other cases.</summary>
         public string Prefix { get; private set; }
@@ -40,6 +43,7 @@ namespace PacManBot.Commands
             Services = services;
             Logger = services.Get<LoggingService>();
             Storage = services.Get<StorageService>();
+            Games = services.Get<GameService>();
         }
 
 

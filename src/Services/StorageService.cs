@@ -1,15 +1,11 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Reflection;
 using Microsoft.Data.Sqlite;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
 using Discord;
 using Discord.Rest;
 using Discord.WebSocket;
@@ -21,27 +17,16 @@ using PacManBot.Extensions;
 namespace PacManBot.Services
 {
     /// <summary>
-    /// Manages all runtime and long-term data the bot utilizes concurrently.
+    /// Manages runtime and long-term data the bot utilizes concurrently.
     /// </summary>
     public class StorageService
     {
-        private static readonly IReadOnlyDictionary<string, Type> StoreableGameTypes = GetStoreableGameTypes();
-
-        private static readonly JsonSerializerSettings GameJsonSettings = new JsonSerializerSettings {
-            ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
-        };
-
-
         private readonly DiscordShardedClient client;
         private readonly LoggingService logger;
-        private readonly ConcurrentDictionary<ulong, IChannelGame> games;
-        private readonly ConcurrentDictionary<(ulong, Type), IUserGame> userGames;
+
         private readonly ConcurrentDictionary<ulong, string> cachedPrefixes;
         private readonly ConcurrentDictionary<ulong, bool> cachedAllowsAutoresponse;
         private readonly ConcurrentDictionary<ulong, bool> cachedNoPrefixChannel;
-
-        public IEnumerable<IChannelGame> GamesEnumerable => games.Select(x => x.Value);
-        public IEnumerable<IUserGame> UserGamesEnumerable => userGames.Select(x => x.Value);
 
         public string DefaultPrefix { get; }
         public RestApplication AppInfo { get; private set; }
@@ -51,8 +36,7 @@ namespace PacManBot.Services
         public ulong[] BannedChannels { get; private set; }
 
 
-        public SqliteConnection NewDatabaseConnection()
-            => new SqliteConnection($"Data Source={Files.Database};");
+        public SqliteConnection NewDatabaseConnection() => new SqliteConnection($"Data Source={Files.Database};");
 
 
 
@@ -66,12 +50,9 @@ namespace PacManBot.Services
             cachedPrefixes = new ConcurrentDictionary<ulong, string>();
             cachedAllowsAutoresponse = new ConcurrentDictionary<ulong, bool>();
             cachedNoPrefixChannel = new ConcurrentDictionary<ulong, bool>();
-            games = new ConcurrentDictionary<ulong, IChannelGame>();
-            userGames = new ConcurrentDictionary<(ulong, Type), IUserGame>();
 
             SetupDatabase();
             LoadContent();
-            LoadGames();
 
             client.LoggedIn += LoadAppInfo;
         }
@@ -79,6 +60,7 @@ namespace PacManBot.Services
 
 
 
+        /// <summary>Retrieves the specified guild's active prefix if the guild exists, or the default prefix otherwise.</summary>
         public string GetPrefix(ulong guildId)
         {
             if (cachedPrefixes.TryGetValue(guildId, out string prefix)) return prefix;
@@ -96,13 +78,14 @@ namespace PacManBot.Services
             return prefix;
         }
 
-        public string GetPrefix(IGuild guild = null)
-            => guild == null ? DefaultPrefix : GetPrefix(guild.Id);
+        /// <summary>Retrieves the specified guild's active prefix if the guild exists, or the default prefix otherwise.</summary>
+        public string GetPrefix(IGuild guild = null) => guild == null ? DefaultPrefix : GetPrefix(guild.Id);
 
-        public string GetPrefixOrEmpty(IGuild guild)
-            => guild == null ? "" : GetPrefix(guild.Id);
+        /// <summary>Retrieves the specified guild's active prefix if the guild exists, or an empty string otherwise.</summary>
+        public string GetPrefixOrEmpty(IGuild guild) => guild == null ? "" : GetPrefix(guild.Id);
 
 
+        /// <summary>Changes the prefix of the specified guild.</summary>
         public void SetPrefix(ulong guildId, string prefix)
         {
             cachedPrefixes[guildId] = prefix;
@@ -124,6 +107,7 @@ namespace PacManBot.Services
 
 
 
+        /// <summary>Whether the specified guild is set to allow message autoresponses.</summary>
         public bool AllowsAutoresponse(ulong guildId)
         {
             if (cachedAllowsAutoresponse.TryGetValue(guildId, out bool allows)) return allows;
@@ -141,6 +125,7 @@ namespace PacManBot.Services
         }
 
 
+        /// <summary>Toggles message autoresponses on or off in the specified guild.</summary>
         public bool ToggleAutoresponse(ulong guildId)
         {
             cachedAllowsAutoresponse[guildId] = !cachedAllowsAutoresponse[guildId];
@@ -169,6 +154,7 @@ namespace PacManBot.Services
 
 
 
+        /// <summary>Whether the specified channel is set to not require a prefix for commands.</summary>
         public bool NoPrefixChannel(ulong channelId)
         {
             if (cachedNoPrefixChannel.TryGetValue(channelId, out bool noPrefixMode)) return noPrefixMode;
@@ -186,6 +172,7 @@ namespace PacManBot.Services
         }
 
 
+        /// <summary>Toggles the specified channel between requiring a prefix for commands and not.</summary>
         public bool ToggleNoPrefix(ulong channelId)
         {
             cachedNoPrefixChannel[channelId] = !cachedNoPrefixChannel[channelId];
@@ -214,6 +201,7 @@ namespace PacManBot.Services
 
 
 
+        /// <summary>Adds a new entry to the <see cref="PacManGame"/> scoreboard.</summary>
         public void AddScore(ScoreEntry entry)
         {
             logger.Log(LogSeverity.Info, LogSource.Storage, $"New scoreboard entry: {entry}");
@@ -236,7 +224,8 @@ namespace PacManBot.Services
         }
 
 
-        public IReadOnlyList<ScoreEntry> GetScores(TimePeriod period, int amount = 1, int start = 0, ulong? userId = null)
+        /// <summary>Retrieves a list of scores from the database that fulfills the specified requirements.</summary>
+        public List<ScoreEntry> GetScores(TimePeriod period, int amount = 1, int start = 0, ulong? userId = null)
         {
             var conditions = new List<string>();
             if (period != TimePeriod.All) conditions.Add($"date>=@date");
@@ -276,63 +265,27 @@ namespace PacManBot.Services
             }
 
             logger.Log(LogSeverity.Info, LogSource.Storage, $"Grabbed {scores.Count} score entries");
-            return scores.AsReadOnly();
+            return scores;
         }
 
 
-
-
-        public IChannelGame GetChannelGame(ulong channelId)
-            => games.TryGetValue(channelId, out var game) ? game : null;
-
-
-        public TGame GetChannelGame<TGame>(ulong channelId) where TGame : class, IChannelGame
-            => GetChannelGame(channelId) as TGame;
-
-
-        public TGame GetUserGame<TGame>(ulong userId) where TGame : class, IUserGame
-            => userGames.TryGetValue((userId, typeof(TGame)), out var game) ? (TGame)game : null;
-
-
-        public void AddGame(IBaseGame game)
+        /// <summary>Reloads various settings from the contents file.</summary>
+        public void LoadContent()
         {
-            if (game is IUserGame uGame) userGames.TryAdd((uGame.OwnerId, uGame.GetType()), uGame);
-            else if (game is IChannelGame cGame) games.TryAdd(cGame.ChannelId, cGame);
-        }
-
-
-        public void DeleteGame(IBaseGame game)
-        {
-            try
+            if (BotContent == null)
             {
-                game.CancelRequests();
-                if (game is IStoreableGame sGame && File.Exists(sGame.GameFile()))
-                {
-                    File.Delete(sGame.GameFile());
-                }
-
-                bool success = false;
-                if (game is IUserGame uGame)
-                {
-                    success = userGames.TryRemove((uGame.OwnerId, uGame.GetType()));
-                }
-                else if (game is IChannelGame cGame)
-                {
-                    success = games.TryRemove(cGame.ChannelId);
-                }
-
-                if (success) logger.Log(LogSeverity.Verbose, LogSource.Storage, $"Removed {game.GetType().Name} at {game.IdentifierId()}");
+                BotContent = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile(Files.Contents).Build();
             }
-            catch (Exception e)
+            else
             {
-                logger.Log(LogSeverity.Error, LogSource.Storage, $"Trying to remove game at {game.IdentifierId()}: {e}");
+                BotContent.Reload();
             }
-        }
 
+            BannedChannels = BotContent["banned"].Split(',').Select(ulong.Parse).ToArray();
+            PettingMessages = BotContent["petting"].Split('\n', StringSplitOptions.RemoveEmptyEntries);
+            SuperPettingMessages = BotContent["superpetting"].Split('\n', StringSplitOptions.RemoveEmptyEntries);
 
-        public void StoreGame(IStoreableGame game)
-        {
-            File.WriteAllText(game.GameFile(), JsonConvert.SerializeObject(game), Encoding.UTF8);
+            logger.LoadLogExclude(this);
         }
 
 
@@ -363,88 +316,10 @@ namespace PacManBot.Services
         }
 
 
-        public void LoadContent()
-        {
-            if (BotContent == null)
-            {
-                BotContent = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile(Files.Contents).Build();
-            }
-            else
-            {
-                BotContent.Reload();
-            }
-
-            BannedChannels = BotContent["banned"].Split(',').Select(ulong.Parse).ToArray();
-            PettingMessages = BotContent["petting"].Split('\n', StringSplitOptions.RemoveEmptyEntries);
-            SuperPettingMessages = BotContent["superpetting"].Split('\n', StringSplitOptions.RemoveEmptyEntries);
-
-            logger.LoadLogExclude(this);
-        }
-
-
-        private void LoadGames()
-        {
-            if (!Directory.Exists(Files.GameFolder))
-            {
-                Directory.CreateDirectory(Files.GameFolder);
-                logger.Log(LogSeverity.Warning, LogSource.Storage, $"Created missing directory \"{Files.GameFolder}\"");
-                return;
-            }
-
-            uint fail = 0;
-            bool firstFail = true;
-
-            IServiceProvider gameServices = new ServiceCollection()
-                .AddSingleton(this)
-                .AddSingleton(client)
-                .AddSingleton(logger)
-                .BuildServiceProvider();
-
-            foreach (string file in Directory.GetFiles(Files.GameFolder))
-            {
-                if (file.EndsWith(Files.GameExtension))
-                {
-                    try
-                    {
-                        Type gameType = StoreableGameTypes.First(x => file.Contains(x.Key)).Value;
-                        var game = (IStoreableGame)JsonConvert.DeserializeObject(File.ReadAllText(file), gameType, GameJsonSettings);
-                        game.PostDeserialize(gameServices);
-
-                        if (game is IUserGame uGame) userGames.TryAdd((uGame.OwnerId, uGame.GetType()), uGame);
-                        else if (game is IChannelGame cGame) games.TryAdd(cGame.ChannelId, cGame);
-                    }
-                    catch (Exception e)
-                    {
-                        logger.Log(LogSeverity.Error, LogSource.Storage,
-                                   $"Couldn't load game at {file}: {(firstFail ? e.ToString() : e.Message)}");
-                        fail++;
-                        firstFail = false;
-                    }
-                }
-            }
-
-            logger.Log(LogSeverity.Info, LogSource.Storage,
-                       $"Loaded {games.Count + userGames.Count} games{$" with {fail} errors".If(fail > 0)}");
-        }
-
-
         private async Task LoadAppInfo()
         {
             AppInfo = await client.GetApplicationInfoAsync(Bot.DefaultOptions);
             client.LoggedIn -= LoadAppInfo;
-        }
-
-        
-
-
-        private static IReadOnlyDictionary<string, Type> GetStoreableGameTypes()
-        {
-            return Assembly.GetAssembly(typeof(IStoreableGame)).GetTypes()
-                .Where(t => t.IsClass && !t.IsAbstract && t.GetInterfaces().Contains(typeof(IStoreableGame)))
-                .Select(x => KeyValuePair.Create(((IStoreableGame)Activator.CreateInstance(x, true)).FilenameKey, x))
-                .OrderByDescending(x => x.Key.Length)
-                .AsDictionary()
-                .AsReadOnly();
         }
     }
 }

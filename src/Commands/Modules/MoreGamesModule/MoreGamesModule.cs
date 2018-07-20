@@ -23,7 +23,7 @@ namespace PacManBot.Commands
                                     ChannelPermission.UseExternalEmojis | ChannelPermission.AddReactions)]
         private async Task MoveGame()
         {
-            var game = Storage.GetChannelGame(Context.Channel.Id);
+            var game = Games.GetForChannel(Context.Channel.Id);
             if (game == null)
             {
                 await ReplyAsync("There is no active game in this channel!");
@@ -52,7 +52,7 @@ namespace PacManBot.Commands
                                     ChannelPermission.UseExternalEmojis | ChannelPermission.AddReactions)]
         public async Task CancelGame()
         {
-            var game = Storage.GetChannelGame(Context.Channel.Id);
+            var game = Games.GetForChannel(Context.Channel.Id);
             if (game == null)
             {
                 await ReplyAsync("There is no active game in this channel!");
@@ -63,7 +63,7 @@ namespace PacManBot.Commands
                 || DateTime.Now - game.LastPlayed > TimeSpan.FromSeconds(60) || game is MultiplayerGame mpGame && mpGame.AllBots)
             {
                 game.State = State.Cancelled;
-                Storage.DeleteGame(game);
+                Games.Remove(game);
 
                 try
                 {

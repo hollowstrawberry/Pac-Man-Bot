@@ -16,10 +16,12 @@ namespace PacManBot.Commands
     [RequireOwner, BetterRequireBotPermission(ChannelPermission.AddReactions)]
     public class DevModule : BaseCustomModule
     {
+        public GameService Games { get; }
         public ScriptingService Scripting { get; }
 
         public DevModule(IServiceProvider services) : base(services)
         {
+            Games = services.Get<GameService>();
             Scripting = services.Get<ScriptingService>();
         }
 
@@ -235,7 +237,7 @@ namespace PacManBot.Commands
         [Summary("Execute game moves in sequence regardless of turn or dignity. Developer only.")]
         public async Task DoRemoteGameMoves(params string[] moves)
         {
-            var game = Storage.GetChannelGame<IMessagesGame>(Context.Channel.Id);
+            var game = Games.GetForChannel<IMessagesGame>(Context.Channel.Id);
             if (game == null)
             {
                 await ReplyAsync("How about you start a game first");
@@ -268,7 +270,7 @@ namespace PacManBot.Commands
                 await msg.ModifyAsync(game.GetMessageUpdate(), DefaultOptions);
             }
 
-            if (game.State != State.Active) Storage.DeleteGame(game);
+            if (game.State != State.Active) Games.Remove(game);
 
             await AutoReactAsync(success);
         }

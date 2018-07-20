@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Runtime.Serialization;
 using Discord;
 using Discord.WebSocket;
 using PacManBot.Utils;
@@ -12,21 +11,8 @@ using PacManBot.Extensions;
 
 namespace PacManBot
 {
-    [DataContract]
-    public class BotConfig
-    {
-        [DataMember] public readonly string discordToken;
-        [DataMember] public readonly string defaultPrefix = "<";
-        [DataMember] public readonly string[] httpToken = { };
-        [DataMember] public readonly int shardCount = 1;
-        [DataMember] public readonly int messageCacheSize = 100;
-        [DataMember] public readonly LogSeverity clientLogLevel = LogSeverity.Verbose;
-        [DataMember] public readonly LogSeverity commandLogLevel = LogSeverity.Verbose;
-    }
-
-
     /// <summary>
-    /// Starts this Discord bot and handles most events fired by the Discord.Net API.
+    /// Runs an instance of this Discord bot and handles most events fired by the Discord.Net API.
     /// </summary>
     public class Bot
     {
@@ -40,6 +26,7 @@ namespace PacManBot
         private readonly DiscordShardedClient client;
         private readonly LoggingService logger;
         private readonly StorageService storage;
+        private readonly GameService games;
 
         private int shardsReady;
         private DateTime lastGuildCountUpdate = DateTime.MinValue;
@@ -51,6 +38,9 @@ namespace PacManBot
             client = services.Get<DiscordShardedClient>();
             logger = services.Get<LoggingService>();
             storage = services.Get<StorageService>();
+            games = services.Get<GameService>();
+
+            games.LoadGames(services);
 
             // Events
             client.ShardReady += OnShardReady;
@@ -60,6 +50,7 @@ namespace PacManBot
         }
 
 
+        /// <summary>Starts the bot's connection to Discord.</summary>
         public async Task StartAsync()
         {
             await client.LoginAsync(TokenType.Bot, botConfig.discordToken);
@@ -92,9 +83,9 @@ namespace PacManBot
         {
             _ = UpdateGuildCountAsync();
 
-            foreach (var game in storage.GamesEnumerable.Where(g => g.Guild?.Id == guild.Id).ToArray())
+            foreach (var game in games.AllChannelGames.Where(g => g.Guild?.Id == guild.Id).ToArray())
             {
-                storage.DeleteGame(game);
+                games.Remove(game);
             }
 
             return Task.CompletedTask;
@@ -103,8 +94,8 @@ namespace PacManBot
 
         private Task OnChannelDestroyed(SocketChannel channel)
         {
-            var game = storage.GetChannelGame(channel.Id);
-            if (game != null) storage.DeleteGame(game);
+            var game = games.GetForChannel(channel.Id);
+            if (game != null) games.Remove(game);
 
             return Task.CompletedTask;
         }

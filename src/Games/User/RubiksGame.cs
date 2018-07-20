@@ -175,7 +175,7 @@ namespace PacManBot.Games
             : base(channelId, new[] { ownerId }, services)
         {
             RawCube = SolvedCube;
-            storage.StoreGame(this);
+            games.Save(this);
         }
 
         
@@ -194,7 +194,7 @@ namespace PacManBot.Games
                 move.Apply(cube);
             }
 
-            storage.StoreGame(this);
+            games.Save(this);
             return true;
         }
 

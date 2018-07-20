@@ -37,7 +37,7 @@ namespace PacManBot.Games
             { "⏭".ToEmoji(), PacManInput.Fast }
         }.AsReadOnly();
 
-                private static readonly IReadOnlyList<char> NonSolidChars = new List<char> {
+        private static readonly IReadOnlyList<char> NonSolidChars = new List<char> {
             ' ', CharPellet, CharPowerPellet, CharSoftWall, CharSoftWallPellet
         }.AsReadOnly();
 
@@ -242,7 +242,7 @@ namespace PacManBot.Games
                 map[ghostPos.Value] = ' ';
             }
 
-            storage.StoreGame(this);
+            games.Save(this);
             if (custom) File.AppendAllText(Files.CustomMapLog, newMap);
         }
 
@@ -387,7 +387,7 @@ namespace PacManBot.Games
 
             if (State == State.Active)
             {
-                storage.StoreGame(this);
+                games.Save(this);
             }
         }
 

@@ -34,7 +34,7 @@ namespace PacManBot.Commands
         {
             if (!Context.BotCan(ChannelPermission.SendMessages)) return;
 
-            var existingGame = Storage.GetChannelGame(Context.Channel.Id);
+            var existingGame = Games.GetForChannel(Context.Channel.Id);
             if (existingGame != null)
             {
                 await ReplyAsync(existingGame.UserId.Contains(Context.User.Id) ?
@@ -72,7 +72,7 @@ namespace PacManBot.Commands
                 return;
             }
 
-            Storage.AddGame(newGame);
+            Games.Add(newGame);
 
             var gameMessage = await ReplyAsync(preMessage + newGame.GetContent(showHelp: false) + "```diff\n+Starting game```");
             newGame.MessageId = gameMessage.Id;
@@ -87,7 +87,7 @@ namespace PacManBot.Commands
                  "for the current game in this channel")]
         public async Task ChangeGameDisplay()
         {
-            var game = Storage.GetChannelGame<PacManGame>(Context.Channel.Id);
+            var game = Games.GetForChannel<PacManGame>(Context.Channel.Id);
             if (game == null)
             {
                 await ReplyAsync("There is no active Pac-Man game in this channel!");

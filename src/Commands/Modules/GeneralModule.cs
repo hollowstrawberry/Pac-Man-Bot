@@ -40,7 +40,7 @@ namespace PacManBot.Commands
                 Color = Colors.PacManYellow,
             };
             embed.AddField("Total guilds", $"{Context.Client.Guilds.Count}", true);
-            embed.AddField("Total active games", $"{Storage.GamesEnumerable.Count()}", true);
+            embed.AddField("Total active games", $"{Games.AllChannelGames.Count()}", true);
             embed.AddField("Latency", $"{Context.Client.Latency}ms", true);
 
             foreach (var field in fields.Select(x => x.Split('|')))
@@ -160,14 +160,14 @@ namespace PacManBot.Commands
             stopwatch.Stop();
 
             string content = $"{CustomEmoji.PacMan} Waka in `{(int)stopwatch.ElapsedMilliseconds}`ms **|** " +
-                             $"{Context.Client.Guilds.Count} total guilds, {Storage.GamesEnumerable.Count()} total active games";
+                             $"{Context.Client.Guilds.Count} total guilds, {Games.AllChannelGames.Count()} total active games";
 
             if (Context.Client.Shards.Count > 1)
             {
                 var shard = Context.Client.GetShardFor(Context.Guild);
 
                 int shardGames = 0;
-                foreach (var game in Storage.GamesEnumerable)
+                foreach (var game in Games.AllChannelGames)
                 {
                     if (game.Guild != null && shard.Guilds.Contains(game.Guild) || game.Guild == null && shard.ShardId == 0)
                     {

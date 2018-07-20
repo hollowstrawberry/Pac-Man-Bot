@@ -60,6 +60,7 @@ namespace PacManBot
                 .AddSingleton(botConfig)
                 .AddSingleton<LoggingService>()
                 .AddSingleton<StorageService>()
+                .AddSingleton<GameService>()
                 .AddSingleton<InputService>()
                 .AddSingleton<SchedulingService>()
                 .AddSingleton<ScriptingService>();
