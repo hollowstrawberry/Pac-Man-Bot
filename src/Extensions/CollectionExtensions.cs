@@ -17,7 +17,7 @@ namespace PacManBot.Extensions
         }
 
 
-        /// <summary>Removes and returns up to <paramref name="amount"/> elements from the end of a list.</summary>
+        /// <summary>Removes and returns up to the specified amount of elements from the end of a list.</summary>
         public static List<T> PopRange<T>(this IList<T> list, int amount)
         {
             var popped = new List<T>();
@@ -26,40 +26,12 @@ namespace PacManBot.Extensions
         }
 
 
-        /// <summary>Swaps two elements in a list</summary>
+        /// <summary>Swaps two elements in a list.</summary>
         public static void Swap<T>(this IList<T> list, int index1, int index2)
         {
             T temp = list[index1];
             list[index1] = list[index2];
             list[index2] = temp;
-        }
-
-
-        /// <summary>If <paramref name="index"/> is not within the bounds of the list,
-        /// returns a new value that has been looped around the list coming out from the other end.</summary>
-        public static int LoopedIndex<T>(this IList<T> list, int index)
-        {
-            if (list.Count == 0) throw new InvalidOperationException("List contains no elements");
-
-            index %= list.Count;
-            if (index < 0) index += list.Count;
-            return index;
-        }
-
-
-        /// <summary>Returns an element from a list at a given index. If the index is not
-        /// within the bounds of the array, it is looped around the list, coming out from the other end.</summary>
-        public static T GetAtLooped<T>(this IList<T> list, int loopedIndex)
-        {
-            return list[LoopedIndex(list, loopedIndex)];
-        }
-
-
-        /// <summary>Sets a list's element at a given index. If the index is not
-        /// within the bounds of the array, it is looped around the list, coming out from the other end.</summary>
-        public static void SetAtLooped<T>(this IList<T> list, int loopedIndex, T value)
-        {
-            list[list.LoopedIndex(loopedIndex)] = value;
         }
 
 
@@ -69,7 +41,10 @@ namespace PacManBot.Extensions
             var old = list.ToArray();
             for (int i = 0; i < list.Count; i++)
             {
-                list[i] = old.GetAtLooped(i + amount);
+                int oldIndex = (i + amount) % list.Count;
+                if (oldIndex < 0) oldIndex += list.Count;
+
+                list[i] = old[oldIndex];
             }
         }
 
@@ -134,7 +109,7 @@ namespace PacManBot.Extensions
 
 
         /// <summary>Returns a <see cref="Nullable{T}"/> that has the value of the first element 
-        /// in the list that satisfies the specified condition if there is one, otherwise it has no value.</summary>
+        /// that satisfies the specified condition if there is one, otherwise it has no value.</summary>
         public static T? FirstOrNull<T>(this IEnumerable<T> list, Func<T, bool> predicate) where T : struct
         {
             try

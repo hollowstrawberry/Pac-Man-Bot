@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
@@ -10,7 +11,7 @@ using PacManBot.Extensions;
 namespace PacManBot.Services
 {
     /// <summary>
-    /// Receives and logs messages from everywhere in the bot, to the console and on disk.
+    /// Receives and logs messages to the console and on disk, from everywhere in the bot.
     /// </summary>
     public class LoggingService
     {
@@ -28,12 +29,14 @@ namespace PacManBot.Services
         }
 
 
-        public void LoadLogExclude(StorageService storage)
+        /// <summary>Grabs a list of strings from a configuration file to match and exclude from log entries.</summary>
+        public void LoadLogExclude(IConfigurationRoot content)
         {
-            logExclude = storage.BotContent["logexclude"]?.Split('\n', StringSplitOptions.RemoveEmptyEntries);
+            logExclude = content["logexclude"]?.Split('\n', StringSplitOptions.RemoveEmptyEntries);
         }
 
 
+        /// <summary>Logs an entry to the console and to disk.</summary>
         public Task Log(LogMessage message)
         {
             if (!Directory.Exists(LogDirectory)) Directory.CreateDirectory(LogDirectory);
@@ -60,7 +63,11 @@ namespace PacManBot.Services
 
             return Console.Out.WriteLineAsync(logText); // Write the log text to the console
         }
+
+        /// <summary>Logs an entry to the console and to disk.</summary>
         public Task Log(LogSeverity severity, string message) => Log(new LogMessage(severity, LogSource.Bot, message));
+
+        /// <summary>Logs an entry to the console and to disk.</summary>
         public Task Log(LogSeverity severity, string source, string message) => Log(new LogMessage(severity, source, message));
     }
 }

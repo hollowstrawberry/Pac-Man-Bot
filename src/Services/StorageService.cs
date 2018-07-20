@@ -285,7 +285,7 @@ namespace PacManBot.Services
             PettingMessages = BotContent["petting"].Split('\n', StringSplitOptions.RemoveEmptyEntries);
             SuperPettingMessages = BotContent["superpetting"].Split('\n', StringSplitOptions.RemoveEmptyEntries);
 
-            logger.LoadLogExclude(this);
+            logger.LoadLogExclude(BotContent);
         }
 
 

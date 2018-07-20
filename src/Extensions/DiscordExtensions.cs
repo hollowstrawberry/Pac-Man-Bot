@@ -149,7 +149,7 @@ namespace PacManBot.Extensions
 
 
         /// <summary>Converts unicode text into an <see cref="Emoji"/> object.
-        /// There will be no indication if the text is not a valid emoji, so be careful. Not my fault.</summary>
+        /// Succeeds even if the text is not a valid emoji.</summary>
         public static Emoji ToEmoji(this string unicode)
         {
             return new Emoji(unicode);

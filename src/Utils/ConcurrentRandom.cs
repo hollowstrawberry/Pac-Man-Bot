@@ -4,7 +4,7 @@ using System.Security.Cryptography;
 namespace PacManBot.Utils
 {
     /// <summary>
-    /// A wrapper for <see cref="RNGCryptoServiceProvider"/> with methods from <see cref="Random"/>
+    /// A wrapper for <see cref="RNGCryptoServiceProvider"/> with methods inherited from <see cref="Random"/>
     /// for ease of use. Main purpose is good randomness and thread-safety.
     /// </summary>
     public class ConcurrentRandom : Random

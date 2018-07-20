@@ -19,12 +19,12 @@ namespace PacManBot.Utils
         public DateTime date;
 
 
-        public ScoreEntry(int score, ulong userid, State state, int turns, string username, string channel, DateTime date)
+        public ScoreEntry(int score, ulong userId, State state, int turns, string username, string channel, DateTime date)
         {
             this.state = state;
             this.score = score;
             this.turns = turns;
-            this.userId = userid;
+            this.userId = userId;
             this.username = username;
             this.date = date;
             this.channel = channel;

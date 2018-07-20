@@ -8,13 +8,17 @@ using PacManBot.Constants;
 
 namespace PacManBot.Games
 {
-    /// <summary>Represents a <see cref="MultiplayerGame"/> player. Acts as a wrapper for an <see cref="int"/>, like an enum.</summary>
+    /// <summary>
+    /// Represents the index of the user in a <see cref="IMultiplayerGame"/>.
+    /// Acts as a wrapper for <see cref="int"/>, like an enum.
+    /// </summary>
     [DataContract, JsonConverter(typeof(PlayerJsonConverter))]
     public readonly struct Player
     {
         public static readonly Player
             None = -1,
             Tie = -2,
+
             Red = 0,
             Blue = 1,
             Green = 2,
@@ -22,15 +26,16 @@ namespace PacManBot.Games
             Purple = 4,
             Orange = 5;
 
+
         /// <summary>Standard player colors for multiplayer games.</summary>
-        public static readonly IReadOnlyList<Color> AllColors = new List<Color> {
+        public static readonly Color[] AllColors = {
             Colors.Red, Colors.Blue, Colors.Green, Colors.Yellow, Colors.Purple, Colors.Orange,
-        }.AsReadOnly();
+        };
 
         /// <summary>Standard player color names for multiplayer games.</summary>
-        public static readonly IReadOnlyList<string> ColorNames = new List<string> {
+        public static readonly string[] ColorNames = {
             "Red", "Blue", "Green", "Yellow", "Purple", "Orange",
-        }.AsReadOnly();
+        };
 
 
 
@@ -56,7 +61,7 @@ namespace PacManBot.Games
         {
             get
             {
-                if (value >= 0 && value <= AllColors.Count) return AllColors[value];
+                if (value >= 0 && value <= AllColors.Length) return AllColors[value];
                 if (value == Tie) return Colors.Green;
                 return Colors.Gray;
             }
@@ -68,7 +73,7 @@ namespace PacManBot.Games
         {
             get
             {
-                if (value >= 0 && value <= ColorNames.Count) return ColorNames[value];
+                if (value >= 0 && value <= ColorNames.Length) return ColorNames[value];
                 return "???";
             }
         }

@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis.CSharp.Scripting;
 namespace PacManBot.Services
 {
     /// <summary>
-    /// Executes code and returns the result, garbage-collecting afterwards, using predefined options.
+    /// Executes code and returns the result using predefined options, always garbage-collecting afterwards.
     /// Thank you to oatmeal and amibu
     /// </summary>
     public class ScriptingService

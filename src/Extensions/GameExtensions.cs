@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-using Discord;
 using PacManBot.Games;
-using PacManBot.Utils;
 using PacManBot.Constants;
 
 namespace PacManBot.Extensions
@@ -10,8 +8,8 @@ namespace PacManBot.Extensions
     {
         // Games
 
-        /// <summary>The unique id that identifies this game, which will be the channel ID it is located in
-        /// if it is a channel game, or the owner's user ID if it is a user-specific game.</summary>
+        /// <summary>The unique id that identifies a game,
+        /// which can be its owner's user ID or the housing channel's ID depending on the type.</summary>
         public static ulong IdentifierId(this IBaseGame game)
         {
             switch (game)

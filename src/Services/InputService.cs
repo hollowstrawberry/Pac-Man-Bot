@@ -14,7 +14,7 @@ using PacManBot.Extensions;
 namespace PacManBot.Services
 {
     /// <summary>
-    /// Manages all external input coming from Discord, used in commands and games.
+    /// Handles all external input coming from Discord, for commands and games.
     /// </summary>
     public class InputService
     {

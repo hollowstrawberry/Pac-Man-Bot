@@ -3,8 +3,10 @@ using PacManBot.Extensions;
 
 namespace PacManBot.Games
 {
-    /// <summary>A position in a <see cref="Board{T}"/>, expressed as x and y coordinates.</summary>
-    public struct Pos
+    /// <summary>
+    /// A position in a <see cref="Board{T}"/>, expressed as x and y coordinates.
+    /// </summary>
+    public struct Pos : IEquatable<Pos>
     {
         public int x;
         public int y;
@@ -24,6 +26,8 @@ namespace PacManBot.Games
         public override int GetHashCode() => x.GetHashCode() ^ y.GetHashCode();
 
         public override bool Equals(object obj) => obj is Pos pos && this == pos;
+
+        public bool Equals(Pos pos) => this == pos;
 
         public static bool operator ==(Pos pos1, Pos pos2) => pos1.x == pos2.x && pos1.y == pos2.y;
 

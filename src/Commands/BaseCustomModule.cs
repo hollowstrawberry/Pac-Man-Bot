@@ -9,16 +9,16 @@ using PacManBot.Extensions;
 namespace PacManBot.Commands
 {
     /// <summary>
-    /// The base for Pac-Man Bot modules, containing its services and some utilities.
-    /// Its members are public to be accessed as globals from within an evaluated script.
+    /// The base for Pac-Man Bot modules, containing their main services and some utilities.
     /// </summary>
+    /// <remarks>Its members are public to be accessed as globals from within an evaluated script.</remarks>
     public abstract class BaseCustomModule : ModuleBase<ShardedCommandContext>
     {
         /// <summary>Consistent and sane <see cref="RequestOptions"/> to be used in most Discord requests.</summary>
         public static readonly RequestOptions DefaultOptions = Bot.DefaultOptions;
 
 
-        /// <summary>All of this program's services, if necessary for whatever reason.</summary>
+        /// <summary>All of this program's services, required to supply new objects such as games.</summary>
         public IServiceProvider Services { get; }
 
         /// <summary>Logs everything in the console and on disk.</summary>
@@ -79,7 +79,7 @@ namespace PacManBot.Commands
             => await ReplyAsync(null, false, embed?.Build(), options);
 
 
-        /// <summary>Reacts to the command's caller message with a check or cross.</summary>
+        /// <summary>Reacts to the command's calling message with a check or cross.</summary>
         public async Task AutoReactAsync(bool success = true)
             => await Context.Message.AutoReactAsync(success);
 

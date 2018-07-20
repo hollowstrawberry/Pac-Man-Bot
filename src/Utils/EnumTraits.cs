@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Collections.Generic;
 using PacManBot.Extensions;
 
 namespace PacManBot.Utils
 {
     /// <summary>
-    /// Maintains a runtime cache of many traits about an enum, after the first access for that enum type.
+    /// Holds a runtime cache of many traits about an enum type.
     /// </summary>
     /// <typeparam name="TEnum">The enum type whose traits you want to check.</typeparam>
     public static class EnumTraits<TEnum> where TEnum : struct, Enum

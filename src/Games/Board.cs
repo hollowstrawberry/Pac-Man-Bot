@@ -8,7 +8,7 @@ using System.Runtime.Serialization;
 namespace PacManBot.Games
 {
     /// <summary>
-    /// Wrapper for a 2d array. Allows looping and accessing values using <see cref="Pos"/> coordinates.
+    /// Wrapper for a 2D array that introduces index looping, and allows access using <see cref="Pos"/> coordinates.
     /// </summary>
     /// <typeparam name="T">The type of the values stored in the board.</typeparam>
     [DataContract]
@@ -29,15 +29,14 @@ namespace PacManBot.Games
 
 
         /// <summary>Creates a new board of the specified constant width and height.</summary>
-        public Board(int width, int height, T fillValue = default)
+        public Board(uint width, uint height, T fillValue = default)
         {
-            if (width < 1 || height < 1) throw new ArgumentException("The width and height must both be above or equal to 1.");
-
             values = new T[width, height];
             if (fillValue != default) Fill(fillValue);
         }
 
-        /// <summary>Creates a new board that is a wrapper for the specified 2d array.</summary>
+        /// <summary>Creates a new board that is a wrapper for the specified 2D array.</summary>
+        /// <exception cref="ArgumentNullException"/>
         public Board(T[,] values)
         {
             this.values = values ?? throw new ArgumentNullException(nameof(values));
