@@ -115,7 +115,7 @@ namespace PacManBot.Games
             {
                 Title = Name,
                 Description = DateTime.Now - LastPlayed > Expiry ? "Game timed out" : "Game cancelled",
-                Color = Player.None.Color(),
+                Color = Player.None.Color,
             };
         }
     }

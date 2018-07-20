@@ -27,7 +27,7 @@ namespace PacManBot.Games
         {
             base.Initialize(channelId, players, services);
 
-            board = new Board<Player>(5, 5, false);
+            board = new Player[5, 5];
             board.Fill(Player.None);
         }
 
@@ -53,7 +53,7 @@ namespace PacManBot.Games
 
             if ((Winner = FindWinner()) == Player.None)
             {
-                Turn = Turn.OtherPlayer();
+                Turn = Turn.Opponent;
             }
             else
             {
@@ -71,9 +71,9 @@ namespace PacManBot.Games
 
             for (int i = 0; i < UserId.Length; i++)
             {
-                if (i == (int)Turn) description.Append("►");
+                if (i == Turn) description.Append("►");
                 description.Append($"{((Player)i).Symbol()} {$"{threes[i]} lines".If(threes[i] >= 0)} - " +
-                                   $"{User((Player)i).NameandDisc().SanitizeMarkdown()}\n");
+                                   $"{User(i).NameandDisc().SanitizeMarkdown()}\n");
             }
 
             description.Append("ᅠ\n");
@@ -92,7 +92,7 @@ namespace PacManBot.Games
 
             if (State == State.Active)
             {
-                description.Append($"ᅠ\nSay a column and row to place an {(Turn == Player.First ? "X" : "O")} in that cell (Example: B4)");
+                description.Append($"ᅠ\nSay a column and row to place an {(Turn == Player.Red ? "X" : "O")} in that cell (Example: B4)");
                 description.Append("\nTo win you must make **more lines of three** than your opponent,\n" +
                                    "but if someone makes a line of **four**, they **win instantly**!");
             }
@@ -102,7 +102,7 @@ namespace PacManBot.Games
             {
                 Title = ColorEmbedTitle(),
                 Description = description.ToString(),
-                Color = Turn.Color(),
+                Color = Turn.Color,
                 ThumbnailUrl = Winner == Player.None ? Turn.Symbol().ToEmote()?.Url : User(Winner)?.GetAvatarUrl(),
             };
         }
@@ -114,29 +114,31 @@ namespace PacManBot.Games
             if (board.FindLines(Turn, 4, highlighted)) return Turn;
             if (Time < board.Length) return Player.None;
 
-            for (int i = 0; i < 2; i++)
+            for (Player i = 0; i < 2; i++)
             {
                 var lines = new List<Pos>();
-                board.FindLines((Player)i, 3, lines);
+                board.FindLines(i, 3, lines);
                 threes[i] = lines.Count / 3;
                 highlighted.AddRange(lines);
             }
 
-            return threes[0] > threes[1] ? Player.First : threes[0] < threes[1] ? Player.Second : Player.Tie;
+            return threes[Player.Red] > threes[Player.Blue] ? Player.Red
+                 : threes[Player.Red] < threes[Player.Blue] ? Player.Blue
+                 : Player.Tie;
         }
 
 
         public override void BotInput()
         {
-            var moves = TryCompleteLines(Turn, 4) ?? TryCompleteLines(Turn.OtherPlayer(), 4) ?? // Win or avoid losing
-                        TryCompleteFlyingLines(Turn) ?? TryCompleteFlyingLines(Turn.OtherPlayer()); // Forced win / forced lose situations
+            var moves = TryCompleteLines(Turn, 4) ?? TryCompleteLines(Turn.Opponent, 4) ?? // Win or avoid losing
+                        TryCompleteFlyingLines(Turn) ?? TryCompleteFlyingLines(Turn.Opponent); // Forced win / forced lose situations
 
             if (Time < 2 && board[2, 2] == Player.None && Bot.Random.Next(4) > 0) moves = new List<Pos> { new Pos(2, 2) };
 
             if (moves == null) // Lines of 3
             {
                 var lines = TryCompleteLines(Turn, 3);
-                var blocks = TryCompleteLines(Turn.OtherPlayer(), 3);
+                var blocks = TryCompleteLines(Turn.Opponent, 3);
 
                 if (lines == null && blocks == null)
                 {

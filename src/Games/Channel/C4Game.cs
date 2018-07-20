@@ -28,7 +28,7 @@ namespace PacManBot.Games
             base.Initialize(channelId, players, services);
 
             highlighted = new List<Pos>();
-            board = new Board<Player>(Columns, Rows, false);
+            board = new Player[Columns, Rows];
             board.Fill(Player.None);
         }
 
@@ -57,7 +57,7 @@ namespace PacManBot.Games
 
             if (Winner == Player.None)
             {
-                Turn = Turn.OtherPlayer();
+                Turn = Turn.Opponent;
             }
             else
             {
@@ -75,8 +75,8 @@ namespace PacManBot.Games
 
             for (int i = 0; i < 2; i++)
             {
-                if (i == (int)Turn) description.Append("►");
-                description.Append($"{((Player)i).Circle()} - {User((Player)i).NameandDisc().SanitizeMarkdown()}\n");
+                if (i == Turn) description.Append("►");
+                description.Append($"{((Player)i).Circle()} - {User(i).NameandDisc().SanitizeMarkdown()}\n");
             }
 
             description.Append("ᅠ\n");
@@ -104,7 +104,7 @@ namespace PacManBot.Games
             {
                 Title = ColorEmbedTitle(),
                 Description = description.ToString(),
-                Color = Turn.Color(),
+                Color = Turn.Color,
                 ThumbnailUrl = Winner == Player.None ? Turn.Circle().ToEmote()?.Url : User(Winner)?.GetAvatarUrl(),
             };
         }
@@ -122,7 +122,7 @@ namespace PacManBot.Games
             if (time < Rows*Columns - 6) return false;
             else if (time == Rows*Columns) return true;
 
-            turn = turn.OtherPlayer();
+            turn = turn.Opponent;
 
             foreach (int column in AvailableColumns(board)) // Checks that all possible configurations result in a tie
             {
@@ -160,9 +160,9 @@ namespace PacManBot.Games
                         break;
                     }
 
-                    moves.Add(column, MayLoseCount(tempBoard, Turn, Turn.OtherPlayer(), Time + 1, depth: 3));
+                    moves.Add(column, MayLoseCount(tempBoard, Turn, Turn.Opponent, Time + 1, depth: 3));
 
-                    if (MayLoseCount(tempBoard, Turn, Turn.OtherPlayer(), Time + 1, depth: 1) > 0) avoidMoves.Add(column); // Can lose right away
+                    if (MayLoseCount(tempBoard, Turn, Turn.Opponent, Time + 1, depth: 1) > 0) avoidMoves.Add(column); // Can lose right away
                 }
             }
 
@@ -197,7 +197,7 @@ namespace PacManBot.Games
                 }
                 else if (turn != player || !FindWinner(tempBoard, turn, time + 1)) // Isn't a win
                 {
-                    count += MayLoseCount(tempBoard, player, turn.OtherPlayer(), time + 1, depth - 1);
+                    count += MayLoseCount(tempBoard, player, turn.Opponent, time + 1, depth - 1);
                 }
             }
 

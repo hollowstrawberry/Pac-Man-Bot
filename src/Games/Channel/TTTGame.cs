@@ -26,7 +26,7 @@ namespace PacManBot.Games
             base.Initialize(channelId, players, services);
 
             highlighted = new List<Pos>();
-            board = new Board<Player>(3, 3, false);
+            board = new Player[3, 3];
             board.Fill(Player.None);
         }
 
@@ -55,7 +55,7 @@ namespace PacManBot.Games
 
             if (Winner == Player.None)
             {
-                Turn = Turn.OtherPlayer();
+                Turn = Turn.Opponent;
             }
             else
             {
@@ -73,7 +73,7 @@ namespace PacManBot.Games
 
             for (int i = 0; i < UserId.Length; i++)
             {
-                description.Append($"{"►".If(i == (int)Turn)}{((Player)i).Symbol()} - {User((Player)i).NameandDisc().SanitizeMarkdown()}\n");
+                description.Append($"{"►".If(i == Turn)}{((Player)i).Symbol()} - {User(i).NameandDisc().SanitizeMarkdown()}\n");
             }
 
             description.Append("ᅠ\n");
@@ -88,13 +88,13 @@ namespace PacManBot.Games
                 description.Append('\n');
             }
 
-            if (State == State.Active) description.Append($"ᅠ\n*Say the number of a cell (1 to 9) to place an {(Turn == Player.First ? "X" : "O")}*");
+            if (State == State.Active) description.Append($"ᅠ\n*Say the number of a cell (1 to 9) to place an {(Turn == Player.Red ? "X" : "O")}*");
 
             return new EmbedBuilder
             {
                 Title = ColorEmbedTitle(),
                 Description = description.ToString(),
-                Color = Turn.Color(),
+                Color = Turn.Color,
                 ThumbnailUrl = Winner == Player.None ? Turn.Symbol().ToEmote()?.Url : User(Winner)?.GetAvatarUrl(),
             };
         }
@@ -111,7 +111,7 @@ namespace PacManBot.Games
             if (time < board.Length - 3) return false;
             else if (time == board.Length) return true;
 
-            turn = turn.OtherPlayer();
+            turn = turn.Opponent;
 
             foreach (Pos pos in EmptyCells(board)) // Checks that all possible configurations result in a tie
             {
@@ -129,7 +129,7 @@ namespace PacManBot.Games
         public override void BotInput()
         {
             // Win or block or random
-            Pos target = TryCompleteLine(Turn) ?? TryCompleteLine(Turn.OtherPlayer()) ?? Bot.Random.Choose(EmptyCells(board));
+            Pos target = TryCompleteLine(Turn) ?? TryCompleteLine(Turn.Opponent) ?? Bot.Random.Choose(EmptyCells(board));
             Input($"{1 + target.y * board.Width + target.x}");
         }
 

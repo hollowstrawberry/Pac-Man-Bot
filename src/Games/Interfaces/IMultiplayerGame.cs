@@ -27,9 +27,6 @@ namespace PacManBot.Games
         /// <summary>Retrieves the user at the specified index. Null if unreachable or not found.</summary>
         IUser User(int i = 0);
 
-        /// <summary>Retrieves the user corresponding to a <see cref="Player"/>. Null if unreachable or not found.</summary>
-        IUser User(Player player);
-
         /// <summary>Executes automatic AI input, assuming it is a bot's turn.</summary>
         void BotInput();
     }

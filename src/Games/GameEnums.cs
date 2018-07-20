@@ -1,3 +1,4 @@
+
 namespace PacManBot.Games
 {
     /// <summary>Indicates whether a <see cref="IBaseGame"/> is ongoing, or the reason that it has ended for.</summary>
@@ -8,15 +9,6 @@ namespace PacManBot.Games
         Cancelled,
         Lose,
         Win,
-    }
-
-
-    /// <summary>The player of a <see cref="MultiplayerGame"/>.</summary>
-    public enum Player
-    {
-        First, Second, Third, Fourth, Fifth, Sixth, Seventh, Eighth, Nineth, Tenth,
-        None = -1,
-        Tie = -2,
     }
 
 

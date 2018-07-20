@@ -57,8 +57,7 @@ namespace PacManBot.Games
         [DataMember] public override Player Winner { get; protected set; }
 
         private Card TopCard { get => discardPile[0]; set => discardPile[0] = value; }
-        private UnoPlayer CurrentPlayer => players[(int)Turn];
-        private UnoPlayer PlayerAt(Player turn) => players[(int)turn];
+        private UnoPlayer CurrentPlayer => players[Turn];
         private Player FollowingTurn => reversed ? PreviousPlayer() : NextPlayer();
         private Player PrecedingTurn => reversed ? NextPlayer() : PreviousPlayer();
 
@@ -447,7 +446,7 @@ namespace PacManBot.Games
                 Card choice;
 
                 var niceCards = playable.Where(x => x.Type >= CardType.Skip).ToList();
-                if (PlayerAt(FollowingTurn).cards.Count <= 2 && niceCards.Count > 0) choice = Bot.Random.Choose(niceCards);
+                if (players[FollowingTurn].cards.Count <= 2 && niceCards.Count > 0) choice = Bot.Random.Choose(niceCards);
                 else
                 {
                     var noWilds = playable.Where(x => x.Color != CardColor.Black).ToList();
@@ -492,7 +491,7 @@ namespace PacManBot.Games
             description.Append("```diff\n");
             for (int i = 0; i < players.Count; i++)
             {
-                string pre = i == (int)Turn ? "+ " : Winner != Player.None ? "- " : "";
+                string pre = i == Turn ? "+ " : Winner != Player.None ? "- " : "";
                 description.Append($"{pre}{players[i].User?.Username}");
                 if (players[i].cards.Count > 0) description.Append($" - {players[i].cards.Count}🃏{" Uno!".If(players[i].uno == UnoState.Said)}");
                 description.Append('\n');
@@ -690,7 +689,7 @@ namespace PacManBot.Games
             drawPile.AddRange(player.cards);
             players.Remove(player);
 
-            while ((int)Turn >= players.Count || !AllBots && CurrentPlayer.User.IsBot) Turn = FollowingTurn;
+            while (Turn >= players.Count || !AllBots && CurrentPlayer.User.IsBot) Turn = FollowingTurn;
         }
 
 

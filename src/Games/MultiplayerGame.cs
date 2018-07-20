@@ -31,9 +31,6 @@ namespace PacManBot.Games
         public virtual bool AllBots => Enumerable.Range(0, UserId.Length).All(x => User(x)?.IsBot ?? false);
 
 
-        /// <summary>Retrieves the user corresponding to a <see cref="Player"/>. Null if unreachable or not found.</summary>
-        public IUser User(Player player) => User((int)player);
-
         /// <summary>Retrieves the user at the specified index. Null if unreachable or not found.</summary>
         public IUser User(int i = 0)
         {
@@ -89,7 +86,7 @@ namespace PacManBot.Games
             ChannelId = channelId;
             if (players != null) UserId = players.Select(x => x.Id).ToArray();
             LastPlayed = DateTime.Now;
-            Turn = Player.First;
+            Turn = 0;
             Winner = Player.None;
             Message = "";
         }
@@ -108,7 +105,7 @@ namespace PacManBot.Games
                 else if (Time > 1 && Winner == Player.None && (!AllBots || Time % 2 == 0)) Message = Bot.Random.Choose(GameTexts);
                 else if (Winner != Player.None)
                 {
-                    if (Winner != Player.Tie && UserId[(int)Winner] == client.CurrentUser.Id) Message = Bot.Random.Choose(WinTexts);
+                    if (Winner != Player.Tie && UserId[Winner] == client.CurrentUser.Id) Message = Bot.Random.Choose(WinTexts);
                     else Message = Bot.Random.Choose(NotWinTexts);
                 }
 
@@ -138,7 +135,7 @@ namespace PacManBot.Games
             if (turn == null) turn = Turn;
 
             if (turn == Player.Tie) return Player.Tie;
-            else if (turn >= 0 && (int)turn < UserId.Length - 1) return (Player)((int)turn + 1);
+            else if (turn >= 0 && turn < UserId.Length - 1) return turn.Value + 1;
             else return 0;
         }
 
@@ -149,8 +146,8 @@ namespace PacManBot.Games
             if (turn == null) turn = Turn;
 
             if (turn == Player.Tie) return Player.Tie;
-            if (turn > 0 && (int)turn < UserId.Length) return (Player)((int)turn - 1);
-            return (Player)(UserId.Length - 1);
+            if (turn > 0 && turn < UserId.Length) return turn.Value - 1;
+            return UserId.Length - 1;
         }
 
 
@@ -165,9 +162,9 @@ namespace PacManBot.Games
         /// <summary>Default title of a multiplayer game embed, displaying the current turn/winner.</summary>
         protected string ColorEmbedTitle()
         {
-            return Winner == Player.None ? $"{Turn.ToStringColor()} Player's turn" :
+            return Winner == Player.None ? $"{Turn.ColorName} Player's turn" :
                    Winner == Player.Tie ? "It's a tie!" :
-                   UserId[0] != UserId[1] ? $"{Turn.ToStringColor()} is the winner!" :
+                   UserId[0] != UserId[1] ? $"{Turn.ColorName} is the winner!" :
                    UserId[0] == client.CurrentUser.Id ? "I win!" : "A winner is you!"; // These two are for laughs
         }
     }

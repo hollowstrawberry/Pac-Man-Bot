@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Text;
 using System.Linq;
+using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Collections;
 
 namespace PacManBot.Games
 {
@@ -15,7 +15,6 @@ namespace PacManBot.Games
     public class Board<T> : IEnumerable<T>, IEnumerable, IEquatable<Board<T>>, ICloneable
     {
         [DataMember] protected readonly T[,] values;
-        [DataMember] protected readonly bool loop;
 
 
         /// <summary>Number of elements in the board.</summary>
@@ -29,68 +28,44 @@ namespace PacManBot.Games
 
 
 
-        /// <summary>Creates a new board of the specified width and height.</summary>
-        /// <param name="width">The constant width of the board.</param>
-        /// <param name="height">The constant height of the board.</param>
-        /// <param name="loop">Whether to loop around an out-of-range index instead of throwing an exception.</param>
-        public Board(int width, int height, bool loop = true)
+        /// <summary>Creates a new board of the specified constant width and height.</summary>
+        public Board(int width, int height, T fillValue = default)
         {
-            if (width < 1 || height < 1) throw new ArgumentException("The board must have a with and height of at least 1.");
+            if (width < 1 || height < 1) throw new ArgumentException("The width and height must both be above or equal to 1.");
 
             values = new T[width, height];
-            this.loop = loop;
+            if (fillValue != default) Fill(fillValue);
         }
 
         /// <summary>Creates a new board that is a wrapper for the specified 2d array.</summary>
-        /// <param name="values">The array of values to use for the board.</param>
-        /// <param name="loop">Whether to loop around an out-of-range index instead of throwing an exception.</param>
-        public Board(T[,] values, bool loop = true)
+        public Board(T[,] values)
         {
             this.values = values ?? throw new ArgumentNullException(nameof(values));
-            this.loop = loop;
         }
 
 
-        /// <summary>Retrieves an element in the board at the given position</summary>
+        /// <summary>Retrieves an element in the board at the given x and y coordinates,
+        /// looping to the other side if the coordinates are outside the board.</summary>
         public T this[int x, int y]
         {
             get => this[new Pos(x, y)];
             set => this[new Pos(x, y)] = value;
         }
 
-        /// <summary>Retrieves an element in the board at the given position</summary>
+        /// <summary>Retrieves an element in the board at the given position,
+        /// looping to the other side if the position is outside the board.</summary>
         public T this[Pos pos]
         {
             get
             {
-                if (loop) Wrap(ref pos);
-
-                try
-                {
-                    return values[pos.x, pos.y];
-                }
-                catch (IndexOutOfRangeException e)
-                {
-                    throw new IndexOutOfRangeException(
-                        $"The position {pos} is outside the board (width {Width}, height {Height}) " +
-                        $"and the board doesn't loop around.", e);
-                }
+                Wrap(ref pos);
+                return values[pos.x, pos.y];
             }
 
             set
             {
-                if (loop) Wrap(ref pos);
-
-                try
-                {
-                    values[pos.x, pos.y] = value;
-                }
-                catch (IndexOutOfRangeException e)
-                {
-                    throw new IndexOutOfRangeException(
-                        $"The position {pos} is outside the board (width {Width}, height {Height}) " +
-                        $"and the board doesn't loop around.", e);
-                }
+                Wrap(ref pos);
+                values[pos.x, pos.y] = value;
             }
         }
 
@@ -104,11 +79,12 @@ namespace PacManBot.Games
         public static bool operator !=(Board<T> left, Board<T> right) => !(left == right);
 
 
-        /// <summary>Returns a new board that is a wrapper for a copy of the original 2d array.</summary>
+        /// <summary>Creates a board whose array is a shallow copy of this board's array.</summary>
         public Board<T> Copy()
         {
-            return new Board<T>((T[,])values.Clone(), loop);
+            return new Board<T>((T[,])values.Clone());
         }
+
 
         /// <summary>Replaces all the elements in the board with the specified value.</summary>
         public void Fill(T value)
@@ -137,8 +113,8 @@ namespace PacManBot.Games
         }
 
 
-        /// <summary>If the given position is outside the board, it will be adjusted to loop around, 
-        /// coming out from the other side. This is done automatically when accessing a board that loops.</summary>
+        /// <summary>If the given position is outside the board, it will be adjusted to loop around to the other side. 
+        /// Positions already loop around when accessing an element in the board, though.</summary>
         public void Wrap(ref Pos pos)
         {
             pos.x %= Width;
@@ -168,7 +144,7 @@ namespace PacManBot.Games
 
         /// <summary>Builds and returns a string representing the board, 
         /// composed of values obtained using the specified selector.</summary>
-        /// <param name="stringSelector">A delegate that takes a position's value and returns its desired string representation.</param>
+        /// <param name="stringSelector">A delegate that takes a value in the board and returns its desired string representation.</param>
         public string ToString(Func<T, string> stringSelector)
         {
             var sb = new StringBuilder();
