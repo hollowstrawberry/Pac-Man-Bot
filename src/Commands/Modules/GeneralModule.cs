@@ -11,7 +11,7 @@ using Discord.WebSocket;
 using PacManBot.Constants;
 using PacManBot.Extensions;
 
-namespace PacManBot.Commands
+namespace PacManBot.Commands.Modules
 {
     [Name("📁General"), Remarks("1")]
     public class GeneralModule : BaseCustomModule
@@ -30,22 +30,19 @@ namespace PacManBot.Commands
         [BetterRequireBotPermission(ChannelPermission.EmbedLinks)]
         public async Task SendBotInfo()
         {
-            string description = Storage.BotContent["about"].Replace("{prefix}", Prefix);
-            var fields = Storage.BotContent["aboutfields"].Split('\n').Where(s => s.Contains("|")).ToArray();
-
             var embed = new EmbedBuilder
             {
                 Title = $"{CustomEmoji.PacMan} __**Pac-Man Bot**__",
-                Description = description,
+                Description = Content.about.Replace("{prefix}", Prefix),
                 Color = Colors.PacManYellow,
             };
             embed.AddField("Total guilds", $"{Context.Client.Guilds.Count}", true);
             embed.AddField("Total active games", $"{Games.AllChannelGames.Count()}", true);
             embed.AddField("Latency", $"{Context.Client.Latency}ms", true);
 
-            foreach (var field in fields.Select(x => x.Split('|')))
+            foreach (var (name, desc) in Content.aboutFields)
             {
-                embed.AddField(field[0], field[1], true);
+                embed.AddField(name, desc, true);
             }
 
             await ReplyAsync(embed);
@@ -220,12 +217,12 @@ namespace PacManBot.Commands
                 Title = "Bot invite link",
                 Color = Colors.PacManYellow,
                 ThumbnailUrl = Context.Client.CurrentUser.GetAvatarUrl(),
-                Url = Storage.BotContent["shortinvite"],
+                Url = Content.invite,
                 Fields = new List<EmbedFieldBuilder>
                 {
                     new EmbedFieldBuilder
                     {
-                        Name = $"➡ <{Storage.BotContent["shortinvite"]}>",
+                        Name = $"➡ <{Content.invite}>",
                         Value = "Thanks for inviting Pac-Man Bot!",
                     },
                 },

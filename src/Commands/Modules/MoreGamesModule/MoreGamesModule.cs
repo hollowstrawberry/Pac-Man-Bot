@@ -7,7 +7,7 @@ using Discord.Commands;
 using PacManBot.Games;
 using PacManBot.Extensions;
 
-namespace PacManBot.Commands
+namespace PacManBot.Commands.Modules
 {
     [Name("👾More Games"), Remarks("3")]
     public partial class MoreGamesModule : BaseCustomModule

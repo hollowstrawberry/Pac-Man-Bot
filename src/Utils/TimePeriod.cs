@@ -1,4 +1,4 @@
-﻿namespace PacManBot.Constants
+﻿namespace PacManBot.Utils
 {
     /// <summary>
     /// A period indicated in hours for the score leaderboard, useful to parse from a string.

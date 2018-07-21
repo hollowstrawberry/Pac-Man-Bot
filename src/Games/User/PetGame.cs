@@ -451,9 +451,9 @@ namespace PacManBot.Games
                 if (achievements.SuperPetting && Bot.Random.OneIn(4))
                 {
                     super = true;
-                    pet = Bot.Random.Choose(storage.SuperPettingMessages);
+                    pet = Bot.Random.Choose(Content.superPettingMessages);
                 }
-                else pet = Bot.Random.Choose(storage.PettingMessages);
+                else pet = Bot.Random.Choose(Content.pettingMessages);
 
                 var match = Regex.Match(pet, @"{-?[0-9]+}");
                 if (match.Success)

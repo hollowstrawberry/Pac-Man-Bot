@@ -5,7 +5,7 @@ using Discord.Commands;
 using PacManBot.Games;
 using PacManBot.Constants;
 
-namespace PacManBot.Commands
+namespace PacManBot.Commands.Modules
 {
     public partial class MoreGamesModule
     {

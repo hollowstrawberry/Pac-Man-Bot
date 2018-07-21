@@ -27,29 +27,41 @@ namespace PacManBot
             {
                 if (!File.Exists(requiredFile)) throw new Exception($"Missing required file {requiredFile}: Bot can't run");
             }
-            
 
-            // Set up configurations
-            var botConfig = JsonConvert.DeserializeObject<BotConfig>(File.ReadAllText(Files.Config));
-            if (string.IsNullOrWhiteSpace(botConfig.discordToken))
+
+            // Set up configuration
+            BotConfig botConfig;
+            try
             {
-                throw new Exception($"Missing {nameof(botConfig.discordToken)} in {Files.Config}: Bot can't run");
+                botConfig = JsonConvert.DeserializeObject<BotConfig>(File.ReadAllText(Files.Config));
+                botConfig.LoadContent(File.ReadAllText(Files.Contents));
+            }
+            catch (JsonReaderException e)
+            {
+                throw new InvalidOperationException("The file does not contain valid JSON. Correct the mistake and try again.", e);
             }
 
-            var clientConfig = new DiscordSocketConfig
+            if (string.IsNullOrWhiteSpace(botConfig.discordToken))
             {
+                throw new InvalidOperationException(
+                    $"Missing {nameof(botConfig.discordToken)} in {Files.Config}: Bot can't run");
+            }
+
+
+            var clientConfig = new DiscordSocketConfig {
                 TotalShards = botConfig.shardCount,
                 LogLevel = botConfig.clientLogLevel,
                 MessageCacheSize = botConfig.messageCacheSize
             };
+
             var client = new DiscordShardedClient(clientConfig);
 
-            var commandConfig = new CommandServiceConfig
-            {
+
+            var commandConfig = new CommandServiceConfig {
                 DefaultRunMode = RunMode.Async,
                 LogLevel = botConfig.commandLogLevel,
-                ThrowOnError = true
             };
+
             var commands = new CommandService(commandConfig);
 
 

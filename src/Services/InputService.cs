@@ -14,7 +14,7 @@ using PacManBot.Extensions;
 namespace PacManBot.Services
 {
     /// <summary>
-    /// Handles all external input coming from Discord, for commands and games.
+    /// Handles all external input coming from Discord, using it for commands and games.
     /// </summary>
     public class InputService
     {
@@ -23,9 +23,10 @@ namespace PacManBot.Services
         private readonly StorageService storage;
         private readonly LoggingService logger;
         private readonly GameService games;
+        private readonly BotConfig botConfig;
         private readonly IServiceProvider provider;
 
-        public readonly Regex waka = new Regex(@"^(w+a+k+a+\W*)+$", RegexOptions.IgnoreCase);
+        private static readonly Regex WakaRegex = new Regex(@"^(w+a+k+a+\W*)+$", RegexOptions.IgnoreCase);
 
 
         public InputService(IServiceProvider provider)
@@ -36,6 +37,7 @@ namespace PacManBot.Services
             storage = provider.Get<StorageService>();
             logger = provider.Get<LoggingService>();
             games = provider.Get<GameService>();
+            botConfig = provider.Get<BotConfig>();
 
             // Events
             client.MessageReceived += OnMessageReceived;
@@ -72,7 +74,7 @@ namespace PacManBot.Services
         {
             try // I have to wrap discarded async methods in a try block so that exceptions don't go silent
             {
-                if (storage.BannedChannels.Contains(genericMessage.Channel.Id)) // After a little bot-breaking incident
+                if (botConfig.bannedChannels.Contains(genericMessage.Channel.Id))
                 {
                     if (genericMessage.Channel is IGuildChannel guildChannel) await guildChannel.Guild.LeaveAsync();
                     return;
@@ -151,7 +153,7 @@ namespace PacManBot.Services
             if (!(message.Channel is SocketGuildChannel gChannel) || storage.AllowsAutoresponse(gChannel.Guild.Id)
                 || storage.AppInfo?.Owner.Id == message.Author.Id)
             {
-                if (waka.IsMatch(message.Content))
+                if (WakaRegex.IsMatch(message.Content))
                 {
                     await message.Channel.SendMessageAsync("waka", options: Bot.DefaultOptions);
                     await logger.Log(LogSeverity.Verbose, $"Waka at {message.Channel.FullName()}");

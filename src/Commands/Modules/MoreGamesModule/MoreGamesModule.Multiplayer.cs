@@ -9,7 +9,7 @@ using Discord.WebSocket;
 using PacManBot.Games;
 using PacManBot.Extensions;
 
-namespace PacManBot.Commands
+namespace PacManBot.Commands.Modules
 {
     public partial class MoreGamesModule
     {

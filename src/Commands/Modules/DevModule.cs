@@ -10,18 +10,18 @@ using PacManBot.Services;
 using PacManBot.Constants;
 using PacManBot.Extensions;
 
-namespace PacManBot.Commands
+namespace PacManBot.Commands.Modules
 {
     [Name("Developer"), Remarks("0")]
     [RequireOwner, BetterRequireBotPermission(ChannelPermission.AddReactions)]
     public class DevModule : BaseCustomModule
     {
-        public GameService Games { get; }
+        public BotConfig Config { get; }
         public ScriptingService Scripting { get; }
 
         public DevModule(IServiceProvider services) : base(services)
         {
-            Games = services.Get<GameService>();
+            Config = services.Get<BotConfig>();
             Scripting = services.Get<ScriptingService>();
         }
 
@@ -136,7 +136,7 @@ namespace PacManBot.Commands
         {
             try
             {
-                Storage.LoadContent();
+                Config.LoadContent(File.ReadAllText(Files.Contents));
                 await Logger.Log(LogSeverity.Info, "Reloaded bot content");
                 await AutoReactAsync();
             }

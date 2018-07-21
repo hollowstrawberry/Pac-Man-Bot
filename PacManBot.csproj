@@ -55,7 +55,7 @@
   </ItemGroup>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="::copy &quot;bin\contents.bot&quot; &quot;bin/Debug/netcoreapp2.0/contents.json&quot;" />
+    <Exec Command="copy &quot;bin\contents.json&quot; &quot;bin/Debug/netcoreapp2.0/contents.json&quot;" />
   </Target>
 
 </Project>

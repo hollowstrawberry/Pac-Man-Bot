@@ -35,16 +35,41 @@ namespace PacManBot.Extensions
         }
 
 
+        /// <summary>If <paramref name="index"/> is not within the bounds of the list,
+        /// returns a new value that has been looped around the list coming out from the other end.</summary>
+        public static int LoopedIndex<T>(this IList<T> list, int index)
+        {
+            if (list.Count == 0) throw new InvalidOperationException("List contains no elements");
+
+            index %= list.Count;
+            if (index< 0) index += list.Count;
+            return index;
+        }
+
+
+        /// <summary>Returns an element from a list at a given index. If the index is not
+        /// within the bounds of the array, it is looped around the list, coming out from the other end.</summary>
+        public static T GetAtLooped<T>(this IList<T> list, int loopedIndex)
+        {
+            return list[LoopedIndex(list, loopedIndex)];
+        }
+
+
+        /// <summary>Sets a list's element at a given index. If the index is not
+        /// within the bounds of the array, it is looped around the list, coming out from the other end.</summary>
+        public static void SetAtLooped<T>(this IList<T> list, int loopedIndex, T value)
+        {
+            list[list.LoopedIndex(loopedIndex)] = value;
+        }
+
+
         /// <summary>Shifts all the elements of a list by the given amount.</summary>
         public static void Shift<T>(this IList<T> list, int amount)
         {
             var old = list.ToArray();
             for (int i = 0; i < list.Count; i++)
             {
-                int oldIndex = (i + amount) % list.Count;
-                if (oldIndex < 0) oldIndex += list.Count;
-
-                list[i] = old[oldIndex];
+                list[i] = old.GetAtLooped(i + amount);
             }
         }
 

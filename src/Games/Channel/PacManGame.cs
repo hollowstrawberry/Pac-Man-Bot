@@ -18,7 +18,7 @@ namespace PacManBot.Games
     }
 
 
-    [DataContract] // Serializable to store in JSON
+    [DataContract]
     public class PacManGame : ChannelGame, IReactionsGame, IStoreableGame
     {
         // Constants
@@ -211,7 +211,7 @@ namespace PacManBot.Games
             this.mobileDisplay = mobileDisplay;
 
             // Map
-            if (newMap == null) newMap = storage.BotContent["map"];
+            if (newMap == null) newMap = Content.gameMap;
             else custom = true;
 
             FullMap = newMap; // Converts string into char[,]
@@ -401,7 +401,7 @@ namespace PacManBot.Games
 
             if (lastInput == PacManInput.Help)
             {
-                return storage.BotContent["gamehelp"].Replace("{prefix}", storage.GetPrefixOrEmpty(Guild));
+                return Content.gameHelp.Replace("{prefix}", storage.GetPrefixOrEmpty(Guild));
             }
 
             try
@@ -496,7 +496,7 @@ namespace PacManBot.Games
 
                     default:
                         display.Insert(0, mobileDisplay ? "```\n" : "```css\n");
-                        display.Append($"#Fastforward: {(fastForward ? "Active" : "Disabled")}");
+                        display.Append($"\n#Fastforward: {(fastForward ? "Active" : "Disabled")}");
                         break;
                 }
                 display.Append("```");

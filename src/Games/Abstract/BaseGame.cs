@@ -13,11 +13,14 @@ namespace PacManBot.Games
     public abstract class BaseGame : IBaseGame
     {
         protected DiscordShardedClient client;
-        protected StorageService storage;
+        protected BotConfig botConfig;
         protected LoggingService logger;
+        protected StorageService storage;
         protected GameService games;
 
-        /// <summary>A <see cref="CancellationTokenSource"/> used to manage previous game tasks such as 
+        protected BotContent Content => botConfig.Content;
+
+        /// <summary>Used to manage previous game tasks such as 
         /// ongoing Discord message editions to prevent them from piling up when new ones come in.</summary>
         protected CancellationTokenSource discordRequestCTS = new CancellationTokenSource();
 
@@ -31,7 +34,7 @@ namespace PacManBot.Games
 
 
 
-        /// <summary>The state indicating whether a game is ongoing, or its ending reason.</summary>
+        /// <summary>The state indicating whether a game is ongoing, or why it ended.</summary>
         public virtual State State { get; set; }
 
         /// <summary>Date when this game was last accessed by a player.</summary>
@@ -54,7 +57,7 @@ namespace PacManBot.Games
 
 
 
-        /// <summary>Empty game constructor, used only with reflection and serialization.</summary>
+        /// <summary>Empty constructor used only in reflection and serialization.</summary>
         protected BaseGame() { }
 
         /// <summary>Creates a new game instance with the specified players.</summary>
@@ -72,6 +75,7 @@ namespace PacManBot.Games
         /// <summary>Sets the services that will be used by this game instance.</summary>
         protected virtual void SetServices(IServiceProvider services)
         {
+            botConfig = services.Get<BotConfig>();
             client = services.Get<DiscordShardedClient>();
             logger = services.Get<LoggingService>();
             storage = services.Get<StorageService>();

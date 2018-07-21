@@ -15,25 +15,21 @@ namespace PacManBot.Services
     /// </summary>
     public class LoggingService
     {
-        private string[] logExclude;
+        private readonly string[] logExclude;
 
         private const int WriteAttempts = 1000;
         public const string LogDirectory = "logs/";
         public string LogFile => $"{LogDirectory}{DateTime.Now:yyyy-MM-dd}.txt";
 
 
-        public LoggingService(DiscordShardedClient client, CommandService commands)
+        public LoggingService(BotConfig config, DiscordShardedClient client, CommandService commands)
         {
+            logExclude = config.logExclude;
+
             client.Log += Log;
             commands.Log += Log;
         }
 
-
-        /// <summary>Grabs a list of strings from a configuration file to match and exclude from log entries.</summary>
-        public void LoadLogExclude(IConfigurationRoot content)
-        {
-            logExclude = content["logexclude"]?.Split('\n', StringSplitOptions.RemoveEmptyEntries);
-        }
 
 
         /// <summary>Logs an entry to the console and to disk.</summary>
@@ -42,7 +38,8 @@ namespace PacManBot.Services
             if (!Directory.Exists(LogDirectory)) Directory.CreateDirectory(LogDirectory);
             if (!File.Exists(LogFile)) File.Create(LogFile).Dispose();
 
-            if (logExclude != null && ((message.Message?.ContainsAny(logExclude) ?? false)
+            if (logExclude != null &&
+                ((message.Message?.ContainsAny(logExclude) ?? false)
                 || (message.Exception?.ToString().ContainsAny(logExclude) ?? false)))
             {
                 return Task.CompletedTask;

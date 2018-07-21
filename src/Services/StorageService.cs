@@ -1,11 +1,9 @@
 using System;
 using System.IO;
-using System.Linq;
 using Microsoft.Data.Sqlite;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
-using Microsoft.Extensions.Configuration;
 using Discord;
 using Discord.Rest;
 using Discord.WebSocket;
@@ -17,7 +15,7 @@ using PacManBot.Extensions;
 namespace PacManBot.Services
 {
     /// <summary>
-    /// Manages runtime and long-term data the bot utilizes concurrently.
+    /// Manages access to the bot's database.
     /// </summary>
     public class StorageService
     {
@@ -30,10 +28,6 @@ namespace PacManBot.Services
 
         public string DefaultPrefix { get; }
         public RestApplication AppInfo { get; private set; }
-        public IConfigurationRoot BotContent { get; private set; }
-        public string[] PettingMessages { get; private set; }
-        public string[] SuperPettingMessages { get; private set; }
-        public ulong[] BannedChannels { get; private set; }
 
 
         public SqliteConnection NewDatabaseConnection() => new SqliteConnection($"Data Source={Files.Database};");
@@ -46,13 +40,11 @@ namespace PacManBot.Services
             this.logger = logger;
 
             DefaultPrefix = config.defaultPrefix;
-            BotContent = null;
             cachedPrefixes = new ConcurrentDictionary<ulong, string>();
             cachedAllowsAutoresponse = new ConcurrentDictionary<ulong, bool>();
             cachedNoPrefixChannel = new ConcurrentDictionary<ulong, bool>();
 
             SetupDatabase();
-            LoadContent();
 
             client.LoggedIn += LoadAppInfo;
         }
@@ -266,26 +258,6 @@ namespace PacManBot.Services
 
             logger.Log(LogSeverity.Info, LogSource.Storage, $"Grabbed {scores.Count} score entries");
             return scores;
-        }
-
-
-        /// <summary>Reloads various settings from the contents file.</summary>
-        public void LoadContent()
-        {
-            if (BotContent == null)
-            {
-                BotContent = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile(Files.Contents).Build();
-            }
-            else
-            {
-                BotContent.Reload();
-            }
-
-            BannedChannels = BotContent["banned"].Split(',').Select(ulong.Parse).ToArray();
-            PettingMessages = BotContent["petting"].Split('\n', StringSplitOptions.RemoveEmptyEntries);
-            SuperPettingMessages = BotContent["superpetting"].Split('\n', StringSplitOptions.RemoveEmptyEntries);
-
-            logger.LoadLogExclude(BotContent);
         }
 
 

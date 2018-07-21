@@ -11,7 +11,7 @@ using PacManBot.Utils;
 using PacManBot.Constants;
 using PacManBot.Extensions;
 
-namespace PacManBot.Commands
+namespace PacManBot.Commands.Modules
 {
     [Name("🎮Pac-Man"), Remarks("2")]
     public class PacManModule : BaseCustomModule
@@ -51,7 +51,7 @@ namespace PacManBot.Commands
             else if (!string.IsNullOrWhiteSpace(argSplice[0])) preMessage = $"Unknown game argument \"{argSplice[0]}\".";
 
             string customMap = null;
-            if (args.Contains("```")) customMap = argSplice[1].Trim('\n', '`').Replace('.', '·').Replace('o', '●');
+            if (args.Contains("```")) customMap = argSplice[1].Trim('\n', '`').ReplaceMany((".", "·"), ("o", "●"));
 
             PacManGame newGame;
             try
@@ -231,13 +231,12 @@ namespace PacManBot.Commands
         [BetterRequireBotPermission(ChannelPermission.EmbedLinks)]
         public async Task SayCustomMapHelp()
         {
-            string message = Storage.BotContent["customhelp"].Replace("{prefix}", Storage.GetPrefixOrEmpty(Context.Guild));
-            string[] links = Storage.BotContent["customlinks"].Split('\n').Where(s => s.Contains("|")).ToArray();
+            string message = Content.customHelp.Replace("{prefix}", Prefix);
 
             var embed = new EmbedBuilder { Color = Colors.PacManYellow };
-            foreach (var link in links.Select(x => x.Split('|')))
+            foreach (var (name, url) in Content.customLinks)
             {
-                embed.AddField(link[0], $"[Click here]({link[1]} \"{link[1]}\")", true);
+                embed.AddField(name, $"[Click here]({url} \"{url}\")", true);
             }
 
             await ReplyAsync(message, embed);

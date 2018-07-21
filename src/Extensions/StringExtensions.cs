@@ -68,13 +68,13 @@ namespace PacManBot.Extensions
 
         /// <summary>Ensures that the provided string is a valid URL, then performs a web request to determine
         /// whether the URL links to an image. This is probably not a good idea?</summary>
-        public static bool HttpCheckImageUrl(this string url)
+        public static bool HttpCheckImageUrl(this string value)
         {
             try
             {
-                if (!Uri.IsWellFormedUriString(url, UriKind.Absolute)) return false;
+                if (!Uri.TryCreate(value, UriKind.Absolute, out Uri uri)) return false;
 
-                var req = WebRequest.Create(url);
+                var req = WebRequest.Create(uri);
                 req.Method = "HEAD";
                 using (var resp = req.GetResponse())
                 {

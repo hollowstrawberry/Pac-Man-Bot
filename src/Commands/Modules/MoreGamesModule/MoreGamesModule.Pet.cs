@@ -9,7 +9,7 @@ using PacManBot.Games;
 using PacManBot.Constants;
 using PacManBot.Extensions;
 
-namespace PacManBot.Commands
+namespace PacManBot.Commands.Modules
 {
     public partial class MoreGamesModule
     {

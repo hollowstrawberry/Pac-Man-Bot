@@ -21,6 +21,9 @@ namespace PacManBot.Commands
         /// <summary>All of this program's services, required to supply new objects such as games.</summary>
         public IServiceProvider Services { get; }
 
+        /// <summary>Contents used throughout the bot.</summary>
+        public BotContent Content { get; }
+
         /// <summary>Logs everything in the console and on disk.</summary>
         public LoggingService Logger { get; }
 
@@ -44,6 +47,7 @@ namespace PacManBot.Commands
             Logger = services.Get<LoggingService>();
             Storage = services.Get<StorageService>();
             Games = services.Get<GameService>();
+            Content = services.Get<BotConfig>().Content;
         }
 
 

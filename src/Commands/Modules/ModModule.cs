@@ -8,7 +8,7 @@ using Discord.WebSocket;
 using PacManBot.Constants;
 using PacManBot.Extensions;
 
-namespace PacManBot.Commands
+namespace PacManBot.Commands.Modules
 {
     [Name(CustomEmoji.Staff + "Mod"), Remarks("5")]
     [BetterRequireUserPermission(GuildPermission.ManageMessages)]
@@ -17,7 +17,7 @@ namespace PacManBot.Commands
         public ModModule(IServiceProvider services) : base(services) { }
 
 
-        string ContactMessage => $"Please try again or, if the problem persists, contact the bot author using `{Prefix}feedback`.";
+        string ContactMessage => $"Please try again or, if the problem persists, contact the bot owner using `{Prefix}feedback`.";
 
 
         [Command("say"), Remarks("Make the bot say anything")]
