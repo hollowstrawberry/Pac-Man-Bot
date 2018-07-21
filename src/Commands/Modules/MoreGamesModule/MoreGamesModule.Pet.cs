@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
-using PacManBot.Games;
 using PacManBot.Constants;
 using PacManBot.Extensions;
+using PacManBot.Games.Concrete;
 
 namespace PacManBot.Commands.Modules
 {

@@ -2,8 +2,8 @@
 using System.Threading.Tasks;
 using Discord.Net;
 using Discord.Commands;
-using PacManBot.Games;
 using PacManBot.Constants;
+using PacManBot.Games.Concrete;
 
 namespace PacManBot.Commands.Modules
 {

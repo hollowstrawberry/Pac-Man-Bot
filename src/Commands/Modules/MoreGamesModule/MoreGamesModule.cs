@@ -5,6 +5,7 @@ using Discord;
 using Discord.Net;
 using Discord.Commands;
 using PacManBot.Games;
+using PacManBot.Games.Concrete;
 using PacManBot.Extensions;
 
 namespace PacManBot.Commands.Modules

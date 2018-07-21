@@ -8,7 +8,7 @@ using Discord;
 using PacManBot.Constants;
 using PacManBot.Extensions;
 
-namespace PacManBot.Games
+namespace PacManBot.Games.Concrete
 {
     [DataContract]
     public class RubiksGame : ChannelGame, IUserGame, IStoreableGame

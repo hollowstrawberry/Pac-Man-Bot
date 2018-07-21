@@ -10,7 +10,7 @@ using PacManBot.Utils;
 using PacManBot.Constants;
 using PacManBot.Extensions;
 
-namespace PacManBot.Games
+namespace PacManBot.Games.Concrete
 {
     [DataContract]
     public class UnoGame : MultiplayerGame, IMessagesGame, IStoreableGame

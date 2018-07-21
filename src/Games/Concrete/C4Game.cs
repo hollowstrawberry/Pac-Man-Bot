@@ -7,7 +7,7 @@ using Discord.WebSocket;
 using PacManBot.Constants;
 using PacManBot.Extensions;
 
-namespace PacManBot.Games
+namespace PacManBot.Games.Concrete
 {
     public class C4Game : MultiplayerGame, IMessagesGame
     {
