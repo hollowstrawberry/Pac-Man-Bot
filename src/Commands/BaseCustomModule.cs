@@ -54,7 +54,7 @@ namespace PacManBot.Commands
         protected override void BeforeExecute(CommandInfo command)
         {
             AbsolutePrefix = Storage.GetPrefix(Context.Guild);
-            Prefix = Context.Guild == null || Storage.NoPrefixChannel(Context.Channel.Id) ? "" : AbsolutePrefix;
+            Prefix = Context.Guild != null && Storage.NeedsPrefix(Context.Channel.Id) ? AbsolutePrefix : "";
         }
 
 

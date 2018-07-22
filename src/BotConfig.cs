@@ -3,6 +3,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Discord;
+using PacManBot.Constants;
 
 namespace PacManBot
 {
@@ -17,6 +18,9 @@ namespace PacManBot
 
         /// <summary>The prefix used for all guilds that don't set a custom prefix.</summary>
         [DataMember] public readonly string defaultPrefix = "<";
+
+        /// <summary>The string that defines the connection to the SQLite database in <see cref="PacManBot.Services.StorageService"/>.</summary>
+        [DataMember] public readonly string dbConnectionString = $"Data Source={Files.Database};";
 
         /// <summary>Secret tokens to send HTTP requests to bot list websites, to update guild count and such. Not required.</summary>
         [DataMember] public readonly string[] httpToken = { };

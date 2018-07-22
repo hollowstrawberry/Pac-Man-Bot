@@ -132,7 +132,7 @@ namespace PacManBot.Commands.Modules
 
             try
             {
-                if (Storage.NoPrefixChannel(channelId))
+                if (!Storage.NeedsPrefix(channelId))
                 {
                     Storage.ToggleNoPrefix(channelId);
                     await ReplyAsync(

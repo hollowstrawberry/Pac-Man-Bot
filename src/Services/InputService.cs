@@ -6,11 +6,11 @@ using Discord;
 using Discord.Net;
 using Discord.Commands;
 using Discord.WebSocket;
-using PacManBot.Utils;
 using PacManBot.Games;
 using PacManBot.Games.Concrete;
 using PacManBot.Constants;
 using PacManBot.Extensions;
+using PacManBot.Services.Database;
 
 namespace PacManBot.Services
 {
@@ -123,7 +123,7 @@ namespace PacManBot.Services
             
             if (message.HasMentionPrefix(client.CurrentUser, ref commandPosition)
                 || message.HasStringPrefix($"{prefix} ", ref commandPosition) || message.HasStringPrefix(prefix, ref commandPosition)
-                || context.Channel is IDMChannel || storage.NoPrefixChannel(context.Channel.Id))
+                || context.Channel is IDMChannel || !storage.NeedsPrefix(context.Channel.Id))
             {
                 var result = await commands.ExecuteAsync(context, commandPosition, provider);
 

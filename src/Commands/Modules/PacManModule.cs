@@ -157,13 +157,13 @@ namespace PacManBot.Commands.Modules
             content.Append($"Displaying best scores {period.Humanized()}\nᅠ\n");
 
             int maxPosDigits = max.ToString().Length;
-            int maxScoreDigits = scores[0].score.ToString().Length;
+            int maxScoreDigits = scores[0].Score.ToString().Length;
             for (int i = 0; i < scores.Count; i++)
             {
-                ScoreEntry entry = scores[i];
+                var entry = scores[i];
 
-                string result = $"`{$"{min + i}.".PadRight(maxPosDigits+1)} {$"({entry.state})".PadRight(6)} " +
-                                $"{$"{entry.score}".PadLeft(maxScoreDigits)} points in {entry.turns} turns";
+                string result = $"`{$"{min + i}.".PadRight(maxPosDigits+1)} {$"({entry.State})".PadRight(6)} " +
+                                $"{$"{entry.Score}".PadLeft(maxScoreDigits)} points in {entry.Turns} turns";
                 content.AppendLine(result.PadRight(38) + $"- {entry.GetUsername(Context.Client).Replace("`", "")}`");
             }
 

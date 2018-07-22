@@ -17,11 +17,15 @@ namespace PacManBot.Services
         public ScriptingService()
         {
             scriptOptions = ScriptOptions.Default
-                .WithImports(
+                .WithImports( // Just give me everything
                     "System", "System.IO", "System.Text", "System.Linq", "System.Reflection", "System.Diagnostics",
-                    "Microsoft.Data.Sqlite", "System.Threading.Tasks", "System.Collections.Generic", "System.Text.RegularExpressions",
+                    "System.Threading.Tasks", "System.Collections.Generic", "System.Text.RegularExpressions",
+                    "Microsoft.EntityFrameworkCore", 
                     "Discord", "Discord.Rest", "Discord.Commands", "Discord.WebSocket",
-                    "PacManBot", "PacManBot.Games", "PacManBot.Utils", "PacManBot.Commands", "PacManBot.Services", "PacManBot.Extensions"
+                    "PacManBot", "PacManBot.Constants", "PacManBot.Utils", "PacManBot.Extensions", 
+                    "PacManBot.Games", "PacManBot.Games.Concrete",
+                    "PacManBot.Commands", "PacManBot.Commands.Modules",
+                    "PacManBot.Services", "PacManBot.Services.Database"
                 )
                 .WithReferences(
                     typeof(ScriptingService).Assembly,

@@ -1,16 +1,14 @@
 using System;
-using System.IO;
-using Microsoft.Data.Sqlite;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
 using Discord;
 using Discord.Rest;
 using Discord.WebSocket;
-using PacManBot.Games;
 using PacManBot.Utils;
 using PacManBot.Constants;
-using PacManBot.Extensions;
+using PacManBot.Services.Database;
 
 namespace PacManBot.Services
 {
@@ -22,29 +20,29 @@ namespace PacManBot.Services
         private readonly DiscordShardedClient client;
         private readonly LoggingService logger;
 
+        public readonly PacManDbContext db;
         private readonly ConcurrentDictionary<ulong, string> cachedPrefixes;
         private readonly ConcurrentDictionary<ulong, bool> cachedAllowsAutoresponse;
-        private readonly ConcurrentDictionary<ulong, bool> cachedNoPrefixChannel;
+        private readonly ConcurrentDictionary<ulong, bool> cachedNeedsPrefix;
 
         public string DefaultPrefix { get; }
         public RestApplication AppInfo { get; private set; }
 
 
-        public SqliteConnection NewDatabaseConnection() => new SqliteConnection($"Data Source={Files.Database};");
 
-
-
-        public StorageService(DiscordShardedClient client, LoggingService logger, BotConfig config)
+        public StorageService(BotConfig config, DiscordShardedClient client, LoggingService logger)
         {
             this.client = client;
             this.logger = logger;
 
+            db = new PacManDbContext(config.dbConnectionString);
+            db.Database.EnsureCreated();
+
             DefaultPrefix = config.defaultPrefix;
+
             cachedPrefixes = new ConcurrentDictionary<ulong, string>();
             cachedAllowsAutoresponse = new ConcurrentDictionary<ulong, bool>();
-            cachedNoPrefixChannel = new ConcurrentDictionary<ulong, bool>();
-
-            SetupDatabase();
+            cachedNeedsPrefix = new ConcurrentDictionary<ulong, bool>();
 
             client.LoggedIn += LoadAppInfo;
         }
@@ -57,14 +55,7 @@ namespace PacManBot.Services
         {
             if (cachedPrefixes.TryGetValue(guildId, out string prefix)) return prefix;
 
-            using (var connection = NewDatabaseConnection())
-            {
-                connection.Open();
-                var command = new SqliteCommand($"SELECT prefix FROM prefixes WHERE id=@id LIMIT 1", connection)
-                    .WithParameter("@id", guildId);
-
-                prefix = (string)command.ExecuteScalar() ?? DefaultPrefix;
-            }
+            prefix = db.Prefixes.Find(guildId)?.Prefix ?? DefaultPrefix;
 
             cachedPrefixes.TryAdd(guildId, prefix);
             return prefix;
@@ -80,20 +71,17 @@ namespace PacManBot.Services
         /// <summary>Changes the prefix of the specified guild.</summary>
         public void SetPrefix(ulong guildId, string prefix)
         {
-            cachedPrefixes[guildId] = prefix;
+            string old = cachedPrefixes[guildId];
 
-            string sql = "DELETE FROM prefixes WHERE id=@id;";
-            if (prefix != DefaultPrefix) sql += "INSERT INTO prefixes VALUES (@id, @prefix);";
-
-            using (var connection = NewDatabaseConnection())
+            if (prefix == DefaultPrefix) db.Prefixes.Remove((guildId, prefix));
+            else
             {
-                connection.Open();
-
-                new SqliteCommand(sql, connection)
-                    .WithParameter("@id", guildId)
-                    .WithParameter("@prefix", prefix)
-                    .ExecuteNonQuery();
+                if (old == DefaultPrefix) db.Prefixes.Add((guildId, prefix));
+                else db.Prefixes.Find(guildId).Prefix = prefix;
             }
+
+            db.SaveChanges();
+            cachedPrefixes[guildId] = prefix;
         }
 
 
@@ -104,188 +92,85 @@ namespace PacManBot.Services
         {
             if (cachedAllowsAutoresponse.TryGetValue(guildId, out bool allows)) return allows;
 
-            using (var connection = NewDatabaseConnection())
-            {
-                connection.Open();
+            allows = !db.NoAutoresponseGuilds.Contains((NoAutoresponseGuild)guildId);
+            cachedAllowsAutoresponse.TryAdd(guildId, allows);
 
-                var command = new SqliteCommand("SELECT * FROM noautoresponse WHERE id=@id LIMIT 1", connection)
-                    .WithParameter("@id", guildId);
-                allows = command.ExecuteScalar() == null;
-                cachedAllowsAutoresponse.TryAdd(guildId, allows);
-                return allows;
-            }
+            return allows;
         }
 
 
-        /// <summary>Toggles message autoresponses on or off in the specified guild.</summary>
+        /// <summary>Toggles message autoresponses on or off in the specified guild and returns the new value.</summary>
         public bool ToggleAutoresponse(ulong guildId)
         {
-            cachedAllowsAutoresponse[guildId] = !cachedAllowsAutoresponse[guildId];
+            bool allows = cachedAllowsAutoresponse[guildId];
 
-            using (var connection = NewDatabaseConnection())
-            {
-                connection.Open();
-                new SqliteCommand("BEGIN", connection).ExecuteNonQuery();
+            if (allows) db.NoAutoresponseGuilds.Add(guildId);
+            else db.NoAutoresponseGuilds.Remove(guildId);
 
-                int rows = new SqliteCommand("DELETE FROM noautoresponse WHERE id=@id", connection)
-                    .WithParameter("@id", guildId)
-                    .ExecuteNonQuery();
-
-                if (rows == 0)
-                {
-                    new SqliteCommand("INSERT INTO noautoresponse VALUES (@id)", connection)
-                        .WithParameter("@id", guildId)
-                        .ExecuteNonQuery();
-                }
-
-                new SqliteCommand("END", connection).ExecuteNonQuery();
-                return rows != 0;
-            }
+            db.SaveChanges();
+            cachedAllowsAutoresponse[guildId] = !allows;
+            return !allows;
         }
 
 
 
 
         /// <summary>Whether the specified channel is set to not require a prefix for commands.</summary>
-        public bool NoPrefixChannel(ulong channelId)
+        public bool NeedsPrefix(ulong channelId)
         {
-            if (cachedNoPrefixChannel.TryGetValue(channelId, out bool noPrefixMode)) return noPrefixMode;
+            if (cachedNeedsPrefix.TryGetValue(channelId, out bool needs)) return needs;
 
-            using (var connection = NewDatabaseConnection())
-            {
-                connection.Open();
+            needs = !db.NoPrefixChannels.Contains((NoPrefixChannel)channelId);
+            cachedNeedsPrefix.TryAdd(channelId, needs);
 
-                var command = new SqliteCommand("SELECT * FROM noprefix WHERE id=@id LIMIT 1", connection)
-                    .WithParameter("@id", channelId);
-                noPrefixMode = command.ExecuteScalar() != null;
-                cachedNoPrefixChannel.TryAdd(channelId, noPrefixMode);
-                return noPrefixMode;
-            }
+            return needs;
         }
 
 
         /// <summary>Toggles the specified channel between requiring a prefix for commands and not.</summary>
         public bool ToggleNoPrefix(ulong channelId)
         {
-            cachedNoPrefixChannel[channelId] = !cachedNoPrefixChannel[channelId];
+            bool needsPrefix = cachedNeedsPrefix[channelId];
 
-            using (var connection = NewDatabaseConnection())
-            {
-                connection.Open();
-                new SqliteCommand("BEGIN", connection).ExecuteNonQuery();
+            if (needsPrefix) db.NoPrefixChannels.Add(channelId);
+            else db.NoPrefixChannels.Remove(channelId);
 
-                int rows = new SqliteCommand("DELETE FROM noprefix WHERE id=@id", connection)
-                    .WithParameter("@id", channelId)
-                    .ExecuteNonQuery();
-
-                if (rows == 0)
-                {
-                    new SqliteCommand("INSERT INTO noprefix VALUES (@id)", connection)
-                        .WithParameter("@id", channelId)
-                        .ExecuteNonQuery();
-                }
-
-                new SqliteCommand("END", connection).ExecuteNonQuery();
-                return rows != 0;
-            }
+            db.SaveChanges();
+            cachedNeedsPrefix[channelId] = !needsPrefix;
+            return !needsPrefix;
         }
 
 
 
 
-        /// <summary>Adds a new entry to the <see cref="PacManGame"/> scoreboard.</summary>
+        /// <summary>Adds a new entry to the <see cref="Games.Concrete.PacManGame"/> scoreboard.</summary>
         public void AddScore(ScoreEntry entry)
         {
             logger.Log(LogSeverity.Info, LogSource.Storage, $"New scoreboard entry: {entry}");
 
-            using (var connection = NewDatabaseConnection())
-            {
-                connection.Open();
-
-                string sql = "INSERT INTO scoreboard VALUES (@score, @userid, @state, @turns, @username, @channel, @date)";
-                new SqliteCommand(sql, connection)
-                    .WithParameter("@score", entry.score)
-                    .WithParameter("@userid", entry.userId)
-                    .WithParameter("@state", entry.state)
-                    .WithParameter("@turns", entry.turns)
-                    .WithParameter("@username", entry.username)
-                    .WithParameter("@channel", entry.channel)
-                    .WithParameter("@date", entry.date)
-                    .ExecuteNonQuery();
-            }
+            db.PacManScores.Add(entry);
+            db.SaveChanges();
         }
 
 
         /// <summary>Retrieves a list of scores from the database that fulfills the specified requirements.</summary>
         public List<ScoreEntry> GetScores(TimePeriod period, int amount = 1, int start = 0, ulong? userId = null)
         {
-            var conditions = new List<string>();
-            if (period != TimePeriod.All) conditions.Add($"date>=@date");
-            if (userId != null) conditions.Add($"userid=@userid");
+            var scores = db.PacManScores.AsQueryable();
 
-            string sql = "SELECT * FROM scoreboard " +
-             (conditions.Count == 0 ? "" : $"WHERE {string.Join(" AND ", conditions)} ") +
-             "ORDER BY score DESC LIMIT @amount OFFSET @start";
-
-            var scores = new List<ScoreEntry>();
-
-            using (var connection = NewDatabaseConnection())
+            if (period != TimePeriod.All)
             {
-                connection.Open();
-
-                var command = new SqliteCommand(sql, connection)
-                    .WithParameter("@amount", amount)
-                    .WithParameter("@start", start)
-                    .WithParameter("@userid", userId)
-                    .WithParameter("@date", DateTime.Now - TimeSpan.FromHours((int)period));
-
-                using (var reader = command.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        int score = reader.GetInt32(0);
-                        ulong id = (ulong)reader.GetInt64(1);
-                        State state = (State)reader.GetInt32(2);
-                        int turns = reader.GetInt32(3);
-                        string name = reader.GetString(4);
-                        string channel = reader.GetString(5);
-                        DateTime date = reader.GetDateTime(6);
-
-                        scores.Add(new ScoreEntry(score, id, state, turns, name, channel, date));
-                    }
-                }
+                var minDate = DateTime.Now - TimeSpan.FromHours((int)period);
+                scores = scores.Where(x => x.Date > minDate);
             }
+            if (userId != null) scores = scores.Where(x => x.UserId == userId);
 
-            logger.Log(LogSeverity.Info, LogSource.Storage, $"Grabbed {scores.Count} score entries");
-            return scores;
+            var list = scores.OrderByDescending(x => x.Score).Skip(start).Take(amount).ToList();
+            logger.Log(LogSeverity.Info, LogSource.Storage, $"Grabbed {list.Count} score entries");
+            return list;
         }
 
 
-
-
-        private void SetupDatabase()
-        {
-            if (!File.Exists(Files.Database))
-            {
-                File.Create(Files.Database);
-                logger.Log(LogSeverity.Info, LogSource.Storage, "Creating database");
-            }
-
-            using (var connection = NewDatabaseConnection())
-            {
-                connection.Open();
-
-                foreach (string table in new[] {
-                    "prefixes (id BIGINT PRIMARY KEY, prefix TEXT)",
-                    "scoreboard (score INT, userid BIGINT, state INT, turns INT, username TEXT, channel TEXT, date DATETIME)",
-                    "noautoresponse (id BIGINT PRIMARY KEY)",
-                    "noprefix (id BIGINT PRIMARY KEY)"
-                })
-                {
-                    new SqliteCommand($"CREATE TABLE IF NOT EXISTS {table}", connection).ExecuteNonQuery();
-                }
-            }
-        }
 
 
         private async Task LoadAppInfo()

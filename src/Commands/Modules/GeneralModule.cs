@@ -195,7 +195,8 @@ namespace PacManBot.Commands.Modules
                 message = $"Prefix for this server is set to `{AbsolutePrefix}`" +
                           " (the default)".If(AbsolutePrefix == Storage.DefaultPrefix) +
                           $". It can be changed using the command `{Prefix}setprefix`";
-                if (Storage.NoPrefixChannel(Context.Channel.Id))
+
+                if (!Storage.NeedsPrefix(Context.Channel.Id))
                 {
                     message += "\n\nThis channel is in **No Prefix mode**, and using the prefix is unnecessary.\n" +
                                "Use `help noprefixchannel` for more info.";
