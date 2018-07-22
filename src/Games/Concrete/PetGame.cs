@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Discord;
+using PacManBot.Utils;
 using PacManBot.Constants;
 using PacManBot.Extensions;
 
@@ -77,7 +78,7 @@ namespace PacManBot.Games.Concrete
             set
             {
                 string url = value?.Trim('<', '>');
-                if (url == null || url.HttpCheckImageUrl())
+                if (url == null || WebUtil.IsImageUrl(url))
                 {
                     petImageUrl = url;
                 }

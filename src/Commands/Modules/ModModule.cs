@@ -134,7 +134,7 @@ namespace PacManBot.Commands.Modules
             {
                 if (!Storage.NeedsPrefix(channelId))
                 {
-                    Storage.ToggleNoPrefix(channelId);
+                    Storage.ToggleNeedsPrefix(channelId);
                     await ReplyAsync(
                         $"{CustomEmoji.Check} The {channel.Mention} channel is back to **Normal mode** " +
                         $"(Prefix: `{AbsolutePrefix}`)");
@@ -143,7 +143,7 @@ namespace PacManBot.Commands.Modules
                 {
                     if (specified)
                     {
-                        Storage.ToggleNoPrefix(channelId);
+                        Storage.ToggleNeedsPrefix(channelId);
                         await ReplyAsync(
                             $"{CustomEmoji.Check} The {channel.Mention} channel is now in **No Prefix mode**. " +
                             $"All commands will work without any prefix.\nTo revert to normal, use `togglenoprefix` again.");

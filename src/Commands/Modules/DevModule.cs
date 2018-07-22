@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
@@ -9,6 +10,7 @@ using PacManBot.Games;
 using PacManBot.Services;
 using PacManBot.Constants;
 using PacManBot.Extensions;
+using PacManBot.Services.Database;
 
 namespace PacManBot.Commands.Modules
 {
@@ -18,6 +20,7 @@ namespace PacManBot.Commands.Modules
     {
         public BotConfig Config { get; }
         public ScriptingService Scripting { get; }
+        public PacManDbContext Db { get; private set; }
 
         public DevModule(IServiceProvider services) : base(services)
         {
@@ -63,7 +66,7 @@ namespace PacManBot.Commands.Modules
 
 
         [Command("setavatar"), HideHelp]
-        [Summary("Set the bot's avatar,")]
+        [Summary("Set the bot's avatar to a file.")]
         [RequireContext(ContextType.Guild)]
         public async Task SetAvatar([Remainder]string path)
         {
@@ -87,6 +90,9 @@ namespace PacManBot.Commands.Modules
         {
             code = code.Trim(' ', '`', '\n');
             if (code.StartsWith("cs\n")) code = code.Remove(0, 3); // C# code block in Discord
+
+            var dbProperty = typeof(StorageService).GetProperty("Db", BindingFlags.NonPublic | BindingFlags.Instance);
+            Db = (PacManDbContext)dbProperty.GetValue(Storage); // If I need to access the database from a script
 
             await Context.Message.AddReactionAsync(CustomEmoji.ELoading, DefaultOptions);
 

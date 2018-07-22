@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
@@ -20,10 +21,13 @@ namespace PacManBot.Services
         private readonly DiscordShardedClient client;
         private readonly LoggingService logger;
 
-        public readonly PacManDbContext db;
+
+        private readonly ThreadLocal<PacManDbContext> threadedDb;
         private readonly ConcurrentDictionary<ulong, string> cachedPrefixes;
         private readonly ConcurrentDictionary<ulong, bool> cachedAllowsAutoresponse;
         private readonly ConcurrentDictionary<ulong, bool> cachedNeedsPrefix;
+
+        private PacManDbContext Db => threadedDb.Value;
 
         public string DefaultPrefix { get; }
         public RestApplication AppInfo { get; private set; }
@@ -35,8 +39,7 @@ namespace PacManBot.Services
             this.client = client;
             this.logger = logger;
 
-            db = new PacManDbContext(config.dbConnectionString);
-            db.Database.EnsureCreated();
+            threadedDb = new ThreadLocal<PacManDbContext>(() => new PacManDbContext(config.dbConnectionString));
 
             DefaultPrefix = config.defaultPrefix;
 
@@ -55,7 +58,7 @@ namespace PacManBot.Services
         {
             if (cachedPrefixes.TryGetValue(guildId, out string prefix)) return prefix;
 
-            prefix = db.Prefixes.Find(guildId)?.Prefix ?? DefaultPrefix;
+            prefix = Db.Prefixes.Find(guildId)?.Prefix ?? DefaultPrefix;
 
             cachedPrefixes.TryAdd(guildId, prefix);
             return prefix;
@@ -73,14 +76,14 @@ namespace PacManBot.Services
         {
             string old = cachedPrefixes[guildId];
 
-            if (prefix == DefaultPrefix) db.Prefixes.Remove((guildId, prefix));
+            if (prefix == DefaultPrefix) Db.Prefixes.Remove((guildId, prefix));
             else
             {
-                if (old == DefaultPrefix) db.Prefixes.Add((guildId, prefix));
-                else db.Prefixes.Find(guildId).Prefix = prefix;
+                if (old == DefaultPrefix) Db.Prefixes.Add((guildId, prefix));
+                else Db.Prefixes.Find(guildId).Prefix = prefix;
             }
 
-            db.SaveChanges();
+            Db.SaveChanges();
             cachedPrefixes[guildId] = prefix;
         }
 
@@ -92,7 +95,7 @@ namespace PacManBot.Services
         {
             if (cachedAllowsAutoresponse.TryGetValue(guildId, out bool allows)) return allows;
 
-            allows = !db.NoAutoresponseGuilds.Contains((NoAutoresponseGuild)guildId);
+            allows = !Db.NoAutoresponseGuilds.Contains((NoAutoresponseGuild)guildId);
             cachedAllowsAutoresponse.TryAdd(guildId, allows);
 
             return allows;
@@ -104,10 +107,10 @@ namespace PacManBot.Services
         {
             bool allows = cachedAllowsAutoresponse[guildId];
 
-            if (allows) db.NoAutoresponseGuilds.Add(guildId);
-            else db.NoAutoresponseGuilds.Remove(guildId);
+            if (allows) Db.NoAutoresponseGuilds.Add(guildId);
+            else Db.NoAutoresponseGuilds.Remove(guildId);
 
-            db.SaveChanges();
+            Db.SaveChanges();
             cachedAllowsAutoresponse[guildId] = !allows;
             return !allows;
         }
@@ -120,22 +123,22 @@ namespace PacManBot.Services
         {
             if (cachedNeedsPrefix.TryGetValue(channelId, out bool needs)) return needs;
 
-            needs = !db.NoPrefixChannels.Contains((NoPrefixChannel)channelId);
+            needs = !Db.NoPrefixChannels.Contains((NoPrefixChannel)channelId);
             cachedNeedsPrefix.TryAdd(channelId, needs);
 
             return needs;
         }
 
 
-        /// <summary>Toggles the specified channel between requiring a prefix for commands and not.</summary>
-        public bool ToggleNoPrefix(ulong channelId)
+        /// <summary>Toggles the specified channel between requiring a prefix for commands and not and returns the new value.</summary>
+        public bool ToggleNeedsPrefix(ulong channelId)
         {
             bool needsPrefix = cachedNeedsPrefix[channelId];
 
-            if (needsPrefix) db.NoPrefixChannels.Add(channelId);
-            else db.NoPrefixChannels.Remove(channelId);
+            if (needsPrefix) Db.NoPrefixChannels.Add(channelId);
+            else Db.NoPrefixChannels.Remove(channelId);
 
-            db.SaveChanges();
+            Db.SaveChanges();
             cachedNeedsPrefix[channelId] = !needsPrefix;
             return !needsPrefix;
         }
@@ -148,15 +151,15 @@ namespace PacManBot.Services
         {
             logger.Log(LogSeverity.Info, LogSource.Storage, $"New scoreboard entry: {entry}");
 
-            db.PacManScores.Add(entry);
-            db.SaveChanges();
+            Db.PacManScores.Add(entry);
+            Db.SaveChanges();
         }
 
 
         /// <summary>Retrieves a list of scores from the database that fulfills the specified requirements.</summary>
         public List<ScoreEntry> GetScores(TimePeriod period, int amount = 1, int start = 0, ulong? userId = null)
         {
-            var scores = db.PacManScores.AsQueryable();
+            var scores = Db.PacManScores.AsQueryable();
 
             if (period != TimePeriod.All)
             {
