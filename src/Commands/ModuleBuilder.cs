@@ -36,8 +36,7 @@ namespace PacManBot.Commands
 
 
         /// <summary>
-        /// Sets a constructor to be used for this type when calling 
-        /// <see cref="Create(TContext, IServiceProvider, bool)"/>.
+        /// Sets a constructor to be used for this type when calling <see cref="Create(TContext, IServiceProvider, bool)"/>.
         /// </summary>
         /// <exception cref="ArgumentException">When the constructor does not match <typeparamref name="TModule"/>.</exception>
         public static void SetConstructor(ConstructorInfo constructor)

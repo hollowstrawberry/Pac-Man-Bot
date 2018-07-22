@@ -26,7 +26,10 @@ namespace PacManBot.Games
         public SocketGuild Guild => (client.GetChannel(ChannelId) as SocketGuildChannel)?.Guild;
 
         /// <summary>Retrieves this game's latest message. Null if not retrievable.</summary>
-        public async Task<IUserMessage> GetMessage() => MessageId != 0 ? await Channel.GetUserMessageAsync(MessageId) : null;
+        public async Task<IUserMessage> GetMessage()
+        {
+            return MessageId != 0 && Channel != null ? await Channel.GetUserMessageAsync(MessageId) : null;
+        }
 
 
         /// <summary>Empty game constructor, used only with reflection and serialization.</summary>

@@ -77,7 +77,7 @@ namespace PacManBot.Games
         }
 
 
-        /// <summary>Does the job of a constructor after this game instance is created using
+        /// <summary>Does the job of a constructor during
         /// <see cref="CreateNew{TGame}(ulong, SocketUser[], IServiceProvider)"/>.</summary>
         protected virtual void Initialize(ulong channelId, SocketUser[] players, IServiceProvider services)
         {

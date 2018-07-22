@@ -30,10 +30,10 @@ namespace PacManBot.Services
         private readonly ConcurrentDictionary<ulong, IChannelGame> games;
         private readonly ConcurrentDictionary<(ulong, Type), IUserGame> userGames;
 
-        /// <summary>Enumerates through all active channel-specific games in a thread-safe way.</summary>
+        /// <summary>Enumerates through all active channel-specific games concurrently.</summary>
         public IEnumerable<IChannelGame> AllChannelGames => games.Select(x => x.Value);
 
-        /// <summary>Enumerates through all active user-specific games in a thread-safe way.</summary>
+        /// <summary>Enumerates through all active user-specific games concurrently.</summary>
         public IEnumerable<IUserGame> AllUserGames => userGames.Select(x => x.Value);
 
 
