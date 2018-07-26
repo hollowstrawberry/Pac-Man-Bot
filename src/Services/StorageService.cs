@@ -118,7 +118,7 @@ namespace PacManBot.Services
 
 
 
-        /// <summary>Whether the specified channel is set to not require a prefix for commands.</summary>
+        /// <summary>Whether the specified channel is set to require a prefix for commands.</summary>
         public bool NeedsPrefix(ulong channelId)
         {
             if (cachedNeedsPrefix.TryGetValue(channelId, out bool needs)) return needs;
@@ -157,9 +157,9 @@ namespace PacManBot.Services
 
 
         /// <summary>Retrieves a list of scores from the database that fulfills the specified requirements.</summary>
-        public List<ScoreEntry> GetScores(TimePeriod period, int amount = 1, int start = 0, ulong? userId = null)
+        public List<ScoreEntry> GetScores(TimePeriod period, int start = 0, int amount = 1, ulong? userId = null)
         {
-            var scores = Db.PacManScores.AsQueryable();
+            IQueryable<ScoreEntry> scores = Db.PacManScores;
 
             if (period != TimePeriod.All)
             {

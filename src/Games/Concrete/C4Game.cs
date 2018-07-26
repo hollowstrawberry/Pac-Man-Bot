@@ -92,7 +92,7 @@ namespace PacManBot.Games.Concrete
             {
                 for (int x = 0; x < Columns; x++)
                 {
-                    description.Append(board[x, y].Circle(highlighted.Contains(new Pos(x, y))));
+                    description.Append(board[x, y].Circle(highlighted.Contains((x, y))));
                 }
                 description.Append('\n');
             }

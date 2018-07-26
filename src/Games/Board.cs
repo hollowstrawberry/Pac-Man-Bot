@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Text;
 using System.Linq;
-using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace PacManBot.Games
 {
@@ -12,7 +12,7 @@ namespace PacManBot.Games
     /// </summary>
     /// <typeparam name="T">The type of the values stored in the board.</typeparam>
     [DataContract]
-    public class Board<T> : IEnumerable<T>, IEnumerable, IEquatable<Board<T>>, ICloneable
+    public class Board<T> : IEquatable<Board<T>>, ICloneable
     {
         [DataMember] protected readonly T[,] values;
 
@@ -26,6 +26,9 @@ namespace PacManBot.Games
         /// <summary>Number of rows in the board.</summary>
         public int Height => values.GetLength(1);
 
+        /// <summary>Enumerates through all positions in the board in order.</summary>
+        public IEnumerable<Pos> Positions => Enumerable.Range(0, Width * Height).Select(i => new Pos(i % Width, i / Width));
+
 
 
         /// <summary>Creates a new board of the specified constant width and height.</summary>
@@ -37,6 +40,7 @@ namespace PacManBot.Games
 
         /// <summary>Creates a new board that is a wrapper for the specified 2D array.</summary>
         /// <exception cref="ArgumentNullException"/>
+        [JsonConstructor]
         public Board(T[,] values)
         {
             this.values = values ?? throw new ArgumentNullException(nameof(values));
@@ -47,8 +51,8 @@ namespace PacManBot.Games
         /// looping to the other side if the coordinates are outside the board.</summary>
         public T this[int x, int y]
         {
-            get => this[new Pos(x, y)];
-            set => this[new Pos(x, y)] = value;
+            get => this[(x, y)];
+            set => this[(x, y)] = value;
         }
 
         /// <summary>Retrieves an element in the board at the given position,
@@ -78,7 +82,7 @@ namespace PacManBot.Games
         public static bool operator !=(Board<T> left, Board<T> right) => !(left == right);
 
 
-        /// <summary>Creates a board whose array is a shallow copy of this board's array.</summary>
+        /// <summary>Creates a shallow copy of this board.</summary>
         public Board<T> Copy()
         {
             return new Board<T>((T[,])values.Clone());
@@ -86,7 +90,7 @@ namespace PacManBot.Games
 
 
         /// <summary>Replaces all the elements in the board with the specified value.</summary>
-        public void Fill(T value)
+        public Board<T> Fill(T value)
         {
             for (int x = 0; x < Width; x++)
             {
@@ -95,20 +99,24 @@ namespace PacManBot.Games
                     values[x, y] = value;
                 }
             }
+
+            return this;
         }
 
 
         /// <summary>Replaces all the elements in the board using the specified value selector.</summary>
         /// <param name="valueSelector">A delegate that returns the desired value at the given position.</param>
-        public void Fill(Func<Pos, T> valueSelector)
+        public Board<T> Fill(Func<Pos, T> valueSelector)
         {
             for (int x = 0; x < Width; x++)
             {
                 for (int y = 0; y < Height; y++)
                 {
-                    values[x, y] = valueSelector(new Pos(x, y));
+                    values[x, y] = valueSelector((x, y));
                 }
             }
+
+            return this;
         }
 
 
@@ -134,6 +142,7 @@ namespace PacManBot.Games
                 for (int x = 0; x < Width; x++)
                 {
                     sb.Append(values[x, y]);
+                    if (x < Width - 1 && typeof(T) != typeof(char)) sb.Append(' ');
                 }
             }
 
@@ -170,9 +179,5 @@ namespace PacManBot.Games
         public bool Equals(Board<T> other) => values == other.values;
 
         public object Clone() => Copy();
-
-        IEnumerator IEnumerable.GetEnumerator() => values.GetEnumerator();
-
-        IEnumerator<T> IEnumerable<T>.GetEnumerator() => values.Cast<T>().GetEnumerator();
     }
 }

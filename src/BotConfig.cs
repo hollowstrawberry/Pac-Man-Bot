@@ -19,8 +19,8 @@ namespace PacManBot
         /// <summary>The prefix used for all guilds that don't set a custom prefix.</summary>
         [DataMember] public readonly string defaultPrefix = "<";
 
-        /// <summary>The string that defines the connection to the SQLite database in <see cref="PacManBot.Services.StorageService"/>.</summary>
-        [DataMember] public readonly string dbConnectionString = $"Data Source={Files.Database};";
+        /// <summary>The string that defines the connection to the SQLite database in <see cref="Services.StorageService"/>.</summary>
+        [DataMember] public readonly string dbConnectionString = $"Data Source={Files.DefaultDatabase};";
 
         /// <summary>Secret tokens to send HTTP requests to bot list websites, to update guild count and such. Not required.</summary>
         [DataMember] public readonly string[] httpToken = { };
@@ -38,7 +38,7 @@ namespace PacManBot
         [DataMember] public readonly LogSeverity commandLogLevel = LogSeverity.Verbose;
 
 
-        /// <summary>Strings that when matched cause a log entry to be dropped and not stored. Use with caution.</summary>
+        /// <summary>Strings that when matched cause a log event to be ignored. Use with caution.</summary>
         [DataMember] public readonly string[] logExclude = new string[0];
 
         /// <summary>Until a long-term solution to command spam attacks is found, I can just ban channels from using the bot.</summary>

@@ -8,6 +8,9 @@ namespace PacManBot.Games
     /// </summary>
     public struct Pos : IEquatable<Pos>
     {
+        public static readonly Pos Origin = (0, 0);
+
+
         public int x;
         public int y;
 
@@ -18,7 +21,7 @@ namespace PacManBot.Games
         }
 
 
-        public static readonly Pos Origin = new Pos(0, 0);
+        public static implicit operator Pos((int x, int y) tuple) => new Pos(tuple.x, tuple.y);
 
 
         public override string ToString() => $"({x},{y})";
@@ -28,6 +31,7 @@ namespace PacManBot.Games
         public override bool Equals(object obj) => obj is Pos pos && this == pos;
 
         public bool Equals(Pos pos) => this == pos;
+
 
         public static bool operator ==(Pos pos1, Pos pos2) => pos1.x == pos2.x && pos1.y == pos2.y;
 

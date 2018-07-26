@@ -78,7 +78,7 @@ namespace PacManBot.Games.Concrete
             set
             {
                 string url = value?.Trim('<', '>');
-                if (url == null || WebUtil.IsImageUrl(url))
+                if (url == null || WebUtil.IsImageUrl(url)) // TODO: don't do this in a property setter
                 {
                     petImageUrl = url;
                 }

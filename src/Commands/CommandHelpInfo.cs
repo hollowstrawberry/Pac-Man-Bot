@@ -6,7 +6,7 @@ namespace PacManBot.Commands
     /// <summary>
     /// Gathers information about a command through its custom attributes.
     /// </summary>
-    public class CommandHelpInfo
+    public class CommandHelpInfo // TODO: Cache command help instead of making it each time
     {
         public bool Hidden { get; }
         public string Remarks { get; }

@@ -224,15 +224,15 @@ namespace PacManBot.Games.Concrete
             pacMan = new PacMan(playerPos);
             map[pacMan.pos] = ' ';
 
-            fruitSpawnPos = FindChar(CharFruit) ?? new Pos(-1, -1);
+            fruitSpawnPos = FindChar(CharFruit) ?? (-1, -1);
             if (fruitSpawnPos.x >= 0) map[fruitSpawnPos] = ' ';
 
             ghosts = new List<Ghost>();
             Pos[] ghostCorners = { // Matches original game
-                new Pos(map.Width - 3, -3),
-                new Pos(2, -3),
-                new Pos(map.Width - 1, map.Height),
-                new Pos(0, map.Height)
+                (map.Width - 3, -3),
+                (2, -3),
+                (map.Width - 1, map.Height),
+                (0, map.Height)
             };
             for (int i = 0; i < 4; i++)
             {
@@ -418,7 +418,7 @@ namespace PacManBot.Games.Concrete
 
                         if (mobileDisplay) // Mode with simplified characters
                         {
-                            if (!NonSolid(x, y) && mapCopy[x, y] != CharDoor) mapCopy[x, y] = '#'; // Walls
+                            if (!NonSolid((x, y)) && mapCopy[x, y] != CharDoor) mapCopy[x, y] = '#'; // Walls
                             else if (mapCopy[x, y] == CharPellet) mapCopy[x, y] = '.'; // Pellets
                             else if (mapCopy[x, y] == CharPowerPellet) mapCopy[x, y] = 'o'; // Power pellets
                         }
@@ -675,7 +675,7 @@ namespace PacManBot.Games.Concrete
                         if (index > 0) index--;
                         else
                         {
-                            return new Pos(x, y);
+                            return (x, y);
                         }
                     }
                 }
@@ -684,8 +684,6 @@ namespace PacManBot.Games.Concrete
             return null;
         }
 
-
-        private bool NonSolid(int x, int y) => NonSolid(new Pos(x, y));
 
         private bool NonSolid(Pos pos) => NonSolidChars.Contains(map[pos]);
 

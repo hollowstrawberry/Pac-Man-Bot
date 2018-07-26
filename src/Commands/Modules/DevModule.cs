@@ -111,7 +111,7 @@ namespace PacManBot.Commands.Modules
             }
 
             await Context.Message.RemoveReactionAsync(CustomEmoji.ELoading, Context.Client.CurrentUser, DefaultOptions);
-            if (result != null) await ReplyAsync($"```{result}".Truncate(1997) + "```");
+            if (result != null) await ReplyAsync($"```\n{result}".Truncate(1997) + "```");
         }
 
 

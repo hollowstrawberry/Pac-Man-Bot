@@ -8,7 +8,7 @@
         public const string
             Config = "config.json",
             Contents = "contents.json",
-            Database = "database.sqlite",
+            DefaultDatabase = "database.sqlite",
             FeedbackLog = "logs/feedback.txt",
             CustomMapLog = "logs/custom.txt",
             GameFolder = "games/",

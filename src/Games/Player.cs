@@ -27,7 +27,7 @@ namespace PacManBot.Games
 
 
         /// <summary>Standard player colors for multiplayer games.</summary>
-        public static readonly Color[] AllColors = {
+        public static readonly Color[] RgbColors = {
             Colors.Red, Colors.Blue, Colors.Green, Colors.Yellow, Colors.Purple, Colors.Orange,
         };
 
@@ -55,12 +55,12 @@ namespace PacManBot.Games
         /// <summary>Returns the opposing player in a two-player game.</summary>
         public Player Opponent => value == Red ? Blue : Red;
 
-        /// <summary>Returns the<see cref="Discord.Color"/> that represents this player.</summary>
+        /// <summary>Returns the <see cref="Discord.Color"/> that represents this player.</summary>
         public Color Color
         {
             get
             {
-                if (value >= 0 && value <= AllColors.Length) return AllColors[value];
+                if (value >= 0 && value <= RgbColors.Length) return RgbColors[value];
                 if (value == Tie) return Colors.Green;
                 return Colors.Gray;
             }
@@ -108,7 +108,7 @@ namespace PacManBot.Games
 
 
         /// <summary>Serializes and deserializes a <see cref="Player"/> as its underlying <see cref="int"/> value.</summary>
-        public class PlayerJsonConverter : JsonConverter<Player>
+        private class PlayerJsonConverter : JsonConverter<Player>
         {
             public override Player ReadJson(JsonReader reader, Type objectType, Player existingValue, bool hasExistingValue, JsonSerializer serializer)
             {

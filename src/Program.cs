@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
+using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using PacManBot.Services;
@@ -16,7 +17,7 @@ using PacManBot.Constants;
 namespace PacManBot
 {
     /// <summary>
-    /// Sets up configurations and services before starting the bot.
+    /// Sets up configurations and services and starts the bot.
     /// </summary>
     public static class Program
     {
@@ -25,7 +26,10 @@ namespace PacManBot
             // Check files
             foreach (string requiredFile in new[] { Files.Config, Files.Contents })
             {
-                if (!File.Exists(requiredFile)) throw new Exception($"Missing required file {requiredFile}: Bot can't run");
+                if (!File.Exists(requiredFile))
+                {
+                    throw new InvalidOperationException($"Missing required file {requiredFile}: Bot can't run");
+                }
             }
 
 
@@ -51,15 +55,17 @@ namespace PacManBot
             var clientConfig = new DiscordSocketConfig {
                 TotalShards = botConfig.shardCount,
                 LogLevel = botConfig.clientLogLevel,
-                MessageCacheSize = botConfig.messageCacheSize
+                MessageCacheSize = botConfig.messageCacheSize,
+                DefaultRetryMode = RetryMode.RetryRatelimit,
             };
 
             var client = new DiscordShardedClient(clientConfig);
 
 
             var commandConfig = new CommandServiceConfig {
-                DefaultRunMode = RunMode.Async,
                 LogLevel = botConfig.commandLogLevel,
+                DefaultRunMode = RunMode.Async,
+                CaseSensitiveCommands = false,
             };
 
             var commands = new CommandService(commandConfig);

@@ -145,7 +145,7 @@ namespace PacManBot.Commands.Modules
 
             int amount = Math.Min(MaxDisplayedScores, (int)max - min + 1);
 
-            var scores = Storage.GetScores(period, amount, min - 1);
+            var scores = Storage.GetScores(period, min - 1, amount);
 
             if (scores.Count == 0)
             {
@@ -207,7 +207,7 @@ namespace PacManBot.Commands.Modules
         [Command("score"), Alias("sc", "s"), HideHelp]
         public async Task SendPersonalBest(TimePeriod time, ulong userId)
         {
-            var scores = Storage.GetScores(time, 1, 0, userId);
+            var scores = Storage.GetScores(time, 0, 1, userId);
 
             if (scores.Count > 0)
             {

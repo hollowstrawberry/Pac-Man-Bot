@@ -82,7 +82,7 @@ namespace PacManBot.Games.Concrete
             {
                 for (int x = 0; x < board.Width; x++)
                 {
-                    description.Append(board[x, y].Symbol(highlighted.Contains(new Pos(x, y))) ??
+                    description.Append(board[x, y].Symbol(highlighted.Contains((x, y))) ??
                         (State == State.Active ? $"{CustomEmoji.NumberCircle[1 + board.Width*y + x]}" : Player.None.Circle()));
                 }
                 description.Append('\n');
@@ -146,7 +146,7 @@ namespace PacManBot.Games.Concrete
                 for (int x = 0; x < 3; x++)
                 {
                     if (board[x, y] == player) count++;
-                    else if (board[x, y] == Player.None) missing = new Pos(x, y);
+                    else if (board[x, y] == Player.None) missing = (x, y);
                     if (count == 2 && missing != null) return missing;
                 }
             }
@@ -158,7 +158,7 @@ namespace PacManBot.Games.Concrete
                 for (int y = 0; y < 3; y++)
                 {
                     if (board[x, y] == player) count++;
-                    else if (board[x, y] == Player.None) missing = new Pos(x, y);
+                    else if (board[x, y] == Player.None) missing = (x, y);
                     if (count == 2 && missing != null) return missing;
                 }
             }
@@ -168,7 +168,7 @@ namespace PacManBot.Games.Concrete
             for (int d = 0; d < 3; d++) // Top-to-right diagonal
             {
                 if (board[d, d] == player) count++;
-                else if (board[d, d] == Player.None) missing = new Pos(d, d);
+                else if (board[d, d] == Player.None) missing = (d, d);
                 if (count == 2 && missing != null) return missing;
             }
 
@@ -177,7 +177,7 @@ namespace PacManBot.Games.Concrete
             for (int d = 0; d < 3; d++) // Top-to-left diagonal
             {
                 if (board[2 - d, d] == player) count++;
-                else if (board[2 - d, d] == Player.None) missing = new Pos(2 - d, d);
+                else if (board[2 - d, d] == Player.None) missing = (2 - d, d);
                 if (count == 2 && missing != null) return missing;
             }
 
@@ -192,7 +192,7 @@ namespace PacManBot.Games.Concrete
             {
                 for (int x = 0; x < board.Width; x++)
                 {
-                    if (board[x, y] == Player.None) empty.Add(new Pos(x, y));
+                    if (board[x, y] == Player.None) empty.Add((x, y));
                 }
             }
             return empty;

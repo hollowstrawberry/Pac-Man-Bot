@@ -205,8 +205,10 @@ namespace PacManBot.Games.Concrete
 
                 CardColor? color = EnumTraits<CardColor>.Values
                     .FirstOrNull(x => value.StartsOrEndsWith(x.ToString().ToLower()));
+
                 CardType? type = EnumTraits<CardType>.Values.ToList().Reversed()
-                    .FirstOrNull(x => value.StartsOrEndsWith(x.ToString().ToLower()) || x <= CardType.Nine && value.StartsOrEndsWith(((int)x).ToString()));
+                    .FirstOrNull(x => value.StartsOrEndsWith(x.ToString().ToLower())
+                                 || x <= CardType.Nine && value.StartsOrEndsWith(((int)x).ToString()));
 
                 if (auto)
                 {
@@ -473,8 +475,9 @@ namespace PacManBot.Games.Concrete
 
         private static CardColor HighestColor(List<Card> cards)
         {
-            var colors = Enumerable.Range(0, 4).Select(x => cards.Count(c => c.Color == (CardColor)x)).ToList();
-            return (CardColor)colors.IndexOf(Bot.Random.Choose(colors.Where(x => x == colors.Max()).ToList()));
+            var counts = EnumTraits<CardColor>.Values.Select(c => cards.Count(x => x.Color == c)).ToList();
+            int max = counts.Max();
+            return (CardColor)counts.IndexOf(Bot.Random.Choose(counts.Where(x => x == max).ToList()));
         }
 
 

@@ -85,7 +85,7 @@ namespace PacManBot.Games.Concrete
                     if (y < 0 && x < 0) description.Append(CustomEmoji.Empty);
                     else if (y < 0) description.Append(FullColumn(x) ? CustomEmoji.Empty : CustomEmoji.LetterCircle[x]);
                     else if (x < 0) description.Append(FullRow(y) ? CustomEmoji.Empty : CustomEmoji.NumberCircle[y + 1]);
-                    else description.Append(board[x, y].Symbol(highlighted.Contains(new Pos(x, y))) ?? Player.None.Circle());
+                    else description.Append(board[x, y].Symbol(highlighted.Contains((x, y))) ?? Player.None.Circle());
                 }
                 description.Append('\n');
             }
@@ -133,7 +133,7 @@ namespace PacManBot.Games.Concrete
             var moves = TryCompleteLines(Turn, 4) ?? TryCompleteLines(Turn.Opponent, 4) ?? // Win or avoid losing
                         TryCompleteFlyingLines(Turn) ?? TryCompleteFlyingLines(Turn.Opponent); // Forced win / forced lose situations
 
-            if (Time < 2 && board[2, 2] == Player.None && Bot.Random.Next(4) > 0) moves = new List<Pos> { new Pos(2, 2) };
+            if (Time < 2 && board[2, 2] == Player.None && Bot.Random.Next(4) > 0) moves = new List<Pos> { (2, 2) };
 
             if (moves == null) // Lines of 3
             {
@@ -179,7 +179,7 @@ namespace PacManBot.Games.Concrete
 
             void CheckCell(int x, int y)
             {
-                Pos pos = new Pos(x, y);
+                Pos pos = (x, y);
 
                 if (board[pos] == player) count++; // Consecutive symbols
                 else if (board[pos] == Player.None) // Find a gap
@@ -256,7 +256,7 @@ namespace PacManBot.Games.Concrete
 
             void CheckCell(int x, int y)
             {
-                Pos pos = new Pos(x, y);
+                Pos pos = (x, y);
                 if (board[pos] == player) count++; // Consecutive symbols
                 else if (board[pos] == Player.None) missing = pos; // Find a gap
 
@@ -331,7 +331,7 @@ namespace PacManBot.Games.Concrete
             {
                 for (int x = 0; x < board.Width; x++)
                 {
-                    if (board[x, y] == Player.None) empty.Add(new Pos(x, y));
+                    if (board[x, y] == Player.None) empty.Add((x, y));
                 }
             }
             return empty;

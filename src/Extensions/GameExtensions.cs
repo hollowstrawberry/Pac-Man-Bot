@@ -52,10 +52,10 @@ namespace PacManBot.Extensions
         {
             switch (dir)
             {
-                case Dir.Up:    return new Pos(0, -length);
-                case Dir.Down:  return new Pos(0, +length);
-                case Dir.Left:  return new Pos(-length, 0);
-                case Dir.Right: return new Pos(+length, 0);
+                case Dir.Up:    return (0, -length);
+                case Dir.Down:  return (0, +length);
+                case Dir.Left:  return (-length, 0);
+                case Dir.Right: return (+length, 0);
                 default: return Pos.Origin;
             }
         }
@@ -81,8 +81,9 @@ namespace PacManBot.Extensions
             List<Pos> line = new List<Pos>();
 
 
-            void CheckCell(Pos pos)
+            void CheckCell(int x, int y)
             {
+                Pos pos = (x, y);
                 if (board[pos].Equals(value))
                 {
                     line.Add(pos);
@@ -108,7 +109,7 @@ namespace PacManBot.Extensions
             {
                 for (int x = 0; x < board.Width; x++)
                 {
-                    CheckCell(new Pos(x, y));
+                    CheckCell(x, y);
                 }
                 line = new List<Pos>();
             }
@@ -117,7 +118,7 @@ namespace PacManBot.Extensions
             {
                 for (int y = 0; y < board.Height; y++)
                 {
-                    CheckCell(new Pos(x, y));
+                    CheckCell(x, y);
                 }
                 line = new List<Pos>();
             }
@@ -128,7 +129,7 @@ namespace PacManBot.Extensions
                 {
                     if (y < board.Height && (x = d - y) < board.Width)
                     {
-                        CheckCell(new Pos(x, y));
+                        CheckCell(x, y);
                     }
                 }
                 line = new List<Pos>();
@@ -140,7 +141,7 @@ namespace PacManBot.Extensions
                 {
                     if (y < board.Height && (x = board.Width - 1 - d + y) >= 0)
                     {
-                        CheckCell(new Pos(x, y));
+                        CheckCell(x, y);
                     }
                 }
                 line = new List<Pos>();

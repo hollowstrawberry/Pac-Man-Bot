@@ -122,6 +122,7 @@ namespace PacManBot.Games.Concrete
             {
                 this.repeat = repeat;
                 this.reverse = reverse;
+                key = key.ToUpperInvariant();
                 baseMove = AllMoves.FirstOrDefault(x => x.Key == key);
                 if (baseMove == null) throw new ArgumentException("Key doesn't match any existing built-in move.", nameof(key));
             }
@@ -149,10 +150,10 @@ namespace PacManBot.Games.Concrete
             {
                 move = null;
 
-                var match = Regex.Match(value, @"^([A-Z]+)([0-9]{0,3})('{0,10})$");
+                var match = Regex.Match(value, @"^([a-zA-Z]+)([0-9]{0,3})('{0,10})$");
                 if (!match.Success) return false;
 
-                var baseMove = AllMoves.FirstOrDefault(x => x.Key == match.Groups[1].Value);
+                var baseMove = AllMoves.FirstOrDefault(x => x.Key == match.Groups[1].Value.ToUpperInvariant());
                 if (baseMove == null) return false;
 
                 move = new Move
@@ -183,7 +184,7 @@ namespace PacManBot.Games.Concrete
         {
             var sequence = new List<Move>();
 
-            foreach (string splice in input.ToUpper().Split(' ', StringSplitOptions.RemoveEmptyEntries))
+            foreach (string splice in input.Split(' ', StringSplitOptions.RemoveEmptyEntries))
             {
                 if (Move.TryParse(splice, out var move)) sequence.Add(move);
                 else return false;

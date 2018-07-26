@@ -20,7 +20,7 @@ namespace PacManBot.Services
                 .WithImports( // Just give me everything
                     "System", "System.IO", "System.Text", "System.Linq", "System.Reflection", "System.Diagnostics",
                     "System.Threading.Tasks", "System.Collections.Generic", "System.Text.RegularExpressions",
-                    "Microsoft.EntityFrameworkCore", 
+                    "Microsoft.EntityFrameworkCore", "Newtonsoft.Json",
                     "Discord", "Discord.Rest", "Discord.Commands", "Discord.WebSocket",
                     "PacManBot", "PacManBot.Constants", "PacManBot.Utils", "PacManBot.Extensions", 
                     "PacManBot.Games", "PacManBot.Games.Concrete",

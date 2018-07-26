@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -82,12 +81,6 @@ namespace PacManBot
         private Task OnLeftGuild(SocketGuild guild)
         {
             _ = UpdateGuildCountAsync();
-
-            foreach (var game in games.AllChannelGames.Where(g => g.Guild?.Id == guild.Id).ToArray())
-            {
-                games.Remove(game);
-            }
-
             return Task.CompletedTask;
         }
 
@@ -123,14 +116,17 @@ namespace PacManBot
                         {
                             if (string.IsNullOrWhiteSpace(botConfig.httpToken[i])) continue;
 
-                            string requesturi = "https://" + website[i] + $"/api/bots/{client.CurrentUser.Id}/stats";
-                            var content = new StringContent($"{{\"server_count\": {guilds}}}",
-                                                            System.Text.Encoding.UTF8, "application/json");
+                            string requesturi = $"https://{website[i]}/api/bots/{client.CurrentUser.Id}/stats";
+
+                            var content = new StringContent(
+                                $"{{\"server_count\": {guilds}}}", System.Text.Encoding.UTF8, "application/json");
+
                             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(botConfig.httpToken[i]);
                             var response = await httpClient.PostAsync(requesturi, content);
 
-                            await logger.Log(response.IsSuccessStatusCode ? LogSeverity.Verbose : LogSeverity.Warning,
-                                             $"Sent guild count to {website[i]} - {(response.IsSuccessStatusCode ? "Success" : $"Response:\n{response}")}");
+                            await logger.Log(
+                                response.IsSuccessStatusCode ? LogSeverity.Verbose : LogSeverity.Warning,
+                                $"Sent guild count to {website[i]} - {(response.IsSuccessStatusCode ? "Success" : $"Response:\n{response}")}");
                         }
                     }
 
