@@ -205,7 +205,7 @@ namespace PacManBot.Commands.Modules
         public async Task GetGuildMembers()
         {
             var guilds = Context.Client.Guilds.OrderByDescending(g => g.MemberCount);
-            await ReplyAsync(string.Join("\n", guilds.Select(g => $"{g.Name}: {g.MemberCount}")).Truncate(2000));
+            await ReplyAsync(guilds.Select(g => $"{g.Name}: {g.MemberCount}").JoinString("\n").Truncate(2000));
         }
 
 

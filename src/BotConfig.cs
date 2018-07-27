@@ -4,6 +4,7 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Discord;
 using PacManBot.Constants;
+using PacManBot.Extensions;
 
 namespace PacManBot
 {
@@ -59,7 +60,7 @@ namespace PacManBot
             if (missingFields.Count > 0)
             {
                 throw new InvalidOperationException(
-                    $"The contents file is missing a value for: {string.Join(", ", missingFields.Select(x => x.Name))}");
+                    $"The contents file is missing a value for: {missingFields.Select(x => x.Name).JoinString(", ")}");
             }
 
             for (int i = 0; i < cont.aboutFields.Length; i++)

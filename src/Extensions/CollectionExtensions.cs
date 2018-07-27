@@ -3,11 +3,64 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
+using PacManBot.Utils;
 
 namespace PacManBot.Extensions
 {
     public static class CollectionExtensions
     {
+        /// <summary>Fluid method that joins the members of a collection using the specified separator between them.</summary>
+        public static string JoinString<T>(this IEnumerable<T> values, string separator = "")
+        {
+            return string.Join(separator, values);
+        }
+
+
+        /// <summary>Returns a <see cref="Nullable{T}"/> that has the value of the first element 
+        /// that satisfies the specified condition if there is one, otherwise it has no value.</summary>
+        public static T? FirstOrNull<T>(this IEnumerable<T> source, Func<T, bool> predicate) where T : struct
+        {
+            try
+            {
+                return source.First(predicate);
+            }
+            catch (InvalidOperationException)
+            {
+                return null;
+            }
+        }
+
+
+        /// <summary>
+        /// Returns a Python-like list slice that is between the specified boundaries and takes elements by the specified step.
+        /// </summary>
+        /// <param name="start">The starting index of the slice. Loops around if negative.</param>
+        /// <param name="stop">The index the slice goes up to, excluding itself. Loops around if negative.</param>
+        /// <param name="step">The increment between each element index. Traverses backwards if negative.</param>
+        public static IEnumerable<T> Slice<T>(this IEnumerable<T> list, int? start = null, int? stop = null, int step = 1)
+        {
+            if (step == 0) throw new ArgumentException("The step of the slice cannot be zero.", nameof(step));
+
+            int count = list.Count();
+            if (count == 0) return list;
+
+            if (start == null) start = step > 0 ? 0 : count - 1;
+            else if (start < 0) start = count + start;
+
+            if (stop == null) stop = step > 0 ? count : -1;
+            else if (stop < 0) stop = count + stop;
+
+            if (step < 0)
+            {
+                list = list.Reverse();
+                start = count - 1 - Math.Min(count - 1, start.Value); // Also reverses indices
+                stop = count - 1 - stop.Value;
+            }
+
+            return list.Skip(start.Value).Take(stop.Value - start.Value).Where((_, i) => i % step == 0);
+        }
+
+
         /// <summary>Removes and returns the last element of a list.</summary>
         public static T Pop<T>(this IList<T> list)
         {
@@ -35,42 +88,19 @@ namespace PacManBot.Extensions
         }
 
 
-        /// <summary>If <paramref name="index"/> is not within the bounds of the list,
-        /// returns a new value that has been looped around the list coming out from the other end.</summary>
-        public static int LoopedIndex<T>(this IList<T> list, int index)
-        {
-            if (list.Count == 0) throw new InvalidOperationException("List contains no elements");
-
-            index %= list.Count;
-            if (index< 0) index += list.Count;
-            return index;
-        }
-
-
-        /// <summary>Returns an element from a list at a given index. If the index is not
-        /// within the bounds of the array, it is looped around the list, coming out from the other end.</summary>
-        public static T GetAtLooped<T>(this IList<T> list, int loopedIndex)
-        {
-            return list[LoopedIndex(list, loopedIndex)];
-        }
-
-
-        /// <summary>Sets a list's element at a given index. If the index is not
-        /// within the bounds of the array, it is looped around the list, coming out from the other end.</summary>
-        public static void SetAtLooped<T>(this IList<T> list, int loopedIndex, T value)
-        {
-            list[list.LoopedIndex(loopedIndex)] = value;
-        }
+        /// <summary>Returns a <see cref="LoopedList{T}"/> that is a wrapper for an existing list.</summary>
+        public static LoopedList<T> Looping<T>(this List<T> list) => new LoopedList<T>(list);
 
 
         /// <summary>Shifts all the elements of a list by the given amount.</summary>
-        public static void Shift<T>(this IList<T> list, int amount)
+        public static List<T> Shift<T>(this List<T> list, int amount)
         {
-            var old = list.ToArray();
+            var old = list.Looping().Copy();
             for (int i = 0; i < list.Count; i++)
             {
-                list[i] = old.GetAtLooped(i + amount);
+                list[i] = old[i + amount];
             }
+            return list;
         }
 
 
@@ -119,32 +149,6 @@ namespace PacManBot.Extensions
             }
 
             return newArray;
-        }
-
-
-        /// <summary>Returns a new array that is the concatenation of the first array and
-        /// an array of the provided elements.</summary>
-        public static T[] Concatenate<T>(this T[] first, params T[] second)
-        {
-            if (first == null) throw new ArgumentNullException(nameof(first));
-            if (second == null) throw new ArgumentNullException(nameof(second));
-
-            return first.Concatenate(new[] { second });
-        }
-
-
-        /// <summary>Returns a <see cref="Nullable{T}"/> that has the value of the first element 
-        /// that satisfies the specified condition if there is one, otherwise it has no value.</summary>
-        public static T? FirstOrNull<T>(this IEnumerable<T> list, Func<T, bool> predicate) where T : struct
-        {
-            try
-            {
-                return list.First(predicate);
-            }
-            catch (InvalidOperationException)
-            {
-                return null;
-            }
         }
 
 

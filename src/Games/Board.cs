@@ -12,7 +12,7 @@ namespace PacManBot.Games
     /// </summary>
     /// <typeparam name="T">The type of the values stored in the board.</typeparam>
     [DataContract]
-    public class Board<T> : IEquatable<Board<T>>, ICloneable
+    public class Board<T>
     {
         [DataMember] protected readonly T[,] values;
 
@@ -169,15 +169,8 @@ namespace PacManBot.Games
         }
 
 
-        public override bool Equals(object obj) => obj is Board<T> board && this.Equals(board);
+        public override bool Equals(object obj) => obj is Board<T> board && values == board.values;
 
         public override int GetHashCode() => values.GetHashCode();
-
-
-        // Interfaces
-
-        public bool Equals(Board<T> other) => values == other.values;
-
-        public object Clone() => Copy();
     }
 }

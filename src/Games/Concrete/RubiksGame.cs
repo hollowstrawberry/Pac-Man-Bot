@@ -48,7 +48,7 @@ namespace PacManBot.Games.Concrete
         /// <summary>The cube array in raw string form, to be stored and loaded.</summary>
         [DataMember] public string RawCube
         {
-            get => string.Join("", cube.Select(x => (int)x));
+            get => cube.Select(x => (int)x).JoinString("");
             set => cube = value.Select(x => (Sticker)int.Parse(x.ToString())).ToArray();
         }
 
@@ -137,7 +137,7 @@ namespace PacManBot.Games.Concrete
                     var cycle = baseMove.Cycles.FirstOrDefault(x => x.Contains(i))?.ToList();
                     if (cycle != null)
                     {
-                        position = cycle.GetAtLooped(cycle.IndexOf(i) + (reverse ? +repeat : -repeat));
+                        position = cycle.Looping()[cycle.IndexOf(i) + (reverse ? +repeat : -repeat)];
                     }
 
                     cube[i] = oldCube[position];
@@ -205,8 +205,9 @@ namespace PacManBot.Games.Concrete
             const int amount = 40;
             var turns = new string[] { "F", "U", "R", "L", "D", "B", };
             var modifiers = new[] { "", "'", "2" };
-            var moves = string.Join(" ",
-                Enumerable.Range(0, amount).Select(x => Bot.Random.Choose(turns) + Bot.Random.Choose(modifiers)));
+            var moves = Enumerable.Range(0, amount)
+                .Select(x => Bot.Random.Choose(turns) + Bot.Random.Choose(modifiers))
+                .JoinString(" ");
 
             Time = -amount; // Done before so it saves the game at 0
             if (!TryDoMoves(moves)) throw new Exception("Invalid generated shuffle sequence");

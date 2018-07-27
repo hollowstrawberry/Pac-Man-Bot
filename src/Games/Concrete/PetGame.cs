@@ -272,7 +272,7 @@ namespace PacManBot.Games.Concrete
             status.Append((hygiene >= 5 ? "🛁" : "💩")   + $" **Hygiene:** {(decimals ? $"{hygiene:0.000}" : $"{hygiene.Ceiling()}")}/{MaxStat}\n");
             status.Append((energy >= 5 ? "⚡" : "🍂") + $" **Energy:** {(decimals ? $"{energy:0.000}" : $"{energy.Ceiling()}")}/{MaxStat}\n");
 
-            var unlocks = string.Join('\n', achievements.GetIcons().Split(3).Select(x => string.Join(' ', x)));
+            var unlocks = achievements.GetIcons().Split(3).Select(x => x.JoinString(" ")).JoinString("\n");
 
             return new EmbedBuilder
             {

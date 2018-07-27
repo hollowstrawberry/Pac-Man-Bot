@@ -32,9 +32,9 @@ namespace PacManBot.Games.Concrete
         private static readonly string[] CardColorEmote = {
             CustomEmoji.RedSquare, CustomEmoji.BlueSquare, CustomEmoji.GreenSquare, CustomEmoji.YellowSquare, CustomEmoji.BlackSquare,
         };
-        private static readonly string[] CardTypeEmote = CustomEmoji.NumberCircle.Concatenate(
+        private static readonly string[] CardTypeEmote = CustomEmoji.NumberCircle.Concatenate(new[] {
             CustomEmoji.UnoSkip, CustomEmoji.UnoReverse, CustomEmoji.AddTwo, CustomEmoji.UnoWild, CustomEmoji.AddFour
-        );
+        });
 
 
         // Fields
