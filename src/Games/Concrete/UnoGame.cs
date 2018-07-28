@@ -238,13 +238,14 @@ namespace PacManBot.Games.Concrete
             base.Initialize(channelId, null, services);
 
             // Make deck
-            for (int color = 0; color < 4; color++)
+            foreach (var color in EnumTraits<CardColor>.Values.Take(4))
             {
-                for (int type = 0; type < 15; type++)
+                foreach (var type in EnumTraits<CardType>.Values)
                 {
-                    var card = new Card((CardType)type, type < 13 ? (CardColor)color : CardColor.Black);
+                    bool wild = Card.IsWild(type);
+                    var card = new Card(type, wild ? CardColor.Black : color);
                     drawPile.Add(card);
-                    if (type > 0 && type < 13) drawPile.Add(card); // Second batch of colors excluding zero
+                    if (type > CardType.Zero && !wild) drawPile.Add(card); // Second batch of colors minus zero
                 }
             }
 
@@ -475,9 +476,11 @@ namespace PacManBot.Games.Concrete
 
         private static CardColor HighestColor(List<Card> cards)
         {
-            var counts = EnumTraits<CardColor>.Values.Select(c => cards.Count(x => x.Color == c)).ToList();
-            int max = counts.Max();
-            return (CardColor)counts.IndexOf(Bot.Random.Choose(counts.Where(x => x == max).ToList()));
+            var groups = cards.GroupBy(c => c.Color).Where(x => x.Key != CardColor.Black);
+            if (groups.Count() == 0) return Bot.Random.Choose(EnumTraits<CardColor>.Values);
+
+            int max = groups.Select(x => x.Count()).Max();
+            return Bot.Random.Choose(groups.Where(x => x.Count() == max).Select(x => x.Key).ToList());
         }
 
 

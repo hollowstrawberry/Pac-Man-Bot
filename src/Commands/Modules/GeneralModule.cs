@@ -317,7 +317,7 @@ namespace PacManBot.Commands.Modules
         public async Task SpamDance(int amount = 5)
         {
             var messages = await Context.Channel.GetMessagesAsync(Math.Min(amount, 10)).FlattenAsync();
-            foreach (SocketUserMessage message in messages.Where(x => x is SocketUserMessage))
+            foreach (var message in messages.OfType<SocketUserMessage>())
             {
                 await message.AddReactionAsync(CustomEmoji.ERapidBlobDance, DefaultOptions);
             }

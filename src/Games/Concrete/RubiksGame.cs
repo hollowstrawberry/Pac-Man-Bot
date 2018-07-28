@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 using Discord;
+using PacManBot.Utils;
 using PacManBot.Constants;
 using PacManBot.Extensions;
 
@@ -48,7 +49,7 @@ namespace PacManBot.Games.Concrete
         /// <summary>The cube array in raw string form, to be stored and loaded.</summary>
         [DataMember] public string RawCube
         {
-            get => cube.Select(x => (int)x).JoinString("");
+            get => cube.Select(x => (int)x).JoinString();
             set => cube = value.Select(x => (Sticker)int.Parse(x.ToString())).ToArray();
         }
 
@@ -131,16 +132,16 @@ namespace PacManBot.Games.Concrete
             public void Apply(Sticker[] cube)
             {
                 var oldCube = (Sticker[])cube.Clone();
-                for (int i = 0; i < cube.Length; i++)
+                for (int index = 0; index < cube.Length; index++)
                 {
-                    int position = i;
-                    var cycle = baseMove.Cycles.FirstOrDefault(x => x.Contains(i))?.ToList();
+                    int oldIndex = index;
+                    var cycle = baseMove.Cycles.FirstOrDefault(x => x.Contains(index));
                     if (cycle != null)
                     {
-                        position = cycle.Looping()[cycle.IndexOf(i) + (reverse ? +repeat : -repeat)];
+                        oldIndex = new LoopedList<int>(cycle)[cycle.IndexOf(index) + (reverse ? +repeat : -repeat)];
                     }
 
-                    cube[i] = oldCube[position];
+                    cube[index] = oldCube[oldIndex];
                 }
             }
             
@@ -205,9 +206,7 @@ namespace PacManBot.Games.Concrete
             const int amount = 40;
             var turns = new string[] { "F", "U", "R", "L", "D", "B", };
             var modifiers = new[] { "", "'", "2" };
-            var moves = Enumerable.Range(0, amount)
-                .Select(x => Bot.Random.Choose(turns) + Bot.Random.Choose(modifiers))
-                .JoinString(" ");
+            var moves = new Range(amount).Select(x => Bot.Random.Choose(turns) + Bot.Random.Choose(modifiers)).JoinString(" ");
 
             Time = -amount; // Done before so it saves the game at 0
             if (!TryDoMoves(moves)) throw new Exception("Invalid generated shuffle sequence");
@@ -263,9 +262,7 @@ namespace PacManBot.Games.Concrete
 
         public string[] GetFaceRows(int faceIndex)
         {
-            var emojis = Enumerable.Range(faceIndex, 9)
-                .Select(x => ColorEmoji[(int)cube[x]])
-                .ToList();
+            var emojis = new Range(faceIndex, faceIndex + 9).Select(x => ColorEmoji[(int)cube[x]]).ToList();
 
             string[] rows = emojis.Split(3).Select(x => string.Join("", x)).ToArray();
             return rows;

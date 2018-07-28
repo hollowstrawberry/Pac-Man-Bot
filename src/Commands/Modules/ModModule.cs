@@ -32,8 +32,7 @@ namespace PacManBot.Commands.Modules
         [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory)]
         public async Task ClearCommandMessages(int amount = 10)
         {
-            var messages = (await Context.Channel.GetMessagesAsync(amount).FlattenAsync())
-                .Select(x => x as IUserMessage).Where(x => x != null);
+            var messages = (await Context.Channel.GetMessagesAsync(amount).FlattenAsync()).OfType<IUserMessage>();
 
             var toDelete = messages.Where(x => x.Author.Id == Context.Client.CurrentUser.Id);
 

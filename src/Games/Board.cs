@@ -4,6 +4,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using PacManBot.Utils;
 
 namespace PacManBot.Games
 {
@@ -27,7 +28,7 @@ namespace PacManBot.Games
         public int Height => values.GetLength(1);
 
         /// <summary>Enumerates through all positions in the board in order.</summary>
-        public IEnumerable<Pos> Positions => Enumerable.Range(0, Width * Height).Select(i => new Pos(i % Width, i / Width));
+        public IEnumerable<Pos> Positions => new Range(Width * Height).Select(i => new Pos(i % Width, i / Width));
 
 
 

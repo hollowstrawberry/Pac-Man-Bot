@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using Newtonsoft.Json;
 
 namespace PacManBot.Utils
 {
@@ -33,7 +32,7 @@ namespace PacManBot.Utils
         /// <exception cref="ArgumentNullException"/>
         public LoopedList(IEnumerable<T> elements)
         {
-            list = new List<T>(list ?? throw new ArgumentNullException(nameof(list)));
+            list = new List<T>(elements ?? throw new ArgumentNullException(nameof(list)));
         }
 
 
@@ -46,11 +45,11 @@ namespace PacManBot.Utils
         }
 
 
-        /// <summary>Returns the index, adjusted to loop around in case it's out of bounds from this list. 
+        /// <summary>Returns an index adjusted to loop around in case it's out of bounds from this list. 
         /// Indices are looped around automatically when accessing an element in the list.</summary>
         public int Wrapped(int index)
         {
-            if (Count == 0) throw new InvalidOperationException("List contains no elements");
+            if (Count == 0) throw new InvalidOperationException("List contains no elements.");
 
             index %= Count;
             if (index < 0) index += Count;

@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using System.Linq;
 using System.Collections.Generic;
 using Discord;
 using Discord.WebSocket;
@@ -187,15 +188,7 @@ namespace PacManBot.Games.Concrete
 
         private static List<Pos> EmptyCells(Board<Player> board)
         {
-            var empty = new List<Pos>();
-            for (int y = 0; y < board.Height; y++)
-            {
-                for (int x = 0; x < board.Width; x++)
-                {
-                    if (board[x, y] == Player.None) empty.Add((x, y));
-                }
-            }
-            return empty;
+            return board.Positions.Where(p => board[p] == Player.None).ToList();
         }
     }
 }

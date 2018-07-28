@@ -4,6 +4,7 @@ using System.Text;
 using System.Collections.Generic;
 using Discord;
 using Discord.WebSocket;
+using PacManBot.Utils;
 using PacManBot.Constants;
 using PacManBot.Extensions;
 
@@ -221,17 +222,7 @@ namespace PacManBot.Games.Concrete
 
         private static List<int> AvailableColumns(Board<Player> board)
         {
-            var available = new List<int>();
-            for (int x = 0; x < Columns; x++)
-            {
-                bool full = true;
-                for (int y = 0; y < Rows; y++)
-                {
-                    if (board[x, y] == Player.None) full = false;
-                }
-                if (!full) available.Add(x);
-            }
-            return available;
+            return new Range(Columns).Where(x => new Range(Rows).Any(y => board[x, y] == Player.None)).ToList();
         }
     }
 }

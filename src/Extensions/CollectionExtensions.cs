@@ -20,14 +20,11 @@ namespace PacManBot.Extensions
         /// that satisfies the specified condition if there is one, otherwise it has no value.</summary>
         public static T? FirstOrNull<T>(this IEnumerable<T> source, Func<T, bool> predicate) where T : struct
         {
-            try
+            foreach (var item in source)
             {
-                return source.First(predicate);
+                if (predicate(item)) return item;
             }
-            catch (InvalidOperationException)
-            {
-                return null;
-            }
+            return null;
         }
 
 
@@ -61,6 +58,17 @@ namespace PacManBot.Extensions
         }
 
 
+        /// <summary>Returns the index of an element contained in a list if it is found, otherwise returns -1.</summary>
+        public static int IndexOf<T>(this IReadOnlyList<T> list, T element) // IList doesn't implement IndexOf for some reason
+        {
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (list[i].Equals(element)) return i;
+            }
+            return -1;
+        }
+
+
         /// <summary>Removes and returns the last element of a list.</summary>
         public static T Pop<T>(this IList<T> list)
         {
@@ -88,14 +96,10 @@ namespace PacManBot.Extensions
         }
 
 
-        /// <summary>Returns a <see cref="LoopedList{T}"/> that is a wrapper for an existing list.</summary>
-        public static LoopedList<T> Looping<T>(this List<T> list) => new LoopedList<T>(list);
-
-
         /// <summary>Shifts all the elements of a list by the given amount.</summary>
         public static List<T> Shift<T>(this List<T> list, int amount)
         {
-            var old = list.Looping().Copy();
+            var old = new LoopedList<T>(list).Copy();
             for (int i = 0; i < list.Count; i++)
             {
                 list[i] = old[i + amount];

@@ -2,6 +2,7 @@
 using System.Linq;
 using Discord;
 using Discord.WebSocket;
+using PacManBot.Utils;
 using PacManBot.Constants;
 using PacManBot.Extensions;
 
@@ -28,7 +29,7 @@ namespace PacManBot.Games
         public virtual bool BotTurn => State == State.Active && (User(Turn)?.IsBot ?? false);
 
         /// <summary>Whether this game's players are all bots.</summary>
-        public virtual bool AllBots => Enumerable.Range(0, UserId.Length).All(x => User(x)?.IsBot ?? false);
+        public virtual bool AllBots => new Range(UserId.Length).All(x => User(x)?.IsBot ?? false);
 
 
         /// <summary>Retrieves the user at the specified index. Null if unreachable or not found.</summary>

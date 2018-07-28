@@ -94,7 +94,7 @@ namespace PacManBot.Games.Concrete
                 {
                     throw new InvalidMapException("Map exceeds the maximum length of 1500 characters");
                 }
-                if (!value.ContainsAny(' ', CharSoftWall, CharPellet, CharPowerPellet, CharSoftWallPellet))
+                if (!value.ContainsAny(NonSolidChars))
                 {
                     throw new InvalidMapException("Map is completely solid");
                 }
@@ -214,26 +214,26 @@ namespace PacManBot.Games.Concrete
             if (newMap == null) newMap = Content.gameMap;
             else custom = true;
 
-            FullMap = newMap; // Converts string into char[,]
+            FullMap = newMap;
 
             maxPellets = newMap.Count(c => c == CharPellet || c == CharPowerPellet || c == CharSoftWallPellet);
             pellets = maxPellets;
 
             // Game objects
-            Pos playerPos = FindChar(CharPlayer).GetValueOrDefault();
-            pacMan = new PacMan(playerPos);
+            pacMan = new PacMan(FindChar(CharPlayer).GetValueOrDefault());
             map[pacMan.pos] = ' ';
 
             fruitSpawnPos = FindChar(CharFruit) ?? (-1, -1);
             if (fruitSpawnPos.x >= 0) map[fruitSpawnPos] = ' ';
 
-            ghosts = new List<Ghost>();
             Pos[] ghostCorners = { // Matches original game
                 (map.Width - 3, -3),
                 (2, -3),
                 (map.Width - 1, map.Height),
                 (0, map.Height)
             };
+
+            ghosts = new List<Ghost>();
             for (int i = 0; i < 4; i++)
             {
                 Pos? ghostPos = FindChar(CharGhost);
@@ -337,7 +337,7 @@ namespace PacManBot.Games.Concrete
                     }
 
                     score += (tile == CharPowerPellet) ? 50 : 10;
-                    map[pacMan.pos.x, pacMan.pos.y] = (tile == CharSoftWallPellet) ? CharSoftWall : ' ';
+                    map[pacMan.pos] = (tile == CharSoftWallPellet) ? CharSoftWall : ' ';
                     if (tile == CharPowerPellet)
                     {
                         pacMan.power += PowerTime;
@@ -534,8 +534,7 @@ namespace PacManBot.Games.Concrete
 
         public override EmbedBuilder GetEmbed(bool showHelp = true)
         {
-            if (State == State.Cancelled && Channel is IGuildChannel) return CancelledEmbed();
-            return null;
+            return State == State.Cancelled && Channel is IGuildChannel ? CancelledEmbed() : null;
         }
 
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace PacManBot.Extensions
 {
@@ -8,8 +9,7 @@ namespace PacManBot.Extensions
     {
         /// <summary>Returns the given text if the condition is true, otherwise returns an empty string.
         /// Helps a little with long text concatenation.</summary>
-        public static string If(this string text, bool condition)
-            => condition ? text : "";
+        public static string If(this string text, bool condition) => condition ? text : "";
 
 
         /// <summary>Retrieves a string with the end trimmed off if the original exceeds the provided maximum length.</summary>
@@ -23,9 +23,7 @@ namespace PacManBot.Extensions
 
 
         /// <summary>Determines whether the beginning or end of a string matches the specified value.</summary>
-        public static bool StartsOrEndsWith(this string text, string value)
-            => text.StartsWith(value) || text.EndsWith(value);
-
+        public static bool StartsOrEndsWith(this string text, string value) => text.StartsWith(value) || text.EndsWith(value);
 
         /// <summary>Determines whether the beginning or end of a string matches the specified value
         /// when compared using the specified comparison option.</summary>
@@ -34,18 +32,26 @@ namespace PacManBot.Extensions
 
 
         /// <summary>Whether any of the provided values occur within a string.</summary>
-        public static bool ContainsAny(this string text, params string[] values)
-            => values.Any(text.Contains);
+        public static bool ContainsAny(this string text, params string[] values) => values.Any(text.Contains);
 
+        /// <summary>Whether any of the values in a collection occur within a string.</summary>
+        public static bool ContainsAny(this string text, IEnumerable<string> values) => values.Any(text.Contains);
 
         /// <summary>Whether any of the provided characters occur within a string.</summary>
-        public static bool ContainsAny(this string text, params char[] values)
-            => values.Select(x => x.ToString()).Any(text.Contains);
+        public static bool ContainsAny(this string text, params char[] values) => values.Any(text.Contains);
+
+        /// <summary>Whether any of the characters in a collection occur within a string.</summary>
+        public static bool ContainsAny(this string text, IEnumerable<char> values) => values.Any(text.Contains);
 
 
         /// <summary>Replaces all occurrences of the specified "before" values,
         /// and replaces them with their corresponding "after" values, inside a string.</summary>
         public static string ReplaceMany(this string text, params (string before, string after)[] replacements)
+            => text.ReplaceMany((IEnumerable<(string, string)>)replacements);
+
+        /// <summary>Replaces all occurrences of the specified "before" values,
+        /// and replaces them with their corresponding "after" values, inside a string.</summary>
+        public static string ReplaceMany(this string text, IEnumerable<(string before, string after)> replacements)
         {
             var sb = new StringBuilder(text);
             foreach (var (before, after) in replacements) sb.Replace(before, after);

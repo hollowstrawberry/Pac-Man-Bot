@@ -32,11 +32,11 @@ namespace PacManBot.Extensions
 
 
         /// <summary>Returns a random element from the given list.</summary>
-        public static T Choose<T>(this Random random, IList<T> values)
+        public static T Choose<T>(this Random random, IReadOnlyList<T> values)
         {
             switch (values.Count)
             {
-                case 0: return default;
+                case 0: throw new InvalidOperationException("Can't choose an element from an empty list.");
                 case 1: return values[0];
                 default: return values[random.Next(values.Count)];
             }

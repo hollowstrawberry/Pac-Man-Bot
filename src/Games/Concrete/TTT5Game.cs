@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using Discord;
 using Discord.WebSocket;
+using PacManBot.Utils;
 using PacManBot.Constants;
 using PacManBot.Extensions;
 
@@ -247,7 +248,7 @@ namespace PacManBot.Games.Concrete
         }
 
 
-        private List<Pos> TryCompleteFlyingLines(Player player) // A flying line is when there is a line of 3 in the center with the extremes empty
+        private List<Pos> TryCompleteFlyingLines(Player player) // A flying line is when there is a line of 3 in the center with the borders empty
         {
             uint count;
             Pos? missing;
@@ -304,37 +305,19 @@ namespace PacManBot.Games.Concrete
 
         private bool FullColumn(int x)
         {
-            bool full = true;
-            for (int y = 0; y < board.Height; y++)
-            {
-                if (board[x, y] == Player.None) full = false;
-            }
-            return full;
+            return new Range(board.Height).All(y => board[x, y] != Player.None);
         }
 
 
         private bool FullRow(int y)
         {
-            bool full = true;
-            for (int x = 0; x < board.Width; x++)
-            {
-                if (board[x, y] == Player.None) full = false;
-            }
-            return full;
+            return new Range(board.Width).All(x => board[x, y] != Player.None);
         }
 
 
         private static List<Pos> EmptyCells(Board<Player> board)
         {
-            var empty = new List<Pos>();
-            for (int y = 0; y < board.Height; y++)
-            {
-                for (int x = 0; x < board.Width; x++)
-                {
-                    if (board[x, y] == Player.None) empty.Add((x, y));
-                }
-            }
-            return empty;
+            return board.Positions.Where(p => board[p] == Player.None).ToList();
         }
     }
 }
