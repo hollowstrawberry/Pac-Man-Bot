@@ -16,7 +16,7 @@ namespace PacManBot.Services
     {
         private readonly string[] logExclude;
 
-        private const int WriteAttempts = 1000;
+        private const int WriteAttempts = 10;
         public const string LogDirectory = "logs/";
         public string LogFile => $"{LogDirectory}{DateTime.Now:yyyy-MM-dd}.txt";
 
@@ -32,7 +32,7 @@ namespace PacManBot.Services
 
 
         /// <summary>Logs an entry to the console and to disk.</summary>
-        public Task Log(LogMessage message)
+        public async Task Log(LogMessage message)
         {
             if (!Directory.Exists(LogDirectory)) Directory.CreateDirectory(LogDirectory);
             if (!File.Exists(LogFile)) File.Create(LogFile).Dispose();
@@ -41,7 +41,7 @@ namespace PacManBot.Services
                 ((message.Message?.ContainsAny(logExclude) ?? false)
                 || (message.Exception?.ToString().ContainsAny(logExclude) ?? false)))
             {
-                return Task.CompletedTask;
+                return;
             }
 
             string logText = $"{DateTime.Now:hh:mm:ss} [{message.Severity}] " +
@@ -51,19 +51,25 @@ namespace PacManBot.Services
             {
                 try
                 {
-                    File.AppendAllTextAsync(LogFile, $"{logText}\n"); // Write the log text to a file
+                    await File.AppendAllTextAsync(LogFile, $"{logText}\n"); // Write the log text to a file
                     break;
                 }
-                catch (IOException) when (i < WriteAttempts) { Task.Delay(2); }
+                catch (IOException) when (i < WriteAttempts) { await Task.Delay(1); }
             }
 
-            return Console.Out.WriteLineAsync(logText); // Write the log text to the console
+            await Console.Out.WriteLineAsync(logText); // Write the log text to the console
         }
 
         /// <summary>Logs an entry to the console and to disk.</summary>
+        public Task Log(LogSeverity severity, string source, string message) => Log(new LogMessage(severity, source, message));
+
+        /// <summary>Logs an entry to the console and to disk, using the default log source name.</summary>
         public Task Log(LogSeverity severity, string message) => Log(new LogMessage(severity, LogSource.Bot, message));
 
-        /// <summary>Logs an entry to the console and to disk.</summary>
-        public Task Log(LogSeverity severity, string source, string message) => Log(new LogMessage(severity, source, message));
+        /// <summary>Logs an entry to the console and to disk, using the default log severity.</summary>
+        public Task Log(string source, string message) => Log(new LogMessage(LogSeverity.Verbose, source, message));
+
+        /// <summary>Logs an entry to the console and to disk, using the default log severity and name source.</summary>
+        public Task Log(string message) => Log(new LogMessage(LogSeverity.Verbose, LogSource.Bot, message));
     }
 }
