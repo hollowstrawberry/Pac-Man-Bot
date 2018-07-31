@@ -36,6 +36,10 @@ namespace PacManBot.Services
         /// <summary>Enumerates through all active user-specific games concurrently.</summary>
         public IEnumerable<IUserGame> AllUserGames => userGames.Select(x => x.Value);
 
+        /// <summary>Enumerates through all active games of any type.</summary>
+        public IEnumerable<IBaseGame> AllGames => AllChannelGames.Cast<IBaseGame>().Concat(AllUserGames.Cast<IBaseGame>());
+
+
 
         public GameService(LoggingService logger)
         {
@@ -79,7 +83,7 @@ namespace PacManBot.Services
 
         /// <summary>Permanently deletes a game from the collection of channel games or user games, 
         /// as well as its savefile if there is one.</summary>
-        public void Remove(IBaseGame game)
+        public void Remove(IBaseGame game, bool log = true)
         {
             try
             {
@@ -99,7 +103,10 @@ namespace PacManBot.Services
                     success = games.TryRemove(cGame.ChannelId);
                 }
 
-                if (success) logger.Log(LogSeverity.Verbose, LogSource.Storage, $"Removed {game.GetType().Name} at {game.IdentifierId()}");
+                if (success && log)
+                {
+                    logger.Log(LogSeverity.Verbose, LogSource.Storage, $"Removed {game.GetType().Name} at {game.IdentifierId()}");
+                }
             }
             catch (Exception e)
             {

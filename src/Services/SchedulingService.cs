@@ -81,13 +81,28 @@ namespace PacManBot.Services
             var now = DateTime.Now;
             int count = 0;
 
-            foreach (var game in games.AllChannelGames.Where(g => now - g.LastPlayed > g.Expiry).ToArray())
+            var removedChannelGames = new List<IChannelGame>();
+
+            var expiredGames = games.AllGames.Where(g => now - g.LastPlayed > g.Expiry).ToArray();
+            foreach (var game in expiredGames)
             {
                 count++;
                 game.State = State.Cancelled;
-                games.Remove(game);
+                games.Remove(game, false);
 
-                if (client?.LoginState == LoginState.LoggedIn)
+                if (game is IChannelGame cGame) removedChannelGames.Add(cGame);
+            }
+
+
+            if (count > 0)
+            {
+                await logger.Log(LogSeverity.Info, LogSource.Scheduling, $"Removed {count} expired game{"s".If(count > 1)}");
+            }
+
+
+            if (client?.LoginState == LoginState.LoggedIn)
+            {
+                foreach (var game in removedChannelGames)
                 {
                     try
                     {
@@ -96,19 +111,6 @@ namespace PacManBot.Services
                     }
                     catch (HttpException) { } // Something happened to the message, we can ignore it
                 }
-            }
-
-            foreach (var game in games.AllUserGames.Where(g => now - g.LastPlayed > g.Expiry).ToArray())
-            {
-                count++;
-                game.State = State.Cancelled;
-                games.Remove(game);
-            }
-
-
-            if (count > 0)
-            {
-                await logger.Log(LogSeverity.Info, LogSource.Scheduling, $"Removed {count} expired game{"s".If(count > 1)}");
             }
         }
     }
