@@ -15,6 +15,9 @@ namespace PacManBot.Games
     /// </summary>
     public abstract class MultiplayerGame : ChannelGame, IMultiplayerGame
     {
+        private IUser[] _users;
+
+
         /// <summary>The current <see cref="Player"/> whose turn it is.</summary>
         public virtual Player Turn { get; protected set; }
 
@@ -32,11 +35,11 @@ namespace PacManBot.Games
         public virtual bool AllBots => new Range(UserId.Length).All(x => User(x)?.IsBot ?? false);
 
 
-        /// <summary>Retrieves the user at the specified index. Null if unreachable or not found.</summary>
-        public IUser User(int i = 0)
+        /// <summary>Retrieves the user at the specified index at the time of game creation. Null if unreachable or not found.</summary>
+        public virtual IUser User(int i = 0)
         {
             if (i < 0 || i >= UserId.Length) return null;
-            return client.GetUser(UserId[i]);
+            return _users[i] ?? (_users[i] = client.GetUser(UserId[i]));
         }
 
 
@@ -85,7 +88,11 @@ namespace PacManBot.Games
             SetServices(services);
 
             ChannelId = channelId;
-            if (players != null) UserId = players.Select(x => x.Id).ToArray();
+            if (players != null)
+            {
+                UserId = players.Select(x => x.Id).ToArray();
+                _users = new IUser[UserId.Length];
+            }
             LastPlayed = DateTime.Now;
             Turn = 0;
             Winner = Player.None;

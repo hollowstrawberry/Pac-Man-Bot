@@ -154,9 +154,14 @@ namespace PacManBot.Commands.Modules
             => await RunMultiplayerGame<UnoGame>(new[] { Context.User as SocketGuildUser }.Concatenate(startingPlayers));
 
 
+        [Command("uno"), Priority(-3)]
+        [Remarks("Play Uno in a 1v1 match with the bot")]
+        [RequireContext(ContextType.DM)]
+        public async Task StartUnoDm() => await RunMultiplayerGame<UnoGame>(Context.User, Context.Client.CurrentUser);
+
+
         [Command("uno help"), Alias("uno h", "uno rules", "uno commands"), Priority(1), HideHelp]
         [Summary("Gives rules and commands for the Uno game.")]
-        [RequireContext(ContextType.Guild)]
         public async Task UnoHelp()
         {
             var summary = typeof(MoreGamesModule).GetMethod(nameof(StartUno)).GetCustomAttribute<SummaryAttribute>();

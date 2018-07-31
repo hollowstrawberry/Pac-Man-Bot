@@ -11,6 +11,10 @@ namespace PacManBot.Games
     /// </summary>
     public abstract class ChannelGame : BaseGame, IChannelGame
     {
+        private ISocketMessageChannel _channel;
+        private IUserMessage _message;
+
+
         /// <summary>Discord snowflake ID of the channel where this game is taking place in.</summary>
         public virtual ulong ChannelId { get; set; }
 
@@ -18,17 +22,22 @@ namespace PacManBot.Games
         public virtual ulong MessageId { get; set; }
 
 
-
         /// <summary>Retrieves the channel where this game is taking place in.</summary>
-        public ISocketMessageChannel Channel => client.GetMessageChannel(ChannelId);
+        public ISocketMessageChannel Channel
+        {
+            get => _channel != null && _channel.Id == ChannelId ? _channel : (_channel = client.GetMessageChannel(ChannelId));
+        }
 
         /// <summary>Retrieves this game's channel's guild. Null when the channel is a DM channel.</summary>
-        public SocketGuild Guild => (client.GetChannel(ChannelId) as SocketGuildChannel)?.Guild;
+        public IGuild Guild => (Channel as IGuildChannel)?.Guild;
+
 
         /// <summary>Retrieves this game's latest message. Null if not retrievable.</summary>
         public async Task<IUserMessage> GetMessage()
         {
-            return MessageId != 0 && Channel != null ? await Channel.GetUserMessageAsync(MessageId) : null;
+            if (MessageId == 0 || Channel == null) return null;
+            if (_message == null || _message.Id != MessageId) return (_message = await Channel.GetUserMessageAsync(MessageId));
+            return _message;
         }
 
 

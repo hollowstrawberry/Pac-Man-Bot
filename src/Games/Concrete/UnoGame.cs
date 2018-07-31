@@ -61,7 +61,7 @@ namespace PacManBot.Games.Concrete
         private Player FollowingTurn => reversed ? PreviousPlayer() : NextPlayer();
         private Player PrecedingTurn => reversed ? NextPlayer() : PreviousPlayer();
 
-        public override bool BotTurn => players.Count > 1 && base.BotTurn;
+        public override bool BotTurn => players.Count > 1 && State == State.Active && CurrentPlayer.User.IsBot;
         public override bool AllBots => players.All(x => x.User?.IsBot ?? false);
         public override ulong[] UserId
         {
@@ -507,13 +507,14 @@ namespace PacManBot.Games.Concrete
             if (State == State.Active)
             {
                 description.Append(
-                    "ᅠ\nSay the name of a card to discard it or \"draw\" to skip a turn." +
-                    "\nYour cards are shown in a DM, say \"cards\" to resend." +
-                    $"\nUse **{prefix}uno join** to join the game.\nUse **{prefix}uno help** for rules and more commands.");
+                    "ᅠ\nSay the name of a card to discard it or \"draw\" to draw another.\n" +
+                    "Your cards are shown in a DM, say \"cards\" to resend.\n".If(Channel is IGuildChannel) +
+                    $"Use **{prefix}uno join** to join the game.\n".If(Channel is IGuildChannel) +
+                    $"Use **{prefix}uno help** for rules and more commands.");
             }
 
 
-            return new EmbedBuilder()
+            var embed = new EmbedBuilder()
             {
                 Title = Winner == Player.None
                     ? $"{(reversed ? "🔼" : "🔽")} {CurrentPlayer.User?.Username}'s turn"
@@ -523,6 +524,10 @@ namespace PacManBot.Games.Concrete
                 Color = RgbCardColor[(int)TopCard.Color],
                 ThumbnailUrl = CurrentPlayer.User?.GetAvatarUrl(),
             };
+
+            if (Channel is IDMChannel) embed.AddField("Your cards", CardsDisplay(players[0]));
+
+            return embed;
         }
 
 
@@ -625,19 +630,21 @@ namespace PacManBot.Games.Concrete
 
 
 
-
-        private void SendCards(UnoPlayer player)
+        private string CardsDisplay(UnoPlayer player)
         {
-            if (player.User == null || player.User.IsBot) return;
+            string cards = player.cards
+                .ToList().Sorted()
+                .GroupBy(x => x.Color)
+                .Select(group => $"{CardColorEmote[(int)group.Key]} {group.JoinString(", ")}")
+                .JoinString("\n");
 
-            var cardsByColor = player.cards.ToList().Sorted().GroupBy(x => x.Color);
+            return cards == "" ? "*None*" : cards;
+        }
 
-            string cardList = "";
-            foreach (var group in cardsByColor)
-            {
-                cardList += $"{CardColorEmote[(int)group.Key]} {string.Join(", ", group)}\n";
-            }
-            cardList += "ᅠ";
+
+        private async void SendCards(UnoPlayer player)
+        {
+            if (player.User == null || player.User.IsBot || Channel is IDMChannel) return;
 
             var embed = new EmbedBuilder
             {
@@ -648,14 +655,14 @@ namespace PacManBot.Games.Concrete
                 Color = RgbCardColor[(int)TopCard.Color],
             };
 
-            embed.AddField("Your cards", cardList.Truncate(1023));
+            embed.AddField("Your cards", CardsDisplay(player).Truncate(1022) + "\nᅠ");
             embed.AddField("Top of the pile", TopCard);
 
             bool resend = false;
             if (player.message == null) resend = true;
             else
             {
-                try { player.message.ModifyAsync(m => m.Embed = embed.Build(), Bot.DefaultOptions).GetAwaiter().GetResult(); }
+                try { await player.message.ModifyAsync(m => m.Embed = embed.Build(), Bot.DefaultOptions); }
                 catch (HttpException) { resend = true; }
             }
 
@@ -663,7 +670,7 @@ namespace PacManBot.Games.Concrete
             {
                 try
                 {
-                    player.message = player.User.SendMessageAsync(embed: embed.Build(), options: Bot.DefaultOptions).GetAwaiter().GetResult();
+                    player.message = await player.User.SendMessageAsync(embed: embed.Build(), options: Bot.DefaultOptions);
                 }
                 catch (HttpException e) when (e.DiscordCode == 50007) // Can't send DMs
                 {

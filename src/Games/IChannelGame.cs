@@ -20,7 +20,7 @@ namespace PacManBot.Games
         ISocketMessageChannel Channel { get; }
 
         /// <summary>Retrieves this game's channel's guild. Null when the channel is a DM channel.</summary>
-        SocketGuild Guild { get; }
+        IGuild Guild { get; }
 
         /// <summary>Retrieves this game's latest message.</summary>
         Task<IUserMessage> GetMessage();
