@@ -225,7 +225,7 @@ namespace PacManBot.Games.Concrete
             string[] rowsLeft  = GetFaceRows(Left);
             string[] rowsDown  = GetFaceRows(Down);
             string[] rowsBack  = GetFaceRows(Back);
-            string emptyRow = CustomEmoji.Empty.Multiply(3);
+            string emptyRow = CustomEmoji.Empty.Repeat(3);
 
             for (int i = 0; i < 3; i++)
             {

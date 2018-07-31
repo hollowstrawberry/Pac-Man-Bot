@@ -229,18 +229,16 @@ namespace PacManBot.Commands.Modules
                 await ReplyAsync($"{(self ? "You're" : "They're")} not playing!");
                 return;
             }
-            if (game.UserId.Length <= 2)
-            {
-                await CancelGame();
-                return;
-            }
             if (!self && !user.IsBot && (game.UserId[game.Turn] != user.Id || (DateTime.Now - game.LastPlayed) < TimeSpan.FromMinutes(1)))
             {
                 await ReplyAsync("To remove another user they have to be inactive for at least 1 minute during their turn.");
             }
 
             game.RemovePlayer(user);
-            await MoveGame();
+
+            if (game.AllBots || game.UserId.Length < 2) await CancelGame();
+            else await MoveGame();
+
             await AutoReactAsync();
         }
     }

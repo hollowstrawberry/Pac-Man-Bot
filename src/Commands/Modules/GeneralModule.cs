@@ -297,7 +297,7 @@ namespace PacManBot.Commands.Modules
         public async Task BlobDance(ulong number = 0)
         {
             if (number < 1) await Context.Message.AddReactionAsync(CustomEmoji.ERapidBlobDance, DefaultOptions);
-            else if (number <= 10) await ReplyAsync(CustomEmoji.RapidBlobDance.Multiply((int)number));
+            else if (number <= 10) await ReplyAsync(CustomEmoji.RapidBlobDance.Repeat((int)number));
             else if (number <= 1000000) await ReplyAsync("Are you insane?");
             else // Message ID
             {

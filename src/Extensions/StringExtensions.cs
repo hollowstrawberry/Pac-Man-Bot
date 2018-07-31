@@ -59,8 +59,20 @@ namespace PacManBot.Extensions
         }
 
 
+        /// <summary>
+        /// Returns a Python-like string slice that is between the specified boundaries and takes characters by the specified step.
+        /// </summary>
+        /// <param name="start">The starting index of the slice. Loops around if negative.</param>
+        /// <param name="stop">The index the slice goes up to, excluding itself. Loops around if negative.</param>
+        /// <param name="step">The increment between each character index. Traverses backwards if negative.</param>
+        public static string Slice(this string str, int? start = null, int? stop = null, int step = 1)
+        {
+            return CollectionExtensions.Slice(str, start, stop, step).JoinString();
+        }
+
+
         /// <summary>Returns a string with the original value repeated the specified amount of times.</summary>
-        public static string Multiply(this string value, int amount)
+        public static string Repeat(this string value, int amount)
         {
             if (amount == 1) return value;
 

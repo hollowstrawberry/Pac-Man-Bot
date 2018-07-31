@@ -15,6 +15,12 @@ namespace PacManBot.Extensions
             return string.Join(separator, values);
         }
 
+        /// <summary>Fluid method that joins the members of a collection using the specified separator between them.</summary>
+        public static string JoinString<T>(this IEnumerable<T> values, char separator)
+        {
+            return string.Join(separator, values);
+        }
+
 
         /// <summary>Returns a <see cref="Nullable{T}"/> that has the value of the first element 
         /// that satisfies the specified condition if there is one, otherwise it has no value.</summary>

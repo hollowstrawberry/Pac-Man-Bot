@@ -174,7 +174,7 @@ namespace PacManBot.Games.Concrete
                 var sb = new StringBuilder();
                 for (int y = 0; y < 5; y++)
                 {
-                    sb.Append($"{CustomEmoji.Empty}".Multiply(2));
+                    sb.Append($"{CustomEmoji.Empty}".Repeat(2));
                     for (int x = 0; x < 3; x++)
                     {
                         if (x == 1 && y == 2) sb.Append(CardTypeEmote[(int)Type]);
@@ -182,7 +182,7 @@ namespace PacManBot.Games.Concrete
                     }
                     sb.Append('\n');
                 }
-                sb.Append($"{CustomEmoji.Empty}".Multiply(2));
+                sb.Append($"{CustomEmoji.Empty}".Repeat(2));
                 sb.Append(ToString());
 
                 return sb.ToString();
@@ -695,7 +695,9 @@ namespace PacManBot.Games.Concrete
             drawPile.AddRange(player.cards);
             players.Remove(player);
 
-            while (Turn >= players.Count || !AllBots && CurrentPlayer.User.IsBot) Turn = FollowingTurn;
+            if (AllBots) return;
+
+            while (Turn >= players.Count || CurrentPlayer.User.IsBot) Turn = FollowingTurn;
         }
 
 

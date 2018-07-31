@@ -60,7 +60,7 @@ namespace PacManBot.Games
         {
             get
             {
-                if (value >= 0 && value <= RgbColors.Length) return RgbColors[value];
+                if (value >= 0 && value < RgbColors.Length) return RgbColors[value];
                 if (value == Tie) return Colors.Green;
                 return Colors.Gray;
             }
@@ -72,7 +72,7 @@ namespace PacManBot.Games
         {
             get
             {
-                if (value >= 0 && value <= ColorNames.Length) return ColorNames[value];
+                if (value >= 0 && value < ColorNames.Length) return ColorNames[value];
                 return "???";
             }
         }
