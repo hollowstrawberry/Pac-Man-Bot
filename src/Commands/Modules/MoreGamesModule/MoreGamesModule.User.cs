@@ -3,6 +3,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Discord;
+using Discord.Net;
 using Discord.Commands;
 using Discord.WebSocket;
 using PacManBot.Constants;
@@ -13,15 +14,102 @@ namespace PacManBot.Commands.Modules
 {
     public partial class MoreGamesModule
     {
-        [AttributeUsage(AttributeTargets.Method)]
-        private class PetCommandAttribute : Attribute
+        [Command("rubik"), Alias("rubiks", "rubix", "rb", "rbx")]
+        [Remarks("Your personal rubik's cube")]
+        [Summary("Gives you a personal Rubik's Cube that you can take to any server or in DMs with the bot.\n\n__**Commands:**__" +
+         "\n**{prefix}rubik [sequence]** - Execute a sequence of turns to apply on the cube." +
+         "\n**{prefix}rubik moves** - Show notation help to control the cube." +
+         "\n**{prefix}rubik scramble** - Scrambles the cube pieces completely." +
+         "\n**{prefix}rubik reset** - Delete the cube, going back to its solved state." +
+         "\n**{prefix}rubik showguide** - Toggle the help displayed below the cube. For pros.")]
+        public async Task RubiksCube([Remainder] string input = "")
         {
-            public string[] Names { get; }
-            public PetCommandAttribute(params string[] names)
+            var cube = Games.GetForUser<RubiksGame>(Context.User.Id);
+
+            if (cube == null)
             {
-                Names = names;
+                cube = new RubiksGame(Context.Channel.Id, Context.User.Id, Services);
+                Games.Add(cube);
+            }
+
+            bool removeOld = false;
+            switch (input.ToLower())
+            {
+                case "moves":
+                case "notation":
+                    string help =
+                        $"You can give a sequence of turns using the **{Prefix}rubik** command, " +
+                        $"with turns separated by spaces.\nYou can do **{Prefix}rubik help** for a few more commands.\n\n" +
+                        "**Simple turns:** U, D, L, R, F, B\nThese are the basic clockwise turns of the cube. " +
+                        "They stand for the Up, Down, Left, Right, Front and Back sides.\n" +
+                        "**Counterclockwise turns:** Add `'`. Example: U', R'\n" +
+                        "**Double turns:** Add `2`. Example: F2, D2\n" +
+                        "**Wide turns:** Add `w`. Example: Dw, Lw2, Uw'\n" +
+                        "These rotate two layers at the same time in the direction of the given face.\n\n" +
+                        "**Slice turns:** M E S\n" +
+                        "These rotate the middle layer corresponding with L, D and B respectively.\n\n" +
+                        "**Cube rotations:** x, y, z\n" +
+                        "These rotate the entire cube in the direction of R, U and F respectively. " +
+                        "They can also be counterclockwise or double.";
+
+                    await ReplyAsync(help);
+                    return;
+
+
+                case "h":
+                case "help":
+                    var summary = typeof(MoreGamesModule).GetMethod(nameof(RubiksCube)).GetCustomAttribute<SummaryAttribute>();
+                    await ReplyAsync(summary.Text.Replace("{prefix}", $"{Prefix}"));
+                    return;
+
+
+                case "reset":
+                    Games.Remove(cube);
+                    await AutoReactAsync();
+                    return;
+
+
+                case "scramble":
+                case "shuffle":
+                    cube.Scramble();
+                    removeOld = true;
+                    break;
+
+
+                case "showguide":
+                    cube.ShowHelp = !cube.ShowHelp;
+                    if (cube.ShowHelp) await AutoReactAsync();
+                    else await ReplyAsync("❗ You just disabled the help displayed below the cube.\n" +
+                                          "Consider re-enabling it if you're not used to the game.");
+                    break;
+
+
+                default:
+                    if (!string.IsNullOrEmpty(input))
+                    {
+                        if (!cube.TryDoMoves(input))
+                        {
+                            await ReplyAsync($"{CustomEmoji.Cross} Invalid sequence of moves. " +
+                                             $"Do **{Prefix}rubik help** for commands.");
+                            return;
+                        }
+                    }
+                    removeOld = true;
+                    break;
+            }
+
+            var oldMessage = await cube.GetMessage();
+            var newMessage = await ReplyAsync(cube.GetContent(), cube.GetEmbed(Context.Guild));
+            cube.MessageId = newMessage.Id;
+            cube.ChannelId = Context.Channel.Id;
+
+            if (removeOld && oldMessage != null && oldMessage.Channel.Id == Context.Channel.Id)
+            {
+                try { await oldMessage.DeleteAsync(DefaultOptions); }
+                catch (HttpException) { }
             }
         }
+
 
 
 
@@ -68,6 +156,19 @@ namespace PacManBot.Commands.Modules
                 }
 
                 await (Task)command.Invoke(this, new object[] { pet, args });
+            }
+        }
+
+
+
+
+        [AttributeUsage(AttributeTargets.Method)]
+        private class PetCommandAttribute : Attribute
+        {
+            public string[] Names { get; }
+            public PetCommandAttribute(params string[] names)
+            {
+                Names = names;
             }
         }
 
@@ -142,8 +243,10 @@ namespace PacManBot.Commands.Modules
             if (pet.Play()) await Context.Message.AddReactionAsync(Bot.Random.Choose(PetGame.PlayEmotes).ToEmoji());
             else
             {
-                string message = pet.energy.Ceiling() >= 5 ? "Your pet doesn't want to play anymore! (-1 happiness)" 
-                                                           : "Your pet is too tired to play! It needs 5 energy or more.";
+                string message = pet.energy.Ceiling() >= 5
+                    ? "Your pet doesn't want to play anymore! (-1 happiness)" 
+                    : "Your pet is too tired to play! It needs 5 energy or more.";
+
                 await ReplyAsync($"{CustomEmoji.Cross} {message}");
             }
         }
@@ -169,8 +272,7 @@ namespace PacManBot.Commands.Modules
             }
             else
             {
-                string message = pet.asleep ? "Your pet is already sleeping."
-                                            : "Your pet is now asleep.";
+                string message = pet.asleep ? "Your pet is already sleeping." : "Your pet is now asleep.";
                 await ReplyAsync($"{Bot.Random.Choose(PetGame.SleepEmotes)} {message}");
                 if (!pet.asleep) pet.ToggleSleep();
             }
@@ -292,42 +394,10 @@ namespace PacManBot.Commands.Modules
             }
             else
             {
-                await ReplyAsync($"❗ Are you sure you want to delete {pet.PetName}? It will be gone forever, along with your stats and achievements, " +
-                                 $"and you can't get it back. Do **{Prefix}pet release {pet.PetName}** to release.");
+                await ReplyAsync(
+                    $"❗ Are you sure you want to delete {pet.PetName}? It will be gone forever, along with your stats and achievements, " +
+                    $"and you can't get it back. Do **{Prefix}pet release {pet.PetName}** to release.");
             }
         }
-
-
-
-
-
-
-
-        // You know, my intention when first creating this bot months ago was
-        // to make a fun bot that produced the least amount of spam possible.
-        // It was a huge mistake from my part to explicitly incentivize spamming.
-        // I'm removing the petting leaderboard, and adding more restrictions to petting.
-        // Pet on, my pet gods. Pet on. /s
-
-        //[PetCommand("top", "rank", "lb", "ranking", "leaderboard", "best")]
-        //public async Task PetRanking(PetGame pet, string args)
-        //{
-        //    var pets = storage.UserGames.Select(x => x as PetGame).Where(x => x != null).OrderByDescending(x => x.TimesPet);
-
-        //    int pos = 1;
-        //    var ranking = new StringBuilder();
-        //    ranking.Append($"**Out of {pets.Count()} pets:**\n");
-        //    foreach (var p in pets.Take(10))
-        //    {
-        //        ranking.Append($"\n**{pos}.** {p.TimesPet} pettings - ");
-        //        if (args == "id") ranking.Append($"{p.OwnerId} ");
-        //        else ranking.Append($"`{p.Owner?.Username.Replace("`", "´") ?? "Unknown"}'s {p.PetName.Replace("`", "´")}` ");
-        //        ranking.Append(string.Join(' ', p.achievements.GetIcons(showHidden: true, highest: true)));
-        //        pos++;
-        //    }
-
-        //    await ReplyAsync(ranking.ToString().Truncate(2000));
-
-        //}
     }
 }
