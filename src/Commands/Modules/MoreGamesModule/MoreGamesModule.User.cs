@@ -62,8 +62,9 @@ namespace PacManBot.Commands.Modules
                     await ReplyAsync(summary.Text.Replace("{prefix}", $"{Prefix}"));
                     return;
 
-
+                
                 case "reset":
+                case "solve":
                     Games.Remove(cube);
                     await AutoReactAsync();
                     return;
@@ -312,13 +313,9 @@ namespace PacManBot.Commands.Modules
             }
             else
             {
-                try
+                if (!pet.TrySetImageUrl(url))
                 {
-                    pet.PetImageUrl = url;
-                }
-                catch (FormatException)
-                {
-                    await ReplyAsync($"{CustomEmoji.Cross} Invalid image link!\nYou can try uploading the image yourself.");
+                    await ReplyAsync($"{CustomEmoji.Cross} Invalid image link!\nYou could also upload the image yourself.");
                     return;
                 }
 

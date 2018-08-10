@@ -72,20 +72,7 @@ namespace PacManBot.Games.Concrete
             }
         }
 
-        public string PetImageUrl
-        {
-            get => petImageUrl;
-            set
-            {
-                string url = value?.Trim('<', '>');
-                if (url == null || WebUtil.IsImageUrl(url)) // TODO: don't do this in a property setter
-                {
-                    petImageUrl = url;
-                }
-                else throw new FormatException();
-                UpdateStats();
-            }
-        }
+        public string PetImageUrl => petImageUrl;
 
 
 
@@ -200,8 +187,9 @@ namespace PacManBot.Games.Concrete
                 // Grab all of this object's properties with the achievement attribute, 
                 // assigning whether they've been obtained by the current instance
                 return GetType().GetProperties()
-                    .Select(x => x.GetCustomAttribute<AchievementAttribute>()?.WithObtained((bool)x.GetMethod.Invoke(this, new object[0])))
-                    .Where(x => x != null).ToList().Sorted();
+                    .Select(x => x.GetCustomAttribute<AchievementAttribute>()?.WithObtained((bool)x.GetMethod.Invoke(this, null)))
+                    .Where(x => x != null)
+                    .ToList().Sorted();
             }
 
             public List<string> GetIcons(bool showHidden = false, bool highest = false)
@@ -437,6 +425,19 @@ namespace PacManBot.Games.Concrete
         {
             asleep = !asleep;
             games.Save(this);
+        }
+
+
+        public bool TrySetImageUrl(string text)
+        {
+            string url = text?.Trim('<', '>');
+            if (url == null || WebUtil.IsImageUrl(url))
+            {
+                petImageUrl = url;
+                UpdateStats();
+                return true;
+            }
+            return false;
         }
 
 

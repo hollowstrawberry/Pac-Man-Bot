@@ -8,6 +8,7 @@ using Discord;
 using PacManBot.Utils;
 using PacManBot.Constants;
 using PacManBot.Extensions;
+using System.Collections;
 
 namespace PacManBot.Games.Concrete
 {
@@ -76,15 +77,15 @@ namespace PacManBot.Games.Concrete
 
 
         /// <summary>An object that represents a transformation to perform on the cube,
-        /// based on stickers that need to cycle with one another.</summary>
-        private class RawMove
+        /// based on cycles of sticker indices.</summary>
+        private class RawMove : IEnumerable<LoopedList<int>>
         {
             /// <summary>The string that identifies the move.</summary>
             public string Key { get; }
 
-            /// <summary>A list of sticker index cycles, where in each cycle the value at one index
-            /// replaces the value at the next index.</summary>
-            public IReadOnlyList<IReadOnlyList<int>> Cycles { get; }
+            /// <summary>All sticker cycles of this move, where each sticker needs to be replaced
+            /// by the sticker that is next in the cycle.</summary>
+            public IEnumerable<LoopedList<int>> Cycles { get; }
 
 
             private RawMove() { }
@@ -93,7 +94,7 @@ namespace PacManBot.Games.Concrete
             {
                 Key = key.ToUpperInvariant();
 
-                var safeCycles = new List<int[]>();
+                var safeCycles = new List<LoopedList<int>>(cycles.GetLength(0));
                 foreach (var cycle in cycles)
                 {
                     if (cycle.Distinct().Count() != cycle.Length
@@ -102,11 +103,14 @@ namespace PacManBot.Games.Concrete
                         throw new InvalidOperationException("Cycle values must be unique");
                     }
 
-                    safeCycles.Add(cycle);
+                    safeCycles.Add(cycle.ToList());
                 }
 
-                Cycles = safeCycles.AsReadOnly();
+                Cycles = safeCycles;
             }
+
+            public IEnumerator<LoopedList<int>> GetEnumerator() => Cycles.GetEnumerator();
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
 
 
@@ -129,22 +133,23 @@ namespace PacManBot.Games.Concrete
             }
 
 
-            public void Apply(Sticker[] cube)
+            public void Apply(ref Sticker[] cube)
             {
-                var oldCube = (Sticker[])cube.Clone();
-                for (int index = 0; index < cube.Length; index++)
-                {
-                    int oldIndex = index;
-                    var cycle = baseMove.Cycles.FirstOrDefault(x => x.Contains(index));
-                    if (cycle != null)
-                    {
-                        oldIndex = new LoopedList<int>(cycle)[cycle.IndexOf(index) + (reverse ? +repeat : -repeat)];
-                    }
+                var newCube = (Sticker[])cube.Clone();
 
-                    cube[index] = oldCube[oldIndex];
+                foreach (var cycle in baseMove)
+                {
+                    for (int i = 0; i < cycle.Count; i++)
+                    {
+                        int index = cycle[i];
+                        int oldIndex = cycle[i + (reverse ? +repeat : -repeat)];
+                        newCube[index] = cube[oldIndex];
+                    }
                 }
+
+                cube = newCube;
             }
-            
+
 
 
             public static bool TryParse(string value, out Move move)
@@ -193,7 +198,7 @@ namespace PacManBot.Games.Concrete
             
             foreach (var move in sequence)
             {
-                move.Apply(cube);
+                move.Apply(ref cube);
             }
 
             games.Save(this);
@@ -353,7 +358,7 @@ namespace PacManBot.Games.Concrete
                 new RawMove("S", cyclesS),
                 new RawMove("E", cyclesE),
 
-                // Why in heck are wide moves so inconsistent in orientation
+                // Why in heck are slice moves so inconsistent in orientation
                 new RawMove("Bw", cyclesB.Concatenate(cyclesS.Select(x => x.Reverse().ToArray()).ToArray())),
                 new RawMove("Uw", cyclesU.Concatenate(cyclesE.Select(x => x.Reverse().ToArray()).ToArray())),
                 new RawMove("Rw", cyclesR.Concatenate(cyclesM.Select(x => x.Reverse().ToArray()).ToArray())),
@@ -370,7 +375,7 @@ namespace PacManBot.Games.Concrete
                     cyclesD.Select(x => x.Reverse().ToArray()).ToArray())),
 
                 new RawMove("z", cyclesF.Concatenate(
-                    cyclesS.Select(x => x.Reverse().ToArray()).ToArray(),
+                    cyclesS,
                     cyclesB.Select(x => x.Reverse().ToArray()).ToArray())),
 
 
