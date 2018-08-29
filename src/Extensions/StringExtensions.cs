@@ -44,13 +44,13 @@ namespace PacManBot.Extensions
         public static bool ContainsAny(this string text, IEnumerable<char> values) => values.Any(text.Contains);
 
 
-        /// <summary>Replaces all occurrences of the specified "before" values,
-        /// and replaces them with their corresponding "after" values, inside a string.</summary>
+        /// <summary>Replaces all occurrences of the specified "before" values
+        /// with their corresponding "after" values, inside a string.</summary>
         public static string ReplaceMany(this string text, params (string before, string after)[] replacements)
             => text.ReplaceMany((IEnumerable<(string, string)>)replacements);
 
-        /// <summary>Replaces all occurrences of the specified "before" values,
-        /// and replaces them with their corresponding "after" values, inside a string.</summary>
+        /// <summary>Replaces all occurrences of the specified "before" values
+        /// with their corresponding "after" values, inside a string.</summary>
         public static string ReplaceMany(this string text, IEnumerable<(string before, string after)> replacements)
         {
             var sb = new StringBuilder(text);

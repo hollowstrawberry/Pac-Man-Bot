@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Linq;
 using System.Text;
+using System.Linq;
+using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
@@ -8,7 +9,6 @@ using Discord;
 using PacManBot.Utils;
 using PacManBot.Constants;
 using PacManBot.Extensions;
-using System.Collections;
 
 namespace PacManBot.Games.Concrete
 {
@@ -22,7 +22,12 @@ namespace PacManBot.Games.Concrete
         public string FilenameKey => "rubik";
 
 
-        private const string SolvedCube = "000000000111111111222222222333333333444444444555555555";
+        /// <summary>The raw cube string representing the solved state.</summary>
+        public const string SolvedCube = "000000000111111111222222222333333333444444444555555555";
+
+        /// <summary>The keys of all valid built-in moves that can be used to create individual moves.</summary>
+        public static IEnumerable<string> MoveKeys => AllMoves.Select(x => x.Key);
+
 
         private const int // Starting index of each face in the cube array
             Front = 0 * 9,
@@ -32,7 +37,7 @@ namespace PacManBot.Games.Concrete
             Down  = 4 * 9,
             Back  = 5 * 9;
 
-        private static readonly IReadOnlyList<RawMove> AllMoves = CreateMoves();
+        private static readonly IEnumerable<RawMove> AllMoves = CreateMoves();
 
         private static readonly string[] ColorEmoji = {
             CustomEmoji.GreenSquare, CustomEmoji.WhiteSquare, CustomEmoji.RedSquare,
@@ -65,6 +70,7 @@ namespace PacManBot.Games.Concrete
 
         // Types
 
+        /// <summary>A sticker color on the cube.</summary>
         public enum Sticker
         {
             Green,
@@ -123,7 +129,8 @@ namespace PacManBot.Games.Concrete
 
             private Move() { }
 
-            public Move(string key, int repeat, bool reverse) // Unused at the moment
+            /// <summary>Creates a new move from a key in <see cref="MoveKeys"/>.</summary>
+            public Move(string key, int repeat = 1, bool reverse = false)
             {
                 this.repeat = repeat;
                 this.reverse = reverse;
@@ -133,9 +140,10 @@ namespace PacManBot.Games.Concrete
             }
 
 
-            public void Apply(ref Sticker[] cube)
+            /// <summary>Applies this move's transformation on the provided cube.</summary>
+            public void Apply(Sticker[] cube)
             {
-                var newCube = (Sticker[])cube.Clone();
+                var oldCube = cube.ToArray();
 
                 foreach (var cycle in baseMove)
                 {
@@ -143,15 +151,14 @@ namespace PacManBot.Games.Concrete
                     {
                         int index = cycle[i];
                         int oldIndex = cycle[i + (reverse ? +repeat : -repeat)];
-                        newCube[index] = cube[oldIndex];
+                        cube[index] = oldCube[oldIndex];
                     }
                 }
-
-                cube = newCube;
             }
 
 
 
+            /// <summary>Attempts to create a move from the provided string. The string must follow standard cube notation.</summary>
             public static bool TryParse(string value, out Move move)
             {
                 move = null;
@@ -186,6 +193,7 @@ namespace PacManBot.Games.Concrete
         }
 
         
+        /// <summary>Attempts to create a sequence of moves from the given string, and executes it if successful.</summary>
         public bool TryDoMoves(string input)
         {
             var sequence = new List<Move>();
@@ -195,26 +203,31 @@ namespace PacManBot.Games.Concrete
                 if (Move.TryParse(splice, out var move)) sequence.Add(move);
                 else return false;
             }
-            
-            foreach (var move in sequence)
-            {
-                move.Apply(ref cube);
-            }
 
-            games.Save(this);
+            DoMoves(sequence);
             return true;
         }
 
 
-        public void Scramble()
+        /// <summary>Executes a sequence of moves on this Rubik's cube.</summary>
+        public void DoMoves(IEnumerable<Move> moves)
         {
-            const int amount = 40;
+            var copy = cube.ToArray();
+            foreach (var move in moves) move.Apply(copy);
+            cube = copy; // Replaces the cube all at once for thread-safety
+
+            games.Save(this);
+        }
+
+
+        /// <summary>Executes a number of random moves on the cube in order to scramble it.</summary>
+        public void Scramble(int amount = 40)
+        {
             var turns = new string[] { "F", "U", "R", "L", "D", "B", };
-            var modifiers = new[] { "", "'", "2" };
-            var moves = new Range(amount).Select(x => Bot.Random.Choose(turns) + Bot.Random.Choose(modifiers)).JoinString(" ");
+            var moves = new Range(amount).Select(x => new Move(Bot.Random.Choose(turns), Bot.Random.Next(1, 4)));
 
             Time = -amount; // Done before so it saves the game at 0
-            if (!TryDoMoves(moves)) throw new Exception("Invalid generated shuffle sequence");
+            DoMoves(moves);
         }
 
         
@@ -265,7 +278,8 @@ namespace PacManBot.Games.Concrete
         }
 
 
-        public string[] GetFaceRows(int faceIndex)
+
+        private string[] GetFaceRows(int faceIndex)
         {
             var emojis = new Range(faceIndex, faceIndex + 9).Select(x => ColorEmoji[(int)cube[x]]).ToList();
 
@@ -274,9 +288,15 @@ namespace PacManBot.Games.Concrete
         }
 
 
+        public void PostDeserialize(IServiceProvider services)
+        {
+            SetServices(services);
+        }
 
 
-        private static IReadOnlyList<RawMove> CreateMoves()
+
+
+        private static IEnumerable<RawMove> CreateMoves()
         {
             var cyclesF = new[] {
                 new[] { Front+0, Front+2, Front+8, Front+6 },
@@ -407,14 +427,6 @@ namespace PacManBot.Games.Concrete
             };
 
             return moves.AsReadOnly();
-        }
-
-
-
-
-        public void PostDeserialize(IServiceProvider services)
-        {
-            SetServices(services);
         }
     }
 }

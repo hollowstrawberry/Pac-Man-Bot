@@ -48,16 +48,16 @@ namespace PacManBot.Extensions
             if (count == 0) return list;
 
             if (start == null) start = step > 0 ? 0 : count - 1;
-            else if (start < 0) start = count + start;
+            else if (start < 0) start = Math.Max(0, start.Value + count);
 
             if (stop == null) stop = step > 0 ? count : -1;
-            else if (stop < 0) stop = count + stop;
+            else if (stop < 0) stop = Math.Max(0, stop.Value + count);
 
             if (step < 0)
             {
                 list = list.Reverse();
-                start = count - 1 - Math.Min(count - 1, start.Value); // Also reverses indices
-                stop = count - 1 - stop.Value;
+                start = Math.Max(0, count - 1 - start.Value); // Also reverses indices
+                stop = Math.Max(start.Value, count - 1 - stop.Value);
             }
 
             return list.Skip(start.Value).Take(stop.Value - start.Value).Where((_, i) => i % step == 0);

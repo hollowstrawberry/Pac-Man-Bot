@@ -164,9 +164,10 @@ namespace PacManBot.Games.Concrete
             public override string ToString()
             {
                 string typeStr = Type > CardType.Nine ? $"{Type}" : $"{(int)Type}";
-                string colorStr = Color == CardColor.Black ? "" : Color.ToString();
 
-                return WildType ? $"{typeStr} {colorStr}" : colorStr + typeStr;
+                return WildType
+                    ? typeStr + $" {Color}".If(Color != CardColor.Black)
+                    : $"{Color}{typeStr}";
             }
 
             public string ToStringBig()
@@ -245,14 +246,14 @@ namespace PacManBot.Games.Concrete
                     bool wild = Card.IsWild(type);
                     var card = new Card(type, wild ? CardColor.Black : color);
                     drawPile.Add(card);
-                    if (type > CardType.Zero && !wild) drawPile.Add(card); // Second batch of colors minus zero
+                    if (type > CardType.Zero && !wild) drawPile.Add(card); // Second batch of colors except zero
                 }
             }
 
             Bot.Random.Shuffle(drawPile);
             discardPile = new List<Card> { drawPile.Pop() };
 
-            while (TopCard.Type == CardType.WildDrawFour) // Invalid first cards
+            while (TopCard.CardsToDraw > 0 || TopCard.Type == CardType.Skip) // Invalid first cards
             {
                 drawPile.Add(discardPile.Pop());
                 drawPile.Swap(drawPile.Count - 1, Bot.Random.Next(drawPile.Count - 1));
@@ -274,11 +275,7 @@ namespace PacManBot.Games.Concrete
 
             foreach (var player in toAdd) AddPlayer(player);
 
-            if (players.Length > 1)
-            {
-                Message += $"• First card is {TopCard}\n";
-                ApplyCardEffect();
-            }
+            ApplyCardEffect();
 
             games.Save(this);
         }
@@ -587,7 +584,7 @@ namespace PacManBot.Games.Concrete
             switch (card.Type)
             {
                 case CardType.Skip:
-                case CardType.Reverse when players.Count == 2:
+                case CardType.Reverse when players.Count == 2 && Time > 0:
                     Turn = FollowingTurn;
                     Message += $"• {CurrentPlayer.User?.Username} skips a turn!\n";
                     break;

@@ -102,19 +102,20 @@ namespace PacManBot.Commands.Modules
         [BetterRequireBotPermission(ChannelPermission.EmbedLinks)]
         public async Task SendAllHelpNoRemarks() => await SendAllHelp(false);
 
-        [Command("helpfull"), Alias("hf", "commandsfull")]
+        [Command("helpfull"), Alias("helpmore", "hf", "commandsfull"), Remarks("Expanded help about all commands")]
+        [Summary("Show a complete list of all commands including their parameters and a short description.")]
         [BetterRequireBotPermission(ChannelPermission.EmbedLinks)]
         public async Task SendAllHelpWithRemarks() => await SendAllHelp(true);
 
 
-        public async Task SendAllHelp(bool showRemarks)
+        private async Task SendAllHelp(bool expanded)
         {
             var embed = new EmbedBuilder()
             {
                 Title = $"{CustomEmoji.PacMan} __**Bot Commands**__",
                 Description = (Prefix == "" ? "No prefix is needed in this channel!" : $"Prefix for this server is '{Prefix}'")
                             + $"\nYou can do **{Prefix}help command** for more information about a command.\n\n"
-                            + $"Parameters: [optional] <needed>",
+                            + $"Parameters: [optional] <needed>".If(expanded),
                 Color = Colors.PacManYellow
             };
 
@@ -131,15 +132,25 @@ namespace PacManBot.Commands.Modules
                         var conditions = await command.CheckPreconditionsAsync(Context);
                         if (!conditions.IsSuccess) continue;
 
-                        moduleText.Append($"**{command.Name} {helpInfo.Parameters}**");
-                        if (showRemarks && helpInfo.Remarks != "") moduleText.Append($" — *{helpInfo.Remarks}*");
-                        moduleText.Append('\n');
+                        if (expanded)
+                        {
+                            moduleText.Append($"**{command.Name} {helpInfo.Parameters}**\n");
+                            if (helpInfo.Remarks != "") moduleText.Append($" — *{helpInfo.Remarks}*");
+                            moduleText.Append("\n");
+                        }
+                        else
+                        {
+                            moduleText.Append($"**{command.Name}**, ");
+                        }
                     }
                 }
 
-                if (!showRemarks && module.Name.Contains("Pac-Man")) moduleText.Append("**bump**\n**cancel**\n");
+                if (!expanded && module.Name.Contains("Pac-Man")) moduleText.Append("**bump**, **cancel**");
 
-                if (moduleText.Length > 0) embed.AddField(module.Name, moduleText.ToString(), true);
+                if (moduleText.Length > 0)
+                {
+                    embed.AddField(module.Name, moduleText.ToString().Trim(' ', ',', '\n'), true);
+                }
             }
 
             await ReplyAsync(embed);

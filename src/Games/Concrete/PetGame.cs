@@ -18,7 +18,7 @@ namespace PacManBot.Games.Concrete
         // Constants
 
         public override string Name => "Clockagotchi";
-        public override TimeSpan Expiry => TimeSpan.FromDays(30);
+        public override TimeSpan Expiry => TimeSpan.FromDays(100);
         public string FilenameKey => "pet";
 
 

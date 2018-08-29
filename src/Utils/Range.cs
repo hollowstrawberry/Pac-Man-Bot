@@ -10,7 +10,7 @@ namespace PacManBot.Utils
     /// </summary>
     public class Range : IEnumerable<int>
     {
-        public int Start { get; } = 0;
+        public int Start { get; }
         public int Stop { get; }
         public int Step { get; }
 
@@ -37,9 +37,9 @@ namespace PacManBot.Utils
         public IEnumerator<int> GetEnumerator()
         {
             for (int i = Start; Step < 0 ? i > Stop : i < Stop; i += Step)
+            {
                 yield return i;
-
-            yield break;
+            }
         }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
@@ -48,13 +48,20 @@ namespace PacManBot.Utils
         /// <summary>Displays the elements of the range in Python style.</summary>
         public override string ToString() => $"[{this.JoinString(", ")}]";
 
-        public override bool Equals(object obj) => obj is Range range && Start == range.Start && Stop == range.Stop && Step == range.Step;
+        public override bool Equals(object obj) => obj is Range other && this == other;
 
         public override int GetHashCode() => Start ^ Stop ^ (Step * (1 << 4));
 
 
-        public static bool operator ==(Range left, Range right) => left.Equals(right);
+        public static bool operator ==(Range left, Range right) // Whether the two ranges would produce the same sequence
+        {
+            int leftLen = left.Length;
+            int rightLen = right.Length;
+            if (leftLen != rightLen) return false;
 
-        public static bool operator !=(Range left, Range right) => !left.Equals(right);
+            return leftLen == 0 || left.Start == right.Start && left.Step == right.Step;
+        }
+
+        public static bool operator !=(Range left, Range right) => !(left == right);
     }
 }
