@@ -87,6 +87,7 @@ namespace PacManBot.Games.Concrete
             public string Description { get; }
             public int Position { get; }
             public int Group { get; }
+            public bool Hidden { get; }
             public bool HideIcon { get; }
 
             private bool? obtained;
@@ -101,12 +102,13 @@ namespace PacManBot.Games.Concrete
             }
 
 
-            public AchievementAttribute(string icon, string name, string description, int position, bool hideIcon = false, int group = 0)
+            public AchievementAttribute(string icon, string name, string description, int position, bool hidden = false, bool hideIcon = false, int group = 0)
             {
                 Icon = icon;
                 Name = name;
                 Description = description;
                 Position = position;
+                Hidden = hidden;
                 HideIcon = hideIcon;
                 Group = group;
             }
@@ -167,6 +169,9 @@ namespace PacManBot.Games.Concrete
 
             [Achievement("👼", "Pet God", "Pet 10,000 times and be king", 102, group: 100), DataMember]
             public bool PetGod { get; set; }
+
+            [Achievement("⚙", "Clock", "Possess great geometry", 0, hidden: true, group: -1), DataMember]
+            public bool ClockSpecial { get; set; }
 
 
             public void DoChecks(PetGame pet)
@@ -302,11 +307,16 @@ namespace PacManBot.Games.Concrete
             stats.Append($"**Time without neglect:** {(DateTime.Now - achievements.lastNeglected).Humanized()}\n");
             stats.Append("*(Neglect occurs when all meters reach 0)*\nᅠ");
 
-            var achievs = new[] { new StringBuilder(), new StringBuilder() }; // off, on
+            var achievOff = new StringBuilder();
+            var achievOn = new StringBuilder();
 
             foreach (var ach in achievements.GetList())
             {
-                achievs[ach.Obtained ? 1 : 0].Append($"\n{ach.Icon} **{ach.Name}** - {ach.Description}");
+                StringBuilder group = null;
+                if (!ach.Hidden && !ach.Obtained) group = achievOff;
+                else if (ach.Obtained) group = achievOn;
+
+                group?.Append($"\n{ach.Icon} **{ach.Name}** - {ach.Description}");
             }
 
             return new EmbedBuilder
@@ -326,7 +336,7 @@ namespace PacManBot.Games.Concrete
                     {
                         IsInline = false,
                         Name = "Achievements 🏆",
-                        Value = achievs[1].ToString().Replace("\n", $"\n{CustomEmoji.Check}") + achievs[0],
+                        Value = achievOn.Replace("\n", $"\n{CustomEmoji.Check}").ToString() + achievOff,
                     },
                 }
             };
