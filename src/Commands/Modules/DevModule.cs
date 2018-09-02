@@ -122,6 +122,7 @@ namespace PacManBot.Commands.Modules
         public async Task ShutDown()
         {
             await AutoReactAsync();
+            await Logger.Log(LogSeverity.Info, LogSource.Owner, "Shutting down.");
             Environment.Exit(ExitCodes.ManualReboot);
         }
 
@@ -154,7 +155,7 @@ namespace PacManBot.Commands.Modules
 
             await ReplyAsync($"```bash\n{result.Truncate(1980)}```");
 
-            await UpdateAndShutDown();
+            await ShutDown();
         }
 
 
