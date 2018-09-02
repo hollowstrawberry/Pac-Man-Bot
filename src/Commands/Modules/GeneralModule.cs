@@ -1,13 +1,14 @@
 using System;
 using System.IO;
-using System.Linq;
 using System.Text;
+using System.Linq;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using PacManBot.Games;
 using PacManBot.Constants;
 using PacManBot.Extensions;
 
@@ -16,6 +17,14 @@ namespace PacManBot.Commands.Modules
     [Name("📁General"), Remarks("1")]
     public class GeneralModule : BaseCustomModule
     {
+        private static readonly IEnumerable<string> GameNames = typeof(BaseGame).Assembly.GetTypes()
+            .Where(t => t.IsSubclassOf(typeof(BaseGame)) && t.IsClass && !t.IsAbstract)
+            .Select(t => (BaseGame)Activator.CreateInstance(t, true))
+            .OrderBy(t => t.GameIndex)
+            .Select(t => t.GameName);
+
+
+
         public CommandService Commands { get; }
 
         public GeneralModule(IServiceProvider services) : base(services)
@@ -37,7 +46,7 @@ namespace PacManBot.Commands.Modules
                 Color = Colors.PacManYellow,
             };
             embed.AddField("Total guilds", $"{Context.Client.Guilds.Count}", true);
-            embed.AddField("Total active games", $"{Games.AllChannelGames.Count()}", true);
+            embed.AddField("Total games", $"{Games.AllGames.Count()}", true);
             embed.AddField("Latency", $"{Context.Client.Latency}ms", true);
 
             foreach (var (name, desc) in Content.aboutFields)
@@ -134,7 +143,7 @@ namespace PacManBot.Commands.Modules
 
                         if (expanded)
                         {
-                            moduleText.Append($"**{command.Name} {helpInfo.Parameters}**\n");
+                            moduleText.Append($"**{command.Name} {helpInfo.Parameters}**");
                             if (helpInfo.Remarks != "") moduleText.Append($" — *{helpInfo.Remarks}*");
                             moduleText.Append("\n");
                         }
@@ -158,36 +167,43 @@ namespace PacManBot.Commands.Modules
 
 
 
-        [Command("waka"), Alias("ping"), Parameters(""), Remarks("Ping? Nah, waka.")]
-        [Summary("Tests the ping (server reaction time in milliseconds) and shows other quick stats about the bot at the current moment.\n" +
-                 "Did you know the bot responds every time you say \"waka\" in chat? Shhh, it's a secret.")]
+        [Command("waka"), Alias("ping"), Parameters(""), Remarks("Like ping, but waka")]
+        [Summary("Check how quickly the bot is responding to commands.")]
         public async Task Ping([Remainder]string uselessArgs = "")
         {
             var stopwatch = Stopwatch.StartNew(); // Measure the time it takes to send a message to chat
             var message = await ReplyAsync($"{CustomEmoji.Loading} Waka");
             stopwatch.Stop();
 
-            string content = $"{CustomEmoji.PacMan} Waka in `{(int)stopwatch.ElapsedMilliseconds}`ms **|** " +
-                             $"{Context.Client.Guilds.Count} total guilds, {Games.AllChannelGames.Count()} total active games";
+            var content = new StringBuilder();
+            content.Append($"{CustomEmoji.PacMan} Waka in `{(int)stopwatch.ElapsedMilliseconds}`ms");
 
             if (Context.Client.Shards.Count > 1)
             {
                 var shard = Context.Client.GetShardFor(Context.Guild);
-
-                int shardGames = 0;
-                foreach (var game in Games.AllChannelGames)
-                {
-                    if (game.Guild != null && shard.Guilds.Contains(game.Guild) || game.Guild == null && shard.ShardId == 0)
-                    {
-                        shardGames++;
-                    }
-                }
-
-                content += $"```css\nShard {shard.ShardId + 1}/{Context.Client.Shards.Count} " +
-                           $"controlling {shard.Guilds.Count} guilds and {shardGames} games```";
+                content.Append($" **|** `Shard {shard.ShardId + 1}/{Context.Client.Shards.Count}`");
             }
 
-            await message.ModifyAsync(m => m.Content = content, DefaultOptions);                   
+            await message.ModifyAsync(m => m.Content = content.ToString(), DefaultOptions);                   
+        }
+
+
+        [Command("games"), Alias("gamestats"), Parameters(""), Remarks("Info about the bot's current games")]
+        [Summary("Shows information about all active games managed by the bot.")]
+        public async Task GameStats([Remainder]string uselessArgs = "")
+        {
+            var embed = new EmbedBuilder
+            {
+                Color = Colors.PacManYellow,
+                Title = $"{CustomEmoji.PacMan} Active games in all guilds",
+                Fields = GameNames.Select(name => new EmbedFieldBuilder {
+                    Name = name,
+                    Value = Games.AllGames.Where(g => g.GameName == name).Count(),
+                    IsInline = true
+                }).ToList()
+            };
+
+            await ReplyAsync(embed);
         }
 
 
