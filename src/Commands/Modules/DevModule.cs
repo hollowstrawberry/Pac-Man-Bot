@@ -2,7 +2,9 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Diagnostics;
 using System.Threading.Tasks;
+using System.Runtime.InteropServices;
 using Discord;
 using Discord.Commands;
 using Discord.Net;
@@ -112,6 +114,47 @@ namespace PacManBot.Commands.Modules
 
             await Context.Message.RemoveReactionAsync(CustomEmoji.ELoading, Context.Client.CurrentUser, DefaultOptions);
             if (result != null) await ReplyAsync($"```\n{result}".Truncate(1997) + "```");
+        }
+
+
+        [Command("$restart"), Alias("$shutdown")]
+        [Summary("Immediately shuts down the bot. Developer only.")]
+        public async Task ShutDown()
+        {
+            await AutoReactAsync();
+            Environment.Exit(ExitCodes.ManualReboot);
+        }
+
+
+        [Command("$update"), HideHelp]
+        [Summary("Perform a `git pull` and close the bot. Developer only.")]
+        public async Task UpdateAndShutDown()
+        {
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                await AutoReactAsync(false);
+                return;
+            }
+
+            var process = new Process()
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = "/bin/bash",
+                    Arguments = $"-c \"git pull\"",
+                    WorkingDirectory = Environment.CurrentDirectory,
+                    RedirectStandardOutput = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                }
+            };
+            process.Start();
+            string result = process.StandardOutput.ReadToEnd();
+            process.WaitForExit();
+
+            await ReplyAsync($"```bash\n{result.Truncate(1980)}```");
+
+            await UpdateAndShutDown();
         }
 
 

@@ -67,7 +67,7 @@ namespace PacManBot.Services
             {
                 await Task.Delay(TimeSpan.FromMinutes(2), cancelShutdown.Token);
                 await logger.Log(LogSeverity.Critical, LogSource.Scheduling, "Reconnection timed out. Shutting down...");
-                Environment.Exit(666);
+                Environment.Exit(ExitCodes.ReconnectionTimeout);
             }
             catch (OperationCanceledException)
             {
