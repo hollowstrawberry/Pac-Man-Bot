@@ -205,7 +205,7 @@ namespace PacManBot.Services
             catch (Exception e) when (e is OperationCanceledException || e is TimeoutException) { }
             catch (HttpException e)
             {
-                await logger.Log(LogSeverity.Warning, game.Name, $"During input in {game.ChannelId}: {e.Message}");
+                await logger.Log(LogSeverity.Warning, game.GameName, $"During input in {game.ChannelId}: {e.Message}");
             }
 
             return true;
@@ -218,7 +218,7 @@ namespace PacManBot.Services
         {
             var gameMessage = await game.GetMessage();
 
-            await logger.Log(LogSeverity.Verbose, game.Name,
+            await logger.Log(LogSeverity.Verbose, game.GameName,
                              $"Input {message.Content} by {message.Author.FullName()} in {message.Channel.FullName()}");
 
             game.Input(message.Content, message.Author.Id);
@@ -251,7 +251,7 @@ namespace PacManBot.Services
             var channel = gameMessage.Channel;
             var guild = (channel as IGuildChannel)?.Guild;
 
-            await logger.Log(LogSeverity.Verbose, game.Name, 
+            await logger.Log(LogSeverity.Verbose, game.GameName, 
                              $"Input {PacManGame.GameInputs[reaction.Emote].ToString().PadRight(5)} " +
                              $"by {user.FullName()} in {channel.FullName()}");
 

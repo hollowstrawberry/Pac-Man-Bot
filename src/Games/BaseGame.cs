@@ -27,7 +27,10 @@ namespace PacManBot.Games
 
 
         /// <summary>The display name of this game's type.</summary>
-        public abstract string Name { get; }
+        public abstract string GameName { get; }
+
+        /// <summary>The internal ID of this game's type used when sorting games.</summary>
+        public abstract int GameIndex { get; }
 
         /// <summary>Time after which a game will be routinely deleted due to inactivity.</summary>
         public abstract TimeSpan Expiry { get; }
@@ -119,7 +122,7 @@ namespace PacManBot.Games
         {
             return new EmbedBuilder()
             {
-                Title = Name,
+                Title = GameName,
                 Description = DateTime.Now - LastPlayed > Expiry ? "Game timed out" : "Game cancelled",
                 Color = Player.None.Color,
             };

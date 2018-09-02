@@ -17,7 +17,8 @@ namespace PacManBot.Games.Concrete
     {
         // Constants
 
-        public override string Name => "Uno";
+        public override int GameIndex => 2;
+        public override string GameName => "Uno";
         public override TimeSpan Expiry => TimeSpan.FromDays(7);
         public string FilenameKey => "uno";
 
@@ -645,7 +646,7 @@ namespace PacManBot.Games.Concrete
 
             var embed = new EmbedBuilder
             {
-                Title = $"{Name} game in #{Channel.Name}{(Guild == null ? "" : $" ({Guild.Name})")}",
+                Title = $"{GameName} game in #{Channel.Name}{(Guild == null ? "" : $" ({Guild.Name})")}",
                 Description = "Send the name of a card in the game's channel to discard that card." +
                               "\nIf you can't or don't want to choose any card, say \"draw\" instead." +
                               "\nYou can also use \"auto\" instead of a color/number/both.\nᅠ",

@@ -9,7 +9,7 @@ namespace PacManBot.Games
     public interface IBaseGame
     {
         /// <summary>The displayed name of this game.</summary>
-        string Name { get; }
+        string GameName { get; }
 
         /// <summary>Time after which a game will be routinely deleted due to inactivity.</summary>
         TimeSpan Expiry { get; }

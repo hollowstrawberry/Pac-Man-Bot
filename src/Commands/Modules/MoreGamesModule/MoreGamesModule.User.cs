@@ -387,7 +387,7 @@ namespace PacManBot.Commands.Modules
             if (string.IsNullOrWhiteSpace(pet.PetName) || args?.SanitizeMarkdown().SanitizeMentions() == pet.PetName)
             {
                 Games.Remove(pet);
-                await ReplyAsync($"Goodbye {(string.IsNullOrWhiteSpace(pet.PetName) ? pet.Name : pet.PetName)}!");
+                await ReplyAsync($"Goodbye {(string.IsNullOrWhiteSpace(pet.PetName) ? pet.GameName : pet.PetName)}!");
             }
             else
             {

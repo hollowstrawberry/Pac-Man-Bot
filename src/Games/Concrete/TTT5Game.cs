@@ -13,7 +13,8 @@ namespace PacManBot.Games.Concrete
 {
     public class TTT5Game : MultiplayerGame, IMessagesGame
     {
-        public override string Name => "5-Tic-Tac-Toe";
+        public override int GameIndex => 5;
+        public override string GameName => "5-Tic-Tac-Toe";
         public override TimeSpan Expiry => TimeSpan.FromMinutes(60);
 
 

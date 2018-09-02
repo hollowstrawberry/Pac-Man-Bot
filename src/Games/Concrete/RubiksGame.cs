@@ -17,7 +17,8 @@ namespace PacManBot.Games.Concrete
     {
         // Constants
 
-        public override string Name => "Rubik's Cube";
+        public override int GameIndex => 6;
+        public override string GameName => "Rubik's Cube";
         public override TimeSpan Expiry => TimeSpan.FromDays(7);
         public string FilenameKey => "rubik";
 

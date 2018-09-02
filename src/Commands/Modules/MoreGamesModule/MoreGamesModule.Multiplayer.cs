@@ -196,7 +196,7 @@ namespace PacManBot.Commands.Modules
             }
             if (!self && !user.IsBot)
             {
-                await ReplyAsync($"{user.Mention} You're being invited to play {game.Name}. Do `{Prefix}uno join` to join.");
+                await ReplyAsync($"{user.Mention} You're being invited to play {game.GameName}. Do `{Prefix}uno join` to join.");
                 return;
             }
 

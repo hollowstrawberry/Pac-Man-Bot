@@ -23,7 +23,9 @@ namespace PacManBot.Games.Concrete
     {
         // Constants
 
-        public override string Name => "Pac-Man";
+        public override int GameIndex => 0;
+        public override string GameName => "Pac-Man";
+        
         public override TimeSpan Expiry => TimeSpan.FromDays(7);
         public string FilenameKey => "";
 
@@ -35,11 +37,11 @@ namespace PacManBot.Games.Concrete
             { "➡".ToEmoji(), PacManInput.Right },
             { CustomEmoji.EHelp, PacManInput.Help },
             { "⏭".ToEmoji(), PacManInput.Fast }
-        }.AsReadOnly();
+        };
 
-        private static readonly IReadOnlyList<char> NonSolidChars = new List<char> {
+        private static readonly IReadOnlyList<char> NonSolidChars = new[] {
             ' ', CharPellet, CharPowerPellet, CharSoftWall, CharSoftWallPellet
-        }.AsReadOnly();
+        };
 
         private const int PowerTime = 20, ScatterCycle = 100, ScatterTime1 = 30, ScatterTime2 = 20;
         private const char CharPlayer = 'O', CharFruit = '$', CharGhost = 'G', CharSoftWall = '_', CharSoftWallPellet = '~'; // Read from map
