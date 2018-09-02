@@ -32,6 +32,9 @@ namespace PacManBot
         /// <summary><see cref="Games.Concrete.PacManGame"/> custom map creation help links.</summary>
         [DataMember] public readonly (string name, string url)[] customLinks;
 
+        /// <summary><see cref="Games.Concrete.PetGame"/> default pet image.</summary>
+        [DataMember] public readonly string petImageUrl;
+
         /// <summary><see cref="Games.Concrete.PetGame"/> messages.</summary>
         [DataMember] public readonly string[] pettingMessages;
 

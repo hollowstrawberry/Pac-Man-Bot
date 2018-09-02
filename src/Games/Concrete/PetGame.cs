@@ -18,7 +18,7 @@ namespace PacManBot.Games.Concrete
         // Constants
 
         public override int GameIndex => 1;
-        public override string GameName => "Clockagotchi";
+        public override string GameName => "Wakagotchi";
         public override TimeSpan Expiry => TimeSpan.FromDays(100);
         public string FilenameKey => "pet";
 
@@ -230,17 +230,17 @@ namespace PacManBot.Games.Concrete
 
 
         public override EmbedBuilder GetEmbed(bool showHelp = true) => GetEmbed(null);
-        public EmbedBuilder GetEmbed(IGuildUser owner, bool decimals = false)
+        public EmbedBuilder GetEmbed(IGuildUser ownerGuildUser, bool decimals = false)
         {
             bool wasAsleep = asleep;
             UpdateStats();
 
             var description = new StringBuilder();
 
-            string prefix = storage.GetPrefixOrEmpty(owner?.Guild);
+            string prefix = storage.GetPrefixOrEmpty(ownerGuildUser?.Guild);
             if (string.IsNullOrWhiteSpace(petName))
             {
-                description.Append("Congratulations on your new Clockagotchi!\n" +
+                description.Append("Congratulations on your new wakagotchi!\n" +
                                    $"Use `{prefix}pet name` to name it and `{prefix}pet help` for more info\n\n");
             }
 
@@ -265,10 +265,10 @@ namespace PacManBot.Games.Concrete
 
             return new EmbedBuilder
             {
-                Title = $"{owner?.Nickname ?? Owner?.Username ?? "Unknown"}'s Clockagotchi",
+                Title = $"{ownerGuildUser?.Nickname ?? Owner?.Username ?? "Unknown"}'s Wakagotchi",
                 Description = description.ToString(),
                 Color = TotalStats.Ceiling() >= 60 ? new Color(0, 200, 0) : TotalStats.Ceiling() >= 25 ? new Color(255, 200, 0) : new Color(255, 0, 0),
-                ThumbnailUrl = petImageUrl ?? "https://cdn.discordapp.com/attachments/353729197824278541/447979173554946051/clockagotchi.png",
+                ThumbnailUrl = petImageUrl ?? Content.petImageUrl,
                 ImageUrl = BannerUrl[achievements.Attention],
                 Fields = new List<EmbedFieldBuilder>
                 {
@@ -289,7 +289,7 @@ namespace PacManBot.Games.Concrete
         }
 
 
-        public EmbedBuilder GetEmbedAchievements(IGuildUser owner)
+        public EmbedBuilder GetEmbedAchievements(IGuildUser ownerGuildUser)
         {
             UpdateStats();
 
@@ -311,9 +311,9 @@ namespace PacManBot.Games.Concrete
 
             return new EmbedBuilder
             {
-                Title = $"{owner?.Nickname ?? Owner?.Username ?? "Unknown"}'s Clockagotchi",
+                Title = $"{ownerGuildUser?.Nickname ?? Owner?.Username ?? "Unknown"}'s Wakagotchi",
                 Color = new Color(150, 0, 220),
-                ThumbnailUrl = petImageUrl ?? "https://cdn.discordapp.com/attachments/353729197824278541/447979173554946051/clockagotchi.png",
+                ThumbnailUrl = petImageUrl ?? Content.petImageUrl,
                 Fields = new List<EmbedFieldBuilder>
                 {
                     new EmbedFieldBuilder

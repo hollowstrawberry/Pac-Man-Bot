@@ -114,7 +114,7 @@ namespace PacManBot.Commands.Modules
 
 
 
-        [Command("pet"), Alias("clockagotchi"), Parameters("[command]"), Priority(-4)]
+        [Command("pet"), Alias("gotchi", "wakagotchi", "clockagotchi"), Parameters("[command]"), Priority(-4)]
         [Remarks("Adopt your own pet!")]
         [Summary("**__Pet Commands__**\n\n" +
                  "**{prefix}pet** - Check on your pet or adopt if you don't have one\n" +
@@ -333,7 +333,7 @@ namespace PacManBot.Commands.Modules
         }
 
 
-        [PetCommand("pet", "pat", "pot", "p", "clockagotchi")]
+        [PetCommand("pet", "pat", "pot", "p", "wakagotchi")]
         public async Task PetPet(PetGame pet, string args)
         {
             var now = DateTime.Now;

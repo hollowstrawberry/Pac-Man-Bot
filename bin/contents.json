@@ -1,6 +1,6 @@
 ﻿{
 
-"version": "3.7.2",
+"version": "3.7.3",
 
 "invite": "http://bit.ly/pacman-bot",
 
@@ -97,6 +97,9 @@ To start a custom game, send **{prefix}play \\`\\`\\`map\\`\\`\\`** or **{prefix
     {"Item1":"Original game map", "Item2":"https://github.com/Samrux/Pac-Man-Bot/blob/master/bin/contents.bot"},
     {"Item1":"Custom map examples", "Item2":"https://github.com/Samrux/Pac-Man-Bot/blob/master/Example%20custom%20maps.txt"}
 ],
+
+
+"petImageUrl": "https://cdn.discordapp.com/attachments/353729197824278541/447979173554946051/clockagotchi.png",
 
 
 "pettingMessages": [
@@ -220,7 +223,7 @@ To start a custom game, send **{prefix}play \\`\\`\\`map\\`\\`\\`** or **{prefix
 "You wonder how long it took this bot's developer to write a hundred different petting messages. The developer wonders if you wonder if he wonders if you wonder.{4}",
 "Your pet is unpettable at the moment, but appreciates the attempt.{0}",
 "Unknown pet command! Syke. +1 pets{hide}",
-"As you pet your pet, you wonder if anyone goes out of their way to type the `clockagotchi` alias instead. That would be silly.",
+"As you pet your pet, you wonder if anyone goes out of their way to type the `wakagotchi` alias instead. That would be silly.",
 "<:check:410612082929565696> You're petting too little! Keep going.",
 "You pet your pet. Suddenly, the sky opens up, and a milliard pet-angels descend upon you and your pet. They crown you king of pets.{getking} The ceremony and following party lasts three whole days, and there is much joy and petting in the land.{20}",
 "Royal pet! {10}{king}",
