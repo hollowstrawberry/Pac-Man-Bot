@@ -6,9 +6,11 @@ using System.Collections.Generic;
 using System.Collections.Concurrent;
 using Discord;
 using Discord.Rest;
+using Discord.Commands;
 using Discord.WebSocket;
 using PacManBot.Utils;
 using PacManBot.Constants;
+using PacManBot.Extensions;
 using PacManBot.Services.Database;
 
 namespace PacManBot.Services
@@ -53,8 +55,11 @@ namespace PacManBot.Services
 
 
 
-        /// <summary>Retrieves the specified guild's active prefix if the guild exists, or the default prefix otherwise.</summary>
-        public string GetPrefix(ulong guildId)
+        /// <summary>Retrieves the specified guild's custom prefix, or the default prefix if no record is found.</summary>
+        public string GetGuildPrefix(IGuild guild) => GetGuildPrefix(guild?.Id ?? 0);
+
+        /// <summary>Retrieves the specified guild's custom prefix, or the default prefix if no record is found.</summary>
+        public string GetGuildPrefix(ulong guildId)
         {
             if (cachedPrefixes.TryGetValue(guildId, out string prefix)) return prefix;
 
@@ -64,15 +69,22 @@ namespace PacManBot.Services
             return prefix;
         }
 
-        /// <summary>Retrieves the specified guild's active prefix if the guild exists, or the default prefix otherwise.</summary>
-        public string GetPrefix(IGuild guild = null) => guild == null ? DefaultPrefix : GetPrefix(guild.Id);
 
-        /// <summary>Retrieves the specified guild's active prefix if the guild exists, or an empty string otherwise.</summary>
-        public string GetPrefixOrEmpty(IGuild guild) => guild == null ? "" : GetPrefix(guild.Id);
+        /// <summary>Retrieves the prefix used in a particular context, or an empty string if none is necessary.</summary>
+        public string GetPrefix(ICommandContext context) => GetPrefix(context.Channel);
+
+        /// <summary>Retrieves the prefix used in a particular channel, or an empty string if none is necessary.</summary>
+        public string GetPrefix(ulong channelId) => GetPrefix(client.GetMessageChannel(channelId));
+
+        /// <summary>Retrieves the prefix used in a particular channel, or an empty string if none is necessary.</summary>
+        public string GetPrefix(IMessageChannel channel)
+        {
+            return RequiresPrefix(channel) ? GetGuildPrefix((channel as IGuildChannel)?.Guild) : "";
+        }
 
 
         /// <summary>Changes the prefix of the specified guild.</summary>
-        public void SetPrefix(ulong guildId, string prefix)
+        public void SetGuildPrefix(ulong guildId, string prefix)
         {
             string old = cachedPrefixes[guildId];
 
@@ -88,7 +100,42 @@ namespace PacManBot.Services
         }
 
 
+        /// <summary>Whether the specified context requires a prefix for commands.</summary>
+        public bool RequiresPrefix(ICommandContext context) => RequiresPrefix(context.Channel);
 
+        /// <summary>Whether the specified channel requires a prefix for commands.</summary>
+        public bool RequiresPrefix(ulong channelId) => RequiresPrefix(client.GetChannel(channelId));
+
+        /// <summary>Whether the specified channel requires a prefix for commands.</summary>
+        public bool RequiresPrefix(IChannel channel)
+        {
+            ulong id = channel?.Id ?? 0;
+            if (cachedNeedsPrefix.TryGetValue(id, out bool needs)) return needs;
+
+            needs = channel is IGuildChannel && !Db.NoPrefixGuildChannels.Contains((NoPrefixGuildChannel)id);
+            cachedNeedsPrefix.TryAdd(id, needs);
+
+            return needs;
+        }
+
+
+        /// <summary>Toggles the specified guild channel between requiring a prefix for commands and not, and returns the new value.</summary>
+        public bool ToggleChannelGuildPrefix(ulong channelId)
+        {
+            bool needsPrefix = cachedNeedsPrefix[channelId];
+
+            if (needsPrefix) Db.NoPrefixGuildChannels.Add(channelId);
+            else Db.NoPrefixGuildChannels.Remove(channelId);
+
+            Db.SaveChanges();
+            cachedNeedsPrefix[channelId] = !needsPrefix;
+            return !needsPrefix;
+        }
+
+
+
+        /// <summary>Whether the specified guild is set to allow message autoresponses.</summary>
+        public bool AllowsAutoresponse(IGuild guild) => AllowsAutoresponse(guild?.Id ?? 0);
 
         /// <summary>Whether the specified guild is set to allow message autoresponses.</summary>
         public bool AllowsAutoresponse(ulong guildId)
@@ -113,34 +160,6 @@ namespace PacManBot.Services
             Db.SaveChanges();
             cachedAllowsAutoresponse[guildId] = !allows;
             return !allows;
-        }
-
-
-
-
-        /// <summary>Whether the specified channel is set to require a prefix for commands.</summary>
-        public bool NeedsPrefix(ulong channelId)
-        {
-            if (cachedNeedsPrefix.TryGetValue(channelId, out bool needs)) return needs;
-
-            needs = !Db.NoPrefixChannels.Contains((NoPrefixChannel)channelId);
-            cachedNeedsPrefix.TryAdd(channelId, needs);
-
-            return needs;
-        }
-
-
-        /// <summary>Toggles the specified channel between requiring a prefix for commands and not and returns the new value.</summary>
-        public bool ToggleNeedsPrefix(ulong channelId)
-        {
-            bool needsPrefix = cachedNeedsPrefix[channelId];
-
-            if (needsPrefix) Db.NoPrefixChannels.Add(channelId);
-            else Db.NoPrefixChannels.Remove(channelId);
-
-            Db.SaveChanges();
-            cachedNeedsPrefix[channelId] = !needsPrefix;
-            return !needsPrefix;
         }
 
 

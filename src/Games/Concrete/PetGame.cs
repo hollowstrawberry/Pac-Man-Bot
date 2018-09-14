@@ -242,7 +242,7 @@ namespace PacManBot.Games.Concrete
 
             var description = new StringBuilder();
 
-            string prefix = storage.GetPrefixOrEmpty(ownerGuildUser?.Guild);
+            string prefix = storage.GetGuildPrefix(ownerGuildUser?.Guild);
             if (string.IsNullOrWhiteSpace(petName))
             {
                 description.Append("Congratulations on your new wakagotchi!\n" +

@@ -271,7 +271,7 @@ namespace PacManBot.Games.Concrete
 
             if (ShowHelp)
             {
-                string prefix = storage.GetPrefixOrEmpty(guild);
+                string prefix = storage.GetPrefix(Channel);
                 embed.AddField("Faces", $"```css\n  U\nL F R B\n  D```Do **{prefix}rubik moves** for help controlling the cube.");
             }
 

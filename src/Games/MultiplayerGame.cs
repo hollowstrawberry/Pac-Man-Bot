@@ -129,7 +129,7 @@ namespace PacManBot.Games
                 if (Time == 0 && showHelp && UserId.Length > 1 && UserId[0] != UserId[1])
                 {
                     return $"{User(0).Mention} You were invited to play {GameName}.\nChoose an action below, " +
-                           $"or type `{storage.GetPrefix(Guild)}cancel` if you don't want to play";
+                           $"or type `{storage.GetPrefix(Channel)}cancel` if you don't want to play";
                 }
             }
 
@@ -162,7 +162,7 @@ namespace PacManBot.Games
         /// <summary>Used to remove the guild prefix from game input, as it is to be ignored.</summary>
         protected string StripPrefix(string value)
         {
-            string prefix = storage.GetPrefix(Guild);
+            string prefix = storage.GetPrefix(Channel);
             return value.StartsWith(prefix) ? value.Substring(prefix.Length) : value;
         }
 

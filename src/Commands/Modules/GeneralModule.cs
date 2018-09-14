@@ -158,7 +158,7 @@ namespace PacManBot.Commands.Modules
 
                 if (moduleText.Length > 0)
                 {
-                    embed.AddField(module.Name, moduleText.ToString().Trim(' ', ',', '\n'), true);
+                    embed.AddField(module.Name, moduleText.ToString().Trim(' ', ',', '\n'));
                 }
             }
 
@@ -223,10 +223,10 @@ namespace PacManBot.Commands.Modules
                           " (the default)".If(AbsolutePrefix == Storage.DefaultPrefix) +
                           $". It can be changed using the command `{Prefix}setprefix`";
 
-                if (!Storage.NeedsPrefix(Context.Channel.Id))
+                if (Prefix == "")
                 {
                     message += "\n\nThis channel is in **No Prefix mode**, and using the prefix is unnecessary.\n" +
-                               "Use `help noprefixchannel` for more info.";
+                               "Use `help toggleprefix` for more info.";
                 }
             }
 
@@ -351,10 +351,10 @@ namespace PacManBot.Commands.Modules
         }
 
 
-        [Command("neat"), HideHelp, Summary("Neat")]
+        [Command("neat"), Summary("Neat"), HideHelp]
         public async Task Neat() => await ReplyAsync("neat");
 
-        [Command("nice"), HideHelp, Summary("Neat")]
+        [Command("nice"), Summary("Nice"), HideHelp]
         public async Task Nice() => await ReplyAsync("nice");
 
 

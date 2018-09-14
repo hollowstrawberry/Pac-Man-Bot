@@ -4,20 +4,20 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace PacManBot.Services.Database
 {
     [Table("NoPrefixChannels")]
-    public class NoPrefixChannel
+    public class NoPrefixGuildChannel
     {
         [Key] public ulong Id { get; set; }
 
-        public NoPrefixChannel(ulong id)
+        public NoPrefixGuildChannel(ulong id)
         {
             Id = id;
         }
 
 
-        public static implicit operator NoPrefixChannel(ulong id) => new NoPrefixChannel(id);
-        public static implicit operator ulong(NoPrefixChannel c) => c.Id;
+        public static implicit operator NoPrefixGuildChannel(ulong id) => new NoPrefixGuildChannel(id);
+        public static implicit operator ulong(NoPrefixGuildChannel c) => c.Id;
 
-        public override bool Equals(object obj) => obj is NoPrefixChannel c && c.Id == Id;
+        public override bool Equals(object obj) => obj is NoPrefixGuildChannel c && c.Id == Id;
         public override int GetHashCode() => Id.GetHashCode();
     }
 }

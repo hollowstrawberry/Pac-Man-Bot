@@ -118,12 +118,12 @@ namespace PacManBot.Services
         {
             var context = new ShardedCommandContext(client, message);
 
-            string prefix = storage.GetPrefix(context.Guild);
+            string prefix = storage.GetGuildPrefix(context.Guild);
             int commandPosition = 0;
             
             if (message.HasMentionPrefix(client.CurrentUser, ref commandPosition)
                 || message.HasStringPrefix($"{prefix} ", ref commandPosition) || message.HasStringPrefix(prefix, ref commandPosition)
-                || context.Channel is IDMChannel || !storage.NeedsPrefix(context.Channel.Id))
+                || !storage.RequiresPrefix(context))
             {
                 var result = await commands.ExecuteAsync(context, commandPosition, provider);
 
@@ -134,7 +134,7 @@ namespace PacManBot.Services
                                      $"\"{message}\" by {message.Author.FullName()} in {context.Channel.FullName()} " +
                                      $"couldn't be executed. {result.ErrorReason}");
 
-                    string reply = CommandErrorReply(result.ErrorReason, context.Guild);
+                    string reply = CommandErrorReply(result.ErrorReason, context);
                     if (reply != null && context.BotCan(ChannelPermission.SendMessages))
                     {
                         await context.Channel.SendMessageAsync(reply, options: Bot.DefaultOptions);
@@ -279,11 +279,11 @@ namespace PacManBot.Services
 
 
 
-        private string CommandErrorReply(string error, SocketGuild guild)
+        private string CommandErrorReply(string error, SocketCommandContext context)
         {
-            string help = $"Please use `{storage.GetPrefixOrEmpty(guild)}help [command name]` or try again.";
+            string help = $"Please use `{storage.GetPrefix(context)}help [command name]` or try again.";
 
-            if (error.Contains("requires") && guild == null)
+            if (error.Contains("requires") && context.Guild == null)
                 return "You need to be in a guild to use this command!";
 
             if (error.Contains("Bot requires"))

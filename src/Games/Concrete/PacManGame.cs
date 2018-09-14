@@ -403,7 +403,7 @@ namespace PacManBot.Games.Concrete
 
             if (lastInput == PacManInput.Help)
             {
-                return Content.gameHelp.Replace("{prefix}", storage.GetPrefixOrEmpty(Guild));
+                return Content.gameHelp.Replace("{prefix}", storage.GetPrefix(Channel));
             }
 
             try
@@ -529,7 +529,7 @@ namespace PacManBot.Games.Concrete
                 logger.Log(LogSeverity.Error, LogSource.Game, $"{e}").GetAwaiter().GetResult();
                 return $"```There was an error displaying the game. {"Make sure your custom map is valid. ".If(custom)}" +
                        $"If this problem persists, please contact the author of the bot using the " +
-                       $"{storage.GetPrefixOrEmpty(Guild)}feedback command.```";
+                       $"{storage.GetPrefix(Channel)}feedback command.```";
             }
         }
 

@@ -66,7 +66,7 @@ namespace PacManBot.Commands.Modules
         {
             string error = null;
             if (string.IsNullOrWhiteSpace(prefix))
-                error = $"The guild prefix can't be empty. If you don't want a prefix in a channel, check out `{Prefix}togglenoprefix`";
+                error = $"The guild prefix can't be empty. If you don't want a prefix in a channel, check out `{Prefix}toggleprefix`";
             else if (prefix.ContainsAny("*", "_", "~", "`", "\\"))
                 error = "The prefix can't contain markdown special characters: *_~\\`\\\\";
             else if (prefix.Length > 32)
@@ -81,7 +81,7 @@ namespace PacManBot.Commands.Modules
 
             try
             {
-                Storage.SetPrefix(Context.Guild.Id, prefix);
+                Storage.SetGuildPrefix(Context.Guild.Id, prefix);
                 await ReplyAsync($"{CustomEmoji.Check} Prefix for this server has been successfully set to `{prefix}`");
                 await Logger.Log(LogSeverity.Info, $"Prefix for server {Context.Guild.Id} set to {prefix}");
             }
@@ -113,7 +113,7 @@ namespace PacManBot.Commands.Modules
         }
 
 
-        [Command("togglenoprefix"), Alias("toggleprefix"), Parameters("[channel id]")]
+        [Command("toggleprefix"), Alias("togglenoprefix"), Parameters("[channel id]")]
         [Remarks("Put a channel in \"No Prefix mode\"")]
         [Summary("When used by a user with the Manage Channels permission, toggles a channel between " +
                  "**Normal** mode and **No Prefix** mode.\nIn No Prefix mode, all commands will work without " +
@@ -131,9 +131,9 @@ namespace PacManBot.Commands.Modules
 
             try
             {
-                if (!Storage.NeedsPrefix(channelId))
+                if (!Storage.RequiresPrefix(channel))
                 {
-                    Storage.ToggleNeedsPrefix(channelId);
+                    Storage.ToggleChannelGuildPrefix(channelId);
                     await ReplyAsync(
                         $"{CustomEmoji.Check} The {channel.Mention} channel is back to **Normal mode** " +
                         $"(Prefix: `{AbsolutePrefix}`)");
@@ -142,10 +142,10 @@ namespace PacManBot.Commands.Modules
                 {
                     if (specified)
                     {
-                        Storage.ToggleNeedsPrefix(channelId);
+                        Storage.ToggleChannelGuildPrefix(channelId);
                         await ReplyAsync(
                             $"{CustomEmoji.Check} The {channel.Mention} channel is now in **No Prefix mode**. " +
-                            $"All commands will work without any prefix.\nTo revert to normal, use `togglenoprefix` again.");
+                            $"All commands will work without any prefix.\nTo revert to normal, use `toggleprefix` again.");
                     }
                     else
                     {
@@ -154,7 +154,7 @@ namespace PacManBot.Commands.Modules
                             $"All commands will work without the need of a prefix such as `{Prefix}`\n" +
                             $"This can lead to a lot of *unnecessary spam*. It's a good idea only in " +
                             $"dedicated channels, for example named \"#pacman\" or \"#botspam\".\n\n" +
-                            $"To set this channel to No Prefix mode, please do `{Prefix}togglenoprefix {channelId}`");
+                            $"To set this channel to No Prefix mode, please do `{Prefix}toggleprefix {channelId}`");
                     }
                 }
             }

@@ -270,7 +270,7 @@ namespace PacManBot.Games.Concrete
             {
                 var mentions = toInvite.Select(x => x.Mention);
                 string inviteMsg = $"{string.Join(", ", mentions)} You've been invited to play Uno. " +
-                                   $"Type `{storage.GetPrefix(Guild)}uno join` to join.\n";
+                                   $"Type `{storage.GetPrefix(Channel)}uno join` to join.\n";
                 Message = inviteMsg;
             }
 
@@ -488,7 +488,7 @@ namespace PacManBot.Games.Concrete
             if (State == State.Cancelled) return CancelledEmbed();
 
             var description = new StringBuilder();
-            string prefix = storage.GetPrefixOrEmpty(Guild);
+            string prefix = storage.GetPrefix(Channel);
 
             if (players.Count < 2) description.Append("👥 You need at least 2 players.\nWait for friends to join or invite some bots!\n\n");
 
