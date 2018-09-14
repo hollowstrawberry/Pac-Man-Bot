@@ -44,6 +44,7 @@ namespace PacManBot.Games.Concrete
         [DataMember] private List<Card> drawPile = new List<Card>();
         [DataMember] private List<Card> discardPile = new List<Card>();
         [DataMember] private bool reversed;
+        [IgnoreDataMember] private List<string> gameLog = new List<string>();
         [IgnoreDataMember] private List<UnoPlayer> updatedPlayers = new List<UnoPlayer>();
 
 
@@ -295,7 +296,7 @@ namespace PacManBot.Games.Concrete
 
                 if (userId == CurrentPlayer.User?.Id)
                 {
-                    if (WaitingForColor()) return Enum.TryParse<CardColor>(value, true, out _); // Wild color
+                    if (IsWaitingForColor()) return Enum.TryParse<CardColor>(value, true, out _); // Wild color
                     else return value == "draw" || value == "skip" || value.Contains("auto") || Card.Parse(value, this).HasValue;
                 }
             }
@@ -314,7 +315,9 @@ namespace PacManBot.Games.Concrete
             // Send cards
             if (input == "cards")
             {
-                SendCards(players.First(x => x.User?.Id == userId));
+                var player = players.First(x => x.User?.Id == userId);
+                player.message = null;
+                SendCards(player);
                 return;
             }
 
@@ -327,7 +330,7 @@ namespace PacManBot.Games.Concrete
                 if (forgot.id == userId) forgot.uno = UnoState.Said;
                 else
                 {
-                    Message = "";
+                    ClearGameLog();
                     Callout(forgot);
                 }
                 games.Save(this);
@@ -335,17 +338,19 @@ namespace PacManBot.Games.Concrete
             }
 
             // Set wild color (non-bots)
-            else if (WaitingForColor())
+            else if (IsWaitingForColor())
             {
                 var color = Enum.Parse<CardColor>(input, true);
                 TopCard = new Card(TopCard.Type, color);
-                Message = $"• {CurrentPlayer.User?.Username} picked {color}!\n";
+                gameLog.Add($"• {CurrentPlayer.User?.Username} picked {color}!");
                 ApplyCardEffect();
             }
 
             // Drawing a card
             else if (input == "draw" || input == "skip" || input == "auto" && CurrentPlayer.cards.All(x => !CanDiscard(x)))
             {
+                ClearGameLog();
+
                 UnoState previousUno = CurrentPlayer.uno;
                 CancelCallouts();
                 Draw(CurrentPlayer, 1);
@@ -353,21 +358,21 @@ namespace PacManBot.Games.Concrete
                 var drawn = CurrentPlayer.cards.Last();
                 if (CanDiscard(drawn))
                 {
-                    if (!CurrentPlayer.User.IsBot) Message = "";
-                    else if (drawn.Color == CardColor.Black) drawn = new Card(drawn.Type, HighestColor(CurrentPlayer.cards));
+                    if (CurrentPlayer.User.IsBot && drawn.Color == CardColor.Black)
+                    {
+                        drawn = new Card(drawn.Type, HighestColor(CurrentPlayer.cards));
+                    }
 
                     CurrentPlayer.uno = previousUno;
-                    Message += $"• {CurrentPlayer.User?.Username} drew and placed {drawn}\n";
+                    gameLog.Add($"• {CurrentPlayer.User?.Username} drew and placed {drawn}");
                     CurrentPlayer.cards.Pop();
                     Discard(drawn);
                     ApplyCardEffect();
                 }
                 else
                 {
-                    if (!CurrentPlayer.User.IsBot) Message = "";
-
                     updatedPlayers.Add(CurrentPlayer);
-                    Message += $"• {CurrentPlayer.User?.Username} drew a card and skipped a turn.\n";
+                    gameLog.Add($"• {CurrentPlayer.User?.Username} drew a card and skipped a turn.");
                     Turn = FollowingTurn;
                 }
             }
@@ -375,30 +380,31 @@ namespace PacManBot.Games.Concrete
             // Checking and playing a card
             else
             {
+                ClearGameLog();
+
                 Card card;
                 var tryCard = Card.Parse(input, this);
 
                 if (tryCard.HasValue) card = tryCard.Value;
                 else
                 {
-                    if (input.Contains("auto")) Message = "Oops, \"auto\" found no valid matches.\n";
+                    if (input.Contains("auto")) gameLog.Add("Oops, \"auto\" found no valid matches.");
                     else throw new FormatException($"Unexpected invalid card \"{input}\" from {CurrentPlayer.User.FullName()} in {Channel.FullName()}");
                     return;
                 }
 
                 if (!CurrentPlayer.cards.Contains(card.NormalizeColor()))
                 {
-                    Message = "Oops, you don't have that card!\n";
+                    gameLog.Add("Oops, you don't have that card!");
                     return;
                 }
                 else if (!CanDiscard(card))
                 {
-                    Message = "Oops, that card doesn't match the type or color!\n";
+                    gameLog.Add("Oops, that card doesn't match the type or color!");
                     return;
                 }
 
-                if (!CurrentPlayer.User.IsBot) Message = "";
-                Message += $"• {CurrentPlayer.User?.Username} plays {card}\n";
+                gameLog.Add($"• {CurrentPlayer.User?.Username} plays {card}");
 
                 if (!CurrentPlayer.User.IsBot) updatedPlayers.Add(CurrentPlayer);
 
@@ -415,13 +421,22 @@ namespace PacManBot.Games.Concrete
                 {
                     State = State.Completed;
                     Winner = Turn;
-                    if (!CurrentPlayer.User.IsBot) Message = "";
-                    if (CurrentPlayer.id == client.CurrentUser.Id) Message += $"\n {Bot.Random.Choose(WinTexts)}";
+                    if (CurrentPlayer.id == client.CurrentUser.Id) gameLog.Add($"\n {Bot.Random.Choose(WinTexts)}");
                     return;
                 }
 
                 ApplyCardEffect();
             }
+
+            if (IsWaitingForColor())
+            {
+                Message = $"{CurrentPlayer.User?.Mention} choose a color: red/blue/green/yellow";
+            }
+            else if (Channel is IGuildChannel && !AllBots)
+            {
+                Message = $"{CurrentPlayer?.User?.Mention}'s turn";
+            }
+
 
             updatedPlayers.Add(CurrentPlayer);
 
@@ -531,17 +546,18 @@ namespace PacManBot.Games.Concrete
 
         public override string GetContent(bool showHelp = true)
         {
-            string msg = "";
-            if (State == State.Cancelled) return msg;
+            if (State == State.Cancelled) return "";
 
-            if (WaitingForColor()) msg = $"{Message}{CurrentPlayer.User?.Mention} choose a color: red/blue/green/yellow";
-            else if (players.Count < 2 || State != State.Active || Channel is IDMChannel) msg = Message;
-            else msg = $"{Message}{CurrentPlayer?.User?.Mention}'s turn";
-
-            return msg.TruncateStart(2000);
+            return $"{gameLog.JoinString("\n")}\n{Message}".TruncateStart(2000);
         }
 
 
+
+
+        private bool IsWaitingForColor()
+        {
+            return Time > 0 && TopCard.Color == CardColor.Black;
+        }
 
 
         private bool CanDiscard(Card card)
@@ -567,7 +583,7 @@ namespace PacManBot.Games.Concrete
                     Bot.Random.Shuffle(discardPile);
                     drawPile = discardPile.ToList();
                     discardPile = new List<Card> { drawPile.Pop() };
-                    Message += "• Shuffled and turned over the discard pile.\n";
+                    gameLog.Add("• Shuffled and turned over the discard pile.\n");
 
                     if (drawPile.Count == 0) break; // No more cards aaaaaa!
                 }
@@ -582,7 +598,7 @@ namespace PacManBot.Games.Concrete
         {
             var card = TopCard;
 
-            if (WaitingForColor()) return;
+            if (IsWaitingForColor()) return;
 
 
             switch (card.Type)
@@ -590,19 +606,19 @@ namespace PacManBot.Games.Concrete
                 case CardType.Skip:
                 case CardType.Reverse when players.Count == 2 && Time > 0:
                     Turn = FollowingTurn;
-                    Message += $"• {CurrentPlayer.User?.Username} skips a turn!\n";
+                    gameLog.Add($"• {CurrentPlayer.User?.Username} skips a turn!");
                     break;
 
                 case CardType.Reverse:
                     reversed = !reversed;
-                    Message += $"• Now going {(reversed ? "backwards" : "forwards")}!\n";
+                    gameLog.Add($"• Now going {(reversed ? "backwards" : "forwards")}!");
                     break;
 
                 case CardType.DrawTwo:
                 case CardType.WildDrawFour:
                     Turn = FollowingTurn;
                     Draw(CurrentPlayer, card.CardsToDraw);
-                    Message += $"• {CurrentPlayer.User?.Username} draws {card.CardsToDraw} cards and skips a turn!\n";
+                    gameLog.Add($"• {CurrentPlayer.User?.Username} draws {card.CardsToDraw} cards and skips a turn!");
                     break;
             }
 
@@ -613,16 +629,19 @@ namespace PacManBot.Games.Concrete
         }
 
 
-        private bool WaitingForColor()
+        private bool ClearGameLog()
         {
-            return Time > 0 && TopCard.Color == CardColor.Black;
+            bool clear = !CurrentPlayer.User.IsBot || AllBots;
+            if (clear) gameLog.Clear();
+            Message = "";
+            return clear;
         }
 
 
         private void Callout(UnoPlayer player)
         {
             Draw(player, 2);
-            Message += $"• {player.User.Username} was called out for not saying Uno and drew 2 cards!\n";
+            gameLog.Add($"• {player.User.Username} was called out for not saying Uno and drew 2 cards!");
             updatedPlayers.Add(player);
         }
 
@@ -666,6 +685,7 @@ namespace PacManBot.Games.Concrete
             embed.AddField("Top of the pile", TopCard);
 
             bool resend = false;
+
             if (player.message == null) resend = true;
             else
             {
@@ -681,7 +701,7 @@ namespace PacManBot.Games.Concrete
                 }
                 catch (HttpException e) when (e.DiscordCode == 50007) // Can't send DMs
                 {
-                    Message = $"{player.User?.Mention} You can't play unless you have DMs enabled!\n";
+                    gameLog.Add($"{player.User?.Mention} You can't play unless you have DMs enabled!\n");
                     RemovePlayer(player);
                 } 
             }

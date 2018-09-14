@@ -55,6 +55,19 @@ namespace PacManBot.Services
 
 
 
+        /// <summary>Retrieves the prefix used in a particular context, or an empty string if none is necessary.</summary>
+        public string GetPrefix(ICommandContext context) => GetPrefix(context.Channel);
+
+        /// <summary>Retrieves the prefix used in a particular channel, or an empty string if none is necessary.</summary>
+        public string GetPrefix(ulong channelId) => GetPrefix(client.GetMessageChannel(channelId));
+
+        /// <summary>Retrieves the prefix used in a particular channel, or an empty string if none is necessary.</summary>
+        public string GetPrefix(IMessageChannel channel)
+        {
+            return RequiresPrefix(channel) ? GetGuildPrefix((channel as IGuildChannel)?.Guild) : "";
+        }
+
+
         /// <summary>Retrieves the specified guild's custom prefix, or the default prefix if no record is found.</summary>
         public string GetGuildPrefix(IGuild guild) => GetGuildPrefix(guild?.Id ?? 0);
 
@@ -67,19 +80,6 @@ namespace PacManBot.Services
 
             cachedPrefixes.TryAdd(guildId, prefix);
             return prefix;
-        }
-
-
-        /// <summary>Retrieves the prefix used in a particular context, or an empty string if none is necessary.</summary>
-        public string GetPrefix(ICommandContext context) => GetPrefix(context.Channel);
-
-        /// <summary>Retrieves the prefix used in a particular channel, or an empty string if none is necessary.</summary>
-        public string GetPrefix(ulong channelId) => GetPrefix(client.GetMessageChannel(channelId));
-
-        /// <summary>Retrieves the prefix used in a particular channel, or an empty string if none is necessary.</summary>
-        public string GetPrefix(IMessageChannel channel)
-        {
-            return RequiresPrefix(channel) ? GetGuildPrefix((channel as IGuildChannel)?.Guild) : "";
         }
 
 

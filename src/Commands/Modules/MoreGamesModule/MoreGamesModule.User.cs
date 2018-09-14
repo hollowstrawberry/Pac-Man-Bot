@@ -58,8 +58,7 @@ namespace PacManBot.Commands.Modules
 
                 case "h":
                 case "help":
-                    var summary = typeof(MoreGamesModule).GetMethod(nameof(RubiksCube)).GetCustomAttribute<SummaryAttribute>();
-                    await ReplyAsync(summary.Text.Replace("{prefix}", $"{Prefix}"));
+                    await GetModule<GeneralModule>().SendCommandHelp("rubik");
                     return;
 
                 
@@ -328,8 +327,7 @@ namespace PacManBot.Commands.Modules
         [PetCommand("help", "h")]
         public async Task PetHelp(PetGame pet, string args)
         {
-            var summary = typeof(MoreGamesModule).GetMethod(nameof(PetMaster)).GetCustomAttribute<SummaryAttribute>();
-            await ReplyAsync(summary?.Text.Replace("{prefix}", Prefix) ?? "Couldn't get help");
+            await GetModule<GeneralModule>().SendCommandHelp("pet");
         }
 
 

@@ -129,8 +129,9 @@ namespace PacManBot.Commands.Modules
         [Summary("__Tip__: Switching back and forth with DMs to see your cards can be tiresome, " +
                  "so try having your cards open in your phone while you're playing in a computer." +
                  "\n\n__**Commands:**__\n" +
-                 "\n • **{prefix}uno** - Starts a new Uno game, for up to 10 players. You can specify players and bots as opponents." +
+                 "\n • **{prefix}uno** - Starts a new Uno game for up to 10 players. You can specify players and bots as players. " +
                  "Players can join or leave at any time." +
+                 "\n • **{prefix}uno bots** - Starts a bot-only game with the specified bots." +
                  "\n • **{prefix}uno join** - Join a game or invite a user or bot." +
                  "\n • **{prefix}uno leave** - Leave the game or kick a bot or inactive user." +
                  "\n • **{prefix}bump** - Move the game to the bottom of the chat." +
@@ -160,13 +161,21 @@ namespace PacManBot.Commands.Modules
         public async Task StartUnoDm() => await RunMultiplayerGame<UnoGame>(Context.User, Context.Client.CurrentUser);
 
 
+        [Command("uno bots"), Alias("uno bot", "unobot", "unobots"), Parameters("[bots]"), HideHelp]
+        [Summary("Start a bot-only uno match.")]
+        [RequireContext(ContextType.Guild)]
+        [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
+        public async Task StartUnoBots(params SocketGuildUser[] startingPlayers)
+        {
+            startingPlayers = startingPlayers.Where(x => x.IsBot).ToArray();
+            if (startingPlayers.Length < 2) await ReplyAsync("You need to specify at least 2 bots for a bot game.");
+            else await RunMultiplayerGame<UnoGame>(startingPlayers);
+        }
+
+
         [Command("uno help"), Alias("uno h", "uno rules", "uno commands"), Priority(1), HideHelp]
         [Summary("Gives rules and commands for the Uno game.")]
-        public async Task UnoHelp()
-        {
-            var summary = typeof(MoreGamesModule).GetMethod(nameof(StartUno)).GetCustomAttribute<SummaryAttribute>();
-            await ReplyAsync(summary?.Text.Replace("{prefix}", Prefix).Replace("{division}", "") ?? "Couldn't get help");
-        }
+        public async Task UnoHelp() => await GetModule<GeneralModule>().SendCommandHelp("uno");
 
 
         [Command("uno join"), Alias("uno add", "uno invite"), Priority(1), HideHelp]

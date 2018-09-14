@@ -72,6 +72,7 @@ namespace PacManBot.Commands.Modules
 
             var helpInfo = new CommandHelpInfo(command);
 
+            const string pad = "\nᅠ";
 
             var embed = new EmbedBuilder
             {
@@ -79,28 +80,38 @@ namespace PacManBot.Commands.Modules
                 Color = Colors.PacManYellow
             };
 
-            if (helpInfo.Hidden) embed.AddField("Hidden command", "*Are you a wizard?*", true);
+            if (helpInfo.Hidden)
+            {
+                embed.AddField("Hidden command", "*Are you a wizard?*" + pad, true);
+            }
 
-            if (helpInfo.Parameters != "") embed.AddField("Parameters", helpInfo.Parameters, true);
+            if (helpInfo.Parameters != "")
+            {
+                embed.AddField("Parameters", helpInfo.Parameters + pad, true);
+            }
 
             if (command.Aliases.Count > 1)
             {
-                string aliasList = "";
-                for (int i = 1; i < command.Aliases.Count; i++) aliasList += $"{", ".If(i > 1)}{Prefix}{command.Aliases[i]}";
-                embed.AddField("Aliases", aliasList, true);
+                string aliases = command.Aliases.Skip(1).Select(x => $"{Prefix}{x}").JoinString(", ");
+                embed.AddField("Aliases", aliases + pad, true);
             }
 
             if (helpInfo.Summary != "")
             {
-                foreach (string section in helpInfo.Summary
-                    .Replace("{prefix}", Prefix)
-                    .Split("\n\n\n"))
+                var summarySections = helpInfo.Summary.Replace("{prefix}", Prefix).Split("\n\n\n").ToArray();
+                for (int i = 0; i < summarySections.Length; i++)
                 {
-                    embed.AddField("Summary", section + "ᅠ");
+                    embed.AddField("Summary" + $" #{i+1}".If(summarySections.Length > 1), summarySections[i] + pad);
                 }
             }
 
-            if (helpInfo.ExampleUsage != "") embed.AddField("Example Usage", helpInfo.ExampleUsage.Replace("{prefix}", Prefix));
+            if (helpInfo.ExampleUsage != "")
+            {
+                embed.AddField("Example Usage", helpInfo.ExampleUsage.Replace("{prefix}", Prefix) + pad);
+            }
+
+            // I like padding between the fields, but not on the last one
+            embed.Fields.Last().Value = embed.Fields.Last().Value.ToString().Replace(pad, "");
 
             await ReplyAsync(embed);
         }
