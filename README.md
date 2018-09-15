@@ -34,9 +34,7 @@ Importantly, please note that the bot uses many custom emotes throughout its com
 
 Should you want to maintain a custom fork of Pac-Man Bot, it's very simple.  
 First, you'll need to add the NuGet source for the Discord.Net library, for the project to use. An IDE such as Visual Studio would help you with this. The source link is https://www.myget.org/F/discord-net/api/v3/index.json   
-
-&nbsp;
-
+&nbsp;  
 To compile the bot, you'll need .NET. The install process varies with your operating system. In Windows, Visual Studio should install it for you. Otherwise, [here's a link](https://www.microsoft.com/net/learn/get-started-with-dotnet-tutorial).  
 With .NET installed, you run a command such as this one:  
 
