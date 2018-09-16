@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Discord;
@@ -126,6 +127,7 @@ namespace PacManBot.Games.Concrete
             public DiscordShardedClient client;
             public IUserMessage message;
             private IUser user;
+        
 
             public IUser User => user ?? (user = client.GetUser(id));
 
@@ -236,9 +238,9 @@ namespace PacManBot.Games.Concrete
 
         private UnoGame() { }
 
-        protected override void Initialize(ulong channelId, SocketUser[] players, IServiceProvider services)
+        protected override async Task Initialize(ulong channelId, SocketUser[] players, IServiceProvider services)
         {
-            base.Initialize(channelId, null, services);
+            await base.Initialize(channelId, null, services);
 
             // Make deck
             foreach (var color in EnumTraits<CardColor>.Values.Take(4))
@@ -275,7 +277,7 @@ namespace PacManBot.Games.Concrete
                 Message = inviteMsg;
             }
 
-            foreach (var player in toAdd) AddPlayer(player);
+            foreach (var player in toAdd) await AddPlayer(player);
 
             ApplyCardEffect();
 
@@ -305,7 +307,7 @@ namespace PacManBot.Games.Concrete
         }
 
 
-        public void Input(string input, ulong userId = 1)
+        public async void Input(string input, ulong userId = 1)
         {
             LastPlayed = DateTime.Now;
             input = StripPrefix(input.ToLower());
@@ -317,7 +319,7 @@ namespace PacManBot.Games.Concrete
             {
                 var player = players.First(x => x.User?.Id == userId);
                 player.message = null;
-                SendCards(player);
+                await SendCards(player);
                 return;
             }
 
@@ -434,7 +436,7 @@ namespace PacManBot.Games.Concrete
             }
             else if (Channel is IGuildChannel && !AllBots)
             {
-                Message = $"{CurrentPlayer?.User?.Mention}'s turn";
+                Message = $"Your turn, {CurrentPlayer.User?.Mention}.";
             }
 
 
@@ -443,9 +445,9 @@ namespace PacManBot.Games.Concrete
             if (!calledByAi || !CurrentPlayer.User.IsBot)
             {
                 games.Save(this);
-                foreach (var player in updatedPlayers.Distinct().Where(x => !x.User.IsBot))
+                foreach (var player in updatedPlayers.Distinct().Where(x => !x.User.IsBot).ToArray())
                 {
-                    SendCards(player);
+                    await SendCards(player);
                 }
                 updatedPlayers = new List<UnoPlayer>();
             }
@@ -583,7 +585,7 @@ namespace PacManBot.Games.Concrete
                     Bot.Random.Shuffle(discardPile);
                     drawPile = discardPile.ToList();
                     discardPile = new List<Card> { drawPile.Pop() };
-                    gameLog.Add("• Shuffled and turned over the discard pile.\n");
+                    gameLog.Add("• Shuffled and turned over the discard pile.");
 
                     if (drawPile.Count == 0) break; // No more cards aaaaaa!
                 }
@@ -618,6 +620,7 @@ namespace PacManBot.Games.Concrete
                 case CardType.WildDrawFour:
                     Turn = FollowingTurn;
                     Draw(CurrentPlayer, card.CardsToDraw);
+                    updatedPlayers.Add(CurrentPlayer);
                     gameLog.Add($"• {CurrentPlayer.User?.Username} draws {card.CardsToDraw} cards and skips a turn!");
                     break;
             }
@@ -668,21 +671,20 @@ namespace PacManBot.Games.Concrete
         }
 
 
-        private async void SendCards(UnoPlayer player)
+        private async Task SendCards(UnoPlayer player)
         {
             if (player.User == null || player.User.IsBot || Channel is IDMChannel) return;
 
             var embed = new EmbedBuilder
             {
-                Title = $"{GameName} game in #{Channel.Name}{(Guild == null ? "" : $" ({Guild.Name})")}",
-                Description = "Send the name of a card in the game's channel to discard that card." +
+                Title = $"{GameName}",
+                Description = $"Send the name of a card in {Channel.Mention()} to discard that card." +
                               "\nIf you can't or don't want to choose any card, say \"draw\" instead." +
                               "\nYou can also use \"auto\" instead of a color/number/both.\nᅠ",
                 Color = RgbCardColor[(int)TopCard.Color],
             };
 
-            embed.AddField("Your cards", CardsDisplay(player).Truncate(1022) + "\nᅠ");
-            embed.AddField("Top of the pile", TopCard);
+            embed.AddField("Your cards", CardsDisplay(player).Truncate(1024));
 
             bool resend = false;
 
@@ -709,7 +711,7 @@ namespace PacManBot.Games.Concrete
 
 
 
-        public string AddPlayer(IUser user)
+        public async Task<string> AddPlayer(IUser user)
         {
             if (players.Count == 10) return "The game is full!";
             if (players.Any(x => x.id == user.Id)) return "You're already playing!";
@@ -717,7 +719,8 @@ namespace PacManBot.Games.Concrete
             var player = new UnoPlayer(user, client);
             players.Add(player);
             Draw(player, CardsPerPlayer);
-            SendCards(player);
+
+            await SendCards(player);
 
             return null;
         }
@@ -741,7 +744,10 @@ namespace PacManBot.Games.Concrete
         {
             SetServices(services);
 
-            foreach (var player in players) player.client = client;
+            foreach (var player in players)
+            {
+                player.client = client;
+            }
         }
     }
 }

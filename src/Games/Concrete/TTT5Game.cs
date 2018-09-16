@@ -1,8 +1,9 @@
 using System;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using Discord;
 using Discord.WebSocket;
 using PacManBot.Utils;
@@ -25,12 +26,14 @@ namespace PacManBot.Games.Concrete
 
         private TTT5Game() { }
 
-        protected override void Initialize(ulong channelId, SocketUser[] players, IServiceProvider services)
+        protected override Task Initialize(ulong channelId, SocketUser[] players, IServiceProvider services)
         {
             base.Initialize(channelId, players, services);
 
             board = new Player[5, 5];
             board.Fill(Player.None);
+
+            return Task.CompletedTask;
         }
 
 

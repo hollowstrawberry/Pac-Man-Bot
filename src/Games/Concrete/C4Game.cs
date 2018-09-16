@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using Discord;
 using Discord.WebSocket;
@@ -25,13 +26,15 @@ namespace PacManBot.Games.Concrete
 
         private C4Game() { }
 
-        protected override void Initialize(ulong channelId, SocketUser[] players, IServiceProvider services)
+        protected override Task Initialize(ulong channelId, SocketUser[] players, IServiceProvider services)
         {
             base.Initialize(channelId, players, services);
 
             highlighted = new List<Pos>();
             board = new Player[Columns, Rows];
             board.Fill(Player.None);
+
+            return Task.CompletedTask;
         }
 
 

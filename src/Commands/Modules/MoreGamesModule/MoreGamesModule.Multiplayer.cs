@@ -25,7 +25,7 @@ namespace PacManBot.Commands.Modules
                 return;
             }
 
-            var game = MultiplayerGame.CreateNew<TGame>(Context.Channel.Id, players, Services);
+            var game = await MultiplayerGame.CreateNew<TGame>(Context.Channel.Id, players, Services);
             Games.Add(game);
             while (!game.AllBots && game.BotTurn) game.BotInput(); // When a bot starts
             var gameMessage = await ReplyAsync(game.GetContent(), game.GetEmbed());
@@ -209,7 +209,7 @@ namespace PacManBot.Commands.Modules
                 return;
             }
 
-            string failReason = game.AddPlayer(user);
+            string failReason = await game.AddPlayer(user);
 
             if (failReason != null) await ReplyAsync($"{user.Mention} {"You ".If(self)}can't join this game: {failReason}");
             else await MoveGame();

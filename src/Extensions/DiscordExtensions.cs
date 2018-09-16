@@ -56,6 +56,13 @@ namespace PacManBot.Extensions
         }
 
 
+        /// <summary>Returns the mention of a channel to send in chat.</summary>
+        public static string Mention(this IChannel channel)
+        {
+            return $"<#{channel.Id}>";
+        }
+
+
         /// <summary>Returns the name of a channel, including its guild if it is a <see cref="IGuildChannel"/>.</summary>
         public static string NameAndGuild(this IChannel channel)
         {
