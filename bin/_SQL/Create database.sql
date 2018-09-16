@@ -1,0 +1,4 @@
+CREATE TABLE PacManScores (Score INT, UserId BIGINT, State INT, Turns INT, Username TEXT, Channel TEXT, Date DATETIME);
+CREATE TABLE Prefixes (Id BIGINT PRIMARY KEY, Prefix TEXT);
+CREATE TABLE NoPrefixChannels (Id BIGINT PRIMARY KEY);
+CREATE TABLE NoAutoresponseGuilds (Id BIGINT PRIMARY KEY);

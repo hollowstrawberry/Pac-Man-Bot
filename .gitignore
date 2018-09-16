@@ -31,4 +31,3 @@ bin/*/**/config.bot
 *.tmp
 *.tmp_proj
 *.scc
-*.sqlite
