@@ -205,7 +205,7 @@ namespace PacManBot.Commands.Modules
         }
 
 
-        [PetCommand("stats", "achievements", "unlocks")]
+        [PetCommand("stats", "statistics", "achievements", "unlocks")]
         public async Task PetStats(PetGame pet, string args)
         {
             var user = Context.User as SocketGuildUser;
@@ -232,7 +232,7 @@ namespace PacManBot.Commands.Modules
         [PetCommand("feed", "food", "eat", "hunger", "satiation")]
         public async Task PetFeed(PetGame pet, string args)
         {
-            if (pet.Feed()) await Context.Message.AddReactionAsync(Bot.Random.Choose(PetGame.FoodEmotes).ToEmoji());
+            if (pet.Feed()) await Context.Message.AddReactionAsync(Bot.Random.Choose(Content.petFoodEmotes).ToEmoji());
             else await ReplyAsync($"{CustomEmoji.Cross} Your pet is already full! (-1 happiness)");
         }
 
@@ -240,7 +240,7 @@ namespace PacManBot.Commands.Modules
         [PetCommand("play", "fun", "happy", "happiness")]
         public async Task PetPlay(PetGame pet, string args)
         {
-            if (pet.Play()) await Context.Message.AddReactionAsync(Bot.Random.Choose(PetGame.PlayEmotes).ToEmoji());
+            if (pet.Play()) await Context.Message.AddReactionAsync(Bot.Random.Choose(Content.petPlayEmotes).ToEmoji());
             else
             {
                 string message = pet.energy.Ceiling() >= 5
@@ -255,7 +255,7 @@ namespace PacManBot.Commands.Modules
         [PetCommand("clean", "hygiene", "wash")]
         public async Task PetClean(PetGame pet, string args)
         {
-            if (pet.Clean()) await Context.Message.AddReactionAsync(Bot.Random.Choose(PetGame.CleanEmotes).ToEmoji());
+            if (pet.Clean()) await Context.Message.AddReactionAsync(Bot.Random.Choose(Content.petCleanEmotes).ToEmoji());
             else await ReplyAsync($"{CustomEmoji.Cross} Your pet is already clean! (-1 happiness)");
         }
 
@@ -273,7 +273,7 @@ namespace PacManBot.Commands.Modules
             else
             {
                 string message = pet.asleep ? "Your pet is already sleeping." : "Your pet is now asleep.";
-                await ReplyAsync($"{Bot.Random.Choose(PetGame.SleepEmotes)} {message}");
+                await ReplyAsync($"{Bot.Random.Choose(Content.petSleepEmotes)} {message}");
                 if (!pet.asleep) pet.ToggleSleep();
             }
         }
@@ -331,7 +331,7 @@ namespace PacManBot.Commands.Modules
         }
 
 
-        [PetCommand("pet", "pat", "pot", "p", "wakagotchi")]
+        [PetCommand("pet", "pat", "pot", "p", "wakagotchi", "gotchi")]
         public async Task PetPet(PetGame pet, string args)
         {
             var now = DateTime.Now;

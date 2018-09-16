@@ -23,11 +23,6 @@ namespace PacManBot.Games.Concrete
         public string FilenameKey => "pet";
 
 
-        public static readonly string[] FoodEmotes = { "🍌", "🍎", "🍊", "🍕", "🌮", "🍩", "🍪", "🍐", "🍉", "🍇", "🍑", "🍧", "🍫", "🥕", "🍼" };
-        public static readonly string[] PlayEmotes = { "⚽", "🏀", "🏈", "🎾", "🏓", "🎨", "🎤", "🎭", "🏐", "🎣", };
-        public static readonly string[] CleanEmotes = { "💧", "🚿", "🛁", "🚽", "🚰", "💦", "👣", "💩", "✨" };
-        public static readonly string[] SleepEmotes = { "💤", "🛏", "🌃", "🌠", "🌙", "🌜" };
-
         public static readonly string[] BannerUrl = {
             null,
             "https://cdn.discordapp.com/attachments/412314001414815751/448939830433415189/copperbanner.png",

@@ -99,7 +99,78 @@ To start a custom game, send **{prefix}play \\`\\`\\`map\\`\\`\\`** or **{prefix
 ],
 
 
+
+
+"gameStartTexts": [
+"I'll give it a go",
+"Let's do this", 
+"Dare to defy the gamemaster?", 
+"May the best win", 
+"I was getting bored!",
+"This will be fun.",
+"Maybe you should play with a real person instead",
+"In need of friends to play with?"
+],
+
+"gamePlayingTexts": [
+"<a:pacman:409803570544902144>",
+"<:thinkxel:409803420308996106>",
+"🤔",
+"🔣", 
+"🤖",
+"Hmm...", 
+"Nice move.", 
+"Take this!", 
+"Huh.",
+"Aha!",
+"Come on now", 
+"All according to plan",
+"I think I'm winning this one", 
+"Beep boop", 
+"Boop?",
+"Interesting...",
+"Recalculating...", 
+"Error: YourSkills not found",
+"I wish to be a real bot", 
+"That's all you got?",
+"Let's see what happens", 
+"I don't even know what I'm doing", 
+"This is a good time for you to quit", "Curious."
+],
+
+"gameWinTexts": [
+"<a:pacman:409803570544902144>",
+"<a:danceblobfast:439575722567401479>",
+"👍",
+"Rekt",
+"Better luck next time",
+"Beep!",
+":)",
+"Nice",
+"Muahaha",
+"You weren't even trying"
+],
+
+"gameNotWinTexts": [
+"Oof",
+"No u",
+"Foiled again!", 
+"Boo...",
+"Ack",
+"Good job!",
+"gg",
+"You're good at this",
+"I let you win, of course"
+],
+
+
+
+
 "petImageUrl": "https://cdn.discordapp.com/attachments/353729197824278541/447979173554946051/clockagotchi.png",
+"petFoodEmotes": [ "🍌", "🍎", "🍊", "🍕", "🌮", "🍩", "🍪", "🍐", "🍉", "🍇", "🍑", "🍧", "🍫", "🥕", "🍼" ],
+"petPlayEmotes": [ "⚽", "🏀", "🏈", "🎾", "🏓", "🎨", "🎤", "🎭", "🏐", "🎣" ],
+"petCleanEmotes": [ "💧", "🚿", "🛁", "🚽", "🚰", "💦", "👣", "💩", "✨" ],
+"petSleepEmotes": [ "💤", "🛏", "🌃", "🌠", "🌙", "🌜" ],
 
 
 "pettingMessages": [

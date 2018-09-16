@@ -1,4 +1,6 @@
 ﻿using System.Runtime.Serialization;
+using PacManBot.Games;
+using PacManBot.Games.Concrete;
 
 namespace PacManBot
 {
@@ -20,25 +22,56 @@ namespace PacManBot
         /// <summary>Fields in the about command.</summary>
         [DataMember] public readonly (string name, string desc)[] aboutFields;
 
-        /// <summary><see cref="Games.Concrete.PacManGame"/> map.</summary>
+
+
+
+        /// <summary><see cref="PacManGame"/> map.</summary>
         [DataMember] public readonly string gameMap;
 
-        /// <summary><see cref="Games.Concrete.PacManGame"/> in-game help.</summary>
+        /// <summary><see cref="PacManGame"/> in-game help.</summary>
         [DataMember] public readonly string gameHelp;
 
-        /// <summary><see cref="Games.Concrete.PacManGame"/> custom map creation help.</summary>
+        /// <summary><see cref="PacManGame"/> custom map creation help.</summary>
         [DataMember] public readonly string customHelp;
 
-        /// <summary><see cref="Games.Concrete.PacManGame"/> custom map creation help links.</summary>
+        /// <summary><see cref="PacManGame"/> custom map creation help links.</summary>
         [DataMember] public readonly (string name, string url)[] customLinks;
 
-        /// <summary><see cref="Games.Concrete.PetGame"/> default pet image.</summary>
+
+
+        /// <summary>AI match flavor text for <see cref="MultiplayerGame"/>.</summary>
+        [DataMember] public readonly string[] gameStartTexts;
+
+        /// <summary>AI match flavor text for <see cref="MultiplayerGame"/>.</summary>
+        [DataMember] public readonly string[] gamePlayingTexts;
+
+        /// <summary>AI match flavor text for <see cref="MultiplayerGame"/>.</summary>
+        [DataMember] public readonly string[] gameWinTexts;
+
+        /// <summary>AI match flavor text for <see cref="MultiplayerGame"/>.</summary>
+        [DataMember] public readonly string[] gameNotWinTexts;
+
+
+
+        /// <summary><see cref="PetGame"/> default pet image.</summary>
         [DataMember] public readonly string petImageUrl;
 
-        /// <summary><see cref="Games.Concrete.PetGame"/> messages.</summary>
+        /// <summary>Food emoji used as reactions for <see cref="PetGame"/>.</summary>
+        [DataMember] public readonly string[] petFoodEmotes;
+
+        /// <summary>Game emoji used as reactions for <see cref="PetGame"/>.</summary>
+        [DataMember] public readonly string[] petPlayEmotes;
+
+        /// <summary>Cleaning emoji used as reactions for <see cref="PetGame"/>.</summary>
+        [DataMember] public readonly string[] petCleanEmotes;
+
+        /// <summary>Sleeping emoji used as reactions for <see cref="PetGame"/>.</summary>
+        [DataMember] public readonly string[] petSleepEmotes;
+
+        /// <summary>Messages used in <see cref="PetGame"/> petting.</summary>
         [DataMember] public readonly string[] pettingMessages;
 
-        /// <summary><see cref="Games.Concrete.PetGame"/> advanced messages.</summary>
+        /// <summary>Messages used in <see cref="PetGame"/> petting.</summary>
         [DataMember] public readonly string[] superPettingMessages;
     }
 }

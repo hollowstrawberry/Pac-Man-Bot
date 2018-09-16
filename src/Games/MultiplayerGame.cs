@@ -43,32 +43,8 @@ namespace PacManBot.Games
             return _users[i] ?? (_users[i] = client.GetUser(UserId[i]));
         }
 
+        
 
-
-        // AI flavor text
-
-        public static readonly string[] StartTexts = {
-            "I'll give it a go", "Let's do this", "Dare to defy the gamemaster?", "May the best win", "I was getting bored!",
-            "Maybe you should play with a real person instead", "In need of friends to play with?"
-        };
-        public static readonly string[] GameTexts = {
-            "🤔", "🔣", "🤖", CustomEmoji.Thinkxel, CustomEmoji.PacMan, "Hmm...", "Nice move.", "Take this!", "Huh.", "Aha!",
-            "Come on now", "All according to plan", "I think I'm winning this one", "Beep boop", "Boop?", "Interesting...",
-            "Recalculating...", "ERROR: YourSkills not found", "I wish to be a real bot", "That's all you got?",
-            "Let's see what happens", "I don't even know what I'm doing", "This is a good time for you to quit", "Curious."
-        };
-        public static readonly string[] WinTexts = {
-            "👍", CustomEmoji.PacMan, CustomEmoji.RapidBlobDance, "Rekt", "Better luck next time", "Beep!", ":)", "Nice",
-            "Muahaha", "You weren't even trying"
-        };
-        public static readonly string[] NotWinTexts = {
-            "Oof", "No u", "Foiled again!", "Boo...", "Ack", "Good job!", "gg", "You're good at this", "I let you win, of course"
-        };
-
-
-
-
-        // Methods
 
         /// <summary>Creates a new instance of <typeparamref name="TGame"/> with the specified channel and players.</summary>
         public static async Task<TGame> CreateNew<TGame>(ulong channelId, SocketUser[] players, IServiceProvider services)
@@ -112,15 +88,24 @@ namespace PacManBot.Games
         {
             if (State != State.Cancelled && UserId.Count(id => id == client.CurrentUser.Id) == 1)
             {
-                if (Message == "") Message = Bot.Random.Choose(StartTexts);
-                else if (Time > 1 && Winner == Player.None && (!AllBots || Time % 2 == 0)) Message = Bot.Random.Choose(GameTexts);
+                var texts = new[] { Message };
+
+                if (Message == "")
+                {
+                    texts = Content.gameStartTexts;
+                }
+                else if (Time > 1 && Winner == Player.None && (!AllBots || Time % 2 == 0))
+                {
+                    texts = Content.gamePlayingTexts;
+                }
                 else if (Winner != Player.None)
                 {
-                    if (Winner != Player.Tie && UserId[Winner] == client.CurrentUser.Id) Message = Bot.Random.Choose(WinTexts);
-                    else Message = Bot.Random.Choose(NotWinTexts);
+                    texts = Winner != Player.Tie && UserId[Winner] == client.CurrentUser.Id
+                        ? Content.gameWinTexts
+                        : Content.gameNotWinTexts;
                 }
 
-                return Message;
+                return Message = Bot.Random.Choose(texts);
             }
 
             if (State == State.Active)

@@ -423,7 +423,7 @@ namespace PacManBot.Games.Concrete
                 {
                     State = State.Completed;
                     Winner = Turn;
-                    if (CurrentPlayer.id == client.CurrentUser.Id) gameLog.Add($"\n {Bot.Random.Choose(WinTexts)}");
+                    if (CurrentPlayer.id == client.CurrentUser.Id) gameLog.Add($"\n {Bot.Random.Choose(Content.gameWinTexts)}");
                     return;
                 }
 
@@ -436,7 +436,7 @@ namespace PacManBot.Games.Concrete
             }
             else if (Channel is IGuildChannel && !AllBots)
             {
-                Message = $"Your turn, {CurrentPlayer.User?.Mention}.";
+                Message = $"Your turn, {CurrentPlayer.User?.Mention}";
             }
 
 

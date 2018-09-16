@@ -43,6 +43,7 @@ namespace PacManBot.Commands.Modules
                     $"There is already a different game in this channel!\nWait until it's finished or try doing `{Prefix}cancel`");
                 return;
             }
+            Games.AllUserGames.OfType<PetGame>().Any(pet => pet.PetName.ToLower() == "cerberus");
 
             string[] argSplice = args.Split("```");
             string preMessage = "";
