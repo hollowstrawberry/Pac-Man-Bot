@@ -6,6 +6,5 @@
   "commandLogLevel": "Info",
   "messageCacheSize": 100,
 
-  "discordToken": "",
-  "developers": []
+  "discordToken": ""
 }

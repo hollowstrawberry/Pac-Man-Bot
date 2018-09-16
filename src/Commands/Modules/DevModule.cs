@@ -16,7 +16,7 @@ using PacManBot.Services.Database;
 
 namespace PacManBot.Commands.Modules
 {
-    [Name(CustomEmoji.RapidBlobDance + "Developer"), Remarks("0")]
+    [Name(CustomEmoji.Discord + "Developer"), Remarks("0")]
     [RequireDeveloper, BetterRequireBotPermission(ChannelPermission.AddReactions)]
     public class DevModule : BaseCustomModule
     {

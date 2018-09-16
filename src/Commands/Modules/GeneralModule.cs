@@ -149,7 +149,7 @@ namespace PacManBot.Commands.Modules
 
                     if (!helpInfo.Hidden)
                     {
-                        var conditions = await command.CheckPreconditionsAsync(Context);
+                        var conditions = await command.CheckPreconditionsAsync(Context, Services);
                         if (!conditions.IsSuccess) continue;
 
                         if (expanded)
