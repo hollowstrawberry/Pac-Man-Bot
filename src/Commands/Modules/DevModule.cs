@@ -16,7 +16,7 @@ using PacManBot.Services.Database;
 
 namespace PacManBot.Commands.Modules
 {
-    [Name("Developer"), Remarks("0")]
+    [Name(CustomEmoji.RapidBlobDance + "Developer"), Remarks("0")]
     [RequireOwner, BetterRequireBotPermission(ChannelPermission.AddReactions)]
     public class DevModule : BaseCustomModule
     {
@@ -30,6 +30,70 @@ namespace PacManBot.Commands.Modules
             Scripting = services.Get<ScriptingService>();
         }
 
+
+
+
+        [Command("dev"), Alias("devcommands"), HideHelp]
+        [Summary("Shows all developer commands")]
+        public async Task ShowDevCommands()
+        {
+            var commands = typeof(DevModule).GetMethods()
+                .Select(x => x.GetCustomAttribute<CommandAttribute>()?.Text)
+                .Where(x => x != null)
+                .Distinct()
+                .JoinString(", ");
+
+            var embed = new EmbedBuilder
+            {
+                Title = $"{CustomEmoji.Staff} Developer Commands",
+                Color = Colors.PacManYellow,
+                Description = commands
+            };
+
+            await ReplyAsync(embed);
+        }
+
+
+        [Command("$restart"), Alias("$shutdown"), HideHelp]
+        [Summary("Immediately shuts down the bot. Developer only.")]
+        public async Task ShutDown()
+        {
+            await AutoReactAsync();
+            await Logger.Log(LogSeverity.Info, LogSource.Owner, "Shutting down.");
+            Environment.Exit(ExitCodes.ManualReboot);
+        }
+
+
+        [Command("$update"), HideHelp]
+        [Summary("Perform a `git pull` and close the bot. Developer only.")]
+        public async Task UpdateAndShutDown()
+        {
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                await AutoReactAsync(false);
+                return;
+            }
+
+            var process = new Process()
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = "/bin/bash",
+                    Arguments = $"-c \"git pull\"",
+                    WorkingDirectory = Environment.CurrentDirectory,
+                    RedirectStandardOutput = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                }
+            };
+            process.Start();
+            string result = process.StandardOutput.ReadToEnd();
+            process.WaitForExit();
+
+            await ReplyAsync($"```\n{result.Truncate(1990)}```");
+
+            await ShutDown();
+        }
 
 
         [Command("setusername"), HideHelp]
@@ -114,48 +178,6 @@ namespace PacManBot.Commands.Modules
 
             await Context.Message.RemoveReactionAsync(CustomEmoji.ELoading, Context.Client.CurrentUser, DefaultOptions);
             if (result != null) await ReplyAsync($"```\n{result.ToString().Truncate(1990)}```");
-        }
-
-
-        [Command("$restart"), Alias("$shutdown")]
-        [Summary("Immediately shuts down the bot. Developer only.")]
-        public async Task ShutDown()
-        {
-            await AutoReactAsync();
-            await Logger.Log(LogSeverity.Info, LogSource.Owner, "Shutting down.");
-            Environment.Exit(ExitCodes.ManualReboot);
-        }
-
-
-        [Command("$update"), HideHelp]
-        [Summary("Perform a `git pull` and close the bot. Developer only.")]
-        public async Task UpdateAndShutDown()
-        {
-            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-            {
-                await AutoReactAsync(false);
-                return;
-            }
-
-            var process = new Process()
-            {
-                StartInfo = new ProcessStartInfo
-                {
-                    FileName = "/bin/bash",
-                    Arguments = $"-c \"git pull\"",
-                    WorkingDirectory = Environment.CurrentDirectory,
-                    RedirectStandardOutput = true,
-                    UseShellExecute = false,
-                    CreateNoWindow = true,
-                }
-            };
-            process.Start();
-            string result = process.StandardOutput.ReadToEnd();
-            process.WaitForExit();
-
-            await ReplyAsync($"```\n{result.Truncate(1990)}```");
-
-            await ShutDown();
         }
 
 
@@ -323,14 +345,6 @@ namespace PacManBot.Commands.Modules
             if (game.State != State.Active) Games.Remove(game);
 
             await AutoReactAsync(success);
-        }
-
-
-        [Command("throw"), HideHelp]
-        [Summary("Why would you do this")]
-        public Task ThrowException()
-        {
-            throw new Exception("Accuracy roll: 20 | Successful throw");
         }
     }
 }
