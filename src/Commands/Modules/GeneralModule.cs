@@ -317,7 +317,9 @@ namespace PacManBot.Commands.Modules
                 File.AppendAllText(Files.FeedbackLog, $"[{Context.User.FullName()}] {message}\n\n");
                 await ReplyAsync($"{CustomEmoji.Check} Message sent. Thank you!");
                 string content = $"```diff\n+Feedback received: {Context.User.FullName()}```\n{message}".Truncate(2000);
-                await Storage.AppInfo.Owner.SendMessageAsync(content, options: DefaultOptions);
+
+                var app = await Context.Client.GetApplicationInfoAsync(Bot.DefaultOptions);
+                await app.Owner.SendMessageAsync(content, options: DefaultOptions);
             }
             catch (Exception e)
             {

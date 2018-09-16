@@ -17,7 +17,7 @@ using PacManBot.Services.Database;
 namespace PacManBot.Commands.Modules
 {
     [Name(CustomEmoji.RapidBlobDance + "Developer"), Remarks("0")]
-    [RequireOwner, BetterRequireBotPermission(ChannelPermission.AddReactions)]
+    [RequireDeveloper, BetterRequireBotPermission(ChannelPermission.AddReactions)]
     public class DevModule : BaseCustomModule
     {
         public BotConfig Config { get; }
@@ -33,7 +33,7 @@ namespace PacManBot.Commands.Modules
 
 
 
-        [Command("dev"), Alias("devcommands"), HideHelp]
+        [Command("dev"), Alias("devcommands")]
         [Summary("Shows all developer commands")]
         public async Task ShowDevCommands()
         {
@@ -68,11 +68,13 @@ namespace PacManBot.Commands.Modules
         [Summary("Perform a `git pull` and close the bot. Developer only.")]
         public async Task UpdateAndShutDown()
         {
+            // I didn't find the need to implement it for other operating systems
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
                 await AutoReactAsync(false);
                 return;
             }
+
 
             var process = new Process()
             {
@@ -86,6 +88,7 @@ namespace PacManBot.Commands.Modules
                     CreateNoWindow = true,
                 }
             };
+
             process.Start();
             string result = process.StandardOutput.ReadToEnd();
             process.WaitForExit();

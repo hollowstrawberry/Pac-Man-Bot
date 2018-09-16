@@ -32,7 +32,6 @@ namespace PacManBot.Services
         private PacManDbContext Db => threadedDb.Value;
 
         public string DefaultPrefix { get; }
-        public RestApplication AppInfo { get; private set; }
 
 
 
@@ -48,8 +47,6 @@ namespace PacManBot.Services
             cachedPrefixes = new ConcurrentDictionary<ulong, string>();
             cachedAllowsAutoresponse = new ConcurrentDictionary<ulong, bool>();
             cachedNeedsPrefix = new ConcurrentDictionary<ulong, bool>();
-
-            client.LoggedIn += LoadAppInfo;
         }
 
 
@@ -190,15 +187,6 @@ namespace PacManBot.Services
             var list = scores.OrderByDescending(x => x.Score).Skip(start).Take(amount).ToList();
             logger.Log(LogSeverity.Info, LogSource.Storage, $"Grabbed {list.Count} score entries");
             return list;
-        }
-
-
-
-
-        private async Task LoadAppInfo()
-        {
-            AppInfo = await client.GetApplicationInfoAsync(Bot.DefaultOptions);
-            client.LoggedIn -= LoadAppInfo;
         }
     }
 }

@@ -151,8 +151,8 @@ namespace PacManBot.Services
         /// <summary>Tries to find special messages to respond to, returns whether it is successful.</summary>
         private async Task<bool> AutoresponseAsync(SocketUserMessage message)
         {
-            if (!(message.Channel is SocketGuildChannel gChannel) || storage.AllowsAutoresponse(gChannel.Guild.Id)
-                || storage.AppInfo?.Owner.Id == message.Author.Id)
+            if (!(message.Channel is SocketGuildChannel gChannel) || storage.AllowsAutoresponse(gChannel.Guild)
+                || botConfig.developers.Contains(message.Author.Id))
             {
                 if (WakaRegex.IsMatch(message.Content))
                 {

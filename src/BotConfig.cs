@@ -20,6 +20,9 @@ namespace PacManBot
         /// <summary>The prefix used for all guilds that don't set a custom prefix.</summary>
         [DataMember] public readonly string defaultPrefix = "<";
 
+        /// <summary>User IDs of users to be considered developers and able to use developer commands. Dangerous.</summary>
+        [DataMember] public readonly ulong[] developers = new ulong[0];
+
         /// <summary>The string that defines the connection to the SQLite database in <see cref="Services.StorageService"/>.</summary>
         [DataMember] public readonly string dbConnectionString = $"Data Source={Files.DefaultDatabase};";
 
@@ -38,12 +41,12 @@ namespace PacManBot
         /// <summary>How many messages to log from command calls. See <see cref="LogSeverity"/> for possible values.</summary>
         [DataMember] public readonly LogSeverity commandLogLevel = LogSeverity.Verbose;
 
-
-        /// <summary>Strings that when matched cause a log event to be ignored. Use with caution.</summary>
+        /// <summary>Strings that when found cause a log event to be ignored. Use with caution.</summary>
         [DataMember] public readonly string[] logExclude = new string[0];
 
         /// <summary>Until a long-term solution to command spam attacks is found, I can just ban channels from using the bot.</summary>
         [DataMember] public readonly ulong[] bannedChannels = new ulong[0];
+
 
 
 

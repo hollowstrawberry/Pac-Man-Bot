@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
@@ -7,7 +8,7 @@ using PacManBot.Extensions;
 namespace PacManBot.Commands
 {
     /// <summary>
-    /// When present, indicates that this command should not be visible.
+    /// When present, indicates that this command should not be visible when listing commands to the user.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method)]
     public class HideHelpAttribute : Attribute { }
@@ -28,7 +29,7 @@ namespace PacManBot.Commands
 
 
     /// <summary>
-    /// Provides example usage of a command. Use "{prefix}" to refer to the guild prefix.
+    /// Provides example usage of a command. The string "{prefix}" refers to the guild prefix.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method)]
     public class ExampleUsageAttribute : Attribute
@@ -41,10 +42,26 @@ namespace PacManBot.Commands
     }
 
 
+    /// <summary>
+    /// Allows either the application owner or any specified developers in the configuration file to run a command.
+    /// </summary>
+    public class RequireDeveloperAttribute : PreconditionAttribute
+    {
+        public override async Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, CommandInfo command, IServiceProvider services)
+        {
+            var config = services.Get<BotConfig>();
+            var app = await context.Client.GetApplicationInfoAsync(Bot.DefaultOptions);
+            ulong userId = context.User.Id;
+
+            bool success = app?.Owner?.Id == userId || config.developers.Contains(userId);
+            return success ? PreconditionResult.FromSuccess() : PreconditionResult.FromError("User must be an owner or developer.");
+        }
+    }
 
 
     /// <summary>
-    /// The original preconditions from Discord.Net just didn't work for some reason.
+    /// The original permission preconditions from Discord.Net had a wrong value for DM permissions,
+    /// and didn't list all missing permissions in the error message. I hope to delete this one day.
     /// </summary>
     public abstract class BasePermissionAttribute : PreconditionAttribute
     {
