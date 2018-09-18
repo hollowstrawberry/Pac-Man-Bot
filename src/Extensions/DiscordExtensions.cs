@@ -148,6 +148,14 @@ namespace PacManBot.Extensions
         }
 
 
+        /// <summary>Extracts the contents of a code block if one is found, otherwise returns the same string trimmed.</summary>
+        public static string ExtractCode(this string text)
+        {
+            var match = Regex.Match(text, "```[A-Za-z]{0,6}\n([\\s\\S]*)```");
+            return match.Success ? match.Groups[1].Value : text.Trim().Trim('`');
+        }
+
+
         /// <summary>Attempts to parse a custom emoji from a string. Value will be null if it fails.</summary>
         public static Emote ToEmote(this string text)
         {

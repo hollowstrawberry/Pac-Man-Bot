@@ -58,7 +58,7 @@ namespace PacManBot.Commands.Modules
 
                 case "h":
                 case "help":
-                    await GetModule<GeneralModule>().SendCommandHelp("rubik");
+                    await ReplyAsync(Help.MakeHelp("rubik", Prefix));
                     return;
 
                 
@@ -327,7 +327,7 @@ namespace PacManBot.Commands.Modules
         [PetCommand("help", "h")]
         public async Task PetHelp(PetGame pet, string args)
         {
-            await GetModule<GeneralModule>().SendCommandHelp("pet");
+            await ReplyAsync(Help.MakeHelp("pet", Prefix));
         }
 
 

@@ -6,6 +6,7 @@ using Discord.Net;
 using Discord.Commands;
 using PacManBot.Games;
 using PacManBot.Games.Concrete;
+using PacManBot.Services;
 using PacManBot.Extensions;
 
 namespace PacManBot.Commands.Modules
@@ -13,7 +14,14 @@ namespace PacManBot.Commands.Modules
     [Name("👾More Games"), Remarks("3")]
     public partial class MoreGamesModule : BaseCustomModule
     {
-        public MoreGamesModule(IServiceProvider services) : base(services) { }
+        public HelpService Help { get; }
+
+        public MoreGamesModule(IServiceProvider services) : base(services)
+        {
+            Help = services.Get<HelpService>();
+        }
+
+
 
 
         [Command("bump"), Alias("b", "refresh", "r", "move"), Priority(2)]

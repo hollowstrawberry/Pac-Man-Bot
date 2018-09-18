@@ -9,6 +9,7 @@ using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using PacManBot.Games;
+using PacManBot.Services;
 using PacManBot.Constants;
 using PacManBot.Extensions;
 
@@ -26,10 +27,12 @@ namespace PacManBot.Commands.Modules
 
 
         public CommandService Commands { get; }
+        public HelpService Help { get; }
 
         public GeneralModule(IServiceProvider services) : base(services)
         {
             Commands = services.Get<CommandService>();
+            Help = services.Get<HelpService>();
         }
 
 
@@ -58,122 +61,31 @@ namespace PacManBot.Commands.Modules
         }
 
 
-        [Command("help"), Alias("h", "commands"), Parameters("[command]"), Remarks("List of commands or help about a command")]
+        [Command("help"), Alias("h", "commands"), Parameters("[command]")]
+        [Remarks("Help about commands or a specific command")]
         [Summary("Show a complete list of commands you can use. You can specify a command to see detailed help about that command.")]
         [BetterRequireBotPermission(ChannelPermission.EmbedLinks)]
-        public async Task SendCommandHelp([Remainder]string commandName)
+        public async Task SendHelp([Remainder]string command = null)
         {
-            CommandInfo command = Commands.Commands.FirstOrDefault(c => c.Aliases.Contains(commandName));
             if (command == null)
             {
-                await ReplyAsync($"Can't find a command with that name. Use `{Prefix}help` for a list of commands.");
-                return;
+                await ReplyAsync(await Help.MakeAllHelp(Context, false));
             }
-
-            var helpInfo = new CommandHelpInfo(command);
-
-            const string pad = "\nᅠ";
-
-            var embed = new EmbedBuilder
+            else
             {
-                Title = $"__Command__: {Prefix}{command.Name}",
-                Color = Colors.PacManYellow
-            };
-
-            if (helpInfo.Hidden)
-            {
-                embed.AddField("Hidden command", "*Are you a wizard?*" + pad, true);
+                var embed = Help.MakeHelp(command, Prefix);
+                string message = embed == null ? $"Can't find a command with that name. Use `{Prefix}help` for a list of commands." : "";
+                await ReplyAsync(message, embed);
             }
-
-            if (helpInfo.Parameters != "")
-            {
-                embed.AddField("Parameters", helpInfo.Parameters + pad, true);
-            }
-
-            if (command.Aliases.Count > 1)
-            {
-                string aliases = command.Aliases.Skip(1).Select(x => $"{Prefix}{x}").JoinString(", ");
-                embed.AddField("Aliases", aliases + pad, true);
-            }
-
-            if (helpInfo.Summary != "")
-            {
-                var summarySections = helpInfo.Summary.Replace("{prefix}", Prefix).Split("\n\n\n").ToArray();
-                for (int i = 0; i < summarySections.Length; i++)
-                {
-                    embed.AddField("Summary" + $" #{i+1}".If(summarySections.Length > 1), summarySections[i] + pad);
-                }
-            }
-
-            if (helpInfo.ExampleUsage != "")
-            {
-                embed.AddField("Example Usage", helpInfo.ExampleUsage.Replace("{prefix}", Prefix) + pad);
-            }
-
-            // I like padding between the fields, but not on the last one
-            embed.Fields.Last().Value = embed.Fields.Last().Value.ToString().Replace(pad, "");
-
-            await ReplyAsync(embed);
         }
 
-
-
-        [Command("help"), Alias("h", "commands"), HideHelp]
-        [BetterRequireBotPermission(ChannelPermission.EmbedLinks)]
-        public async Task SendAllHelpNoRemarks() => await SendAllHelp(false);
 
         [Command("helpfull"), Alias("helpmore", "hf", "commandsfull"), Remarks("Expanded help about all commands")]
         [Summary("Show a complete list of all commands including their parameters and a short description.")]
         [BetterRequireBotPermission(ChannelPermission.EmbedLinks)]
-        public async Task SendAllHelpWithRemarks() => await SendAllHelp(true);
-
-
-        private async Task SendAllHelp(bool expanded)
+        public async Task SendAllHelpExpanded()
         {
-            var embed = new EmbedBuilder()
-            {
-                Title = $"{CustomEmoji.PacMan} __**Bot Commands**__",
-                Description = (Prefix == "" ? "No prefix is needed in this channel!" : $"Prefix for this server is '{Prefix}'")
-                            + $"\nYou can do **{Prefix}help command** for more information about a command.\n\n"
-                            + $"Parameters: [optional] <needed>".If(expanded),
-                Color = Colors.PacManYellow
-            };
-
-            foreach (var module in Commands.Modules.OrderBy(m => m.Remarks))
-            {
-                var moduleText = new StringBuilder();
-
-                foreach (var command in module.Commands.OrderBy(c => c.Priority))
-                {
-                    var helpInfo = new CommandHelpInfo(command);
-
-                    if (!helpInfo.Hidden)
-                    {
-                        var conditions = await command.CheckPreconditionsAsync(Context, Services);
-                        if (!conditions.IsSuccess) continue;
-
-                        if (expanded)
-                        {
-                            moduleText.Append($"**{command.Name} {helpInfo.Parameters}**");
-                            if (helpInfo.Remarks != "") moduleText.Append($" — *{helpInfo.Remarks}*");
-                            moduleText.Append("\n");
-                        }
-                        else
-                        {
-                            moduleText.Append($"**{command.Name}**, ");
-                        }
-                    }
-                }
-
-                if (!expanded && module.Name.Contains("Pac-Man")) moduleText.Append("**bump**, **cancel**");
-
-                if (moduleText.Length > 0)
-                {
-                    embed.AddField(module.Name, moduleText.ToString().Trim(' ', ',', '\n'));
-                }
-            }
-
-            await ReplyAsync(embed);
+            await ReplyAsync(await Help.MakeAllHelp(Context, true));
         }
 
 

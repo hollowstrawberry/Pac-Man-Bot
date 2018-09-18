@@ -70,7 +70,6 @@ namespace PacManBot
 
             var commands = new CommandService(commandConfig);
 
-
             // Set up services
             var services = new ServiceCollection()
                 .AddSingleton(client)
@@ -79,6 +78,7 @@ namespace PacManBot
                 .AddSingleton<LoggingService>()
                 .AddSingleton<StorageService>()
                 .AddSingleton<GameService>()
+                .AddSingleton<HelpService>()
                 .AddSingleton<InputService>()
                 .AddSingleton<SchedulingService>()
                 .AddSingleton<ScriptingService>();
@@ -86,9 +86,8 @@ namespace PacManBot
             var provider = services.BuildServiceProvider();
             foreach (var service in services)
             {
-                provider.GetRequiredService(service.ServiceType); // Create instance
+                provider.GetRequiredService(service.ServiceType);
             }
-
 
             await commands.AddModulesAsync(Assembly.GetEntryAssembly(), provider);
 

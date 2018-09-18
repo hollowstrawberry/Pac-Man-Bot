@@ -17,17 +17,17 @@ namespace PacManBot
         /// <summary>Secret token used to connect to Discord. Must be provided for the bot to run.</summary>
         [DataMember] public readonly string discordToken;
 
+        /// <summary>Secret tokens to send requests to bot list websites. Unnecessary.</summary>
+        [DataMember] public readonly string[] httpToken = { };
+
         /// <summary>The prefix used for all guilds that don't set a custom prefix.</summary>
         [DataMember] public readonly string defaultPrefix = "<";
 
         /// <summary>User IDs of users to be considered developers and able to use developer commands. Dangerous.</summary>
-        [DataMember] public readonly ulong[] developers = new ulong[0];
+        [DataMember] public readonly ulong[] developers = { };
 
         /// <summary>The string that defines the connection to the SQLite database in <see cref="Services.StorageService"/>.</summary>
         [DataMember] public readonly string dbConnectionString = $"Data Source={Files.DefaultDatabase};";
-
-        /// <summary>Secret tokens to send HTTP requests to bot list websites, to update guild count and such. Not required.</summary>
-        [DataMember] public readonly string[] httpToken = { };
 
         /// <summary>Number of shards to divide the bot into. 1 shard per 1000 guilds is enough.</summary>
         [DataMember] public readonly int shardCount = 1;
@@ -42,10 +42,10 @@ namespace PacManBot
         [DataMember] public readonly LogSeverity commandLogLevel = LogSeverity.Verbose;
 
         /// <summary>Strings that when found cause a log event to be ignored. Use with caution.</summary>
-        [DataMember] public readonly string[] logExclude = new string[0];
+        [DataMember] public readonly string[] logExclude = { };
 
         /// <summary>Until a long-term solution to command spam attacks is found, I can just ban channels from using the bot.</summary>
-        [DataMember] public readonly ulong[] bannedChannels = new ulong[0];
+        [DataMember] public readonly ulong[] bannedChannels = { };
 
 
 

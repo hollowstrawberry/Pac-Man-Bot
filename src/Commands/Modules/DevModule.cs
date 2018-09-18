@@ -1,18 +1,21 @@
 using System;
 using System.IO;
+using System.Text;
 using System.Linq;
 using System.Reflection;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 using Discord;
-using Discord.Commands;
 using Discord.Net;
+using Discord.Commands;
 using PacManBot.Games;
 using PacManBot.Services;
+using PacManBot.Services.Database;
 using PacManBot.Constants;
 using PacManBot.Extensions;
-using PacManBot.Services.Database;
 
 namespace PacManBot.Commands.Modules
 {
@@ -22,7 +25,9 @@ namespace PacManBot.Commands.Modules
     {
         public BotConfig Config { get; }
         public ScriptingService Scripting { get; }
-        public PacManDbContext Db { get; private set; }
+        public PacManDbContext Db => _db ?? (_db = GetDatabase());
+
+        private PacManDbContext _db;
 
         public DevModule(IServiceProvider services) : base(services)
         {
@@ -31,10 +36,17 @@ namespace PacManBot.Commands.Modules
         }
 
 
+        private PacManDbContext GetDatabase()
+        {
+            var dbProperty = typeof(StorageService).GetProperty("Db", BindingFlags.NonPublic | BindingFlags.Instance);
+            return (PacManDbContext)dbProperty.GetValue(Storage);
+        }
 
 
-        [Command("dev"), Alias("devcommands")]
-        [Summary("Shows all developer commands")]
+
+
+        [Command("dev"), Alias("devcommands"), Remarks("List developer commands")]
+        [Summary("Lists developer commands. Developer only.")]
         public async Task ShowDevCommands()
         {
             var commands = typeof(DevModule).GetMethods()
@@ -100,7 +112,7 @@ namespace PacManBot.Commands.Modules
 
 
         [Command("setusername"), HideHelp]
-        [Summary("Set the bot's username in all servers.")]
+        [Summary("Set the bot's username in all servers. Developer only.")]
         public async Task SetUsername([Remainder]string name)
         {
             try
@@ -117,7 +129,7 @@ namespace PacManBot.Commands.Modules
 
 
         [Command("setnickname"), HideHelp]
-        [Summary("Set the bot's nickname in this server.")]
+        [Summary("Set the bot's nickname in this server. Developer only.")]
         [RequireContext(ContextType.Guild)]
         public async Task SetNickname([Remainder]string name = null)
         {
@@ -135,7 +147,7 @@ namespace PacManBot.Commands.Modules
 
 
         [Command("setavatar"), HideHelp]
-        [Summary("Set the bot's avatar to a file.")]
+        [Summary("Set the bot's avatar to a file. Developer only.")]
         [RequireContext(ContextType.Guild)]
         public async Task SetAvatar([Remainder]string path)
         {
@@ -153,15 +165,11 @@ namespace PacManBot.Commands.Modules
 
 
 
-        [Command("run"), Alias("eval", "runasync", "evalasync"), HideHelp]
+        [Command("eval"), Alias("evalasync", "run", "runasync"), HideHelp]
         [Summary("Run code, super dangerous do not try at home. Developer only.")]
         public async Task ScriptEval([Remainder]string code)
         {
-            code = code.Trim(' ', '`', '\n');
-            if (code.StartsWith("cs\n")) code = code.Remove(0, 3); // C# code block in Discord
-
-            var dbProperty = typeof(StorageService).GetProperty("Db", BindingFlags.NonPublic | BindingFlags.Instance);
-            Db = (PacManDbContext)dbProperty.GetValue(Storage); // If I need to access the database from a script
+            code = code.ExtractCode();
 
             await Context.Message.AddReactionAsync(CustomEmoji.ELoading, DefaultOptions);
 
@@ -181,6 +189,55 @@ namespace PacManBot.Commands.Modules
 
             await Context.Message.RemoveReactionAsync(CustomEmoji.ELoading, Context.Client.CurrentUser, DefaultOptions);
             if (result != null) await ReplyAsync($"```\n{result.ToString().Truncate(1990)}```");
+        }
+
+
+        [Command("sql"), HideHelp]
+        [Summary("Execute a raw SQL query on the database. Dangerous. Developer only.")]
+        public async Task SqlQuery([Remainder]string query)
+        {
+            query = query.ExtractCode();
+
+            bool success = true;
+            var message = new StringBuilder();
+            var table = new StringBuilder();
+            int affected = -1;
+
+            try
+            {
+                using (var command = Db.Database.GetDbConnection().CreateCommand())
+                {
+                    command.CommandText = query;
+                    Db.Database.OpenConnection();
+                    using (var result = command.ExecuteReader())
+                    {
+                        affected = result.RecordsAffected;
+                        while (result.Read())
+                        {
+                            object[] values = new object[result.FieldCount];
+                            result.GetValues(values);
+
+                            for (int i = 0; i < values.Length; i++) // Adds quotes to strings
+                            {
+                                if (values[i] is string str && str.ContainsAny(" ", "\n")) values[i] = $"\"{values[i]}\"";
+                            }
+
+                            table.AppendLine(values?.JoinString("  "));
+                        }
+                    }
+                }
+            }
+            catch (SqliteException e)
+            {
+                success = false;
+                message.Append($"```{e.Message}```");
+            }
+
+            if (affected >= 0) message.Append($"`{affected} rows affected`\n");
+            if (table.Length > 0) message.Append($"```{table.ToString().Truncate(1990 - message.Length)}```");
+
+            await AutoReactAsync(success);
+            await ReplyAsync(message);
         }
 
 
