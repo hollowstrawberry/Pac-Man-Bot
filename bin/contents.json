@@ -1,8 +1,8 @@
 ﻿{
 
-"version": "3.7.6.1",
-
-"invite": "http://bit.ly/pacman-bot",
+"inviteLink": "http://bit.ly/pacman-bot",
+"githubLink": "https://github.com/Samrux/Pac-Man-Bot",
+"serverLink": "https://discord.gg/hGHnfda",
 
 "gameMap":
 "╔════════════╤╤════════════╗

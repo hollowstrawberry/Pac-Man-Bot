@@ -39,18 +39,31 @@ namespace PacManBot.Services
             logger = provider.Get<LoggingService>();
             games = provider.Get<GameService>();
             botConfig = provider.Get<BotConfig>();
+        }
 
-            // Events
+
+        /// <summary>Start listening to input events from Discord.</summary>
+        public void StartListening()
+        {
             client.MessageReceived += OnMessageReceived;
             client.ReactionAdded += OnReactionAdded;
             client.ReactionRemoved += OnReactionRemoved;
         }
 
 
+        /// <summary>Stop listening to input events from Discord.</summary>
+        public void StopListening()
+        {
+            client.MessageReceived -= OnMessageReceived;
+            client.ReactionAdded -= OnReactionAdded;
+            client.ReactionRemoved -= OnReactionRemoved;
+        }
+
+
 
         private Task OnMessageReceived(SocketMessage m)
         {
-            _ = OnMessageReceivedAsync(m); // Discarding allows the async code to run without blocking the gateway task
+            _ = OnMessageReceivedAsync(m);
             return Task.CompletedTask;
         }
 

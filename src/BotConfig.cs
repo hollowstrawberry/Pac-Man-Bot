@@ -69,7 +69,7 @@ namespace PacManBot
             for (int i = 0; i < cont.aboutFields.Length; i++)
             {
                 (string name, string desc) = cont.aboutFields[i];
-                cont.aboutFields[i] = (name, desc.Replace("{version}", cont.version));
+                cont.aboutFields[i] = (name, desc.Replace("{version}", Program.Version));
             }
 
             Content = cont;

@@ -10,11 +10,14 @@ namespace PacManBot
     [DataContract]
     public class BotContent
     {
-        /// <summary>Displayed version number of the bot.</summary>
-        [DataMember] public readonly string version;
-
         /// <summary>Short invite link for the bot.</summary>
-        [DataMember] public readonly string invite;
+        [DataMember] public readonly string inviteLink;
+
+        /// <summary>GitHub repository link for the bot.</summary>
+        [DataMember] public readonly string githubLink;
+
+        /// <summary>Invite link to the bot's support server.</summary>
+        [DataMember] public readonly string serverLink;
 
         /// <summary>Message in the about command.</summary>
         [DataMember] public readonly string about;

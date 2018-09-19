@@ -67,11 +67,19 @@ namespace PacManBot.Commands.Modules
 
 
         [Command("$restart"), Alias("$shutdown"), HideHelp]
-        [Summary("Immediately shuts down the bot. Developer only.")]
+        [Summary("Stops all input for a few seconds then shuts down the bot. Developer only.")]
         public async Task ShutDown()
         {
+            Services.Get<InputService>().StopListening();
+            await Logger.Log(LogSeverity.Info, LogSource.Owner, "Shutting down...");
+
+            // Waits a bit to finish up whatever it might be doing at the moment
+            await Context.Message.AddReactionAsync(CustomEmoji.ELoading, Bot.DefaultOptions);
+            await Task.Delay(5000);
             await AutoReactAsync();
-            await Logger.Log(LogSeverity.Info, LogSource.Owner, "Shutting down.");
+            await Context.Message.RemoveReactionAsync(CustomEmoji.ELoading, Context.Client.CurrentUser, Bot.DefaultOptions);
+
+            await Logger.Log(LogSeverity.Info, LogSource.Owner, "Closing.");
             Environment.Exit(ExitCodes.ManualReboot);
         }
 
@@ -80,10 +88,9 @@ namespace PacManBot.Commands.Modules
         [Summary("Perform a `git pull` and close the bot. Developer only.")]
         public async Task UpdateAndShutDown()
         {
-            // I didn't find the need to implement it for other operating systems
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                await AutoReactAsync(false);
+                await ReplyAsync("This command is currently only available on Linux systems.");
                 return;
             }
 
@@ -105,9 +112,13 @@ namespace PacManBot.Commands.Modules
             string result = process.StandardOutput.ReadToEnd();
             process.WaitForExit();
 
+            bool updated = !result.Contains("Already up-to-date");
+
+            if (!updated) await AutoReactAsync(false);
+
             await ReplyAsync($"```\n{result.Truncate(1990)}```");
 
-            await ShutDown();
+            if (updated) await ShutDown();
         }
 
 
@@ -162,7 +173,6 @@ namespace PacManBot.Commands.Modules
                 throw;
             }
         }
-
 
 
         [Command("eval"), Alias("evalasync", "run", "runasync"), HideHelp]
@@ -327,10 +337,10 @@ namespace PacManBot.Commands.Modules
 
 
         [Command("getguilds"), Alias("guilds"), HideHelp]
-        [Summary("Gets a list of guilds and member counts where this bot is in. Developer only.")]
+        [Summary("Gets a list of top 100 guilds and member counts where this bot is in. Developer only.")]
         public async Task GetGuildMembers()
         {
-            var guilds = Context.Client.Guilds.OrderByDescending(g => g.MemberCount);
+            var guilds = Context.Client.Guilds.OrderByDescending(g => g.MemberCount).Take(100);
             await ReplyAsync(guilds.Select(g => $"{g.Name}: {g.MemberCount}").JoinString("\n").Truncate(2000));
         }
 

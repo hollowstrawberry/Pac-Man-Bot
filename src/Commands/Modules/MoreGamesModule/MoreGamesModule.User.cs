@@ -117,12 +117,13 @@ namespace PacManBot.Commands.Modules
         [Remarks("Adopt your own pet!")]
         [Summary("**__Pet Commands__**\n\n" +
                  "**{prefix}pet** - Check on your pet or adopt if you don't have one\n" +
-                 "**{prefix}pet stats** - Check your pet's statistics and achievements\n" +
+                 "**{prefix}pet stats [user]** - Check your pet or another's statistics and unlocks\n" +
                  "**{prefix}pet name <name>** - Name your pet\n" +
                  "**{prefix}pet image <image>** - Give your pet an image\n\n" +
-                 "**{prefix}pet feed** - Fills your pet's Satiation and restores 2 Energy\n" +
-                 "**{prefix}pet play** - Fills your pet's Happinness and consumes 5 Energy\n" +
+                 "**{prefix}pet feed** - Fills your pet's Satiation and restores a little Energy\n" +
                  "**{prefix}pet clean** - Fills your pet's Hygiene\n" +
+                 "**{prefix}pet play [user]** - Fills your pet's Happinness. It requires Energy, and consumes a little of every stat. " +
+                 "You can make your pet play with another user's pet, in which case they get Happiness for free\n" +
                  "**{prefix}pet sleep/wakeup** - Sleep to restore Energy over time\n\n" +
                  "**{prefix}pet help** - This list of commands\n" +
                  "**{prefix}pet pet** - Pet your pet\n" +
@@ -232,31 +233,70 @@ namespace PacManBot.Commands.Modules
         [PetCommand("feed", "food", "eat", "hunger", "satiation")]
         public async Task PetFeed(PetGame pet, string args)
         {
-            if (pet.Feed()) await Context.Message.AddReactionAsync(Bot.Random.Choose(Content.petFoodEmotes).ToEmoji());
-            else await ReplyAsync($"{CustomEmoji.Cross} Your pet is already full! (-1 happiness)");
-        }
-
-
-        [PetCommand("play", "fun", "happy", "happiness")]
-        public async Task PetPlay(PetGame pet, string args)
-        {
-            if (pet.Play()) await Context.Message.AddReactionAsync(Bot.Random.Choose(Content.petPlayEmotes).ToEmoji());
-            else
-            {
-                string message = pet.energy.Ceiling() >= 5
-                    ? "Your pet doesn't want to play anymore! (-1 happiness)" 
-                    : "Your pet is too tired to play! It needs 5 energy or more.";
-
-                await ReplyAsync($"{CustomEmoji.Cross} {message}");
-            }
+            if (pet.TryFeed()) await Context.Message.AddReactionAsync(Bot.Random.Choose(Content.petFoodEmotes).ToEmoji());
+            else await ReplyAsync($"{CustomEmoji.Cross} Your pet is already full! (-1 energy)");
         }
 
 
         [PetCommand("clean", "hygiene", "wash")]
         public async Task PetClean(PetGame pet, string args)
         {
-            if (pet.Clean()) await Context.Message.AddReactionAsync(Bot.Random.Choose(Content.petCleanEmotes).ToEmoji());
-            else await ReplyAsync($"{CustomEmoji.Cross} Your pet is already clean! (-1 happiness)");
+            if (pet.TryClean()) await Context.Message.AddReactionAsync(Bot.Random.Choose(Content.petCleanEmotes).ToEmoji());
+            else await ReplyAsync($"{CustomEmoji.Cross} Your pet is already clean! (-1 energy)");
+        }
+
+
+        [PetCommand("play", "fun", "happy", "happiness")]
+        public async Task PetPlay(PetGame pet, string args)
+        {
+            PetGame otherPet = null;
+            if (!string.IsNullOrWhiteSpace(args))
+            {
+                var otherUser = await Context.ParseUserAsync(args);
+                if (otherUser == null)
+                {
+                    await ReplyAsync("Can't find that user to play with!");
+                    return;
+                }
+                else if ((otherPet = Games.GetForUser<PetGame>(otherUser.Id)) == null)
+                {
+                    await ReplyAsync("This person doesn't have a pet :(");
+                    return;
+                }
+                else
+                {
+                    otherPet.UpdateStats();
+                    if (otherPet.happiness.Ceiling() == PetGame.MaxStat)
+                    {
+                        await ReplyAsync("This person's pet doesn't want to play right now!");
+                        return;
+                    }
+                }
+            }
+
+
+            if (pet.TryPlay())
+            {
+                var playEmote = Bot.Random.Choose(Content.petPlayEmotes).ToEmoji();
+
+                if (otherPet == null) await Context.Message.AddReactionAsync(playEmote);
+                else
+                {
+                    otherPet.happiness = PetGame.MaxStat;
+                    Games.Save(otherPet);
+
+                    await ReplyAsync($"{CustomEmoji.PetRight}{playEmote}{CustomEmoji.PetLeft}");
+                    await ReplyAsync($"{pet.PetName} and {otherPet.PetName} are happy to play together!");
+                }
+            }
+            else
+            {
+                string message = pet.happiness.Ceiling() == PetGame.MaxStat
+                    ? "Your pet doesn't want to play anymore! (-1 energy)"
+                    : "Your pet is too tired! It needs 5 energy, or for someone else's pet to encourage it to play.";
+
+                await ReplyAsync($"{CustomEmoji.Cross} {message}");
+            }
         }
 
 
@@ -335,17 +375,27 @@ namespace PacManBot.Commands.Modules
         public async Task PetPet(PetGame pet, string args)
         {
             var now = DateTime.Now;
-            if (now - pet.petTimerStart > TimeSpan.FromMinutes(1))
+            var passed = now - pet.petTimerStart;
+            if (passed > TimeSpan.FromMinutes(1))
             {
                 pet.petTimerStart = now;
                 pet.timesPetSinceTimerStart = 0;
             }
 
-            int limit = Context.Guild == null ? 15 : 5;
+            int limit = Context.Guild == null ? 10 : 1;
+
             if (pet.timesPetSinceTimerStart >= limit)
             {
-                await ReplyAsync($"{CustomEmoji.Cross} That's enough petting! Try again in a minute"
-                    + (Context.Guild == null ? "." : ", or pet in a DM with the bot."));
+                if (pet.timesPetSinceTimerStart < limit + 3) // Reattempts
+                {
+                    pet.timesPetSinceTimerStart += 1;
+
+                    string response = Context.Guild == null
+                        ? $"{CustomEmoji.Cross} That's enough petting! {60 - (int)passed.TotalSeconds} seconds left."
+                        : $"{CustomEmoji.Cross} You may pet once a minute in guilds. Try DM-ing the bot.";
+                        
+                    await ReplyAsync(response);
+                }
             }
             else
             {

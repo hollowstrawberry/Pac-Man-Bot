@@ -17,10 +17,13 @@ using PacManBot.Constants;
 namespace PacManBot
 {
     /// <summary>
-    /// Sets up configurations and services and starts the bot.
+    /// Program that sets up and runs the bot.
     /// </summary>
     public static class Program
     {
+        public const string Version = "3.8.0";
+
+
         static async Task Main()
         {
             // Check files

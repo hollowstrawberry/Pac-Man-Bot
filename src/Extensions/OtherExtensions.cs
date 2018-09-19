@@ -16,6 +16,9 @@ namespace PacManBot.Extensions
         /// <summary>Returns the given number rounded up to the nearest <see cref="int"/>.</summary>
         public static int Ceiling(this double num) => (int)Math.Ceiling(num);
 
+        /// <summary>Returns the given number rounded down to the nearest <see cref="int"/>.</summary>
+        public static int Floor(this double num) => (int)Math.Floor(num);
+
 
         /// <summary>Converts a <see cref="TimeSpan"/> into a string listing the days, hours and minutes.</summary>
         public static string Humanized(this TimeSpan span)

@@ -26,6 +26,7 @@ namespace PacManBot
         private readonly LoggingService logger;
         private readonly StorageService storage;
         private readonly GameService games;
+        private readonly InputService input;
 
         private int shardsReady;
         private DateTime lastGuildCountUpdate = DateTime.MinValue;
@@ -38,6 +39,7 @@ namespace PacManBot
             logger = services.Get<LoggingService>();
             storage = services.Get<StorageService>();
             games = services.Get<GameService>();
+            input = services.Get<InputService>();
 
             games.LoadGames(services);
 
@@ -65,7 +67,10 @@ namespace PacManBot
             if (++shardsReady == client.Shards.Count)
             {
                 logger.Log(LogSeverity.Info, "All shards ready");
-                _ = UpdateGuildCountAsync(); // Discarding allows the async code to run without blocking the gateway task
+
+                input.StartListening();
+
+                _ = UpdateGuildCountAsync();
             }
             return Task.CompletedTask;
         }

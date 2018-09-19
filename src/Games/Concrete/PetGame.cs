@@ -38,8 +38,8 @@ namespace PacManBot.Games.Concrete
         [DataMember] private string petName;
         [DataMember] private string petImageUrl;
         [DataMember] public double satiation = 15;
-        [DataMember] public double happiness = 15;
         [DataMember] public double hygiene = 15;
+        [DataMember] public double happiness = 15;
         [DataMember] public double energy = 15;
         [DataMember] public bool asleep;
         [DataMember] public DateTime bornDate;
@@ -230,6 +230,8 @@ namespace PacManBot.Games.Concrete
 
 
         public override EmbedBuilder GetEmbed(bool showHelp = true) => GetEmbed(null);
+
+        /// <summary>Returns an embed showing the profile of a pet.</summary>
         public EmbedBuilder GetEmbed(IGuildUser ownerGuildUser, bool decimals = false)
         {
             bool wasAsleep = asleep;
@@ -256,10 +258,19 @@ namespace PacManBot.Games.Concrete
             var status = new StringBuilder();
             if (asleep) status.Append("💤💤💤\n\n");
             else if (wasAsleep) status.Append("Your pet woke up!\n\n");
-            status.Append((satiation >= 5 ? "🍎" : "🍽") + $" **Satiation:** {(decimals ? $"{satiation:0.000}" : $"{satiation.Ceiling()}")}/{MaxStat}\n");
-            status.Append((happiness >= 5 ? "🏈" : "🕸") + $" **Happiness:** {(decimals ? $"{happiness:0.000}" : $"{happiness.Ceiling()}")}/{MaxStat}\n");
-            status.Append((hygiene >= 5 ? "🛁" : "💩")   + $" **Hygiene:** {(decimals ? $"{hygiene:0.000}" : $"{hygiene.Ceiling()}")}/{MaxStat}\n");
-            status.Append((energy >= 5 ? "⚡" : "🍂") + $" **Energy:** {(decimals ? $"{energy:0.000}" : $"{energy.Ceiling()}")}/{MaxStat}\n");
+
+            status.Append(satiation >= 5 ? "🍎" : "🍽");
+            status.Append($" **Satiation:** {(decimals ? $"{satiation:0.000}" : $"{satiation.Ceiling()}")}/{MaxStat}\n");
+
+            status.Append(hygiene >= 5 ? "🛁" : "💩");
+            status.Append($" **Hygiene:** {(decimals ? $"{hygiene:0.000}" : $"{hygiene.Ceiling()}")}/{MaxStat}\n");
+
+            status.Append(happiness >= 5 ? "🏈" : "🕸");
+            status.Append($" **Happiness:** {(decimals ? $"{happiness:0.000}" : $"{happiness.Ceiling()}")}/{MaxStat}\n");
+
+            status.Append(energy >= 5 ? "⚡" : "🍂");
+            status.Append($" **Energy:** {(decimals ? $"{energy:0.000}" : $"{energy.Ceiling()}")}/{MaxStat}\n");
+
 
             var unlocks = achievements.GetIcons().Split(3).Select(x => x.JoinString(" ")).JoinString("\n");
 
@@ -289,14 +300,15 @@ namespace PacManBot.Games.Concrete
         }
 
 
+        /// <summary>Returns an embed showing the stats and unlocks of a pet.</summary>
         public EmbedBuilder GetEmbedAchievements(IGuildUser ownerGuildUser)
         {
             UpdateStats();
 
             var stats = new StringBuilder();
             stats.Append($"**Times fed:** {achievements.timesFed}\n");
-            stats.Append($"**Times played:** {achievements.timesPlayed}\n");
             stats.Append($"**Times cleaned:** {achievements.timesCleaned}\n");
+            stats.Append($"**Times played:** {achievements.timesPlayed}\n");
             stats.Append($"**Total actions:** {achievements.TotalActions}\n");
             stats.Append($"**Pettings given:** {achievements.timesPet}\n");
             stats.Append($"**Time without neglect:** {(DateTime.Now - achievements.lastNeglected).Humanized()}\n");
@@ -338,6 +350,7 @@ namespace PacManBot.Games.Concrete
         }
 
 
+        /// <summary>Calculates and updates a pet's current status.</summary>
         public void UpdateStats(bool store = true)
         {
             var now = DateTime.Now;
@@ -365,20 +378,24 @@ namespace PacManBot.Games.Concrete
 
 
 
-        public bool Feed()
+        /// <summary>Attempts to feed a pet. It restores some energy based on hungriness.
+        /// If it's already full, it consumes 1 energy.</summary>
+        public bool TryFeed()
         {
             UpdateStats(store: false);
 
             bool canEat = satiation.Ceiling() != MaxStat;
             if (canEat)
             {
+                int energyBoost = Math.Max(0, (MaxStat - satiation - 3) / 4).Ceiling();
+                energy = Math.Min(MaxStat, energy + energyBoost);
+
                 satiation = MaxStat;
-                energy = Math.Min(MaxStat, energy + 2);
                 achievements.timesFed++;
             }
             else
             {
-                happiness = Math.Max(0, happiness - 1);
+                energy = Math.Max(0, energy - 1);
             }
 
             games.Save(this);
@@ -386,28 +403,8 @@ namespace PacManBot.Games.Concrete
         }
 
 
-        public bool Play()
-        {
-            UpdateStats(store: false);
-
-            bool canPlay = happiness.Ceiling() != MaxStat && energy.Ceiling() >= 5;
-            if (canPlay)
-            {
-                happiness = MaxStat;
-                energy = Math.Max(0, energy - (energy.Ceiling() == MaxStat ? 5.5 : 5.0)); // It's all for appearance
-                achievements.timesPlayed++;
-            }
-            else if (energy.Ceiling() >= 5)
-            {
-                happiness = Math.Max(0, happiness - 1);
-            }
-
-            games.Save(this);
-            return canPlay;
-        }
-
-
-        public bool Clean()
+        /// <summary>Attempts to clean a pet. If it's already clean, it consumes 1 energy.</summary>
+        public bool TryClean()
         {
             UpdateStats(store: false);
 
@@ -419,7 +416,7 @@ namespace PacManBot.Games.Concrete
             }
             else
             {
-                happiness = Math.Max(0, happiness - 1);
+                energy = Math.Max(0, energy - 1);
             }
 
             games.Save(this);
@@ -427,6 +424,35 @@ namespace PacManBot.Games.Concrete
         }
 
 
+        /// <summary>Attempts to play with a pet. It requires 5 energy and consumes 5 of every stat.
+        /// If it's already happy, it consumes 1 energy.</summary>
+        public bool TryPlay()
+        {
+            UpdateStats(store: false);
+
+            bool isMax = happiness.Ceiling() == MaxStat;
+            bool canPlay = !isMax && energy.Ceiling() >= 5;
+
+            if (canPlay)
+            {
+                happiness = MaxStat;
+                achievements.timesPlayed++;
+
+                energy = Math.Max(0, energy - (energy.Ceiling() == MaxStat ? 5.5 : 5.0)); // Tweaked for appearance
+                hygiene = Math.Max(0, hygiene - (hygiene.Ceiling() == MaxStat ? 5.5 : 5.0));
+                satiation = Math.Max(0, satiation - (satiation.Ceiling() == MaxStat ? 5.5 : 5.0));
+            }
+            else if (isMax)
+            {
+                energy = Math.Max(0, energy - 1);
+            }
+
+            games.Save(this);
+            return canPlay;
+        }
+
+
+        /// <summary>Toggles a pet between sleep and awake.</summary
         public void ToggleSleep()
         {
             asleep = !asleep;
@@ -434,6 +460,7 @@ namespace PacManBot.Games.Concrete
         }
 
 
+        /// <summary>Returns whether the given text is a valid image URL, and sets the pet's image URL if it is.</summary>
         public bool TrySetImageUrl(string text)
         {
             string url = text?.Trim('<', '>');
@@ -447,6 +474,7 @@ namespace PacManBot.Games.Concrete
         }
 
 
+        /// <summary>Does a random petting: A mini incremental game for pets.</summary>
         public string DoPet()
         {
             string pet;

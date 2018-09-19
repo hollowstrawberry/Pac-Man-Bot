@@ -32,13 +32,13 @@ namespace PacManBot.Constants
             Empty = "<:Empty:445680384592576514>",
 
             TTTx = "<:TTTx:445729766952402944>",
-            TTTxHL = "<:TTTxHL:445729766881099776>",
+            TTTxHL = "<a:TTTxHL:491828381990649866>",
             TTTo = "<:TTTo:445729766780436490>",
-            TTToHL = "<:TTToHL:445729767371702292>",
+            TTToHL = "<a:TTToHL:491828125269884928>",
             C4red = "<:C4red:445683639137599492>",
-            C4redHL = "<:C4redHL:445729766327451680>",
+            C4redHL = "<a:C4RedHL:491824083122782209>",
             C4blue = "<:C4blue:445683639817207813>",
-            C4blueHL = "<:C4blueHL:445729766541099011>",
+            C4blueHL = "<a:C4blueHL:491824083185696768>",
             BlackCircle = "<:black:451507461556404224>",
             
             UnoSkip = "<:block:452172078859419678>",
@@ -57,7 +57,9 @@ namespace PacManBot.Constants
 
             BronzeIcon = "<:bronze:453367514550894602>",
             SilverIcon = "<:silver:453367514588774400>",
-            GoldIcon = "<:gold:453368658303909888>";
+            GoldIcon = "<:gold:453368658303909888>",
+            PetRight = "<:petright:491790787856826400>",
+            PetLeft = "<:petleft:491790787877535745>";
 
 
         public static readonly string[] NumberCircle =

@@ -168,12 +168,12 @@ namespace PacManBot.Commands.Modules
                 Title = "Bot invite link",
                 Color = Colors.PacManYellow,
                 ThumbnailUrl = Context.Client.CurrentUser.GetAvatarUrl(),
-                Url = Content.invite,
+                Url = Content.inviteLink,
                 Fields = new List<EmbedFieldBuilder>
                 {
                     new EmbedFieldBuilder
                     {
-                        Name = $"➡ <{Content.invite}>",
+                        Name = $"➡ <{Content.inviteLink}>",
                         Value = "Thanks for inviting Pac-Man Bot!",
                     },
                 },
@@ -191,7 +191,7 @@ namespace PacManBot.Commands.Modules
             var embed = new EmbedBuilder()
             {
                 Title = "Pac-Man Bot Support server",
-                Url = "https://discord.gg/hGHnfda",
+                Url = Content.serverLink,
                 Description = $"{CustomEmoji.Staff} We'll be happy to see you there!",
                 Color = Colors.PacManYellow,
                 ThumbnailUrl = Context.Client.GetGuild(409803292219277313).IconUrl,
@@ -209,7 +209,7 @@ namespace PacManBot.Commands.Modules
             var embed = new EmbedBuilder()
             {
                 Title = "Pac-Man Bot GitHub repository",
-                Url = "https://github.com/Samrux/Pac-Man-Bot",
+                Url = Content.githubLink,
                 Description = $"{CustomEmoji.GitHub} Contributions welcome!",
                 Color = Colors.PacManYellow,
                 ThumbnailUrl = "https://cdn.discordapp.com/attachments/412090039686660097/455914771179503633/GitHub.png",
