@@ -35,8 +35,8 @@ namespace PacManBot.Games.Concrete
 
         // Fields
 
-        [DataMember] private string petName;
-        [DataMember] private string petImageUrl;
+        [DataMember] public string petName { get; private set; }
+        [DataMember] public string petImageUrl { get; private set; }
         [DataMember] public double satiation = 15;
         [DataMember] public double hygiene = 15;
         [DataMember] public double happiness = 15;
@@ -57,19 +57,6 @@ namespace PacManBot.Games.Concrete
 
         public double TotalStats => satiation + happiness + hygiene + energy;
         public int TimesPet => achievements.timesPet;
-
-        public string PetName
-        {
-            get => petName;
-            set
-            {
-                petName = value?.SanitizeMarkdown().SanitizeMentions().Trim('<', '>');
-                UpdateStats();
-            }
-        }
-
-        public string PetImageUrl => petImageUrl;
-
 
 
         // Types
@@ -174,8 +161,11 @@ namespace PacManBot.Games.Concrete
                 if (lastNeglected == default) lastNeglected = pet.bornDate;
                 else if (pet.TotalStats == 0) lastNeglected = DateTime.Now;
                 double days = (DateTime.Now - lastNeglected).TotalDays;
+                Console.WriteLine(pet.bornDate);
+                Console.WriteLine(lastNeglected);
+                Console.WriteLine(days);
 
-                if (!string.IsNullOrWhiteSpace(pet.PetName) && !string.IsNullOrWhiteSpace(pet.PetImageUrl)) Custom = true;
+                if (!string.IsNullOrWhiteSpace(pet.petName) && !string.IsNullOrWhiteSpace(pet.petImageUrl)) Custom = true;
 
                 if (days >= 14 && Attention < 3) Attention = 3;
                 else if (days >= 7 && Attention < 2) Attention = 2;
@@ -223,9 +213,10 @@ namespace PacManBot.Games.Concrete
         public PetGame(string name, ulong ownerId, IServiceProvider services)
             : base(new[] { ownerId }, services)
         {
-            petName = name;
             bornDate = DateTime.Now;
             lastUpdated = DateTime.Now;
+
+            SetPetName(name);
         }
 
 
@@ -246,7 +237,7 @@ namespace PacManBot.Games.Concrete
                                    $"Use `{prefix}pet name` to name it and `{prefix}pet help` for more info\n\n");
             }
 
-            description.Append($"**Name:** {(string.IsNullOrWhiteSpace(petName) ? "*Unnamed*" : PetName)}\n");
+            description.Append($"**Name:** {(string.IsNullOrWhiteSpace(petName) ? "*Unnamed*" : petName)}\n");
 
             string age = (DateTime.Now - bornDate).Humanized();
             description.Append($"**Age:** {(age == "Just now" ? "Newborn" : age)}\nᅠ\n");
@@ -305,13 +296,15 @@ namespace PacManBot.Games.Concrete
         {
             UpdateStats();
 
+            string noNeglect = achievements.lastNeglected == bornDate ? "Never" : (DateTime.Now - achievements.lastNeglected).Humanized();
+
             var stats = new StringBuilder();
             stats.Append($"**Times fed:** {achievements.timesFed}\n");
             stats.Append($"**Times cleaned:** {achievements.timesCleaned}\n");
             stats.Append($"**Times played:** {achievements.timesPlayed}\n");
             stats.Append($"**Total actions:** {achievements.TotalActions}\n");
             stats.Append($"**Pettings given:** {achievements.timesPet}\n");
-            stats.Append($"**Time without neglect:** {(DateTime.Now - achievements.lastNeglected).Humanized()}\n");
+            stats.Append($"**Time without neglect:** {noNeglect}\n");
             stats.Append("*(Neglect occurs when all meters reach 0)*\nᅠ");
 
             var achievOff = new StringBuilder();
@@ -460,6 +453,14 @@ namespace PacManBot.Games.Concrete
         }
 
 
+        /// <summary>Sets the pet's name.</summary>
+        public void SetPetName(string text)
+        {
+            petName = text?.SanitizeMarkdown().SanitizeMentions().Trim('<', '>');
+            UpdateStats();
+        }
+
+
         /// <summary>Returns whether the given text is a valid image URL, and sets the pet's image URL if it is.</summary>
         public bool TrySetImageUrl(string text)
         {
@@ -523,7 +524,7 @@ namespace PacManBot.Games.Concrete
             {
                 achievements.PetGod = true;
                 pet = "👼 Having petted 10,000 times, and having lived a long and just life as Pet King, you and your pet ascend into the realm of the pet-angels.\n\n" +
-                      $"After arriving to their heavenly dominion, some angels begin chanting: *\"{Owner?.Username.SanitizeMarkdown() ?? "Owner"}, {PetName}\"*. " +
+                      $"After arriving to their heavenly dominion, some angels begin chanting: *\"{Owner?.Username.SanitizeMarkdown() ?? "Owner"}, {petName}\"*. " +
                       "Soon more and more join them, until ten billion voices act in unison. A blinding glare falls upon the pedestal you stand on. " +
                       "Your entire being slowly fades away, morphing into something else, something like... __pure petting energy__.\n" +
                       "The sounds of grand bells and trumpets fill the realm. You have been chosen as a new **Pet God**.\n\n" +
