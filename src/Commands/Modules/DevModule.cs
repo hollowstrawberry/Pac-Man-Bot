@@ -4,6 +4,7 @@ using System.Text;
 using System.Linq;
 using System.Reflection;
 using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using Microsoft.Data.Sqlite;
@@ -12,6 +13,7 @@ using Discord;
 using Discord.Net;
 using Discord.Commands;
 using PacManBot.Games;
+using PacManBot.Utils;
 using PacManBot.Services;
 using PacManBot.Services.Database;
 using PacManBot.Constants;
@@ -251,16 +253,60 @@ namespace PacManBot.Commands.Modules
         }
 
 
+        [Command("bf"), Alias("brainf", "brainfuck"), HideHelp]
+        [Summary("Run a program in the Brainfuck language. Separate code and input with an exclamation point. Developer only.")]
+        public async Task RunBrainf([Remainder]string userInput)
+        {
+            await Context.Message.AddReactionAsync(CustomEmoji.ELoading, DefaultOptions);
+
+            var slice = userInput.ExtractCode().Split('!', 2);
+            string program = slice[0];
+            string programInput = slice.Length > 1 ? slice[1] : "";
+
+            var message = new StringBuilder();
+            var bf = new Brainfuck(program, programInput);
+
+            try
+            {
+                message.Append(await bf.RunAsync(3000));
+                await AutoReactAsync(true);
+            }
+            catch (Exception e)
+            {
+                switch (e)
+                {
+                    case Brainfuck.BrainfuckException be:
+                        message.AppendLine($"Runtime exception: {be.Message}");
+                        if (e.InnerException != null) message.AppendLine($"Inner exception: {e.InnerException}\n");
+                        message.AppendLine($"Memory at this point: {be.Memory}\n");
+                        message.AppendLine($"Output up to this point:\n{bf.Output}");
+                        break;
+
+                    case ArgumentException ae:
+                        message.AppendLine("The provided program has invalid syntax.");
+                        break;
+
+                    default:
+                        throw e;
+                }
+                await AutoReactAsync(false);
+            }
+
+            await Context.Message.RemoveReactionAsync(CustomEmoji.ELoading, Context.Client.CurrentUser, DefaultOptions);
+            await ReplyAsync(message.Length == 0 ? "*No output*" : $"```\n{message.ToString().Truncate(1990)}```");
+        }
+
+
         [Command("feedbackreply"), Alias("reply"), HideHelp]
         [Summary("This is how Samrux replies to feedback. Developer only.")]
-        public async Task ReplyFeedback(ulong useriD, [Remainder]string message)
+        public async Task ReplyFeedback(ulong userId, [Remainder]string message)
         {
             try
             {
-                await Context.Client.GetUser(useriD).SendMessageAsync(
-                    "```diff\n+The following message was sent to you by this bot's owner." +
-                    "\n-To reply to this message, use the 'feedback' command.```\n" + message,
-                    options: DefaultOptions);
+                string pre = "```diff\n+The following message was sent to you by this bot's owner." +
+                             "\n-To reply to this message, use the 'feedback' command.```\n";
+
+                await Context.Client.GetUser(userId).SendMessageAsync(pre + message, options: DefaultOptions);
                 await AutoReactAsync();
             }
             catch (Exception e)
