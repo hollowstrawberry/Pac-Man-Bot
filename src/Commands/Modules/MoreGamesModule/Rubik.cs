@@ -16,7 +16,7 @@ namespace PacManBot.Commands.Modules
          "\n**{prefix}rubik scramble** - Scrambles the cube pieces completely." +
          "\n**{prefix}rubik reset** - Delete the cube, going back to its solved state." +
          "\n**{prefix}rubik showguide** - Toggle the help displayed below the cube. For pros.")]
-        public async Task RubiksCube([Remainder] string input = "")
+        public async Task RubiksCube([Remainder]string input = "")
         {
             var cube = Games.GetForUser<RubiksGame>(Context.User.Id);
 
@@ -31,7 +31,7 @@ namespace PacManBot.Commands.Modules
             {
                 case "moves":
                 case "notation":
-                    string help =
+                    string moveHelp =
                         $"You can give a sequence of turns using the **{Prefix}rubik** command, " +
                         $"with turns separated by spaces.\nYou can do **{Prefix}rubik help** for a few more commands.\n\n" +
                         "**Simple turns:** U, D, L, R, F, B\nThese are the basic clockwise turns of the cube. " +
@@ -46,7 +46,7 @@ namespace PacManBot.Commands.Modules
                         "These rotate the entire cube in the direction of R, U and F respectively. " +
                         "They can also be counterclockwise or double.";
 
-                    await ReplyAsync(help);
+                    await ReplyAsync(moveHelp);
                     return;
 
 

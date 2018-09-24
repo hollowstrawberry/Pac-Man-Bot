@@ -119,14 +119,15 @@ namespace PacManBot.Services
         /// <summary>Toggles the specified guild channel between requiring a prefix for commands and not, and returns the new value.</summary>
         public bool ToggleChannelGuildPrefix(ulong channelId)
         {
-            bool needsPrefix = cachedNeedsPrefix[channelId];
+            bool contained = Db.NoPrefixGuildChannels.Contains((NoPrefixGuildChannel)channelId);
+            bool needs = !contained;
 
-            if (needsPrefix) Db.NoPrefixGuildChannels.Add(channelId);
-            else Db.NoPrefixGuildChannels.Remove(channelId);
+            if (contained) Db.NoPrefixGuildChannels.Remove(channelId);
+            else Db.NoPrefixGuildChannels.Add(channelId);
 
             Db.SaveChanges();
-            cachedNeedsPrefix[channelId] = !needsPrefix;
-            return !needsPrefix;
+            cachedNeedsPrefix[channelId] = needs;
+            return needs;
         }
 
 
@@ -149,14 +150,15 @@ namespace PacManBot.Services
         /// <summary>Toggles message autoresponses on or off in the specified guild and returns the new value.</summary>
         public bool ToggleAutoresponse(ulong guildId)
         {
-            bool allows = cachedAllowsAutoresponse[guildId];
+            bool contained = Db.NoAutoresponseGuilds.Contains((NoAutoresponseGuild)guildId);
+            bool allows = !contained;
 
-            if (allows) Db.NoAutoresponseGuilds.Add(guildId);
-            else Db.NoAutoresponseGuilds.Remove(guildId);
+            if (contained) Db.NoAutoresponseGuilds.Remove(guildId);
+            else Db.NoAutoresponseGuilds.Add(guildId);
 
             Db.SaveChanges();
-            cachedAllowsAutoresponse[guildId] = !allows;
-            return !allows;
+            cachedAllowsAutoresponse[guildId] = allows;
+            return allows;
         }
 
 
