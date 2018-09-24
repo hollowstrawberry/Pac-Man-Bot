@@ -4,7 +4,6 @@ using System.Text;
 using System.Linq;
 using System.Reflection;
 using System.Diagnostics;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using Microsoft.Data.Sqlite;
@@ -27,7 +26,7 @@ namespace PacManBot.Commands.Modules
     {
         public BotConfig Config { get; }
         public ScriptingService Scripting { get; }
-        public PacManDbContext Db => _db ?? (_db = GetDatabase());
+        public PacManDbContext Db => _db ?? (_db = new PacManDbContext(Config.dbConnectionString));
 
         private PacManDbContext _db;
 
@@ -38,10 +37,10 @@ namespace PacManBot.Commands.Modules
         }
 
 
-        private PacManDbContext GetDatabase()
+        protected override void AfterExecute(CommandInfo command)
         {
-            var dbProperty = typeof(StorageService).GetProperty("Db", BindingFlags.NonPublic | BindingFlags.Instance);
-            return (PacManDbContext)dbProperty.GetValue(Storage);
+            base.AfterExecute(command);
+            _db?.Dispose();
         }
 
 
@@ -73,7 +72,7 @@ namespace PacManBot.Commands.Modules
         public async Task ShutDown()
         {
             Services.Get<InputService>().StopListening();
-            await Logger.Log(LogSeverity.Info, LogSource.Owner, "Shutting down...");
+            await Logger.Log(LogSeverity.Info, LogSource.Owner, "Preparing to shut down.");
 
             // Waits a bit to finish up whatever it might be doing at the moment
             await Context.Message.AddReactionAsync(CustomEmoji.ELoading, Bot.DefaultOptions);
@@ -81,7 +80,7 @@ namespace PacManBot.Commands.Modules
             await AutoReactAsync();
             await Context.Message.RemoveReactionAsync(CustomEmoji.ELoading, Context.Client.CurrentUser, Bot.DefaultOptions);
 
-            await Logger.Log(LogSeverity.Info, LogSource.Owner, "Closing.");
+            await Logger.Log(LogSeverity.Info, LogSource.Owner, "Shutting down.");
             Environment.Exit(ExitCodes.ManualReboot);
         }
 

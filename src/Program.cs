@@ -21,7 +21,7 @@ namespace PacManBot
     /// </summary>
     public static class Program
     {
-        public const string Version = "3.8.0.2";
+        public const string Version = "3.8.0.3";
 
 
         static async Task Main()
@@ -87,10 +87,6 @@ namespace PacManBot
                 .AddSingleton<ScriptingService>();
 
             var provider = services.BuildServiceProvider();
-            foreach (var service in services)
-            {
-                provider.GetRequiredService(service.ServiceType);
-            }
 
             await commands.AddModulesAsync(Assembly.GetEntryAssembly(), provider);
 

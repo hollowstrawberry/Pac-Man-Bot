@@ -1,11 +1,8 @@
 using System;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
 using Discord;
-using Discord.Rest;
 using Discord.Commands;
 using Discord.WebSocket;
 using PacManBot.Utils;
@@ -22,17 +19,17 @@ namespace PacManBot.Services
     {
         private readonly DiscordShardedClient client;
         private readonly LoggingService logger;
+        private readonly string dbConnection;
 
 
-        private readonly ThreadLocal<PacManDbContext> threadedDb;
         private readonly ConcurrentDictionary<ulong, string> cachedPrefixes;
         private readonly ConcurrentDictionary<ulong, bool> cachedAllowsAutoresponse;
         private readonly ConcurrentDictionary<ulong, bool> cachedNeedsPrefix;
 
-        private PacManDbContext Db => threadedDb.Value;
-
         public string DefaultPrefix { get; }
 
+
+        private PacManDbContext MakeDbContext() => new PacManDbContext(dbConnection);
 
 
         public StorageService(BotConfig config, DiscordShardedClient client, LoggingService logger)
@@ -40,15 +37,13 @@ namespace PacManBot.Services
             this.client = client;
             this.logger = logger;
 
-            threadedDb = new ThreadLocal<PacManDbContext>(() => new PacManDbContext(config.dbConnectionString));
-
             DefaultPrefix = config.defaultPrefix;
+            dbConnection = config.dbConnectionString;
 
             cachedPrefixes = new ConcurrentDictionary<ulong, string>();
             cachedAllowsAutoresponse = new ConcurrentDictionary<ulong, bool>();
             cachedNeedsPrefix = new ConcurrentDictionary<ulong, bool>();
         }
-
 
 
 
@@ -73,7 +68,10 @@ namespace PacManBot.Services
         {
             if (cachedPrefixes.TryGetValue(guildId, out string prefix)) return prefix;
 
-            prefix = Db.Prefixes.Find(guildId)?.Prefix ?? DefaultPrefix;
+            using (var db = MakeDbContext())
+            {
+                prefix = db.Prefixes.Find(guildId)?.Prefix ?? DefaultPrefix;
+            }
 
             cachedPrefixes.TryAdd(guildId, prefix);
             return prefix;
@@ -83,17 +81,23 @@ namespace PacManBot.Services
         /// <summary>Changes the prefix of the specified guild.</summary>
         public void SetGuildPrefix(ulong guildId, string prefix)
         {
-            string old = cachedPrefixes[guildId];
-
-            if (prefix == DefaultPrefix) Db.Prefixes.Remove((guildId, prefix));
-            else
+            using (var db = MakeDbContext())
             {
-                if (old == DefaultPrefix) Db.Prefixes.Add((guildId, prefix));
-                else Db.Prefixes.Find(guildId).Prefix = prefix;
-            }
+                var entry = db.Prefixes.Find(guildId);
 
-            Db.SaveChanges();
-            cachedPrefixes[guildId] = prefix;
+                if (entry == null)
+                {
+                    if (prefix != DefaultPrefix) db.Prefixes.Add((guildId, prefix));
+                }
+                else
+                {
+                    if (prefix == DefaultPrefix) db.Prefixes.Remove(entry);
+                    else entry.Prefix = prefix;
+                }
+
+                db.SaveChanges();
+                cachedPrefixes[guildId] = prefix;
+            }
         }
 
 
@@ -106,12 +110,16 @@ namespace PacManBot.Services
         /// <summary>Whether the specified channel requires a prefix for commands.</summary>
         public bool RequiresPrefix(IChannel channel)
         {
-            ulong id = channel?.Id ?? 0;
-            if (cachedNeedsPrefix.TryGetValue(id, out bool needs)) return needs;
+            if (channel == null) return true;
 
-            needs = channel is IGuildChannel && !Db.NoPrefixGuildChannels.Contains((NoPrefixGuildChannel)id);
-            cachedNeedsPrefix.TryAdd(id, needs);
+            if (cachedNeedsPrefix.TryGetValue(channel.Id, out bool needs)) return needs;
 
+            using (var db = MakeDbContext())
+            {
+                needs = channel is IGuildChannel && db.NoPrefixGuildChannels.Find(channel.Id) == null;
+            }
+
+            cachedNeedsPrefix.TryAdd(channel.Id, needs);
             return needs;
         }
 
@@ -119,15 +127,19 @@ namespace PacManBot.Services
         /// <summary>Toggles the specified guild channel between requiring a prefix for commands and not, and returns the new value.</summary>
         public bool ToggleChannelGuildPrefix(ulong channelId)
         {
-            bool contained = Db.NoPrefixGuildChannels.Contains((NoPrefixGuildChannel)channelId);
-            bool needs = !contained;
+            using (var db = MakeDbContext())
+            {
+                var entry = db.NoPrefixGuildChannels.Find(channelId);
 
-            if (contained) Db.NoPrefixGuildChannels.Remove(channelId);
-            else Db.NoPrefixGuildChannels.Add(channelId);
+                if (entry == null) db.NoPrefixGuildChannels.Add(channelId);
+                else db.NoPrefixGuildChannels.Remove(entry);
 
-            Db.SaveChanges();
-            cachedNeedsPrefix[channelId] = needs;
-            return needs;
+                db.SaveChanges();
+
+                var nowNeeds = entry != null;
+                cachedNeedsPrefix[channelId] = nowNeeds;
+                return nowNeeds;
+            }
         }
 
 
@@ -140,9 +152,12 @@ namespace PacManBot.Services
         {
             if (cachedAllowsAutoresponse.TryGetValue(guildId, out bool allows)) return allows;
 
-            allows = !Db.NoAutoresponseGuilds.Contains((NoAutoresponseGuild)guildId);
-            cachedAllowsAutoresponse.TryAdd(guildId, allows);
+            using (var db = MakeDbContext())
+            {
+                allows = db.NoAutoresponseGuilds.Find(guildId) == null;
+            }
 
+            cachedAllowsAutoresponse.TryAdd(guildId, allows);
             return allows;
         }
 
@@ -150,15 +165,19 @@ namespace PacManBot.Services
         /// <summary>Toggles message autoresponses on or off in the specified guild and returns the new value.</summary>
         public bool ToggleAutoresponse(ulong guildId)
         {
-            bool contained = Db.NoAutoresponseGuilds.Contains((NoAutoresponseGuild)guildId);
-            bool allows = !contained;
+            using (var db = MakeDbContext())
+            {
+                var entry = db.NoAutoresponseGuilds.Find(guildId);
 
-            if (contained) Db.NoAutoresponseGuilds.Remove(guildId);
-            else Db.NoAutoresponseGuilds.Add(guildId);
+                if (entry == null) db.NoAutoresponseGuilds.Add(guildId);
+                else db.NoAutoresponseGuilds.Remove(entry);
 
-            Db.SaveChanges();
-            cachedAllowsAutoresponse[guildId] = allows;
-            return allows;
+                db.SaveChanges();
+
+                var nowAllows = entry != null;
+                cachedAllowsAutoresponse[guildId] = nowAllows;
+                return nowAllows;
+            }
         }
 
 
@@ -167,28 +186,34 @@ namespace PacManBot.Services
         /// <summary>Adds a new entry to the <see cref="Games.Concrete.PacManGame"/> scoreboard.</summary>
         public void AddScore(ScoreEntry entry)
         {
-            logger.Log(LogSeverity.Info, LogSource.Storage, $"New scoreboard entry: {entry}");
+            using (var db = MakeDbContext())
+            {
+                db.PacManScores.Add(entry);
+                db.SaveChanges();
+            }
 
-            Db.PacManScores.Add(entry);
-            Db.SaveChanges();
+            logger.Log(LogSeverity.Info, LogSource.Storage, $"New scoreboard entry: {entry}");
         }
 
 
         /// <summary>Retrieves a list of scores from the database that fulfills the specified requirements.</summary>
         public List<ScoreEntry> GetScores(TimePeriod period, int start = 0, int amount = 1, ulong? userId = null)
         {
-            IQueryable<ScoreEntry> scores = Db.PacManScores;
-
-            if (period != TimePeriod.All)
+            using (var db = MakeDbContext())
             {
-                var minDate = DateTime.Now - TimeSpan.FromHours((int)period);
-                scores = scores.Where(x => x.Date > minDate);
-            }
-            if (userId != null) scores = scores.Where(x => x.UserId == userId);
+                IQueryable<ScoreEntry> scores = db.PacManScores;
 
-            var list = scores.OrderByDescending(x => x.Score).Skip(start).Take(amount).ToList();
-            logger.Log(LogSeverity.Info, LogSource.Storage, $"Grabbed {list.Count} score entries");
-            return list;
+                if (period != TimePeriod.All)
+                {
+                    var minDate = DateTime.Now - TimeSpan.FromHours((int)period);
+                    scores = scores.Where(x => x.Date > minDate);
+                }
+                if (userId != null) scores = scores.Where(x => x.UserId == userId);
+
+                var list = scores.OrderByDescending(x => x.Score).Skip(start).Take(amount).ToList();
+                logger.Log(LogSeverity.Info, LogSource.Storage, $"Grabbed {list.Count} score entries");
+                return list;
+            }
         }
     }
 }
