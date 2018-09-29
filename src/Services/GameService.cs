@@ -23,6 +23,7 @@ namespace PacManBot.Services
         private static readonly JsonSerializerSettings GameJsonSettings = new JsonSerializerSettings
         {
             ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
+            TypeNameHandling = TypeNameHandling.Auto,
         };
 
 
@@ -118,7 +119,7 @@ namespace PacManBot.Services
         /// <summary>Stores a backup of the game on disk, to be loaded the next time the bot starts.</summary>
         public void Save(IStoreableGame game)
         {
-            File.WriteAllText(game.GameFile(), JsonConvert.SerializeObject(game), Encoding.UTF8);
+            File.WriteAllText(game.GameFile(), JsonConvert.SerializeObject(game, GameJsonSettings), Encoding.UTF8);
         }
 
 

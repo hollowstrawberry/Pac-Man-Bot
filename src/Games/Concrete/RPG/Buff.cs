@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
+﻿
 namespace PacManBot.Games.Concrete.RPG
 {
+    /// <summary>
+    /// An effect that an <see cref="Entity"/> holds for a certain amount of time.
+    /// </summary>
     public abstract class Buff : IKeyable
     {
         public virtual string Key => GetType().Name;
@@ -11,6 +11,8 @@ namespace PacManBot.Games.Concrete.RPG
         public abstract string Icon { get; }
         public virtual string Description => "";
 
-        public virtual string Effects(Entity holder) => "";
+        public virtual string TickEffects(Entity holder) => "";
+        public virtual void StartEffects(Entity holder) { }
+        public virtual void EndEffects(Entity holder) { }
     }
 }

@@ -5,6 +5,7 @@ namespace PacManBot.Games.Concrete.RPG.Weapons
     public class Fists : Weapon
     {
         public override string Name => "Fists";
+        public override string Description => "You can't really take them off,\nbut you can put something on.";
         public override int Damage => 1;
         public override double CritChance => 0;
         public override DamageType Type => DamageType.Blunt;
@@ -14,7 +15,7 @@ namespace PacManBot.Games.Concrete.RPG.Weapons
     public class Stick : Weapon
     {
         public override string Name => "Stick";
-        public override string Description => "You found this on the floor. Why did you even pick it up?";
+        public override string Description => "You found this on the floor.\nWhy did you even pick it up?";
         public override int Damage => 2;
         public override double CritChance => 0.01f;
         public override DamageType Type => DamageType.Blunt;

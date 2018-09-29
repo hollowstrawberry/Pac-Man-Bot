@@ -17,4 +17,11 @@ namespace PacManBot.Games.Concrete.RPG
         Water,
         Earth,
     }
+
+    public enum PlayerFightAction
+    {
+        Attack,
+        Skill,
+        Heal,
+    }
 }

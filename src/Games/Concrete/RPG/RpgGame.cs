@@ -4,7 +4,6 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Discord;
-using PacManBot.Services;
 using PacManBot.Constants;
 using PacManBot.Extensions;
 
@@ -21,6 +20,7 @@ namespace PacManBot.Games.Concrete.RPG
 
         [DataMember] public Player player;
         [DataMember] public Enemy enemy;
+        [DataMember] public Color ProfileColor = Colors.DarkBlack;
 
         [DataMember] public override ulong OwnerId { get => base.OwnerId; protected set => base.OwnerId = value; }
         [DataMember] public override DateTime LastPlayed { get => base.LastPlayed; set => base.LastPlayed = value; }
@@ -39,12 +39,22 @@ namespace PacManBot.Games.Concrete.RPG
         {
             var embed = new EmbedBuilder
             {
-                Title = $"{player.name}'s Summary",
+                Title = $"{player.Name}'s Summary",
+                Color = ProfileColor,
             };
 
-            embed.AddField("HP", $"{player.Life}/{player.MaxLife}", true);
-            embed.AddField("Weapon", player.weapon.Weapon().Name, true);
-            embed.AddField("Inventory", player.inventory.Select(x => x.Item().Name).JoinString(", "), true);
+            string statsDesc =
+                $"**Level {player.Level}**  (`{player.experience}/{player.NextLevelExp} EXP`)\n" +
+                $"HP: `{player.Life}/{player.MaxLife}`\nDefense: `{player.Defense}`";
+            embed.AddField("Stats", statsDesc, true);
+
+            var wp = player.weapon.GetWeapon();
+            string weaponDesc = $"**[{wp.Name}]**\n`{wp.Damage}` {wp.Type} damage"
+                              + $" | {wp.Magic} magic".If(wp.Magic != MagicType.None)
+                              + $"\n*\"{wp.Description}\"*";
+            embed.AddField("Weapon", weaponDesc, true);
+
+            embed.AddField("Inventory", player.inventory.Select(x => x.GetItem().Name).JoinString(", "), true);
 
             return embed;
         }
@@ -57,11 +67,12 @@ namespace PacManBot.Games.Concrete.RPG
         }
 
 
-        public EmbedBuilder FightTurn()
+        public EmbedBuilder FightTurn(PlayerFightAction action = PlayerFightAction.Attack)
         {
             var embed = new EmbedBuilder
             {
                 Title = $"{player} vs {enemy}",
+                Color = Colors.DarkBlack,
             };
 
             var desc = new StringBuilder();
@@ -84,15 +95,16 @@ namespace PacManBot.Games.Concrete.RPG
             foreach (var ent in new Entity[] { player, enemy })
             {
                 embed.AddField(ent.Name,
-                    $"{ent.Life}/{ent.MaxLife} {ent.Buffs.Select(x => x.Key.Buff().Icon).JoinString(" ")}", true);
+                    $"{ent.Life}/{ent.MaxLife} {ent.Buffs.Select(x => x.Key.GetBuff().Icon).JoinString(" ")}", true);
             }
 
             
             if (State == State.Win)
             {
                 embed.Color = Colors.Green;
-                desc.AppendLine("You win!");
-                player.Level += 1;
+                desc.AppendLine($"You win! +{enemy.ExpYield} EXP");
+                player.experience += enemy.ExpYield;
+                if (player.experience >= player.NextLevelExp) desc.AppendLine($"\n⏫ Level up! {player.LevelUp()}");
                 enemy = null;
             }
             else if (State == State.Lose)

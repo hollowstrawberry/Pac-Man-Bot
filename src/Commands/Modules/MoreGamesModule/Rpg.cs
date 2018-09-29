@@ -1,6 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
+using PacManBot.Extensions;
 using PacManBot.Games.Concrete.RPG;
 
 namespace PacManBot.Commands.Modules
@@ -28,12 +31,13 @@ namespace PacManBot.Commands.Modules
 
                 case "equip":
                 case "weapon":
-                    if (game.player.inventory.Contains(args))
+                    var item = game.player.inventory.Select(x => x.GetItem()).FirstOrDefault(x => x.Equals(args));
+                    if (item == null) await ReplyAsync("That item is not in your inventory.");
+                    else
                     {
-                        game.player.EquipWeapon(args);
+                        game.player.EquipWeapon(item.Key);
                         await ReplyAsync(game.Profile());
                     }
-                    else await ReplyAsync("That item is not in your inventory.");
                     break;
 
                 default:
@@ -41,7 +45,7 @@ namespace PacManBot.Commands.Modules
                     break;
             }
 
-            //Games.Save(game);
+            Games.Save(game);
         }
     }
 }

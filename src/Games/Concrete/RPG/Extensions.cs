@@ -5,13 +5,16 @@ using PacManBot.Extensions;
 
 namespace PacManBot.Games.Concrete.RPG
 {
+    /// <summary>
+    /// Contains extension methods for the RPG such as those that allow strings to get converted into game objects.
+    /// </summary>
     public static class Extensions
     {
-        public static Item Item(this string item) => ItemTypes[item];
-        public static Equipment Equipment(this string equipment) => EquipmentTypes[equipment];
-        public static Weapon Weapon(this string item) => WeaponTypes[item];
-        public static Enemy Enemy(this string enemy) => EnemyTypes[enemy];
-        public static Buff Buff(this string buff) => BuffTypes[buff];
+        public static Item GetItem(this string item) => ItemTypes.GetValueOrDefault(item);
+        public static Equipment GetEquip(this string equipment) => EquipmentTypes.GetValueOrDefault(equipment);
+        public static Weapon GetWeapon(this string item) => WeaponTypes.GetValueOrDefault(item);
+        public static Enemy GetEnemy(this string enemy) => EnemyTypes.GetValueOrDefault(enemy);
+        public static Buff GetBuff(this string buff) => BuffTypes.GetValueOrDefault(buff);
 
 
         public static IReadOnlyDictionary<string, Item> ItemTypes = GetTypes<Item>();

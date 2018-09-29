@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using PacManBot.Games.Concrete.RPG.Buffs;
+﻿using PacManBot.Games.Concrete.RPG.Buffs;
 
 namespace PacManBot.Games.Concrete.RPG.Enemies
 {
@@ -8,11 +6,12 @@ namespace PacManBot.Games.Concrete.RPG.Enemies
     {
         public override string Name => "Green Slime";
 
-        public override void SetDefaults()
+        public override void SetStats()
         {
             Level = 1;
-            MaxLife = 15;
-            Damage = 3;
+            ExpYield = 1;
+            MaxLife = 10;
+            Damage = 1;
             DamageType = DamageType.Blunt;
         }
     }
@@ -22,12 +21,30 @@ namespace PacManBot.Games.Concrete.RPG.Enemies
     {
         public override string Name => "Blue Slime";
 
-        public override void SetDefaults()
+        public override void SetStats()
         {
             Level = 1;
-            MaxLife = 20;
-            Damage = 5;
+            ExpYield = 2;
+            MaxLife = 12;
+            Damage = 2;
             DamageType = DamageType.Blunt;
+        }
+    }
+
+
+    public class Flop : Enemy
+    {
+        public override string Name => "Flopper";
+
+        public override void SetStats()
+        {
+            Level = 2;
+            ExpYield = 2;
+            MaxLife = 13;
+            Damage = 2;
+            CritChance = 0.5;
+            DamageType = DamageType.Blunt;
+            DamageResistance[DamageType.Cutting] = -0.2;
         }
     }
 
@@ -36,14 +53,15 @@ namespace PacManBot.Games.Concrete.RPG.Enemies
     {
         public override string Name => "Skellington";
 
-        public override void SetDefaults()
+        public override void SetStats()
         {
-            Level = 2;
-            MaxLife = 30;
-            Damage = 5;
-            CritChance = 0.1;
+            Level = 3;
+            ExpYield = 3;
+            MaxLife = 25;
+            Damage = 3;
+            CritChance = 0.2;
             DamageType = DamageType.Cutting;
-            DamageResistance[DamageType.Cutting] = 0.2;
+            DamageResistance[DamageType.Pierce] = 0.2;
         }
     }
 
@@ -52,14 +70,16 @@ namespace PacManBot.Games.Concrete.RPG.Enemies
     {
         public override string Name => "Rain Elemental";
 
-        public override void SetDefaults()
+        public override void SetStats()
         {
-            Level = 3;
-            MaxLife = 30;
-            Damage = 8;
+            Level = 5;
+            ExpYield = 4;
+            MaxLife = 40;
+            Damage = 5;
             DamageType = DamageType.Magic;
             MagicType = MagicType.Water;
             MagicResistance[MagicType.Water] = 1;
+            MagicResistance[MagicType.Fire] = 0.5;
         }
 
         public override string Attack(Entity target)
