@@ -10,7 +10,7 @@ using PacManBot.Extensions;
 namespace PacManBot.Games.Concrete.RPG
 {
     [DataContract]
-    class RpgGame : ChannelGame, IUserGame, IStoreableGame, IReactionsGame
+    public class RpgGame : ChannelGame, IUserGame, IStoreableGame, IReactionsGame
     {
         public override string GameName => "Generic RPG";
         public override int GameIndex => 9;
@@ -144,7 +144,14 @@ namespace PacManBot.Games.Concrete.RPG
                 {
                     desc.AppendLine($"{en} was defeated! +{en.ExpYield} EXP");
                     player.experience += en.ExpYield;
-                    if (player.experience >= player.NextLevelExp) desc.AppendLine($"\n⏫ Level up! {player.LevelUp()}");
+                    if (player.experience >= player.NextLevelExp)
+                    {
+                        string lvl = player.LevelUp();
+                        if (player.Level < Player.LevelCap)
+                        {
+                            desc.AppendLine($"\n⏫ Level up! {player.LevelUp()}");
+                        }
+                    }
 
                     enemies.RemoveAt(i);
                 }
@@ -163,7 +170,7 @@ namespace PacManBot.Games.Concrete.RPG
                 embed.Color = Colors.Red;
                 desc.AppendLine($"\n☠ You died and lost EXP!");
                 enemies.Clear();
-                player.experience = 0;
+                player.experience /= 3;
                 player.Life = player.MaxLife / 2;
             }
 

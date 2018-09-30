@@ -19,7 +19,7 @@ namespace PacManBot.Commands.Modules
             "\n**{prefix}rpg battle** - Start a new battle or resend the current battle." +
             "\n**{prefix}rpg profile** - Check your hero." +
             "\n**{prefix}rpg equip [weapon]** - Equip a weapon in your inventory." +
-            "\n**{prefix}rpg heal** - Refill your HP." +
+            "\n**{prefix}rpg heal** - Refill your HP, only once per battle." +
             "\n\n**{prefix}rpg name [name]** - Change your hero's name." +
             "\n**{prefix}rpg color [color]** - Change the color of your hero's profile.")]
         [BetterRequireBotPermission(ChannelPermission.EmbedLinks | ChannelPermission.AddReactions)]
@@ -66,12 +66,13 @@ namespace PacManBot.Commands.Modules
             {
                 case "fight":
                 case "battle":
+                case "b":
                     if (game.State != State.Active)
                     {
                         var timeLeft = TimeSpan.FromMinutes(0.5) - (DateTime.Now - game.lastBattle);
                         if (timeLeft > TimeSpan.Zero)
                         {
-                            await ReplyAsync($"{CustomEmoji.Cross} You may battle again in {timeLeft.Humanized()}");
+                            await ReplyAsync($"{CustomEmoji.Cross} You may battle again in {timeLeft.Humanized(empty: "1 second")}");
                             return;
                         }
 
@@ -128,7 +129,7 @@ namespace PacManBot.Commands.Modules
                     var timeLeftH = TimeSpan.FromMinutes(5) - (DateTime.Now - game.lastHeal);
                     if (timeLeftH > TimeSpan.Zero)
                     {
-                        await ReplyAsync($"{CustomEmoji.Cross} You can heal again in {timeLeftH.Humanized()}");
+                        await ReplyAsync($"{CustomEmoji.Cross} You may heal again in {timeLeftH.Humanized(empty: "1 second")}");
                         return;
                     }
 

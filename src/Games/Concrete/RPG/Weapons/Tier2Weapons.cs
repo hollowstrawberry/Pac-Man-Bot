@@ -33,11 +33,13 @@ namespace PacManBot.Games.Concrete.RPG.Weapons
 
         public override void EquipEffects(Player player)
         {
+            base.EquipEffects(player);
             player.Defense += 2;
         }
 
         public override void UnequipEffects(Player player)
         {
+            base.UnequipEffects(player);
             player.Defense -= 2;
         }
     }

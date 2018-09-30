@@ -14,6 +14,8 @@ namespace PacManBot.Games.Concrete.RPG
     [DataContract]
     public class Player : Entity
     {
+        public const int LevelCap = 15;
+
         /// <summary>The player's name.</summary>
         public override string Name => name;
 
@@ -83,13 +85,19 @@ namespace PacManBot.Games.Concrete.RPG
         /// <summary>Levels up the player, increasing stats.</summary>
         public string LevelUp()
         {
+            if (Level >= LevelCap)
+            {
+                experience = NextLevelExp;
+                return "";
+            }
+
             experience -= NextLevelExp;
             Level++;
 
             var boosts = new List<string>(5);
 
             MaxLife += 5;
-            Life += 5;
+            Life = MaxLife;
             boosts.Add("+5 HP");
             if (Level % 2 == 0)
             {
@@ -102,35 +110,45 @@ namespace PacManBot.Games.Concrete.RPG
                 boosts.Add("+1 defense");
             }
 
-            switch (Level)
+            if (Level % 5 == 0)
             {
-                case 3:
-                    inventory.AddRange(new[] { nameof(Weapons.Shortsword), nameof(Weapons.Dagger) });
-                    boosts.Add("**new weapons!**");
-                    break;
-                case 5:
-                    inventory.AddRange(new[] { nameof(Weapons.Mace), nameof(Weapons.FireScroll) });
-                    boosts.Add("**new weapons!**");
-                    break;
-                case 8:
-                    inventory.Add(nameof(Weapons.Bow));
-                    boosts.Add("**new weapon!**");
-                    break;
-                case 10:
-                    inventory.Add(nameof(Weapons.ForestSword));
-                    boosts.Add("**new weapon!**");
-                    break;
-                case 11:
-                    inventory.Add(nameof(Weapons.Shield));
-                    boosts.Add("**new weapon!**");
-                    break;
-                case 12:
-                    inventory.Add(nameof(Weapons.SimpleSpell));
-                    boosts.Add("**new weapon!**");
-                    break;
+                CritChance += 0.01;
+                boosts.Add("+1% crit chance");
             }
 
+            if (AddLeveledWeapons()) boosts.Add("**new weapons!**");
+
             return boosts.JoinString(", ");
+        }
+
+
+        public bool AddLeveledWeapons()
+        {
+            var weps = new Dictionary<int, string[]>
+            {
+                { 3, new[] { nameof(Weapons.Shortsword), nameof(Weapons.Dagger) } },
+                { 5, new[] { nameof(Weapons.Mace), nameof(Weapons.FireScroll) } },
+                { 8, new[] { nameof(Weapons.Bow) } },
+                { 10, new[] { nameof(Weapons.ForestSword) } },
+                { 11, new[] { nameof(Weapons.Shield) } },
+                { 12, new[] { nameof(Weapons.SimpleSpell) } },
+            };
+
+            bool added = false;
+
+            foreach (var pair in weps)
+            {
+                if (Level >= pair.Key)
+                {
+                    var toAdd = pair.Value.Where(x => !inventory.Contains(x));
+                    if (toAdd.Count() > 0)
+                    {
+                        inventory.AddRange(toAdd);
+                    }
+                }
+            }
+
+            return added;
         }
 
 

@@ -77,7 +77,7 @@ namespace PacManBot.Games.Concrete.RPG.Enemies
             Level = 9;
             ExpYield = 10;
             MaxLife = 70;
-            Damage = 7;
+            Damage = 9;
             Defense = 4;
             CritChance = 0.01;
             DamageType = DamageType.Cutting;
@@ -94,9 +94,9 @@ namespace PacManBot.Games.Concrete.RPG.Enemies
         {
             Level = 12;
             ExpYield = 13;
-            MaxLife = 70;
-            Damage = 6;
-            Defense = 2;
+            MaxLife = 60;
+            Damage = 8;
+            Defense = 3;
             CritChance = 0.05;
             DamageType = DamageType.Pierce;
         }
@@ -104,7 +104,7 @@ namespace PacManBot.Games.Concrete.RPG.Enemies
         public override string Attack(Entity target)
         {
             string msg = "";
-            if (!target.Buffs.ContainsKey(nameof(Blinded)) && Bot.Random.OneIn(4))
+            if (!target.Buffs.ContainsKey(nameof(Blinded)) && Bot.Random.OneIn(3))
             {
                 msg = $"{target} is now vulnerable!";
                 target.Buffs[nameof(Blinded)] = 3;

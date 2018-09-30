@@ -11,7 +11,6 @@ namespace PacManBot.Extensions
     {
         /// <summary>Gets a service of type <typeparamref name="T"/> from a <see cref="IServiceProvider"/>. 
         /// Throws an exception if one is not found. I didn't like the long name of the original.</summary>
-        [DebuggerStepThrough]
         public static T Get<T>(this IServiceProvider provider) => provider.GetRequiredService<T>();
 
 
@@ -30,9 +29,10 @@ namespace PacManBot.Extensions
 
         /// <summary>
         /// Converts a <see cref="TimeSpan"/> into a string listing days, hours, minutes and seconds.
-        /// <paramref name="depth"/> can be specified to limit how many units to show.
         /// </summary>
-        public static string Humanized(this TimeSpan span, int depth = 4)
+        /// <param name="depth">How many units to show, from 1 (only days) to 4 (all)</param>
+        /// <param name="empty">The default string if the timeframe is smaller than can be expressed.</param>
+        public static string Humanized(this TimeSpan span, int depth = 4, string empty = "now")
         {
             int days = (int)span.TotalDays, hours = span.Hours, minutes = span.Minutes, seconds = span.Seconds;
 
@@ -44,7 +44,7 @@ namespace PacManBot.Extensions
                 if (val > 0) text.Add($"{val} {name}{"s".If(val > 1)}");
             }
 
-            return text.Count > 0 ? text.JoinString(", ") : "Just now";
+            return text.Count > 0 ? text.JoinString(", ") : empty;
         }
 
 

@@ -47,12 +47,31 @@ namespace PacManBot.Games.Concrete.RPG.Enemies
         {
             Level = 11;
             ExpYield = 10;
-            MaxLife = 29;
-            Damage = 15;
+            MaxLife = 37;
+            Damage = 16;
             Defense = -2;
             CritChance = 0.1;
             DamageType = DamageType.Pierce;
             DamageResistance[DamageType.Pierce] = -0.2;
+        }
+    }
+
+
+    public class SkeletonKing : Enemy
+    {
+        public override string Name => "Skingeton";
+
+        public override void SetStats()
+        {
+            Level = 20;
+            ExpYield = 15;
+            MaxLife = 100;
+            Damage = 30;
+            Defense = 6;
+            CritChance = 0.2;
+            DamageType = DamageType.Blunt;
+            DamageResistance[DamageType.Magic] = 0.15;
+            DamageResistance[DamageType.Blunt] = 0.15;
         }
     }
 }

@@ -38,8 +38,8 @@ namespace PacManBot.Games.Concrete.RPG.Enemies
         {
             Level = 6;
             ExpYield = 5;
-            MaxLife = 55;
-            Damage = 4;
+            MaxLife = 50;
+            Damage = 5;
             Defense = 4;
             CritChance = 0.05;
             DamageType = DamageType.Pierce;
@@ -89,7 +89,7 @@ namespace PacManBot.Games.Concrete.RPG.Enemies
             Level = 10;
             ExpYield = 9;
             MaxLife = 45;
-            Damage = 8;
+            Damage = 10;
             Defense = 2;
             CritChance = 0.02;
             DamageType = DamageType.Magic;
