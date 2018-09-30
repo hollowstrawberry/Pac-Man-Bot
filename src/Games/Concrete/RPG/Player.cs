@@ -29,7 +29,7 @@ namespace PacManBot.Games.Concrete.RPG
         /// <summary>The key of the weapon the player is holding.</summary>
         [DataMember] public string weapon;
         /// <summary>Profile embed color.</summary>
-        [DataMember] public Color color = Colors.DarkBlack;
+        [DataMember] public Color color = Color.Blue;
         /// <summary>Contains the keys of the items in the player's inventory.</summary>
         [DataMember] public List<string> inventory = new List<string>(20);
 
@@ -42,7 +42,11 @@ namespace PacManBot.Games.Concrete.RPG
             MaxLife = 50;
             Life = MaxLife;
             EquipWeapon(nameof(Weapons.Fists));
-            inventory = Extensions.ItemTypes.Keys.ToList();
+
+            inventory = new List<string>
+            {
+                nameof(Weapons.Stick),
+            };
         }
 
 
@@ -98,6 +102,19 @@ namespace PacManBot.Games.Concrete.RPG
                 boosts.Add("+1 defense");
             }
 
+            switch (Level)
+            {
+                case 3:
+                    inventory.AddRange(new[] { nameof(Weapons.Shortsword), nameof(Weapons.Mace),
+                                               nameof(Weapons.Dagger), nameof(Weapons.FireScroll) });
+                    boosts.Add("**new weapons!**");
+                    break;
+                case 10:
+                    inventory.AddRange(new[] { nameof(Weapons.ForestSword), nameof(Weapons.Bow) });
+                    boosts.Add("**new weapons!**");
+                    break;
+            }
+
             return boosts.JoinString(", ");
         }
 
@@ -118,11 +135,13 @@ namespace PacManBot.Games.Concrete.RPG
             var wp = weapon.GetWeapon();
             string weaponDesc = $"**[{wp.Name}]**\n`{Damage}` {wp.Type} damage"
                               + $" | {wp.Magic} magic".If(wp.Magic != MagicType.None)
-                              + $"\n{(int)(CritChance * 100)}% critical hit chance"
+                              + $"\n`{(CritChance * 100).Round()}%` critical hit chance"
                               + $"\n*\"{wp.Description}\"*";
+
             embed.AddField("Weapon", weaponDesc, true);
 
-            embed.AddField("Inventory", inventory.Select(x => x.GetItem().Name).JoinString(", "), true);
+            var inv = inventory.Select(x => x.GetItem().Name).JoinString(", ");
+            embed.AddField("Inventory", inv == "" ? "*Empty*" : inv);
 
             return embed;
         }

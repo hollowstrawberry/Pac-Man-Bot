@@ -1,4 +1,5 @@
 ﻿using PacManBot.Games.Concrete.RPG.Buffs;
+using PacManBot.Extensions;
 
 namespace PacManBot.Games.Concrete.RPG.Enemies
 {
@@ -40,7 +41,7 @@ namespace PacManBot.Games.Concrete.RPG.Enemies
         {
             Level = 2;
             ExpYield = 2;
-            MaxLife = 13;
+            MaxLife = 18;
             Damage = 2;
             CritChance = 0.5;
             DamageType = DamageType.Blunt;
@@ -49,46 +50,38 @@ namespace PacManBot.Games.Concrete.RPG.Enemies
     }
 
 
-    public class Skeleton : Enemy
+    public class Rat : Enemy
     {
-        public override string Name => "Skellington";
+        public override string Name => "Feral rat";
 
         public override void SetStats()
         {
             Level = 3;
             ExpYield = 3;
-            MaxLife = 25;
-            Damage = 3;
-            Defense = 1;
-            CritChance = 0.2;
+            MaxLife = 30;
+            Damage = 5;
+            Defense = 0;
+            CritChance = 0.08;
             DamageType = DamageType.Cutting;
-            DamageResistance[DamageType.Pierce] = 0.2;
+            DamageResistance[DamageType.Magic] = -0.3;
         }
     }
 
-
-    public class RainElemental : Enemy
+    
+    public class Bear : Enemy
     {
-        public override string Name => "Rain Elemental";
+        public override string Name => "Bear";
 
         public override void SetStats()
         {
-            Level = 5;
-            ExpYield = 4;
-            MaxLife = 40;
-            Damage = 5;
-            Defense = 2;
-            DamageType = DamageType.Magic;
-            MagicType = MagicType.Water;
-            MagicResistance[MagicType.Water] = 1;
-            MagicResistance[MagicType.Fire] = 0.5;
-        }
-
-        public override string Attack(Entity target)
-        {
-            string msg = target.Buffs.ContainsKey(nameof(Wet)) ? "" : $"{target} is now wet.";
-            target.Buffs[nameof(Wet)] = 5;
-            return base.Attack(target) + msg;
+            Level = 9;
+            ExpYield = 10;
+            MaxLife = 70;
+            Damage = 9;
+            Defense = 4;
+            CritChance = 0.01;
+            DamageType = DamageType.Cutting;
+            DamageResistance[DamageType.Blunt] = 0.2;
         }
     }
 }

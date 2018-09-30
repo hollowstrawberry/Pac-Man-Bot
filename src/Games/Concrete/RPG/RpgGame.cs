@@ -18,8 +18,10 @@ namespace PacManBot.Games.Concrete.RPG
         public override TimeSpan Expiry => TimeSpan.FromDays(100);
 
 
+        public const string MenuEmote = "🛂";
+        public const string ProfileEmote = "🚹";
         public static readonly IReadOnlyList<string> EmoteNumberInputs = CustomEmoji.NumberCircle.Skip(1).Take(3).ToArray();
-        public static readonly IReadOnlyList<string> EmoteOtherInputs = new[] { "⏏", "🚹" };
+        public static readonly IReadOnlyList<string> EmoteOtherInputs = new[] { MenuEmote, ProfileEmote };
 
 
         private string lastEmote;
@@ -51,25 +53,25 @@ namespace PacManBot.Games.Concrete.RPG
         {
             State = State.Active;
             lastBattle = DateTime.Now;
+            enemies.Clear();
 
             var possible = Extensions.EnemyTypes
                 .Select(x => x.Value)
-                .Where(x => x.Level <= player.Level && x.Level >= player.Level - 10)
+                .Where(x => x.Level <= player.Level)
+                .OrderByDescending(x => x.Level)
+                .Take(10)
                 .ToList();
 
             enemies.Add(Bot.Random.Choose(possible).MakeNew());
 
-            if (Bot.Random.OneIn(2))
+            if (!Bot.Random.OneIn(player.Level - enemies[0].Level))
             {
-                if (enemies[0].Level <= player.Level - 2)
-                {
-                    possible = possible.Where(x => x.Level <= player.Level - 2).ToList();
-                    enemies.Add(Bot.Random.Choose(possible).MakeNew());
+                possible = possible.Where(x => x.Level <= player.Level - 2).ToList();
+                enemies.Add(Bot.Random.Choose(possible).MakeNew());
 
-                    if (Bot.Random.OneIn(2) && enemies[1].Level <= player.Level - 5)
-                    {
-                        enemies.Add(Bot.Random.Choose(possible).MakeNew());
-                    }
+                if (!Bot.Random.OneIn(Math.Max(0, player.Level - enemies[1].Level - 2)))
+                {
+                    enemies.Add(Bot.Random.Choose(possible).MakeNew());
                 }
             }
         }
@@ -80,7 +82,7 @@ namespace PacManBot.Games.Concrete.RPG
         {
             var embed = new EmbedBuilder
             {
-                Title = $"{player} vs {enemies.JoinString(", ")}",
+                Title = $"⚔ Generic RPG Battle",
                 Color = Colors.DarkBlack,
             };
 
@@ -159,10 +161,10 @@ namespace PacManBot.Games.Concrete.RPG
             {
                 State = State.Lose;
                 embed.Color = Colors.Red;
-                desc.AppendLine($"\n☠ You died! Experience reset.");
+                desc.AppendLine($"\n☠ You died and lost EXP!");
                 enemies.Clear();
                 player.experience = 0;
-                player.Life = player.MaxLife;
+                player.Life = player.MaxLife / 2;
             }
 
             if (State != State.Active)
@@ -194,7 +196,7 @@ namespace PacManBot.Games.Concrete.RPG
         {
             var emoji = input.Mention();
 
-            if (emoji == "⏏")
+            if (emoji == MenuEmote)
             {
                 if (lastEmote == emoji)
                 {
@@ -207,7 +209,7 @@ namespace PacManBot.Games.Concrete.RPG
                     fightEmbed = FightMenu();
                 }
             }
-            else if (emoji == "🚹")
+            else if (emoji == ProfileEmote)
             {
                 if (lastEmote == emoji)
                 {
@@ -235,7 +237,7 @@ namespace PacManBot.Games.Concrete.RPG
 
         public override EmbedBuilder GetEmbed(bool showHelp = true)
         {
-            return fightEmbed ?? new EmbedBuilder { Title = "Generic RPG", Description = "On Hold" };
+            return fightEmbed ?? new EmbedBuilder { Title = "Generic RPG", Description = "..." };
         }
 
 

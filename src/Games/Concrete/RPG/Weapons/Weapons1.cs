@@ -26,8 +26,8 @@ namespace PacManBot.Games.Concrete.RPG.Weapons
     {
         public override string Name => "Shortsword";
         public override string Description => "A rounded weapon for a rounded beginner.";
-        public override int Damage => 6;
-        public override double CritChance => 0.05f;
+        public override int Damage => 4;
+        public override double CritChance => 0.08f;
         public override DamageType Type => DamageType.Cutting;
     }
 
@@ -36,8 +36,8 @@ namespace PacManBot.Games.Concrete.RPG.Weapons
     {
         public override string Name => "Dagger";
         public override string Description => "A beginner weapon likely to deal critical hits.";
-        public override int Damage => 4;
-        public override double CritChance => 0.1f;
+        public override int Damage => 3;
+        public override double CritChance => 0.2f;
         public override DamageType Type => DamageType.Pierce;
     }
 
@@ -46,8 +46,8 @@ namespace PacManBot.Games.Concrete.RPG.Weapons
     {
         public override string Name => "Mace";
         public override string Description => "A slow beginner weapon that deals decent damage.";
-        public override int Damage => 7;
-        public override double CritChance => 0.02f;
+        public override int Damage => 5;
+        public override double CritChance => 0.03f;
         public override DamageType Type => DamageType.Blunt;
     }
 
@@ -56,26 +56,36 @@ namespace PacManBot.Games.Concrete.RPG.Weapons
     {
         public override string Name => "Fire Scroll";
         public override string Description => "A beginner spell that may cause an extra burn.";
-        public override int Damage => 5;
-        public override double CritChance => 0.05f;
+        public override int Damage => 4;
+        public override double CritChance => 0.01f;
         public override DamageType Type => DamageType.Magic;
         public override MagicType Magic => MagicType.Fire;
 
         public override string AttackEffects(Player wielder, Entity target)
         {
-            if (Bot.Random.OneIn(2) && !target.Buffs.ContainsKey(nameof(Buffs.Burn)))
+            if (Bot.Random.OneIn(5) && !target.Buffs.ContainsKey(nameof(Buffs.Burn)))
             {
                 target.Buffs[nameof(Buffs.Burn)] = 3;
-                return $"{target} sustained a burn!";
+                return $"{target} got burned!";
             }
             return "";
         }
     }
 
 
+    public class Bow : Weapon
+    {
+        public override string Name => "Bow";
+        public override string Description => "Simple and effective.";
+        public override int Damage => 9;
+        public override double CritChance => 0.1f;
+        public override DamageType Type => DamageType.Pierce;
+    }
+
+
     public class ForestSword : Weapon
     {
-        public override string Name => "Sword of the Woods";
+        public override string Name => "Swordwood";
         public override string Description => "Better than a wooden sword.";
         public override int Damage => 10;
         public override double CritChance => 0.01f;

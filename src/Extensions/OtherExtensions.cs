@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 using PacManBot.Utils;
@@ -26,16 +28,23 @@ namespace PacManBot.Extensions
         public static int Round(this double num) => (int)Math.Round(num);
 
 
-        /// <summary>Converts a <see cref="TimeSpan"/> into a string listing the days, hours and minutes.</summary>
-        public static string Humanized(this TimeSpan span)
+        /// <summary>
+        /// Converts a <see cref="TimeSpan"/> into a string listing days, hours, minutes and seconds.
+        /// <paramref name="depth"/> can be specified to limit how many units to show.
+        /// </summary>
+        public static string Humanized(this TimeSpan span, int depth = 4)
         {
-            int days = (int)span.TotalDays, hours = span.Hours, minutes = span.Minutes;
+            int days = (int)span.TotalDays, hours = span.Hours, minutes = span.Minutes, seconds = span.Seconds;
 
-            string result = $"{days} day{"s".If(days > 1)}, ".If(days > 0)
-                          + $"{hours} hour{"s".If(hours > 1)}, ".If(hours > 0)
-                          + $"{minutes} minute{"s".If(minutes > 1)}".If(minutes > 0);
+            var units = new[] { (days, "day"), (hours, "hour"), (minutes, "minute"), (seconds, "second") };
+            var text = new List<string>(4);
 
-            return result != "" ? result : "Just now";
+            foreach (var (val, name) in units.Take(depth))
+            {
+                if (val > 0) text.Add($"{val} {name}{"s".If(val > 1)}");
+            }
+
+            return text.Count > 0 ? text.JoinString(", ") : "Just now";
         }
 
 
