@@ -89,7 +89,7 @@ namespace PacManBot.Games.Concrete.RPG.Enemies
             Level = 10;
             ExpYield = 9;
             MaxLife = 45;
-            Damage = 10;
+            Damage = 12;
             Defense = 2;
             CritChance = 0.02;
             DamageType = DamageType.Magic;

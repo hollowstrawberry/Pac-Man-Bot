@@ -30,7 +30,7 @@ namespace PacManBot.Games.Concrete.RPG.Enemies
             Level = 8;
             ExpYield = 8;
             MaxLife = 42;
-            Damage = 7;
+            Damage = 8;
             Defense = 2;
             CritChance = 0.2;
             DamageType = DamageType.Cutting;

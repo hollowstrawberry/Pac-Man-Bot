@@ -14,7 +14,7 @@ namespace PacManBot.Games.Concrete.RPG
     [DataContract]
     public class Player : Entity
     {
-        public const int LevelCap = 15;
+        public const int LevelCap = 20;
 
         /// <summary>The player's name.</summary>
         public override string Name => name;
