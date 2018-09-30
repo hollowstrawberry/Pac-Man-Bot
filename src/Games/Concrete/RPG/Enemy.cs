@@ -49,8 +49,7 @@ namespace PacManBot.Games.Concrete.RPG
 
             desc.AppendLine($"**Level {Level}**");
             desc.AppendLine($"`{MaxLife}` MaxHP, `{Defense}` defense");
-            desc.AppendLine($"`{Damage}` {DamageType} damage");
-            if (MagicType != MagicType.None) desc.Append($"{MagicType} Magic");
+            desc.AppendLine($"`{Damage}` {DamageType}{$"/{MagicType}".If(MagicType != MagicType.None)} damage");
             desc.AppendLine($"`{(CritChance*100).Round()}%` critical hit chance");
 
             if (DamageResistance.Count > 0 || DamageResistance.Count > 0)

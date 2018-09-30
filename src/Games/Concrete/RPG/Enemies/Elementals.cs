@@ -11,7 +11,7 @@ namespace PacManBot.Games.Concrete.RPG.Enemies
         {
             Level = 5;
             ExpYield = 5;
-            MaxLife = 45;
+            MaxLife = 35;
             Damage = 5;
             Defense = 2;
             CritChance = 0.07;
@@ -57,8 +57,8 @@ namespace PacManBot.Games.Concrete.RPG.Enemies
         {
             Level = 8;
             ExpYield = 8;
-            MaxLife = 50;
-            Damage = 10;
+            MaxLife = 30;
+            Damage = 9;
             Defense = 4;
             CritChance = 0.05;
             DamageType = DamageType.Magic;
@@ -69,8 +69,12 @@ namespace PacManBot.Games.Concrete.RPG.Enemies
 
         public override string Attack(Entity target)
         {
-            string msg = target.Buffs.ContainsKey(nameof(Burn)) ? "" : $"{target} got burned!";
-            target.Buffs[nameof(Burn)] = 5;
+            string msg = "";
+            if (!target.Buffs.ContainsKey(nameof(Burn)))
+            {
+                msg = $"{target} got burned!";
+                target.Buffs[nameof(Burn)] = 4;
+            }
             return base.Attack(target) + msg;
         }
     }
@@ -84,7 +88,7 @@ namespace PacManBot.Games.Concrete.RPG.Enemies
         {
             Level = 10;
             ExpYield = 9;
-            MaxLife = 60;
+            MaxLife = 45;
             Damage = 8;
             Defense = 2;
             CritChance = 0.02;

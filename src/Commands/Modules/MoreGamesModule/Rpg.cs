@@ -71,7 +71,7 @@ namespace PacManBot.Commands.Modules
                         var timeLeft = TimeSpan.FromMinutes(0.5) - (DateTime.Now - game.lastBattle);
                         if (timeLeft > TimeSpan.Zero)
                         {
-                            await ReplyAsync($"You may battle again in {timeLeft.Humanized()}");
+                            await ReplyAsync($"{CustomEmoji.Cross} You may battle again in {timeLeft.Humanized()}");
                             return;
                         }
 
@@ -133,7 +133,7 @@ namespace PacManBot.Commands.Modules
                     }
 
                     game.lastHeal = DateTime.Now;
-                    game.player.Life += 50;
+                    game.player.Life += (game.player.MaxLife * 0.75).Round();
                     await AutoReactAsync();
                     break;
 
@@ -158,6 +158,7 @@ namespace PacManBot.Commands.Modules
                     else
                     {
                         game.player.SetName(args);
+                        await AutoReactAsync();
                     }
                     break;
 
@@ -167,10 +168,10 @@ namespace PacManBot.Commands.Modules
                     else
                     {
                         var color = (Color)typeof(Color).GetFields()
-                            .FirstOrDefault(x => x.Name.ToLower() == args.ToLower().Replace(" ", ""))
+                            .FirstOrDefault(x => x.Name.ToLower() == args.ToLower().Replace(" ", ""))?
                             .GetValue(null);
 
-                        if (color == null) await ReplyAsync("Can't find that color.");
+                        if (color == null) await ReplyAsync("Can't find that color with that name.");
                         else
                         {
                             game.player.color = color;

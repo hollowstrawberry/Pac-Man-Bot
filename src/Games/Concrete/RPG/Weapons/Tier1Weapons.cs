@@ -71,25 +71,4 @@ namespace PacManBot.Games.Concrete.RPG.Weapons
             return "";
         }
     }
-
-
-    public class Bow : Weapon
-    {
-        public override string Name => "Bow";
-        public override string Description => "Simple and effective.";
-        public override int Damage => 9;
-        public override double CritChance => 0.1f;
-        public override DamageType Type => DamageType.Pierce;
-    }
-
-
-    public class ForestSword : Weapon
-    {
-        public override string Name => "Swordwood";
-        public override string Description => "Better than a wooden sword.";
-        public override int Damage => 10;
-        public override double CritChance => 0.01f;
-        public override DamageType Type => DamageType.Cutting;
-        public override MagicType Magic => MagicType.Earth;
-    }
 }

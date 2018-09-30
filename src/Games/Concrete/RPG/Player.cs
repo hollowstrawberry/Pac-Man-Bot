@@ -105,13 +105,28 @@ namespace PacManBot.Games.Concrete.RPG
             switch (Level)
             {
                 case 3:
-                    inventory.AddRange(new[] { nameof(Weapons.Shortsword), nameof(Weapons.Mace),
-                                               nameof(Weapons.Dagger), nameof(Weapons.FireScroll) });
+                    inventory.AddRange(new[] { nameof(Weapons.Shortsword), nameof(Weapons.Dagger) });
                     boosts.Add("**new weapons!**");
                     break;
-                case 10:
-                    inventory.AddRange(new[] { nameof(Weapons.ForestSword), nameof(Weapons.Bow) });
+                case 5:
+                    inventory.AddRange(new[] { nameof(Weapons.Mace), nameof(Weapons.FireScroll) });
                     boosts.Add("**new weapons!**");
+                    break;
+                case 8:
+                    inventory.Add(nameof(Weapons.Bow));
+                    boosts.Add("**new weapon!**");
+                    break;
+                case 10:
+                    inventory.Add(nameof(Weapons.ForestSword));
+                    boosts.Add("**new weapon!**");
+                    break;
+                case 11:
+                    inventory.Add(nameof(Weapons.Shield));
+                    boosts.Add("**new weapon!**");
+                    break;
+                case 12:
+                    inventory.Add(nameof(Weapons.SimpleSpell));
+                    boosts.Add("**new weapon!**");
                     break;
             }
 
@@ -133,8 +148,7 @@ namespace PacManBot.Games.Concrete.RPG
             embed.AddField("Stats", statsDesc, true);
 
             var wp = weapon.GetWeapon();
-            string weaponDesc = $"**[{wp.Name}]**\n`{Damage}` {wp.Type} damage"
-                              + $" | {wp.Magic} magic".If(wp.Magic != MagicType.None)
+            string weaponDesc = $"**[{wp.Name}]**\n`{Damage}` {wp.Type}{$"/{wp.Magic}".If(wp.Magic != MagicType.None)} damage"
                               + $"\n`{(CritChance * 100).Round()}%` critical hit chance"
                               + $"\n*\"{wp.Description}\"*";
 
