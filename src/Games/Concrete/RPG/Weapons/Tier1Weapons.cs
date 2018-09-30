@@ -65,7 +65,7 @@ namespace PacManBot.Games.Concrete.RPG.Weapons
         {
             if (Bot.Random.OneIn(5) && !target.Buffs.ContainsKey(nameof(Buffs.Burn)))
             {
-                target.Buffs[nameof(Buffs.Burn)] = 3;
+                target.AddBuff(nameof(Buffs.Burn), 4);
                 return $"{target} got burned!";
             }
             return "";

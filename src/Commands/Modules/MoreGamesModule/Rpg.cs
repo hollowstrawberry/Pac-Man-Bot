@@ -119,7 +119,7 @@ namespace PacManBot.Commands.Modules
 
                 case "heal":
                 case "potion":
-                case "hp":
+                case "h":
                     if (game.lastHeal > game.lastBattle && game.State == State.Active)
                     {
                         await ReplyAsync($"{CustomEmoji.Cross} You already healed during this battle.");
@@ -135,6 +135,7 @@ namespace PacManBot.Commands.Modules
 
                     game.lastHeal = DateTime.Now;
                     game.player.Life += (game.player.MaxLife * 0.75).Round();
+                    Games.Save(game);
                     await AutoReactAsync();
                     break;
 
@@ -159,6 +160,7 @@ namespace PacManBot.Commands.Modules
                     else
                     {
                         game.player.SetName(args);
+                        Games.Save(game);
                         await AutoReactAsync();
                     }
                     break;
@@ -176,6 +178,7 @@ namespace PacManBot.Commands.Modules
                         else
                         {
                             game.player.color = color;
+                            Games.Save(game);
                             await AutoReactAsync();
                         }
                     }

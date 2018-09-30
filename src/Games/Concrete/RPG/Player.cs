@@ -82,13 +82,18 @@ namespace PacManBot.Games.Concrete.RPG
         }
 
 
-        /// <summary>Levels up the player, increasing stats.</summary>
-        public string LevelUp()
+        /// <summary>
+        /// Levels up the player if possible, returning a description of the level-up bonuses.
+        /// Otherwise returns null.
+        /// </summary>
+        public string TryLevelUp()
         {
+            if (experience < NextLevelExp) return null;
+
             if (Level >= LevelCap)
             {
                 experience = NextLevelExp;
-                return "";
+                return null;
             }
 
             experience -= NextLevelExp;

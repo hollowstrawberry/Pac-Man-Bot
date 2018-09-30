@@ -58,7 +58,7 @@ namespace PacManBot.Games.Concrete.RPG.Weapons
         {
             if (Bot.Random.OneIn(3) && !target.Buffs.ContainsKey(nameof(Buffs.Blinded)))
             {
-                target.Buffs[nameof(Buffs.Blinded)] = 3;
+                target.AddBuff(nameof(Buffs.Blinded), 3);
                 return $"{target} is now vulnerable!";
             }
             return "";

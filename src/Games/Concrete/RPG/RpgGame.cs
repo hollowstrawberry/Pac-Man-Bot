@@ -144,13 +144,10 @@ namespace PacManBot.Games.Concrete.RPG
                 {
                     desc.AppendLine($"{en} was defeated! +{en.ExpYield} EXP");
                     player.experience += en.ExpYield;
-                    if (player.experience >= player.NextLevelExp)
+                    string lvlUp = player.TryLevelUp();
+                    if (lvlUp != null)
                     {
-                        string lvl = player.LevelUp();
-                        if (player.Level < Player.LevelCap)
-                        {
-                            desc.AppendLine($"\n⏫ Level up! {player.LevelUp()}");
-                        }
+                        desc.AppendLine($"\n⏫ Level up! {lvlUp}");
                     }
 
                     enemies.RemoveAt(i);

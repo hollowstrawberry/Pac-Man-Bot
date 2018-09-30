@@ -75,7 +75,7 @@ namespace PacManBot.Games.Concrete.RPG.Enemies
         public override void SetStats()
         {
             Level = 9;
-            ExpYield = 10;
+            ExpYield = 7;
             MaxLife = 70;
             Damage = 9;
             Defense = 4;
@@ -93,7 +93,7 @@ namespace PacManBot.Games.Concrete.RPG.Enemies
         public override void SetStats()
         {
             Level = 12;
-            ExpYield = 13;
+            ExpYield = 8;
             MaxLife = 60;
             Damage = 10;
             Defense = 3;
@@ -107,7 +107,7 @@ namespace PacManBot.Games.Concrete.RPG.Enemies
             if (!target.Buffs.ContainsKey(nameof(Blinded)) && Bot.Random.OneIn(3))
             {
                 msg = $"{target} is now vulnerable!";
-                target.Buffs[nameof(Blinded)] = 3;
+                target.AddBuff(nameof(Blinded), 3);
             }
             return base.Attack(target) + msg;
         }

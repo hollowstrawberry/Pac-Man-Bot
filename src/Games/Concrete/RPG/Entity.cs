@@ -59,7 +59,11 @@ namespace PacManBot.Games.Concrete.RPG
             foreach (var (buff, duration) in Buffs.Select(x => (x.Key, x.Value)).ToArray())
             {
                 msg.AppendLine(buff.GetBuff().TickEffects(this));
-                if (duration == 1) Buffs.Remove(buff);
+                if (duration == 1)
+                {
+                    Buffs.Remove(buff);
+                    buff.GetBuff().EndEffects(this);
+                }
                 else Buffs[buff] -= 1;
             }
 

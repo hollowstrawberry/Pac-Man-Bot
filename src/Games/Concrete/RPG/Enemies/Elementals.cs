@@ -10,7 +10,7 @@ namespace PacManBot.Games.Concrete.RPG.Enemies
         public override void SetStats()
         {
             Level = 5;
-            ExpYield = 5;
+            ExpYield = 4;
             MaxLife = 35;
             Damage = 5;
             Defense = 2;
@@ -37,7 +37,7 @@ namespace PacManBot.Games.Concrete.RPG.Enemies
         public override void SetStats()
         {
             Level = 6;
-            ExpYield = 5;
+            ExpYield = 4;
             MaxLife = 50;
             Damage = 5;
             Defense = 4;
@@ -56,7 +56,7 @@ namespace PacManBot.Games.Concrete.RPG.Enemies
         public override void SetStats()
         {
             Level = 8;
-            ExpYield = 8;
+            ExpYield = 6;
             MaxLife = 30;
             Damage = 9;
             Defense = 4;
@@ -73,7 +73,7 @@ namespace PacManBot.Games.Concrete.RPG.Enemies
             if (!target.Buffs.ContainsKey(nameof(Burn)))
             {
                 msg = $"{target} got burned!";
-                target.Buffs[nameof(Burn)] = 4;
+                target.AddBuff(nameof(Burn), 4);
             }
             return base.Attack(target) + msg;
         }
@@ -87,7 +87,7 @@ namespace PacManBot.Games.Concrete.RPG.Enemies
         public override void SetStats()
         {
             Level = 10;
-            ExpYield = 9;
+            ExpYield = 8;
             MaxLife = 45;
             Damage = 12;
             Defense = 2;
