@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using Discord;
+using PacManBot.Constants;
 using PacManBot.Extensions;
 
 namespace PacManBot.Games.Concrete.RPG
@@ -26,6 +28,8 @@ namespace PacManBot.Games.Concrete.RPG
         [DataMember] public int experience;
         /// <summary>The key of the weapon the player is holding.</summary>
         [DataMember] public string weapon;
+        /// <summary>Profile embed color.</summary>
+        [DataMember] public Color color = Colors.DarkBlack;
         /// <summary>Contains the keys of the items in the player's inventory.</summary>
         [DataMember] public List<string> inventory = new List<string>(20);
 
@@ -77,32 +81,50 @@ namespace PacManBot.Games.Concrete.RPG
         {
             experience -= NextLevelExp;
             Level++;
+
+            var boosts = new List<string>(5);
+
             MaxLife += 5;
             Life += 5;
-            Damage += 1;
-            Defense += 1;
+            boosts.Add("+5 HP");
+            if (Level % 2 == 0)
+            {
+                Damage += 1;
+                boosts.Add("+1 damage");
+            }
+            else
+            {
+                Defense += 1;
+                boosts.Add("+1 defense");
+            }
 
-            return "+5 HP, +1 damage, +1 defense";
+            return boosts.JoinString(", ");
         }
 
 
-
-
-        /// <summary>
-        /// Calculates the experience needed to reach a level.
-        /// The difference in experience to the next level will be 5 times the level minus one, starting from level 2.
-        /// </summary>
-        public static int ExperienceNeededFor(int level)
+        public EmbedBuilder Profile()
         {
-            return level <= 1 ? 0 : (2.5 * level * (level - 3) + 10).Floor();
-        }
+            var embed = new EmbedBuilder
+            {
+                Title = $"{Name}'s Profile",
+                Color = color,
+            };
 
-        /// <summary>
-        /// Converts experience into a level using the inverse function of <see cref="ExperienceNeededFor(int)"/>
-        /// </summary>
-        public static int LevelAt(int experience)
-        {
-            return experience < 5 ? 1 : (0.5 * (3 + Math.Sqrt(1.6*experience - 7))).Floor();
+            string statsDesc =
+                $"**Level {Level}**  (`{experience}/{NextLevelExp} EXP`)\n" +
+                $"HP: `{Life}/{MaxLife}`\nDefense: `{Defense}`";
+            embed.AddField("Stats", statsDesc, true);
+
+            var wp = weapon.GetWeapon();
+            string weaponDesc = $"**[{wp.Name}]**\n`{Damage}` {wp.Type} damage"
+                              + $" | {wp.Magic} magic".If(wp.Magic != MagicType.None)
+                              + $"\n{(int)(CritChance * 100)}% critical hit chance"
+                              + $"\n*\"{wp.Description}\"*";
+            embed.AddField("Weapon", weaponDesc, true);
+
+            embed.AddField("Inventory", inventory.Select(x => x.GetItem().Name).JoinString(", "), true);
+
+            return embed;
         }
     }
 }

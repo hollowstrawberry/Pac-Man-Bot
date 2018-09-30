@@ -18,7 +18,7 @@ namespace PacManBot.Games.Concrete.RPG
         public virtual int Life
         {
             get => internalLife;
-            set => internalLife = value >= 0 ? (value <= MaxLife ? value : MaxLife) : 0;
+            set => internalLife = Math.Clamp(value, 0, MaxLife);
         }
 
         public abstract string Name { get; }

@@ -56,6 +56,13 @@ namespace PacManBot.Extensions
         }
 
 
+        /// <summary>Returns an emoji or emote in string form.</summary>
+        public static string Mention(this IEmote e)
+        {
+            return e is Emoji ? e.Name : e.ToString();
+        }
+
+
         /// <summary>Returns the mention of a channel to send in chat.</summary>
         public static string Mention(this IChannel channel)
         {

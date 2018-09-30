@@ -59,6 +59,7 @@ namespace PacManBot.Games.Concrete.RPG.Enemies
             ExpYield = 3;
             MaxLife = 25;
             Damage = 3;
+            Defense = 1;
             CritChance = 0.2;
             DamageType = DamageType.Cutting;
             DamageResistance[DamageType.Pierce] = 0.2;
@@ -76,6 +77,7 @@ namespace PacManBot.Games.Concrete.RPG.Enemies
             ExpYield = 4;
             MaxLife = 40;
             Damage = 5;
+            Defense = 2;
             DamageType = DamageType.Magic;
             MagicType = MagicType.Water;
             MagicResistance[MagicType.Water] = 1;

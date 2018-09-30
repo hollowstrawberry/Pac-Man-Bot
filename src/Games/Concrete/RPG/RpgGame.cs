@@ -10,7 +10,7 @@ using PacManBot.Extensions;
 namespace PacManBot.Games.Concrete.RPG
 {
     [DataContract]
-    class RpgGame : ChannelGame, IUserGame, IStoreableGame
+    class RpgGame : ChannelGame, IUserGame, IStoreableGame, IReactionsGame
     {
         public override string GameName => "Generic RPG";
         public override int GameIndex => 9;
@@ -18,10 +18,20 @@ namespace PacManBot.Games.Concrete.RPG
         public override TimeSpan Expiry => TimeSpan.FromDays(100);
 
 
-        [DataMember] public Player player;
-        [DataMember] public Enemy enemy;
-        [DataMember] public Color ProfileColor = Colors.DarkBlack;
+        public static readonly IReadOnlyList<string> EmoteNumberInputs = CustomEmoji.NumberCircle.Skip(1).Take(3).ToArray();
+        public static readonly IReadOnlyList<string> EmoteOtherInputs = new[] { "⏏", "🚹" };
 
+
+        private string lastEmote;
+        private EmbedBuilder fightEmbed;
+        public DateTime lastBattle = default;
+        public DateTime lastHeal = default;
+
+        [DataMember] public Player player;
+        [DataMember] public List<Enemy> enemies = new List<Enemy>(3);
+
+        /// <summary>The state of the current or last battle.</summary>
+        [DataMember] public override State State { get => base.State; set => base.State = value; }
         [DataMember] public override ulong OwnerId { get => base.OwnerId; protected set => base.OwnerId = value; }
         [DataMember] public override DateTime LastPlayed { get => base.LastPlayed; set => base.LastPlayed = value; }
 
@@ -32,93 +42,200 @@ namespace PacManBot.Games.Concrete.RPG
             : base(0, new[] { userId }, services)
         {
             player = new Player(name);
+            State = State.Cancelled;
         }
 
 
-        public EmbedBuilder Profile()
+        /// <summary>Prepares a new fight.</summary>
+        public void StartFight()
+        {
+            State = State.Active;
+            lastBattle = DateTime.Now;
+
+            var possible = Extensions.EnemyTypes
+                .Select(x => x.Value)
+                .Where(x => x.Level <= player.Level && x.Level >= player.Level - 10)
+                .ToList();
+
+            enemies.Add(Bot.Random.Choose(possible).MakeNew());
+
+            if (Bot.Random.OneIn(2))
+            {
+                if (enemies[0].Level <= player.Level - 2)
+                {
+                    possible = possible.Where(x => x.Level <= player.Level - 2).ToList();
+                    enemies.Add(Bot.Random.Choose(possible).MakeNew());
+
+                    if (Bot.Random.OneIn(2) && enemies[1].Level <= player.Level - 5)
+                    {
+                        enemies.Add(Bot.Random.Choose(possible).MakeNew());
+                    }
+                }
+            }
+        }
+
+
+        /// <summary>Returns an embed containing secondary information about the current fight.</summary>
+        public EmbedBuilder FightMenu()
         {
             var embed = new EmbedBuilder
             {
-                Title = $"{player.Name}'s Summary",
-                Color = ProfileColor,
+                Title = $"{player} vs {enemies.JoinString(", ")}",
+                Color = Colors.DarkBlack,
             };
 
-            string statsDesc =
-                $"**Level {player.Level}**  (`{player.experience}/{player.NextLevelExp} EXP`)\n" +
-                $"HP: `{player.Life}/{player.MaxLife}`\nDefense: `{player.Defense}`";
-            embed.AddField("Stats", statsDesc, true);
-
-            var wp = player.weapon.GetWeapon();
-            string weaponDesc = $"**[{wp.Name}]**\n`{wp.Damage}` {wp.Type} damage"
-                              + $" | {wp.Magic} magic".If(wp.Magic != MagicType.None)
-                              + $"\n*\"{wp.Description}\"*";
-            embed.AddField("Weapon", weaponDesc, true);
-
-            embed.AddField("Inventory", player.inventory.Select(x => x.GetItem().Name).JoinString(", "), true);
+            foreach (var en in enemies)
+            {
+                embed.AddField(en.Summary());
+            }
 
             return embed;
         }
 
 
-        public void StartFight()
-        {
-            var enemies = Extensions.EnemyTypes.Select(x => x.Value).Where(x => x.Level <= player.Level).ToList();
-            enemy = Bot.Random.Choose(enemies).MakeNew();
-        }
-
-
-        public EmbedBuilder FightTurn(PlayerFightAction action = PlayerFightAction.Attack)
+        /// <summary>Returns an embed displaying the current fight, performing an action first if applicable.</summary>
+        public EmbedBuilder Fight(int attack = -1)
         {
             var embed = new EmbedBuilder
             {
-                Title = $"{player} vs {enemy}",
+                Title = $"⚔ Generic RPG Battle",
                 Color = Colors.DarkBlack,
             };
 
             var desc = new StringBuilder();
 
-            desc.AppendLine(player.Attack(enemy));
-            string eBuffs = enemy.UpdateBuffs();
-            if (eBuffs != "") desc.AppendLine(eBuffs);
 
-            if (enemy.Life == 0) State = State.Win;
-            else
+            if (attack >= 0)
             {
-                desc.AppendLine(enemy.Attack(player));
-                string pBuffs = player.UpdateBuffs();
-                if (pBuffs != "") desc.AppendLine(pBuffs);
+                desc.AppendLine(player.Attack(enemies[attack]));
 
-                if (player.Life == 0) State = State.Lose;
+                foreach (var en in enemies)
+                {
+                    string eBuffs = en.UpdateBuffs();
+                    if (eBuffs != "") desc.AppendLine(eBuffs.Trim());
+
+                    if (en.Life > 0) desc.AppendLine(en.Attack(player));
+                }
+
+                if (player.Life > 0)
+                {
+                    string pBuffs = player.UpdateBuffs();
+                    if (pBuffs != "") desc.AppendLine(pBuffs.Trim());
+                }
             }
 
 
-            foreach (var ent in new Entity[] { player, enemy })
+            embed.AddField(player.Name,
+                $"{player.Life}/{player.MaxLife} {player.Buffs.Select(x => x.Key.GetBuff().Icon).JoinString(" ")}");
+
+            for (int i = 0; i < enemies.Count; /**/)
             {
-                embed.AddField(ent.Name,
-                    $"{ent.Life}/{ent.MaxLife} {ent.Buffs.Select(x => x.Key.GetBuff().Icon).JoinString(" ")}", true);
+                var en = enemies[i];
+
+                if (en.Life > 0)
+                {
+                    embed.AddField($"{CustomEmoji.NumberCircle[i + 1]}" + en.Name,
+                        $"{en.Life}/{en.MaxLife} {en.Buffs.Select(x => x.Key.GetBuff().Icon).JoinString(" ")}", true);
+                    i++;
+                }
+                else
+                {
+                    desc.AppendLine($"{en} was defeated! +{en.ExpYield} EXP");
+                    player.experience += en.ExpYield;
+                    if (player.experience >= player.NextLevelExp) desc.AppendLine($"\n⏫ Level up! {player.LevelUp()}");
+
+                    enemies.RemoveAt(i);
+                }
             }
 
             
-            if (State == State.Win)
+            if (enemies.Count == 0)
             {
+                State = State.Win;
                 embed.Color = Colors.Green;
-                desc.AppendLine($"You win! +{enemy.ExpYield} EXP");
-                player.experience += enemy.ExpYield;
-                if (player.experience >= player.NextLevelExp) desc.AppendLine($"\n⏫ Level up! {player.LevelUp()}");
-                enemy = null;
+                desc.AppendLine($"\n🎺 You win!");
             }
-            else if (State == State.Lose)
+            else if (player.Life == 0)
             {
+                State = State.Lose;
                 embed.Color = Colors.Red;
-                desc.AppendLine("You died!");
-                enemy = null;
+                desc.AppendLine($"\n☠ You died! Experience reset.");
+                enemies.Clear();
+                player.experience = 0;
                 player.Life = player.MaxLife;
             }
-            State = State.Active;
+
+            if (State != State.Active)
+            {
+                ChannelId = 0;
+                MessageId = 0;
+            }
 
             embed.Description = desc.ToString();
 
             return embed;
+        }
+
+
+
+
+        public bool IsInput(IEmote value, ulong userId)
+        {
+            string emote = value.Mention();
+            if (userId != OwnerId) return false;
+            
+            int index = EmoteNumberInputs.IndexOf(emote);
+            if (index >= 0) return index < enemies.Count;
+            else return EmoteOtherInputs.Contains(emote);
+        }
+
+
+        public void Input(IEmote input, ulong userId = 1)
+        {
+            var emoji = input.Mention();
+
+            if (emoji == "⏏")
+            {
+                if (lastEmote == emoji)
+                {
+                    lastEmote = null;
+                    fightEmbed = Fight();
+                }
+                else
+                {
+                    lastEmote = emoji;
+                    fightEmbed = FightMenu();
+                }
+            }
+            else if (emoji == "🚹")
+            {
+                if (lastEmote == emoji)
+                {
+                    lastEmote = null;
+                    fightEmbed = Fight();
+                }
+                else
+                {
+                    lastEmote = emoji;
+                    fightEmbed = player.Profile();
+                }
+            }
+            else
+            {
+                int index = EmoteNumberInputs.IndexOf(emoji);
+                if (index < 0 || index >= enemies.Count) return;
+
+                lastEmote = emoji;
+                fightEmbed = Fight(index);
+            }
+
+            games.Save(this);
+        }
+
+
+        public override EmbedBuilder GetEmbed(bool showHelp = true)
+        {
+            return fightEmbed ?? new EmbedBuilder { Title = "Generic RPG", Description = "On Hold" };
         }
 
 
