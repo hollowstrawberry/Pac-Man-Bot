@@ -15,6 +15,7 @@ namespace PacManBot.Games.Concrete.RPG
     public abstract class Enemy : Entity, IKeyable
     {
         public virtual string Key => GetType().Name;
+        public abstract string Description { get; }
         public int ExpYield { get; set; } = 1;
 
         //public override bool Equals(object obj) => obj is Enemy en && Key == en.Key;
@@ -43,23 +44,25 @@ namespace PacManBot.Games.Concrete.RPG
 
 
         /// <summary>Returns a Discord embed field about this enemy.</summary>
-        public EmbedFieldBuilder Summary()
+        public virtual EmbedFieldBuilder Summary()
         {
             var desc = new StringBuilder();
 
             desc.AppendLine($"**Level {Level}**");
-            desc.AppendLine($"`{MaxLife}` MaxHP, `{Defense}` defense");
+            desc.AppendLine($"`{$"{Life}/".If(Life < MaxLife)}{MaxLife}` HP, `{Defense}` defense");
             desc.AppendLine($"`{Damage}` {DamageType}{$"/{MagicType}".If(MagicType != MagicType.None)} damage");
             desc.AppendLine($"`{(CritChance*100).Round()}%` critical hit chance");
 
-            if (DamageResistance.Count > 0 || DamageResistance.Count > 0)
+            if (DamageResistance.Count > 0 || MagicResistance.Count > 0)
             {
                 var restList = DamageResistance.Select(x => $"`{(int)(x.Value * 100)}%` {x.Key}")
                     .Concat(MagicResistance.Select(x => $"`{(int)(x.Value * 100)}%` {x.Key}"))
                     .JoinString(", ");
 
-                desc.AppendLine($"**Resistances:** {restList}");
+                desc.AppendLine($"Resists {restList}");
             }
+
+            desc.AppendLine($"*\"{Description}\"*");
 
             return new EmbedFieldBuilder
             {

@@ -26,16 +26,18 @@ namespace PacManBot.Games.Concrete.RPG
 
         private string lastEmote;
         private EmbedBuilder fightEmbed;
-        public DateTime lastBattle = default;
-        public DateTime lastHeal = default;
 
         [DataMember] public Player player;
         [DataMember] public List<Enemy> enemies = new List<Enemy>(3);
+        [DataMember] public DateTime lastBattle = default;
+        [DataMember] public DateTime lastHeal = default;
 
         /// <summary>The state of the current or last battle.</summary>
         [DataMember] public override State State { get => base.State; set => base.State = value; }
         [DataMember] public override ulong OwnerId { get => base.OwnerId; protected set => base.OwnerId = value; }
         [DataMember] public override DateTime LastPlayed { get => base.LastPlayed; set => base.LastPlayed = value; }
+        [DataMember] public override ulong ChannelId { get => base.ChannelId; set => base.ChannelId = value; }
+        [DataMember] public override ulong MessageId { get => base.MessageId; set => base.MessageId = value; }
 
 
         private RpgGame() { }

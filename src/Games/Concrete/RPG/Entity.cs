@@ -72,14 +72,16 @@ namespace PacManBot.Games.Concrete.RPG
 
 
         /// <summary>
-        /// Deals damage to this entity applying damage reduction calculations.
+        /// Deals damage to this entity applying damage reduction calculations and returns the damage received.
         /// </summary>
-        public virtual void Hit(int damage, DamageType type, MagicType magic)
+        public virtual int Hit(int damage, DamageType type, MagicType magic)
         {
             double modified = (damage - Defense) * (1 - DamageResistance.GetValueOrDefault(type, 0) * DefenseMult)
                                                  * (1 - MagicResistance.GetValueOrDefault(magic, 0) * DefenseMult);
 
-            if (modified > 0) Life -= modified.Ceiling();
+            int final = Math.Max(0, modified.Ceiling());
+            Life -= final;
+            return final;
         }
 
 
@@ -88,13 +90,11 @@ namespace PacManBot.Games.Concrete.RPG
         /// </summary>
         public virtual string Attack(Entity target)
         {
-            int previousLife = target.Life;
-
             bool crit = Bot.Random.NextDouble() < CritChance;
             int dmg = Damage <= 0 ? 0 : (Damage * DamageMult * (crit ? 2 : 1) * Bot.Random.NextDouble(0.85, 1.15)).Ceiling();
-            target.Hit(dmg, DamageType, MagicType);
+            int dealt = target.Hit(dmg, DamageType, MagicType);
 
-            return $"{this} dealt {previousLife - target.Life} damage to {target}. {"Critical hit!".If(crit)} ";
+            return $"{this} dealt {dealt} damage to {target}. {"Critical hit!".If(crit)} ";
         }
 
 
@@ -103,8 +103,8 @@ namespace PacManBot.Games.Concrete.RPG
         /// </summary>
         public void AddBuff(string buff, int duration)
         {
+            if (!Buffs.ContainsKey(buff)) buff.GetBuff().StartEffects(this);
             Buffs[buff] = duration;
-            buff.GetBuff().StartEffects(this);
         }
 
 

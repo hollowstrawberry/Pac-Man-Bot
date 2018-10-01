@@ -77,7 +77,6 @@ namespace PacManBot.Commands.Modules
                         }
 
                         game.StartFight();
-                        Games.Save(game);
                     }
 
                     var old = await game.GetMessage();
@@ -90,6 +89,8 @@ namespace PacManBot.Commands.Modules
                     var message = await ReplyAsync(game.Fight());
                     game.ChannelId = Context.Channel.Id;
                     game.MessageId = message.Id;
+
+                    Games.Save(game);
 
                     var emotes = RpgGame.EmoteNumberInputs.Take(game.enemies.Count).Concat(RpgGame.EmoteOtherInputs);
                     try
@@ -107,12 +108,12 @@ namespace PacManBot.Commands.Modules
                 case "equip":
                 case "weapon":
                     var item = game.player.inventory.Select(x => x.GetWeapon()).FirstOrDefault(x => x.Equals(args));
-                    if (item == null) await ReplyAsync("That weapon is not in your inventory.");
+                    if (item == null) await ReplyAsync("Can't find a weapon with that name in your inventory.");
                     else
                     {
                         game.player.EquipWeapon(item.Key);
                         Games.Save(game);
-                        await AutoReactAsync();
+                        await Context.Message.AddReactionAsync("⚔".ToEmoji(), DefaultOptions);
                     }
                     break;
 
@@ -126,7 +127,7 @@ namespace PacManBot.Commands.Modules
                         return;
                     }
 
-                    var timeLeftH = TimeSpan.FromMinutes(5) - (DateTime.Now - game.lastHeal);
+                    var timeLeftH = TimeSpan.FromMinutes(3) - (DateTime.Now - game.lastHeal);
                     if (timeLeftH > TimeSpan.Zero)
                     {
                         await ReplyAsync($"{CustomEmoji.Cross} You may heal again in {timeLeftH.Humanized(empty: "1 second")}");
@@ -136,7 +137,7 @@ namespace PacManBot.Commands.Modules
                     game.lastHeal = DateTime.Now;
                     game.player.Life += (game.player.MaxLife * 0.75).Round();
                     Games.Save(game);
-                    await AutoReactAsync();
+                    await Context.Message.AddReactionAsync("💟".ToEmoji(), DefaultOptions);
                     break;
 
 
@@ -170,14 +171,14 @@ namespace PacManBot.Commands.Modules
                     if (args == "") await ReplyAsync("Please specify a new name.");
                     else
                     {
-                        var color = (Color)typeof(Color).GetFields()
-                            .FirstOrDefault(x => x.Name.ToLower() == args.ToLower().Replace(" ", ""))?
-                            .GetValue(null);
+                        var color = (Color?)typeof(Color).GetFields()
+                            .FirstOrDefault(x => x.Name.ToLower() == args.ToLower().Replace(" ", ""))
+                            ?.GetValue(null);
 
-                        if (color == null) await ReplyAsync("Can't find that color with that name.");
+                        if (!color.HasValue) await ReplyAsync("Can't find a color with that name.");
                         else
                         {
-                            game.player.color = color;
+                            game.player.color = color.Value;
                             Games.Save(game);
                             await AutoReactAsync();
                         }

@@ -7,17 +7,19 @@ namespace PacManBot.Games.Concrete.RPG.Buffs
     public class Blinded : Buff
     {
         public override string Name => "Blinded";
-        public override string Icon => "☀";
-        public override string Description => "Reduces enemy defense by 4";
+        public override string Icon => "👁";
+        public override string Description => "Reduces damage and crit ratio";
 
         public override void StartEffects(Entity holder)
         {
-            holder.Defense -= 4;
+            holder.Damage -= 4;
+            holder.CritChance -= 0.15;
         }
 
         public override void EndEffects(Entity holder)
         {
-            holder.Defense += 4;
+            holder.Damage += 4;
+            holder.CritChance += 0.15;
         }
     }
 }

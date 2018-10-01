@@ -6,6 +6,7 @@ namespace PacManBot.Games.Concrete.RPG.Enemies
     public class Slime : Enemy
     {
         public override string Name => "Green Slime";
+        public override string Description => "So common and weak it's boring.";
 
         public override void SetStats()
         {
@@ -21,6 +22,7 @@ namespace PacManBot.Games.Concrete.RPG.Enemies
     public class BlueSlime : Enemy
     {
         public override string Name => "Blue Slime";
+        public override string Description => "Almost as weak as the green variety.";
 
         public override void SetStats()
         {
@@ -36,6 +38,7 @@ namespace PacManBot.Games.Concrete.RPG.Enemies
     public class Flop : Enemy
     {
         public override string Name => "Flopper";
+        public override string Description => "It flops around messily. Weird one.";
 
         public override void SetStats()
         {
@@ -52,7 +55,8 @@ namespace PacManBot.Games.Concrete.RPG.Enemies
 
     public class Rat : Enemy
     {
-        public override string Name => "Feral rat";
+        public override string Name => "Feral Rat";
+        public override string Description => "Just your basic rat enemy.";
 
         public override void SetStats()
         {
@@ -71,6 +75,7 @@ namespace PacManBot.Games.Concrete.RPG.Enemies
     public class Bear : Enemy
     {
         public override string Name => "Bear";
+        public override string Description => "Grrrr.";
 
         public override void SetStats()
         {
@@ -89,6 +94,7 @@ namespace PacManBot.Games.Concrete.RPG.Enemies
     public class Goblin : Enemy
     {
         public override string Name => "Goblin";
+        public override string Description => "Its spear can expose your weak points.";
 
         public override void SetStats()
         {
@@ -104,12 +110,64 @@ namespace PacManBot.Games.Concrete.RPG.Enemies
         public override string Attack(Entity target)
         {
             string msg = "";
-            if (!target.Buffs.ContainsKey(nameof(Blinded)) && Bot.Random.OneIn(3))
+            if (!target.Buffs.ContainsKey(nameof(Vulnerable)) && Bot.Random.OneIn(3))
             {
                 msg = $"{target} is now vulnerable!";
+                target.AddBuff(nameof(Vulnerable), 3);
+            }
+            return base.Attack(target) + msg;
+        }
+    }
+
+
+    public class Slime3 : Enemy
+    {
+        public override string Name => "Dark Slime";
+        public override string Description => "It's so mushy you can barely damage it.";
+
+        public override void SetStats()
+        {
+            Level = 14;
+            ExpYield = 8;
+            MaxLife = 60;
+            Damage = 15;
+            Defense = 5;
+            CritChance = 0.05;
+            DamageType = DamageType.Blunt;
+            DamageResistance[DamageType.Blunt] = 0.5;
+            DamageResistance[DamageType.Cutting] = 0.2;
+            DamageResistance[DamageType.Pierce] = 0.5;
+            DamageResistance[DamageType.Magic] = -0.25;
+        }
+
+        public override string Attack(Entity target)
+        {
+            string msg = "";
+            if (!target.Buffs.ContainsKey(nameof(Blinded)) && Bot.Random.OneIn(3))
+            {
+                msg = $"{target} got slime in their eyes!";
                 target.AddBuff(nameof(Blinded), 3);
             }
             return base.Attack(target) + msg;
+        }
+    }
+
+
+    public class MechaBear : Enemy
+    {
+        public override string Name => "Mecha Bear";
+        public override string Description => "Grrrrr BEEP grrr BOOP";
+
+        public override void SetStats()
+        {
+            Level = 26;
+            ExpYield = 15;
+            MaxLife = 110;
+            Damage = 35;
+            Defense = 8;
+            CritChance = 0.02;
+            DamageType = DamageType.Cutting;
+            DamageResistance[DamageType.Cutting] = 0.5;
         }
     }
 }

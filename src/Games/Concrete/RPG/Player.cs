@@ -14,13 +14,29 @@ namespace PacManBot.Games.Concrete.RPG
     [DataContract]
     public class Player : Entity
     {
-        public const int LevelCap = 20;
+        public const int LevelCap = 40;
+
+        public static readonly IReadOnlyDictionary<int, string[]> LeveledWeapons = new Dictionary<int, string[]>
+        {
+            { 3, new[] { nameof(Weapons.Shortsword), nameof(Weapons.Dagger) } },
+            { 5, new[] { nameof(Weapons.Mace), nameof(Weapons.FireScroll) } },
+            { 8, new[] { nameof(Weapons.Bow) } },
+            { 10, new[] { nameof(Weapons.ForestSword) } },
+            { 11, new[] { nameof(Weapons.Shield) } },
+            { 12, new[] { nameof(Weapons.SimpleSpell) } },
+            { 20, new[] { nameof(Weapons.TitanHammer) } },
+            { 24, new[] { nameof(Weapons.Longbow) } },
+            { 29, new[] { nameof(Weapons.EarthSpell) } },
+            { 35, new[] { nameof(Weapons.ImportantSword) } },
+        };
+
+
 
         /// <summary>The player's name.</summary>
         public override string Name => name;
 
         /// <summary>The experience required to advance to the next level.</summary>
-        public int NextLevelExp => Level == 1 ? 5 : 5 * (Level - 1);
+        public int NextLevelExp => Level == 1 ? 4 : 6 * (Level - 1);
 
         [DataMember] private string name;
 
@@ -129,26 +145,17 @@ namespace PacManBot.Games.Concrete.RPG
 
         public bool AddLeveledWeapons()
         {
-            var weps = new Dictionary<int, string[]>
-            {
-                { 3, new[] { nameof(Weapons.Shortsword), nameof(Weapons.Dagger) } },
-                { 5, new[] { nameof(Weapons.Mace), nameof(Weapons.FireScroll) } },
-                { 8, new[] { nameof(Weapons.Bow) } },
-                { 10, new[] { nameof(Weapons.ForestSword) } },
-                { 11, new[] { nameof(Weapons.Shield) } },
-                { 12, new[] { nameof(Weapons.SimpleSpell) } },
-            };
-
             bool added = false;
 
-            foreach (var pair in weps)
+            foreach (var pair in LeveledWeapons)
             {
                 if (Level >= pair.Key)
                 {
-                    var toAdd = pair.Value.Where(x => !inventory.Contains(x));
+                    var toAdd = pair.Value.Where(x => !inventory.Contains(x) && weapon != x);
                     if (toAdd.Count() > 0)
                     {
                         inventory.AddRange(toAdd);
+                        added = true;
                     }
                 }
             }
@@ -177,7 +184,7 @@ namespace PacManBot.Games.Concrete.RPG
 
             embed.AddField("Weapon", weaponDesc, true);
 
-            var inv = inventory.Select(x => x.GetItem().Name).JoinString(", ");
+            var inv = inventory.Select(x => $"`{x.GetItem().Name}`").JoinString(", ");
             embed.AddField("Inventory", inv == "" ? "*Empty*" : inv);
 
             return embed;

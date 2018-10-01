@@ -48,7 +48,7 @@ namespace PacManBot.Games.Concrete.RPG.Weapons
     public class SimpleSpell : Weapon
     {
         public override string Name => "Enchantio";
-        public override string Description => "A basic light spell grimoire.\nMight reduce enemy defense.";
+        public override string Description => "An air spell grimoire.\nMight reduce enemy defense.";
         public override int Damage => 7;
         public override double CritChance => 0.05f;
         public override DamageType Type => DamageType.Magic;
@@ -56,9 +56,9 @@ namespace PacManBot.Games.Concrete.RPG.Weapons
 
         public override string AttackEffects(Player wielder, Entity target)
         {
-            if (Bot.Random.OneIn(3) && !target.Buffs.ContainsKey(nameof(Buffs.Blinded)))
+            if (Bot.Random.OneIn(3) && !target.Buffs.ContainsKey(nameof(Buffs.Vulnerable)))
             {
-                target.AddBuff(nameof(Buffs.Blinded), 3);
+                target.AddBuff(nameof(Buffs.Vulnerable), 3);
                 return $"{target} is now vulnerable!";
             }
             return "";

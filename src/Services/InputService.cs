@@ -113,9 +113,10 @@ namespace PacManBot.Services
             try
             {
                 var message = reaction.Message.Value ?? await messageData.GetOrDownloadAsync();
+
                 if (reaction.UserId != client.CurrentUser.Id && message.Author.Id == client.CurrentUser.Id)
                 {
-                    await ReactionGameInputAsync(reaction.Message.Value, channel, reaction);
+                    await ReactionGameInputAsync(message, channel, reaction);
                 }
             }
             catch (Exception e)
