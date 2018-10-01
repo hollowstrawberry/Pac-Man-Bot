@@ -13,7 +13,7 @@ namespace PacManBot.Games.Concrete.RPG
     public class RpgGame : ChannelGame, IUserGame, IStoreableGame, IReactionsGame
     {
         public override string GameName => "Generic RPG";
-        public override int GameIndex => 9;
+        public override int GameIndex => 6;
         public string FilenameKey => "rpg";
         public override TimeSpan Expiry => TimeSpan.FromDays(100);
 

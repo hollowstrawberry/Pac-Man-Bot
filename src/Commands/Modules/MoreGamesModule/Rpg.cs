@@ -14,7 +14,7 @@ namespace PacManBot.Commands.Modules
     partial class MoreGamesModule
     {
         [Command("rpg"), Remarks("Play a generic RPG"), HideHelp]
-        [Summary("Play an RPG. This is an alpha test." +
+        [Summary("Play an RPG in Discord. This is a beta test." +
             "\n\n**__Commands:__**" +
             "\n**{prefix}rpg battle** - Start a new battle or resend the current battle." +
             "\n**{prefix}rpg profile** - Check your hero." +
@@ -42,7 +42,7 @@ namespace PacManBot.Commands.Modules
 
                 var embed = new EmbedBuilder
                 {
-                    Title = "Welcome to Generic RPG! This is an alpha test.",
+                    Title = "Welcome to Generic RPG (beta test)!",
                     Description =
                     "**Instructions:**" +
                     $"\nUse the command **{Prefix}rpg profile** to see your new hero." +
