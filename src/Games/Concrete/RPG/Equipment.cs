@@ -9,11 +9,9 @@ namespace PacManBot.Games.Concrete.RPG
     /// </summary>
     public abstract class Equipment : Item
     {
-        public virtual void EquipEffects(Player player)
-        {
-        }
+        public virtual int LevelGet => -1;
 
-        public virtual void UnequipEffects(Player player)
+        public virtual void EquipEffects(Player player)
         {
         }
     }

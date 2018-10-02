@@ -29,6 +29,8 @@ namespace PacManBot.Games.Concrete.RPG.Weapons
         public override int Damage => 4;
         public override double CritChance => 0.08f;
         public override DamageType Type => DamageType.Cutting;
+
+        public override int LevelGet => 3;
     }
 
 
@@ -39,6 +41,8 @@ namespace PacManBot.Games.Concrete.RPG.Weapons
         public override int Damage => 3;
         public override double CritChance => 0.2f;
         public override DamageType Type => DamageType.Pierce;
+
+        public override int LevelGet => 3;
     }
 
 
@@ -49,6 +53,8 @@ namespace PacManBot.Games.Concrete.RPG.Weapons
         public override int Damage => 5;
         public override double CritChance => 0.03f;
         public override DamageType Type => DamageType.Blunt;
+
+        public override int LevelGet => 5;
     }
 
 
@@ -60,6 +66,8 @@ namespace PacManBot.Games.Concrete.RPG.Weapons
         public override double CritChance => 0.01f;
         public override DamageType Type => DamageType.Magic;
         public override MagicType Magic => MagicType.Fire;
+
+        public override int LevelGet => 5;
 
         public override string AttackEffects(Player wielder, Entity target)
         {

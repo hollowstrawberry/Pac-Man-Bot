@@ -7,16 +7,16 @@ namespace PacManBot.Games.Concrete.RPG.Enemies
     public class Skeleton : Enemy
     {
         public override string Name => "Skeleton";
-        public override string Description => "";
+        public override string Description => "Only the first of many.";
+        public override int Level => 3;
+        public override int ExpYield => 3;
+        public override int BaseDamage => 5;
+        public override int BaseDefense => 1;
+        public override double BaseCritChance => 0.2;
 
         public override void SetStats()
         {
-            Level = 3;
-            ExpYield = 3;
             MaxLife = 26;
-            Damage = 5;
-            Defense = 1;
-            CritChance = 0.2;
             DamageType = DamageType.Pierce;
             DamageResistance[DamageType.Pierce] = 0.2;
         }
@@ -27,15 +27,15 @@ namespace PacManBot.Games.Concrete.RPG.Enemies
     {
         public override string Name => "Skellington";
         public override string Description => "A skeleton's wacky brother.";
+        public override int Level => 8;
+        public override int ExpYield => 7;
+        public override int BaseDamage => 8;
+        public override int BaseDefense => 2;
+        public override double BaseCritChance => 0.2;
 
         public override void SetStats()
         {
-            Level = 8;
-            ExpYield = 7;
             MaxLife = 42;
-            Damage = 8;
-            Defense = 2;
-            CritChance = 0.2;
             DamageType = DamageType.Cutting;
             DamageResistance[DamageType.Pierce] = 0.2;
         }
@@ -46,15 +46,15 @@ namespace PacManBot.Games.Concrete.RPG.Enemies
     {
         public override string Name => "Spookington";
         public override string Description => "Be careful, it's spooky!";
+        public override int Level => 11;
+        public override int ExpYield => 7;
+        public override int BaseDamage => 16;
+        public override int BaseDefense => -2;
+        public override double BaseCritChance => 0.1;
 
         public override void SetStats()
         {
-            Level = 11;
-            ExpYield = 7;
             MaxLife = 37;
-            Damage = 16;
-            Defense = -2;
-            CritChance = 0.1;
             DamageType = DamageType.Pierce;
             DamageResistance[DamageType.Pierce] = -0.2;
         }
@@ -64,18 +64,18 @@ namespace PacManBot.Games.Concrete.RPG.Enemies
     public class Skeleton4 : Enemy
     {
         public override string Name => "Swoleton";
-        public override string Description => "Milk makes your bones strong!";
+        public override string Description => "Milk makes your bones stronger!";
+        public override int Level => 15;
+        public override int ExpYield => 9;
+        public override int BaseDamage => 12;
+        public override int BaseDefense => 2;
+        public override double BaseCritChance => 0.02;
 
         [DataMember] private bool milk = false;
 
         public override void SetStats()
         {
-            Level = 15;
-            ExpYield = 9;
             MaxLife = 60;
-            Damage = 12;
-            Defense = 2;
-            CritChance = 0.02;
             DamageType = DamageType.Blunt;
             DamageResistance[DamageType.Blunt] = 0.3;
         }
@@ -90,6 +90,7 @@ namespace PacManBot.Games.Concrete.RPG.Enemies
                 Damage += 4;
                 Defense += 4;
                 Life += MaxLife / 2;
+                MaxLife += MaxLife / 2;
             }
 
             return msg + base.Attack(target);
@@ -101,15 +102,15 @@ namespace PacManBot.Games.Concrete.RPG.Enemies
     {
         public override string Name => "Skeleton King";
         public override string Description => "He's actually just a count, but don't tell him.";
+        public override int Level => 20;
+        public override int ExpYield => 10;
+        public override int BaseDamage => 24;
+        public override int BaseDefense => 2;
+        public override double BaseCritChance => 0.1;
 
         public override void SetStats()
         {
-            Level = 20;
-            ExpYield = 10;
             MaxLife = 100;
-            Damage = 25;
-            Defense = 2;
-            CritChance = 0.15;
             DamageType = DamageType.Blunt;
             DamageResistance[DamageType.Magic] = 0.15;
             DamageResistance[DamageType.Blunt] = 0.15;
@@ -134,24 +135,24 @@ namespace PacManBot.Games.Concrete.RPG.Enemies
     {
         public override string Name => "Swingeton";
         public override string Description => "Its dance is unpredictable.";
+        public override int Level => 30;
+        public override int ExpYield => 16;
+        public override int BaseDamage => 999;
+        public override int BaseDefense => 6;
+        public override double BaseCritChance => 0;
 
         public override void SetStats()
         {
-            Level = 30;
-            ExpYield = 16;
             MaxLife = 74;
-            Defense = 6;
-            Damage = 999;
-            CritChance = 0;
             DamageType = DamageType.Cutting;
             DamageResistance[DamageType.Cutting] = 0.1;
         }
 
         public override string Attack(Entity target)
         {
-            Damage = Bot.Random.Next(18, 60);
+            Damage = Bot.Random.Next(18, 58);
             string msg = base.Attack(target);
-            Damage = 999;
+            Damage = BaseDamage;
             return msg;
         }
     }

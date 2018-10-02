@@ -15,10 +15,12 @@ namespace PacManBot.Commands.Modules
     public partial class MoreGamesModule : BaseCustomModule
     {
         public HelpService Help { get; }
+        public BotConfig Config { get; }
 
         public MoreGamesModule(IServiceProvider services) : base(services)
         {
             Help = services.Get<HelpService>();
+            Config = services.Get<BotConfig>();
         }
 
 

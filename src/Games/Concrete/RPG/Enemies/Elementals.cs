@@ -11,15 +11,15 @@ namespace PacManBot.Games.Concrete.RPG.Enemies
     {
         public override string Name => "Drip Elemental";
         public override string Description => "A little wet, but mostly harmless.";
+        public override int Level => 5;
+        public override int ExpYield => 4;
+        public override int BaseDamage => 5;
+        public override int BaseDefense => 2;
+        public override double BaseCritChance => 0.07;
 
         public override void SetStats()
         {
-            Level = 5;
-            ExpYield = 4;
             MaxLife = 35;
-            Damage = 5;
-            Defense = 2;
-            CritChance = 0.07;
             DamageType = DamageType.Magic;
             MagicType = MagicType.Water;
             MagicResistance[MagicType.Water] = 0.5;
@@ -39,15 +39,15 @@ namespace PacManBot.Games.Concrete.RPG.Enemies
     {
         public override string Name => "Dirt Elemental";
         public override string Description => "Pretty tough even for its small size.";
+        public override int Level => 6;
+        public override int ExpYield => 4;
+        public override int BaseDamage => 5;
+        public override int BaseDefense => 4;
+        public override double BaseCritChance => 0.05;
 
         public override void SetStats()
         {
-            Level = 6;
-            ExpYield = 4;
             MaxLife = 50;
-            Damage = 5;
-            Defense = 4;
-            CritChance = 0.05;
             DamageType = DamageType.Blunt;
             MagicType = MagicType.Earth;
             MagicResistance[MagicType.Earth] = 0.5;
@@ -59,15 +59,15 @@ namespace PacManBot.Games.Concrete.RPG.Enemies
     {
         public override string Name => "Spark Elemental";
         public override string Description => "Time to turn up the heat.";
+        public override int Level => 8;
+        public override int ExpYield => 6;
+        public override int BaseDamage => 9;
+        public override int BaseDefense => 4;
+        public override double BaseCritChance => 0.05;
 
         public override void SetStats()
         {
-            Level = 8;
-            ExpYield = 6;
             MaxLife = 30;
-            Damage = 9;
-            Defense = 4;
-            CritChance = 0.05;
             DamageType = DamageType.Magic;
             MagicType = MagicType.Fire;
             MagicResistance[MagicType.Fire] = 0.5;
@@ -91,15 +91,15 @@ namespace PacManBot.Games.Concrete.RPG.Enemies
     {
         public override string Name => "Breeze Elemental";
         public override string Description => "It's so fast it might strike twice.";
+        public override int Level => 10;
+        public override int ExpYield => 8;
+        public override int BaseDamage => 12;
+        public override int BaseDefense => 2;
+        public override double BaseCritChance => 0.02;
 
         public override void SetStats()
         {
-            Level = 10;
-            ExpYield = 8;
             MaxLife = 45;
-            Damage = 12;
-            Defense = 2;
-            CritChance = 0.02;
             DamageType = DamageType.Magic;
             MagicType = MagicType.Air;
             MagicResistance[MagicType.Air] = 0.5;
@@ -118,17 +118,17 @@ namespace PacManBot.Games.Concrete.RPG.Enemies
     {
         public override string Name => "Rain Elemental";
         public override string Description => "Reminds of cold winter days.";
+        public override int Level => 22;
+        public override int ExpYield => 12;
+        public override int BaseDamage => 22;
+        public override int BaseDefense => 5;
+        public override double BaseCritChance => 0.05;
 
         [DataMember] int rain = 0;
 
         public override void SetStats()
         {
-            Level = 22;
-            ExpYield = 12;
             MaxLife = 80;
-            Damage = 22;
-            Defense = 5;
-            CritChance = 0.05;
             DamageType = DamageType.Magic;
             MagicType = MagicType.Water;
             MagicResistance[MagicType.Water] = 0.75;
@@ -162,15 +162,15 @@ namespace PacManBot.Games.Concrete.RPG.Enemies
     {
         public override string Name => "Forest Elemental";
         public override string Description => "Quite a tree-hugger, this one.";
+        public override int Level => 25;
+        public override int ExpYield => 14;
+        public override int BaseDamage => 25;
+        public override int BaseDefense => 6;
+        public override double BaseCritChance => 0.05;
 
         public override void SetStats()
         {
-            Level = 25;
-            ExpYield = 14;
             MaxLife = 90;
-            Damage = 25;
-            Defense = 6;
-            CritChance = 0.05;
             DamageType = DamageType.Magic;
             MagicType = MagicType.Earth;
             MagicResistance[MagicType.Earth] = 0.75;
@@ -190,15 +190,15 @@ namespace PacManBot.Games.Concrete.RPG.Enemies
     {
         public override string Name => "Thunder Elemental";
         public override string Description => "The electricity is overwhelming.";
+        public override int Level => 28;
+        public override int ExpYield => 16;
+        public override int BaseDamage => 15;
+        public override int BaseDefense => 7;
+        public override double BaseCritChance => 0.2;
 
         public override void SetStats()
         {
-            Level = 28;
-            ExpYield = 16;
             MaxLife = 100;
-            Damage = 21;
-            Defense = 7;
-            CritChance = 0.2;
             DamageType = DamageType.Magic;
             MagicType = MagicType.Air;
             MagicResistance[MagicType.Air] = 0.75;
@@ -213,8 +213,7 @@ namespace PacManBot.Games.Concrete.RPG.Enemies
             for (int i = 0; i < attacks.Length; i++)
             {
                 bool crit = Bot.Random.NextDouble() < CritChance;
-                int dmg = Damage <= 0 ? 0 : (Damage * DamageMult * (crit ? 1.5 : 1) * Bot.Random.NextDouble(0.85, 1.15)).Ceiling();
-                dmg = target.Hit(dmg, DamageType, MagicType);
+                int dmg = target.Hit(AttackFormula(Damage, crit), DamageType, MagicType);
 
                 attacks[i] = $"{dmg}" + " (!)".If(crit);
             }
@@ -228,15 +227,15 @@ namespace PacManBot.Games.Concrete.RPG.Enemies
     {
         public override string Name => "Lava Elemental";
         public override string Description => "Hotter than my new mixtape.";
+        public override int Level => 32;
+        public override int ExpYield => 18;
+        public override int BaseDamage => 40;
+        public override int BaseDefense => 12;
+        public override double BaseCritChance => 0.05;
 
         public override void SetStats()
         {
-            Level = 32;
-            ExpYield = 18;
             MaxLife = 90;
-            Damage = 40;
-            Defense = 12;
-            CritChance = 0.05;
             DamageType = DamageType.Magic;
             MagicType = MagicType.Fire;
             MagicResistance[MagicType.Fire] = 0.75;
@@ -266,14 +265,15 @@ namespace PacManBot.Games.Concrete.RPG.Enemies
     {
         public override string Name => "Elemental Elemental";
         public override string Description => "Master of the element..als.";
+        public override int Level => 40;
+        public override int ExpYield => 25;
+        public override int BaseDamage => 132;
+        public override int BaseDefense => 15;
+        public override double BaseCritChance => 0;
 
         public override void SetStats()
         {
-            Level = 40;
-            ExpYield = 25;
             MaxLife = 200;
-            Damage = 132;
-            Defense = 15;
             DamageType = DamageType.Magic;
             DamageResistance[DamageType.Magic] = 0.6;
         }

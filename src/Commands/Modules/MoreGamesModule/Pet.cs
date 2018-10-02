@@ -31,7 +31,8 @@ namespace PacManBot.Commands.Modules
 
 
         private static readonly IEnumerable<MethodInfo> PetMethods = typeof(MoreGamesModule).GetMethods()
-            .Where(x => x.GetCustomAttribute<PetCommandAttribute>() != null);
+            .Where(x => x.GetCustomAttribute<PetCommandAttribute>() != null)
+            .ToList();
 
         public string AdoptPetMessage => $"You don't have a pet yet! Do `{Prefix}pet adopt` to adopt one.";
 

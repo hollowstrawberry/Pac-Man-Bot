@@ -22,7 +22,6 @@ namespace PacManBot.Games.Concrete.RPG
         }
 
         public abstract string Name { get; }
-        [DataMember] public virtual int Level { get; set; }
         [DataMember] public int MaxLife { get; set; }
         [DataMember] public int Damage { get; set; }
         [DataMember] public int Defense { get; set; }
@@ -33,6 +32,8 @@ namespace PacManBot.Games.Concrete.RPG
         [DataMember] public MagicType MagicType { get; set; }
 
         [DataMember] public Dictionary<string, int> Buffs { get; }
+        [DataMember] public Dictionary<DamageType, int> DamageBoost { get; set; }
+        [DataMember] public Dictionary<MagicType, int> MagicBoost { get; set; }
         [DataMember] public Dictionary<DamageType, double> DamageResistance { get; set; }
         [DataMember] public Dictionary<MagicType, double> MagicResistance { get; set; }
 
@@ -42,28 +43,42 @@ namespace PacManBot.Games.Concrete.RPG
 
         protected Entity()
         {
-            Level = 1;
             Buffs = new Dictionary<string, int>(5);
+            DamageBoost = new Dictionary<DamageType, int>(4);
+            MagicBoost = new Dictionary<MagicType, int>(4);
             DamageResistance = new Dictionary<DamageType, double>(4);
             MagicResistance = new Dictionary<MagicType, double>(5);
         }
 
 
+        /// <summary>Updates the entity's stats, affected by all active stat change sources.</summary>
+        public virtual void CalculateStats()
+        {
+            foreach (var buff in Buffs)
+            {
+                buff.Key.GetBuff().BuffEffects(this);
+            }
+
+            if (DamageBoost.TryGetValue(DamageType, out var dmgB)) Damage += dmgB;
+            if (MagicBoost.TryGetValue(MagicType, out var magicB)) Damage += magicB;
+
+            Damage = (Damage * DamageMult).Round();
+            Defense = (Defense * DefenseMult).Round();
+        }
+
+
+
         /// <summary>
         /// Performs a tick on all active buffs of this entity, and returns all buff tick messages.
         /// </summary>
-        public virtual string UpdateBuffs()
+        public virtual string TickBuffs()
         {
             var msg = new StringBuilder();
 
             foreach (var (buff, duration) in Buffs.Select(x => (x.Key, x.Value)).ToArray())
             {
                 msg.AppendLine(buff.GetBuff().TickEffects(this));
-                if (duration == 1)
-                {
-                    Buffs.Remove(buff);
-                    buff.GetBuff().EndEffects(this);
-                }
+                if (duration == 1) RemoveBuff(buff);
                 else Buffs[buff] -= 1;
             }
 
@@ -85,25 +100,28 @@ namespace PacManBot.Games.Concrete.RPG
         }
 
 
-        /// <summary>
-        /// Deals damage to another entity applying damage calculations, and returns an attack message.
-        /// </summary>
+        /// <summary>Deals damage to another entity applying damage calculations, and returns an attack message.</summary>
         public virtual string Attack(Entity target)
         {
             bool crit = Bot.Random.NextDouble() < CritChance;
-            int dmg = Damage <= 0 ? 0 : (Damage * DamageMult * (crit ? 2 : 1) * Bot.Random.NextDouble(0.85, 1.15)).Ceiling();
-            int dealt = target.Hit(dmg, DamageType, MagicType);
+            int dealt = target.Hit(AttackFormula(Damage, crit), DamageType, MagicType);
 
             return $"{this} dealt {dealt} damage to {target}. {"Critical hit!".If(crit)} ";
         }
 
+
+        /// <summary>Generates an attack using damage calculations.</summary>
+        public static int AttackFormula(int baseDmg, bool crit)
+        {
+            return baseDmg <= 0 ? 0 : (baseDmg * (crit ? 2 : 1) * Bot.Random.NextDouble(0.85, 1.15)).Ceiling();
+        }
 
         /// <summary>
         /// Safely adds a buff to this entity.
         /// </summary>
         public void AddBuff(string buff, int duration)
         {
-            if (!Buffs.ContainsKey(buff)) buff.GetBuff().StartEffects(this);
+            if (!Buffs.ContainsKey(buff)) buff.GetBuff().BuffEffects(this);
             Buffs[buff] = duration;
         }
 
@@ -114,9 +132,7 @@ namespace PacManBot.Games.Concrete.RPG
         public void RemoveBuff(string buff)
         {
             if (!Buffs.ContainsKey(buff)) return;
-
             Buffs.Remove(buff);
-            buff.GetBuff().EndEffects(this);
         }
     }
 }

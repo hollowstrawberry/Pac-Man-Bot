@@ -25,7 +25,7 @@ namespace PacManBot.Games.Concrete.RPG
 
 
         private string lastEmote;
-        private EmbedBuilder fightEmbed;
+        public EmbedBuilder fightEmbed;
 
         [DataMember] public Player player;
         [DataMember] public List<Enemy> enemies = new List<Enemy>(3);
@@ -98,7 +98,7 @@ namespace PacManBot.Games.Concrete.RPG
 
 
         /// <summary>Returns an embed displaying the current fight, performing an action first if applicable.</summary>
-        public EmbedBuilder Fight(int attack = -1)
+        public EmbedBuilder Fight(int? attack = null, Skill skill = null)
         {
             var embed = new EmbedBuilder
             {
@@ -109,22 +109,29 @@ namespace PacManBot.Games.Concrete.RPG
             var desc = new StringBuilder();
 
 
-            if (attack >= 0)
+            if (attack != null)
             {
-                desc.AppendLine(player.Attack(enemies[attack]));
+                player.CalculateStats();
 
-                foreach (var en in enemies)
+                if (skill != null) desc.AppendLine($"{player} uses **{skill}**!\n{skill.Effect(this)}");
+                else desc.AppendLine(player.Attack(enemies[attack.Value]));
+
+                foreach (var enemy in enemies)
                 {
-                    string eBuffs = en.UpdateBuffs();
-                    if (eBuffs != "") desc.AppendLine(eBuffs.Trim());
-
-                    if (en.Life > 0) desc.AppendLine(en.Attack(player));
+                    if (enemy.Life > 0)
+                    {
+                        string eBuffs = enemy.TickBuffs();
+                        if (eBuffs != "") desc.AppendLine(eBuffs.Trim());
+                        enemy.CalculateStats();
+                        desc.AppendLine(enemy.Attack(player));
+                    }
                 }
 
                 if (player.Life > 0)
                 {
-                    string pBuffs = player.UpdateBuffs();
+                    string pBuffs = player.TickBuffs();
                     if (pBuffs != "") desc.AppendLine(pBuffs.Trim());
+                    player.CalculateStats();
                 }
             }
 
@@ -144,12 +151,16 @@ namespace PacManBot.Games.Concrete.RPG
                 }
                 else
                 {
-                    desc.AppendLine($"{en} was defeated! +{en.ExpYield} EXP");
-                    player.experience += en.ExpYield;
+                    int exp = en.ExpYield;
+                    if (botConfig.debugRpg.Contains(OwnerId)) exp *= 2;
+
+                    desc.AppendLine($"{en} was defeated! +{exp} EXP");
+                    player.experience += exp;
                     string lvlUp = player.TryLevelUp();
                     if (lvlUp != null)
                     {
                         desc.AppendLine($"\n⏫ Level up! {lvlUp}");
+                        if (player.Level == Player.LevelCap) desc.AppendLine("\n⭐ **Reached the maximum level! Congratulations!**");
                     }
 
                     enemies.RemoveAt(i);
@@ -243,7 +254,7 @@ namespace PacManBot.Games.Concrete.RPG
 
         public override EmbedBuilder GetEmbed(bool showHelp = true)
         {
-            return fightEmbed ?? new EmbedBuilder { Title = "Generic RPG", Description = "..." };
+            return fightEmbed ?? new EmbedBuilder { Title = GameName, Description = "..." };
         }
 
 

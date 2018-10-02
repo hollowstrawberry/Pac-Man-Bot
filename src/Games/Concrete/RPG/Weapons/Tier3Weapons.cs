@@ -11,6 +11,8 @@ namespace PacManBot.Games.Concrete.RPG.Weapons
         public override DamageType Type => DamageType.Blunt;
         public override MagicType Magic => MagicType.Water;
 
+        public override int LevelGet => 20;
+
         public override string AttackEffects(Player wielder, Entity target)
         {
             target.Defense -= 1;
@@ -27,6 +29,8 @@ namespace PacManBot.Games.Concrete.RPG.Weapons
         public override double CritChance => 0.2f;
         public override DamageType Type => DamageType.Pierce;
         public override MagicType Magic => MagicType.Air;
+
+        public override int LevelGet => 24;
     }
 
 
@@ -38,6 +42,8 @@ namespace PacManBot.Games.Concrete.RPG.Weapons
         public override double CritChance => 0.05f;
         public override DamageType Type => DamageType.Magic;
         public override MagicType Magic => MagicType.Earth;
+
+        public override int LevelGet => 29;
 
         public override string AttackEffects(Player wielder, Entity target)
         {
@@ -56,6 +62,8 @@ namespace PacManBot.Games.Concrete.RPG.Weapons
         public override double CritChance => 0.05f;
         public override DamageType Type => DamageType.Cutting;
         public override MagicType Magic => MagicType.Fire;
+
+        public override int LevelGet => 35;
 
         public override string AttackEffects(Player wielder, Entity target)
         {

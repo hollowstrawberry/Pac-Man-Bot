@@ -10,16 +10,10 @@ namespace PacManBot.Games.Concrete.RPG.Buffs
         public override string Icon => "👁";
         public override string Description => "Reduces damage and crit ratio";
 
-        public override void StartEffects(Entity holder)
+        public override void BuffEffects(Entity holder)
         {
             holder.Damage -= 4;
             holder.CritChance -= 0.15;
-        }
-
-        public override void EndEffects(Entity holder)
-        {
-            holder.Damage += 4;
-            holder.CritChance += 0.15;
         }
     }
 }

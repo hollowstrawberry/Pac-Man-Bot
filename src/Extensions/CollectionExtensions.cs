@@ -170,6 +170,16 @@ namespace PacManBot.Extensions
         }
 
 
+        /// <summary>
+        /// Sets a value in the dictionary. If they key doesn't exist, it's set to the default first.
+        /// </summary>
+        public static void ChangeOrSet<TKey, TValue>(this Dictionary<TKey, TValue> dict, TKey key, Func<TValue, TValue> valueSelector)
+        {
+            if (!dict.ContainsKey(key)) dict[key] = default;
+            dict[key] = valueSelector(dict[key]);
+        }
+
+
         /// <summary>Creates a <see cref="Dictionary{TKey, TValue}"/> from a collection of 
         /// <see cref="KeyValuePair{TKey, TValue}"/>s.</summary>
         public static Dictionary<TKey, TValue> AsDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> pairs)

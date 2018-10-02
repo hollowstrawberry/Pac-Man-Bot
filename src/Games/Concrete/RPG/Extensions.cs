@@ -11,17 +11,21 @@ namespace PacManBot.Games.Concrete.RPG
     public static class Extensions
     {
         public static Item GetItem(this string item) => ItemTypes.GetValueOrDefault(item);
-        public static Equipment GetEquip(this string equipment) => EquipmentTypes.GetValueOrDefault(equipment);
+        public static Equipment GetEquip(this string equipment) => EquipTypes.GetValueOrDefault(equipment);
         public static Weapon GetWeapon(this string item) => WeaponTypes.GetValueOrDefault(item);
+        public static Armor GetArmor(this string item) => ArmorTypes.GetValueOrDefault(item);
         public static Enemy GetEnemy(this string enemy) => EnemyTypes.GetValueOrDefault(enemy);
         public static Buff GetBuff(this string buff) => BuffTypes.GetValueOrDefault(buff);
+        public static Skill GetSkill(this string skill) => SkillTypes.GetValueOrDefault(skill);
 
 
         public static IReadOnlyDictionary<string, Item> ItemTypes = GetTypes<Item>();
-        public static IReadOnlyDictionary<string, Equipment> EquipmentTypes = GetTypes<Equipment>();
+        public static IReadOnlyDictionary<string, Equipment> EquipTypes = GetTypes<Equipment>();
         public static IReadOnlyDictionary<string, Weapon> WeaponTypes = GetTypes<Weapon>();
+        public static IReadOnlyDictionary<string, Armor> ArmorTypes = GetTypes<Armor>();
         public static IReadOnlyDictionary<string, Enemy> EnemyTypes = GetTypes<Enemy>();
         public static IReadOnlyDictionary<string, Buff> BuffTypes = GetTypes<Buff>();
+        public static IReadOnlyDictionary<string, Skill> SkillTypes = GetTypes<Skill>();
 
 
         private static IReadOnlyDictionary<string, T> GetTypes<T>() where T : IKeyable

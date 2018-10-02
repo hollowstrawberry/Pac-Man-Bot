@@ -12,7 +12,6 @@ namespace PacManBot.Games.Concrete.RPG
         public virtual string Description => "";
 
         public virtual string TickEffects(Entity holder) => "";
-        public virtual void StartEffects(Entity holder) { }
-        public virtual void EndEffects(Entity holder) { }
+        public virtual void BuffEffects(Entity holder) { }
     }
 }

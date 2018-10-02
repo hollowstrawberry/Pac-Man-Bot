@@ -18,10 +18,10 @@ namespace PacManBot.Games.Concrete.RPG
         Earth,
     }
 
-    public enum PlayerFightAction
+    public enum SkillType
     {
-        Attack,
-        Skill,
-        Heal,
+        Dmg,
+        Def,
+        Crit,
     }
 }

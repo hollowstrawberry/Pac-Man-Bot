@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Linq;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Discord;
@@ -15,8 +16,13 @@ namespace PacManBot.Games.Concrete.RPG
     public abstract class Enemy : Entity, IKeyable
     {
         public virtual string Key => GetType().Name;
+
         public abstract string Description { get; }
-        public int ExpYield { get; set; } = 1;
+        public abstract int Level { get; }
+        public abstract int ExpYield { get; }
+        public abstract int BaseDamage { get; }
+        public abstract int BaseDefense { get; }
+        public abstract double BaseCritChance { get; }
 
         //public override bool Equals(object obj) => obj is Enemy en && Key == en.Key;
         //public override int GetHashCode() => Key.GetHashCode();
@@ -28,12 +34,28 @@ namespace PacManBot.Games.Concrete.RPG
         protected Enemy() : base()
         {
             SetStats();
+            CalculateStats();
             Life = MaxLife;
         }
 
 
         /// <summary>Sets all of this enemy's stats.</summary>
         public abstract void SetStats();
+
+
+        public sealed override void CalculateStats()
+        {
+            Damage = BaseDamage;
+            Defense = BaseDefense;
+            CritChance = BaseCritChance;
+
+            DamageBoost = new Dictionary<DamageType, int>(4);
+            MagicBoost = new Dictionary<MagicType, int>(4);
+            DamageMult = 1;
+            DefenseMult = 1;
+
+            base.CalculateStats();
+        }
 
 
         /// <summary>Clones an enemy of this type, ready for battle.</summary>

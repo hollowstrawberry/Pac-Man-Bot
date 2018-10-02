@@ -60,6 +60,42 @@ namespace PacManBot.Extensions
 
 
         /// <summary>
+        /// Returns the percentage similarity of two strings using a Levenshtein algorithm.
+        /// </summary>
+        // https://social.technet.microsoft.com/wiki/contents/articles/26805.c-calculating-percentage-similarity-of-2-strings.aspx
+        public static double Similarity(this string a, string b, bool caseSensitive = true)
+        {
+            if (a == null || b == null) return 0.0;
+
+            if (!caseSensitive)
+            {
+                a = a.ToLowerInvariant();
+                b = b.ToLowerInvariant();
+            }
+
+            if (a == b) return 1.0;
+            if (a.Length == 0 || b.Length == 0) return 0.0;
+
+            int[,] distance = new int[a.Length + 1, b.Length + 1];
+
+            for (int i = 0; i <= a.Length; distance[i, 0] = i++) ;
+            for (int j = 0; j <= b.Length; distance[0, j] = j++) ;
+
+            for (int i = 1; i <= a.Length; i++)
+            {
+                for (int j = 1; j <= b.Length; j++)
+                {
+                    int cost = (b[j - 1] == a[i - 1]) ? 0 : 1;
+                    distance[i, j] = Math.Min(Math.Min(distance[i - 1, j] + 1, distance[i, j - 1] + 1), distance[i - 1, j - 1] + cost);
+                }
+            }
+
+            int steps = distance[a.Length, b.Length];
+            return 1.0 - (double)steps / Math.Max(a.Length, b.Length);
+        }
+
+
+        /// <summary>
         /// Returns a Python-like string slice that is between the specified boundaries and takes characters by the specified step.
         /// </summary>
         /// <param name="start">The starting index of the slice. Loops around if negative.</param>

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Reflection;
-using System.Collections.Generic;
-using PacManBot.Extensions;
-
+﻿
 namespace PacManBot.Games.Concrete.RPG
 {
     public abstract class Weapon : Equipment
@@ -23,12 +18,6 @@ namespace PacManBot.Games.Concrete.RPG
             player.CritChance += CritChance;
             player.DamageType = Type;
             player.MagicType = Magic;
-        }
-
-        public override void UnequipEffects(Player player)
-        {
-            player.Damage -= Damage;
-            player.CritChance -= CritChance;
         }
     }
 }
