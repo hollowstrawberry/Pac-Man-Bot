@@ -21,7 +21,7 @@ namespace PacManBot
     /// </summary>
     public static class Program
     {
-        public const string Version = "3.8.6";
+        public const string Version = "3.9";
 
 
         static async Task Main()

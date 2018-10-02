@@ -24,7 +24,7 @@ namespace PacManBot.Games.Concrete.Rpg
         public static readonly IReadOnlyList<string> EmoteOtherInputs = new[] { MenuEmote, ProfileEmote };
 
 
-        private string lastEmote;
+        public string lastEmote;
         public EmbedBuilder fightEmbed;
 
         [DataMember] public Player player;
@@ -168,7 +168,8 @@ namespace PacManBot.Games.Concrete.Rpg
                     if (lvlUp != null)
                     {
                         desc.AppendLine($"\n⏫ Level up! {lvlUp}");
-                        if (player.Level == Player.LevelCap) desc.AppendLine("\n⭐ **Reached the maximum level! Congratulations!**");
+                        if (player.Level == Player.LevelCap)
+                            desc.AppendLine("\n⭐ **You reached the maximum level! Congratulations!**");
                     }
 
                     enemies.RemoveAt(i);

@@ -13,5 +13,9 @@ namespace PacManBot.Games.Concrete.Rpg
 
         public virtual string TickEffects(Entity holder) => "";
         public virtual void BuffEffects(Entity holder) { }
+
+
+        public override bool Equals(object obj) => obj is Buff other && Key == other.Key;
+        public override int GetHashCode() => Key.GetHashCode();
     }
 }

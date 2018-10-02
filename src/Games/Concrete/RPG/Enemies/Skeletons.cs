@@ -105,10 +105,10 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
     public class SkeletonKing : Enemy
     {
         public override string Name => "Skeleton King";
-        public override string Description => "He's actually just a count, but don't tell him.";
+        public override string Description => "He's actually just a count,\nbut don't tell him.";
         public override int Level => 20;
         public override int ExpYield => 10;
-        public override int BaseDamage => 25;
+        public override int BaseDamage => 26;
         public override int BaseDefense => 2;
         public override double BaseCritChance => 0.1;
 
@@ -158,6 +158,37 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
             string msg = base.Attack(target);
             Damage = BaseDamage;
             return msg;
+        }
+    }
+
+
+    public class Skeleton6 : Enemy
+    {
+        public override string Name => "Skarlton";
+        public override string Description => "He's Icelandic, I think.";
+        public override int Level => 40;
+        public override int ExpYield => 20;
+        public override int BaseDamage => 35;
+        public override int BaseDefense => 8;
+        public override double BaseCritChance => 0.05;
+
+        public override void SetStats()
+        {
+            MaxLife = 120;
+            DamageType = DamageType.Cutting;
+            MagicType = MagicType.Water;
+            MagicResistance[MagicType.Water] = 0.3;
+        }
+
+        public override string Attack(Entity target)
+        {
+            string msg = "";
+            if (Bot.Random.OneIn(4))
+            {
+                AddBuff(nameof(Fury), 3);
+                msg = $"{this} is going berzerk!";
+            }
+            return msg + base.Attack(target);
         }
     }
 }

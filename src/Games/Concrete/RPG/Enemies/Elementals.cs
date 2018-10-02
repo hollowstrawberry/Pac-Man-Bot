@@ -266,9 +266,9 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
     {
         public override string Name => "Elemental Elemental";
         public override string Description => "Master of the element...als.";
-        public override int Level => 40;
+        public override int Level => 50;
         public override int ExpYield => 25;
-        public override int BaseDamage => 132;
+        public override int BaseDamage => 160;
         public override int BaseDefense => 15;
         public override double BaseCritChance => 0;
 

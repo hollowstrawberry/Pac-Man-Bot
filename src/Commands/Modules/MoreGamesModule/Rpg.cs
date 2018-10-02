@@ -134,10 +134,10 @@ namespace PacManBot.Commands.Modules
                 return;
             }
 
-            var timeLeftH = TimeSpan.FromMinutes(3) - (DateTime.Now - game.lastHeal);
-            if (timeLeftH > TimeSpan.Zero && !Config.debugRpg.Contains(Context.User.Id))
+            var timeLeft = TimeSpan.FromMinutes(3) - (DateTime.Now - game.lastHeal);
+            if (timeLeft > TimeSpan.Zero && !Config.debugRpg.Contains(Context.User.Id))
             {
-                await ReplyAsync($"{CustomEmoji.Cross} You may heal again in {timeLeftH.Humanized(empty: "1 second")}");
+                await ReplyAsync($"{CustomEmoji.Cross} You may heal again in {timeLeft.Humanized(empty: "1 second")}");
                 return;
             }
 
@@ -148,8 +148,21 @@ namespace PacManBot.Commands.Modules
 
             await ReplyAsync($"💟 Fully restored!");
 
-            if (game.State == State.Active && Context.BotCan(ChannelPermission.ManageMessages))
-                await Context.Message.DeleteAsync(DefaultOptions);
+            if (game.State == State.Active)
+            {
+                var message = await game.GetMessage();
+                if (message != null)
+                {
+                    game.lastEmote = "";
+                    try { await message.ModifyAsync(m => m.Embed = game.Fight().Build()); }
+                    catch { }
+                }
+
+                if (Context.BotCan(ChannelPermission.ManageMessages))
+                {
+                    await Context.Message.DeleteAsync(DefaultOptions);
+                }
+            }
         }
 
 
@@ -180,7 +193,7 @@ namespace PacManBot.Commands.Modules
             {
                 if (bestMatch is Armor && game.State == State.Active)
                 {
-                    await ReplyAsync("You can change weapons mid-battle, but you can't change armor mid-battle.");
+                    await ReplyAsync("You can't switch armors mid-battle (but you can switch weapons).");
                     return;
                 }
 
@@ -188,8 +201,21 @@ namespace PacManBot.Commands.Modules
                 Games.Save(game);
                 await ReplyAsync($"⚔ Equipped `{bestMatch}`.");
 
-                if (game.State == State.Active && Context.BotCan(ChannelPermission.ManageMessages))
-                    await Context.Message.DeleteAsync(DefaultOptions);
+                if (game.State == State.Active)
+                {
+                    var message = await game.GetMessage();
+                    if (message != null)
+                    {
+                        game.lastEmote = RpgGame.ProfileEmote;
+                        try { await message.ModifyAsync(m => m.Embed = game.player.Profile().Build()); }
+                        catch { }
+                    }
+
+                    if (Context.BotCan(ChannelPermission.ManageMessages))
+                    {
+                        await Context.Message.DeleteAsync(DefaultOptions);
+                    }
+                }
             }
             else
             {
@@ -202,14 +228,14 @@ namespace PacManBot.Commands.Modules
         [RpgCommand("skill", "s")]
         public async Task RpgUseActiveSkill(RpgGame game, string args)
         {
-            if (args == "")
-            {
-                await ReplyAsync("Please specify an active skill shortcut to use that skill.");
-                return;
-            }
             if (game.State != State.Active)
             {
                 await ReplyAsync("You can only use an active skill during battle!");
+                return;
+            }
+            if (args == "")
+            {
+                await ReplyAsync("Please specify the shortcut of an active skill to use it.");
                 return;
             }
 
@@ -246,7 +272,7 @@ namespace PacManBot.Commands.Modules
             game.fightEmbed = game.Fight(-1, skill);
 
             var message = await game.GetMessage();
-            if (message == null || game.ChannelId != Context.Channel.Id)
+            if (game.State == State.Active && message == null || game.ChannelId != Context.Channel.Id)
             {
                 message = await ReplyAsync(game.fightEmbed);
                 game.ChannelId = Context.Channel.Id;
@@ -291,7 +317,8 @@ namespace PacManBot.Commands.Modules
 
             switch (skill)
             {
-                case "p": case "power": case "damage": case "dmg":
+                case "p": case "power":
+                case "pow": case "damage": case "dmg":
                     type = SkillType.Dmg;
                     break;
 

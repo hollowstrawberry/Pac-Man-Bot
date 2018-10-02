@@ -195,4 +195,42 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
             DamageResistance[DamageType.Cutting] = 0.5;
         }
     }
+
+
+    public class MechRat : Enemy
+    {
+        public override string Name => "Mecha Rat";
+        public override string Description => "Where are these mechas coming from?";
+        public override int Level => 35;
+        public override int ExpYield => 20;
+        public override int BaseDamage => 40;
+        public override int BaseDefense => 10;
+        public override double BaseCritChance => 0.2;
+
+        public override void SetStats()
+        {
+            MaxLife = 80;
+            DamageType = DamageType.Cutting;
+            DamageResistance[DamageType.Magic] = -0.2;
+        }
+    }
+
+
+    public class MechaFlopper : Enemy
+    {
+        public override string Name => "Mecha Flopper";
+        public override string Description => "EXTERMINATE.";
+        public override int Level => 45;
+        public override int ExpYield => 25;
+        public override int BaseDamage => 40;
+        public override int BaseDefense => 15;
+        public override double BaseCritChance => 1.0;
+
+        public override void SetStats()
+        {
+            MaxLife = 100;
+            DamageType = DamageType.Blunt;
+            DamageResistance[DamageType.Cutting] = -0.2;
+        }
+    }
 }

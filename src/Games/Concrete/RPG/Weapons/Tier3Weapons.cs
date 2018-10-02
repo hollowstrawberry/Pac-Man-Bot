@@ -43,7 +43,7 @@ namespace PacManBot.Games.Concrete.Rpg.Weapons
         public override DamageType Type => DamageType.Magic;
         public override MagicType Magic => MagicType.Earth;
 
-        public override int LevelGet => 29;
+        public override int LevelGet => 28;
 
         public override string AttackEffects(Player wielder, Entity target)
         {
@@ -54,16 +54,44 @@ namespace PacManBot.Games.Concrete.Rpg.Weapons
     }
 
 
+    public class QuestSword : Weapon
+    {
+        public override string Name => "Quest Sword";
+        public override string Description => "Not actually part of any quest.";
+        public override int Damage => 20;
+        public override double CritChance => 0.05f;
+        public override DamageType Type => DamageType.Cutting;
+
+        public override int LevelGet => 32;
+
+        public override string AttackEffects(Player wielder, Entity target)
+        {
+            bool active = false;
+            if (Bot.Random.OneIn(10))
+            {
+                var buff = Bot.Random.Choose(new[] { nameof(Buffs.CritBuff), nameof(Buffs.Fury) });
+                if (!wielder.Buffs.ContainsKey(buff))
+                {
+                    active = true;
+                    wielder.Buffs.Add(buff, 2);
+                }
+            }
+
+            return active ? $"{wielder} activated the secret of the sword!" : "";
+        }
+    }
+
+
     public class ImportantSword : Weapon
     {
         public override string Name => "Sword McGuffin";
         public override string Description => "They say it's legendary,\nbut you don't buy that.";
-        public override int Damage => 25;
-        public override double CritChance => 0.05f;
+        public override int Damage => 35;
+        public override double CritChance => 0.07f;
         public override DamageType Type => DamageType.Cutting;
         public override MagicType Magic => MagicType.Fire;
 
-        public override int LevelGet => 35;
+        public override int LevelGet => 50;
 
         public override string AttackEffects(Player wielder, Entity target)
         {

@@ -16,7 +16,7 @@ namespace PacManBot.Games.Concrete.Rpg
     [DataContract]
     public class Player : Entity
     {
-        public const int LevelCap = 40;
+        public const int LevelCap = 50;
         public const int SkillMax = 20;
 
         /// <summary>The player's name.</summary>
@@ -157,10 +157,7 @@ namespace PacManBot.Games.Concrete.Rpg
 
             CalculateStats();
 
-            int sp = Level % 100 == 0 ? 10
-                   : Level %  20 == 0 ? 3
-                   : Level %   5 == 0 ? 2 : 1;
-
+            int sp = Level % 5 == 0 ? 2 : 1;
             skillPoints += sp;
             boosts.Add($"+{sp} skill point{"s".If(sp > 1)}");
      
@@ -193,8 +190,7 @@ namespace PacManBot.Games.Concrete.Rpg
 
             string statsDesc = $"**Level {Level}**  (`{experience}/{NextLevelExp} EXP`)" +
                                $"\nStatus: `{Life}/{MaxLife}`{CustomEmoji.Life}`{Mana}/{MaxMana}`{CustomEmoji.Mana}" +
-                               $"\nDefense: `{Defense}`" +
-                               $"\nResistances: *None*";
+                               $"\nDefense: `{Defense}`";
 
             string buffDesc = Buffs.Keys.Select(b => b.GetBuff())
                 .Select(b => $"`{Buffs[b.Key]}`{b.Icon}{b.Name}: {b.Description}").JoinString("\n");
