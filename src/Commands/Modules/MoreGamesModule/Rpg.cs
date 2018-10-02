@@ -7,10 +7,10 @@ using Discord;
 using Discord.Net;
 using Discord.Commands;
 using PacManBot.Games;
-using PacManBot.Games.Concrete.RPG;
+using PacManBot.Games.Concrete.Rpg;
 using PacManBot.Constants;
 using PacManBot.Extensions;
-using Player = PacManBot.Games.Concrete.RPG.Player;
+using Player = PacManBot.Games.Concrete.Rpg.Player;
 
 namespace PacManBot.Commands.Modules
 {
@@ -208,7 +208,7 @@ namespace PacManBot.Commands.Modules
                 return;
             }
 
-            var unlocked = PacManBot.Games.Concrete.RPG.Extensions.SkillTypes.Values
+            var unlocked = PacManBot.Games.Concrete.Rpg.Extensions.SkillTypes.Values
                 .Where(s => s.SkillGet <= game.player.spentSkill[s.Type]);
 
             if (unlocked.Count() == 0)

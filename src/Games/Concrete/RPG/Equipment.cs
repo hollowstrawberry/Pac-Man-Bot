@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 
-namespace PacManBot.Games.Concrete.RPG
+namespace PacManBot.Games.Concrete.Rpg
 {
     /// <summary>
     /// An item that can be equipped by a player in the RPG.

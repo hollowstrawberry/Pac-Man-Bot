@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace PacManBot.Games.Concrete.RPG
+namespace PacManBot.Games.Concrete.Rpg
 {
     public abstract class Armor : Equipment
     {

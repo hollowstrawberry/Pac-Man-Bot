@@ -7,7 +7,7 @@ using Discord;
 using PacManBot.Utils;
 using PacManBot.Extensions;
 
-namespace PacManBot.Games.Concrete.RPG
+namespace PacManBot.Games.Concrete.Rpg
 {
     /// <summary>
     /// A player fighting entity in the RPG. Contains most information about the user's savefile.

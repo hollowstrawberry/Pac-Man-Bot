@@ -1,6 +1,6 @@
 ﻿using PacManBot.Extensions;
 
-namespace PacManBot.Games.Concrete.RPG.Weapons
+namespace PacManBot.Games.Concrete.Rpg.Weapons
 {
     public class Fists : Weapon
     {

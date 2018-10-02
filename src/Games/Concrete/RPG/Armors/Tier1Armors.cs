@@ -1,6 +1,6 @@
 ﻿using PacManBot.Extensions;
 
-namespace PacManBot.Games.Concrete.RPG.Armors
+namespace PacManBot.Games.Concrete.Rpg.Armors
 {
     public class Clothes : Armor
     {

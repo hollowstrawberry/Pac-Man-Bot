@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 using Discord;
 using PacManBot.Extensions;
 
-namespace PacManBot.Games.Concrete.RPG
+namespace PacManBot.Games.Concrete.Rpg
 {
     /// <summary>
     /// A non-player fighting entity in the RPG.

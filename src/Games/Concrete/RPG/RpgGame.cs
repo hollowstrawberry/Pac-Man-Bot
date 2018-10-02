@@ -7,7 +7,7 @@ using Discord;
 using PacManBot.Constants;
 using PacManBot.Extensions;
 
-namespace PacManBot.Games.Concrete.RPG
+namespace PacManBot.Games.Concrete.Rpg
 {
     [DataContract]
     public class RpgGame : ChannelGame, IUserGame, IStoreableGame, IReactionsGame

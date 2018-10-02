@@ -3,7 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using PacManBot.Extensions;
 
-namespace PacManBot.Games.Concrete.RPG
+namespace PacManBot.Games.Concrete.Rpg
 {
     /// <summary>
     /// Contains extension methods for the RPG such as those that allow strings to get converted into game objects.

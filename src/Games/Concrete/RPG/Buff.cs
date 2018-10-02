@@ -1,5 +1,5 @@
 ﻿
-namespace PacManBot.Games.Concrete.RPG
+namespace PacManBot.Games.Concrete.Rpg
 {
     /// <summary>
     /// An effect that an <see cref="Entity"/> holds for a certain amount of time.

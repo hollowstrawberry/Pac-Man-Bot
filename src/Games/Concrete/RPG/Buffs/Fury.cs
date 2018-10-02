@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace PacManBot.Games.Concrete.RPG.Buffs
+namespace PacManBot.Games.Concrete.Rpg.Buffs
 {
     public class Fury : Buff
     {

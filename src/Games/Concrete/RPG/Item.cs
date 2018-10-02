@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PacManBot.Games.Concrete.RPG
+namespace PacManBot.Games.Concrete.Rpg
 {
     public abstract class Item : IKeyable, IEquatable<Item>, IEquatable<string>
     {

@@ -1,11 +1,11 @@
 ﻿using System.Linq;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using PacManBot.Games.Concrete.RPG.Buffs;
+using PacManBot.Games.Concrete.Rpg.Buffs;
 using PacManBot.Utils;
 using PacManBot.Extensions;
 
-namespace PacManBot.Games.Concrete.RPG.Enemies
+namespace PacManBot.Games.Concrete.Rpg.Enemies
 {
     public class WaterElemental1 : Enemy
     {

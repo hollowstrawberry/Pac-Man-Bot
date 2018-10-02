@@ -1,5 +1,5 @@
 ﻿
-namespace PacManBot.Games.Concrete.RPG
+namespace PacManBot.Games.Concrete.Rpg
 {
     public abstract class Weapon : Equipment
     {

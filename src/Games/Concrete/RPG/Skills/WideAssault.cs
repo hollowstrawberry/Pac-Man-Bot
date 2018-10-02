@@ -3,7 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using PacManBot.Extensions;
 
-namespace PacManBot.Games.Concrete.RPG.Skills
+namespace PacManBot.Games.Concrete.Rpg.Skills
 {
     public class WideAssault : Skill
     {

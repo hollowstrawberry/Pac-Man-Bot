@@ -1,8 +1,8 @@
 ﻿using System.Runtime.Serialization;
-using PacManBot.Games.Concrete.RPG.Buffs;
+using PacManBot.Games.Concrete.Rpg.Buffs;
 using PacManBot.Extensions;
 
-namespace PacManBot.Games.Concrete.RPG.Enemies
+namespace PacManBot.Games.Concrete.Rpg.Enemies
 {
     public class Skeleton : Enemy
     {
