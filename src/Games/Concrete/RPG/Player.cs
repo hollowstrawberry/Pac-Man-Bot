@@ -17,7 +17,7 @@ namespace PacManBot.Games.Concrete.Rpg
     public class Player : Entity
     {
         public const int LevelCap = 50;
-        public const int SkillMax = 20;
+        public const int SkillMax = 30;
 
         /// <summary>The player's name.</summary>
         public sealed override string Name => name;
@@ -264,10 +264,10 @@ namespace PacManBot.Games.Concrete.Rpg
 
             return new EmbedFieldBuilder
             {
-                Name = type.Icon() + title,
+                Name = $"{type.Icon()}{title} `{spentSkill[type]}/{SkillMax}`",
                 IsInline = true,
                 Value =
-                $"`[{title[0]}][{ProgressBar(spentSkill[type], SkillMax, active.Select(x => x.SkillGet))}] {spentSkill[type]}/{SkillMax}`" +
+                $"`[{ProgressBar(spentSkill[type], SkillMax, active.Select(x => x.SkillGet))}]`" +
                 $"\n{desc}\n__Active skills:__\n" +
                 active.Select(x => x.SkillGet <= spentSkill[type] ? x.Name : $"`{x.SkillGet}: {x.Name}`").JoinString("\n")
                 + "\nᅠ".If(type < EnumTraits<SkillType>.MaxValue), // padding

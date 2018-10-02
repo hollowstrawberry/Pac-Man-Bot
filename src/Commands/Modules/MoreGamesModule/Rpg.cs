@@ -272,7 +272,7 @@ namespace PacManBot.Commands.Modules
             game.fightEmbed = game.Fight(-1, skill);
 
             var message = await game.GetMessage();
-            if (game.State == State.Active && message == null || game.ChannelId != Context.Channel.Id)
+            if (game.State == State.Active && (message == null || game.ChannelId != Context.Channel.Id))
             {
                 message = await ReplyAsync(game.fightEmbed);
                 game.ChannelId = Context.Channel.Id;
@@ -335,9 +335,9 @@ namespace PacManBot.Commands.Modules
                     return;
             }
 
-            if (game.player.spentSkill[type] + amount > Player.LevelCap)
+            if (game.player.spentSkill[type] + amount > Player.SkillMax)
             {
-                await ReplyAsync($"A skill line can only have {Player.LevelCap} skill points invested.");
+                await ReplyAsync($"A skill line can only have {Player.SkillMax} skill points invested.");
                 return;
             }
 

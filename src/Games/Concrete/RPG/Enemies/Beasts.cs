@@ -184,7 +184,7 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
         public override string Description => "Grrrrr BEEP grrr BOOP";
         public override int Level => 26;
         public override int ExpYield => 15;
-        public override int BaseDamage => 30;
+        public override int BaseDamage => 26;
         public override int BaseDefense => 8;
         public override double BaseCritChance => 0.02;
 
@@ -200,11 +200,11 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
     public class MechRat : Enemy
     {
         public override string Name => "Mecha Rat";
-        public override string Description => "Where are these mechas coming from?";
+        public override string Description => "Where are these mechas coming from?!";
         public override int Level => 35;
         public override int ExpYield => 20;
-        public override int BaseDamage => 40;
-        public override int BaseDefense => 10;
+        public override int BaseDamage => 35;
+        public override int BaseDefense => 6;
         public override double BaseCritChance => 0.2;
 
         public override void SetStats()
@@ -222,13 +222,13 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
         public override string Description => "EXTERMINATE.";
         public override int Level => 45;
         public override int ExpYield => 25;
-        public override int BaseDamage => 40;
-        public override int BaseDefense => 15;
+        public override int BaseDamage => 35;
+        public override int BaseDefense => 10;
         public override double BaseCritChance => 1.0;
 
         public override void SetStats()
         {
-            MaxLife = 100;
+            MaxLife = 90;
             DamageType = DamageType.Blunt;
             DamageResistance[DamageType.Cutting] = -0.2;
         }

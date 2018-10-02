@@ -120,7 +120,7 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
         public override string Description => "Reminds of cold winter days.";
         public override int Level => 22;
         public override int ExpYield => 12;
-        public override int BaseDamage => 22;
+        public override int BaseDamage => 18;
         public override int BaseDefense => 5;
         public override double BaseCritChance => 0.05;
 
@@ -164,7 +164,7 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
         public override string Description => "Quite a tree-hugger, this one.";
         public override int Level => 25;
         public override int ExpYield => 14;
-        public override int BaseDamage => 24;
+        public override int BaseDamage => 21;
         public override int BaseDefense => 6;
         public override double BaseCritChance => 0.05;
 
@@ -193,7 +193,7 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
         public override string Description => "The electricity is overwhelming.";
         public override int Level => 28;
         public override int ExpYield => 16;
-        public override int BaseDamage => 16;
+        public override int BaseDamage => 14;
         public override int BaseDefense => 7;
         public override double BaseCritChance => 0.2;
 
@@ -230,7 +230,7 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
         public override string Description => "Hotter than my new mixtape.";
         public override int Level => 32;
         public override int ExpYield => 18;
-        public override int BaseDamage => 38;
+        public override int BaseDamage => 30;
         public override int BaseDefense => 12;
         public override double BaseCritChance => 0.05;
 

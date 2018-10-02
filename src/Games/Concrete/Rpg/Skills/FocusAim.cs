@@ -8,7 +8,7 @@ namespace PacManBot.Games.Concrete.Rpg.Skills
         public override string Shortcut => "aim";
         public override int ManaCost => 5;
         public override SkillType Type => SkillType.Crit;
-        public override int SkillGet => 15;
+        public override int SkillGet => 20;
 
         public override string Effect(RpgGame game)
         {

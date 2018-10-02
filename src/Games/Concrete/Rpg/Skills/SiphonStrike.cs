@@ -9,7 +9,7 @@ namespace PacManBot.Games.Concrete.Rpg.Skills
     public class SiphonStrike : Skill
     {
         public override string Name => "Siphon Strike";
-        public override string Description => "Hit a random enemy and steal 200% HP.";
+        public override string Description => "Hit a random enemy and steal 300% HP.";
         public override string Shortcut => "siphon";
         public override int ManaCost => 3;
         public override SkillType Type => SkillType.Def;
@@ -24,7 +24,8 @@ namespace PacManBot.Games.Concrete.Rpg.Skills
 
             string effectMessage = game.player.weapon.GetWeapon().AttackEffects(game.player, target);
             int dealt = target.Hit(dmg, game.player.DamageType, game.player.MagicType);
-            int heal = dealt * 2;
+            int heal = dealt * 3;
+            game.player.Life += heal;
             return $"{this} dealt {dealt} damage to {target}{" (!)".If(crit)} and siphoned {heal} HP!";
         }
     }

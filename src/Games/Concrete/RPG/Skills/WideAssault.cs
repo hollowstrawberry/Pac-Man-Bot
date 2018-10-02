@@ -26,7 +26,7 @@ namespace PacManBot.Games.Concrete.Rpg.Skills
                 hits.Add($"{enemy} for {dealt}{"(!)".If(crit)}");
             }
 
-            return $"{game.player} hits {hits.JoinString(", ")}!";
+            return $"{game.player} hits {hits.JoinString(", ")}.";
         }
     }
 }

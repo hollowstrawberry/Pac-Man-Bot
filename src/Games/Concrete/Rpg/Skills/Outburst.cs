@@ -9,7 +9,7 @@ namespace PacManBot.Games.Concrete.Rpg.Skills
         public override string Shortcut => "burst";
         public override int ManaCost => 2;
         public override SkillType Type => SkillType.Dmg;
-        public override int SkillGet => 12;
+        public override int SkillGet => 15;
 
         public override string Effect(RpgGame game)
         {
