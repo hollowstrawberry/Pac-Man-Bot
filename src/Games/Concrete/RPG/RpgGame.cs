@@ -113,8 +113,14 @@ namespace PacManBot.Games.Concrete.Rpg
             {
                 player.CalculateStats();
 
-                if (skill != null) desc.AppendLine($"{player} uses **{skill}**!\n{skill.Effect(this)}");
-                else desc.AppendLine(player.Attack(enemies[attack.Value]));
+                if (skill != null)
+                {
+                    desc.AppendLine($"{player} uses {skill.Type.Icon()}**{skill}**!\n{skill.Effect(this)}");
+                }
+                else
+                {
+                    desc.AppendLine(player.Attack(enemies[attack.Value]));
+                }
 
                 foreach (var enemy in enemies)
                 {
@@ -137,7 +143,8 @@ namespace PacManBot.Games.Concrete.Rpg
 
 
             embed.AddField(player.Name,
-                $"{player.Life}/{player.MaxLife} {player.Buffs.Select(x => x.Key.GetBuff().Icon).JoinString(" ")}");
+                $"{player.Life}/{player.MaxLife}{CustomEmoji.Life}{player.Mana}/{player.MaxMana}{CustomEmoji.Mana}" +
+                player.Buffs.Select(x => x.Key.GetBuff().Icon).JoinString(" "));
 
             for (int i = 0; i < enemies.Count; /**/)
             {
@@ -146,7 +153,8 @@ namespace PacManBot.Games.Concrete.Rpg
                 if (en.Life > 0)
                 {
                     embed.AddField($"{CustomEmoji.NumberCircle[i + 1]}" + en.Name,
-                        $"{en.Life}/{en.MaxLife} {en.Buffs.Select(x => x.Key.GetBuff().Icon).JoinString(" ")}", true);
+                        $"{en.Life}/{en.MaxLife}{CustomEmoji.Life}" + 
+                        en.Buffs.Select(x => x.Key.GetBuff().Icon).JoinString(" "), true);
                     i++;
                 }
                 else
@@ -178,10 +186,12 @@ namespace PacManBot.Games.Concrete.Rpg
             {
                 State = State.Lose;
                 embed.Color = Colors.Red;
-                desc.AppendLine($"\n☠ You died and lost EXP!");
+                desc.AppendLine($"\n☠ You died and lost EXP!\nYou rest and feel ready to battle again.");
                 enemies.Clear();
                 player.experience /= 3;
-                player.Life = player.MaxLife / 2;
+                player.Life = player.MaxLife;
+                player.Mana = player.MaxMana;
+                player.Buffs.Clear();
             }
 
             if (State != State.Active)

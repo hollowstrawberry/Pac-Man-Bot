@@ -29,7 +29,7 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
         public override string Description => "A skeleton's wacky brother.";
         public override int Level => 8;
         public override int ExpYield => 7;
-        public override int BaseDamage => 12;
+        public override int BaseDamage => 10;
         public override int BaseDefense => 2;
         public override double BaseCritChance => 0.2;
 
@@ -54,7 +54,7 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
 
         public override void SetStats()
         {
-            MaxLife = 33;
+            MaxLife = 27;
             DamageType = DamageType.Pierce;
             DamageResistance[DamageType.Pierce] = -0.2;
         }
@@ -67,7 +67,7 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
         public override string Description => "Milk makes your bones stronger!";
         public override int Level => 15;
         public override int ExpYield => 9;
-        public override int BaseDamage => 14;
+        public override int BaseDamage => 15;
         public override int BaseDefense => 1;
         public override double BaseCritChance => 0.02;
 
@@ -108,7 +108,7 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
         public override string Description => "He's actually just a count, but don't tell him.";
         public override int Level => 20;
         public override int ExpYield => 10;
-        public override int BaseDamage => 26;
+        public override int BaseDamage => 25;
         public override int BaseDefense => 2;
         public override double BaseCritChance => 0.1;
 

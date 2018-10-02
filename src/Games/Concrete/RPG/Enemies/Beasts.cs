@@ -77,14 +77,33 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
         }
     }
 
-    
+
+    public class Oinx : Enemy
+    {
+        public override string Name => "Oinx";
+        public override string Description => "Nobody knows what it is.";
+        public override int Level => 4;
+        public override int ExpYield => 3;
+        public override int BaseDamage => 7;
+        public override int BaseDefense => 0;
+        public override double BaseCritChance => 0.02;
+
+        public override void SetStats()
+        {
+            MaxLife = 21;
+            DamageType = DamageType.Magic;
+            DamageResistance[DamageType.Cutting] = -0.2;
+        }
+    }
+
+
     public class Bear : Enemy
     {
         public override string Name => "Bear";
         public override string Description => "Grrrr.";
         public override int Level => 9;
         public override int ExpYield => 7;
-        public override int BaseDamage => 14;
+        public override int BaseDamage => 10;
         public override int BaseDefense => 4;
         public override double BaseCritChance => 0.01;
 
@@ -103,7 +122,7 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
         public override string Description => "Its spear can expose your weak points.";
         public override int Level => 12;
         public override int ExpYield => 8;
-        public override int BaseDamage => 14;
+        public override int BaseDamage => 10;
         public override int BaseDefense => 3;
         public override double BaseCritChance => 0.05;
 

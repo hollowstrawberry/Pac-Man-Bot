@@ -59,7 +59,10 @@ namespace PacManBot.Constants
             SilverIcon = "<:silver:453367514588774400>",
             GoldIcon = "<:gold:453368658303909888>",
             PetRight = "<:petright:491790787856826400>",
-            PetLeft = "<:petleft:491790787877535745>";
+            PetLeft = "<:petleft:491790787877535745>",
+            
+            Life = "<a:hp:496668550698893322>",
+            Mana = "<a:mp:496668551231307786>";
 
 
         public static readonly string[] NumberCircle =

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Discord;
 using PacManBot.Utils;
+using PacManBot.Constants;
 using PacManBot.Extensions;
 
 namespace PacManBot.Games.Concrete.Rpg
@@ -85,9 +86,9 @@ namespace PacManBot.Games.Concrete.Rpg
         {
             MaxLife = 45 + 5 * Level;
             MaxMana = 1 + Level / 5;
-            Damage = Level / 6 + spentSkill[SkillType.Dmg] / 2;
-            Defense = Level / 8 + spentSkill[SkillType.Def] / 2;
-            CritChance = 0.01 * (Level / 9 + spentSkill[SkillType.Crit] / 2);
+            Damage = spentSkill[SkillType.Dmg] / 2;
+            Defense = spentSkill[SkillType.Def] / 2;
+            CritChance = 0.01 * (spentSkill[SkillType.Crit] / 2);
             DamageMult = 1;
             DefenseMult = 1;
             DamageBoost = new Dictionary<DamageType, int>(4);
@@ -152,15 +153,12 @@ namespace PacManBot.Games.Concrete.Rpg
             Life = MaxLife;
             Mana = MaxMana;
             boosts.Add("+5 HP");
-            if (Level % 5 == 0) boosts.Add("+1 mana");
-            if (Level % 6 == 0) boosts.Add("+1 damage");
-            if (Level % 8 == 0) boosts.Add("+1 defense");
-            if (Level % 9 == 0) boosts.Add("+1% crit chance");
+            if (Level % 5 == 0) boosts.Add("+1 MP");
 
             CalculateStats();
 
             int sp = Level % 100 == 0 ? 10
-                   : Level %  10 == 0 ? 3
+                   : Level %  20 == 0 ? 3
                    : Level %   5 == 0 ? 2 : 1;
 
             skillPoints += sp;
@@ -189,14 +187,17 @@ namespace PacManBot.Games.Concrete.Rpg
                 Title = $"{Name}'s Profile",
                 Color = color,
                 Description =
-                $"Do **{channelPrefix}rpg skills** for skills." +
-                $"\n**You have unspent skill points!**\nᅠ".If(skillPoints > 0),
+                $"\n**You have unspent skill points!**\nᅠ".If(skillPoints > 0) +
+                $"Do **{channelPrefix}rpg skills** for skills.",
             };
 
             string statsDesc = $"**Level {Level}**  (`{experience}/{NextLevelExp} EXP`)" +
-                               $"\nHP: `{Life}/{MaxLife}`" +
-                               $"\nMana: `{Mana}/{MaxMana}`" +
-                               $"\nDefense: `{Defense}`";
+                               $"\nStatus: `{Life}/{MaxLife}`{CustomEmoji.Life}`{Mana}/{MaxMana}`{CustomEmoji.Mana}" +
+                               $"\nDefense: `{Defense}`" +
+                               $"\nResistances: *None*";
+
+            string buffDesc = Buffs.Keys.Select(b => b.GetBuff())
+                .Select(b => $"`{Buffs[b.Key]}`{b.Icon}{b.Name}: {b.Description}").JoinString("\n");
 
             var wp = weapon.GetWeapon();
             string weaponDesc = $"**[{wp.Name}]**\n*\"{wp.Description}\"*"
@@ -204,14 +205,15 @@ namespace PacManBot.Games.Concrete.Rpg
                               + $"\n`{(CritChance * 100).Round()}%` critical hit chance";
 
             var arm = armor.GetArmor();
-            string armorDesc = $"**[{arm.Name}]**\n*\"{arm.Description}\"*\n__Effects:__\n{arm.EffectsDesc}";
+            string armorDesc = $"**[{arm.Name}]**\n*\"{arm.Description}\"*\n{arm.EffectsDesc}";
 
             var invDesc = inventory.Select(x => $"`{x.GetItem().Name}`").JoinString(", ");
 
-            embed.AddField("Stats", statsDesc);
-            embed.AddField("Weapon", weaponDesc, true);
-            embed.AddField("Armor", armorDesc, true);
-            embed.AddField("Inventory", invDesc == "" ? "*Empty*" : invDesc);
+            embed.AddField("\\📊Stats", statsDesc, buffDesc.Length > 0);
+            if (buffDesc.Length > 0) embed.AddField("Active buffs", buffDesc, true);
+            embed.AddField("\\🗡Weapon", weaponDesc, true);
+            embed.AddField("\\🛡Armor", armorDesc, true);
+            embed.AddField("\\💼Inventory", invDesc == "" ? "*Empty*" : invDesc);
 
             return embed;
         }
@@ -231,7 +233,8 @@ namespace PacManBot.Games.Concrete.Rpg
             var unlocked = Extensions.SkillTypes.Values
                 .ToList().Sorted()
                 .Where(x => x.SkillGet <= spentSkill[x.Type])
-                .Select(x => $"**[{x.Name}]** / {x.ManaCost} mana\nUse with `{channelPrefix}rpg skill {x.Shortcut}`" +
+                .Select(x => $"**[{x.Name}]** / {x.ManaCost}{CustomEmoji.Mana}" +
+                             $"\nUse with `{channelPrefix}rpg skill {x.Shortcut}`" +
                              $"\n*{x.Description}*")
                 .JoinString("\n");
 
@@ -246,26 +249,26 @@ namespace PacManBot.Games.Concrete.Rpg
                 Description = desc.ToString().Truncate(2048),
             };
 
-            embed.AddField(SkillField("⭐", "Power", SkillType.Dmg,
+            embed.AddField(SkillField("Power", SkillType.Dmg,
                 $"Represents your mastery of weapons.\nEvery 2 power increases damage by 1"));
 
-            embed.AddField(SkillField("🛡", "Grit", SkillType.Def,
+            embed.AddField(SkillField("Grit", SkillType.Def,
                 $"Represents your ability to take hits.\nEvery 2 grit increases defense by 1"));
 
-            embed.AddField(SkillField("☄", "Focus", SkillType.Crit,
+            embed.AddField(SkillField("Focus", SkillType.Crit,
                 $"Represents your capacity to target enemy weak points.\nEvery 2 focus increases critical hit chance by 1%"));
 
             return embed;
         }
 
 
-        private EmbedFieldBuilder SkillField(string emoji, string title, SkillType type, string desc)
+        private EmbedFieldBuilder SkillField(string title, SkillType type, string desc)
         {
             var active = Extensions.SkillTypes.Values.Where(x => x.Type == type).ToList().Sorted();
 
             return new EmbedFieldBuilder
             {
-                Name = emoji + title,
+                Name = type.Icon() + title,
                 IsInline = true,
                 Value =
                 $"`[{title[0]}][{ProgressBar(spentSkill[type], SkillMax, active.Select(x => x.SkillGet))}] {spentSkill[type]}/{SkillMax}`" +

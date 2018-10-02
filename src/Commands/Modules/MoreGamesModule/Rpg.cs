@@ -142,12 +142,11 @@ namespace PacManBot.Commands.Modules
             }
 
             game.lastHeal = DateTime.Now;
-            int previousLife = game.player.Life;
-            game.player.Life += (game.player.MaxLife * 0.75).Round();
+            game.player.Life = game.player.MaxLife;
+            game.player.Mana = game.player.MaxMana;
             Games.Save(game);
 
-            if (game.player.Life < game.player.MaxLife) await ReplyAsync($"💟 Healed by {game.player.Life - previousLife}!");
-            else await ReplyAsync($"💟 Healed to full HP!");
+            await ReplyAsync($"💟 Fully restored!");
 
             if (game.State == State.Active && Context.BotCan(ChannelPermission.ManageMessages))
                 await Context.Message.DeleteAsync(DefaultOptions);
@@ -222,18 +221,23 @@ namespace PacManBot.Commands.Modules
                 await ReplyAsync("You haven't unlocked any active skills to use.");
                 return;
             }
+            if (game.player.Mana == 0)
+            {
+                await ReplyAsync("You don't have any MP left! You should heal.");
+                return;
+            }
 
             var skill = unlocked.FirstOrDefault(s => s.Shortcut == args.Trim().ToLower());
 
             if (skill == null)
             {
                 await ReplyAsync("Invalid skill shortcut." +
-                    $"\nYour unlocked skills are: {unlocked.Select(x => $"`{x}`").JoinString(", ")}");
+                    $"\nYour unlocked skills are: {unlocked.Select(x => $"`{x.Shortcut}`").JoinString(", ")}");
                 return;
             }
             if (skill.ManaCost > game.player.Mana)
             {
-                await ReplyAsync($"You only have {game.player.Mana} mana, but {skill.Name} requires {skill.ManaCost}");
+                await ReplyAsync($"{skill.Name} requires {skill.ManaCost} MP, but you only have {game.player.Mana}.");
                 return;
             }
 
@@ -284,7 +288,7 @@ namespace PacManBot.Commands.Modules
             }
 
             SkillType type;
-            
+
             switch (skill)
             {
                 case "p": case "power": case "damage": case "dmg":
@@ -310,10 +314,21 @@ namespace PacManBot.Commands.Modules
                 return;
             }
 
+            int oldValue = game.player.spentSkill[type];
             game.player.spentSkill[type] += amount;
             game.player.skillPoints -= amount;
-            await AutoReactAsync();
             Games.Save(game);
+            await AutoReactAsync();
+
+            var newSkills = PacManBot.Games.Concrete.Rpg.Extensions.SkillTypes.Values
+                .Where(x => x.Type == type && x.SkillGet > oldValue && x.SkillGet <= game.player.spentSkill[x.Type]);
+
+            foreach (var sk in newSkills)
+            {
+                await ReplyAsync("You unlocked a new skill!\n\n" +
+                    $"**[{sk.Name}]** / {sk.ManaCost}{CustomEmoji.Mana}" +
+                    $"\nUse with `{Prefix}rpg skill {sk.Shortcut}`\n*{sk.Description}*");
+            }
         }
 
 
@@ -420,8 +435,9 @@ namespace PacManBot.Commands.Modules
             {
                 Name = "📁 Utilities",
                 Value =
-                $"You will get hurt in battle, and if you die you will lose EXP. To recover HP and Mana, " +
-                $"use **{Prefix}rpg heal** - It can only be used once per battle." +
+                $"You will get hurt in battle, and if you die you will lose EXP. To recover" +
+                $" {CustomEmoji.Life}and {CustomEmoji.Mana}, use **{Prefix}rpg heal**" +
+                $" - It can only be used once per battle." +
                 $"\nYou will unlock equipment as you progress. When you have an item in your inventory," +
                 $" you can equip it using **{Prefix}rpg equip [item]** - You can switch weapons at any time," +
                 $" but you can't switch armors mid-battle.",
@@ -435,7 +451,7 @@ namespace PacManBot.Commands.Modules
                 $"\nThere are three skill lines: __Power__ (attack), __Grit__ (defense) and __Focus__ (crit chance). " +
                 $"\nYou can view your skill lines and active skills using **{Prefix}rpg skills** - " +
                 $"To spend points in a skill line use **{Prefix}rpg spend [skill] [amount]**\n" +
-                $"You can unlock __active skills__, which can be used during battle and cost mana. " +
+                $"You can unlock __active skills__, which can be used during battle and cost {CustomEmoji.Mana}. " +
                 $"To use an active skill, do **{Prefix}rpg skill [shortcut]** with the skill's shortcut.",
             });
 

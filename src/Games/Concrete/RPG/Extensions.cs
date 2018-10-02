@@ -19,6 +19,19 @@ namespace PacManBot.Games.Concrete.Rpg
         public static Skill GetSkill(this string skill) => SkillTypes.GetValueOrDefault(skill);
 
 
+        public static string Icon(this SkillType type)
+        {
+            switch (type)
+            {
+                case SkillType.Dmg: return "⭐";
+                case SkillType.Def: return "🛡";
+                case SkillType.Crit: return "☄";
+                default: return null;
+            }
+        }
+
+
+
         public static IReadOnlyDictionary<string, Item> ItemTypes = GetTypes<Item>();
         public static IReadOnlyDictionary<string, Equipment> EquipTypes = GetTypes<Equipment>();
         public static IReadOnlyDictionary<string, Weapon> WeaponTypes = GetTypes<Weapon>();

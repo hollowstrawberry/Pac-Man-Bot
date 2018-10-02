@@ -5,6 +5,6 @@ namespace PacManBot.Games.Concrete.Rpg.Buffs
     {
         public override string Name => "Wet";
         public override string Icon => "💦";
-        public override string Description => "Your clothes got a little wet. No effects.";
+        public override string Description => "Annoying. No effects.";
     }
 }

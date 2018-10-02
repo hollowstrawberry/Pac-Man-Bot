@@ -8,11 +8,11 @@ namespace PacManBot.Games.Concrete.Rpg.Skills
     public class WideAssault : Skill
     {
         public override string Name => "Wide Assault";
-        public override string Description => "Damages all enemies for 75% damage.";
+        public override string Description => "Hits all enemies for 75% damage.";
         public override string Shortcut => "wide";
-        public override int ManaCost => 2;
+        public override int ManaCost => 1;
         public override SkillType Type => SkillType.Dmg;
-        public override int SkillGet => 10;
+        public override int SkillGet => 5;
 
         public override string Effect(RpgGame game)
         {
@@ -23,7 +23,7 @@ namespace PacManBot.Games.Concrete.Rpg.Skills
             {
                 bool crit = Bot.Random.NextDouble() < game.player.CritChance;
                 int dealt = enemy.Hit(Entity.AttackFormula(dmg, crit), game.player.DamageType, game.player.MagicType);
-                hits.Add($"{enemy} for {dealt} {"(!)".If(crit)}");
+                hits.Add($"{enemy} for {dealt}{"(!)".If(crit)}");
             }
 
             return $"{game.player} hits {hits.JoinString(", ")}!";

@@ -43,7 +43,7 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
         public override int ExpYield => 4;
         public override int BaseDamage => 8;
         public override int BaseDefense => 3;
-        public override double BaseCritChance => 0.16;
+        public override double BaseCritChance => 0.1;
 
         public override void SetStats()
         {
@@ -61,13 +61,13 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
         public override string Description => "Time to turn up the heat.";
         public override int Level => 8;
         public override int ExpYield => 6;
-        public override int BaseDamage => 14;
-        public override int BaseDefense => 2;
+        public override int BaseDamage => 11;
+        public override int BaseDefense => 1;
         public override double BaseCritChance => 0.05;
 
         public override void SetStats()
         {
-            MaxLife = 32;
+            MaxLife = 36;
             DamageType = DamageType.Magic;
             MagicType = MagicType.Fire;
             MagicResistance[MagicType.Fire] = 0.5;
@@ -93,9 +93,9 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
         public override string Description => "It's so fast it might strike twice.";
         public override int Level => 10;
         public override int ExpYield => 8;
-        public override int BaseDamage => 12;
+        public override int BaseDamage => 10;
         public override int BaseDefense => 2;
-        public override double BaseCritChance => 0.02;
+        public override double BaseCritChance => 0.01;
 
         public override void SetStats()
         {

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Discord;
+using PacManBot.Constants;
 using PacManBot.Extensions;
 
 namespace PacManBot.Games.Concrete.Rpg
@@ -71,7 +72,7 @@ namespace PacManBot.Games.Concrete.Rpg
             var desc = new StringBuilder();
 
             desc.AppendLine($"**Level {Level}**");
-            desc.AppendLine($"`{$"{Life}/".If(Life < MaxLife)}{MaxLife}` HP, `{Defense}` defense");
+            desc.AppendLine($"`{$"{Life}/".If(Life < MaxLife)}{MaxLife}`{CustomEmoji.Life} `{Defense}` defense");
             desc.AppendLine($"`{Damage}` {DamageType}{$"/{MagicType}".If(MagicType != MagicType.None)} damage");
             desc.AppendLine($"`{(CritChance*100).Round()}%` critical hit chance");
 
