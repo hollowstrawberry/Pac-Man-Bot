@@ -29,7 +29,7 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
         public override string Description => "A skeleton's wacky brother.";
         public override int Level => 8;
         public override int ExpYield => 7;
-        public override int BaseDamage => 10;
+        public override int BaseDamage => 12;
         public override int BaseDefense => 2;
         public override double BaseCritChance => 0.2;
 
@@ -48,7 +48,7 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
         public override string Description => "Be careful, it's spooky!";
         public override int Level => 11;
         public override int ExpYield => 7;
-        public override int BaseDamage => 17;
+        public override int BaseDamage => 18;
         public override int BaseDefense => -2;
         public override double BaseCritChance => 0.1;
 
@@ -68,7 +68,7 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
         public override int Level => 15;
         public override int ExpYield => 9;
         public override int BaseDamage => 14;
-        public override int BaseDefense => 2;
+        public override int BaseDefense => 1;
         public override double BaseCritChance => 0.02;
 
         [DataMember] private bool milk = false;

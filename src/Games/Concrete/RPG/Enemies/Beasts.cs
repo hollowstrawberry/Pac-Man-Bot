@@ -84,7 +84,7 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
         public override string Description => "Grrrr.";
         public override int Level => 9;
         public override int ExpYield => 7;
-        public override int BaseDamage => 13;
+        public override int BaseDamage => 14;
         public override int BaseDefense => 4;
         public override double BaseCritChance => 0.01;
 
@@ -103,7 +103,7 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
         public override string Description => "Its spear can expose your weak points.";
         public override int Level => 12;
         public override int ExpYield => 8;
-        public override int BaseDamage => 12;
+        public override int BaseDamage => 14;
         public override int BaseDefense => 3;
         public override double BaseCritChance => 0.05;
 

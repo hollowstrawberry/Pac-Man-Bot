@@ -85,9 +85,9 @@ namespace PacManBot.Games.Concrete.Rpg
         {
             MaxLife = 45 + 5 * Level;
             MaxMana = 1 + Level / 5;
-            Damage = Level / 4 + spentSkill[SkillType.Dmg] / 2;
-            Defense = Level / 6 + spentSkill[SkillType.Def] / 2;
-            CritChance = 0.01 * (Level / 7 + spentSkill[SkillType.Crit] / 2);
+            Damage = Level / 6 + spentSkill[SkillType.Dmg] / 2;
+            Defense = Level / 8 + spentSkill[SkillType.Def] / 2;
+            CritChance = 0.01 * (Level / 9 + spentSkill[SkillType.Crit] / 2);
             DamageMult = 1;
             DefenseMult = 1;
             DamageBoost = new Dictionary<DamageType, int>(4);
@@ -152,10 +152,10 @@ namespace PacManBot.Games.Concrete.Rpg
             Life = MaxLife;
             Mana = MaxMana;
             boosts.Add("+5 HP");
-            if (Level % 4 == 0) boosts.Add("+1 damage");
             if (Level % 5 == 0) boosts.Add("+1 mana");
-            if (Level % 6 == 0) boosts.Add("+1 defense");
-            if (Level % 7 == 0) boosts.Add("+1% crit chance");
+            if (Level % 6 == 0) boosts.Add("+1 damage");
+            if (Level % 8 == 0) boosts.Add("+1 defense");
+            if (Level % 9 == 0) boosts.Add("+1% crit chance");
 
             CalculateStats();
 

@@ -41,13 +41,13 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
         public override string Description => "Pretty tough even for its small size.";
         public override int Level => 6;
         public override int ExpYield => 4;
-        public override int BaseDamage => 7;
+        public override int BaseDamage => 8;
         public override int BaseDefense => 3;
-        public override double BaseCritChance => 0.05;
+        public override double BaseCritChance => 0.16;
 
         public override void SetStats()
         {
-            MaxLife = 50;
+            MaxLife = 40;
             DamageType = DamageType.Blunt;
             MagicType = MagicType.Earth;
             MagicResistance[MagicType.Earth] = 0.5;
@@ -61,7 +61,7 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
         public override string Description => "Time to turn up the heat.";
         public override int Level => 8;
         public override int ExpYield => 6;
-        public override int BaseDamage => 12;
+        public override int BaseDamage => 14;
         public override int BaseDefense => 2;
         public override double BaseCritChance => 0.05;
 
@@ -93,7 +93,7 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
         public override string Description => "It's so fast it might strike twice.";
         public override int Level => 10;
         public override int ExpYield => 8;
-        public override int BaseDamage => 11;
+        public override int BaseDamage => 12;
         public override int BaseDefense => 2;
         public override double BaseCritChance => 0.02;
 
