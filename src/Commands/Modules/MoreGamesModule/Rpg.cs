@@ -145,8 +145,12 @@ namespace PacManBot.Commands.Modules
             int previousLife = game.player.Life;
             game.player.Life += (game.player.MaxLife * 0.75).Round();
             Games.Save(game);
-            await ReplyAsync($"💟 Healed by {game.player.Life - previousLife}!");
-            if (Context.BotCan(ChannelPermission.ManageMessages)) await Context.Message.DeleteAsync(DefaultOptions);
+
+            if (game.player.Life < game.player.MaxLife) await ReplyAsync($"💟 Healed by {game.player.Life - previousLife}!");
+            else await ReplyAsync($"💟 Healed to full HP!");
+
+            if (game.State == State.Active && Context.BotCan(ChannelPermission.ManageMessages))
+                await Context.Message.DeleteAsync(DefaultOptions);
         }
 
 
@@ -159,14 +163,14 @@ namespace PacManBot.Commands.Modules
                 return;
             }
 
-            string bestMatch = "";
+            Equipment bestMatch = null;
             double bestPercent = 0;
-            foreach (var name in game.player.inventory.Select(x => x.GetWeapon().Name))
+            foreach (var item in game.player.inventory.Select(x => x.GetEquip()))
             {
-                double sim = args.Similarity(name, false);
+                double sim = args.Similarity(item.Name, false);
                 if (sim > bestPercent)
                 {
-                    bestMatch = name;
+                    bestMatch = item;
                     bestPercent = sim;
                 }
                 if (sim == 1) break;
@@ -175,16 +179,18 @@ namespace PacManBot.Commands.Modules
 
             if (bestPercent > 0.69)
             {
-                if (bestMatch.GetEquip() is Armor && game.State == State.Active)
+                if (bestMatch is Armor && game.State == State.Active)
                 {
                     await ReplyAsync("You can change weapons mid-battle, but you can't change armor mid-battle.");
                     return;
                 }
 
-                game.player.EquipItem(bestMatch);
+                game.player.EquipItem(bestMatch.Key);
                 Games.Save(game);
                 await ReplyAsync($"⚔ Equipped `{bestMatch}`.");
-                if (Context.BotCan(ChannelPermission.ManageMessages)) await Context.Message.DeleteAsync(DefaultOptions);
+
+                if (game.State == State.Active && Context.BotCan(ChannelPermission.ManageMessages))
+                    await Context.Message.DeleteAsync(DefaultOptions);
             }
             else
             {
@@ -254,7 +260,7 @@ namespace PacManBot.Commands.Modules
         }
 
 
-        [RpgCommand("spend")]
+        [RpgCommand("spend", "invest")]
         public async Task RpgSendSkills(RpgGame game, string args)
         {
             if (args == "")
@@ -417,7 +423,8 @@ namespace PacManBot.Commands.Modules
                 $"You will get hurt in battle, and if you die you will lose EXP. To recover HP and Mana, " +
                 $"use **{Prefix}rpg heal** - It can only be used once per battle." +
                 $"\nYou will unlock equipment as you progress. When you have an item in your inventory," +
-                $" you can equip it using **{Prefix}rpg equip [item]**",
+                $" you can equip it using **{Prefix}rpg equip [item]** - You can switch weapons at any time," +
+                $" but you can't switch armors mid-battle.",
             });
 
             embed.AddField(new EmbedFieldBuilder

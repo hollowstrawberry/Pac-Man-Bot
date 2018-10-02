@@ -50,7 +50,7 @@ namespace PacManBot.Games.Concrete.Rpg.Weapons
     {
         public override string Name => "Mace";
         public override string Description => "A slow beginner weapon that deals decent damage.";
-        public override int Damage => 5;
+        public override int Damage => 6;
         public override double CritChance => 0.03f;
         public override DamageType Type => DamageType.Blunt;
 
@@ -62,7 +62,7 @@ namespace PacManBot.Games.Concrete.Rpg.Weapons
     {
         public override string Name => "Fire Scroll";
         public override string Description => "A beginner spell that may cause an extra burn.";
-        public override int Damage => 4;
+        public override int Damage => 5;
         public override double CritChance => 0.01f;
         public override DamageType Type => DamageType.Magic;
         public override MagicType Magic => MagicType.Fire;

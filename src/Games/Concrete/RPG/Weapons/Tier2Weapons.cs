@@ -6,7 +6,7 @@ namespace PacManBot.Games.Concrete.Rpg.Weapons
     {
         public override string Name => "Bow";
         public override string Description => "Simple and effective.";
-        public override int Damage => 8;
+        public override int Damage => 10;
         public override double CritChance => 0.1f;
         public override DamageType Type => DamageType.Pierce;
 
@@ -18,7 +18,7 @@ namespace PacManBot.Games.Concrete.Rpg.Weapons
     {
         public override string Name => "Swordwood";
         public override string Description => "Better than a wooden sword.";
-        public override int Damage => 10;
+        public override int Damage => 12;
         public override double CritChance => 0.01f;
         public override DamageType Type => DamageType.Cutting;
         public override MagicType Magic => MagicType.Earth;
@@ -31,7 +31,7 @@ namespace PacManBot.Games.Concrete.Rpg.Weapons
     {
         public override string Name => "Spiky Shield";
         public override string Description => "Also raises defense by 2.";
-        public override int Damage => 7;
+        public override int Damage => 9;
         public override double CritChance => 0.02f;
         public override DamageType Type => DamageType.Blunt;
 
@@ -49,7 +49,7 @@ namespace PacManBot.Games.Concrete.Rpg.Weapons
     {
         public override string Name => "Enchantio";
         public override string Description => "An air spell grimoire.\nMight reduce enemy defense.";
-        public override int Damage => 7;
+        public override int Damage => 9;
         public override double CritChance => 0.05f;
         public override DamageType Type => DamageType.Magic;
         public override MagicType Magic => MagicType.Air;

@@ -64,19 +64,19 @@ namespace PacManBot.Games.Concrete.Rpg
         public Player(string name) : base()
         {
             SetName(name);
-            CalculateStats();
-            Life = MaxLife;
-            Mana = MaxMana;
 
             inventory = new List<string>
             {
                 nameof(Weapons.Stick),
             };
-
             spentSkill = new Dictionary<SkillType, int>(3)
             {
                 { SkillType.Dmg, 0 }, { SkillType.Def, 0 }, { SkillType.Crit, 0 },
             };
+
+            CalculateStats();
+            Life = MaxLife;
+            Mana = MaxMana;
         }
 
 
@@ -85,9 +85,9 @@ namespace PacManBot.Games.Concrete.Rpg
         {
             MaxLife = 45 + 5 * Level;
             MaxMana = 1 + Level / 5;
-            Damage = spentSkill[SkillType.Dmg] / 2;
-            Defense = spentSkill[SkillType.Def] / 2;
-            CritChance = 0.01 * (spentSkill[SkillType.Crit] / 2);
+            Damage = Level / 4 + spentSkill[SkillType.Dmg] / 2;
+            Defense = Level / 6 + spentSkill[SkillType.Def] / 2;
+            CritChance = 0.01 * (Level / 7 + spentSkill[SkillType.Crit] / 2);
             DamageMult = 1;
             DefenseMult = 1;
             DamageBoost = new Dictionary<DamageType, int>(4);
@@ -152,7 +152,12 @@ namespace PacManBot.Games.Concrete.Rpg
             Life = MaxLife;
             Mana = MaxMana;
             boosts.Add("+5 HP");
+            if (Level % 4 == 0) boosts.Add("+1 damage");
             if (Level % 5 == 0) boosts.Add("+1 mana");
+            if (Level % 6 == 0) boosts.Add("+1 defense");
+            if (Level % 7 == 0) boosts.Add("+1% crit chance");
+
+            CalculateStats();
 
             int sp = Level % 100 == 0 ? 10
                    : Level %  10 == 0 ? 3
@@ -185,8 +190,7 @@ namespace PacManBot.Games.Concrete.Rpg
                 Color = color,
                 Description =
                 $"Do **{channelPrefix}rpg skills** for skills." +
-                $"\n**You have unspent skill points!**".If(skillPoints > 0) +
-                "\nᅠ",
+                $"\n**You have unspent skill points!**\nᅠ".If(skillPoints > 0),
             };
 
             string statsDesc = $"**Level {Level}**  (`{experience}/{NextLevelExp} EXP`)" +
@@ -204,9 +208,9 @@ namespace PacManBot.Games.Concrete.Rpg
 
             var invDesc = inventory.Select(x => $"`{x.GetItem().Name}`").JoinString(", ");
 
-            embed.AddField("Stats", statsDesc + "\nᅠ");
-            embed.AddField("Weapon", weaponDesc + "\nᅠ", true);
-            embed.AddField("Armor", armorDesc + "\nᅠ", true);
+            embed.AddField("Stats", statsDesc);
+            embed.AddField("Weapon", weaponDesc, true);
+            embed.AddField("Armor", armorDesc, true);
             embed.AddField("Inventory", invDesc == "" ? "*Empty*" : invDesc);
 
             return embed;
@@ -216,11 +220,6 @@ namespace PacManBot.Games.Concrete.Rpg
         /// <summary>Obtain a Discord embed displaying this person's skills.</summary>
         public EmbedBuilder Skills(string channelPrefix = "")
         {
-            var allSkills = Extensions.SkillTypes.Values.ToList().Sorted();
-            var powerSkills = allSkills.Where(s => s.Type == SkillType.Dmg).ToList();
-            var gritSkills = allSkills.Where(s => s.Type == SkillType.Def).ToList();
-            var focusSkills = allSkills.Where(s => s.Type == SkillType.Crit).ToList();
-
             var desc = new StringBuilder();
 
             if (skillPoints > 0)
@@ -229,14 +228,15 @@ namespace PacManBot.Games.Concrete.Rpg
                                 $"\nUse the command **{channelPrefix}rpg spend [skill] [amount]** to spend them.\n");
             }
 
-            var unlocked = allSkills
+            var unlocked = Extensions.SkillTypes.Values
+                .ToList().Sorted()
                 .Where(x => x.SkillGet <= spentSkill[x.Type])
                 .Select(x => $"**[{x.Name}]** / {x.ManaCost} mana\nUse with `{channelPrefix}rpg skill {x.Shortcut}`" +
                              $"\n*{x.Description}*")
                 .JoinString("\n");
 
             desc.AppendLine("__**Active Skills:**__");
-            desc.AppendLine(unlocked.Length == 0 ? "*None unlocked*" : "\n" + unlocked);
+            desc.AppendLine(unlocked.Length == 0 ? "*None unlocked*" : $"{unlocked}\nᅠ");
 
 
             var embed = new EmbedBuilder
@@ -246,29 +246,29 @@ namespace PacManBot.Games.Concrete.Rpg
                 Description = desc.ToString().Truncate(2048),
             };
 
-            embed.AddField(SkillField("⭐Power", SkillType.Dmg,
+            embed.AddField(SkillField("⭐", "Power", SkillType.Dmg,
                 $"Represents your mastery of weapons.\nEvery 2 power increases damage by 1"));
 
-            embed.AddField(SkillField("🛡Grit", SkillType.Def,
+            embed.AddField(SkillField("🛡", "Grit", SkillType.Def,
                 $"Represents your ability to take hits.\nEvery 2 grit increases defense by 1"));
 
-            embed.AddField(SkillField("☄Focus", SkillType.Crit,
+            embed.AddField(SkillField("☄", "Focus", SkillType.Crit,
                 $"Represents your capacity to target enemy weak points.\nEvery 2 focus increases critical hit chance by 1%"));
 
             return embed;
         }
 
 
-        private EmbedFieldBuilder SkillField(string title, SkillType type, string desc)
+        private EmbedFieldBuilder SkillField(string emoji, string title, SkillType type, string desc)
         {
-            var active = Extensions.SkillTypes.Values.Where(x => x.Type == type);
+            var active = Extensions.SkillTypes.Values.Where(x => x.Type == type).ToList().Sorted();
 
             return new EmbedFieldBuilder
             {
-                Name = title,
+                Name = emoji + title,
                 IsInline = true,
                 Value =
-                $"`[{title[1]}][{ProgressBar(spentSkill[type], SkillMax, active.Select(x => x.SkillGet))}] {spentSkill[type]}/{SkillMax}`" +
+                $"`[{title[0]}][{ProgressBar(spentSkill[type], SkillMax, active.Select(x => x.SkillGet))}] {spentSkill[type]}/{SkillMax}`" +
                 $"\n{desc}\n__Active skills:__\n" +
                 active.Select(x => x.SkillGet <= spentSkill[type] ? x.Name : $"`{x.SkillGet}: {x.Name}`").JoinString("\n")
                 + "\nᅠ".If(type < EnumTraits<SkillType>.MaxValue), // padding

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
+﻿
 namespace PacManBot.Games.Concrete.Rpg.Buffs
 {
     public class Vulnerable : Buff

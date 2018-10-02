@@ -13,8 +13,8 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
         public override string Description => "A little wet, but mostly harmless.";
         public override int Level => 5;
         public override int ExpYield => 4;
-        public override int BaseDamage => 5;
-        public override int BaseDefense => 2;
+        public override int BaseDamage => 6;
+        public override int BaseDefense => 1;
         public override double BaseCritChance => 0.07;
 
         public override void SetStats()
@@ -41,8 +41,8 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
         public override string Description => "Pretty tough even for its small size.";
         public override int Level => 6;
         public override int ExpYield => 4;
-        public override int BaseDamage => 5;
-        public override int BaseDefense => 4;
+        public override int BaseDamage => 7;
+        public override int BaseDefense => 3;
         public override double BaseCritChance => 0.05;
 
         public override void SetStats()
@@ -61,13 +61,13 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
         public override string Description => "Time to turn up the heat.";
         public override int Level => 8;
         public override int ExpYield => 6;
-        public override int BaseDamage => 9;
-        public override int BaseDefense => 4;
+        public override int BaseDamage => 12;
+        public override int BaseDefense => 2;
         public override double BaseCritChance => 0.05;
 
         public override void SetStats()
         {
-            MaxLife = 30;
+            MaxLife = 32;
             DamageType = DamageType.Magic;
             MagicType = MagicType.Fire;
             MagicResistance[MagicType.Fire] = 0.5;
@@ -93,7 +93,7 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
         public override string Description => "It's so fast it might strike twice.";
         public override int Level => 10;
         public override int ExpYield => 8;
-        public override int BaseDamage => 12;
+        public override int BaseDamage => 11;
         public override int BaseDefense => 2;
         public override double BaseCritChance => 0.02;
 
@@ -164,7 +164,7 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
         public override string Description => "Quite a tree-hugger, this one.";
         public override int Level => 25;
         public override int ExpYield => 14;
-        public override int BaseDamage => 25;
+        public override int BaseDamage => 24;
         public override int BaseDefense => 6;
         public override double BaseCritChance => 0.05;
 
@@ -180,8 +180,9 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
         public override string Attack(Entity target)
         {
             int heal = Bot.Random.Next(3, 9);
+            string msg = Life == MaxLife ? "" : $"\n{Name}'s roots recover {heal} HP.";
             Life += heal;
-            return base.Attack(target) + $"\n{Name}'s roots recover {heal} HP.";
+            return base.Attack(target) + msg;
         }
     }
 
@@ -192,7 +193,7 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
         public override string Description => "The electricity is overwhelming.";
         public override int Level => 28;
         public override int ExpYield => 16;
-        public override int BaseDamage => 15;
+        public override int BaseDamage => 16;
         public override int BaseDefense => 7;
         public override double BaseCritChance => 0.2;
 
@@ -229,7 +230,7 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
         public override string Description => "Hotter than my new mixtape.";
         public override int Level => 32;
         public override int ExpYield => 18;
-        public override int BaseDamage => 40;
+        public override int BaseDamage => 38;
         public override int BaseDefense => 12;
         public override double BaseCritChance => 0.05;
 
@@ -264,7 +265,7 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
     public class AllElemental1 : Enemy
     {
         public override string Name => "Elemental Elemental";
-        public override string Description => "Master of the element..als.";
+        public override string Description => "Master of the element...als.";
         public override int Level => 40;
         public override int ExpYield => 25;
         public override int BaseDamage => 132;

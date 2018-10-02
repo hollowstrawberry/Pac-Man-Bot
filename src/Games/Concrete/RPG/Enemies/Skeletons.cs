@@ -29,7 +29,7 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
         public override string Description => "A skeleton's wacky brother.";
         public override int Level => 8;
         public override int ExpYield => 7;
-        public override int BaseDamage => 8;
+        public override int BaseDamage => 10;
         public override int BaseDefense => 2;
         public override double BaseCritChance => 0.2;
 
@@ -48,13 +48,13 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
         public override string Description => "Be careful, it's spooky!";
         public override int Level => 11;
         public override int ExpYield => 7;
-        public override int BaseDamage => 16;
+        public override int BaseDamage => 17;
         public override int BaseDefense => -2;
         public override double BaseCritChance => 0.1;
 
         public override void SetStats()
         {
-            MaxLife = 37;
+            MaxLife = 33;
             DamageType = DamageType.Pierce;
             DamageResistance[DamageType.Pierce] = -0.2;
         }
@@ -67,7 +67,7 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
         public override string Description => "Milk makes your bones stronger!";
         public override int Level => 15;
         public override int ExpYield => 9;
-        public override int BaseDamage => 12;
+        public override int BaseDamage => 14;
         public override int BaseDefense => 2;
         public override double BaseCritChance => 0.02;
 
@@ -87,10 +87,14 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
             {
                 milk = true;
                 msg = $"{Name} drank some milk and became stronger!\n";
-                Damage += 4;
-                Defense += 4;
                 Life += MaxLife / 2;
                 MaxLife += MaxLife / 2;
+            }
+
+            if (milk)
+            {
+                Damage += 4;
+                Defense += 4;
             }
 
             return msg + base.Attack(target);
@@ -104,7 +108,7 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
         public override string Description => "He's actually just a count, but don't tell him.";
         public override int Level => 20;
         public override int ExpYield => 10;
-        public override int BaseDamage => 24;
+        public override int BaseDamage => 26;
         public override int BaseDefense => 2;
         public override double BaseCritChance => 0.1;
 
@@ -150,7 +154,7 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
 
         public override string Attack(Entity target)
         {
-            Damage = Bot.Random.Next(18, 58);
+            Damage = Bot.Random.Next(15, 55);
             string msg = base.Attack(target);
             Damage = BaseDamage;
             return msg;
