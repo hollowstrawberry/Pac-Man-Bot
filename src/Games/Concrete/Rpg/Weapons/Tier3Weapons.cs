@@ -70,7 +70,7 @@ namespace PacManBot.Games.Concrete.Rpg.Weapons
             if (Bot.Random.OneIn(10))
             {
                 var buff = Bot.Random.Choose(new[] { nameof(Buffs.CritBuff), nameof(Buffs.Fury) });
-                if (!wielder.Buffs.ContainsKey(buff))
+                if (!wielder.HasBuff(buff))
                 {
                     active = true;
                     wielder.AddBuff(buff, 2);
@@ -95,7 +95,7 @@ namespace PacManBot.Games.Concrete.Rpg.Weapons
 
         public override string AttackEffects(Player wielder, Entity target)
         {
-            if (Bot.Random.OneIn(3) && !target.Buffs.ContainsKey(nameof(Buffs.Blinded)))
+            if (Bot.Random.OneIn(3) && !target.HasBuff(nameof(Buffs.Blinded)))
             {
                 target.AddBuff(nameof(Buffs.Blinded), 5);
                 return $"{target} is blinded by awesomeness!";

@@ -199,8 +199,7 @@ namespace PacManBot.Games.Concrete.Rpg
                                $"\nStatus: `{Life}/{MaxLife}`{CustomEmoji.Life}`{Mana}/{MaxMana}`{CustomEmoji.Mana}" +
                                $"\nDefense: `{Defense}`";
 
-            string buffDesc = Buffs.Keys.Select(b => b.GetBuff())
-                .Select(b => $"`{Buffs[b.Key]}`{b.Icon}{b.Name}: {b.Description}").JoinString("\n");
+            string buffDesc = Buffs.Select(b => $"`{b.timeLeft}`{b.Icon}{b.Name}: {b.Description}").JoinString("\n");
 
             var wp = weapon.GetWeapon();
             string weaponDesc = $"**[{wp.Name}]**\n*\"{wp.Description}\"*"

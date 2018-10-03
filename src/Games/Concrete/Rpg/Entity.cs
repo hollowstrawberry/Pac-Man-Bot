@@ -31,7 +31,7 @@ namespace PacManBot.Games.Concrete.Rpg
         [DataMember] public DamageType DamageType { get; set; }
         [DataMember] public MagicType MagicType { get; set; }
 
-        [DataMember] public Dictionary<string, int> Buffs { get; }
+        [DataMember] public List<Buff> Buffs { get; }
         [DataMember] public Dictionary<DamageType, int> DamageBoost { get; set; }
         [DataMember] public Dictionary<MagicType, int> MagicBoost { get; set; }
         [DataMember] public Dictionary<DamageType, double> DamageResistance { get; set; }
@@ -43,7 +43,7 @@ namespace PacManBot.Games.Concrete.Rpg
 
         protected Entity()
         {
-            Buffs = new Dictionary<string, int>(5);
+            Buffs = new List<Buff>(5);
             DamageBoost = new Dictionary<DamageType, int>(4);
             MagicBoost = new Dictionary<MagicType, int>(4);
             DamageResistance = new Dictionary<DamageType, double>(4);
@@ -56,7 +56,7 @@ namespace PacManBot.Games.Concrete.Rpg
         {
             foreach (var buff in Buffs)
             {
-                buff.Key.GetBuff().BuffEffects(this);
+                buff.BuffEffects(this);
             }
 
             if (DamageBoost.TryGetValue(DamageType, out var dmgB)) Damage += dmgB;
@@ -73,11 +73,10 @@ namespace PacManBot.Games.Concrete.Rpg
         {
             var msg = new StringBuilder();
 
-            foreach (var (buff, duration) in Buffs.Select(x => (x.Key, x.Value)).ToArray())
+            foreach (var buff in Buffs.ToList())
             {
-                msg.AppendLine(buff.GetBuff().TickEffects(this));
-                if (duration == 1) RemoveBuff(buff);
-                else Buffs[buff] -= 1;
+                msg.AppendLine(buff.TickEffects(this));
+                if (--buff.timeLeft == 0) Buffs.Remove(buff);
             }
 
             return msg.ToString();
@@ -114,19 +113,25 @@ namespace PacManBot.Games.Concrete.Rpg
             return baseDmg <= 0 ? 0 : (baseDmg * (crit ? 2 : 1) * Bot.Random.NextDouble(0.85, 1.15)).Ceiling();
         }
 
-        /// <summary>Safely adds a buff to this entity.</summary>
-        public void AddBuff(string buff, int duration)
+
+        /// <summary>Returns whether this entity contains a buff of the given type.</summary>
+        public bool HasBuff(string buff)
         {
-            Buffs[buff] = duration;
+            return Buffs.Any(x => x.Key == buff);
+        }
+
+        /// <summary>Safely adds a buff to this entity.</summary>
+        public void AddBuff(Buff buff, int duration)
+        {
+            Buffs.Add(buff);
             UpdateStats();
         }
 
-
-        /// <summary>Safely removes a buff from this entity.</summary>
-        public void RemoveBuff(string buff)
+        /// <summary>Safely adds a buff to this entity.</summary>
+        public void AddBuff(string buff, int duration)
         {
-            if (!Buffs.ContainsKey(buff)) return;
-            Buffs.Remove(buff);
+            Buffs.Add(buff.GetBuff().MakeNew(duration));
+            UpdateStats();
         }
     }
 }

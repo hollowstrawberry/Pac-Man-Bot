@@ -156,7 +156,7 @@ namespace PacManBot.Games.Concrete.Rpg
                 {
                     embed.AddField($"{CustomEmoji.NumberCircle[i + 1]}" + en.Name,
                         $"{en.Life}/{en.MaxLife}{CustomEmoji.Life}" + 
-                        en.Buffs.Select(x => x.Key.GetBuff().Icon).JoinString(" "), true);
+                        en.Buffs.Select(b => b.Icon).JoinString(" "), true);
                     i++;
                 }
                 else

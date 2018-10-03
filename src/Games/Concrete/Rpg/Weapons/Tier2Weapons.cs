@@ -58,7 +58,7 @@ namespace PacManBot.Games.Concrete.Rpg.Weapons
 
         public override string AttackEffects(Player wielder, Entity target)
         {
-            if (Bot.Random.OneIn(3) && !target.Buffs.ContainsKey(nameof(Buffs.Vulnerable)))
+            if (Bot.Random.OneIn(3) && !target.HasBuff(nameof(Buffs.Vulnerable)))
             {
                 target.AddBuff(nameof(Buffs.Vulnerable), 3);
                 return $"{target} is now vulnerable!";

@@ -37,8 +37,8 @@ namespace PacManBot.Commands.Modules
             .ToList();
 
 
-        [Command("rpg"), Remarks("Play a generic RPG"), HideHelp]
-        [Summary("Play an RPG in Discord. This is a beta test." +
+        [Command("rpg"), Remarks("Play an RPG game"), HideHelp]
+        [Summary("Play Generic RPG, a new game where you beat monsters and level up." +
             "\n\n**__Commands:__**" +
             "\n**{prefix}rpg manual** - See detailed instructions for the game." +
             "\n\n**{prefix}rpg** - Start a new battle or resend the current battle." +

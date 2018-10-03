@@ -28,7 +28,7 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
 
         public override string Attack(Entity target)
         {
-            string msg = target.Buffs.ContainsKey(nameof(Wet)) ? "" : $"{target} got wet.";
+            string msg = target.HasBuff(nameof(Wet)) ? "" : $"{target} got wet.";
             target.AddBuff(nameof(Wet), 5);
             return base.Attack(target) + msg;
         }
@@ -77,7 +77,7 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
         public override string Attack(Entity target)
         {
             string msg = "";
-            if (!target.Buffs.ContainsKey(nameof(Burn)))
+            if (!target.HasBuff(nameof(Burn)))
             {
                 msg = $"{target} got burned!";
                 target.AddBuff(nameof(Burn), 4);
@@ -270,7 +270,7 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
         public override int ExpYield => 25;
         public override int BaseDamage => 160;
         public override int BaseDefense => 15;
-        public override double BaseCritChance => 0;
+        public override double BaseCritChance => 0.01;
 
         public override void SetStats()
         {
@@ -281,11 +281,12 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
 
         public override string Attack(Entity target)
         {
-            var attacks = new List<int>(4);
+            var attacks = new List<string>(4);
             foreach (var element in EnumTraits<MagicType>.Values.Skip(1))
             {
-                double dmg = (Damage / 4.0) * Bot.Random.NextDouble(0.85, 1.15);
-                attacks.Add(target.Hit(dmg.Round(), DamageType, element));
+                bool crit = Bot.Random.NextDouble() < CritChance;
+                int dmg = AttackFormula(Damage / 4, crit);
+                attacks.Add($"{target.Hit(dmg, DamageType, element)}{"(!)".If(crit)}");
             }
 
             return $"{Name} attacks {target} with all four elements! {attacks.JoinString(", ")}.";
