@@ -41,7 +41,7 @@ namespace PacManBot.Commands.Modules
         [Summary("Play an RPG in Discord. This is a beta test." +
             "\n\n**__Commands:__**" +
             "\n**{prefix}rpg manual** - See detailed instructions for the game." +
-            "\n\n**{prefix}rpg battle** - Start a new battle or resend the current battle." +
+            "\n\n**{prefix}rpg** - Start a new battle or resend the current battle." +
             "\n**{prefix}rpg profile** - Check a summary of your hero." +
             "\n**{prefix}rpg skills** - Check your hero's skills lines and active skills." +
             "\n**{prefix}rpg equip [item]** - Equip an item in your inventory." +
@@ -86,26 +86,12 @@ namespace PacManBot.Commands.Modules
 
 
 
-        [RpgCommand("", "profile", "stats", "inventory")]
-        public async Task RpgProfile(RpgGame game, string args)
-        {
-            await ReplyAsync(game.player.Profile(Prefix));
-        }
-
-
-        [RpgCommand("skills", "spells")]
-        public async Task RpgSkills(RpgGame game, string args)
-        {
-            await ReplyAsync(game.player.Skills(Prefix));
-        }
-
-
-        [RpgCommand("battle", "fight", "b")]
+        [RpgCommand("", "battle", "fight", "b", "rpg")]
         public async Task RpgStartBattle(RpgGame game, string args)
         {
             if (game.State != State.Active)
             {
-                var timeLeft = TimeSpan.FromMinutes(0.5) - (DateTime.Now - game.lastBattle);
+                var timeLeft = TimeSpan.FromSeconds(30) - (DateTime.Now - game.lastBattle);
                 if (timeLeft > TimeSpan.Zero && !Config.debugRpg.Contains(Context.User.Id))
                 {
                     await ReplyAsync($"{CustomEmoji.Cross} You may battle again in {timeLeft.Humanized(empty: "1 second")}");
@@ -133,6 +119,74 @@ namespace PacManBot.Commands.Modules
         }
 
 
+        public async Task RpgUseActiveSkill(RpgGame game, Skill skill)
+        {
+            if (game.State != State.Active)
+            {
+                await ReplyAsync("You can only use an active skill during battle!");
+                return;
+            }
+
+            var unlocked = game.player.UnlockedSkills;
+
+            if (!game.player.UnlockedSkills.Contains(skill))
+            {
+                await ReplyAsync($"You haven't unlocked the `{skill.Shortcut}` active skill.");
+                return;
+            }
+            if (game.player.Mana == 0)
+            {
+                await ReplyAsync($"You don't have any {CustomEmoji.Mana}left! You should heal.");
+                return;
+            }
+            if (skill.ManaCost > game.player.Mana)
+            {
+                await ReplyAsync($"{skill.Name} requires {skill.ManaCost}{CustomEmoji.Mana}" +
+                    $"but you only have {game.player.Mana}{CustomEmoji.Mana}");
+                return;
+            }
+
+
+            var gameMsg = await game.GetMessage();
+            game.player.Mana -= skill.ManaCost;
+            game.fightEmbed = game.Fight(-1, skill);
+
+            if (game.State == State.Active && (gameMsg == null || gameMsg.Channel.Id != Context.Channel.Id))
+            {
+                gameMsg = await ReplyAsync(game.fightEmbed);
+                game.ChannelId = Context.Channel.Id;
+                game.MessageId = gameMsg.Id;
+                Games.Save(game);
+
+                await AddRpgEmotes(gameMsg, game.enemies.Count);
+            }
+            else
+            {
+                Games.Save(game);
+                await gameMsg.ModifyAsync(game.GetMessageUpdate());
+            }
+
+            if (Context.BotCan(ChannelPermission.ManageMessages)) await Context.Message.DeleteAsync(DefaultOptions);
+        }
+
+
+
+
+        [RpgCommand("profile", "p", "stats", "inventory", "inv")]
+        public async Task RpgProfile(RpgGame game, string args)
+        {
+            await ReplyAsync(game.player.Profile(Prefix));
+        }
+
+
+        [RpgCommand("skills", "spells")]
+        public async Task RpgSkills(RpgGame game, string args)
+        {
+            await ReplyAsync(game.player.Skills(Prefix));
+        }
+
+
+
         [RpgCommand("heal", "h", "potion")]
         public async Task RpgHeal(RpgGame game, string args)
         {
@@ -142,7 +196,7 @@ namespace PacManBot.Commands.Modules
                 return;
             }
 
-            var timeLeft = TimeSpan.FromMinutes(3) - (DateTime.Now - game.lastHeal);
+            var timeLeft = TimeSpan.FromMinutes(5) - (DateTime.Now - game.lastHeal);
             if (timeLeft > TimeSpan.Zero && !Config.debugRpg.Contains(Context.User.Id))
             {
                 await ReplyAsync($"{CustomEmoji.Cross} You may heal again in {timeLeft.Humanized(empty: "1 second")}");
@@ -174,7 +228,7 @@ namespace PacManBot.Commands.Modules
         }
 
 
-        [RpgCommand("equip", "e")]
+        [RpgCommand("equip", "e", "weapon", "armor")]
         public async Task RpgEquip(RpgGame game, string args)
         {
             if (args == "")
@@ -233,56 +287,6 @@ namespace PacManBot.Commands.Modules
         }
 
 
-        public async Task RpgUseActiveSkill(RpgGame game, Skill skill)
-        {
-            if (game.State != State.Active)
-            {
-                await ReplyAsync("You can only use an active skill during battle!");
-                return;
-            }
-
-            var unlocked = game.player.UnlockedSkills;
-
-            if (!game.player.UnlockedSkills.Contains(skill))
-            {
-                await ReplyAsync($"You haven't unlocked the `{skill.Shortcut}` active skill.");
-                return;
-            }
-            if (game.player.Mana == 0)
-            {
-                await ReplyAsync($"You don't have any {CustomEmoji.Mana}left! You should heal.");
-                return;
-            }
-            if (skill.ManaCost > game.player.Mana)
-            {
-                await ReplyAsync($"{skill.Name} requires {skill.ManaCost}{CustomEmoji.Mana}" +
-                    $"but you only have {game.player.Mana}{CustomEmoji.Mana}");
-                return;
-            }
-
-
-            var gameMsg = await game.GetMessage();
-            game.player.Mana -= skill.ManaCost;
-            game.fightEmbed = game.Fight(-1, skill);
-
-            if (game.State == State.Active && (gameMsg == null || gameMsg.Channel.Id != Context.Channel.Id))
-            {
-                gameMsg = await ReplyAsync(game.fightEmbed);
-                game.ChannelId = Context.Channel.Id;
-                game.MessageId = gameMsg.Id;
-                Games.Save(game);
-
-                await AddRpgEmotes(gameMsg, game.enemies.Count);
-            }
-            else
-            {
-                await gameMsg.ModifyAsync(game.GetMessageUpdate());
-            }
-
-            if (Context.BotCan(ChannelPermission.ManageMessages)) await Context.Message.DeleteAsync(DefaultOptions);
-        }
-
-
         [RpgCommand("spend", "invest")]
         public async Task RpgSendSkills(RpgGame game, string args)
         {
@@ -293,9 +297,18 @@ namespace PacManBot.Commands.Modules
             }
 
             args = args.ToLower();
-            string[] splice = args.Split(' ');
+            string[] splice = args.Split(' ', 2);
             string skill = splice[0];
-            if (splice.Length < 2 || !int.TryParse(splice[1], out int amount) || amount < 1)
+            int amount = 0;
+            if (splice.Length == 2)
+            {
+                if (splice[1] == "all") amount = game.player.skillPoints;
+                else
+                {
+                    int.TryParse(splice[1], out amount);
+                }
+            }
+            if (amount < 1)
             {
                 await ReplyAsync("Please specify a valid amount of skill points to spend.");
                 return;
@@ -439,14 +452,14 @@ namespace PacManBot.Commands.Modules
                 $"Welcome to Generic RPG{$", {game?.player.Name}".If(game != null)}!" +
                 $"\nThe game consists of battling enemies, levelling up and unlocking skills." +
                 $"\nUse the command **{Prefix}rpg help** for a list of commands." +
-                $"\nUse **{Prefix}rpg** to see your hero's profile, and **{Prefix}rpg name/color** to personalize it.",
+                $"\nUse **{Prefix}rpg profile** to see your hero's profile, and **{Prefix}rpg name/color** to personalize it.",
             };
 
             embed.AddField(new EmbedFieldBuilder
             {
                 Name = "⚔ Battles",
                 Value =
-                $"To start a battle, use the command **{Prefix}rpg battle**" +
+                $"To start a battle, use the command **{Prefix}rpg**" +
                 $"\nWhen in a battle, you can use the _message reactions_ to perform an action." +
                 $"\nSelect a number {RpgGame.EmoteNumberInputs[0]} of an enemy to attack. " +
                 $"You can also select {RpgGame.MenuEmote} to inspect your enemies," +
@@ -469,7 +482,7 @@ namespace PacManBot.Commands.Modules
             {
                 Name = "⭐ Skills",
                 Value =
-                $"When you level up you gain __skill points__ which you can spend." +
+                $"When you level up you gain __skill points__, which you can spend." +
                 $"\nThere are three skill lines: __Power__ (attack), __Grit__ (defense) and __Focus__ (crit chance). " +
                 $"\nYou can view your skills page using **{Prefix}rpg skills** - " +
                 $"To spend points in a skill line use **{Prefix}rpg spend [skill] [amount]**\n" +

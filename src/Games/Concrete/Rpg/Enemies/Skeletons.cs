@@ -148,8 +148,8 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
         public override void SetStats()
         {
             MaxLife = 74;
-            DamageType = DamageType.Cutting;
-            DamageResistance[DamageType.Cutting] = 0.1;
+            DamageType = DamageType.Pierce;
+            DamageResistance[DamageType.Pierce] = 0.1;
         }
 
         public override string Attack(Entity target)
@@ -165,10 +165,10 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
     public class Skeleton6 : Enemy
     {
         public override string Name => "Skarlton";
-        public override string Description => "He's Icelandic, I think.";
+        public override string Description => "He's from Iceland, I think.";
         public override int Level => 40;
         public override int ExpYield => 20;
-        public override int BaseDamage => 32;
+        public override int BaseDamage => 30;
         public override int BaseDefense => 8;
         public override double BaseCritChance => 0.05;
 
@@ -183,10 +183,10 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
         public override string Attack(Entity target)
         {
             string msg = "";
-            if (Bot.Random.OneIn(4))
+            if (Bot.Random.OneIn(5))
             {
                 AddBuff(nameof(Fury), 3);
-                msg = $"{this} is going berzerk!";
+                msg = $"{this} is going berzerk!\n";
             }
             return msg + base.Attack(target);
         }

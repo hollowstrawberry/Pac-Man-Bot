@@ -89,9 +89,8 @@ namespace PacManBot.Games.Concrete.Rpg
         /// </summary>
         public virtual int Hit(int damage, DamageType type, MagicType magic)
         {
-            double modified = (damage - Defense * DefenseMult)
-                * (1 - DamageResistance.GetValueOrDefault(type, 0))
-                * (1 - MagicResistance.GetValueOrDefault(magic, 0));
+            double modified = (damage - Defense)
+                * (1 - DamageResistance.GetValueOrDefault(type, 0) - MagicResistance.GetValueOrDefault(magic, 0));
 
             int final = Math.Max(0, modified.Ceiling());
             Life -= final;
@@ -118,8 +117,8 @@ namespace PacManBot.Games.Concrete.Rpg
         /// <summary>Safely adds a buff to this entity.</summary>
         public void AddBuff(string buff, int duration)
         {
-            if (!Buffs.ContainsKey(buff)) buff.GetBuff().BuffEffects(this);
             Buffs[buff] = duration;
+            UpdateStats();
         }
 
 

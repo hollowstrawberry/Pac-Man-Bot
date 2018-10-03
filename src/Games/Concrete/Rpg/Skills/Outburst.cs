@@ -21,7 +21,7 @@ namespace PacManBot.Games.Concrete.Rpg.Skills
 
             string effectMessage = game.player.weapon.GetWeapon().AttackEffects(game.player, target);
             int dealt = target.Hit(dmg, game.player.DamageType, game.player.MagicType);
-            return $"{game.player} hits {target} for {dealt} damage. {"Critical hit!".If(crit)} ";
+            return $"{game.player} hits {target} for {dealt} damage. {"Critical hit!".If(crit)}\n{effectMessage}";
         }
     }
 }

@@ -57,6 +57,7 @@ namespace PacManBot.Games.Concrete.Rpg
             State = State.Active;
             lastBattle = DateTime.Now;
             enemies.Clear();
+            player.Mana += 1;
 
             var possible = RpgExtensions.EnemyTypes
                 .Select(x => x.Value)
@@ -190,7 +191,7 @@ namespace PacManBot.Games.Concrete.Rpg
                 embed.Color = Colors.Red;
                 desc.AppendLine($"\n☠ You died and lost EXP!\nYou rest and feel ready to battle again.");
                 enemies.Clear();
-                player.experience /= 3;
+                player.experience = Math.Max(player.experience - player.NextLevelExp / 2, player.experience / 3);
                 player.Life = player.MaxLife;
                 player.Mana = player.MaxMana;
                 player.Buffs.Clear();

@@ -191,7 +191,7 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
         public override void SetStats()
         {
             MaxLife = 69;
-            DamageType = DamageType.Magic;
+            DamageType = DamageType.Blunt;
             DamageResistance[DamageType.Pierce] = -0.2;
         }
 
@@ -242,8 +242,8 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
         public override void SetStats()
         {
             MaxLife = 80;
-            DamageType = DamageType.Cutting;
-            DamageResistance[DamageType.Magic] = -0.2;
+            DamageType = DamageType.Pierce;
+            DamageResistance[DamageType.Pierce] = -0.2;
         }
     }
 

@@ -164,7 +164,7 @@ namespace PacManBot.Games.Concrete.Rpg
 
             UpdateStats();
 
-            int sp = Level % 5 == 0 ? 2 : 1;
+            int sp = Level % 50 == 0 ? 3 : Level % 5 == 0 ? 2 : 1;
             skillPoints += sp;
             boosts.Add($"+{sp} skill point{"s".If(sp > 1)}");
      

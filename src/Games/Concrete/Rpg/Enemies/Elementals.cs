@@ -288,7 +288,7 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
                 attacks.Add(target.Hit(dmg.Round(), DamageType, element));
             }
 
-            return $"{Name} attacks {target} with all four elements! {attacks.JoinString(", ")}";
+            return $"{Name} attacks {target} with all four elements! {attacks.JoinString(", ")}.";
         }
     }
 }
