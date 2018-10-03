@@ -6,14 +6,14 @@ namespace PacManBot.Games.Concrete.Rpg.Armors
     {
         public override string Name => "Spectre Sheet";
         public override string Description => "OooooOOOOOooo!";
-        public override string EffectsDesc => "+15% damage\n+4 MP\n+3 defense\n+20% magic resistance";
+        public override string EffectsDesc => "+15% damage\n+3 MP\n+3 defense\n+20% magic resistance";
 
         public override int LevelGet => 35;
 
         public override void EquipEffects(Player player)
         {
             player.DamageMult += 0.15;
-            player.MaxMana += 4;
+            player.MaxMana += 3;
             player.Defense += 3;
             player.DamageResistance.ChangeOrSet(DamageType.Magic, x => x + 0.2);
         }
@@ -51,9 +51,7 @@ namespace PacManBot.Games.Concrete.Rpg.Armors
             player.DamageMult += 0.1;
             player.MaxLife += 20;
             player.Defense += 6;
-            player.DamageResistance.ChangeOrSet(DamageType.Blunt, x => x + 0.2);
-            player.DamageResistance.ChangeOrSet(DamageType.Cutting, x => x + 0.2);
-            player.DamageResistance.ChangeOrSet(DamageType.Pierce, x => x + 0.2);
+            player.MagicResistance.ChangeOrSet(MagicType.None, x => x + 0.2);
         }
     }
 }

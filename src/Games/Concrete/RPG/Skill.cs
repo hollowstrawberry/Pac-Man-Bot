@@ -21,6 +21,8 @@ namespace PacManBot.Games.Concrete.Rpg
         public abstract string Effect(RpgGame game);
 
         public override string ToString() => Name;
+        public override bool Equals(object obj) => obj is Skill other && Key == other.Key;
+        public override int GetHashCode() => Key.GetHashCode();
 
 
         public int CompareTo(Skill other)

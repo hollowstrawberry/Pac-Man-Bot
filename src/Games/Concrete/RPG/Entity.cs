@@ -52,7 +52,7 @@ namespace PacManBot.Games.Concrete.Rpg
 
 
         /// <summary>Updates the entity's stats, affected by all active stat change sources.</summary>
-        public virtual void CalculateStats()
+        public virtual void UpdateStats()
         {
             foreach (var buff in Buffs)
             {
@@ -68,9 +68,7 @@ namespace PacManBot.Games.Concrete.Rpg
 
 
 
-        /// <summary>
-        /// Performs a tick on all active buffs of this entity, and returns all buff tick messages.
-        /// </summary>
+        /// <summary>Performs a tick on all active buffs of this entity, and returns all buff tick messages.</summary>
         public virtual string TickBuffs()
         {
             var msg = new StringBuilder();
@@ -91,8 +89,9 @@ namespace PacManBot.Games.Concrete.Rpg
         /// </summary>
         public virtual int Hit(int damage, DamageType type, MagicType magic)
         {
-            double modified = (damage - Defense) * (1 - DamageResistance.GetValueOrDefault(type, 0) * DefenseMult)
-                                                 * (1 - MagicResistance.GetValueOrDefault(magic, 0) * DefenseMult);
+            double modified = (damage - Defense * DefenseMult)
+                * (1 - DamageResistance.GetValueOrDefault(type, 0))
+                * (1 - MagicResistance.GetValueOrDefault(magic, 0));
 
             int final = Math.Max(0, modified.Ceiling());
             Life -= final;
@@ -116,9 +115,7 @@ namespace PacManBot.Games.Concrete.Rpg
             return baseDmg <= 0 ? 0 : (baseDmg * (crit ? 2 : 1) * Bot.Random.NextDouble(0.85, 1.15)).Ceiling();
         }
 
-        /// <summary>
-        /// Safely adds a buff to this entity.
-        /// </summary>
+        /// <summary>Safely adds a buff to this entity.</summary>
         public void AddBuff(string buff, int duration)
         {
             if (!Buffs.ContainsKey(buff)) buff.GetBuff().BuffEffects(this);
@@ -126,9 +123,7 @@ namespace PacManBot.Games.Concrete.Rpg
         }
 
 
-        /// <summary>
-        /// Safely removes a buff from this entity.
-        /// </summary>
+        /// <summary>Safely removes a buff from this entity.</summary>
         public void RemoveBuff(string buff)
         {
             if (!Buffs.ContainsKey(buff)) return;

@@ -25,8 +25,9 @@ namespace PacManBot.Games.Concrete.Rpg
         public abstract int BaseDefense { get; }
         public abstract double BaseCritChance { get; }
 
-        //public override bool Equals(object obj) => obj is Enemy en && Key == en.Key;
-        //public override int GetHashCode() => Key.GetHashCode();
+        public override string ToString() => Name;
+        public override bool Equals(object obj) => obj is Enemy other && Key == other.Key;
+        public override int GetHashCode() => Key.GetHashCode();
 
 
         [JsonConstructor]
@@ -35,7 +36,7 @@ namespace PacManBot.Games.Concrete.Rpg
         protected Enemy() : base()
         {
             SetStats();
-            CalculateStats();
+            UpdateStats();
             Life = MaxLife;
         }
 
@@ -44,7 +45,7 @@ namespace PacManBot.Games.Concrete.Rpg
         public abstract void SetStats();
 
 
-        public sealed override void CalculateStats()
+        public sealed override void UpdateStats()
         {
             Damage = BaseDamage;
             Defense = BaseDefense;
@@ -55,7 +56,7 @@ namespace PacManBot.Games.Concrete.Rpg
             DamageMult = 1;
             DefenseMult = 1;
 
-            base.CalculateStats();
+            base.UpdateStats();
         }
 
 

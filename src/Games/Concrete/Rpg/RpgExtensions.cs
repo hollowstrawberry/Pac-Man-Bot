@@ -8,7 +8,7 @@ namespace PacManBot.Games.Concrete.Rpg
     /// <summary>
     /// Contains extension methods for the RPG such as those that allow strings to get converted into game objects.
     /// </summary>
-    public static class Extensions
+    public static class RpgExtensions
     {
         public static Item GetItem(this string item) => ItemTypes.GetValueOrDefault(item);
         public static Equipment GetEquip(this string equipment) => EquipTypes.GetValueOrDefault(equipment);

@@ -73,7 +73,7 @@ namespace PacManBot.Games.Concrete.Rpg.Weapons
                 if (!wielder.Buffs.ContainsKey(buff))
                 {
                     active = true;
-                    wielder.Buffs.Add(buff, 2);
+                    wielder.AddBuff(buff, 2);
                 }
             }
 
@@ -86,8 +86,8 @@ namespace PacManBot.Games.Concrete.Rpg.Weapons
     {
         public override string Name => "Sword McGuffin";
         public override string Description => "They say it's legendary,\nbut you don't buy that.";
-        public override int Damage => 35;
-        public override double CritChance => 0.07f;
+        public override int Damage => 30;
+        public override double CritChance => 0.1f;
         public override DamageType Type => DamageType.Cutting;
         public override MagicType Magic => MagicType.Fire;
 

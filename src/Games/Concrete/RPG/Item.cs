@@ -10,17 +10,8 @@ namespace PacManBot.Games.Concrete.Rpg
 
 
         public override string ToString() => Name;
+        public override bool Equals(object obj) => obj is Item other && Key == other.Key;
         public override int GetHashCode() => Key.GetHashCode();
-
-        public override bool Equals(object obj)
-        {
-            switch (obj)
-            {
-                case Item i: return Equals(i);
-                case string str: return Equals(str);
-                default: return false;
-            }
-        }
 
         public bool Equals(Item other) => Key == other?.Key || Name.ToLower() == other?.Name.ToLower();
         public bool Equals(string str) => Key == str || Name.ToLower() == str.ToLower();

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Discord;
@@ -57,7 +58,7 @@ namespace PacManBot.Games.Concrete.Rpg
             lastBattle = DateTime.Now;
             enemies.Clear();
 
-            var possible = Extensions.EnemyTypes
+            var possible = RpgExtensions.EnemyTypes
                 .Select(x => x.Value)
                 .Where(x => x.Level <= player.Level)
                 .OrderByDescending(x => x.Level)
@@ -71,7 +72,7 @@ namespace PacManBot.Games.Concrete.Rpg
                 possible = possible.Where(x => x.Level <= player.Level - 2).ToList();
                 enemies.Add(Bot.Random.Choose(possible).MakeNew());
 
-                if (!Bot.Random.OneIn(Math.Max(0, player.Level - enemies[1].Level - 2)))
+                if (!Bot.Random.OneIn(Math.Max(0, player.Level - enemies[1].Level - 4)))
                 {
                     enemies.Add(Bot.Random.Choose(possible).MakeNew());
                 }
@@ -111,7 +112,7 @@ namespace PacManBot.Games.Concrete.Rpg
 
             if (attack != null)
             {
-                player.CalculateStats();
+                player.UpdateStats();
 
                 if (skill != null)
                 {
@@ -128,7 +129,7 @@ namespace PacManBot.Games.Concrete.Rpg
                     {
                         string eBuffs = enemy.TickBuffs();
                         if (eBuffs != "") desc.AppendLine(eBuffs.Trim());
-                        enemy.CalculateStats();
+                        enemy.UpdateStats();
                         desc.AppendLine(enemy.Attack(player));
                     }
                 }
@@ -137,7 +138,7 @@ namespace PacManBot.Games.Concrete.Rpg
                 {
                     string pBuffs = player.TickBuffs();
                     if (pBuffs != "") desc.AppendLine(pBuffs.Trim());
-                    player.CalculateStats();
+                    player.UpdateStats();
                 }
             }
 
@@ -167,9 +168,9 @@ namespace PacManBot.Games.Concrete.Rpg
                     string lvlUp = player.TryLevelUp();
                     if (lvlUp != null)
                     {
-                        desc.AppendLine($"\n⏫ Level up! {lvlUp}");
-                        if (player.Level == Player.LevelCap)
-                            desc.AppendLine("\n⭐ **You reached the maximum level! Congratulations!**");
+                        Channel.SendMessageAsync(options: Bot.DefaultOptions,
+                            text: $"\n⏫ Level up! {lvlUp}"
+                            + "\n⭐ **You reached the maximum level! Congratulations!**".If(player.Level == Player.LevelCap));
                     }
 
                     enemies.RemoveAt(i);

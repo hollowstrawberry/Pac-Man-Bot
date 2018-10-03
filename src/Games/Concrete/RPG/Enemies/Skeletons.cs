@@ -108,9 +108,9 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
         public override string Description => "He's actually just a count,\nbut don't tell him.";
         public override int Level => 20;
         public override int ExpYield => 10;
-        public override int BaseDamage => 25;
+        public override int BaseDamage => 26;
         public override int BaseDefense => 2;
-        public override double BaseCritChance => 0.1;
+        public override double BaseCritChance => 0.01;
 
         public override void SetStats()
         {
@@ -154,7 +154,7 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
 
         public override string Attack(Entity target)
         {
-            Damage = Bot.Random.Next(15, 50);
+            Damage = Bot.Random.Next(10, 45);
             string msg = base.Attack(target);
             Damage = BaseDamage;
             return msg;

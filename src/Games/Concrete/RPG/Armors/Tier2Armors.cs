@@ -57,7 +57,7 @@ namespace PacManBot.Games.Concrete.Rpg.Armors
     {
         public override string Name => "Wizard Robe";
         public override string Description => "Shoot whipped cream from your fingertips.";
-        public override string EffectsDesc => "+4 Magic damage\n+2 Defense\n+3 MP";
+        public override string EffectsDesc => "+4 Magic damage\n+2 Defense\n+2 MP";
 
         public override int LevelGet => 15;
 
@@ -65,7 +65,7 @@ namespace PacManBot.Games.Concrete.Rpg.Armors
         {
             player.DamageBoost.ChangeOrSet(DamageType.Magic, x => x + 4);
             player.Defense += 2;
-            player.MaxMana += 3;
+            player.MaxMana += 2;
         }
     }
 }

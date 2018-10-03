@@ -193,13 +193,13 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
         public override string Description => "The electricity is overwhelming.";
         public override int Level => 28;
         public override int ExpYield => 16;
-        public override int BaseDamage => 14;
+        public override int BaseDamage => 12;
         public override int BaseDefense => 7;
-        public override double BaseCritChance => 0.2;
+        public override double BaseCritChance => 0.25;
 
         public override void SetStats()
         {
-            MaxLife = 100;
+            MaxLife = 70;
             DamageType = DamageType.Magic;
             MagicType = MagicType.Air;
             MagicResistance[MagicType.Air] = 0.75;

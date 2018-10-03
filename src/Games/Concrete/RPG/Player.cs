@@ -26,6 +26,10 @@ namespace PacManBot.Games.Concrete.Rpg
         public int NextLevelExp => Level == 1 ? 4 : 6 * (Level - 1);
         /// <summary>All equipment currently used by this player.</summary>
         public IEnumerable<Equipment> ActiveEquipment => new[] { armor, weapon }.Select(x => x.GetEquip());
+        /// <summary>All skills the player can use.</summary>
+        public List<Skill> UnlockedSkills => RpgExtensions.SkillTypes.Values
+            .Where(x => x.SkillGet <= spentSkill[x.Type]).ToList().Sorted();
+                
 
 
         /// <summary>Used for active skills.</summary>
@@ -75,14 +79,14 @@ namespace PacManBot.Games.Concrete.Rpg
                 { SkillType.Dmg, 0 }, { SkillType.Def, 0 }, { SkillType.Crit, 0 },
             };
 
-            CalculateStats();
+            UpdateStats();
             Life = MaxLife;
             Mana = MaxMana;
         }
 
 
         /// <summary>Updates the player's stats affected by items, skills, buffs, etc.</summary>
-        public sealed override void CalculateStats()
+        public sealed override void UpdateStats()
         {
             MaxLife = 45 + 5 * Level;
             MaxMana = 1 + Level / 5;
@@ -91,14 +95,17 @@ namespace PacManBot.Games.Concrete.Rpg
             CritChance = 0.01 * (spentSkill[SkillType.Crit] / 2);
             DamageMult = 1;
             DefenseMult = 1;
-            DamageBoost = new Dictionary<DamageType, int>(4);
-            MagicBoost = new Dictionary<MagicType, int>(4);
+            DamageBoost.Clear();
+            MagicBoost.Clear();
+            DamageResistance.Clear();
+            MagicResistance.Clear();
 
             foreach (var equip in ActiveEquipment) equip.EquipEffects(this);
 
             Life = Life; // Clamps if out of bounds
+            Mana = Mana;
 
-            base.CalculateStats();
+            base.UpdateStats();
         }
 
 
@@ -111,7 +118,7 @@ namespace PacManBot.Games.Concrete.Rpg
 
             if (equip is Weapon) weapon = key;
             else if (equip is Armor) armor = key;
-            CalculateStats();
+            UpdateStats();
         }
 
 
@@ -146,7 +153,7 @@ namespace PacManBot.Games.Concrete.Rpg
 
             experience -= NextLevelExp;
             Level++;
-            CalculateStats();
+            UpdateStats();
 
             var boosts = new List<string>(5);
 
@@ -155,13 +162,13 @@ namespace PacManBot.Games.Concrete.Rpg
             boosts.Add("+5 HP");
             if (Level % 5 == 0) boosts.Add("+1 MP");
 
-            CalculateStats();
+            UpdateStats();
 
             int sp = Level % 5 == 0 ? 2 : 1;
             skillPoints += sp;
             boosts.Add($"+{sp} skill point{"s".If(sp > 1)}");
      
-            var newEquips = Extensions.EquipTypes
+            var newEquips = RpgExtensions.EquipTypes
                 .Where(pair => pair.Value.LevelGet > 0 && pair.Value.LevelGet <= Level)
                 .Select(pair => pair.Key)
                 .Where(e => !inventory.Contains(e));
@@ -226,16 +233,12 @@ namespace PacManBot.Games.Concrete.Rpg
                                 $"\nUse the command **{channelPrefix}rpg spend [skill] [amount]** to spend them.\n");
             }
 
-            var unlocked = Extensions.SkillTypes.Values
-                .ToList().Sorted()
-                .Where(x => x.SkillGet <= spentSkill[x.Type])
-                .Select(x => $"**[{x.Name}]** / {x.ManaCost}{CustomEmoji.Mana}" +
-                             $"\nUse with `{channelPrefix}rpg skill {x.Shortcut}`" +
-                             $"\n*{x.Description}*")
-                .JoinString("\n");
+            var unlocked = UnlockedSkills.Select(x =>
+                $"**[{x.Name}]** {x.ManaCost}{CustomEmoji.Mana}| Command: `{channelPrefix}rpg {x.Shortcut}`" +
+                $"\n*{x.Description}*");
 
             desc.AppendLine("__**Active Skills:**__");
-            desc.AppendLine(unlocked.Length == 0 ? "*None unlocked*" : $"{unlocked}\nᅠ");
+            desc.AppendLine(unlocked.Count() == 0 ? "*None unlocked*" : $"{unlocked.JoinString("\n")}\nᅠ");
 
 
             var embed = new EmbedBuilder
@@ -260,7 +263,7 @@ namespace PacManBot.Games.Concrete.Rpg
 
         private EmbedFieldBuilder SkillField(string title, SkillType type, string desc)
         {
-            var active = Extensions.SkillTypes.Values.Where(x => x.Type == type).ToList().Sorted();
+            var active = RpgExtensions.SkillTypes.Values.Where(x => x.Type == type).ToList().Sorted();
 
             return new EmbedFieldBuilder
             {

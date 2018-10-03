@@ -81,7 +81,7 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
     public class Oinx : Enemy
     {
         public override string Name => "Oinx";
-        public override string Description => "Nobody knows what it is.";
+        public override string Description => "A mix between pig and lynx.";
         public override int Level => 4;
         public override int ExpYield => 3;
         public override int BaseDamage => 7;
@@ -92,7 +92,7 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
         {
             MaxLife = 21;
             DamageType = DamageType.Magic;
-            DamageResistance[DamageType.Cutting] = -0.2;
+            DamageResistance[DamageType.Pierce] = -0.2;
         }
     }
 
@@ -178,6 +178,38 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
     }
 
 
+    public class MamaOinx : Enemy
+    {
+        public override string Name => "Mama Oinx";
+        public override string Description => "Cute and terrifying.";
+        public override int Level => 17;
+        public override int ExpYield => 9;
+        public override int BaseDamage => 8;
+        public override int BaseDefense => 5;
+        public override double BaseCritChance => 0.02;
+
+        public override void SetStats()
+        {
+            MaxLife = 69;
+            DamageType = DamageType.Magic;
+            DamageResistance[DamageType.Pierce] = -0.2;
+        }
+
+        public override string Attack(Entity target)
+        {
+            var attacks = new int[6];
+            for (int i = 0; i < attacks.Length; i++)
+            {
+                int dmg = Bot.Random.Next(1, 3);
+                target.Life -= dmg;
+                attacks[i] = dmg;
+            }
+
+            return base.Attack(target) + $"\n{this}'s babies attack! {attacks.JoinString(", ")}.";
+        }
+    }
+
+
     public class MechaBear : Enemy
     {
         public override string Name => "Mecha Bear";
@@ -197,14 +229,14 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
     }
 
 
-    public class MechRat : Enemy
+    public class MechaOinx : Enemy
     {
-        public override string Name => "Mecha Rat";
+        public override string Name => "Mecha Oinx";
         public override string Description => "Where are these mechas coming from?!";
         public override int Level => 35;
         public override int ExpYield => 20;
         public override int BaseDamage => 35;
-        public override int BaseDefense => 6;
+        public override int BaseDefense => 7;
         public override double BaseCritChance => 0.2;
 
         public override void SetStats()
