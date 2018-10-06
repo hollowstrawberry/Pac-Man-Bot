@@ -98,6 +98,11 @@ namespace PacManBot.Games.Concrete.Rpg
         {
             MaxLife = 45 + 5 * Level;
             MaxMana = 1 + Level / 5;
+            if (Level == LevelCap)
+            {
+                MaxLife += 5;
+                MaxMana += 1;
+            }
             Damage = spentSkill[SkillType.Dmg] / 2;
             Defense = spentSkill[SkillType.Def] / 2;
             CritChance = 0.01 * (spentSkill[SkillType.Crit] / 2);
@@ -177,8 +182,8 @@ namespace PacManBot.Games.Concrete.Rpg
 
             Life = MaxLife;
             Mana = MaxMana;
-            boosts.Add("+5 HP");
-            if (Level % 5 == 0) boosts.Add("+1 MP");
+            boosts.Add($"+{(Level == LevelCap ? 10 : 5)} HP");
+            if (Level % 5 == 0) boosts.Add($"+{(Level == LevelCap ? 2 : 1)} MP");
 
             UpdateStats();
 
