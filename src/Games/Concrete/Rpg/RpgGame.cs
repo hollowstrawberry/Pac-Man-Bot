@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Text;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Discord;
@@ -13,7 +12,7 @@ namespace PacManBot.Games.Concrete.Rpg
     [DataContract]
     public class RpgGame : ChannelGame, IUserGame, IStoreableGame, IReactionsGame
     {
-        public override string GameName => "Generic RPG";
+        public override string GameName => "ReactionRPG";
         public override int GameIndex => 6;
         public string FilenameKey => "rpg";
         public override TimeSpan Expiry => TimeSpan.FromDays(100);
@@ -68,12 +67,12 @@ namespace PacManBot.Games.Concrete.Rpg
 
             enemies.Add(Bot.Random.Choose(possible).MakeNew());
 
-            if (!Bot.Random.OneIn(player.Level - enemies[0].Level))
+            if (!Bot.Random.OneIn(player.Level - enemies[0].Level)) // 2 levels below
             {
                 possible = possible.Where(x => x.Level <= player.Level - 2).ToList();
                 enemies.Add(Bot.Random.Choose(possible).MakeNew());
 
-                if (!Bot.Random.OneIn(Math.Max(0, player.Level - enemies[1].Level - 4)))
+                if (!Bot.Random.OneIn(Math.Max(0, player.Level - enemies[1].Level - 3))) // 5 levels below
                 {
                     enemies.Add(Bot.Random.Choose(possible).MakeNew());
                 }
@@ -86,7 +85,7 @@ namespace PacManBot.Games.Concrete.Rpg
         {
             var embed = new EmbedBuilder
             {
-                Title = $"⚔ Generic RPG Battle",
+                Title = $"⚔ ReactionRPG Battle",
                 Color = Colors.DarkBlack,
             };
 
@@ -104,7 +103,7 @@ namespace PacManBot.Games.Concrete.Rpg
         {
             var embed = new EmbedBuilder
             {
-                Title = $"⚔ Generic RPG Battle",
+                Title = $"⚔ ReactionRPG Battle",
                 Color = Colors.DarkBlack,
             };
 

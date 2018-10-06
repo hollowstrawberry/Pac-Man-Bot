@@ -1,10 +1,14 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System;
 using System.Text.RegularExpressions;
+using System.Linq;
+using System.Drawing;
+using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using PacManBot.Constants;
+using SystemColor = System.Drawing.Color;
+using DiscordColor = Discord.Color;
 
 namespace PacManBot.Extensions
 {
@@ -175,6 +179,24 @@ namespace PacManBot.Extensions
         public static Emoji ToEmoji(this string unicode)
         {
             return new Emoji(unicode);
+        }
+
+
+        /// <summary>Tries to convert a hexadecimal code or X11 color name into a <see cref="DiscordColor"/>.</summary>
+        public static DiscordColor? ToColor(this string text)
+        {
+            try
+            {
+                text = text.ToLower().Trim().Replace(" ", "");
+                if (Regex.IsMatch(text, @"^[0123456789abcdef]{6}$")) text = $"#{text}";
+
+                var color = (SystemColor)new ColorConverter().ConvertFromString(text);
+                return new DiscordColor(color.R, color.G, color.B);
+            }
+            catch (Exception) // It's always System.Exception, and the inner exception can vary a lot, so screw it
+            {
+                return null;
+            }
         }
     }
 }

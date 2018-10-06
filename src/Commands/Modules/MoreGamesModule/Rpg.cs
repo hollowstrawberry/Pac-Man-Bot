@@ -38,7 +38,7 @@ namespace PacManBot.Commands.Modules
 
 
         [Command("rpg"), Remarks("Play an RPG game"), HideHelp]
-        [Summary("Play Generic RPG, a new game where you beat monsters and level up." +
+        [Summary("Play ReactionRPG, a new game where you beat monsters and level up." +
             "\n\n**__Commands:__**" +
             "\n**{prefix}rpg manual** - See detailed instructions for the game." +
             "\n\n**{prefix}rpg** - Start a new battle or resend the current battle." +
@@ -50,7 +50,7 @@ namespace PacManBot.Commands.Modules
             "\n\n**{prefix}rpg name [name]** - Change your hero's name." +
             "\n**{prefix}rpg color [color]** - Change the color of your hero's profile.")]
         [BetterRequireBotPermission(ChannelPermission.EmbedLinks | ChannelPermission.AddReactions)]
-        public async Task GenericRpg(string commandName = "", [Remainder]string args = "")
+        public async Task RpgMaster(string commandName = "", [Remainder]string args = "")
         {
             commandName = commandName.ToLower();
             args = args.Trim();
@@ -65,7 +65,8 @@ namespace PacManBot.Commands.Modules
                 var skill = RpgExtensions.SkillTypes.Values.FirstOrDefault(x => x.Shortcut == commandName);
                 if (game == null || skill == null)
                 {
-                    await ReplyAsync($"Unknown RPG command! Do `{Prefix}rpg help` for help");
+                    await ReplyAsync($"Unknown RPG command! Do `{Prefix}rpg manual` for game instructions," +
+                        $" or `{Prefix}rpg help` for a list of commands.");
                     return;
                 }
 
@@ -179,7 +180,7 @@ namespace PacManBot.Commands.Modules
         }
 
 
-        [RpgCommand("skills", "spells")]
+        [RpgCommand("skills", "skill", "s", "spells")]
         public async Task RpgSkills(RpgGame game, string args)
         {
             await ReplyAsync(game.player.Skills(Prefix));
@@ -384,35 +385,22 @@ namespace PacManBot.Commands.Modules
         [RpgCommand("color", "setcolor")]
         public async Task RpgSetColor(RpgGame game, string args)
         {
-            if (args == "") await ReplyAsync("Please specify a color name.");
+            if (args == "")
+            {
+                await ReplyAsync("Please specify a color name.");
+                return;
+            }
+
+            var color = args.ToColor();
+            if (color == null)
+            {
+                await ReplyAsync("That is neither a valid color name or hex code. Example: `red` or `#FF0000`");
+            }
             else
             {
-                var colors = typeof(Color).GetFields().Where(x => x.FieldType == typeof(Color));
-
-                FieldInfo bestMatch = null;
-                double bestPercent = 0;
-                foreach (var field in colors)
-                {
-                    double sim = args.Similarity(field.Name, false);
-                    if (sim > bestPercent)
-                    {
-                        bestMatch = field;
-                        bestPercent = sim;
-                    }
-                    if (sim == 1) break;
-                }
-
-                if (bestPercent > 0.59) 
-                {
-                    game.player.color = (Color)bestMatch.GetValue(null);
-                    Games.Save(game);
-                    await ReplyAsync($"{CustomEmoji.Check} Set player color to {bestMatch.Name}");
-                }
-                else
-                {
-                    await ReplyAsync("Can't find a color with that name. "
-                        + $"Did you mean `{bestMatch.Name}`?".If(bestPercent > 0.34));
-                }
+                game.player.color = color.Value;
+                Games.Save(game);
+                await ReplyAsync(new EmbedBuilder { Title = "Success", Color = color, Description = "Player color set" });
             }
         }
 
@@ -446,11 +434,11 @@ namespace PacManBot.Commands.Modules
         {
             var embed = new EmbedBuilder
             {
-                Title = $"Generic RPG Game Manual",
+                Title = $"ReactionRPG Game Manual",
                 Color = Colors.Black,
                 Description =
-                $"Welcome to Generic RPG{$", {game?.player.Name}".If(game != null)}!" +
-                $"\nThe game consists of battling enemies, levelling up and unlocking skills." +
+                $"Welcome to ReactionRPG{$", {game?.player.Name}".If(game != null)}!" +
+                $"\nThis game consists of battling enemies, levelling up and unlocking skills." +
                 $"\nUse the command **{Prefix}rpg help** for a list of commands." +
                 $"\nUse **{Prefix}rpg profile** to see your hero's profile, and **{Prefix}rpg name/color** to personalize it.",
             };
@@ -462,8 +450,8 @@ namespace PacManBot.Commands.Modules
                 $"To start a battle, use the command **{Prefix}rpg**" +
                 $"\nWhen in a battle, you can use the _message reactions_ to perform an action." +
                 $"\nSelect a number {RpgGame.EmoteNumberInputs[0]} of an enemy to attack. " +
-                $"You can also select {RpgGame.MenuEmote} to inspect your enemies," +
-                $"and {RpgGame.ProfileEmote} to see your own profile.",
+                $"You can also select {RpgGame.MenuEmote} to inspect your enemies, " +
+                $"and {RpgGame.ProfileEmote} to see your own profile; react again to close these pages.",
             });
 
             embed.AddField(new EmbedFieldBuilder

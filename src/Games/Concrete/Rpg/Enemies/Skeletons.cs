@@ -44,8 +44,8 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
 
     public class Skeleton3 : Enemy
     {
-        public override string Name => "Spookington";
-        public override string Description => "Be careful, it's spooky!";
+        public override string Name => "Scarington";
+        public override string Description => "😱💀";
         public override int Level => 11;
         public override int ExpYield => 7;
         public override int BaseDamage => 18;
@@ -64,7 +64,7 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
     public class Skeleton4 : Enemy
     {
         public override string Name => "Swoleton";
-        public override string Description => "Milk makes your bones stronger!";
+        public override string Description => "Milk makes your bones strong!";
         public override int Level => 15;
         public override int ExpYield => 9;
         public override int BaseDamage => 15;

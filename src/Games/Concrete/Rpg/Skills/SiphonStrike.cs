@@ -1,8 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Collections.Generic;
-using PacManBot.Constants;
-using PacManBot.Extensions;
+﻿using PacManBot.Extensions;
 
 namespace PacManBot.Games.Concrete.Rpg.Skills
 {
