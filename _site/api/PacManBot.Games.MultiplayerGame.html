@@ -1,0 +1,769 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class MultiplayerGame
+   </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class MultiplayerGame
+   ">
+    <meta name="generator" content="docfx 2.39.2.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="PacManBot.Games.MultiplayerGame">
+  
+  
+  <h1 id="PacManBot_Games_MultiplayerGame" data-uid="PacManBot.Games.MultiplayerGame" class="text-break">Class MultiplayerGame
+  </h1>
+  <div class="markdown level0 summary"><p>A specialized type of game that is channel-based and allows for inter-player mechanics as well as AI.
+Implements <a class="xref" href="PacManBot.Games.IMultiplayerGame.html">IMultiplayerGame</a>.<p>
+Instances of its subclasses must be created using <a class="xref" href="PacManBot.Games.MultiplayerGame.html#PacManBot_Games_MultiplayerGame_CreateNew__1_System_UInt64_Discord_WebSocket_SocketUser___System_IServiceProvider_">CreateNew&lt;TGame&gt;(UInt64, SocketUser[], IServiceProvider)</a>.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><a class="xref" href="PacManBot.Games.BaseGame.html">BaseGame</a></div>
+    <div class="level2"><a class="xref" href="PacManBot.Games.ChannelGame.html">ChannelGame</a></div>
+    <div class="level3"><span class="xref">MultiplayerGame</span></div>
+      <div class="level4"><a class="xref" href="PacManBot.Games.Concrete.C4Game.html">C4Game</a></div>
+      <div class="level4"><a class="xref" href="PacManBot.Games.Concrete.TTT5Game.html">TTT5Game</a></div>
+      <div class="level4"><a class="xref" href="PacManBot.Games.Concrete.TTTGame.html">TTTGame</a></div>
+      <div class="level4"><a class="xref" href="PacManBot.Games.Concrete.UnoGame.html">UnoGame</a></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="PacManBot.Games.IChannelGame.html">IChannelGame</a></div>
+    <div><a class="xref" href="PacManBot.Games.IMultiplayerGame.html">IMultiplayerGame</a></div>
+    <div><a class="xref" href="PacManBot.Games.IBaseGame.html">IBaseGame</a></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="PacManBot.Games.ChannelGame.html#PacManBot_Games_ChannelGame_ChannelId">ChannelGame.ChannelId</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.ChannelGame.html#PacManBot_Games_ChannelGame_MessageId">ChannelGame.MessageId</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.ChannelGame.html#PacManBot_Games_ChannelGame_Channel">ChannelGame.Channel</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.ChannelGame.html#PacManBot_Games_ChannelGame_Guild">ChannelGame.Guild</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.ChannelGame.html#PacManBot_Games_ChannelGame_GetMessage">ChannelGame.GetMessage()</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_client">BaseGame.client</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_botConfig">BaseGame.botConfig</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_logger">BaseGame.logger</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_storage">BaseGame.storage</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_games">BaseGame.games</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_Content">BaseGame.Content</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_discordRequestCTS">BaseGame.discordRequestCTS</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_GameName">BaseGame.GameName</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_GameIndex">BaseGame.GameIndex</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_Expiry">BaseGame.Expiry</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_State">BaseGame.State</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_LastPlayed">BaseGame.LastPlayed</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_Time">BaseGame.Time</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_UserId">BaseGame.UserId</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_OwnerId">BaseGame.OwnerId</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_Owner">BaseGame.Owner</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_SetServices_System_IServiceProvider_">BaseGame.SetServices(IServiceProvider)</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_GetEmbed_System_Boolean_">BaseGame.GetEmbed(Boolean)</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_GetRequestOptions">BaseGame.GetRequestOptions()</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_GetMessageUpdate">BaseGame.GetMessageUpdate()</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_CancelRequests">BaseGame.CancelRequests()</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_CancelledEmbed">BaseGame.CancelledEmbed()</a>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="PacManBot.Games.html">PacManBot.Games</a></h6>
+  <h6><strong>Assembly</strong>: Pacman.dll</h6>
+  <h5 id="PacManBot_Games_MultiplayerGame_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract class MultiplayerGame : ChannelGame, IChannelGame, IMultiplayerGame, IBaseGame</code></pre>
+  </div>
+  <h3 id="properties">Properties
+  </h3>
+  
+  
+  <a id="PacManBot_Games_MultiplayerGame_AllBots_" data-uid="PacManBot.Games.MultiplayerGame.AllBots*"></a>
+  <h4 id="PacManBot_Games_MultiplayerGame_AllBots" data-uid="PacManBot.Games.MultiplayerGame.AllBots">AllBots</h4>
+  <div class="markdown level1 summary"><p>Whether this game's players are all bots.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual bool AllBots { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="PacManBot_Games_MultiplayerGame_BotTurn_" data-uid="PacManBot.Games.MultiplayerGame.BotTurn*"></a>
+  <h4 id="PacManBot_Games_MultiplayerGame_BotTurn" data-uid="PacManBot.Games.MultiplayerGame.BotTurn">BotTurn</h4>
+  <div class="markdown level1 summary"><p>Whether the current turn belongs to a bot.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual bool BotTurn { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="PacManBot_Games_MultiplayerGame_Message_" data-uid="PacManBot.Games.MultiplayerGame.Message*"></a>
+  <h4 id="PacManBot_Games_MultiplayerGame_Message" data-uid="PacManBot.Games.MultiplayerGame.Message">Message</h4>
+  <div class="markdown level1 summary"><p>The message displayed at the top of this game.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual string Message { get; protected set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="PacManBot_Games_MultiplayerGame_Turn_" data-uid="PacManBot.Games.MultiplayerGame.Turn*"></a>
+  <h4 id="PacManBot_Games_MultiplayerGame_Turn" data-uid="PacManBot.Games.MultiplayerGame.Turn">Turn</h4>
+  <div class="markdown level1 summary"><p>The current <a class="xref" href="PacManBot.Games.Player.html">Player</a> whose turn it is.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual Player Turn { get; protected set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="PacManBot.Games.Player.html">Player</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="PacManBot_Games_MultiplayerGame_Winner_" data-uid="PacManBot.Games.MultiplayerGame.Winner*"></a>
+  <h4 id="PacManBot_Games_MultiplayerGame_Winner" data-uid="PacManBot.Games.MultiplayerGame.Winner">Winner</h4>
+  <div class="markdown level1 summary"><p>This game's winner. <a class="xref" href="PacManBot.Games.Player.html#PacManBot_Games_Player_None">None</a> if none.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual Player Winner { get; protected set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="PacManBot.Games.Player.html">Player</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  
+  
+  <a id="PacManBot_Games_MultiplayerGame_BotInput_" data-uid="PacManBot.Games.MultiplayerGame.BotInput*"></a>
+  <h4 id="PacManBot_Games_MultiplayerGame_BotInput" data-uid="PacManBot.Games.MultiplayerGame.BotInput">BotInput()</h4>
+  <div class="markdown level1 summary"><p>Executes automatic AI input, assuming it is a bot's turn.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract void BotInput()</code></pre>
+  </div>
+  
+  
+  <a id="PacManBot_Games_MultiplayerGame_ColorEmbedTitle_" data-uid="PacManBot.Games.MultiplayerGame.ColorEmbedTitle*"></a>
+  <h4 id="PacManBot_Games_MultiplayerGame_ColorEmbedTitle" data-uid="PacManBot.Games.MultiplayerGame.ColorEmbedTitle">ColorEmbedTitle()</h4>
+  <div class="markdown level1 summary"><p>Default title of a multiplayer game embed, displaying the current turn/winner.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected string ColorEmbedTitle()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="PacManBot_Games_MultiplayerGame_CreateNew_" data-uid="PacManBot.Games.MultiplayerGame.CreateNew*"></a>
+  <h4 id="PacManBot_Games_MultiplayerGame_CreateNew__1_System_UInt64_Discord_WebSocket_SocketUser___System_IServiceProvider_" data-uid="PacManBot.Games.MultiplayerGame.CreateNew``1(System.UInt64,Discord.WebSocket.SocketUser[],System.IServiceProvider)">CreateNew&lt;TGame&gt;(UInt64, SocketUser[], IServiceProvider)</h4>
+  <div class="markdown level1 summary"><p>Creates a new instance of <code data-dev-comment-type="typeparamref" class="typeparamref">TGame</code> with the specified channel and players.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Task&lt;TGame&gt; CreateNew&lt;TGame&gt;(ulong channelId, SocketUser[] players, IServiceProvider services)
+    where TGame : MultiplayerGame</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt64</span></td>
+        <td><span class="parametername">channelId</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">Discord.WebSocket.SocketUser</span>[]</td>
+        <td><span class="parametername">players</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.IServiceProvider</span></td>
+        <td><span class="parametername">services</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;TGame&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">TGame</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="PacManBot_Games_MultiplayerGame_GetContent_" data-uid="PacManBot.Games.MultiplayerGame.GetContent*"></a>
+  <h4 id="PacManBot_Games_MultiplayerGame_GetContent_System_Boolean_" data-uid="PacManBot.Games.MultiplayerGame.GetContent(System.Boolean)">GetContent(Boolean)</h4>
+  <div class="markdown level1 summary"><p>Default string content of a multiplayer game message. Displays flavor text in AI matches.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override string GetContent(bool showHelp = true)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">showHelp</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_GetContent_System_Boolean_">BaseGame.GetContent(Boolean)</a></div>
+  
+  
+  <a id="PacManBot_Games_MultiplayerGame_Initialize_" data-uid="PacManBot.Games.MultiplayerGame.Initialize*"></a>
+  <h4 id="PacManBot_Games_MultiplayerGame_Initialize_System_UInt64_Discord_WebSocket_SocketUser___System_IServiceProvider_" data-uid="PacManBot.Games.MultiplayerGame.Initialize(System.UInt64,Discord.WebSocket.SocketUser[],System.IServiceProvider)">Initialize(UInt64, SocketUser[], IServiceProvider)</h4>
+  <div class="markdown level1 summary"><p>Does the job of a constructor during
+<a class="xref" href="PacManBot.Games.MultiplayerGame.html#PacManBot_Games_MultiplayerGame_CreateNew__1_System_UInt64_Discord_WebSocket_SocketUser___System_IServiceProvider_">CreateNew&lt;TGame&gt;(UInt64, SocketUser[], IServiceProvider)</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual Task Initialize(ulong channelId, SocketUser[] players, IServiceProvider services)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt64</span></td>
+        <td><span class="parametername">channelId</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">Discord.WebSocket.SocketUser</span>[]</td>
+        <td><span class="parametername">players</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.IServiceProvider</span></td>
+        <td><span class="parametername">services</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="PacManBot_Games_MultiplayerGame_NextPlayer_" data-uid="PacManBot.Games.MultiplayerGame.NextPlayer*"></a>
+  <h4 id="PacManBot_Games_MultiplayerGame_NextPlayer_System_Nullable_PacManBot_Games_Player__" data-uid="PacManBot.Games.MultiplayerGame.NextPlayer(System.Nullable{PacManBot.Games.Player})">NextPlayer(Nullable&lt;Player&gt;)</h4>
+  <div class="markdown level1 summary"><p>Returns the next player in order, looping back to the first if necessary.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected Player NextPlayer(Player? turn = default(Player? ))</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<a class="xref" href="PacManBot.Games.Player.html">Player</a>&gt;</td>
+        <td><span class="parametername">turn</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="PacManBot.Games.Player.html">Player</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="PacManBot_Games_MultiplayerGame_PreviousPlayer_" data-uid="PacManBot.Games.MultiplayerGame.PreviousPlayer*"></a>
+  <h4 id="PacManBot_Games_MultiplayerGame_PreviousPlayer_System_Nullable_PacManBot_Games_Player__" data-uid="PacManBot.Games.MultiplayerGame.PreviousPlayer(System.Nullable{PacManBot.Games.Player})">PreviousPlayer(Nullable&lt;Player&gt;)</h4>
+  <div class="markdown level1 summary"><p>Returns the previous player in order, loopingback to the last if necessary.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected Player PreviousPlayer(Player? turn = default(Player? ))</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<a class="xref" href="PacManBot.Games.Player.html">Player</a>&gt;</td>
+        <td><span class="parametername">turn</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="PacManBot.Games.Player.html">Player</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="PacManBot_Games_MultiplayerGame_StripPrefix_" data-uid="PacManBot.Games.MultiplayerGame.StripPrefix*"></a>
+  <h4 id="PacManBot_Games_MultiplayerGame_StripPrefix_System_String_" data-uid="PacManBot.Games.MultiplayerGame.StripPrefix(System.String)">StripPrefix(String)</h4>
+  <div class="markdown level1 summary"><p>Used to remove the guild prefix from game input, as it is to be ignored.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected string StripPrefix(string value)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">value</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="PacManBot_Games_MultiplayerGame_User_" data-uid="PacManBot.Games.MultiplayerGame.User*"></a>
+  <h4 id="PacManBot_Games_MultiplayerGame_User_System_Int32_" data-uid="PacManBot.Games.MultiplayerGame.User(System.Int32)">User(Int32)</h4>
+  <div class="markdown level1 summary"><p>Retrieves the user at the specified index at the time of game creation. Null if unreachable or not found.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual IUser User(int i = 0)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">i</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Discord.IUser</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="PacManBot.Games.IChannelGame.html">IChannelGame</a>
+  </div>
+  <div>
+      <a class="xref" href="PacManBot.Games.IMultiplayerGame.html">IMultiplayerGame</a>
+  </div>
+  <div>
+      <a class="xref" href="PacManBot.Games.IBaseGame.html">IBaseGame</a>
+  </div>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="PacManBot.Extensions.GameExtensions.html#PacManBot_Extensions_GameExtensions_IdentifierId_PacManBot_Games_IBaseGame_">GameExtensions.IdentifierId(IBaseGame)</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

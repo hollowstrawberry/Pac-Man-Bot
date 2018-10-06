@@ -1,0 +1,823 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class GeneralModule
+   </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class GeneralModule
+   ">
+    <meta name="generator" content="docfx 2.39.2.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="PacManBot.Commands.Modules.GeneralModule">
+  
+  
+  <h1 id="PacManBot_Commands_Modules_GeneralModule" data-uid="PacManBot.Commands.Modules.GeneralModule" class="text-break">Class GeneralModule
+  </h1>
+  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><span class="xref">Discord.Commands.ModuleBase</span>&lt;<span class="xref">Discord.Commands.ShardedCommandContext</span>&gt;</div>
+    <div class="level2"><a class="xref" href="PacManBot.Commands.BaseCustomModule.html">BaseCustomModule</a></div>
+    <div class="level3"><span class="xref">GeneralModule</span></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="PacManBot.Commands.BaseCustomModule.html#PacManBot_Commands_BaseCustomModule_DefaultOptions">BaseCustomModule.DefaultOptions</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Commands.BaseCustomModule.html#PacManBot_Commands_BaseCustomModule_Services">BaseCustomModule.Services</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Commands.BaseCustomModule.html#PacManBot_Commands_BaseCustomModule_Content">BaseCustomModule.Content</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Commands.BaseCustomModule.html#PacManBot_Commands_BaseCustomModule_Logger">BaseCustomModule.Logger</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Commands.BaseCustomModule.html#PacManBot_Commands_BaseCustomModule_Storage">BaseCustomModule.Storage</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Commands.BaseCustomModule.html#PacManBot_Commands_BaseCustomModule_Games">BaseCustomModule.Games</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Commands.BaseCustomModule.html#PacManBot_Commands_BaseCustomModule_Prefix">BaseCustomModule.Prefix</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Commands.BaseCustomModule.html#PacManBot_Commands_BaseCustomModule_AbsolutePrefix">BaseCustomModule.AbsolutePrefix</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Commands.BaseCustomModule.html#PacManBot_Commands_BaseCustomModule_BeforeExecute_Discord_Commands_CommandInfo_">BaseCustomModule.BeforeExecute(CommandInfo)</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Commands.BaseCustomModule.html#PacManBot_Commands_BaseCustomModule_AfterExecute_Discord_Commands_CommandInfo_">BaseCustomModule.AfterExecute(CommandInfo)</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Commands.BaseCustomModule.html#PacManBot_Commands_BaseCustomModule_ReplyAsync_System_String_System_Boolean_Discord_Embed_Discord_RequestOptions_">BaseCustomModule.ReplyAsync(String, Boolean, Embed, RequestOptions)</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Commands.BaseCustomModule.html#PacManBot_Commands_BaseCustomModule_ReplyAsync_System_Object_Discord_EmbedBuilder_Discord_RequestOptions_">BaseCustomModule.ReplyAsync(Object, EmbedBuilder, RequestOptions)</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Commands.BaseCustomModule.html#PacManBot_Commands_BaseCustomModule_ReplyAsync_System_Object_Discord_RequestOptions_">BaseCustomModule.ReplyAsync(Object, RequestOptions)</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Commands.BaseCustomModule.html#PacManBot_Commands_BaseCustomModule_ReplyAsync_Discord_EmbedBuilder_Discord_RequestOptions_">BaseCustomModule.ReplyAsync(EmbedBuilder, RequestOptions)</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Commands.BaseCustomModule.html#PacManBot_Commands_BaseCustomModule_AutoReactAsync_System_Boolean_">BaseCustomModule.AutoReactAsync(Boolean)</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Commands.BaseCustomModule.html#PacManBot_Commands_BaseCustomModule_GetModule__1">BaseCustomModule.GetModule&lt;TModule&gt;()</a>
+    </div>
+    <div>
+      <span class="xref">Discord.Commands.ModuleBase&lt;Discord.Commands.ShardedCommandContext&gt;.OnModuleBuilding(Discord.Commands.CommandService, Discord.Commands.Builders.ModuleBuilder)</span>
+    </div>
+    <div>
+      <span class="xref">Discord.Commands.ModuleBase&lt;Discord.Commands.ShardedCommandContext&gt;.Context</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="PacManBot.Commands.Modules.html">PacManBot.Commands.Modules</a></h6>
+  <h6><strong>Assembly</strong>: Pacman.dll</h6>
+  <h5 id="PacManBot_Commands_Modules_GeneralModule_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Name(&quot;&#128193;General&quot;)]
+[Remarks(&quot;1&quot;)]
+public class GeneralModule : BaseCustomModule, IModuleBase</code></pre>
+  </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  
+  
+  <a id="PacManBot_Commands_Modules_GeneralModule__ctor_" data-uid="PacManBot.Commands.Modules.GeneralModule.#ctor*"></a>
+  <h4 id="PacManBot_Commands_Modules_GeneralModule__ctor_System_IServiceProvider_" data-uid="PacManBot.Commands.Modules.GeneralModule.#ctor(System.IServiceProvider)">GeneralModule(IServiceProvider)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public GeneralModule(IServiceProvider services)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.IServiceProvider</span></td>
+        <td><span class="parametername">services</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  
+  
+  <a id="PacManBot_Commands_Modules_GeneralModule_Commands_" data-uid="PacManBot.Commands.Modules.GeneralModule.Commands*"></a>
+  <h4 id="PacManBot_Commands_Modules_GeneralModule_Commands" data-uid="PacManBot.Commands.Modules.GeneralModule.Commands">Commands</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public CommandService Commands { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Discord.Commands.CommandService</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="PacManBot_Commands_Modules_GeneralModule_Help_" data-uid="PacManBot.Commands.Modules.GeneralModule.Help*"></a>
+  <h4 id="PacManBot_Commands_Modules_GeneralModule_Help" data-uid="PacManBot.Commands.Modules.GeneralModule.Help">Help</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public HelpService Help { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="PacManBot.Services.HelpService.html">HelpService</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  
+  
+  <a id="PacManBot_Commands_Modules_GeneralModule_BlobDance_" data-uid="PacManBot.Commands.Modules.GeneralModule.BlobDance*"></a>
+  <h4 id="PacManBot_Commands_Modules_GeneralModule_BlobDance_System_UInt64_" data-uid="PacManBot.Commands.Modules.GeneralModule.BlobDance(System.UInt64)">BlobDance(UInt64)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Command(&quot;party&quot;)]
+[Alias(new string[]{&quot;blob&quot;, &quot;dance&quot;})]
+[Summary(&quot;Takes a number which can be either an amount of emotes to send or a message ID to react to. Reacts to the command by default.&quot;)]
+[BetterRequireBotPermission(ChannelPermission.AddReactions | ChannelPermission.UseExternalEmojis)]
+public Task BlobDance(ulong number = 0UL)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt64</span></td>
+        <td><span class="parametername">number</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="PacManBot_Commands_Modules_GeneralModule_DoNothing_" data-uid="PacManBot.Commands.Modules.GeneralModule.DoNothing*"></a>
+  <h4 id="PacManBot_Commands_Modules_GeneralModule_DoNothing" data-uid="PacManBot.Commands.Modules.GeneralModule.DoNothing">DoNothing()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Command(&quot;command&quot;)]
+[ExampleUsage(&quot;help play&quot;)]
+[Summary(&quot;This is not a real command. If you want to see help for a specific command, please do `{prefix}help [command name]`, where \&quot;[command name]\&quot; is the name of a command.&quot;)]
+public Task DoNothing()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="PacManBot_Commands_Modules_GeneralModule_GameStats_" data-uid="PacManBot.Commands.Modules.GeneralModule.GameStats*"></a>
+  <h4 id="PacManBot_Commands_Modules_GeneralModule_GameStats_System_String_" data-uid="PacManBot.Commands.Modules.GeneralModule.GameStats(System.String)">GameStats(String)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Command(&quot;games&quot;)]
+[Alias(new string[]{&quot;gamestats&quot;})]
+[Parameters(&quot;&quot;)]
+[Remarks(&quot;Info about the bot's current games&quot;)]
+[Summary(&quot;Shows information about all active games managed by the bot.&quot;)]
+public Task GameStats([Remainder] string uselessArgs = &quot;&quot;)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">uselessArgs</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="PacManBot_Commands_Modules_GeneralModule_GetServerPrefix_" data-uid="PacManBot.Commands.Modules.GeneralModule.GetServerPrefix*"></a>
+  <h4 id="PacManBot_Commands_Modules_GeneralModule_GetServerPrefix" data-uid="PacManBot.Commands.Modules.GeneralModule.GetServerPrefix">GetServerPrefix()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Command(&quot;prefix&quot;)]
+[Summary(&quot;Shows this bot's prefix for this server, even though you can already see it here.\nYou can use the **{prefix}setprefix** command to set a prefix if you're an Administrator.&quot;)]
+public Task GetServerPrefix()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="PacManBot_Commands_Modules_GeneralModule_Neat_" data-uid="PacManBot.Commands.Modules.GeneralModule.Neat*"></a>
+  <h4 id="PacManBot_Commands_Modules_GeneralModule_Neat" data-uid="PacManBot.Commands.Modules.GeneralModule.Neat">Neat()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Command(&quot;neat&quot;)]
+[Summary(&quot;Neat&quot;)]
+public Task Neat()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="PacManBot_Commands_Modules_GeneralModule_Nice_" data-uid="PacManBot.Commands.Modules.GeneralModule.Nice*"></a>
+  <h4 id="PacManBot_Commands_Modules_GeneralModule_Nice" data-uid="PacManBot.Commands.Modules.GeneralModule.Nice">Nice()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Command(&quot;nice&quot;)]
+[Summary(&quot;Nice&quot;)]
+public Task Nice()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="PacManBot_Commands_Modules_GeneralModule_Ping_" data-uid="PacManBot.Commands.Modules.GeneralModule.Ping*"></a>
+  <h4 id="PacManBot_Commands_Modules_GeneralModule_Ping_System_String_" data-uid="PacManBot.Commands.Modules.GeneralModule.Ping(System.String)">Ping(String)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Command(&quot;waka&quot;)]
+[Alias(new string[]{&quot;ping&quot;})]
+[Parameters(&quot;&quot;)]
+[Remarks(&quot;Like ping, but waka&quot;)]
+[Summary(&quot;Check how quickly the bot is responding to commands.&quot;)]
+public Task Ping([Remainder] string uselessArgs = &quot;&quot;)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">uselessArgs</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="PacManBot_Commands_Modules_GeneralModule_SendAllHelpExpanded_" data-uid="PacManBot.Commands.Modules.GeneralModule.SendAllHelpExpanded*"></a>
+  <h4 id="PacManBot_Commands_Modules_GeneralModule_SendAllHelpExpanded" data-uid="PacManBot.Commands.Modules.GeneralModule.SendAllHelpExpanded">SendAllHelpExpanded()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Command(&quot;helpfull&quot;)]
+[Alias(new string[]{&quot;helpmore&quot;, &quot;hf&quot;, &quot;commandsfull&quot;})]
+[Remarks(&quot;Expanded help about all commands&quot;)]
+[Summary(&quot;Show a complete list of all commands including their parameters and a short description.&quot;)]
+public Task SendAllHelpExpanded()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="PacManBot_Commands_Modules_GeneralModule_SendBotGitHub_" data-uid="PacManBot.Commands.Modules.GeneralModule.SendBotGitHub*"></a>
+  <h4 id="PacManBot_Commands_Modules_GeneralModule_SendBotGitHub" data-uid="PacManBot.Commands.Modules.GeneralModule.SendBotGitHub">SendBotGitHub()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Command(&quot;github&quot;)]
+[Alias(new string[]{&quot;git&quot;})]
+[Remarks(&quot;GitHub repository link&quot;)]
+[Summary(&quot;&lt;:github:409803419717599234&gt;Link to Pac-Man's GitHub repository. I welcome contributions!&quot;)]
+public Task SendBotGitHub()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="PacManBot_Commands_Modules_GeneralModule_SendBotInfo_" data-uid="PacManBot.Commands.Modules.GeneralModule.SendBotInfo*"></a>
+  <h4 id="PacManBot_Commands_Modules_GeneralModule_SendBotInfo" data-uid="PacManBot.Commands.Modules.GeneralModule.SendBotInfo">SendBotInfo()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Command(&quot;about&quot;)]
+[Alias(new string[]{&quot;info&quot;})]
+[Remarks(&quot;About this bot&quot;)]
+[Summary(&quot;Shows relevant information, data and links about Pac-Man Bot.&quot;)]
+public Task SendBotInfo()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="PacManBot_Commands_Modules_GeneralModule_SendBotInvite_" data-uid="PacManBot.Commands.Modules.GeneralModule.SendBotInvite*"></a>
+  <h4 id="PacManBot_Commands_Modules_GeneralModule_SendBotInvite" data-uid="PacManBot.Commands.Modules.GeneralModule.SendBotInvite">SendBotInvite()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Command(&quot;invite&quot;)]
+[Alias(new string[]{&quot;inv&quot;})]
+[Remarks(&quot;Invite this bot to your server&quot;)]
+[Summary(&quot;Shows a fancy embed block with the bot's invite link. I'd show it right now too, since you're already here, but I really want you to see that fancy embed.&quot;)]
+public Task SendBotInvite()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="PacManBot_Commands_Modules_GeneralModule_SendBotServer_" data-uid="PacManBot.Commands.Modules.GeneralModule.SendBotServer*"></a>
+  <h4 id="PacManBot_Commands_Modules_GeneralModule_SendBotServer" data-uid="PacManBot.Commands.Modules.GeneralModule.SendBotServer">SendBotServer()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Command(&quot;server&quot;)]
+[Alias(new string[]{&quot;support&quot;})]
+[Remarks(&quot;Support server link&quot;)]
+[Summary(&quot;&lt;:staff:412019879772815361&gt; Link to the Pac-Man discord server&quot;)]
+public Task SendBotServer()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="PacManBot_Commands_Modules_GeneralModule_SendFeedback_" data-uid="PacManBot.Commands.Modules.GeneralModule.SendFeedback*"></a>
+  <h4 id="PacManBot_Commands_Modules_GeneralModule_SendFeedback_System_String_" data-uid="PacManBot.Commands.Modules.GeneralModule.SendFeedback(System.String)">SendFeedback(String)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Command(&quot;feedback&quot;)]
+[Alias(new string[]{&quot;suggestion&quot;, &quot;bug&quot;})]
+[Remarks(&quot;Send a message to the bot's developer&quot;)]
+[Summary(&quot;Whatever text you write after this command will be sent directly to the bot's developer. You may receive an answer through the bot in a DM.&quot;)]
+public Task SendFeedback([Remainder] string message)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">message</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="PacManBot_Commands_Modules_GeneralModule_SendHelp_" data-uid="PacManBot.Commands.Modules.GeneralModule.SendHelp*"></a>
+  <h4 id="PacManBot_Commands_Modules_GeneralModule_SendHelp_System_String_" data-uid="PacManBot.Commands.Modules.GeneralModule.SendHelp(System.String)">SendHelp(String)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Command(&quot;help&quot;)]
+[Alias(new string[]{&quot;h&quot;, &quot;commands&quot;})]
+[Parameters(&quot;[command]&quot;)]
+[Remarks(&quot;Help about commands or a specific command&quot;)]
+[Summary(&quot;Show a complete list of commands you can use. You can specify a command to see detailed help about that command.&quot;)]
+public Task SendHelp([Remainder] string command = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">command</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="PacManBot_Commands_Modules_GeneralModule_SpamDance_" data-uid="PacManBot.Commands.Modules.GeneralModule.SpamDance*"></a>
+  <h4 id="PacManBot_Commands_Modules_GeneralModule_SpamDance_System_Int32_" data-uid="PacManBot.Commands.Modules.GeneralModule.SpamDance(System.Int32)">SpamDance(Int32)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Command(&quot;spamparty&quot;)]
+[Alias(new string[]{&quot;spamblob&quot;, &quot;spamdance&quot;})]
+[Summary(&quot;Reacts to everything with a blob dance emote. Only usable by a moderator.&quot;)]
+[BetterRequireUserPermission(ChannelPermission.ManageMessages)]
+[BetterRequireBotPermission(ChannelPermission.AddReactions)]
+public Task SpamDance(int amount = 5)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">amount</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

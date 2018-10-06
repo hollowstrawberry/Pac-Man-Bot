@@ -22,6 +22,8 @@ bin/*/**/config.bot
 **/prefixes.bot
 **/scoreboard.bot
 **/wakaexclude.bot
+docfx.json
+toc.yml
 
 # Formats
 *.lnk

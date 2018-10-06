@@ -1,0 +1,2229 @@
+{
+  "homepages": [],
+  "source_base_path": "C:/Users/Samuel/Google Drive/Programación/C#/PacManBot",
+  "xrefmap": "xrefmap.yml",
+  "files": [
+    {
+      "type": "Conceptual",
+      "source_relative_path": "README.md",
+      "output": {
+        ".html": {
+          "relative_path": "README.html",
+          "hash": "L5zPQiKK1GlQ/a+khG3V/g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Bot.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Bot.html",
+          "hash": "/+Wl6qJOOoDQZCIsi/jPmA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.BotConfig.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.BotConfig.html",
+          "hash": "M+xs0/7qe5y8jd6W8iET6w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.BotContent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.BotContent.html",
+          "hash": "ea2P7M2pnDHIRXMBQEx3KQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Commands.BaseCustomModule.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Commands.BaseCustomModule.html",
+          "hash": "aqaH/8gdz7F147muOHZtfg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Commands.BasePermissionAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Commands.BasePermissionAttribute.html",
+          "hash": "cFDPapnGybQQZZawa7E48Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Commands.BetterRequireBotPermissionAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Commands.BetterRequireBotPermissionAttribute.html",
+          "hash": "3IFAChyHHQXcEZTEdjZxSg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Commands.BetterRequireUserPermissionAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Commands.BetterRequireUserPermissionAttribute.html",
+          "hash": "Xawr0UyjIEWeKXKiESxkoQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Commands.ExampleUsageAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Commands.ExampleUsageAttribute.html",
+          "hash": "lkIa5nwrN7TxMzCMHA9khw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Commands.HideHelpAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Commands.HideHelpAttribute.html",
+          "hash": "djYGo/NZIYYPIbyHOhzlrA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Commands.ModuleBuilder-2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Commands.ModuleBuilder-2.html",
+          "hash": "0EPGtBOQgcJu27CyBuYpww=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Commands.Modules.DevModule.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Commands.Modules.DevModule.html",
+          "hash": "4YtoJOlA6XFYkVE1Rmauaw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Commands.Modules.GeneralModule.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Commands.Modules.GeneralModule.html",
+          "hash": "h01Om80cy1s8xa0gsEk3yQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Commands.Modules.ModModule.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Commands.Modules.ModModule.html",
+          "hash": "hZ9uIb6Lxfs5SWN/CugFRg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Commands.Modules.MoreGamesModule.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Commands.Modules.MoreGamesModule.html",
+          "hash": "tCMFPZGKTb/SiQqHfSX+lg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Commands.Modules.PacManModule.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Commands.Modules.PacManModule.html",
+          "hash": "5shLWO3UQDtUcysSVVEoSw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Commands.Modules.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Commands.Modules.html",
+          "hash": "nwB6kAObiPcPFzp5XvGB4g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Commands.ParametersAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Commands.ParametersAttribute.html",
+          "hash": "DAoGUrHM4siAUfb8i3edAQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Commands.RequireDeveloperAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Commands.RequireDeveloperAttribute.html",
+          "hash": "8HBKZbOEj81mU+p+5PdNhA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Commands.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Commands.html",
+          "hash": "U3EoqYyURpKisRbCXvG+2A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Constants.Colors.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Constants.Colors.html",
+          "hash": "saJ2VuCen2B7n2wumnYgJw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Constants.CustomEmoji.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Constants.CustomEmoji.html",
+          "hash": "fzmcLjsveDh8vCmURKezpw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Constants.ExitCodes.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Constants.ExitCodes.html",
+          "hash": "MQTKGjzUIPEwTyBbz4e7+w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Constants.Files.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Constants.Files.html",
+          "hash": "lrog2kl2ZZZnMvsluaDwsw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Constants.LogSource.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Constants.LogSource.html",
+          "hash": "bQjwippT0Mf0GIcYENbqWQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Constants.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Constants.html",
+          "hash": "6GibAHVAVtdjOSQ5Ugf87g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Extensions.CollectionExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Extensions.CollectionExtensions.html",
+          "hash": "PGA0s4tPbYH7BpNqeQwHKQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Extensions.DiscordExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Extensions.DiscordExtensions.html",
+          "hash": "zJM07d6yqhtwCxBK2PuXYA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Extensions.GameExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Extensions.GameExtensions.html",
+          "hash": "1WsLKM9vlXDf5CW2tvSyaQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Extensions.OtherExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Extensions.OtherExtensions.html",
+          "hash": "Nnn5DqSmtY8dRI9GL7W0WA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Extensions.RandomExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Extensions.RandomExtensions.html",
+          "hash": "tq8NsU+MT6uVQlgNXWTCZQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Extensions.StringExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Extensions.StringExtensions.html",
+          "hash": "46RtGDfW9qso+KN3GUsD7w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Extensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Extensions.html",
+          "hash": "9f9AIrL6UU4w/t8W3oDNpg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.BaseGame.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.BaseGame.html",
+          "hash": "sRnn7P/wdE2TEqKqzzdIuw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Board-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Board-1.html",
+          "hash": "ZygOhUr6C7844vUzfuTwig=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.ChannelGame.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.ChannelGame.html",
+          "hash": "ghwg9Ml1xoozOqHKuiTq+A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.C4Game.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.C4Game.html",
+          "hash": "H1D61vrtlICzm9pu4n5Ocw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.InvalidMapException.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.InvalidMapException.html",
+          "hash": "oNI0m+H7GA50qruXjqbwNg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.PacManGame.PacManInput.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.PacManGame.PacManInput.html",
+          "hash": "5YlJso8HAen9rG0eBAR3Wg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.PacManGame.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.PacManGame.html",
+          "hash": "qgRNmNIAzacLj/OtpWw4zA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.PetGame.AchievementAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.PetGame.AchievementAttribute.html",
+          "hash": "5/T75TiUqQ5jqg0PowF+Yg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.PetGame.Achievements.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.PetGame.Achievements.html",
+          "hash": "C9xX72jdLMLZzc2lGvmW6w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.PetGame.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.PetGame.html",
+          "hash": "8k/EeF6CFjJ+/V7vqV33Dw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Armor.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Armor.html",
+          "hash": "DFtimkghJiFQdp0ppYTSLg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Armors.BluntArmor.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Armors.BluntArmor.html",
+          "hash": "KLDbVAMnfp22x5WNVaPj0Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Armors.Clothes.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Armors.Clothes.html",
+          "hash": "FxSH2tJ4MNnJjWhhsanKsQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Armors.CuttingArmor.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Armors.CuttingArmor.html",
+          "hash": "x4fRjOcdUuHvtD0tt7qp6w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Armors.MagicArmor.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Armors.MagicArmor.html",
+          "hash": "RKB/mz6SHzSojBPxEzhvAg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Armors.NinjaSuit.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Armors.NinjaSuit.html",
+          "hash": "tJAIzNKLaemj7QnJUgCAFA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Armors.NoobArmor.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Armors.NoobArmor.html",
+          "hash": "ozuFbO9hjPYVSx4wpgzgaA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Armors.PierceArmor.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Armors.PierceArmor.html",
+          "hash": "LTY3X3DL4lzIm8Ev575O8Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Armors.SpectreArmor.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Armors.SpectreArmor.html",
+          "hash": "HBind1az3OgeFSad3Iy0FQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Armors.TitanArmor.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Armors.TitanArmor.html",
+          "hash": "ka5j3wZTk8lIwsmwj9yh6g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Armors.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Armors.html",
+          "hash": "Gm80oDOidfeBwrj/3e57nA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Buff.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Buff.html",
+          "hash": "q6LquSZU3vOUhmpAEdU/Cg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Buffs.Blinded.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Buffs.Blinded.html",
+          "hash": "wonhRWJBSDkx+2iQqj9zrg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Buffs.Blocking.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Buffs.Blocking.html",
+          "hash": "yAufzuOH0PGyCbtIhAC/bg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Buffs.Burn.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Buffs.Burn.html",
+          "hash": "e8X4YCqpX09JVkl3ZIpxyQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Buffs.CritBuff.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Buffs.CritBuff.html",
+          "hash": "s8/MJ0fVeHjQVzZ8aiFlfg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Buffs.Fury.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Buffs.Fury.html",
+          "hash": "x0aNdmVDgZTH6OfQHiKEGg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Buffs.Immune.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Buffs.Immune.html",
+          "hash": "PV/uPVDBfpWHCyHuU3nhPg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Buffs.Vulnerable.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Buffs.Vulnerable.html",
+          "hash": "0ALHwpu8jC9CpknEC7n/Nw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Buffs.Wet.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Buffs.Wet.html",
+          "hash": "0zwvafP63eJO8poWgN2DJw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Buffs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Buffs.html",
+          "hash": "P/FEeocgA8HbJ4NmYGF03Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.DamageType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.DamageType.html",
+          "hash": "YxyENTb5e6mJKD9+U2E5Lw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.AirElemental1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.AirElemental1.html",
+          "hash": "7E3IlUVDobLRYcb9IhKvOw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.AirElemental2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.AirElemental2.html",
+          "hash": "TTwoia9Qlhv4eIjb3Lsayg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.AllElemental1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.AllElemental1.html",
+          "hash": "gsLxb9q2aiLMCm8QRXDaPg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.Bear.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.Bear.html",
+          "hash": "nY3iKrRCEtXdzj9k6IeUTw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.BlueSlime.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.BlueSlime.html",
+          "hash": "+hAXr9/0j167m86ZIbNuFg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.EarthElemental1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.EarthElemental1.html",
+          "hash": "LpH0dCzyB1kopQdZWCKLBw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.EarthElemental2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.EarthElemental2.html",
+          "hash": "YSWH5ZLjSLMOUflBvUKKug=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.FireElemental1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.FireElemental1.html",
+          "hash": "6Ds6wIBpli86NOe2QJZa/A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.FireElemental2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.FireElemental2.html",
+          "hash": "CWCdM+HBuEaTCwnnjNn90A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.Flop.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.Flop.html",
+          "hash": "yIjAkp7+P8D4aalP3zoQxA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.Goblin.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.Goblin.html",
+          "hash": "+HQIARqQMYiwZ/19uWM8ZQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.MamaOinx.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.MamaOinx.html",
+          "hash": "llM0dtAk9R1bUxGYeLNZ9g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.MechaBear.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.MechaBear.html",
+          "hash": "9Lqxtf3wLYvv9wM4ozN9Iw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.MechaFlopper.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.MechaFlopper.html",
+          "hash": "Ij2qm6YB35qZlQNbSM4ZeQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.MechaOinx.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.MechaOinx.html",
+          "hash": "HOl9EHcTpD6djdm+IgNJyA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.Oinx.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.Oinx.html",
+          "hash": "Urk4iKZ9pYcmhDDzr6nfyQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.Rat.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.Rat.html",
+          "hash": "rnPArsvRJc911D2wkxdWUQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.Skeleton.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.Skeleton.html",
+          "hash": "qPRKuRiayEV7Z+VcX1S0Tg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.Skeleton2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.Skeleton2.html",
+          "hash": "dq3oUZZSxcvJ2fgKxxHEag=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.Skeleton3.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.Skeleton3.html",
+          "hash": "gpJIFBVEkCPtODEHY2Idaw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.Skeleton4.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.Skeleton4.html",
+          "hash": "Z2bhOX9wq/b3lcsS8TVvGQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.Skeleton5.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.Skeleton5.html",
+          "hash": "K1tCx20E/uwjIPBKnkUEyg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.Skeleton6.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.Skeleton6.html",
+          "hash": "N3Gc6ViHLEkUgj+t+cppXg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.SkeletonKing.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.SkeletonKing.html",
+          "hash": "JHBJMNFx8AcYCRFOwIWobQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.Slime.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.Slime.html",
+          "hash": "TABMr6oYw6ZXDxBBsWZUOA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.Slime3.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.Slime3.html",
+          "hash": "znkYfxKQnMFW+WwZzc0S5A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.WaterElemental1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.WaterElemental1.html",
+          "hash": "45EY0gFd1NuMBi+d04LntQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.WaterElemental2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.WaterElemental2.html",
+          "hash": "bRv7eimVzpMM3ogOdTfMMA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.html",
+          "hash": "JtfCGTBG7QQ0mHL1liKiwQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemy.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemy.html",
+          "hash": "8ry4mfoTS5oBvQ712NApbA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Entity.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Entity.html",
+          "hash": "cEHnYZMlydozpy+AGtN8Rg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Equipment.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Equipment.html",
+          "hash": "SCWRWi/P9JIGOpTNAaKuSw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.IKeyable.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.IKeyable.html",
+          "hash": "8JK5jKJBuz7fRYh57wpxqA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Item.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Item.html",
+          "hash": "w0CEP+Ylj0Kf5VK1O6Or6A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.MagicType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.MagicType.html",
+          "hash": "8prf7UdilrRnTxRFlmJPbg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.RpgExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.RpgExtensions.html",
+          "hash": "HYMAMLKq2GsGbcEx/OWiZw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.RpgPlayer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.RpgPlayer.html",
+          "hash": "7zdgM+2DnkruhlYBlcSC9g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Skill.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Skill.html",
+          "hash": "sR4E0vMMwkMzfhIejeS26A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.SkillType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.SkillType.html",
+          "hash": "3kSewMlFOYCRRwpF/cPt/w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Skills.FocusAim.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Skills.FocusAim.html",
+          "hash": "/m9iKzEnTi+cpPRgyThq+A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Skills.FuriousResolve.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Skills.FuriousResolve.html",
+          "hash": "NuPwiCemGXb+xXpxSIifow=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Skills.Outburst.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Skills.Outburst.html",
+          "hash": "UgccL9I234AW+Vdrl2zX/A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Skills.ReadyBlock.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Skills.ReadyBlock.html",
+          "hash": "sfItyJC3YEcFL0qwKWd9Uw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Skills.SiphonStrike.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Skills.SiphonStrike.html",
+          "hash": "8D/bcwJlD6+wk3DaUw6szw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Skills.StealthBolt.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Skills.StealthBolt.html",
+          "hash": "Fy+ho9WlfrlhGCR+kYj8nA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Skills.WideAssault.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Skills.WideAssault.html",
+          "hash": "RGyVIIv+gT0Jv3jbqkcMtA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Skills.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Skills.html",
+          "hash": "7J9x6qvtssiAzrZaxxZgbA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Weapon.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Weapon.html",
+          "hash": "bDJXGFy8Lox39G7kvuzoEQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Weapons.Bow.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Weapons.Bow.html",
+          "hash": "plS6PQwBG7lvo5CEUGphIQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Weapons.Dagger.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Weapons.Dagger.html",
+          "hash": "SQjOYWMK7ozpn8aKy9ROVg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Weapons.EarthSpell.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Weapons.EarthSpell.html",
+          "hash": "M3XYOZWg7TKTokQus6JArg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Weapons.FireScroll.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Weapons.FireScroll.html",
+          "hash": "zDkJRqva1iFugzlC0VtY+g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Weapons.Fists.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Weapons.Fists.html",
+          "hash": "dhqqkRlUwnevUh4Oerz8YA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Weapons.ForestSword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Weapons.ForestSword.html",
+          "hash": "9OXl1pT9ZRDoL7PHnE/mjw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Weapons.ImportantSword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Weapons.ImportantSword.html",
+          "hash": "gQ+qiD0RYvs30EfYw3c+Bw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Weapons.Longbow.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Weapons.Longbow.html",
+          "hash": "EQKR7iv1oLkcPYPTn11sJQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Weapons.Mace.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Weapons.Mace.html",
+          "hash": "UQBfkQxCMKMD+02nGoMKxw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Weapons.QuestSword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Weapons.QuestSword.html",
+          "hash": "fWCH1k2ILRu+1ZGUvnt5CQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Weapons.Shield.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Weapons.Shield.html",
+          "hash": "Nfkjx190szYO3k/BXPVLVA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Weapons.Shortsword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Weapons.Shortsword.html",
+          "hash": "Sbez2pK9Maa8Ft1OP7NlHg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Weapons.SimpleSpell.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Weapons.SimpleSpell.html",
+          "hash": "8tdOl1ZzAe831O/zOk1IvQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Weapons.Stick.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Weapons.Stick.html",
+          "hash": "eOZBD3aNvgweEg87UH1NKQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Weapons.TitanHammer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Weapons.TitanHammer.html",
+          "hash": "cs7u9e6YoiEjw2oMGE9lBw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.Weapons.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.Weapons.html",
+          "hash": "BLEJI7BiYwe1vJEgnJ6S+A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.Rpg.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.Rpg.html",
+          "hash": "gqmKf2PzLIQE7eBmSqPTZg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.RpgGame.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.RpgGame.html",
+          "hash": "+D9DdbMAAXoAYwL0h/7Z4g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.RubiksGame.Move.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.RubiksGame.Move.html",
+          "hash": "CGxa56IdUzp609/nJlwJyw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.RubiksGame.Sticker.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.RubiksGame.Sticker.html",
+          "hash": "zI8cJvmnM8/nq0ERRH+f9Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.RubiksGame.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.RubiksGame.html",
+          "hash": "rw8p6epLrcjwu3Vh1hl1Wg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.TTT5Game.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.TTT5Game.html",
+          "hash": "kCg2WM6klGjVRjkw2PmgzQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.TTTGame.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.TTTGame.html",
+          "hash": "jvzVSwXWz6uq8GM9DRNULg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.UnoGame.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.UnoGame.html",
+          "hash": "5VXmu3aKSzXNMoDfPYLOAA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Concrete.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Concrete.html",
+          "hash": "wmFi2k1jZF6rydl6IQnaOw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Dir.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Dir.html",
+          "hash": "JLNxj3+PJaNrYlZmhwCi0Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.IBaseGame.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.IBaseGame.html",
+          "hash": "NmITEjs5Wuz8hyEPtmpoPQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.IChannelGame.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.IChannelGame.html",
+          "hash": "GxqBIOhI2Ms7g452Q3m5eg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.IMessagesGame.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.IMessagesGame.html",
+          "hash": "o07HGDwkY2H6rtGFArUZPA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.IMultiplayerGame.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.IMultiplayerGame.html",
+          "hash": "1lVZg5L13HDN/vmDLSE+Dg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.IReactionsGame.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.IReactionsGame.html",
+          "hash": "MrbpxyohT3Qd5jQ6z7WT5w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.IStoreableGame.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.IStoreableGame.html",
+          "hash": "rv6KsbOptFkzqE0XrxPIuQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.IUserGame.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.IUserGame.html",
+          "hash": "a0LlyF8CeJzyC/aEpJlztA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.MultiplayerGame.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.MultiplayerGame.html",
+          "hash": "+4xSdcBYsft6zm8Jyl84bQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Player.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Player.html",
+          "hash": "gASeIbI9noQ2GT9xv3xkmg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.Pos.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.Pos.html",
+          "hash": "2x8A3W7DL83CFOc3a4we+w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.State.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.State.html",
+          "hash": "h7SLbcgzevuQ4xe74wv16w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.html",
+          "hash": "U7uIm6i6yuZSpGuMtzLiCg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Program.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Program.html",
+          "hash": "Me36FzgK69GsWbIb5tKL2g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Services.Database.GuildPrefix.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Services.Database.GuildPrefix.html",
+          "hash": "u/S9tz82KbiZqruo/T/9xw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Services.Database.NoAutoresponseGuild.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Services.Database.NoAutoresponseGuild.html",
+          "hash": "IxHP2bg3LbGrJ6bWRPU7zw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Services.Database.NoPrefixGuildChannel.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Services.Database.NoPrefixGuildChannel.html",
+          "hash": "veiBabL6TMo5tTKxMZLbUw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Services.Database.PacManDbContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Services.Database.PacManDbContext.html",
+          "hash": "8c8FzPbBuXOuQ8hWYj1ApQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Services.Database.ScoreEntry.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Services.Database.ScoreEntry.html",
+          "hash": "U9c3NX7tlpLI/SmnScSArg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Services.Database.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Services.Database.html",
+          "hash": "Ctjl3qfiGnRtXY0BQYDr/A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Services.GameService.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Services.GameService.html",
+          "hash": "GMEnTYK/Xsc6+B1/Zv68RA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Services.HelpService.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Services.HelpService.html",
+          "hash": "oWJZGE7Yj4hAZoABNLfPkA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Services.InputService.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Services.InputService.html",
+          "hash": "ls9j7LqnhB00NLIKYtHntg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Services.LoggingService.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Services.LoggingService.html",
+          "hash": "pOEta1ZsUU9mHri9v4nGXw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Services.SchedulingService.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Services.SchedulingService.html",
+          "hash": "1QHPciysXtrwxxKcneT57A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Services.ScriptingService.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Services.ScriptingService.html",
+          "hash": "zJnDGM5JdVK89wMXiW2FbQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Services.StorageService.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Services.StorageService.html",
+          "hash": "N7qEGNPrJpX3tQHwYWee5Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Services.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Services.html",
+          "hash": "8lANZH3xQFPUoCc5cjukng=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Utils.Brainfuck.BrainfuckException.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Utils.Brainfuck.BrainfuckException.html",
+          "hash": "QgD05iA2WpT3iwXZRIU+7w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Utils.Brainfuck.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Utils.Brainfuck.html",
+          "hash": "OD5O2T3ZgfNwOP7YcfJGMg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Utils.ConcurrentRandom.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Utils.ConcurrentRandom.html",
+          "hash": "qvy4lrLt+N48LQNZqrsvqg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Utils.EnumTraits-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Utils.EnumTraits-1.html",
+          "hash": "NwLbSEx+fdmd3d6TE1XZbA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Utils.LoopedList-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Utils.LoopedList-1.html",
+          "hash": "2Ja1STkfBGugevbjFReIeQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Utils.Range.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Utils.Range.html",
+          "hash": "OLzi0PxpVXc8RxND4nBiDg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Utils.TimePeriod.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Utils.TimePeriod.html",
+          "hash": "DSMrUBdfVbTVPzscu/mvog=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Utils.WebUtil.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Utils.WebUtil.html",
+          "hash": "1suGzJIW3nzvxuJ+xzQi/Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Utils.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Utils.html",
+          "hash": "T81RhoaPuxv9WB7a7Qw18Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.html",
+          "hash": "SVjmtixGQp5yPnP0pS61OQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/index.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/index.html",
+          "hash": "ENCHdiPa0vbTemsH+gDwgg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "api/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/toc.html",
+          "hash": "WdmF9FphbA2BPDUutORnfg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/intro.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/intro.html",
+          "hash": "DHvQLzpZ6ga5iQX0eNFoFw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "articles/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "articles/toc.html",
+          "hash": "t7iiFrmuYmrKWisdq+lN6Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "index.md",
+      "output": {
+        ".html": {
+          "relative_path": "index.html",
+          "hash": "vOf2CnJ843qe1BJxbLyHvw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "toc.html",
+          "hash": "k+/dkjFuwAVS32HduMpmBw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    }
+  ],
+  "incremental_info": [
+    {
+      "status": {
+        "can_incremental": false,
+        "details": "Cannot build incrementally because last build info is missing.",
+        "incrementalPhase": "build"
+      },
+      "processors": {
+        "ConceptualDocumentProcessor": {
+          "can_incremental": false,
+          "incrementalPhase": "build"
+        },
+        "ManagedReferenceDocumentProcessor": {
+          "can_incremental": false,
+          "incrementalPhase": "build"
+        },
+        "TocDocumentProcessor": {
+          "can_incremental": false,
+          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+          "incrementalPhase": "build"
+        }
+      }
+    },
+    {
+      "status": {
+        "can_incremental": false,
+        "details": "Cannot support incremental post processing, the reason is: it's disabled.",
+        "incrementalPhase": "postProcessing"
+      },
+      "processors": {}
+    }
+  ],
+  "version_info": {},
+  "groups": [
+    {
+      "xrefmap": "xrefmap.yml"
+    }
+  ]
+}

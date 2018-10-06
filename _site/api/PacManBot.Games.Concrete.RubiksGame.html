@@ -1,0 +1,867 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class RubiksGame
+   </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class RubiksGame
+   ">
+    <meta name="generator" content="docfx 2.39.2.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="PacManBot.Games.Concrete.RubiksGame">
+  
+  
+  <h1 id="PacManBot_Games_Concrete_RubiksGame" data-uid="PacManBot.Games.Concrete.RubiksGame" class="text-break">Class RubiksGame
+  </h1>
+  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><a class="xref" href="PacManBot.Games.BaseGame.html">BaseGame</a></div>
+    <div class="level2"><a class="xref" href="PacManBot.Games.ChannelGame.html">ChannelGame</a></div>
+    <div class="level3"><span class="xref">RubiksGame</span></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="PacManBot.Games.IChannelGame.html">IChannelGame</a></div>
+    <div><a class="xref" href="PacManBot.Games.IUserGame.html">IUserGame</a></div>
+    <div><a class="xref" href="PacManBot.Games.IStoreableGame.html">IStoreableGame</a></div>
+    <div><a class="xref" href="PacManBot.Games.IBaseGame.html">IBaseGame</a></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="PacManBot.Games.ChannelGame.html#PacManBot_Games_ChannelGame_Channel">ChannelGame.Channel</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.ChannelGame.html#PacManBot_Games_ChannelGame_Guild">ChannelGame.Guild</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.ChannelGame.html#PacManBot_Games_ChannelGame_GetMessage">ChannelGame.GetMessage()</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_client">BaseGame.client</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_botConfig">BaseGame.botConfig</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_logger">BaseGame.logger</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_storage">BaseGame.storage</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_games">BaseGame.games</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_Content">BaseGame.Content</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_discordRequestCTS">BaseGame.discordRequestCTS</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_State">BaseGame.State</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_UserId">BaseGame.UserId</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_Owner">BaseGame.Owner</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_SetServices_System_IServiceProvider_">BaseGame.SetServices(IServiceProvider)</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_GetContent_System_Boolean_">BaseGame.GetContent(Boolean)</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_GetRequestOptions">BaseGame.GetRequestOptions()</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_GetMessageUpdate">BaseGame.GetMessageUpdate()</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_CancelRequests">BaseGame.CancelRequests()</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_CancelledEmbed">BaseGame.CancelledEmbed()</a>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="PacManBot.Games.Concrete.html">PacManBot.Games.Concrete</a></h6>
+  <h6><strong>Assembly</strong>: Pacman.dll</h6>
+  <h5 id="PacManBot_Games_Concrete_RubiksGame_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[DataContract]
+public class RubiksGame : ChannelGame, IChannelGame, IUserGame, IStoreableGame, IBaseGame</code></pre>
+  </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  
+  
+  <a id="PacManBot_Games_Concrete_RubiksGame__ctor_" data-uid="PacManBot.Games.Concrete.RubiksGame.#ctor*"></a>
+  <h4 id="PacManBot_Games_Concrete_RubiksGame__ctor_System_UInt64_System_UInt64_System_IServiceProvider_" data-uid="PacManBot.Games.Concrete.RubiksGame.#ctor(System.UInt64,System.UInt64,System.IServiceProvider)">RubiksGame(UInt64, UInt64, IServiceProvider)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public RubiksGame(ulong channelId, ulong ownerId, IServiceProvider services)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt64</span></td>
+        <td><span class="parametername">channelId</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.UInt64</span></td>
+        <td><span class="parametername">ownerId</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.IServiceProvider</span></td>
+        <td><span class="parametername">services</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="fields">Fields
+  </h3>
+  
+  
+  <h4 id="PacManBot_Games_Concrete_RubiksGame_cube" data-uid="PacManBot.Games.Concrete.RubiksGame.cube">cube</h4>
+  <div class="markdown level1 summary"><p>An array of all stickers of the cube, grouped by face.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public RubiksGame.Sticker[] cube</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="PacManBot.Games.Concrete.RubiksGame.Sticker.html">RubiksGame.Sticker</a>[]</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <h4 id="PacManBot_Games_Concrete_RubiksGame_SolvedCube" data-uid="PacManBot.Games.Concrete.RubiksGame.SolvedCube">SolvedCube</h4>
+  <div class="markdown level1 summary"><p>The raw cube string representing the solved state.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string SolvedCube = &quot;000000000111111111222222222333333333444444444555555555&quot;</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  
+  
+  <a id="PacManBot_Games_Concrete_RubiksGame_ChannelId_" data-uid="PacManBot.Games.Concrete.RubiksGame.ChannelId*"></a>
+  <h4 id="PacManBot_Games_Concrete_RubiksGame_ChannelId" data-uid="PacManBot.Games.Concrete.RubiksGame.ChannelId">ChannelId</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[DataMember]
+public override ulong ChannelId { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt64</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="PacManBot.Games.ChannelGame.html#PacManBot_Games_ChannelGame_ChannelId">ChannelGame.ChannelId</a></div>
+  
+  
+  <a id="PacManBot_Games_Concrete_RubiksGame_Expiry_" data-uid="PacManBot.Games.Concrete.RubiksGame.Expiry*"></a>
+  <h4 id="PacManBot_Games_Concrete_RubiksGame_Expiry" data-uid="PacManBot.Games.Concrete.RubiksGame.Expiry">Expiry</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override TimeSpan Expiry { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.TimeSpan</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_Expiry">BaseGame.Expiry</a></div>
+  
+  
+  <a id="PacManBot_Games_Concrete_RubiksGame_FilenameKey_" data-uid="PacManBot.Games.Concrete.RubiksGame.FilenameKey*"></a>
+  <h4 id="PacManBot_Games_Concrete_RubiksGame_FilenameKey" data-uid="PacManBot.Games.Concrete.RubiksGame.FilenameKey">FilenameKey</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string FilenameKey { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="PacManBot_Games_Concrete_RubiksGame_GameIndex_" data-uid="PacManBot.Games.Concrete.RubiksGame.GameIndex*"></a>
+  <h4 id="PacManBot_Games_Concrete_RubiksGame_GameIndex" data-uid="PacManBot.Games.Concrete.RubiksGame.GameIndex">GameIndex</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override int GameIndex { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_GameIndex">BaseGame.GameIndex</a></div>
+  
+  
+  <a id="PacManBot_Games_Concrete_RubiksGame_GameName_" data-uid="PacManBot.Games.Concrete.RubiksGame.GameName*"></a>
+  <h4 id="PacManBot_Games_Concrete_RubiksGame_GameName" data-uid="PacManBot.Games.Concrete.RubiksGame.GameName">GameName</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override string GameName { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_GameName">BaseGame.GameName</a></div>
+  
+  
+  <a id="PacManBot_Games_Concrete_RubiksGame_LastPlayed_" data-uid="PacManBot.Games.Concrete.RubiksGame.LastPlayed*"></a>
+  <h4 id="PacManBot_Games_Concrete_RubiksGame_LastPlayed" data-uid="PacManBot.Games.Concrete.RubiksGame.LastPlayed">LastPlayed</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[DataMember]
+public override DateTime LastPlayed { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.DateTime</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_LastPlayed">BaseGame.LastPlayed</a></div>
+  
+  
+  <a id="PacManBot_Games_Concrete_RubiksGame_MessageId_" data-uid="PacManBot.Games.Concrete.RubiksGame.MessageId*"></a>
+  <h4 id="PacManBot_Games_Concrete_RubiksGame_MessageId" data-uid="PacManBot.Games.Concrete.RubiksGame.MessageId">MessageId</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[DataMember]
+public override ulong MessageId { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt64</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="PacManBot.Games.ChannelGame.html#PacManBot_Games_ChannelGame_MessageId">ChannelGame.MessageId</a></div>
+  
+  
+  <a id="PacManBot_Games_Concrete_RubiksGame_MoveKeys_" data-uid="PacManBot.Games.Concrete.RubiksGame.MoveKeys*"></a>
+  <h4 id="PacManBot_Games_Concrete_RubiksGame_MoveKeys" data-uid="PacManBot.Games.Concrete.RubiksGame.MoveKeys">MoveKeys</h4>
+  <div class="markdown level1 summary"><p>The keys of all valid built-in moves that can be used to create individual moves.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IEnumerable&lt;string&gt; MoveKeys { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="PacManBot_Games_Concrete_RubiksGame_OwnerId_" data-uid="PacManBot.Games.Concrete.RubiksGame.OwnerId*"></a>
+  <h4 id="PacManBot_Games_Concrete_RubiksGame_OwnerId" data-uid="PacManBot.Games.Concrete.RubiksGame.OwnerId">OwnerId</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[DataMember]
+public override ulong OwnerId { get; protected set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt64</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_OwnerId">BaseGame.OwnerId</a></div>
+  
+  
+  <a id="PacManBot_Games_Concrete_RubiksGame_RawCube_" data-uid="PacManBot.Games.Concrete.RubiksGame.RawCube*"></a>
+  <h4 id="PacManBot_Games_Concrete_RubiksGame_RawCube" data-uid="PacManBot.Games.Concrete.RubiksGame.RawCube">RawCube</h4>
+  <div class="markdown level1 summary"><p>The cube array in raw string form, to be stored and loaded.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[DataMember]
+public string RawCube { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="PacManBot_Games_Concrete_RubiksGame_ShowHelp_" data-uid="PacManBot.Games.Concrete.RubiksGame.ShowHelp*"></a>
+  <h4 id="PacManBot_Games_Concrete_RubiksGame_ShowHelp" data-uid="PacManBot.Games.Concrete.RubiksGame.ShowHelp">ShowHelp</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[DataMember]
+public bool ShowHelp { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="PacManBot_Games_Concrete_RubiksGame_Time_" data-uid="PacManBot.Games.Concrete.RubiksGame.Time*"></a>
+  <h4 id="PacManBot_Games_Concrete_RubiksGame_Time" data-uid="PacManBot.Games.Concrete.RubiksGame.Time">Time</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[DataMember]
+public override int Time { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_Time">BaseGame.Time</a></div>
+  <h3 id="methods">Methods
+  </h3>
+  
+  
+  <a id="PacManBot_Games_Concrete_RubiksGame_DoMoves_" data-uid="PacManBot.Games.Concrete.RubiksGame.DoMoves*"></a>
+  <h4 id="PacManBot_Games_Concrete_RubiksGame_DoMoves_System_Collections_Generic_IEnumerable_PacManBot_Games_Concrete_RubiksGame_Move__" data-uid="PacManBot.Games.Concrete.RubiksGame.DoMoves(System.Collections.Generic.IEnumerable{PacManBot.Games.Concrete.RubiksGame.Move})">DoMoves(IEnumerable&lt;RubiksGame.Move&gt;)</h4>
+  <div class="markdown level1 summary"><p>Executes a sequence of moves on this Rubik's cube.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void DoMoves(IEnumerable&lt;RubiksGame.Move&gt; moves)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="PacManBot.Games.Concrete.RubiksGame.Move.html">RubiksGame.Move</a>&gt;</td>
+        <td><span class="parametername">moves</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="PacManBot_Games_Concrete_RubiksGame_GetEmbed_" data-uid="PacManBot.Games.Concrete.RubiksGame.GetEmbed*"></a>
+  <h4 id="PacManBot_Games_Concrete_RubiksGame_GetEmbed_Discord_IGuild_" data-uid="PacManBot.Games.Concrete.RubiksGame.GetEmbed(Discord.IGuild)">GetEmbed(IGuild)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public EmbedBuilder GetEmbed(IGuild guild)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Discord.IGuild</span></td>
+        <td><span class="parametername">guild</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Discord.EmbedBuilder</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="PacManBot_Games_Concrete_RubiksGame_GetEmbed_" data-uid="PacManBot.Games.Concrete.RubiksGame.GetEmbed*"></a>
+  <h4 id="PacManBot_Games_Concrete_RubiksGame_GetEmbed_System_Boolean_" data-uid="PacManBot.Games.Concrete.RubiksGame.GetEmbed(System.Boolean)">GetEmbed(Boolean)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override EmbedBuilder GetEmbed(bool _ = true)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">_</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Discord.EmbedBuilder</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_GetEmbed_System_Boolean_">BaseGame.GetEmbed(Boolean)</a></div>
+  
+  
+  <a id="PacManBot_Games_Concrete_RubiksGame_PostDeserialize_" data-uid="PacManBot.Games.Concrete.RubiksGame.PostDeserialize*"></a>
+  <h4 id="PacManBot_Games_Concrete_RubiksGame_PostDeserialize_System_IServiceProvider_" data-uid="PacManBot.Games.Concrete.RubiksGame.PostDeserialize(System.IServiceProvider)">PostDeserialize(IServiceProvider)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void PostDeserialize(IServiceProvider services)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.IServiceProvider</span></td>
+        <td><span class="parametername">services</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="PacManBot_Games_Concrete_RubiksGame_Scramble_" data-uid="PacManBot.Games.Concrete.RubiksGame.Scramble*"></a>
+  <h4 id="PacManBot_Games_Concrete_RubiksGame_Scramble_System_Int32_" data-uid="PacManBot.Games.Concrete.RubiksGame.Scramble(System.Int32)">Scramble(Int32)</h4>
+  <div class="markdown level1 summary"><p>Executes a number of random moves on the cube in order to scramble it.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Scramble(int amount = 40)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">amount</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="PacManBot_Games_Concrete_RubiksGame_TryDoMoves_" data-uid="PacManBot.Games.Concrete.RubiksGame.TryDoMoves*"></a>
+  <h4 id="PacManBot_Games_Concrete_RubiksGame_TryDoMoves_System_String_" data-uid="PacManBot.Games.Concrete.RubiksGame.TryDoMoves(System.String)">TryDoMoves(String)</h4>
+  <div class="markdown level1 summary"><p>Attempts to create a sequence of moves from the given string, and executes it if successful.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool TryDoMoves(string input)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">input</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="PacManBot.Games.IChannelGame.html">IChannelGame</a>
+  </div>
+  <div>
+      <a class="xref" href="PacManBot.Games.IUserGame.html">IUserGame</a>
+  </div>
+  <div>
+      <a class="xref" href="PacManBot.Games.IStoreableGame.html">IStoreableGame</a>
+  </div>
+  <div>
+      <a class="xref" href="PacManBot.Games.IBaseGame.html">IBaseGame</a>
+  </div>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="PacManBot.Extensions.GameExtensions.html#PacManBot_Extensions_GameExtensions_IdentifierId_PacManBot_Games_IBaseGame_">GameExtensions.IdentifierId(IBaseGame)</a>
+  </div>
+  <div>
+      <a class="xref" href="PacManBot.Extensions.GameExtensions.html#PacManBot_Extensions_GameExtensions_GameFile_PacManBot_Games_IStoreableGame_">GameExtensions.GameFile(IStoreableGame)</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

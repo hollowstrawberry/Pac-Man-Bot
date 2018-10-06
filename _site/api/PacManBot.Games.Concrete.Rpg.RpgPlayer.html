@@ -1,0 +1,916 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class RpgPlayer
+   </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class RpgPlayer
+   ">
+    <meta name="generator" content="docfx 2.39.2.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="PacManBot.Games.Concrete.Rpg.RpgPlayer">
+  
+  
+  <h1 id="PacManBot_Games_Concrete_Rpg_RpgPlayer" data-uid="PacManBot.Games.Concrete.Rpg.RpgPlayer" class="text-break">Class RpgPlayer
+  </h1>
+  <div class="markdown level0 summary"><p>A player fighting entity. Contains most information about the user's savefile.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><a class="xref" href="PacManBot.Games.Concrete.Rpg.Entity.html">Entity</a></div>
+    <div class="level2"><span class="xref">RpgPlayer</span></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="PacManBot.Games.Concrete.Rpg.Entity.html#PacManBot_Games_Concrete_Rpg_Entity_Life">Entity.Life</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.Concrete.Rpg.Entity.html#PacManBot_Games_Concrete_Rpg_Entity_MaxLife">Entity.MaxLife</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.Concrete.Rpg.Entity.html#PacManBot_Games_Concrete_Rpg_Entity_Damage">Entity.Damage</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.Concrete.Rpg.Entity.html#PacManBot_Games_Concrete_Rpg_Entity_Defense">Entity.Defense</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.Concrete.Rpg.Entity.html#PacManBot_Games_Concrete_Rpg_Entity_DamageMult">Entity.DamageMult</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.Concrete.Rpg.Entity.html#PacManBot_Games_Concrete_Rpg_Entity_DefenseMult">Entity.DefenseMult</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.Concrete.Rpg.Entity.html#PacManBot_Games_Concrete_Rpg_Entity_CritChance">Entity.CritChance</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.Concrete.Rpg.Entity.html#PacManBot_Games_Concrete_Rpg_Entity_DamageType">Entity.DamageType</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.Concrete.Rpg.Entity.html#PacManBot_Games_Concrete_Rpg_Entity_MagicType">Entity.MagicType</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.Concrete.Rpg.Entity.html#PacManBot_Games_Concrete_Rpg_Entity_Buffs">Entity.Buffs</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.Concrete.Rpg.Entity.html#PacManBot_Games_Concrete_Rpg_Entity_DamageBoost">Entity.DamageBoost</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.Concrete.Rpg.Entity.html#PacManBot_Games_Concrete_Rpg_Entity_MagicBoost">Entity.MagicBoost</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.Concrete.Rpg.Entity.html#PacManBot_Games_Concrete_Rpg_Entity_DamageResistance">Entity.DamageResistance</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.Concrete.Rpg.Entity.html#PacManBot_Games_Concrete_Rpg_Entity_MagicResistance">Entity.MagicResistance</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.Concrete.Rpg.Entity.html#PacManBot_Games_Concrete_Rpg_Entity_ToString">Entity.ToString()</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.Concrete.Rpg.Entity.html#PacManBot_Games_Concrete_Rpg_Entity_TickBuffs">Entity.TickBuffs()</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.Concrete.Rpg.Entity.html#PacManBot_Games_Concrete_Rpg_Entity_Hit_System_Int32_PacManBot_Games_Concrete_Rpg_DamageType_PacManBot_Games_Concrete_Rpg_MagicType_">Entity.Hit(Int32, DamageType, MagicType)</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.Concrete.Rpg.Entity.html#PacManBot_Games_Concrete_Rpg_Entity_AttackFormula_System_Int32_System_Boolean_">Entity.AttackFormula(Int32, Boolean)</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.Concrete.Rpg.Entity.html#PacManBot_Games_Concrete_Rpg_Entity_HasBuff_System_String_">Entity.HasBuff(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.Concrete.Rpg.Entity.html#PacManBot_Games_Concrete_Rpg_Entity_AddBuff_PacManBot_Games_Concrete_Rpg_Buff_System_Int32_">Entity.AddBuff(Buff, Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Games.Concrete.Rpg.Entity.html#PacManBot_Games_Concrete_Rpg_Entity_AddBuff_System_String_System_Int32_">Entity.AddBuff(String, Int32)</a>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="PacManBot.Games.Concrete.Rpg.html">PacManBot.Games.Concrete.Rpg</a></h6>
+  <h6><strong>Assembly</strong>: Pacman.dll</h6>
+  <h5 id="PacManBot_Games_Concrete_Rpg_RpgPlayer_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[DataContract]
+public class RpgPlayer : Entity</code></pre>
+  </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  
+  
+  <a id="PacManBot_Games_Concrete_Rpg_RpgPlayer__ctor_" data-uid="PacManBot.Games.Concrete.Rpg.RpgPlayer.#ctor*"></a>
+  <h4 id="PacManBot_Games_Concrete_Rpg_RpgPlayer__ctor_System_String_" data-uid="PacManBot.Games.Concrete.Rpg.RpgPlayer.#ctor(System.String)">RpgPlayer(String)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public RpgPlayer(string name)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="fields">Fields
+  </h3>
+  
+  
+  <h4 id="PacManBot_Games_Concrete_Rpg_RpgPlayer_armor" data-uid="PacManBot.Games.Concrete.Rpg.RpgPlayer.armor">armor</h4>
+  <div class="markdown level1 summary"><p>The key of the armor the player is wearing.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[DataMember]
+public string armor</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <h4 id="PacManBot_Games_Concrete_Rpg_RpgPlayer_experience" data-uid="PacManBot.Games.Concrete.Rpg.RpgPlayer.experience">experience</h4>
+  <div class="markdown level1 summary"><p>The current experience in the current level.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[DataMember]
+public int experience</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <h4 id="PacManBot_Games_Concrete_Rpg_RpgPlayer_inventory" data-uid="PacManBot.Games.Concrete.Rpg.RpgPlayer.inventory">inventory</h4>
+  <div class="markdown level1 summary"><p>Contains the keys of the items in the player's inventory.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[DataMember]
+public List&lt;string&gt; inventory</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <h4 id="PacManBot_Games_Concrete_Rpg_RpgPlayer_LevelCap" data-uid="PacManBot.Games.Concrete.Rpg.RpgPlayer.LevelCap">LevelCap</h4>
+  <div class="markdown level1 summary"><p>Maximum level a player can reach.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const int LevelCap = 50</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <h4 id="PacManBot_Games_Concrete_Rpg_RpgPlayer_SkillMax" data-uid="PacManBot.Games.Concrete.Rpg.RpgPlayer.SkillMax">SkillMax</h4>
+  <div class="markdown level1 summary"><p>Maximum value an invested skill can have.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const int SkillMax = 30</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <h4 id="PacManBot_Games_Concrete_Rpg_RpgPlayer_skillPoints" data-uid="PacManBot.Games.Concrete.Rpg.RpgPlayer.skillPoints">skillPoints</h4>
+  <div class="markdown level1 summary"><p>The number of unspent skill points.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[DataMember]
+public int skillPoints</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <h4 id="PacManBot_Games_Concrete_Rpg_RpgPlayer_spentSkill" data-uid="PacManBot.Games.Concrete.Rpg.RpgPlayer.spentSkill">spentSkill</h4>
+  <div class="markdown level1 summary"><p>Skill points spent in each skill line.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[DataMember]
+public Dictionary&lt;SkillType, int&gt; spentSkill</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.Dictionary</span>&lt;<a class="xref" href="PacManBot.Games.Concrete.Rpg.SkillType.html">SkillType</a>, <span class="xref">System.Int32</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <h4 id="PacManBot_Games_Concrete_Rpg_RpgPlayer_weapon" data-uid="PacManBot.Games.Concrete.Rpg.RpgPlayer.weapon">weapon</h4>
+  <div class="markdown level1 summary"><p>The key of the weapon the player is holding.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[DataMember]
+public string weapon</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  
+  
+  <a id="PacManBot_Games_Concrete_Rpg_RpgPlayer_ActiveEquipment_" data-uid="PacManBot.Games.Concrete.Rpg.RpgPlayer.ActiveEquipment*"></a>
+  <h4 id="PacManBot_Games_Concrete_Rpg_RpgPlayer_ActiveEquipment" data-uid="PacManBot.Games.Concrete.Rpg.RpgPlayer.ActiveEquipment">ActiveEquipment</h4>
+  <div class="markdown level1 summary"><p>All equipment currently used by this player.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IEnumerable&lt;Equipment&gt; ActiveEquipment { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="PacManBot.Games.Concrete.Rpg.Equipment.html">Equipment</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="PacManBot_Games_Concrete_Rpg_RpgPlayer_Color_" data-uid="PacManBot.Games.Concrete.Rpg.RpgPlayer.Color*"></a>
+  <h4 id="PacManBot_Games_Concrete_Rpg_RpgPlayer_Color" data-uid="PacManBot.Games.Concrete.Rpg.RpgPlayer.Color">Color</h4>
+  <div class="markdown level1 summary"><p>Profile embed color.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Color Color { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Discord.Color</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="PacManBot_Games_Concrete_Rpg_RpgPlayer_Level_" data-uid="PacManBot.Games.Concrete.Rpg.RpgPlayer.Level*"></a>
+  <h4 id="PacManBot_Games_Concrete_Rpg_RpgPlayer_Level" data-uid="PacManBot.Games.Concrete.Rpg.RpgPlayer.Level">Level</h4>
+  <div class="markdown level1 summary"><p>The player's current level.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[DataMember]
+public int Level { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="PacManBot_Games_Concrete_Rpg_RpgPlayer_Mana_" data-uid="PacManBot.Games.Concrete.Rpg.RpgPlayer.Mana*"></a>
+  <h4 id="PacManBot_Games_Concrete_Rpg_RpgPlayer_Mana" data-uid="PacManBot.Games.Concrete.Rpg.RpgPlayer.Mana">Mana</h4>
+  <div class="markdown level1 summary"><p>Used for active skills.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual int Mana { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="PacManBot_Games_Concrete_Rpg_RpgPlayer_MaxMana_" data-uid="PacManBot.Games.Concrete.Rpg.RpgPlayer.MaxMana*"></a>
+  <h4 id="PacManBot_Games_Concrete_Rpg_RpgPlayer_MaxMana" data-uid="PacManBot.Games.Concrete.Rpg.RpgPlayer.MaxMana">MaxMana</h4>
+  <div class="markdown level1 summary"><p>The player's maximum mana.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[DataMember]
+public int MaxMana { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="PacManBot_Games_Concrete_Rpg_RpgPlayer_Name_" data-uid="PacManBot.Games.Concrete.Rpg.RpgPlayer.Name*"></a>
+  <h4 id="PacManBot_Games_Concrete_Rpg_RpgPlayer_Name" data-uid="PacManBot.Games.Concrete.Rpg.RpgPlayer.Name">Name</h4>
+  <div class="markdown level1 summary"><p>The player's name.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override sealed string Name { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="PacManBot.Games.Concrete.Rpg.Entity.html#PacManBot_Games_Concrete_Rpg_Entity_Name">Entity.Name</a></div>
+  
+  
+  <a id="PacManBot_Games_Concrete_Rpg_RpgPlayer_NextLevelExp_" data-uid="PacManBot.Games.Concrete.Rpg.RpgPlayer.NextLevelExp*"></a>
+  <h4 id="PacManBot_Games_Concrete_Rpg_RpgPlayer_NextLevelExp" data-uid="PacManBot.Games.Concrete.Rpg.RpgPlayer.NextLevelExp">NextLevelExp</h4>
+  <div class="markdown level1 summary"><p>The experience required to advance to the next level.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int NextLevelExp { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="PacManBot_Games_Concrete_Rpg_RpgPlayer_UnlockedSkills_" data-uid="PacManBot.Games.Concrete.Rpg.RpgPlayer.UnlockedSkills*"></a>
+  <h4 id="PacManBot_Games_Concrete_Rpg_RpgPlayer_UnlockedSkills" data-uid="PacManBot.Games.Concrete.Rpg.RpgPlayer.UnlockedSkills">UnlockedSkills</h4>
+  <div class="markdown level1 summary"><p>All skills the player can use.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;Skill&gt; UnlockedSkills { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="PacManBot.Games.Concrete.Rpg.Skill.html">Skill</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  
+  
+  <a id="PacManBot_Games_Concrete_Rpg_RpgPlayer_Attack_" data-uid="PacManBot.Games.Concrete.Rpg.RpgPlayer.Attack*"></a>
+  <h4 id="PacManBot_Games_Concrete_Rpg_RpgPlayer_Attack_PacManBot_Games_Concrete_Rpg_Entity_" data-uid="PacManBot.Games.Concrete.Rpg.RpgPlayer.Attack(PacManBot.Games.Concrete.Rpg.Entity)">Attack(Entity)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override sealed string Attack(Entity target)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="PacManBot.Games.Concrete.Rpg.Entity.html">Entity</a></td>
+        <td><span class="parametername">target</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="PacManBot.Games.Concrete.Rpg.Entity.html#PacManBot_Games_Concrete_Rpg_Entity_Attack_PacManBot_Games_Concrete_Rpg_Entity_">Entity.Attack(Entity)</a></div>
+  
+  
+  <a id="PacManBot_Games_Concrete_Rpg_RpgPlayer_Die_" data-uid="PacManBot.Games.Concrete.Rpg.RpgPlayer.Die*"></a>
+  <h4 id="PacManBot_Games_Concrete_Rpg_RpgPlayer_Die" data-uid="PacManBot.Games.Concrete.Rpg.RpgPlayer.Die">Die()</h4>
+  <div class="markdown level1 summary"><p>Apply all effects when a player dies and returns a death message.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string Die()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="PacManBot_Games_Concrete_Rpg_RpgPlayer_EquipItem_" data-uid="PacManBot.Games.Concrete.Rpg.RpgPlayer.EquipItem*"></a>
+  <h4 id="PacManBot_Games_Concrete_Rpg_RpgPlayer_EquipItem_System_String_" data-uid="PacManBot.Games.Concrete.Rpg.RpgPlayer.EquipItem(System.String)">EquipItem(String)</h4>
+  <div class="markdown level1 summary"><p>Safely equips an item from the inventory.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void EquipItem(string key)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="PacManBot_Games_Concrete_Rpg_RpgPlayer_Profile_" data-uid="PacManBot.Games.Concrete.Rpg.RpgPlayer.Profile*"></a>
+  <h4 id="PacManBot_Games_Concrete_Rpg_RpgPlayer_Profile_System_String_" data-uid="PacManBot.Games.Concrete.Rpg.RpgPlayer.Profile(System.String)">Profile(String)</h4>
+  <div class="markdown level1 summary"><p>Obtain a Discord embed with this person's profile.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public EmbedBuilder Profile(string channelPrefix = &quot;&quot;)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">channelPrefix</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Discord.EmbedBuilder</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="PacManBot_Games_Concrete_Rpg_RpgPlayer_SetName_" data-uid="PacManBot.Games.Concrete.Rpg.RpgPlayer.SetName*"></a>
+  <h4 id="PacManBot_Games_Concrete_Rpg_RpgPlayer_SetName_System_String_" data-uid="PacManBot.Games.Concrete.Rpg.RpgPlayer.SetName(System.String)">SetName(String)</h4>
+  <div class="markdown level1 summary"><p>Safely sets the player's name.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void SetName(string name)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="PacManBot_Games_Concrete_Rpg_RpgPlayer_Skills_" data-uid="PacManBot.Games.Concrete.Rpg.RpgPlayer.Skills*"></a>
+  <h4 id="PacManBot_Games_Concrete_Rpg_RpgPlayer_Skills_System_String_" data-uid="PacManBot.Games.Concrete.Rpg.RpgPlayer.Skills(System.String)">Skills(String)</h4>
+  <div class="markdown level1 summary"><p>Obtain a Discord embed displaying this person's skills.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public EmbedBuilder Skills(string channelPrefix = &quot;&quot;)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">channelPrefix</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Discord.EmbedBuilder</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="PacManBot_Games_Concrete_Rpg_RpgPlayer_TryLevelUp_" data-uid="PacManBot.Games.Concrete.Rpg.RpgPlayer.TryLevelUp*"></a>
+  <h4 id="PacManBot_Games_Concrete_Rpg_RpgPlayer_TryLevelUp" data-uid="PacManBot.Games.Concrete.Rpg.RpgPlayer.TryLevelUp">TryLevelUp()</h4>
+  <div class="markdown level1 summary"><p>Levels up the player if possible, returning a description of the level-up bonuses.
+Otherwise returns null.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string TryLevelUp()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="PacManBot_Games_Concrete_Rpg_RpgPlayer_UpdateStats_" data-uid="PacManBot.Games.Concrete.Rpg.RpgPlayer.UpdateStats*"></a>
+  <h4 id="PacManBot_Games_Concrete_Rpg_RpgPlayer_UpdateStats" data-uid="PacManBot.Games.Concrete.Rpg.RpgPlayer.UpdateStats">UpdateStats()</h4>
+  <div class="markdown level1 summary"><p>Updates the player's stats affected by items, skills, buffs, etc.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override sealed void UpdateStats()</code></pre>
+  </div>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="PacManBot.Games.Concrete.Rpg.Entity.html#PacManBot_Games_Concrete_Rpg_Entity_UpdateStats">Entity.UpdateStats()</a></div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>
