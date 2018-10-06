@@ -26,8 +26,8 @@ namespace PacManBot
         /// <summary>User IDs of users to be considered developers and able to use developer commands. Dangerous.</summary>
         [DataMember] public readonly ulong[] developers = { };
 
-        /// <summary>Temporary. User IDs of users beta testing the RPG game.</summary>
-        [DataMember] public readonly ulong[] debugRpg = { };
+        /// <summary>User IDs of people helping test and debug the bot. Effects may change at any point.</summary>
+        [DataMember] public readonly ulong[] testers = { };
 
         /// <summary>The string that defines the connection to the SQLite database in <see cref="Services.StorageService"/>.</summary>
         [DataMember] public readonly string dbConnectionString = $"Data Source={Files.DefaultDatabase};";

@@ -1,5 +1,4 @@
-﻿using PacManBot.Extensions;
-
+﻿
 namespace PacManBot.Games.Concrete.Rpg.Armors
 {
     public class Clothes : Armor

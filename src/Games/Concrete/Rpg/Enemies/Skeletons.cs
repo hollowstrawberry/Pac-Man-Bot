@@ -26,7 +26,7 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
     public class Skeleton2 : Enemy
     {
         public override string Name => "Skellington";
-        public override string Description => "A skeleton's wacky brother.";
+        public override string Description => "A skeleton's flamboyant brother.";
         public override int Level => 8;
         public override int ExpYield => 7;
         public override int BaseDamage => 10;

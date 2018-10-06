@@ -2,10 +2,16 @@
 
 namespace PacManBot.Games.Concrete.Rpg
 {
+    /// <summary>
+    /// An item that can be stored in a player's inventory.
+    /// </summary>
     public abstract class Item : IKeyable, IEquatable<Item>, IEquatable<string>
     {
         public virtual string Key => GetType().Name;
+
+        /// <summary>Visible name of this item.</summary>
         public abstract string Name { get; }
+        /// <summary>Visible description of this item.</summary>
         public abstract string Description { get; }
 
 

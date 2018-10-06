@@ -1,6 +1,9 @@
 ﻿
 namespace PacManBot.Games.Concrete.Rpg
 {
+    /// <summary>
+    /// The type of damage inflicted by an entity on another.
+    /// </summary>
     public enum DamageType
     {
         Blunt,
@@ -9,6 +12,10 @@ namespace PacManBot.Games.Concrete.Rpg
         Magic,
     }
 
+
+    /// <summary>
+    /// The type of damage inflicted by an enitity on another.
+    /// </summary>
     public enum MagicType
     {
         None,
@@ -18,6 +25,10 @@ namespace PacManBot.Games.Concrete.Rpg
         Earth,
     }
 
+
+    /// <summary>
+    /// One of a player's skills.
+    /// </summary>
     public enum SkillType
     {
         Dmg,

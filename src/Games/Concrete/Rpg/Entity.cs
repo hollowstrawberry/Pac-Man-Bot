@@ -8,33 +8,51 @@ using PacManBot.Extensions;
 namespace PacManBot.Games.Concrete.Rpg
 {
     /// <summary>
-    /// A fighting entity in the RPG, player or non-player.
+    /// A fighting entity, player or non-player.
     /// </summary>
     [DataContract]
     public abstract class Entity
     {
         [DataMember] private int internalLife;
 
+        /// <summary>
+        /// HP, the entity is dead when it reaches 0. 
+        /// It's automatically clamped between 0 and <see cref="MaxLife"/>
+        /// </summary>
         public virtual int Life
         {
             get => internalLife;
             set => internalLife = Math.Clamp(value, 0, MaxLife);
         }
 
+        /// <summary>The visible name of this entity.</summary>
         public abstract string Name { get; }
+        /// <summary>The maximum <see cref="Life"/> this entity can have at any point.</summary>
         [DataMember] public int MaxLife { get; set; }
-        [DataMember] public int Damage { get; set; }
-        [DataMember] public int Defense { get; set; }
-        [DataMember] public double DamageMult { get; set; } = 1;
-        [DataMember] public double DefenseMult { get; set; } = 1;
-        [DataMember] public double CritChance { get; set; }
+        /// <summary>The current calculated damage of this entity.</summary>
+        public int Damage { get; set; }
+        /// <summary>The current calculated defense of this entity.</summary>
+        public int Defense { get; set; }
+        /// <summary>The current calculated damage multiplier this entity is affected by.</summary>
+        public double DamageMult { get; set; } = 1;
+        /// <summary>The current calculated defense multiplier this entity is affected by.</summary>
+        public double DefenseMult { get; set; } = 1;
+        /// <summary>The current critical hit chance of this entity.</summary>
+        public double CritChance { get; set; }
+        /// <summary>The damage type inflicted by this entity when attacking.</summary>
         [DataMember] public DamageType DamageType { get; set; }
+        /// <summary>The magic damage type inflicted by this entity when attacking.</summary>
         [DataMember] public MagicType MagicType { get; set; }
 
+        /// <summary>All buffs held by this entity.</summary>
         [DataMember] public List<Buff> Buffs { get; }
+        /// <summary>The current typed damage boosts this entity is affected by.</summary>
         [DataMember] public Dictionary<DamageType, int> DamageBoost { get; set; }
+        /// <summary>The current typed damage boosts this entity is affected by.</summary>
         [DataMember] public Dictionary<MagicType, int> MagicBoost { get; set; }
+        /// <summary>The current typed damage reduction this entity has as a percentage.</summary>
         [DataMember] public Dictionary<DamageType, double> DamageResistance { get; set; }
+        /// <summary>The current typed damage reduction this entity has as a percentage.</summary>
         [DataMember] public Dictionary<MagicType, double> MagicResistance { get; set; }
 
 

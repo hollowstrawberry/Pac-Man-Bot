@@ -11,19 +11,26 @@ using PacManBot.Extensions;
 namespace PacManBot.Games.Concrete.Rpg
 {
     /// <summary>
-    /// A non-player fighting entity in the RPG.
+    /// A non-player fighting entity.
     /// </summary>
     [DataContract]
     public abstract class Enemy : Entity, IKeyable
     {
         public virtual string Key => GetType().Name;
 
+        /// <summary>The visible description of this enemy type.</summary>
         public abstract string Description { get; }
+        /// <summary>The minimum player level this enemy type can be encountered at.</summary>
         public abstract int Level { get; }
+        /// <summary>The base experience given by this enemy type when defeated.</summary>
         public abstract int ExpYield { get; }
+        /// <summary>The base damage of this enemy type.</summary>
         public abstract int BaseDamage { get; }
+        /// <summary>The base defense of this enemy type.</summary>
         public abstract int BaseDefense { get; }
+        /// <summary>The base critical hit chance of this enemy type.</summary>
         public abstract double BaseCritChance { get; }
+
 
         public override string ToString() => Name;
         public override bool Equals(object obj) => obj is Enemy other && Key == other.Key;
@@ -70,6 +77,8 @@ namespace PacManBot.Games.Concrete.Rpg
         /// <summary>Returns a Discord embed field about this enemy.</summary>
         public virtual EmbedFieldBuilder Summary()
         {
+            UpdateStats();
+
             var desc = new StringBuilder();
 
             desc.AppendLine($"**Level {Level}**");
