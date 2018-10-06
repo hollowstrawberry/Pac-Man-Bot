@@ -10,7 +10,7 @@ namespace PacManBot.Games.Concrete.Rpg.Armors
 
         public override int LevelGet => 35;
 
-        public override void EquipEffects(Player player)
+        public override void EquipEffects(RpgPlayer player)
         {
             player.DamageMult += 0.15;
             player.MaxMana += 3;
@@ -28,7 +28,7 @@ namespace PacManBot.Games.Concrete.Rpg.Armors
 
         public override int LevelGet => 40;
 
-        public override void EquipEffects(Player player)
+        public override void EquipEffects(RpgPlayer player)
         {
             player.DamageMult += 0.15;
             player.CritChance += 0.1;
@@ -46,7 +46,7 @@ namespace PacManBot.Games.Concrete.Rpg.Armors
 
         public override int LevelGet => 45;
 
-        public override void EquipEffects(Player player)
+        public override void EquipEffects(RpgPlayer player)
         {
             player.DamageMult += 0.1;
             player.MaxLife += 20;

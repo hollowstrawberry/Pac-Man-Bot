@@ -4,10 +4,11 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Discord;
+using PacManBot.Games.Concrete.Rpg;
 using PacManBot.Constants;
 using PacManBot.Extensions;
 
-namespace PacManBot.Games.Concrete.Rpg
+namespace PacManBot.Games.Concrete
 {
     [DataContract]
     public class RpgGame : ChannelGame, IUserGame, IStoreableGame, IReactionsGame
@@ -27,7 +28,7 @@ namespace PacManBot.Games.Concrete.Rpg
         public string lastEmote;
         public EmbedBuilder fightEmbed;
 
-        [DataMember] public Player player;
+        [DataMember] public RpgPlayer player;
         [DataMember] public List<Enemy> enemies = new List<Enemy>(3);
         [DataMember] public DateTime lastBattle = default;
         [DataMember] public DateTime lastHeal = default;
@@ -45,7 +46,7 @@ namespace PacManBot.Games.Concrete.Rpg
         public RpgGame(string name, ulong userId, IServiceProvider services)
             : base(0, new[] { userId }, services)
         {
-            player = new Player(name);
+            player = new RpgPlayer(name);
             State = State.Cancelled;
         }
 
@@ -170,7 +171,7 @@ namespace PacManBot.Games.Concrete.Rpg
                     {
                         Channel.SendMessageAsync(options: Bot.DefaultOptions,
                             text: $"\n⏫ Level up! {lvlUp}"
-                            + "\n⭐ **You reached the maximum level! Congratulations!**".If(player.Level == Player.LevelCap));
+                            + "\n⭐ **You reached the maximum level! Congratulations!**".If(player.Level == RpgPlayer.LevelCap));
                     }
 
                     enemies.RemoveAt(i);

@@ -11,7 +11,7 @@ namespace PacManBot.Games.Concrete.Rpg
     {
         public virtual int LevelGet => -1;
 
-        public virtual void EquipEffects(Player player)
+        public virtual void EquipEffects(RpgPlayer player)
         {
         }
     }

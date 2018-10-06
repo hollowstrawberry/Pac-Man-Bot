@@ -14,7 +14,7 @@ namespace PacManBot.Games.Concrete.Rpg
     /// A player fighting entity in the RPG. Contains most information about the user's savefile.
     /// </summary>
     [DataContract]
-    public class Player : Entity
+    public class RpgPlayer : Entity
     {
         public const int LevelCap = 50;
         public const int SkillMax = 30;
@@ -64,9 +64,9 @@ namespace PacManBot.Games.Concrete.Rpg
 
  
 
-        private Player() { }
+        private RpgPlayer() { }
 
-        public Player(string name) : base()
+        public RpgPlayer(string name) : base()
         {
             SetName(name);
 

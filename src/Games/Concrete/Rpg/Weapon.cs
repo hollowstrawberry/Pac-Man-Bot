@@ -9,10 +9,10 @@ namespace PacManBot.Games.Concrete.Rpg
         public virtual MagicType Magic => MagicType.None;
 
 
-        public virtual string AttackEffects(Player wielder, Entity target) => "";
+        public virtual string AttackEffects(RpgPlayer wielder, Entity target) => "";
 
 
-        public override void EquipEffects(Player player)
+        public override void EquipEffects(RpgPlayer player)
         {
             player.Damage += Damage;
             player.CritChance += CritChance;

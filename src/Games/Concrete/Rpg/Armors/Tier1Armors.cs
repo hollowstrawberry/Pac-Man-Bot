@@ -18,7 +18,7 @@ namespace PacManBot.Games.Concrete.Rpg.Armors
 
         public override int LevelGet => 7;
 
-        public override void EquipEffects(Player player)
+        public override void EquipEffects(RpgPlayer player)
         {
             player.Defense += 1;
             player.CritChance += 0.02;

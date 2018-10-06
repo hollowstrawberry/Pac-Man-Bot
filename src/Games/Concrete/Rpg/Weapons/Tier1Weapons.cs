@@ -69,7 +69,7 @@ namespace PacManBot.Games.Concrete.Rpg.Weapons
 
         public override int LevelGet => 5;
 
-        public override string AttackEffects(Player wielder, Entity target)
+        public override string AttackEffects(RpgPlayer wielder, Entity target)
         {
             if (Bot.Random.OneIn(5) && !target.HasBuff(nameof(Buffs.Burn)))
             {

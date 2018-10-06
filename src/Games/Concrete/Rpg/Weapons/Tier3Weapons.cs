@@ -13,7 +13,7 @@ namespace PacManBot.Games.Concrete.Rpg.Weapons
 
         public override int LevelGet => 20;
 
-        public override string AttackEffects(Player wielder, Entity target)
+        public override string AttackEffects(RpgPlayer wielder, Entity target)
         {
             target.Defense /= 2;
             return "";
@@ -45,7 +45,7 @@ namespace PacManBot.Games.Concrete.Rpg.Weapons
 
         public override int LevelGet => 28;
 
-        public override string AttackEffects(Player wielder, Entity target)
+        public override string AttackEffects(RpgPlayer wielder, Entity target)
         {
             int heal = Bot.Random.Next(3, 7);
             wielder.Life += heal;
@@ -64,7 +64,7 @@ namespace PacManBot.Games.Concrete.Rpg.Weapons
 
         public override int LevelGet => 32;
 
-        public override string AttackEffects(Player wielder, Entity target)
+        public override string AttackEffects(RpgPlayer wielder, Entity target)
         {
             bool active = false;
             if (Bot.Random.OneIn(10))
@@ -93,7 +93,7 @@ namespace PacManBot.Games.Concrete.Rpg.Weapons
 
         public override int LevelGet => 50;
 
-        public override string AttackEffects(Player wielder, Entity target)
+        public override string AttackEffects(RpgPlayer wielder, Entity target)
         {
             if (Bot.Random.OneIn(3) && !target.HasBuff(nameof(Buffs.Blinded)))
             {

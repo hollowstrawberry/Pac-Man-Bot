@@ -37,7 +37,7 @@ namespace PacManBot.Games.Concrete.Rpg.Weapons
 
         public override int LevelGet => 11;
 
-        public override void EquipEffects(Player player)
+        public override void EquipEffects(RpgPlayer player)
         {
             base.EquipEffects(player);
             player.Defense += 2;
@@ -56,7 +56,7 @@ namespace PacManBot.Games.Concrete.Rpg.Weapons
 
         public override int LevelGet => 12;
 
-        public override string AttackEffects(Player wielder, Entity target)
+        public override string AttackEffects(RpgPlayer wielder, Entity target)
         {
             if (Bot.Random.OneIn(3) && !target.HasBuff(nameof(Buffs.Vulnerable)))
             {

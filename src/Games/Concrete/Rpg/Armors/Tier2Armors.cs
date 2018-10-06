@@ -10,7 +10,7 @@ namespace PacManBot.Games.Concrete.Rpg.Armors
 
         public override int LevelGet => 17;
 
-        public override void EquipEffects(Player player)
+        public override void EquipEffects(RpgPlayer player)
         {
             player.DamageBoost.ChangeOrSet(DamageType.Blunt, x => x + 2);
             player.Defense += 3;
@@ -27,7 +27,7 @@ namespace PacManBot.Games.Concrete.Rpg.Armors
 
         public override int LevelGet => 15;
 
-        public override void EquipEffects(Player player)
+        public override void EquipEffects(RpgPlayer player)
         {
             player.DamageBoost.ChangeOrSet(DamageType.Cutting, x => x + 3);
             player.Defense += 2;
@@ -44,7 +44,7 @@ namespace PacManBot.Games.Concrete.Rpg.Armors
 
         public override int LevelGet => 18;
 
-        public override void EquipEffects(Player player)
+        public override void EquipEffects(RpgPlayer player)
         {
             player.DamageBoost.ChangeOrSet(DamageType.Pierce, x => x + 4);
             player.Defense += 2;
@@ -61,7 +61,7 @@ namespace PacManBot.Games.Concrete.Rpg.Armors
 
         public override int LevelGet => 15;
 
-        public override void EquipEffects(Player player)
+        public override void EquipEffects(RpgPlayer player)
         {
             player.DamageBoost.ChangeOrSet(DamageType.Magic, x => x + 4);
             player.Defense += 2;

@@ -7,10 +7,10 @@ using Discord;
 using Discord.Net;
 using Discord.Commands;
 using PacManBot.Games;
+using PacManBot.Games.Concrete;
 using PacManBot.Games.Concrete.Rpg;
 using PacManBot.Constants;
 using PacManBot.Extensions;
-using Player = PacManBot.Games.Concrete.Rpg.Player;
 
 namespace PacManBot.Commands.Modules
 {
@@ -346,9 +346,9 @@ namespace PacManBot.Commands.Modules
                     return;
             }
 
-            if (game.player.spentSkill[type] + amount > Player.SkillMax)
+            if (game.player.spentSkill[type] + amount > RpgPlayer.SkillMax)
             {
-                await ReplyAsync($"A skill line can only have {Player.SkillMax} skill points invested.");
+                await ReplyAsync($"A skill line can only have {RpgPlayer.SkillMax} skill points invested.");
                 return;
             }
 
