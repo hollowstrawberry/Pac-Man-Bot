@@ -132,8 +132,7 @@ namespace PacManBot.Games.Concrete.Rpg
         /// <summary> Safely sets the player's name. </summary>
         public void SetName(string name)
         {
-            // Here I'd do some validation eventually
-            this.name = name.Truncate(32);
+            this.name = name.SanitizeMarkdown();
         }
 
 

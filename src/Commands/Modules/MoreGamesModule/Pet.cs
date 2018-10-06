@@ -256,9 +256,11 @@ namespace PacManBot.Commands.Modules
         {
             if (string.IsNullOrWhiteSpace(args)) await ReplyAsync($"{CustomEmoji.Cross} Please specify a name!");
             else if (args.Length > 32) await ReplyAsync($"{CustomEmoji.Cross} Pet name can't go above 32 characters!");
+            else if (args.Contains("@")) await ReplyAsync($"{CustomEmoji.Cross} Pet name can't contain \"@\"!");
             else
             {
                 pet.SetPetName(args);
+                Games.Save(pet);
                 await AutoReactAsync();
             }
         }
@@ -281,6 +283,8 @@ namespace PacManBot.Commands.Modules
                     await ReplyAsync($"{CustomEmoji.Cross} Invalid image link!\nYou could also upload the image yourself.");
                     return;
                 }
+
+                Games.Save(pet);
 
                 if (url == null) await ReplyAsync($"{CustomEmoji.Check} Pet image reset!");
                 else await AutoReactAsync();
@@ -363,7 +367,7 @@ namespace PacManBot.Commands.Modules
             }
             else
             {
-                pet = new PetGame(args, Context.User.Id, Services);
+                pet = new PetGame(args.Replace("@", "").Truncate(32), Context.User.Id, Services);
                 Games.Add(pet);
                 await SendPetProfile(pet, null);
             }
@@ -374,7 +378,7 @@ namespace PacManBot.Commands.Modules
         [RequiresPet]
         public async Task PetRelease(PetGame pet, string args)
         {
-            if (string.IsNullOrWhiteSpace(pet.petName) || args?.SanitizeMarkdown().SanitizeMentions() == pet.petName)
+            if (string.IsNullOrWhiteSpace(pet.petName) || args?.SanitizeMarkdown() == pet.petName)
             {
                 Games.Remove(pet);
                 await ReplyAsync($"Goodbye {(string.IsNullOrWhiteSpace(pet.petName) ? pet.GameName : pet.petName)}!");

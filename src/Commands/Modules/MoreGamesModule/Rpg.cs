@@ -37,18 +37,21 @@ namespace PacManBot.Commands.Modules
             .ToList();
 
 
-        [Command("rpg"), Remarks("Play an RPG game"), Priority(4)]
+
+
+        [Command("rpg"), Remarks("Play an RPG game"), Parameters("[command]"), Priority(4)]
         [Summary("Play ReactionRPG, a new game where you beat monsters and level up." +
             "\n\n**__Commands:__**" +
             "\n**{prefix}rpg manual** - See detailed instructions for the game." +
             "\n\n**{prefix}rpg** - Start a new battle or resend the current battle." +
             "\n**{prefix}rpg profile** - Check a summary of your hero." +
             "\n**{prefix}rpg skills** - Check your hero's skills lines and active skills." +
-            "\n**{prefix}rpg equip [item]** - Equip an item in your inventory." +
+            "\n**{prefix}rpg equip <item>** - Equip an item in your inventory." +
             "\n**{prefix}rpg heal** - Refill your HP, only once per battle." +
-            "\n**{prefix}rpg spend [skill] [amount]** - Spend skill points on a skill line." +
-            "\n\n**{prefix}rpg name [name]** - Change your hero's name." +
-            "\n**{prefix}rpg color [color]** - Change the color of your hero's profile.")]
+            "\n**{prefix}rpg spend <skill> <amount>** - Spend skill points on a skill line." +
+            "\n\n**{prefix}rpg name <name>** - Change your hero's name." +
+            "\n**{prefix}rpg color <color>** - Change the color of your hero's profile." +
+            "\n**{prefix}rpg reset** - Delete your hero.")]
         public async Task RpgMaster(string commandName = "", [Remainder]string args = "")
         {
             commandName = commandName.ToLower();
@@ -374,6 +377,7 @@ namespace PacManBot.Commands.Modules
         {
             if (args == "") await ReplyAsync("Please specify a new name.");
             else if (args.Length > 32) await ReplyAsync("Your name can't be longer than 32 characters.");
+            else if (args.Contains("@")) await ReplyAsync($"Your name can't contain \"@\"");
             else
             {
                 game.player.SetName(args);
@@ -420,6 +424,23 @@ namespace PacManBot.Commands.Modules
             Games.Save(game);
 
             await SendRpgManual(game, "");
+        }
+
+
+        [RpgCommand("reset")]
+        public async Task RpgDelete(RpgGame game, string args)
+        {
+            if (args?.SanitizeMarkdown() == game.player.Name)
+            {
+                Games.Remove(game);
+                await ReplyAsync($"{game.player.Name}'s adventure has ended.");
+            }
+            else
+            {
+                await ReplyAsync(
+                    $"❗ You're about to completely delete your progress in ReactionRPG. This is not reversible." +
+                    $"\nDo **{Prefix}rpg reset {game.player.Name}** if you're sure you want to end your adventure.");
+            }
         }
 
 
