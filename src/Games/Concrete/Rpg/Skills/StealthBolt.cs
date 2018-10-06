@@ -12,7 +12,7 @@ namespace PacManBot.Games.Concrete.Rpg.Skills
 
         public override string Effect(RpgGame game)
         {
-            foreach (var enemy in game.enemies)
+            foreach (var enemy in game.Opponents)
             {
                 enemy.AddBuff(nameof(Buffs.Blinded), 5);
             }

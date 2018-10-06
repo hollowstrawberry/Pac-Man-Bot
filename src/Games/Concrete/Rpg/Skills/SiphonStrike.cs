@@ -16,11 +16,11 @@ namespace PacManBot.Games.Concrete.Rpg.Skills
             bool crit = Bot.Random.NextDouble() < game.player.CritChance;
             int dmg = Entity.AttackFormula(game.player.Damage, crit);
 
-            var target = Bot.Random.Choose(game.enemies);
+            var target = Bot.Random.Choose(game.Opponents);
 
             string effectMessage = game.player.weapon.GetWeapon().AttackEffects(game.player, target);
             int dealt = target.Hit(dmg, game.player.DamageType, game.player.MagicType);
-            int heal = dealt * 3;
+            int heal = game.IsPvp ? dealt : dealt * 3;
             game.player.Life += heal;
             return $"{this} dealt {dealt} damage to {target}{" (!)".If(crit)} and siphoned {heal} HP!\n{effectMessage}";
         }

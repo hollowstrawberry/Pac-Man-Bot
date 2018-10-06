@@ -11,13 +11,16 @@ using PacManBot.Extensions;
 namespace PacManBot.Games.Concrete.Rpg
 {
     /// <summary>
-    /// A player fighting entity in the RPG. Contains most information about the user's savefile.
+    /// A player fighting entity. Contains most information about the user's savefile.
     /// </summary>
     [DataContract]
     public class RpgPlayer : Entity
     {
+        /// <summary>Maximum level a player can reach.</summary>
         public const int LevelCap = 50;
+        /// <summary>Maximum value an invested skill can have.</summary>
         public const int SkillMax = 30;
+
 
         /// <summary>The player's name.</summary>
         public sealed override string Name => name;
@@ -38,10 +41,17 @@ namespace PacManBot.Games.Concrete.Rpg
             get => internalMana;
             set => internalMana = Math.Clamp(value, 0, MaxMana);
         }
+        /// <summary>Profile embed color.</summary>
+        public Color Color
+        {
+            set => rawColor = value.RawValue;
+            get => new Color(rawColor);
+        }
 
 
         [DataMember] private string name;
         [DataMember] private int internalMana;
+        [DataMember] private uint rawColor;
 
         /// <summary>The player's current level.</summary>
         [DataMember] public int Level { get; set; } = 1;
@@ -57,8 +67,6 @@ namespace PacManBot.Games.Concrete.Rpg
         [DataMember] public string weapon = nameof(Weapons.Fists);
         /// <summary>The key of the armor the player is wearing.</summary>
         [DataMember] public string armor = nameof(Armors.Clothes);
-        /// <summary>Profile embed color.</summary>
-        [DataMember] public Color color = Color.Blue;
         /// <summary>Contains the keys of the items in the player's inventory.</summary>
         [DataMember] public List<string> inventory = new List<string>(20);
 
@@ -129,6 +137,17 @@ namespace PacManBot.Games.Concrete.Rpg
         }
 
 
+        /// <summary>Apply all effects when a player dies and returns a death message.</summary>
+        public string Die()
+        {
+            experience = Math.Max(experience - NextLevelExp / 2, experience / 3);
+            Life = MaxLife;
+            Mana = MaxMana;
+            Buffs.Clear();
+            return $"\n☠ You died and lost EXP!\nYou rest and feel ready to battle again.";
+        }
+
+
         /// <summary> Safely sets the player's name. </summary>
         public void SetName(string name)
         {
@@ -185,10 +204,12 @@ namespace PacManBot.Games.Concrete.Rpg
         /// <summary>Obtain a Discord embed with this person's profile.</summary>
         public EmbedBuilder Profile(string channelPrefix = "")
         {
+            UpdateStats();
+
             var embed = new EmbedBuilder
             {
                 Title = $"{Name}'s Profile",
-                Color = color,
+                Color = Color,
                 Description =
                 $"\n**You have unspent skill points!**\nᅠ".If(skillPoints > 0) +
                 $"Do **{channelPrefix}rpg skills** for skills.",
@@ -242,7 +263,7 @@ namespace PacManBot.Games.Concrete.Rpg
             var embed = new EmbedBuilder
             {
                 Title = $"{Name}'s Skills",
-                Color = color,
+                Color = Color,
                 Description = desc.ToString().Truncate(2048),
             };
 

@@ -209,8 +209,11 @@ namespace PacManBot.Services
         /// <summary>Tries to find a game and execute reaction input, returns whether it is successful.</summary>
         private async Task<bool> ReactionGameInputAsync(IUserMessage message, ISocketMessageChannel channel, SocketReaction reaction)
         {
-            var game = games.AllGames.OfType<IReactionsGame>().FirstOrDefault(g => g.MessageId == message.Id);
-            if (game == null || !game.IsInput(reaction.Emote, reaction.UserId)) return false;
+            var game = games.AllGames
+                .OfType<IReactionsGame>()
+                .FirstOrDefault(g => g.MessageId == message.Id && g.IsInput(reaction.Emote, reaction.UserId));
+
+            if (game == null) return false;
 
             try
             {

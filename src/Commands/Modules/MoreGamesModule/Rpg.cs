@@ -44,12 +44,14 @@ namespace PacManBot.Commands.Modules
             "\n\n**__Commands:__**" +
             "\n**{prefix}rpg manual** - See detailed instructions for the game." +
             "\n\n**{prefix}rpg** - Start a new battle or resend the current battle." +
-            "\n**{prefix}rpg profile** - Check a summary of your hero." +
-            "\n**{prefix}rpg skills** - Check your hero's skills lines and active skills." +
+            "\n**{prefix}rpg pvp <player>** - Challenge a user to a battle, or accept a user's challenge." +
             "\n**{prefix}rpg equip <item>** - Equip an item in your inventory." +
             "\n**{prefix}rpg heal** - Refill your HP, only once per battle." +
+            "\n**{prefix}rpg cancel** - Cancel a battle, dying instantly against monsters." +
+            "\n\n**{prefix}rpg profile** - Check a summary of your hero." +
+            "\n**{prefix}rpg skills** - Check your hero's skills lines and active skills." +
             "\n**{prefix}rpg spend <skill> <amount>** - Spend skill points on a skill line." +
-            "\n\n**{prefix}rpg name <name>** - Change your hero's name." +
+            "\n**{prefix}rpg name <name>** - Change your hero's name." +
             "\n**{prefix}rpg color <color>** - Change the color of your hero's profile." +
             "\n**{prefix}rpg reset** - Delete your hero.")]
         public async Task RpgMaster(string commandName = "", [Remainder]string args = "")
@@ -97,7 +99,7 @@ namespace PacManBot.Commands.Modules
             if (game.State != State.Active)
             {
                 var timeLeft = TimeSpan.FromSeconds(30) - (DateTime.Now - game.lastBattle);
-                if (timeLeft > TimeSpan.Zero && !Config.debugRpg.Contains(Context.User.Id))
+                if (timeLeft > TimeSpan.Zero)
                 {
                     await ReplyAsync($"{CustomEmoji.Cross} You may battle again in {timeLeft.Humanized(empty: "1 second")}");
                     return;
@@ -114,13 +116,20 @@ namespace PacManBot.Commands.Modules
                 catch (HttpException) { }
             }
 
-            var message = await ReplyAsync(game.fightEmbed ?? game.Fight());
+            game.fightEmbed = game.fightEmbed ?? (game.IsPvp ? game.FightPvP() : game.Fight());
+            var message = await ReplyAsync(game.fightEmbed);
+
             game.ChannelId = Context.Channel.Id;
             game.MessageId = message.Id;
+            if (game.IsPvp && game.PvpBattleConfirmed)
+            {
+                game.PvpGame.ChannelId = Context.Channel.Id;
+                game.PvpGame.MessageId = message.Id;
+            }
 
             Games.Save(game);
 
-            await AddRpgEmotes(message, game.enemies.Count);
+            await AddRpgEmotes(message, game);
         }
 
 
@@ -129,6 +138,11 @@ namespace PacManBot.Commands.Modules
             if (game.State != State.Active)
             {
                 await ReplyAsync("You can only use an active skill during battle!");
+                return;
+            }
+            if (game.IsPvp && !game.isPvpTurn)
+            {
+                await ReplyAsync("It's not your turn.");
                 return;
             }
 
@@ -151,10 +165,25 @@ namespace PacManBot.Commands.Modules
                 return;
             }
 
+            game.player.UpdateStats();
+            foreach (var op in game.Opponents) op.UpdateStats();
 
             var gameMsg = await game.GetMessage();
             game.player.Mana -= skill.ManaCost;
-            game.fightEmbed = game.Fight(-1, skill);
+            if (game.IsPvp)
+            {
+                game.fightEmbed = game.FightPvP(true, skill);
+                if (game.IsPvp) // Match didn't end
+                {
+                    game.isPvpTurn = false;
+                    game.PvpGame.isPvpTurn = true;
+                    game.PvpGame.fightEmbed = game.fightEmbed;
+                }
+            }
+            else
+            {
+                game.fightEmbed = game.Fight(-1, skill);
+            }
 
             if (game.State == State.Active && (gameMsg == null || gameMsg.Channel.Id != Context.Channel.Id))
             {
@@ -163,7 +192,7 @@ namespace PacManBot.Commands.Modules
                 game.MessageId = gameMsg.Id;
                 Games.Save(game);
 
-                await AddRpgEmotes(gameMsg, game.enemies.Count);
+                await AddRpgEmotes(gameMsg, game);
             }
             else
             {
@@ -200,9 +229,14 @@ namespace PacManBot.Commands.Modules
                 await ReplyAsync($"{CustomEmoji.Cross} You already healed during this battle.");
                 return;
             }
+            else if (game.IsPvp && game.PvpBattleConfirmed)
+            {
+                await ReplyAsync($"{CustomEmoji.Cross} You can't heal in a PVP battle.");
+                return;
+            }
 
             var timeLeft = TimeSpan.FromMinutes(5) - (DateTime.Now - game.lastHeal);
-            if (timeLeft > TimeSpan.Zero && !Config.debugRpg.Contains(Context.User.Id))
+            if (timeLeft > TimeSpan.Zero)
             {
                 await ReplyAsync($"{CustomEmoji.Cross} You may heal again in {timeLeft.Humanized(empty: "1 second")}");
                 return;
@@ -221,7 +255,8 @@ namespace PacManBot.Commands.Modules
                 if (message != null)
                 {
                     game.lastEmote = "";
-                    try { await message.ModifyAsync(m => m.Embed = game.Fight().Build()); }
+                    game.fightEmbed = game.IsPvp ? game.FightPvP() : game.Fight();
+                    try { await message.ModifyAsync(m => m.Embed = game.fightEmbed.Build(), game.GetRequestOptions()); }
                     catch { }
                 }
 
@@ -268,13 +303,13 @@ namespace PacManBot.Commands.Modules
                 Games.Save(game);
                 await ReplyAsync($"⚔ Equipped `{bestMatch}`.");
 
-                if (game.State == State.Active)
+                if (game.State == State.Active && !game.IsPvp)
                 {
                     var message = await game.GetMessage();
                     if (message != null)
                     {
                         game.lastEmote = RpgGame.ProfileEmote;
-                        try { await message.ModifyAsync(m => m.Embed = game.player.Profile().Build()); }
+                        try { await message.ModifyAsync(m => m.Embed = game.player.Profile().Build(), game.GetRequestOptions()); }
                         catch { }
                     }
 
@@ -403,9 +438,116 @@ namespace PacManBot.Commands.Modules
             }
             else
             {
-                game.player.color = color.Value;
+                game.player.Color = color.Value;
                 Games.Save(game);
-                await ReplyAsync(new EmbedBuilder { Title = "Success", Color = color, Description = "Player color set" });
+                var embed = new EmbedBuilder
+                {
+                    Title = "Player color set",
+                    Description = $"#{color.Value.RawValue:X}",
+                    Color = color,
+                };
+                await ReplyAsync(embed);
+            }
+        }
+
+
+        [RpgCommand("cancel", "die", "end", "killme")]
+        public async Task RpgCancelBattle(RpgGame game, string args)
+        {
+            if (game.State != State.Active)
+            {
+                await ReplyAsync("You're not fighting anything.");
+                return;
+            }
+
+            string reply = "";
+            var oldMessage = await game.GetMessage();
+
+            if (game.IsPvp)
+            {
+                reply = "PVP match cancelled.";
+                if (game.PvpBattleConfirmed) game.PvpGame.ResetBattle(State.Completed);
+            }
+            else
+            {
+                reply = game.player.Die();
+            }
+
+            game.ResetBattle(State.Completed);
+
+            if (oldMessage != null)
+            {
+                try { await oldMessage.DeleteAsync(); }
+                catch (HttpException) { }
+            }
+
+            await ReplyAsync(reply);
+        }
+
+
+        [RpgCommand("pvp", "vs", "challenge")]
+        public async Task RpgStartPvpBattle(RpgGame game, string args)
+        {
+            if (game.State == State.Active)
+            {
+                await ReplyAsync("You're already busy fighting.");
+                return;
+            }
+            if (args == "")
+            {
+                await ReplyAsync("You must specify a person to challenge in a PVP battle.");
+                return;
+            }
+
+            RpgGame otherGame = null;
+            var otherUser = await Context.ParseUserAsync(args);
+            if (otherUser == null)
+            {
+                await ReplyAsync("Can't find that user to challenge!");
+                return;
+            }
+            if ((otherGame = Games.GetForUser<RpgGame>(otherUser.Id)) == null)
+            {
+                await ReplyAsync("This person doesn't have a hero.");
+                return;
+            }
+
+
+            if (otherGame.pvpUserId == Context.User.Id) // Accept fight
+            {
+                game.StartFight(otherUser.Id);
+                game.isPvpTurn = true;
+                game.ChannelId = otherGame.ChannelId;
+                game.MessageId = otherGame.MessageId;
+                Games.Save(game);
+                await AutoReactAsync();
+
+                var msg = await otherGame.GetMessage();
+                try
+                {
+                    await AddRpgEmotes(msg, game);
+                    await msg.ModifyAsync(x => {
+                        x.Content = "";
+                        x.Embed = game.FightPvP().Build();
+                    }, game.GetRequestOptions());
+                }
+                catch { }
+            }
+            else if (otherGame.State == State.Active)
+            {
+                await ReplyAsync("This person is already busy fighting.");
+            }
+            else // Propose fight
+            {
+                game.StartFight(otherUser.Id);
+                game.isPvpTurn = false;
+                string content = $"{otherUser.Mention} do **{Prefix}rpg pvp {Context.User.Mention}** " +
+                                 $"to accept the challenge. You should heal first.";
+
+                var msg = await ReplyAsync(content, game.FightPvP());
+                game.MessageId = msg.Id;
+                game.ChannelId = Context.Channel.Id;
+                Games.Save(game);
             }
         }
 
@@ -505,9 +647,19 @@ namespace PacManBot.Commands.Modules
 
 
 
-        private static async Task AddRpgEmotes(IUserMessage message, int enemyCount)
+        private static async Task AddRpgEmotes(IUserMessage message, RpgGame game)
         {
-            var emotes = RpgGame.EmoteNumberInputs.Take(enemyCount).Concat(RpgGame.EmoteOtherInputs);
+            if (game.IsPvp)
+            {
+                try { await message.AddReactionAsync(RpgGame.PvpEmote.ToEmoji(), DefaultOptions); }
+                catch { }
+                return;
+            }
+
+            var emotes = game.IsPvp
+                ? new[] { RpgGame.PvpEmote}
+                : RpgGame.EmoteNumberInputs.Take(game.enemies.Count()).Concat(RpgGame.EmoteOtherInputs);
+
             try
             {
                 foreach (var emote in emotes)

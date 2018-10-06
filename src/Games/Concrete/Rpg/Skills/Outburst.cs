@@ -17,7 +17,7 @@ namespace PacManBot.Games.Concrete.Rpg.Skills
             int dmg = Entity.AttackFormula(game.player.Damage * 2, crit);
             if (crit) dmg = (dmg * 2.0 / 3.0).Round(); // Crits too OP
 
-            var target = Bot.Random.Choose(game.enemies);
+            var target = Bot.Random.Choose(game.Opponents);
 
             string effectMessage = game.player.weapon.GetWeapon().AttackEffects(game.player, target);
             int dealt = target.Hit(dmg, game.player.DamageType, game.player.MagicType);

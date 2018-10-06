@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using PacManBot.Extensions;
 
 namespace PacManBot.Games.Concrete.Rpg.Skills
@@ -19,7 +17,7 @@ namespace PacManBot.Games.Concrete.Rpg.Skills
             int dmg = (game.player.Damage * 0.75).Round();
 
             var hits = new List<string>(3);
-            foreach (var enemy in game.enemies)
+            foreach (var enemy in game.Opponents)
             {
                 bool crit = Bot.Random.NextDouble() < game.player.CritChance;
                 int dealt = enemy.Hit(Entity.AttackFormula(dmg, crit), game.player.DamageType, game.player.MagicType);
