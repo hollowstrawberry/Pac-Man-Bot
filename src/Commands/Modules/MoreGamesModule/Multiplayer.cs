@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Net;
@@ -56,7 +55,7 @@ namespace PacManBot.Commands.Modules
 
 
 
-        [Command("tictactoe"), Alias("ttt", "tic"), Priority(-1)]
+        [Command("tictactoe"), Alias("ttt", "tic"), Priority(1)]
         [Remarks("Play Tic-Tac-Toe with another user or the bot")]
         [Summary("You can choose a guild member to invite as an opponent using a mention, username, nickname or user ID. Otherwise, " +
                  "you'll play against the bot.\n\nYou play by sending the number of a free cell (1 to 9) in chat while it is your turn, " +
@@ -64,21 +63,19 @@ namespace PacManBot.Commands.Modules
                  "Do `{prefix}cancel` to end the game or `{prefix}bump` to move it to the bottom of the chat. " +
                  "The game times out in case of extended inactivity.\n\n" +
                  "You can also make the bot challenge another user or bot with `{prefix}ttt vs <opponent>`")]
-        [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
         public async Task StartTicTacToe(SocketGuildUser opponent = null)
             => await RunMultiplayerGame<TTTGame>(opponent ?? (SocketUser)Context.Client.CurrentUser, Context.User);
 
 
-        [Command("tictactoe vs"), Alias("ttt vs", "tic vs"), Priority(1), HideHelp]
+        [Command("tictactoe vs"), Alias("ttt vs", "tic vs"), Priority(-1), HideHelp]
         [Summary("Make the bot challenge a user... or another bot")]
-        [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
         public async Task StartTicTacToeVs(SocketGuildUser opponent)
             => await RunMultiplayerGame<TTTGame>(opponent, Context.Client.CurrentUser);
 
 
 
 
-        [Command("5ttt"), Alias("ttt5", "5tictactoe", "5tic"), Priority(-1)]
+        [Command("5ttt"), Alias("ttt5", "5tictactoe", "5tic"), Priority(1)]
         [Remarks("Play a harder 5-Tic-Tac-Toe with another user or the bot")]
         [Summary("You can choose a guild member to invite as an opponent using a mention, username, nickname or user ID. Otherwise, " +
                  "you'll play against the bot.\n\nYou play by sending the column and row of the cell you want to play, for example, \"C4\". " +
@@ -86,21 +83,19 @@ namespace PacManBot.Commands.Modules
                  "Do `{prefix}cancel` to end the game or `{prefix}bump` to move it to the bottom of the chat. " +
                  "The game times out in case of extended inactivity.\n\n" +
                  "You can also make the bot challenge another user or bot with `{prefix}5ttt vs <opponent>`")]
-        [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
         public async Task StartTicTacToe5(SocketGuildUser opponent = null)
             => await RunMultiplayerGame<TTT5Game>((SocketUser)opponent ?? Context.Client.CurrentUser, Context.User);
 
 
-        [Command("5ttt vs"), Alias("ttt5 vs", "5tictactoe vs", "5tic vs"), Priority(1), HideHelp]
+        [Command("5ttt vs"), Alias("ttt5 vs", "5tictactoe vs", "5tic vs"), Priority(-1), HideHelp]
         [Summary("Make the bot challenge a user... or another bot")]
-        [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
         public async Task Start5TicTacToeVs(SocketGuildUser opponent)
             => await RunMultiplayerGame<TTT5Game>(opponent, Context.Client.CurrentUser);
 
 
 
 
-        [Command("connect4"), Alias("c4", "four"), Priority(-1)]
+        [Command("connect4"), Alias("c4", "four"), Priority(1)]
         [Remarks("Play Connect Four with another user or the bot")]
         [Summary("You can choose a guild member to invite as an opponent using a mention, username, nickname or user ID. Otherwise, " +
                  "you'll play against the bot.\n\n You play by sending the number of a free cell (1 to 7) in chat while it is your turn, " +
@@ -108,14 +103,12 @@ namespace PacManBot.Commands.Modules
                  "Do `{prefix}cancel` to end the game or `{prefix}bump` to move it to the bottom of the chat. " +
                  "The game times out in case of extended inactivity.\n\n" +
                  "You can also make the bot challenge another user or bot with `{prefix}c4 vs <opponent>`")]
-        [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
         public async Task StartConnectFour(SocketGuildUser opponent = null)
             => await RunMultiplayerGame<C4Game>(opponent ?? (SocketUser)Context.Client.CurrentUser, Context.User);
 
 
-        [Command("connect4 vs"), Alias("c4 vs", "four vs"), Priority(1), HideHelp]
+        [Command("connect4 vs"), Alias("c4 vs", "four vs"), Priority(-1), HideHelp]
         [Summary("Make the bot challenge a user... or another bot")]
-        [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
         public async Task StartConnectFoureVs(SocketGuildUser opponent)
             => await RunMultiplayerGame<C4Game>(opponent, Context.Client.CurrentUser);
 
@@ -123,7 +116,7 @@ namespace PacManBot.Commands.Modules
 
 
 
-        [Command("uno"), Parameters("[players]"), Priority(-2)]
+        [Command("uno"), Parameters("[players]"), Priority(3)]
         [Remarks("Play Uno with up to 10 friends and bots")]
         [ExampleUsage("uno\nuno @Pac-Man#3944")]
         [Summary("__Tip__: Switching back and forth with DMs to see your cards can be tiresome, " +
@@ -150,12 +143,11 @@ namespace PacManBot.Commands.Modules
                  " *Draw* cards force the next player to draw cards and skip a turn. *Wild* cards let you choose the color, " +
                  "and will match with any card.")]
         [RequireContext(ContextType.Guild)]
-        [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
         public async Task StartUno(params SocketGuildUser[] startingPlayers)
             => await RunMultiplayerGame<UnoGame>(new[] { Context.User as SocketGuildUser }.Concatenate(startingPlayers));
 
 
-        [Command("uno"), Priority(-3)]
+        [Command("uno"), Priority(3)]
         [Remarks("Play Uno in a 1v1 match with the bot")]
         [RequireContext(ContextType.DM)]
         public async Task StartUnoDm() => await RunMultiplayerGame<UnoGame>(Context.User, Context.Client.CurrentUser);
@@ -164,7 +156,6 @@ namespace PacManBot.Commands.Modules
         [Command("uno bots"), Alias("uno bot", "unobot", "unobots"), Parameters("[bots]"), HideHelp]
         [Summary("Start a bot-only uno match.")]
         [RequireContext(ContextType.Guild)]
-        [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
         public async Task StartUnoBots(params SocketGuildUser[] startingPlayers)
         {
             startingPlayers = startingPlayers.Where(x => x.IsBot).ToArray();
@@ -173,16 +164,15 @@ namespace PacManBot.Commands.Modules
         }
 
 
-        [Command("uno help"), Alias("uno h", "uno rules", "uno commands"), Priority(1), HideHelp]
+        [Command("uno help"), Alias("uno h", "uno rules", "uno commands"), Priority(-1), HideHelp]
         [Summary("Gives rules and commands for the Uno game.")]
         public async Task UnoHelp() => await ReplyAsync(Help.MakeHelp("uno", Prefix));
 
 
-        [Command("uno join"), Alias("uno add", "uno invite"), Priority(1), HideHelp]
+        [Command("uno join"), Alias("uno add", "uno invite"), Priority(-1), HideHelp]
         [Summary("Joins an ongoing Uno game in this channel. Fails if the game is full or if there aren't enough cards to draw for you.\n" +
                  "You can also invite a bot or another user to play.")]
         [RequireContext(ContextType.Guild)]
-        [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
         public async Task JoinUno(SocketGuildUser user = null)
         {
             bool self = false;
@@ -219,10 +209,9 @@ namespace PacManBot.Commands.Modules
         }
 
 
-        [Command("uno leave"), Alias("uno remove", "uno kick"), Priority(1), HideHelp]
+        [Command("uno leave"), Alias("uno remove", "uno kick"), Priority(-1), HideHelp]
         [Summary("Leaves the Uno game in this channel.\nYou can also remove a bot or inactive player.")]
         [RequireContext(ContextType.Guild)]
-        [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.EmbedLinks)]
         public async Task LeaveUno(SocketGuildUser user = null)
         {
             bool self = false;

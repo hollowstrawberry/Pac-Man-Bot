@@ -15,6 +15,8 @@ using PacManBot.Extensions;
 namespace PacManBot.Commands.Modules
 {
     [Name("🎮Pac-Man"), Remarks("2")]
+    [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.EmbedLinks |
+                                ChannelPermission.UseExternalEmojis | ChannelPermission.AddReactions)]
     public class PacManModule : BaseCustomModule
     {
         public PacManModule(IServiceProvider services) : base(services) { }
@@ -23,14 +25,12 @@ namespace PacManBot.Commands.Modules
         private const int MaxDisplayedScores = 20;
 
 
-        [Command("play"), Alias("pacman", "p", "start"), Remarks("Start a new game in this channel"), Parameters("[mobile] [map]")]
+        [Command("pacman"), Alias("p", "start"), Remarks("Start a new game in this channel"), Parameters("[mobile] [map]")]
         [Summary("Starts a new Pac-Man game, unless there is already a game in this channel.\nAdding \"mobile\" or \"m\" " +
                  "after the command will begin the game in *Mobile Mode*, which uses simple characters that will work in phones. " +
                  "Use **{prefix}display** to change mode later.\n\nIf you add a valid customized map between \\`\\`\\`triple backticks\\`\\`\\`, " +
                  "it will start a custom game using that map instead. For more information about custom games, use the **{prefix}custom** command.\n\n" +
                  "Use **{prefix}bump** to move the game message to the bottom of the chat. Use **{prefix}cancel** to end the game. ")]
-        [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.EmbedLinks |
-                                    ChannelPermission.UseExternalEmojis | ChannelPermission.AddReactions)]
         public async Task StartGameInstance([Remainder]string args = "")
         {
             if (!Context.BotCan(ChannelPermission.SendMessages)) return;
@@ -229,7 +229,6 @@ namespace PacManBot.Commands.Modules
 
         [Command("custom"), Remarks("Learn how custom maps work")]
         [Summary("Using this command will display detailed help about the custom Pac-Man maps that you can design and play yourself!")]
-        [BetterRequireBotPermission(ChannelPermission.EmbedLinks)]
         public async Task SayCustomMapHelp()
         {
             string message = Content.customHelp.Replace("{prefix}", Prefix);

@@ -39,7 +39,6 @@ namespace PacManBot.Commands.Modules
 
         [Command("about"), Alias("info"), Remarks("About this bot")]
         [Summary("Shows relevant information, data and links about Pac-Man Bot.")]
-        [BetterRequireBotPermission(ChannelPermission.EmbedLinks)]
         public async Task SendBotInfo()
         {
             var embed = new EmbedBuilder
@@ -64,7 +63,6 @@ namespace PacManBot.Commands.Modules
         [Command("help"), Alias("h", "commands"), Parameters("[command]")]
         [Remarks("Help about commands or a specific command")]
         [Summary("Show a complete list of commands you can use. You can specify a command to see detailed help about that command.")]
-        [BetterRequireBotPermission(ChannelPermission.EmbedLinks)]
         public async Task SendHelp([Remainder]string command = null)
         {
             if (command == null)
@@ -82,7 +80,6 @@ namespace PacManBot.Commands.Modules
 
         [Command("helpfull"), Alias("helpmore", "hf", "commandsfull"), Remarks("Expanded help about all commands")]
         [Summary("Show a complete list of all commands including their parameters and a short description.")]
-        [BetterRequireBotPermission(ChannelPermission.EmbedLinks)]
         public async Task SendAllHelpExpanded()
         {
             await ReplyAsync(await Help.MakeAllHelp(Context, true));
@@ -160,7 +157,6 @@ namespace PacManBot.Commands.Modules
         [Command("invite"), Alias("inv"), Remarks("Invite this bot to your server")]
         [Summary("Shows a fancy embed block with the bot's invite link. " +
                  "I'd show it right now too, since you're already here, but I really want you to see that fancy embed.")]
-        [BetterRequireBotPermission(ChannelPermission.EmbedLinks)]
         public async Task SendBotInvite()
         {
             var embed = new EmbedBuilder()
@@ -185,7 +181,6 @@ namespace PacManBot.Commands.Modules
 
         [Command("server"), Alias("support"), Remarks("Support server link")]
         [Summary(CustomEmoji.Staff + " Link to the Pac-Man discord server")]
-        [BetterRequireBotPermission(ChannelPermission.EmbedLinks)]
         public async Task SendBotServer()
         {
             var embed = new EmbedBuilder()
@@ -203,7 +198,6 @@ namespace PacManBot.Commands.Modules
 
         [Command("github"), Alias("git"), Remarks("GitHub repository link")]
         [Summary(CustomEmoji.GitHub + "Link to Pac-Man's GitHub repository. I welcome contributions!")]
-        [BetterRequireBotPermission(ChannelPermission.EmbedLinks)]
         public async Task SendBotGitHub()
         {
             var embed = new EmbedBuilder()
@@ -246,6 +240,7 @@ namespace PacManBot.Commands.Modules
         [Command("party"), Alias("blob", "dance"), HideHelp]
         [Summary("Takes a number which can be either an amount of emotes to send or a message ID to react to. " +
                  "Reacts to the command by default.")]
+        [BetterRequireBotPermission(ChannelPermission.UseExternalEmojis | ChannelPermission.AddReactions)]
         public async Task BlobDance(ulong number = 0)
         {
             if (number < 1) await Context.Message.AddReactionAsync(CustomEmoji.ERapidBlobDance, DefaultOptions);

@@ -37,7 +37,7 @@ namespace PacManBot.Commands.Modules
             .ToList();
 
 
-        [Command("rpg"), Remarks("Play an RPG game"), HideHelp]
+        [Command("rpg"), Remarks("Play an RPG game"), Priority(4)]
         [Summary("Play ReactionRPG, a new game where you beat monsters and level up." +
             "\n\n**__Commands:__**" +
             "\n**{prefix}rpg manual** - See detailed instructions for the game." +
@@ -49,7 +49,6 @@ namespace PacManBot.Commands.Modules
             "\n**{prefix}rpg spend [skill] [amount]** - Spend skill points on a skill line." +
             "\n\n**{prefix}rpg name [name]** - Change your hero's name." +
             "\n**{prefix}rpg color [color]** - Change the color of your hero's profile.")]
-        [BetterRequireBotPermission(ChannelPermission.EmbedLinks | ChannelPermission.AddReactions)]
         public async Task RpgMaster(string commandName = "", [Remainder]string args = "")
         {
             commandName = commandName.ToLower();
@@ -62,8 +61,10 @@ namespace PacManBot.Commands.Modules
 
             if (command == null)
             {
-                var skill = RpgExtensions.SkillTypes.Values.FirstOrDefault(x => x.Shortcut == commandName);
-                if (game == null || skill == null)
+                var skill = game == null ? null
+                    : RpgExtensions.SkillTypes.Values.FirstOrDefault(x => x.Shortcut == commandName);
+
+                if (skill == null)
                 {
                     await ReplyAsync($"Unknown RPG command! Do `{Prefix}rpg manual` for game instructions," +
                         $" or `{Prefix}rpg help` for a list of commands.");

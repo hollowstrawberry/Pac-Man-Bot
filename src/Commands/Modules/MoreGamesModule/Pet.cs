@@ -37,7 +37,7 @@ namespace PacManBot.Commands.Modules
         public string AdoptPetMessage => $"You don't have a pet yet! Do `{Prefix}pet adopt` to adopt one.";
 
 
-        [Command("pet"), Alias("gotchi", "wakagotchi", "clockagotchi"), Parameters("[command]"), Priority(-4)]
+        [Command("pet"), Alias("gotchi", "wakagotchi", "clockagotchi"), Parameters("[command]"), Priority(5)]
         [Remarks("Adopt your own pet!")]
         [Summary("**__Pet Commands__**\n\n" +
                  "**{prefix}pet** - Check on your pet or adopt if you don't have one\n" +
@@ -54,7 +54,6 @@ namespace PacManBot.Commands.Modules
                  "**{prefix}pet user <user>** - See another person's pet\n" +
                  "**{prefix}pet adopt [name]** - Adopt a new pet!\n" +
                  "**{prefix}pet release** - Gives your pet to a loving family that will take care of it (Deletes pet forever)")]
-        [BetterRequireBotPermission(ChannelPermission.EmbedLinks | ChannelPermission.AddReactions)]
         public async Task PetMaster(string commandName = "", [Remainder]string args = null)
         {
             commandName = commandName.ToLower();

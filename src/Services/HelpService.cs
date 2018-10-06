@@ -142,12 +142,13 @@ namespace PacManBot.Services
         {
             var dict = new Dictionary<string, CommandHelpInfo>();
 
-            foreach (var com in commands.Commands.OrderBy(c => c.Priority))
+            foreach (var com in commands.Commands.OrderByDescending(c => c.Priority))
             {
                 var help = new CommandHelpInfo(com);
                 foreach (var alias in com.Aliases)
                 {
-                    dict[alias.ToLower()] = help;
+                    string key = alias.ToLower();
+                    if (!dict.ContainsKey(key)) dict[key] = help;
                 }
             }
 
@@ -194,7 +195,7 @@ namespace PacManBot.Services
             {
                 var moduleText = new StringBuilder();
 
-                foreach (var command in module.Commands.OrderBy(c => c.Priority))
+                foreach (var command in module.Commands.OrderByDescending(c => c.Priority))
                 {
                     var help = HelpInfo[command.Name.ToLower()];
 

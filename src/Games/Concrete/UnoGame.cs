@@ -18,7 +18,7 @@ namespace PacManBot.Games.Concrete
     {
         // Constants
 
-        public override int GameIndex => 2;
+        public override int GameIndex => 10;
         public override string GameName => "Uno";
         public override TimeSpan Expiry => TimeSpan.FromDays(7);
         public string FilenameKey => "uno";

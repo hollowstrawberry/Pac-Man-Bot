@@ -13,7 +13,7 @@ namespace PacManBot.Games.Concrete
 {
     public class C4Game : MultiplayerGame, IMessagesGame
     {
-        public override int GameIndex => 3;
+        public override int GameIndex => 11;
         public override string GameName => "Connect Four";
         public override TimeSpan Expiry => TimeSpan.FromMinutes(60);
 
