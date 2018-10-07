@@ -2,6 +2,7 @@
 
 ![Discord Bots](https://discordbots.org/api/widget/status/398127484983443468.svg) ![Discord Bots](https://discordbots.org/api/widget/servers/398127484983443468.svg?noavatar=true)  
 ![Discord Bots](https://discordbots.org/api/widget/lib/398127484983443468.svg?noavatar=true) ![Discord Bots](https://discordbots.org/api/widget/owner/398127484983443468.svg?noavatar=true)  
+[![paypal](https://img.shields.io/badge/Donate-PayPal-green.svg)](http://paypal.me/samrux)  
 
 Play the best chat games for Discord: Pac-Man, Uno, Pets and more! Works in a server with friends or in direct messages with the bot.  
 The objective is to bring the most enterntainment to you and your group, with the least amount of hassle and spam possible.
@@ -18,9 +19,9 @@ Features the following games:
 
 &nbsp;
 
-## Pac-Man Bot Documentation
+## API Documentation
 
-The full documentation can be found [here](https://rawgit.com/Samrux/Pac-Man-Bot/master/_site/api/index.html)
+The full project documentation can be found [here](https://rawgit.com/Samrux/Pac-Man-Bot/master/_site/api/index.html).
 
 &nbsp;
 
