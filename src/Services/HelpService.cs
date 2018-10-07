@@ -2,6 +2,7 @@
 using System.Text;
 using System.Linq;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using Discord;
 using Discord.Commands;
 using PacManBot.Commands;
@@ -22,8 +23,9 @@ namespace PacManBot.Services
 
         private readonly Color embedColor = Colors.PacManYellow;
 
-        private Dictionary<string, CommandHelpInfo> _helpInfo;
-        private Dictionary<string, CommandHelpInfo> HelpInfo => _helpInfo ?? (_helpInfo = BuildHelpInfo());
+        private ConcurrentDictionary<string, CommandHelpInfo> internalHelpInfo;
+        private ConcurrentDictionary<string, CommandHelpInfo> HelpInfo
+            => internalHelpInfo ?? (internalHelpInfo = BuildHelpInfo());
 
 
         /// <summary>
@@ -138,9 +140,9 @@ namespace PacManBot.Services
         }
 
 
-        private Dictionary<string, CommandHelpInfo> BuildHelpInfo()
+        private ConcurrentDictionary<string, CommandHelpInfo> BuildHelpInfo()
         {
-            var dict = new Dictionary<string, CommandHelpInfo>();
+            var dict = new ConcurrentDictionary<string, CommandHelpInfo>();
 
             foreach (var com in commands.Commands.OrderByDescending(c => c.Priority))
             {
@@ -195,7 +197,7 @@ namespace PacManBot.Services
             {
                 var moduleText = new StringBuilder();
 
-                foreach (var command in module.Commands.OrderByDescending(c => c.Priority))
+                foreach (var command in module.Commands.OrderByDescending(c => c.Priority).Distinct(CommandEqComp.Instance))
                 {
                     var help = HelpInfo[command.Name.ToLower()];
 
@@ -226,6 +228,15 @@ namespace PacManBot.Services
             }
 
             return embed;
+        }
+
+
+        private class CommandEqComp : IEqualityComparer<CommandInfo>
+        {
+            public static CommandEqComp Instance = new CommandEqComp();
+
+            public bool Equals(CommandInfo x, CommandInfo y) => x.Name == y.Name;
+            public int GetHashCode(CommandInfo obj) => obj.Name.GetHashCode();
         }
     }
 }

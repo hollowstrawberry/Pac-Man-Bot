@@ -213,6 +213,28 @@ namespace PacManBot.Commands.Modules
         }
 
 
+
+        [Command("donate"), Alias("donation", "donations", "paypal"), Remarks("Donate to the bot's the developer")]
+        [Summary("Show donation info for this bot's developer.")]
+        public async Task SendDonationInfo()
+        {
+            var embed = new EmbedBuilder()
+            {
+                Title = "Donations",
+                Url = "http://paypal.me/samrux",
+                Color = Colors.PacManYellow,
+                ThumbnailUrl = "https://upload.wikimedia.org/wikipedia/commons/a/a4/Paypal_2014_logo.png",
+
+                Description =
+                $"You can donate to Samrux, the author of this bot.\n" +
+                $"Donations support development and pay the hosting costs of the bot.\n" +
+                $"[Click here to go to my PayPal](http://paypal.me/samrux)"
+            };
+
+            await ReplyAsync(embed);
+        }
+
+
         [Command("feedback"), Alias("suggestion", "bug"), Remarks("Send a message to the bot's developer")]
         [Summary("Whatever text you write after this command will be sent directly to the bot's developer. " +
                  "You may receive an answer through the bot in a DM.")]
