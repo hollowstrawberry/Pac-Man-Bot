@@ -11,50 +11,46 @@ namespace PacManBot.Commands
     /// <summary>
     /// The base for Pac-Man Bot modules, containing their main services and some utilities.
     /// </summary>
-    /// <remarks>Its members are public to be accessed as globals from within an evaluated script.</remarks>
+    /// <remarks>Service properties are loaded lazily.</remarks>
     public abstract class BaseCustomModule : ModuleBase<ShardedCommandContext>
     {
         /// <summary>Consistent and sane <see cref="RequestOptions"/> to be used in most Discord requests.</summary>
         public static readonly RequestOptions DefaultOptions = Bot.DefaultOptions;
 
 
+        private BotContent internalContent;
+        private LoggingService internalLogger;
+        private StorageService internalStorage;
+        private GameService internalGames;
+        private HelpService internalHelp;
+        private string internalPrefix;
+        private string internalAbsPrefix;
+
+
         /// <summary>All of this program's services, required to supply new objects such as games.</summary>
         public IServiceProvider Services { get; }
 
         /// <summary>Contents used throughout the bot.</summary>
-        public BotContent Content { get; }
-
+        public BotContent Content => internalContent ?? (internalContent = Services.Get<BotConfig>().Content);
         /// <summary>Logs everything in the console and on disk.</summary>
-        public LoggingService Logger { get; }
-
+        public LoggingService Logger => internalLogger ?? (internalLogger = Services.Get<LoggingService>());
         /// <summary>Gives access to the bot's database.</summary>
-        public StorageService Storage { get; }
-
+        public StorageService Storage => internalStorage ?? (internalStorage = Services.Get<StorageService>());
         /// <summary>Gives access to active games.</summary>
-        public GameService Games { get; }
-
-        /// <summary>The relative prefix used in this context. Might be empty in DMs and other cases.</summary>
-        public string Prefix { get; private set; }
+        public GameService Games => internalGames ?? (internalGames = Services.Get<GameService>());
+        /// <summary>Provides help for commands.</summary>
+        public HelpService Help => internalHelp ?? (internalHelp = Services.Get<HelpService>());
 
         /// <summary>The prefix accepted in this context, even if none is necessary.</summary>
-        public string AbsolutePrefix { get; private set; }
+        public string AbsolutePrefix => internalAbsPrefix ?? (internalAbsPrefix = Storage.GetGuildPrefix(Context.Guild));
+        /// <summary>The relative prefix used in this context. Might be empty in DMs and other cases.</summary>
+        public string Prefix => internalPrefix ?? (internalPrefix = Storage.RequiresPrefix(Context) ? AbsolutePrefix : "");
 
 
 
         protected BaseCustomModule(IServiceProvider services)
         {
             Services = services;
-            Logger = services.Get<LoggingService>();
-            Storage = services.Get<StorageService>();
-            Games = services.Get<GameService>();
-            Content = services.Get<BotConfig>().Content;
-        }
-
-
-        protected override void BeforeExecute(CommandInfo command)
-        {
-            AbsolutePrefix = Storage.GetGuildPrefix(Context.Guild);
-            Prefix = Storage.RequiresPrefix(Context) ? AbsolutePrefix : "";
         }
 
 

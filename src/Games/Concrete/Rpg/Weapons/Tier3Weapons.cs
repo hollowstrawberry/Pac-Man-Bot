@@ -1,4 +1,5 @@
-﻿using PacManBot.Extensions;
+﻿using PacManBot.Games.Concrete.Rpg.Buffs;
+using PacManBot.Extensions;
 
 namespace PacManBot.Games.Concrete.Rpg.Weapons
 {
@@ -73,7 +74,7 @@ namespace PacManBot.Games.Concrete.Rpg.Weapons
                 if (!wielder.HasBuff(buff))
                 {
                     active = true;
-                    wielder.AddBuff(buff, 2);
+                    wielder.AddBuff(buff.GetBuff().MakeNew(2));
                 }
             }
 
@@ -95,9 +96,9 @@ namespace PacManBot.Games.Concrete.Rpg.Weapons
 
         public override string AttackEffects(RpgPlayer wielder, Entity target)
         {
-            if (Bot.Random.OneIn(3) && !target.HasBuff(nameof(Buffs.Blinded)))
+            if (Bot.Random.OneIn(3) && !target.HasBuff<Blinded>())
             {
-                target.AddBuff(nameof(Buffs.Blinded), 5);
+                target.AddBuff<Blinded>(5);
                 return $"{target} is blinded by awesomeness!";
             }
             return "";

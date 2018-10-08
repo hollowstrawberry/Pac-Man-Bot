@@ -14,7 +14,7 @@ namespace PacManBot.Games.Concrete.Rpg.Skills
         {
             foreach (var enemy in game.Opponents)
             {
-                enemy.AddBuff(nameof(Buffs.Blinded), 5);
+                enemy.AddBuff<Buffs.Blinded>(5);
             }
 
             return $"{game.player} cripples the enemy!";

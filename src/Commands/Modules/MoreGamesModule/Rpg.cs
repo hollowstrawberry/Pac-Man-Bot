@@ -41,6 +41,7 @@ namespace PacManBot.Commands.Modules
 
         [Command("rpg"), Remarks("Play an RPG game"), Parameters("[command]"), Priority(4)]
         [Summary("Play ReactionRPG, a new game where you beat monsters and level up." +
+            "\nThe game is yours. You can play in **any channel** anywhere you go, even DMs with the bot." +
             "\n\n**__Commands:__**" +
             "\n**{prefix}rpg manual** - See detailed instructions for the game." +
             "\n\n**{prefix}rpg** - Start a new battle or resend the current battle." +
@@ -109,6 +110,8 @@ namespace PacManBot.Commands.Modules
                 game.fightEmbed = game.Fight();
             }
 
+            game.CancelRequests();
+
             var old = await game.GetMessage();
             if (old != null)
             {
@@ -129,7 +132,7 @@ namespace PacManBot.Commands.Modules
 
             Games.Save(game);
 
-            await AddRpgEmotes(message, game);
+            await RpgAddEmotes(message, game);
         }
 
 
@@ -192,12 +195,13 @@ namespace PacManBot.Commands.Modules
                 game.MessageId = gameMsg.Id;
                 Games.Save(game);
 
-                await AddRpgEmotes(gameMsg, game);
+                await RpgAddEmotes(gameMsg, game);
             }
             else
             {
                 Games.Save(game);
-                await gameMsg.ModifyAsync(game.GetMessageUpdate());
+                game.CancelRequests();
+                await gameMsg.ModifyAsync(game.GetMessageUpdate(), game.GetRequestOptions());
             }
 
             if (Context.BotCan(ChannelPermission.ManageMessages)) await Context.Message.DeleteAsync(DefaultOptions);
@@ -256,8 +260,8 @@ namespace PacManBot.Commands.Modules
                 {
                     game.lastEmote = "";
                     game.fightEmbed = game.IsPvp ? game.FightPvP() : game.Fight();
-                    try { await message.ModifyAsync(m => m.Embed = game.fightEmbed.Build(), game.GetRequestOptions()); }
-                    catch { }
+                    game.CancelRequests();
+                    await message.ModifyAsync(m => m.Embed = game.fightEmbed.Build(), game.GetRequestOptions());
                 }
 
                 if (Context.BotCan(ChannelPermission.ManageMessages))
@@ -309,8 +313,8 @@ namespace PacManBot.Commands.Modules
                     if (message != null)
                     {
                         game.lastEmote = RpgGame.ProfileEmote;
-                        try { await message.ModifyAsync(m => m.Embed = game.player.Profile().Build(), game.GetRequestOptions()); }
-                        catch { }
+                        game.CancelRequests();
+                        await message.ModifyAsync(m => m.Embed = game.player.Profile().Build(), game.GetRequestOptions());
                     }
 
                     if (Context.BotCan(ChannelPermission.ManageMessages))
@@ -443,7 +447,7 @@ namespace PacManBot.Commands.Modules
                 var embed = new EmbedBuilder
                 {
                     Title = "Player color set",
-                    Description = $"#{color.Value.RawValue:X}",
+                    Description = $"#{color.Value.RawValue:X6}",
                     Color = color,
                 };
                 await ReplyAsync(embed);
@@ -477,6 +481,7 @@ namespace PacManBot.Commands.Modules
 
             if (oldMessage != null)
             {
+                game.CancelRequests();
                 try { await oldMessage.DeleteAsync(); }
                 catch (HttpException) { }
             }
@@ -525,11 +530,11 @@ namespace PacManBot.Commands.Modules
                 var msg = await otherGame.GetMessage();
                 try
                 {
-                    await AddRpgEmotes(msg, game);
-                    await msg.ModifyAsync(x => {
-                        x.Content = "";
-                        x.Embed = game.FightPvP().Build();
-                    }, game.GetRequestOptions());
+                    game.CancelRequests();
+                    game.PvpGame.CancelRequests();
+                    game.fightEmbed = game.FightPvP();
+                    await msg.ModifyAsync(game.GetMessageUpdate(), game.GetRequestOptions());
+                    await RpgAddEmotes(msg, game);
                 }
                 catch { }
             }
@@ -565,7 +570,7 @@ namespace PacManBot.Commands.Modules
             Games.Add(game);
             Games.Save(game);
 
-            await SendRpgManual(game, "");
+            await RpgSendManual(game, "");
         }
 
 
@@ -594,7 +599,7 @@ namespace PacManBot.Commands.Modules
 
 
         [RpgCommand("manual", "instructions"), NotRequiresRpg]
-        public async Task SendRpgManual(RpgGame game, string args)
+        public async Task RpgSendManual(RpgGame game, string args)
         {
             var embed = new EmbedBuilder
             {
@@ -603,6 +608,7 @@ namespace PacManBot.Commands.Modules
                 Description =
                 $"Welcome to ReactionRPG{$", {game?.player.Name}".If(game != null)}!" +
                 $"\nThis game consists of battling enemies, levelling up and unlocking skills." +
+                $"\nYou can play in **any channel**, even in DMs with the bot." +
                 $"\nUse the command **{Prefix}rpg help** for a list of commands." +
                 $"\nUse **{Prefix}rpg profile** to see your hero's profile, and **{Prefix}rpg name/color** to personalize it.",
             };
@@ -611,7 +617,7 @@ namespace PacManBot.Commands.Modules
             {
                 Name = "⚔ Battles",
                 Value =
-                $"To start a battle, use the command **{Prefix}rpg**" +
+                $"To start a battle or re-send the current battle, use the command **{Prefix}rpg**" +
                 $"\nWhen in a battle, you can use the _message reactions_ to perform an action." +
                 $"\nSelect a number {RpgGame.EmoteNumberInputs[0]} of an enemy to attack. " +
                 $"You can also select {RpgGame.MenuEmote} to inspect your enemies, " +
@@ -647,7 +653,7 @@ namespace PacManBot.Commands.Modules
 
 
 
-        private static async Task AddRpgEmotes(IUserMessage message, RpgGame game)
+        private static async Task RpgAddEmotes(IUserMessage message, RpgGame game)
         {
             if (game.IsPvp)
             {

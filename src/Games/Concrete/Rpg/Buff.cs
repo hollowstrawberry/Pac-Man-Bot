@@ -35,7 +35,7 @@ namespace PacManBot.Games.Concrete.Rpg
         /// <summary>Clones a buff of this type, ready for use.</summary>
         public Buff MakeNew(int duration)
         {
-            var buff = (Buff)Activator.CreateInstance(GetType(), true);
+            var buff = (Buff)Activator.CreateInstance(GetType());
             buff.timeLeft = duration;
             return buff;
         }

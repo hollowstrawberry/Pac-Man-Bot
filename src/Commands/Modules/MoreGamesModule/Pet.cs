@@ -83,14 +83,14 @@ namespace PacManBot.Commands.Modules
 
         [PetCommand("")]
         [RequiresPet]
-        public async Task SendPetProfile(PetGame pet, string args)
+        public async Task PetSendProfile(PetGame pet, string args)
         {
             await ReplyAsync(pet.GetContent(), pet.GetEmbed(Context.User as IGuildUser));
         }
 
 
         [PetCommand("exact", "precise", "decimals", "float", "double")]
-        public async Task SendPetExact(PetGame pet, string args)
+        public async Task PetSendExact(PetGame pet, string args)
         {
             var user = Context.User as SocketGuildUser;
 
@@ -119,7 +119,7 @@ namespace PacManBot.Commands.Modules
 
 
         [PetCommand("stats", "statistics", "achievements", "unlocks")]
-        public async Task SendPetStats(PetGame pet, string args)
+        public async Task PetSendStats(PetGame pet, string args)
         {
             var user = Context.User as SocketGuildUser;
 
@@ -293,7 +293,7 @@ namespace PacManBot.Commands.Modules
 
 
         [PetCommand("help", "h")]
-        public async Task SendPetHelp(PetGame pet, string args)
+        public async Task PetSendHelp(PetGame pet, string args)
         {
             await ReplyAsync(Help.MakeHelp("pet", Prefix));
         }
@@ -335,7 +335,7 @@ namespace PacManBot.Commands.Modules
 
 
         [PetCommand("user", "u")]
-        public async Task SendUserPet(PetGame pet, string args)
+        public async Task PetSendUser(PetGame pet, string args)
         {
             if (string.IsNullOrWhiteSpace(args))
             {
@@ -369,7 +369,7 @@ namespace PacManBot.Commands.Modules
             {
                 pet = new PetGame(args.Replace("@", "").Truncate(32), Context.User.Id, Services);
                 Games.Add(pet);
-                await SendPetProfile(pet, null);
+                await PetSendProfile(pet, null);
             }
         }
 

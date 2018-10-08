@@ -126,9 +126,9 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
             if (Bot.Random.OneIn(4))
             {
                 msg = $"{target} is overwhelmed!";
-                target.AddBuff(nameof(Burn), 2);
-                target.AddBuff(nameof(Vulnerable), 2);
-                target.AddBuff(nameof(Wet), 2);
+                target.AddBuff<Burn>(2);
+                target.AddBuff<Vulnerable>(2);
+                target.AddBuff<Wet>(2);
             }
             return base.Attack(target) + msg;
         }
@@ -183,9 +183,9 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
         public override string Attack(Entity target)
         {
             string msg = "";
-            if (Bot.Random.OneIn(5))
+            if (!HasBuff<Fury>() && Bot.Random.OneIn(3))
             {
-                AddBuff(nameof(Fury), 3);
+                AddBuff<Fury>(3);
                 msg = $"{this} is going berzerk!\n";
             }
             return msg + base.Attack(target);

@@ -133,22 +133,32 @@ namespace PacManBot.Games.Concrete.Rpg
 
 
         /// <summary>Returns whether this entity contains a buff of the given type.</summary>
+        public bool HasBuff<TBuff>() where TBuff : Buff
+        {
+            return Buffs.OfType<TBuff>().FirstOrDefault() != null;
+        }
+
+        /// <summary>Returns whether this entity contains a buff of the given type.</summary>
         public bool HasBuff(string buff)
         {
             return Buffs.Any(x => x.Key == buff);
         }
 
-        /// <summary>Safely adds a buff to this entity.</summary>
-        public void AddBuff(Buff buff, int duration)
+
+        /// <summary>Safely adds a new buff to this entity.</summary>
+        public void AddBuff(Buff buff, int? duration = null)
         {
+            if (duration.HasValue) buff.timeLeft = duration.Value;
             Buffs.Add(buff);
             UpdateStats();
         }
 
         /// <summary>Safely adds a buff to this entity.</summary>
-        public void AddBuff(string buff, int duration)
+        public void AddBuff<TBuff>(int duration) where TBuff : Buff
         {
-            Buffs.Add(buff.GetBuff().MakeNew(duration));
+            var buff = Activator.CreateInstance<TBuff>();
+            buff.timeLeft = duration;
+            Buffs.Add(buff);
             UpdateStats();
         }
     }

@@ -1,4 +1,5 @@
-﻿using PacManBot.Extensions;
+﻿using PacManBot.Games.Concrete.Rpg.Buffs;
+using PacManBot.Extensions;
 
 namespace PacManBot.Games.Concrete.Rpg.Weapons
 {
@@ -58,9 +59,9 @@ namespace PacManBot.Games.Concrete.Rpg.Weapons
 
         public override string AttackEffects(RpgPlayer wielder, Entity target)
         {
-            if (Bot.Random.OneIn(3) && !target.HasBuff(nameof(Buffs.Vulnerable)))
+            if (Bot.Random.OneIn(3) && !target.HasBuff<Vulnerable>())
             {
-                target.AddBuff(nameof(Buffs.Vulnerable), 3);
+                target.AddBuff<Vulnerable>(3);
                 return $"{target} is now vulnerable!";
             }
             return "";

@@ -16,7 +16,7 @@ namespace PacManBot.Games
     /// </summary>
     public abstract class MultiplayerGame : ChannelGame, IMultiplayerGame
     {
-        private IUser[] _users;
+        private IUser[] internalUsers;
 
 
         /// <summary>The current <see cref="Player"/> whose turn it is.</summary>
@@ -40,7 +40,7 @@ namespace PacManBot.Games
         public virtual IUser User(int i = 0)
         {
             if (i < 0 || i >= UserId.Length) return null;
-            return _users[i] ?? (_users[i] = client.GetUser(UserId[i]));
+            return internalUsers[i] ?? (internalUsers[i] = client.GetUser(UserId[i]));
         }
 
         
@@ -68,7 +68,7 @@ namespace PacManBot.Games
             if (players != null)
             {
                 UserId = players.Select(x => x.Id).ToArray();
-                _users = new IUser[UserId.Length];
+                internalUsers = new IUser[UserId.Length];
             }
             LastPlayed = DateTime.Now;
             Turn = 0;

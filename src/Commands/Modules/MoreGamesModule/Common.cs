@@ -16,12 +16,7 @@ namespace PacManBot.Commands.Modules
                                 ChannelPermission.UseExternalEmojis | ChannelPermission.AddReactions)]
     public partial class MoreGamesModule : BaseCustomModule
     {
-        public HelpService Help { get; }
-
-        public MoreGamesModule(IServiceProvider services) : base(services)
-        {
-            Help = services.Get<HelpService>();
-        }
+        public MoreGamesModule(IServiceProvider services) : base(services) {}
 
 
 

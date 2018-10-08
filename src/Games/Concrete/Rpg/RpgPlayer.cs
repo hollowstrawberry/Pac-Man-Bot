@@ -26,7 +26,9 @@ namespace PacManBot.Games.Concrete.Rpg
         public sealed override string Name => name;
 
         /// <summary>The experience required to advance to the next level.</summary>
-        public int NextLevelExp => Level == 1 ? 4 : 6 * (Level - 1);
+        public int NextLevelExp => Level == 1 ? 3 : 5 * (Level - 1);
+        /// <summary>Mana regenerated after each battle.</summary>
+        public int ManaRegen => (Level + 10) / 20;
         /// <summary>All equipment currently used by this player.</summary>
         public IEnumerable<Equipment> ActiveEquipment => new[] { armor, weapon }.Select(x => x.GetEquip());
         /// <summary>All skills the player can use.</summary>
@@ -184,6 +186,7 @@ namespace PacManBot.Games.Concrete.Rpg
             Mana = MaxMana;
             boosts.Add($"+{(Level == LevelCap ? 10 : 5)} HP");
             if (Level % 5 == 0) boosts.Add($"+{(Level == LevelCap ? 2 : 1)} MP");
+            if ((Level + 10) % 20 == 0) boosts.Add("+1 mana regen");
 
             UpdateStats();
 

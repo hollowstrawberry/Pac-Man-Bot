@@ -12,7 +12,7 @@ namespace PacManBot.Games.Concrete.Rpg.Skills
 
         public override string Effect(RpgGame game)
         {
-            game.player.AddBuff(nameof(Buffs.CritBuff), 5);
+            game.player.AddBuff<Buffs.CritBuff>(5);
             return $"{game.player} is in deep focus and will crit easily!";
         }
     }

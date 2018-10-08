@@ -24,23 +24,22 @@ namespace PacManBot.Commands.Modules
     [RequireDeveloper, BetterRequireBotPermission(ChannelPermission.AddReactions)]
     public class DevModule : BaseCustomModule
     {
-        public BotConfig Config { get; }
-        public ScriptingService Scripting { get; }
-        public PacManDbContext Db => _db ?? (_db = new PacManDbContext(Config.dbConnectionString));
+        private BotConfig internalConfig;
+        private ScriptingService internalScripting;
+        private PacManDbContext internalDb;
 
-        private PacManDbContext _db;
+        public BotConfig Config => internalConfig ?? (internalConfig = Services.Get<BotConfig>());
+        public ScriptingService Scripting => internalScripting ?? (internalScripting = Services.Get<ScriptingService>());
+        public PacManDbContext Db => internalDb ?? (internalDb = new PacManDbContext(Config.dbConnectionString));
 
-        public DevModule(IServiceProvider services) : base(services)
-        {
-            Config = services.Get<BotConfig>();
-            Scripting = services.Get<ScriptingService>();
-        }
+
+        public DevModule(IServiceProvider services) : base(services) {}
 
 
         protected override void AfterExecute(CommandInfo command)
         {
             base.AfterExecute(command);
-            _db?.Dispose();
+            internalDb?.Dispose();
         }
 
 

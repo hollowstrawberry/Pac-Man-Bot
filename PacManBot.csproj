@@ -23,15 +23,19 @@
   <ItemGroup>
     <Compile Remove="_Screenshots\**" />
     <Compile Remove="_Resources\**" />
+    <Compile Remove="_site\**" />
     <None Remove="_Screenshots\**" />
     <None Remove="_Resources\**" />
+    <None Remove="_site\**" />
     <EmbeddedResource Remove="_Screenshots\**" />
     <EmbeddedResource Remove="_Resources\**" />
+    <EmbeddedResource Remove="_site\**" />
   </ItemGroup>
 
   <ItemGroup>
     <None Remove=".gitattributes" />
     <None Remove=".gitignore" />
+    <None Remove="docfx.json" />
     <None Remove="Example custom maps.txt" />
     <None Remove="LinuxPublish.bat" />
     <None Remove="Icon.ico" />

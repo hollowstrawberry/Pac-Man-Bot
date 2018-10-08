@@ -11,33 +11,33 @@ namespace PacManBot.Games
     /// </summary>
     public abstract class ChannelGame : BaseGame, IChannelGame
     {
-        private ISocketMessageChannel _channel;
-        private IUserMessage _message;
+        private ISocketMessageChannel internalChannel;
+        private IUserMessage internalMessage;
 
 
         /// <summary>Discord snowflake ID of the channel where this game is taking place in.</summary>
         public virtual ulong ChannelId { get; set; }
-
         /// <summary>Discord snowflake ID of the latest message used by this game.</summary>
         public virtual ulong MessageId { get; set; }
 
 
-        /// <summary>Retrieves the channel where this game is taking place in.</summary>
-        public ISocketMessageChannel Channel
-        {
-            get => _channel != null && _channel.Id == ChannelId ? _channel : (_channel = client.GetMessageChannel(ChannelId));
-        }
-
         /// <summary>Retrieves this game's channel's guild. Null when the channel is a DM channel.</summary>
         public IGuild Guild => (Channel as IGuildChannel)?.Guild;
 
+        /// <summary>Retrieves the channel where this game is taking place in.</summary>
+        public ISocketMessageChannel Channel
+        {
+            get => internalChannel != null && internalChannel.Id == ChannelId
+                ? internalChannel : (internalChannel = client.GetMessageChannel(ChannelId)); // Lazy load
+        }
 
         /// <summary>Retrieves this game's latest message. Null if not retrievable.</summary>
         public async Task<IUserMessage> GetMessage()
         {
-            if (MessageId == 0 || Channel == null) return null;
-            if (_message == null || _message.Id != MessageId) return (_message = await Channel.GetUserMessageAsync(MessageId));
-            return _message;
+            if (MessageId == 0 || Channel == null) return (internalMessage = null);
+
+            return internalMessage != null && internalMessage.Id == MessageId
+                ? internalMessage : (internalMessage = await Channel.GetUserMessageAsync(MessageId)); // Lazy load
         }
 
 

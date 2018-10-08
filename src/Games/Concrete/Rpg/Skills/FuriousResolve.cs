@@ -12,7 +12,7 @@ namespace PacManBot.Games.Concrete.Rpg.Skills
 
         public override string Effect(RpgGame game)
         {
-            game.player.AddBuff(nameof(Buffs.Fury), 8);
+            game.player.AddBuff<Buffs.Fury>(8);
             return $"{game.player}'s fury makes him a lot stronger!";
         }
     }

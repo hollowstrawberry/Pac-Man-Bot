@@ -1,4 +1,5 @@
-﻿using PacManBot.Extensions;
+﻿using PacManBot.Games.Concrete.Rpg.Buffs;
+using PacManBot.Extensions;
 
 namespace PacManBot.Games.Concrete.Rpg.Weapons
 {
@@ -71,9 +72,9 @@ namespace PacManBot.Games.Concrete.Rpg.Weapons
 
         public override string AttackEffects(RpgPlayer wielder, Entity target)
         {
-            if (Bot.Random.OneIn(5) && !target.HasBuff(nameof(Buffs.Burn)))
+            if (Bot.Random.OneIn(5) && !target.HasBuff<Burn>())
             {
-                target.AddBuff(nameof(Buffs.Burn), 4);
+                target.AddBuff<Burn>(4);
                 return $"{target} got burned!";
             }
             return "";

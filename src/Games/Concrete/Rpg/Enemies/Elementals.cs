@@ -28,8 +28,14 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
 
         public override string Attack(Entity target)
         {
-            string msg = target.HasBuff(nameof(Wet)) ? "" : $"{target} got wet.";
-            target.AddBuff(nameof(Wet), 5);
+            string msg = "";
+            var buff = target.Buffs.OfType<Wet>().FirstOrDefault();
+            if (buff == null)
+            {
+                target.AddBuff(buff = new Wet());
+                msg = $"{target} got wet.";
+            }
+            buff.timeLeft = 3;
             return base.Attack(target) + msg;
         }
     }
@@ -77,10 +83,10 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
         public override string Attack(Entity target)
         {
             string msg = "";
-            if (!target.HasBuff(nameof(Burn)))
+            if (!target.HasBuff<Burn>())
             {
                 msg = $"{target} got burned!";
-                target.AddBuff(nameof(Burn), 4);
+                target.AddBuff<Burn>(4);
             }
             return base.Attack(target) + msg;
         }
@@ -148,7 +154,7 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
                 int rainDmg = Bot.Random.Next(3, 6);
                 target.Life -= rainDmg;
                 msg += $"\n{target} takes {rainDmg} damage from the rain.";
-                target.AddBuff(nameof(Wet), 1);
+                if (!target.HasBuff<Wet>()) target.AddBuff<Wet>(2);
                 rain--;
                 if (rain == 0) msg += "\nThe downpour stopped.";
             }
@@ -208,7 +214,7 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
 
         public override string Attack(Entity target)
         {
-            if (Bot.Random.OneIn(3)) target.AddBuff(nameof(Burn), 2);
+            if (Bot.Random.OneIn(3)) target.AddBuff<Burn>(2);
 
             var attacks = new string[3];
             for (int i = 0; i < attacks.Length; i++)
@@ -249,12 +255,12 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
             if (rand < 0.3)
             {
                 msg += $"{target} got burned!";
-                target.AddBuff(nameof(Burn), 4);
+                target.AddBuff<Burn>(4);
             }
             if (rand < 0.15)
             {
                 msg += $"\n{target}'s eyes hurt from the heat!";
-                target.AddBuff(nameof(Blinded), 4);
+                target.AddBuff<Blinded>(3);
             }
 
             return base.Attack(target) + msg;
@@ -277,6 +283,9 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
             MaxLife = 200;
             DamageType = DamageType.Magic;
             DamageResistance[DamageType.Magic] = 0.6;
+            DamageResistance[DamageType.Blunt] = 0.3;
+            DamageResistance[DamageType.Cutting] = 0.3;
+            DamageResistance[DamageType.Pierce] = 0.3;
         }
 
         public override string Attack(Entity target)

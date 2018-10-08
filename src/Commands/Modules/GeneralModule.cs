@@ -25,15 +25,7 @@ namespace PacManBot.Commands.Modules
             .Select(t => t.GameName);
 
 
-
-        public CommandService Commands { get; }
-        public HelpService Help { get; }
-
-        public GeneralModule(IServiceProvider services) : base(services)
-        {
-            Commands = services.Get<CommandService>();
-            Help = services.Get<HelpService>();
-        }
+        public GeneralModule(IServiceProvider services) : base(services) {}
 
 
 

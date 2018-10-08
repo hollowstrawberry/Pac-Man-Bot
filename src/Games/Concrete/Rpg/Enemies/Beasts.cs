@@ -135,10 +135,10 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
         public override string Attack(Entity target)
         {
             string msg = "";
-            if (!target.HasBuff(nameof(Vulnerable)) && Bot.Random.OneIn(3))
+            if (!target.HasBuff<Vulnerable>() && Bot.Random.OneIn(3))
             {
                 msg = $"{target} is now vulnerable!";
-                target.AddBuff(nameof(Vulnerable), 3);
+                target.AddBuff<Vulnerable>(3);
             }
             return base.Attack(target) + msg;
         }
@@ -168,10 +168,10 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
         public override string Attack(Entity target)
         {
             string msg = "";
-            if (!target.HasBuff(nameof(Blinded)) && Bot.Random.OneIn(3))
+            if (!target.HasBuff<Blinded>() && Bot.Random.OneIn(3))
             {
                 msg = $"{target} got slime in their eyes!";
-                target.AddBuff(nameof(Blinded), 3);
+                target.AddBuff<Blinded>(3);
             }
             return base.Attack(target) + msg;
         }

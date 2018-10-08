@@ -12,8 +12,8 @@ namespace PacManBot.Games.Concrete.Rpg.Skills
 
         public override string Effect(RpgGame game)
         {
-            game.player.AddBuff(nameof(Buffs.Blocking), 2);
-            game.player.AddBuff(nameof(Buffs.Immune), 1);
+            game.player.AddBuff<Buffs.Blocking>(2);
+            game.player.AddBuff<Buffs.Immune>(1);
             return $"{game.player} is blocking!";
         }
     }

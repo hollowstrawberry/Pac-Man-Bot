@@ -102,7 +102,6 @@ namespace PacManBot.Games.Concrete
             State = State.Active;
             lastBattle = DateTime.Now;
             enemies.Clear();
-            player.Mana += 1;
 
             if (pvpUserId.HasValue)
             {
@@ -230,6 +229,7 @@ namespace PacManBot.Games.Concrete
                 embed.Color = Colors.Green;
                 desc.AppendLine($"\n🎺 You win!");
                 ResetBattle(State.Win);
+                player.Mana += player.ManaRegen;
             }
             else if (player.Life == 0)
             {
