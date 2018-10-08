@@ -35,11 +35,12 @@
 ║··························║
 ╚══════════════════════════╝",
 
-"about":
-"Play Pac-Man on a Discord chat! Featuring turn-based gameplay with reaction controls, the focus is low spam and original arcade game fidelity. You can play in a server with friends or in a DM with the bot.
-Now with more games to challenge your friends or the bot itself! Use **{prefix}help** for a list of commands.
-🎮 To play Pac-Man, use the command **{prefix}play** or **{prefix}play mobile**
-🏆 Get a spot on the global **{prefix}leaderboard**!
+"about": "Play the best chat games for Discord: Pac-Man, Uno, Pets and more! Works in a server with friends or in direct messages with the bot.
+The objective is to bring the most entertainment to you and your group, with the least amount of hassle and spam possible.
+
+
+🎮 Use the command **{prefix}help** for a list of commands and games.
+🏆 Play Pac-Man and get a spot on its **{prefix}leaderboard**!
 🤖 You can contact the developer [here](https://discord.gg/hGHnfda) or by using **{prefix}feedback**
 ` `",
 

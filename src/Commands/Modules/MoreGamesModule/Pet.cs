@@ -54,7 +54,7 @@ namespace PacManBot.Commands.Modules
                  "**{prefix}pet user <user>** - See another person's pet\n" +
                  "**{prefix}pet adopt [name]** - Adopt a new pet!\n" +
                  "**{prefix}pet release** - Gives your pet to a loving family that will take care of it (Deletes pet forever)")]
-        public async Task PetMaster(string commandName = "", [Remainder]string args = null)
+        public async Task PetMaster(string commandName = "", [Remainder]string args = "")
         {
             commandName = commandName.ToLower();
 
@@ -94,7 +94,7 @@ namespace PacManBot.Commands.Modules
         {
             var user = Context.User as SocketGuildUser;
 
-            if (!string.IsNullOrEmpty(args))
+            if (args != "")
             {
                 user = await Context.ParseUserAsync(args);
                 if (user == null)
@@ -123,7 +123,7 @@ namespace PacManBot.Commands.Modules
         {
             var user = Context.User as SocketGuildUser;
 
-            if (!string.IsNullOrEmpty(args))
+            if (args != "")
             {
                 user = await Context.ParseUserAsync(args);
                 if (user == null)
@@ -170,7 +170,7 @@ namespace PacManBot.Commands.Modules
         public async Task PetPlay(PetGame pet, string args)
         {
             PetGame otherPet = null;
-            if (!string.IsNullOrWhiteSpace(args))
+            if (args != "")
             {
                 var otherUser = await Context.ParseUserAsync(args);
                 if (otherUser == null)
@@ -254,7 +254,7 @@ namespace PacManBot.Commands.Modules
         [RequiresPet]
         public async Task PetName(PetGame pet, string args)
         {
-            if (string.IsNullOrWhiteSpace(args)) await ReplyAsync($"{CustomEmoji.Cross} Please specify a name!");
+            if (args == "") await ReplyAsync($"{CustomEmoji.Cross} Please specify a name!");
             else if (args.Length > 32) await ReplyAsync($"{CustomEmoji.Cross} Pet name can't go above 32 characters!");
             else if (args.Contains("@")) await ReplyAsync($"{CustomEmoji.Cross} Pet name can't contain \"@\"!");
             else
@@ -270,7 +270,7 @@ namespace PacManBot.Commands.Modules
         [RequiresPet]
         public async Task PetImage(PetGame pet, string args)
         {
-            string url = args ?? Context.Message.Attachments.FirstOrDefault()?.Url;
+            string url = args == "" ? null : Context.Message.Attachments.FirstOrDefault()?.Url;
 
             if (url == null && pet.petImageUrl == null)
             {
@@ -321,7 +321,7 @@ namespace PacManBot.Commands.Modules
 
                     string response = Context.Guild == null
                         ? $"{CustomEmoji.Cross} That's enough petting! {60 - (int)passed.TotalSeconds} seconds left."
-                        : $"{CustomEmoji.Cross} You may pet once a minute in guilds. Try DM-ing the bot.";
+                        : $"{CustomEmoji.Cross} You may pet once a minute in guilds. You can pet more in DMs with the bot.";
                         
                     await ReplyAsync(response);
                 }
@@ -337,7 +337,7 @@ namespace PacManBot.Commands.Modules
         [PetCommand("user", "u")]
         public async Task PetSendUser(PetGame pet, string args)
         {
-            if (string.IsNullOrWhiteSpace(args))
+            if (args == "")
             {
                 await ReplyAsync("You must specify a user!");
                 return;
@@ -378,7 +378,7 @@ namespace PacManBot.Commands.Modules
         [RequiresPet]
         public async Task PetRelease(PetGame pet, string args)
         {
-            if (string.IsNullOrWhiteSpace(pet.petName) || args?.SanitizeMarkdown() == pet.petName)
+            if (string.IsNullOrWhiteSpace(pet.petName) || args.SanitizeMarkdown() == pet.petName)
             {
                 Games.Remove(pet);
                 await ReplyAsync($"Goodbye {(string.IsNullOrWhiteSpace(pet.petName) ? pet.GameName : pet.petName)}!");

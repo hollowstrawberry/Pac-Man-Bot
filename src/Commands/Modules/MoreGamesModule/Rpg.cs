@@ -608,7 +608,7 @@ namespace PacManBot.Commands.Modules
                 Description =
                 $"Welcome to ReactionRPG{$", {game?.player.Name}".If(game != null)}!" +
                 $"\nThis game consists of battling enemies, levelling up and unlocking skills." +
-                $"\nYou can play in **any channel**, even in DMs with the bot." +
+                $"\nYou can play in *any channel*, even in DMs with the bot." +
                 $"\nUse the command **{Prefix}rpg help** for a list of commands." +
                 $"\nUse **{Prefix}rpg profile** to see your hero's profile, and **{Prefix}rpg name/color** to personalize it.",
             };
