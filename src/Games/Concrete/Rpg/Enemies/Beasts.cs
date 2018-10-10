@@ -198,13 +198,15 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
         public override string Attack(Entity target)
         {
             var attacks = new int[6];
-            for (int i = 0; i < attacks.Length; i++)
+            if (!target.HasBuff<Immune>())
             {
-                int dmg = Bot.Random.Next(1, 3);
-                target.Life -= dmg;
-                attacks[i] = dmg;
+                for (int i = 0; i < attacks.Length; i++)
+                {
+                    int dmg = Bot.Random.Next(1, 3);
+                    target.Life -= dmg;
+                    attacks[i] = dmg;
+                }
             }
-
             return base.Attack(target) + $"\n{this}'s babies attack! {attacks.JoinString(", ")}.";
         }
     }

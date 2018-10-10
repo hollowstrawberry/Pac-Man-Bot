@@ -151,7 +151,7 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
             }
             if (rain > 0)
             {
-                int rainDmg = Bot.Random.Next(3, 6);
+                int rainDmg = target.HasBuff<Immune>() ? 0 : Bot.Random.Next(3, 6);
                 target.Life -= rainDmg;
                 msg += $"\n{target} takes {rainDmg} damage from the rain.";
                 if (!target.HasBuff<Wet>()) target.AddBuff<Wet>(2);
