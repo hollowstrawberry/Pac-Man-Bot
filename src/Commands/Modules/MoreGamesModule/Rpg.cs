@@ -312,9 +312,10 @@ namespace PacManBot.Commands.Modules
                     var message = await game.GetMessage();
                     if (message != null)
                     {
-                        game.lastEmote = RpgGame.ProfileEmote;
                         game.CancelRequests();
-                        await message.ModifyAsync(m => m.Embed = game.player.Profile().Build(), game.GetRequestOptions());
+                        game.lastEmote = RpgGame.ProfileEmote;
+                        await message.ModifyAsync(m => m.Embed = game.player.Profile(Prefix, true).Build(),
+                            game.GetRequestOptions());
                     }
 
                     if (Context.BotCan(ChannelPermission.ManageMessages))
@@ -407,6 +408,18 @@ namespace PacManBot.Commands.Modules
                     $"\n*{sk.Description}*" +
                     $"\nMana cost: {sk.ManaCost}{CustomEmoji.Mana}" +
                     $"\nUse with the command: `{Prefix}rpg {sk.Shortcut}`");
+            }
+
+            if (game.State == State.Active && !game.IsPvp)
+            {
+                var message = await game.GetMessage();
+                if (message != null)
+                {
+                    game.CancelRequests();
+                    game.lastEmote = RpgGame.SkillsEmote;
+                    await message.ModifyAsync(m => m.Embed = game.player.Skills(Prefix, true).Build(),
+                        game.GetRequestOptions());
+                }
             }
         }
 
