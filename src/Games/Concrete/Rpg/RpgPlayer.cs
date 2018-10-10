@@ -26,7 +26,7 @@ namespace PacManBot.Games.Concrete.Rpg
         public sealed override string Name => name;
 
         /// <summary>The experience required to advance to the next level.</summary>
-        public int NextLevelExp => Level == 1 ? 3 : 5 * (Level - 1);
+        public int NextLevelExp => Level == 1 ? 4 : 6 * (Level - 1);
         /// <summary>Mana regenerated after each battle.</summary>
         public int ManaRegen => (Level + 10) / 20;
         /// <summary>All equipment currently used by this player.</summary>
@@ -210,7 +210,7 @@ namespace PacManBot.Games.Concrete.Rpg
 
 
         /// <summary>Obtain a Discord embed with this person's profile.</summary>
-        public EmbedBuilder Profile(string channelPrefix = "")
+        public EmbedBuilder Profile(string channelPrefix = "", bool reaction = false)
         {
             UpdateStats();
 
@@ -219,8 +219,8 @@ namespace PacManBot.Games.Concrete.Rpg
                 Title = $"{Name}'s Profile",
                 Color = Color,
                 Description =
-                $"\n**You have unspent skill points!**\nᅠ".If(skillPoints > 0) +
-                $"Do **{channelPrefix}rpg skills** for skills.",
+                $"\n**You have unspent skill points!**\nᅠ\n".If(skillPoints > 0) +
+                (reaction ? "React again for skills" : $"Do **{channelPrefix}rpg skills** for skills."),
             };
 
             string statsDesc = $"**Level {Level}**  (`{experience}/{NextLevelExp} EXP`)" +
@@ -231,7 +231,7 @@ namespace PacManBot.Games.Concrete.Rpg
 
             var wp = weapon.GetWeapon();
             string weaponDesc = $"**[{wp.Name}]**\n*\"{wp.Description}\"*"
-                              + $"\n`{Damage}` {wp.Type}{$"/{wp.Magic}".If(wp.Magic != MagicType.None)} damage"
+                              + $"\n`{Damage}` {wp.Type}{$"/{wp.Magic}".If(wp.Magic != MagicType.Magicless)} damage"
                               + $"\n`{(CritChance * 100).Round()}%` critical hit chance";
 
             var arm = armor.GetArmor();
@@ -250,10 +250,14 @@ namespace PacManBot.Games.Concrete.Rpg
 
 
         /// <summary>Obtain a Discord embed displaying this person's skills.</summary>
-        public EmbedBuilder Skills(string channelPrefix = "")
+        public EmbedBuilder Skills(string channelPrefix = "", bool reaction = false)
         {
             var desc = new StringBuilder();
 
+            if (reaction)
+            {
+                desc.AppendLine($"React again to close\n");
+            }
             if (skillPoints > 0)
             {
                 desc.AppendLine($"You have {skillPoints} unused skill points!" +

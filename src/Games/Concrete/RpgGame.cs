@@ -21,6 +21,7 @@ namespace PacManBot.Games.Concrete
 
         public const string MenuEmote = "🛂";
         public const string ProfileEmote = "🚹";
+        public const string SkillsEmote = "🅿";
         public const string PvpEmote = "💥";
         public static readonly IReadOnlyList<string> EmoteNumberInputs = CustomEmoji.NumberCircle.Skip(1).Take(3).ToArray();
         public static readonly IReadOnlyList<string> EmoteOtherInputs = new[] { MenuEmote, ProfileEmote };
@@ -137,6 +138,7 @@ namespace PacManBot.Games.Concrete
             var embed = new EmbedBuilder
             {
                 Title = $"⚔ ReactionRPG Battle",
+                Description = "React again to close",
                 Color = Colors.DarkBlack,
             };
 
@@ -206,16 +208,15 @@ namespace PacManBot.Games.Concrete
                 else
                 {
                     int exp = en.ExpYield;
-                    if (botConfig.testers.Contains(OwnerId)) exp *= 2;
 
                     desc.AppendLine($"{en} was defeated! +{exp} EXP");
                     player.experience += exp;
                     string lvlUp = player.TryLevelUp();
                     if (lvlUp != null)
                     {
-                        Channel.SendMessageAsync(options: Bot.DefaultOptions,
-                            text: $"\n⏫ Level up! {lvlUp}"
-                            + "\n⭐ **You reached the maximum level! Congratulations!**".If(player.Level == RpgPlayer.LevelCap));
+                        Channel.SendMessageAsync(options: Bot.DefaultOptions, text:
+                            $"\n⏫ Level up! {lvlUp}" +
+                            "\n⭐ **You reached the maximum level! Congratulations!**".If(player.Level == RpgPlayer.LevelCap));
                     }
 
                     enemies.RemoveAt(i);
@@ -225,7 +226,6 @@ namespace PacManBot.Games.Concrete
 
             if (Opponents.Count == 0)
             {
-
                 embed.Color = Colors.Green;
                 desc.AppendLine($"\n🎺 You win!");
                 ResetBattle(State.Win);
@@ -248,9 +248,11 @@ namespace PacManBot.Games.Concrete
         /// <summary>Returns an embed displaying the current PVP fight, performing an action first if applicable.</summary>
         public EmbedBuilder FightPvP(bool attack = false, Skill skill = null)
         {
+            var players = new[] { this, PvpGame }.OrderBy(g => g.OwnerId).Select(g => g.player);
+
             var embed = new EmbedBuilder
             {
-                Title = $"⚔ ReactionRPG Battle",
+                Title = players.JoinString(" ⚔ "),
             };
 
 
@@ -275,7 +277,6 @@ namespace PacManBot.Games.Concrete
                 }
             }
 
-            var players = new[] { this, PvpGame }.OrderBy(g => g.OwnerId).Select(g => g.player);
             foreach (var p in players)
             {
                 embed.AddField(p.Name,
@@ -370,46 +371,51 @@ namespace PacManBot.Games.Concrete
 
         public void Input(IEmote input, ulong userId = 1)
         {
-            var emoji = input.Mention();
+            var emote = input.Mention();
 
             if (IsPvp)
             {
-                lastEmote = emoji;
+                lastEmote = emote;
                 fightEmbed = FightPvP(true);
                 if (IsPvp) PvpGame.fightEmbed = fightEmbed; // Match didn't end
             }
-            else if (emoji == MenuEmote)
+            else if (emote == MenuEmote)
             {
-                if (lastEmote == emoji)
+                if (lastEmote == emote)
                 {
                     lastEmote = null;
                     fightEmbed = Fight();
                 }
                 else
                 {
-                    lastEmote = emoji;
+                    lastEmote = emote;
                     fightEmbed = FightMenu();
                 }
             }
-            else if (emoji == ProfileEmote)
+            else if (emote == ProfileEmote)
             {
-                if (lastEmote == emoji)
+                if (lastEmote == emote)
+                {
+                    lastEmote = SkillsEmote;
+                    fightEmbed = player.Skills(storage.GetPrefix(Channel), true);
+                }
+                else if (lastEmote == SkillsEmote)
                 {
                     lastEmote = null;
                     fightEmbed = Fight();
                 }
                 else
                 {
-                    lastEmote = emoji;
-                    fightEmbed = player.Profile();
+                    lastEmote = emote;
+                    fightEmbed = player.Profile(storage.GetPrefix(Channel), true);
                 }
             }
             else
             {
-                int index = EmoteNumberInputs.IndexOf(emoji);
+                int index = EmoteNumberInputs.IndexOf(emote);
                 if (index < 0 || index >= Opponents.Count) return;
 
-                lastEmote = emoji;
+                lastEmote = emote;
                 fightEmbed = Fight(index);
             }
 
@@ -419,7 +425,7 @@ namespace PacManBot.Games.Concrete
 
         public override EmbedBuilder GetEmbed(bool showHelp = true)
         {
-            return fightEmbed ?? new EmbedBuilder { Title = GameName, Description = "..." };
+            return fightEmbed ?? new EmbedBuilder { Title = GameName, Description = "Error" };
         }
 
 

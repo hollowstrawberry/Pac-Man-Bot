@@ -13,7 +13,7 @@ namespace PacManBot.Games.Concrete.Rpg
         /// <summary>Damage type of this weapon type.</summary>
         public abstract DamageType Type { get; }
         /// <summary>Damage type of this weapon type.</summary>
-        public virtual MagicType Magic => MagicType.None;
+        public virtual MagicType Magic => MagicType.Magicless;
 
 
         /// <summary>Additional effects this weapon has when used.</summary>

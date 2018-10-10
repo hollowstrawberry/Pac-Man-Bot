@@ -42,7 +42,7 @@ namespace PacManBot.Games.Concrete.Rpg.Armors
     {
         public override string Name => "Titan Armor";
         public override string Description => "You can barely move, but dayum.";
-        public override string EffectsDesc => "+10% damage\n+20 HP\n+7 Defense\n+20% non-magic resistance";
+        public override string EffectsDesc => "+10% damage\n+20 HP\n+6 Defense\n+20% non-magic resistance";
 
         public override int LevelGet => 45;
 
@@ -51,7 +51,7 @@ namespace PacManBot.Games.Concrete.Rpg.Armors
             player.DamageMult += 0.1;
             player.MaxLife += 20;
             player.Defense += 7;
-            player.MagicResistance.ChangeOrSet(MagicType.None, x => x + 0.2);
+            player.MagicResistance.ChangeOrSet(MagicType.Magicless, x => x + 0.2);
         }
     }
 }

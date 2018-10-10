@@ -511,6 +511,11 @@ namespace PacManBot.Commands.Modules
                 await ReplyAsync("Can't find that user to challenge!");
                 return;
             }
+            if (otherUser.Id == Context.User.Id)
+            {
+                await ReplyAsync("You can't battle yourself, smart guy.");
+                return;
+            }
             if ((otherGame = Games.GetForUser<RpgGame>(otherUser.Id)) == null)
             {
                 await ReplyAsync("This person doesn't have a hero.");
@@ -621,7 +626,7 @@ namespace PacManBot.Commands.Modules
                 $"\nWhen in a battle, you can use the _message reactions_ to perform an action." +
                 $"\nSelect a number {RpgGame.EmoteNumberInputs[0]} of an enemy to attack. " +
                 $"You can also select {RpgGame.MenuEmote} to inspect your enemies, " +
-                $"and {RpgGame.ProfileEmote} to see your own profile; react again to close these pages.",
+                $"and {RpgGame.ProfileEmote} to see your own profile and skills. React again to close these pages.",
             });
 
             embed.AddField(new EmbedFieldBuilder

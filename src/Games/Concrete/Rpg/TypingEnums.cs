@@ -18,11 +18,13 @@ namespace PacManBot.Games.Concrete.Rpg
     /// </summary>
     public enum MagicType
     {
-        None,
+        Magicless,
         Fire,
         Air,
         Water,
         Earth,
+
+        None = 0, // Backwards compatibility
     }
 
 

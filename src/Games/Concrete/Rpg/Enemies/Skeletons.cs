@@ -48,8 +48,8 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
         public override string Description => "😱💀";
         public override int Level => 11;
         public override int ExpYield => 7;
-        public override int BaseDamage => 18;
-        public override int BaseDefense => -2;
+        public override int BaseDamage => 20;
+        public override int BaseDefense => -3;
         public override double BaseCritChance => 0.1;
 
         public override void SetStats()
