@@ -22,6 +22,20 @@ namespace PacManBot.Commands.Modules
             {
                 Names = names;
             }
+
+
+            private static readonly Type ReturnType = typeof(Task<string>);
+            private static readonly IEnumerable<Type> ParameterTypes = new[] { typeof(PetGame), typeof(string) };
+
+            // Runtime check that all commands are valid
+            public object VerifyMethod(MethodInfo method)
+            {
+                if (method.ReturnType != ReturnType || !method.GetParameters().Select(x => x.ParameterType).SequenceEqual(ParameterTypes))
+                {
+                    throw new InvalidOperationException($"{method.Name} does not match the expected {GetType().Name} signature.");
+                }
+                return this;
+            }
         }
 
         [AttributeUsage(AttributeTargets.Method)]
@@ -31,8 +45,8 @@ namespace PacManBot.Commands.Modules
 
 
         private static readonly IEnumerable<MethodInfo> PetMethods = typeof(MoreGamesModule).GetMethods()
-            .Where(x => x.GetCustomAttribute<PetCommandAttribute>() != null)
-            .ToList();
+            .Where(x => x.GetCustomAttribute<PetCommandAttribute>()?.VerifyMethod(x) != null)
+            .ToArray();
 
         public string AdoptPetMessage => $"You don't have a pet yet! Do `{Prefix}pet adopt` to adopt one.";
 
@@ -74,126 +88,101 @@ namespace PacManBot.Commands.Modules
                     return;
                 }
 
-                await (Task)command.Invoke(this, new object[] { pet, args });
+                string response = await (Task<string>)command.Invoke(this, new object[] { pet, args });
+                if (response != null) await ReplyAsync(response);
             }
         }
 
 
 
 
-        [PetCommand("")]
-        [RequiresPet]
-        public async Task PetSendProfile(PetGame pet, string args)
+        [PetCommand(""), RequiresPet]
+        public async Task<string> PetSendProfile(PetGame pet, string args)
         {
             await ReplyAsync(pet.GetContent(), pet.GetEmbed(Context.User as IGuildUser));
+            return null;
         }
 
 
         [PetCommand("exact", "precise", "decimals", "float", "double")]
-        public async Task PetSendExact(PetGame pet, string args)
+        public async Task<string> PetSendExact(PetGame pet, string args)
         {
             var user = Context.User as SocketGuildUser;
 
             if (args != "")
             {
                 user = await Context.ParseUserAsync(args);
-                if (user == null)
-                {
-                    await ReplyAsync("Can't find that user!");
-                    return;
-                }
+                if (user == null) return "Can't find that user!";
                 else
                 {
                     pet = Games.GetForUser<PetGame>(user.Id);
-                    if (pet == null)
-                    {
-                        await ReplyAsync("This person doesn't have a pet :(");
-                        return;
-                    }
+                    if (pet == null) return "This person doesn't have a pet :(";
                 }
             }
 
-            if (pet == null) await ReplyAsync(AdoptPetMessage);
-            else await ReplyAsync(pet.GetContent(), pet.GetEmbed(user, decimals: true));
+            if (pet == null) return AdoptPetMessage;
+
+            await ReplyAsync(pet.GetContent(), pet.GetEmbed(user, decimals: true));
+            return null;
         }
 
 
         [PetCommand("stats", "statistics", "achievements", "unlocks")]
-        public async Task PetSendStats(PetGame pet, string args)
+        public async Task<string> PetSendStats(PetGame pet, string args)
         {
             var user = Context.User as SocketGuildUser;
 
             if (args != "")
             {
                 user = await Context.ParseUserAsync(args);
-                if (user == null)
-                {
-                    await ReplyAsync("Can't find that user!");
-                    return;
-                }
+                if (user == null) return "Can't find that user!";
                 else
                 {
                     pet = Games.GetForUser<PetGame>(user.Id);
-                    if (pet == null)
-                    {
-                        await ReplyAsync("This person doesn't have a pet :(");
-                        return;
-                    }
+                    if (pet == null) return "This person doesn't have a pet :(";
                 }
             }
 
-            if (pet == null) await ReplyAsync(AdoptPetMessage);
-            else await ReplyAsync(pet.GetEmbedAchievements(user));
+            if (pet == null) return AdoptPetMessage;
+
+            await ReplyAsync(pet.GetEmbedAchievements(user));
+            return null;
         }
 
 
-        [PetCommand("feed", "food", "eat", "hunger", "satiation")]
-        [RequiresPet]
-        public async Task PetFeed(PetGame pet, string args)
+        [PetCommand("feed", "food", "eat", "hunger", "satiation"), RequiresPet]
+        public async Task<string> PetFeed(PetGame pet, string args)
         {
-            if (pet.TryFeed()) await Context.Message.AddReactionAsync(Bot.Random.Choose(Content.petFoodEmotes).ToEmoji());
-            else await ReplyAsync($"{CustomEmoji.Cross} Your pet is already full! (-1 energy)");
+            if (!pet.TryFeed()) return $"{CustomEmoji.Cross} Your pet is already full! (-1 energy)";
+            await Context.Message.AddReactionAsync(Bot.Random.Choose(Content.petFoodEmotes).ToEmoji());
+            return null;
         }
 
 
-        [PetCommand("clean", "hygiene", "wash")]
-        [RequiresPet]
-        public async Task PetClean(PetGame pet, string args)
+        [PetCommand("clean", "hygiene", "wash"), RequiresPet]
+        public async Task<string> PetClean(PetGame pet, string args)
         {
-            if (pet.TryClean()) await Context.Message.AddReactionAsync(Bot.Random.Choose(Content.petCleanEmotes).ToEmoji());
-            else await ReplyAsync($"{CustomEmoji.Cross} Your pet is already clean! (-1 energy)");
+            if (!pet.TryClean()) return $"{CustomEmoji.Cross} Your pet is already clean! (-1 energy)";
+            await Context.Message.AddReactionAsync(Bot.Random.Choose(Content.petCleanEmotes).ToEmoji());
+            return null;
         }
 
 
-        [PetCommand("play", "fun", "happy", "happiness")]
-        [RequiresPet]
-        public async Task PetPlay(PetGame pet, string args)
+        [PetCommand("play", "fun", "happy", "happiness"), RequiresPet]
+        public async Task<string> PetPlay(PetGame pet, string args)
         {
             PetGame otherPet = null;
             if (args != "")
             {
                 var otherUser = await Context.ParseUserAsync(args);
-                if (otherUser == null)
-                {
-                    await ReplyAsync("Can't find that user to play with!");
-                    return;
-                }
-                else if ((otherPet = Games.GetForUser<PetGame>(otherUser.Id)) == null)
-                {
-                    await ReplyAsync("This person doesn't have a pet :(");
-                    return;
-                }
+                if (otherUser == null) return "Can't find that user to play with!";
+                else if ((otherPet = Games.GetForUser<PetGame>(otherUser.Id)) == null) return "This person doesn't have a pet :(";
                 else
                 {
                     otherPet.UpdateStats();
-                    if (otherPet.happiness.Ceiling() == PetGame.MaxStat)
-                    {
-                        await ReplyAsync("This person's pet doesn't want to play right now!");
-                        return;
-                    }
+                    if (otherPet.happiness.Ceiling() == PetGame.MaxStat) return "This person's pet doesn't want to play right now!";
                 }
             }
-
 
             if (pet.TryPlay())
             {
@@ -217,12 +206,13 @@ namespace PacManBot.Commands.Modules
 
                 await ReplyAsync($"{CustomEmoji.Cross} {message}");
             }
+
+            return null;
         }
 
 
-        [PetCommand("sleep", "rest", "energy")]
-        [RequiresPet]
-        public async Task PetSleep(PetGame pet, string args)
+        [PetCommand("sleep", "rest", "energy"), RequiresPet]
+        public async Task<string> PetSleep(PetGame pet, string args)
         {
             pet.UpdateStats(store: false);
             if (pet.energy.Ceiling() == PetGame.MaxStat && !pet.asleep)
@@ -230,78 +220,75 @@ namespace PacManBot.Commands.Modules
                 pet.happiness = Math.Max(0, pet.happiness - 1);
                 Games.Save(pet);
                 await ReplyAsync($"{CustomEmoji.Cross} Your pet is not tired! (-1 happiness)");
+                return null;
             }
-            else
-            {
-                string message = pet.asleep ? "Your pet is already sleeping." : "Your pet is now asleep.";
-                await ReplyAsync($"{Bot.Random.Choose(Content.petSleepEmotes)} {message}");
-                if (!pet.asleep) pet.ToggleSleep();
-            }
+
+            if (!pet.asleep) pet.ToggleSleep();
+            string message = pet.asleep ? "Your pet is already sleeping." : "Your pet is now asleep.";
+            return $"{Bot.Random.Choose(Content.petSleepEmotes)} {message}";
         }
 
 
-        [PetCommand("wake", "wakeup", "awaken")]
-        [RequiresPet]
-        public async Task PetWake(PetGame pet, string args)
+        [PetCommand("wake", "wakeup", "awaken"), RequiresPet]
+        public async Task<string> PetWake(PetGame pet, string args)
         {
             pet.UpdateStats(false);
-            await ReplyAsync(pet.asleep ? "🌅 You wake up your pet." : "🌅 Your pet is already awake.");
             if (pet.asleep) pet.ToggleSleep();
+            await ReplyAsync(pet.asleep ? "🌅 You wake up your pet." : "🌅 Your pet is already awake.");
+            return null;
         }
 
 
-        [PetCommand("name")]
-        [RequiresPet]
-        public async Task PetName(PetGame pet, string args)
+        [PetCommand("name"), RequiresPet]
+        public async Task<string> PetName(PetGame pet, string args)
         {
-            if (args == "") await ReplyAsync($"{CustomEmoji.Cross} Please specify a name!");
-            else if (args.Length > 32) await ReplyAsync($"{CustomEmoji.Cross} Pet name can't go above 32 characters!");
-            else if (args.Contains("@")) await ReplyAsync($"{CustomEmoji.Cross} Pet name can't contain \"@\"!");
-            else
-            {
-                pet.SetPetName(args);
-                Games.Save(pet);
-                await AutoReactAsync();
-            }
+            if (args == "") return $"{CustomEmoji.Cross} Please specify a name!";
+            if (args.Length > 32) return $"{CustomEmoji.Cross} Pet name can't go above 32 characters!";
+            if (args.Contains("@")) return $"{CustomEmoji.Cross} Pet name can't contain \"@\"!";
+
+            pet.SetPetName(args);
+            Games.Save(pet);
+            await AutoReactAsync();
+            return null;
         }
 
 
-        [PetCommand("image", "url")]
-        [RequiresPet]
-        public async Task PetImage(PetGame pet, string args)
+        [PetCommand("image", "url"), RequiresPet]
+        public async Task<string> PetImage(PetGame pet, string args)
         {
             string url = args == "" ? null : Context.Message.Attachments.FirstOrDefault()?.Url;
 
             if (url == null && pet.petImageUrl == null)
             {
-                await ReplyAsync($"{CustomEmoji.Cross} Please specify an image! You can use a link or upload your own.");
+                return $"{CustomEmoji.Cross} Please specify an image! You can use a link or upload your own.";
             }
             else
             {
                 if (!pet.TrySetImageUrl(url))
                 {
-                    await ReplyAsync($"{CustomEmoji.Cross} Invalid image link!\nYou could also upload the image yourself.");
-                    return;
+                    return $"{CustomEmoji.Cross} Invalid image link!\nYou could also upload the image yourself.";
                 }
 
                 Games.Save(pet);
 
-                if (url == null) await ReplyAsync($"{CustomEmoji.Check} Pet image reset!");
-                else await AutoReactAsync();
+                if (url == null) return $"{CustomEmoji.Check} Pet image reset!";
+
+                await AutoReactAsync();
+                return null;
             }
         }
 
 
         [PetCommand("help", "h")]
-        public async Task PetSendHelp(PetGame pet, string args)
+        public async Task<string> PetSendHelp(PetGame pet, string args)
         {
             await ReplyAsync(Help.MakeHelp("pet", Prefix));
+            return null;
         }
 
 
-        [PetCommand("pet", "pat", "pot", "p", "wakagotchi", "gotchi")]
-        [RequiresPet]
-        public async Task PetPet(PetGame pet, string args)
+        [PetCommand("pet", "pat", "pot", "p", "wakagotchi", "gotchi"), RequiresPet]
+        public async Task<string> PetPet(PetGame pet, string args)
         {
             var now = DateTime.Now;
             var passed = now - pet.petTimerStart;
@@ -331,64 +318,54 @@ namespace PacManBot.Commands.Modules
                 pet.timesPetSinceTimerStart += 1;
                 await ReplyAsync(pet.DoPet());
             }
+
+            return null;
         }
 
 
         [PetCommand("user", "u")]
-        public async Task PetSendUser(PetGame pet, string args)
+        public async Task<string> PetSendUser(PetGame pet, string args)
         {
-            if (args == "")
-            {
-                await ReplyAsync("You must specify a user!");
-                return;
-            }
+            if (args == "") return "You must specify a user!";
 
             var user = await Context.ParseUserAsync(args);
 
-            if (user == null)
-            {
-                await ReplyAsync("Can't find that user!");
-                return;
-            }
+            if (user == null) return "Can't find that user!";
 
             pet = Games.GetForUser<PetGame>(user.Id);
 
-            if (pet == null) await ReplyAsync("This person doesn't have a pet :(");
-            else await ReplyAsync(pet.GetContent(), pet.GetEmbed(user));
+            if (pet == null) return "This person doesn't have a pet :(";
+
+            await ReplyAsync(pet.GetContent(), pet.GetEmbed(user));
+            return null;
         }
 
 
         [PetCommand("adopt", "get")]
-        public async Task PetAdopt(PetGame pet, string args)
+        public async Task<string> PetAdopt(PetGame pet, string args)
         {
-            if (pet != null)
-            {
-                await ReplyAsync($"You already have a pet!");
-            }
-            else
-            {
-                pet = new PetGame(args.Replace("@", "").Truncate(32), Context.User.Id, Services);
-                Games.Add(pet);
-                await PetSendProfile(pet, null);
-            }
+            if (pet != null) return $"You already have a pet!";
+
+            pet = new PetGame(args.Replace("@", "").Truncate(32), Context.User.Id, Services);
+            Games.Add(pet);
+            await PetSendProfile(pet, null);
+            return null;
         }
 
 
-        [PetCommand("release")]
-        [RequiresPet]
-        public async Task PetRelease(PetGame pet, string args)
+        [PetCommand("release"), RequiresPet]
+        public async Task<string> PetRelease(PetGame pet, string args)
         {
             if (string.IsNullOrWhiteSpace(pet.petName) || args.SanitizeMarkdown() == pet.petName)
             {
                 Games.Remove(pet);
                 await ReplyAsync($"Goodbye {(string.IsNullOrWhiteSpace(pet.petName) ? pet.GameName : pet.petName)}!");
+                return null;
             }
-            else
-            {
-                await ReplyAsync(
-                    $"❗ Are you sure you want to delete {pet.petName}? It will be gone forever, along with your stats and achievements, " +
-                    $"and you can't get it back. Do **{Prefix}pet release {pet.petName}** to release.");
-            }
+
+            return $"❗ Are you sure you want to delete {pet.petName}? It will be gone forever, " +
+                   $"along with your stats and achievements, and you can't get it back. " +
+                   $"Do **{Prefix}pet release {pet.petName}** to release.";
         }
     }
 }

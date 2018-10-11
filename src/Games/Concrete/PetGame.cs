@@ -153,7 +153,7 @@ namespace PacManBot.Games.Concrete
             public bool PetGod { get; set; }
 
             [Achievement("⚙", "Clock", "Possess great geometry", 0, hidden: true, group: -1), DataMember]
-            public bool ClockSpecial { get; set; }
+            public bool ClockSpecial { get; set; } // For a friend that inspired pets to begin with <3
 
 
             public void DoChecks(PetGame pet)
@@ -161,9 +161,6 @@ namespace PacManBot.Games.Concrete
                 if (lastNeglected == default) lastNeglected = pet.bornDate;
                 else if (pet.TotalStats == 0) lastNeglected = DateTime.Now;
                 double days = (DateTime.Now - lastNeglected).TotalDays;
-                Console.WriteLine(pet.bornDate);
-                Console.WriteLine(lastNeglected);
-                Console.WriteLine(days);
 
                 if (!string.IsNullOrWhiteSpace(pet.petName) && !string.IsNullOrWhiteSpace(pet.petImageUrl)) Custom = true;
 
