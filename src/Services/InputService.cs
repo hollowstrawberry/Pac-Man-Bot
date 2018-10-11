@@ -8,9 +8,9 @@ using Discord.Commands;
 using Discord.WebSocket;
 using PacManBot.Games;
 using PacManBot.Games.Concrete;
+using PacManBot.Services.Database;
 using PacManBot.Constants;
 using PacManBot.Extensions;
-using PacManBot.Services.Database;
 
 namespace PacManBot.Services
 {
@@ -63,7 +63,7 @@ namespace PacManBot.Services
 
         private Task OnMessageReceived(SocketMessage m)
         {
-            _ = OnMessageReceivedAsync(m);
+            _ = OnMessageReceivedAsync(m); // Fire and forget
             return Task.CompletedTask;
         }
 
@@ -86,7 +86,7 @@ namespace PacManBot.Services
 
         private async Task OnMessageReceivedAsync(SocketMessage genericMessage)
         {
-            try // I have to wrap discarded async methods in a try block so that exceptions don't go silent
+            try // Wrap discarded async methods in a try block so that exceptions don't go silent
             {
                 if (botConfig.bannedChannels.Contains(genericMessage.Channel.Id))
                 {
@@ -133,12 +133,12 @@ namespace PacManBot.Services
         {
             var context = new ShardedCommandContext(client, message);
 
-            string prefix = storage.GetGuildPrefix(context.Guild);
+            string prefix = await storage.GetGuildPrefixAsync(context.Guild);
             int commandPosition = 0;
             
             if (message.HasMentionPrefix(client.CurrentUser, ref commandPosition)
                 || message.HasStringPrefix($"{prefix} ", ref commandPosition) || message.HasStringPrefix(prefix, ref commandPosition)
-                || !storage.RequiresPrefix(context))
+                || !(await storage.RequiresPrefixAsync(context.Channel)))
             {
                 var result = await commands.ExecuteAsync(context, commandPosition, provider);
 
@@ -166,7 +166,7 @@ namespace PacManBot.Services
         /// <summary>Tries to find special messages to respond to, returns whether it is successful.</summary>
         private async Task<bool> AutoresponseAsync(SocketUserMessage message)
         {
-            if (!(message.Channel is SocketGuildChannel gChannel) || storage.AllowsAutoresponse(gChannel.Guild.Id))
+            if (!(message.Channel is SocketGuildChannel gChannel) || await storage.AllowsAutoresponseAsync(gChannel.Guild))
             {
                 if (WakaRegex.IsMatch(message.Content))
                 {

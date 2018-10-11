@@ -1,14 +1,15 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using PacManBot.Utils;
+using PacManBot.Services.Database;
 using PacManBot.Constants;
 using PacManBot.Extensions;
-using PacManBot.Services.Database;
 
 namespace PacManBot.Services
 {
@@ -61,7 +62,7 @@ namespace PacManBot.Services
 
 
         /// <summary>Retrieves the specified guild's custom prefix, or the default prefix if no record is found.</summary>
-        public string GetGuildPrefix(IGuild guild) => GetGuildPrefix(guild?.Id ?? 0);
+        public string GetGuildPrefix(IGuild guild) => guild == null ? DefaultPrefix : GetGuildPrefix(guild.Id);
 
         /// <summary>Retrieves the specified guild's custom prefix, or the default prefix if no record is found.</summary>
         public string GetGuildPrefix(ulong guildId)
@@ -74,6 +75,22 @@ namespace PacManBot.Services
             }
 
             cachedPrefixes.TryAdd(guildId, prefix);
+            return prefix;
+        }
+
+        /// <summary>Retrieves the specified guild's custom prefix, or the default prefix if no record is found.
+        /// Provides the benefit of an asynchronous database access if one is necessary.</summary>
+        public async Task<string> GetGuildPrefixAsync(IGuild guild)
+        {
+            if (guild == null) return DefaultPrefix;
+            if (cachedPrefixes.TryGetValue(guild.Id, out string prefix)) return prefix;
+
+            using (var db = MakeDbContext())
+            {
+                prefix = (await db.Prefixes.FindAsync(guild.Id))?.Prefix ?? DefaultPrefix;
+            }
+
+            cachedPrefixes.TryAdd(guild.Id, prefix);
             return prefix;
         }
 
@@ -110,13 +127,26 @@ namespace PacManBot.Services
         /// <summary>Whether the specified channel requires a prefix for commands.</summary>
         public bool RequiresPrefix(IChannel channel)
         {
-            if (channel == null) return true;
-
             if (cachedNeedsPrefix.TryGetValue(channel.Id, out bool needs)) return needs;
 
             using (var db = MakeDbContext())
             {
                 needs = channel is IGuildChannel && db.NoPrefixGuildChannels.Find(channel.Id) == null;
+            }
+
+            cachedNeedsPrefix.TryAdd(channel.Id, needs);
+            return needs;
+        }
+
+        /// <summary>Whether the specified channel requires a prefix for commands.
+        /// Provides the benefit of an asynchronous database access if one is necessary.</summary>
+        public async Task<bool> RequiresPrefixAsync(IChannel channel)
+        {
+            if (cachedNeedsPrefix.TryGetValue(channel.Id, out bool needs)) return needs;
+
+            using (var db = MakeDbContext())
+            {
+                needs = channel is IGuildChannel && await db.NoPrefixGuildChannels.FindAsync(channel.Id) == null;
             }
 
             cachedNeedsPrefix.TryAdd(channel.Id, needs);
@@ -145,7 +175,7 @@ namespace PacManBot.Services
 
 
         /// <summary>Whether the specified guild is set to allow message autoresponses.</summary>
-        public bool AllowsAutoresponse(IGuild guild) => AllowsAutoresponse(guild?.Id ?? 0);
+        public bool AllowsAutoresponse(IGuild guild) => guild == null ? true : AllowsAutoresponse(guild.Id);
 
         /// <summary>Whether the specified guild is set to allow message autoresponses.</summary>
         public bool AllowsAutoresponse(ulong guildId)
@@ -158,6 +188,22 @@ namespace PacManBot.Services
             }
 
             cachedAllowsAutoresponse.TryAdd(guildId, allows);
+            return allows;
+        }
+
+        /// <summary>Whether the specified guild is set to allow message autoresponses.
+        /// Provides the benefit of an asynchronous database access if one is necessary.</summary>
+        public async Task<bool> AllowsAutoresponseAsync(IGuild guild)
+        {
+            if (guild == null) return true;
+            if (cachedAllowsAutoresponse.TryGetValue(guild.Id, out bool allows)) return allows;
+
+            using (var db = MakeDbContext())
+            {
+                allows = await db.NoAutoresponseGuilds.FindAsync(guild.Id) == null;
+            }
+
+            cachedAllowsAutoresponse.TryAdd(guild.Id, allows);
             return allows;
         }
 
