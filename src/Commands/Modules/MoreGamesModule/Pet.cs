@@ -256,7 +256,7 @@ namespace PacManBot.Commands.Modules
         [PetCommand("image", "url"), RequiresPet]
         public async Task<string> PetImage(PetGame pet, string args)
         {
-            string url = args == "" ? null : Context.Message.Attachments.FirstOrDefault()?.Url;
+            string url = args != "" ? args : Context.Message.Attachments.FirstOrDefault()?.Url;
 
             if (url == null && pet.petImageUrl == null)
             {
