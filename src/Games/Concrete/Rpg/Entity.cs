@@ -91,10 +91,10 @@ namespace PacManBot.Games.Concrete.Rpg
         {
             var msg = new StringBuilder();
 
-            foreach (var buff in Buffs.ToList())
+            foreach (var buff in Buffs.ToArray())
             {
                 msg.AppendLine(buff.TickEffects(this));
-                if (--buff.timeLeft == 0) Buffs.Remove(buff);
+                if (--buff.timeLeft <= 0) Buffs.Remove(buff);
             }
 
             return msg.ToString();
