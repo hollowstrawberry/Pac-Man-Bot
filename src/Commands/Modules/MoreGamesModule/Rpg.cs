@@ -320,7 +320,7 @@ namespace PacManBot.Commands.Modules
 
 
         [RpgCommand("spend", "invest")]
-        public async Task<string> RpgSendSkills(RpgGame game, string args)
+        public async Task<string> RpgSpendSkills(RpgGame game, string args)
         {
             if (args == "") return "Please specify a skill and amount to spend.";
 
@@ -331,10 +331,7 @@ namespace PacManBot.Commands.Modules
             if (splice.Length == 2)
             {
                 if (splice[1] == "all") amount = game.player.skillPoints;
-                else
-                {
-                    int.TryParse(splice[1], out amount);
-                }
+                else int.TryParse(splice[1], out amount); // Default value 0
             }
 
             if (amount < 1) return "Please specify a valid amount of skill points to spend.";

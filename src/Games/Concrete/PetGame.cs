@@ -454,7 +454,7 @@ namespace PacManBot.Games.Concrete
         /// <summary>Sets the pet's name.</summary>
         public void SetPetName(string text)
         {
-            petName = text?.SanitizeMarkdown();
+            petName = text?.Trim().SanitizeMarkdown();
             UpdateStats();
         }
 

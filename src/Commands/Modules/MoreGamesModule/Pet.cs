@@ -113,11 +113,9 @@ namespace PacManBot.Commands.Modules
             {
                 user = await Context.ParseUserAsync(args);
                 if (user == null) return "Can't find that user!";
-                else
-                {
-                    pet = Games.GetForUser<PetGame>(user.Id);
-                    if (pet == null) return "This person doesn't have a pet :(";
-                }
+
+                pet = Games.GetForUser<PetGame>(user.Id);
+                if (pet == null) return "This person doesn't have a pet :(";
             }
 
             if (pet == null) return AdoptPetMessage;
@@ -136,11 +134,9 @@ namespace PacManBot.Commands.Modules
             {
                 user = await Context.ParseUserAsync(args);
                 if (user == null) return "Can't find that user!";
-                else
-                {
-                    pet = Games.GetForUser<PetGame>(user.Id);
-                    if (pet == null) return "This person doesn't have a pet :(";
-                }
+
+                pet = Games.GetForUser<PetGame>(user.Id);
+                if (pet == null) return "This person doesn't have a pet :(";
             }
 
             if (pet == null) return AdoptPetMessage;
@@ -197,6 +193,7 @@ namespace PacManBot.Commands.Modules
                     await ReplyAsync($"{CustomEmoji.PetRight}{playEmote}{CustomEmoji.PetLeft}");
                     await ReplyAsync($"{pet.petName} and {otherPet.petName} are happy to play together!");
                 }
+                return null;
             }
             else
             {
@@ -204,38 +201,35 @@ namespace PacManBot.Commands.Modules
                     ? "Your pet doesn't want to play anymore! (-1 energy)"
                     : "Your pet is too tired! It needs 5 energy, or for someone else's pet to encourage it to play.";
 
-                await ReplyAsync($"{CustomEmoji.Cross} {message}");
+                return $"{CustomEmoji.Cross} {message}";
             }
-
-            return null;
         }
 
 
         [PetCommand("sleep", "rest", "energy"), RequiresPet]
-        public async Task<string> PetSleep(PetGame pet, string args)
+        public Task<string> PetSleep(PetGame pet, string args)
         {
             pet.UpdateStats(store: false);
             if (pet.energy.Ceiling() == PetGame.MaxStat && !pet.asleep)
             {
                 pet.happiness = Math.Max(0, pet.happiness - 1);
                 Games.Save(pet);
-                await ReplyAsync($"{CustomEmoji.Cross} Your pet is not tired! (-1 happiness)");
-                return null;
+                return Task.FromResult($"{CustomEmoji.Cross} Your pet is not tired! (-1 happiness)");
             }
 
-            if (!pet.asleep) pet.ToggleSleep();
             string message = pet.asleep ? "Your pet is already sleeping." : "Your pet is now asleep.";
-            return $"{Bot.Random.Choose(Content.petSleepEmotes)} {message}";
+            if (!pet.asleep) pet.ToggleSleep();
+            return Task.FromResult($"{Bot.Random.Choose(Content.petSleepEmotes)} {message}");
         }
 
 
-        [PetCommand("wake", "wakeup", "awaken"), RequiresPet]
-        public async Task<string> PetWake(PetGame pet, string args)
+        [PetCommand("wake", "wakeup", "awaken", "awake"), RequiresPet]
+        public Task<string> PetWake(PetGame pet, string args)
         {
             pet.UpdateStats(false);
+            var message = pet.asleep ? "🌅 You wake up your pet." : "🌅 Your pet is already awake.";
             if (pet.asleep) pet.ToggleSleep();
-            await ReplyAsync(pet.asleep ? "🌅 You wake up your pet." : "🌅 Your pet is already awake.");
-            return null;
+            return Task.FromResult(message);
         }
 
 
@@ -259,23 +253,16 @@ namespace PacManBot.Commands.Modules
             string url = args != "" ? args : Context.Message.Attachments.FirstOrDefault()?.Url;
 
             if (url == null && pet.petImageUrl == null)
-            {
                 return $"{CustomEmoji.Cross} Please specify an image! You can use a link or upload your own.";
-            }
-            else
-            {
-                if (!pet.TrySetImageUrl(url))
-                {
-                    return $"{CustomEmoji.Cross} Invalid image link!\nYou could also upload the image yourself.";
-                }
 
-                Games.Save(pet);
+            if (!pet.TrySetImageUrl(url))
+                return $"{CustomEmoji.Cross} Invalid image link!\nYou could also upload the image yourself.";
 
-                if (url == null) return $"{CustomEmoji.Check} Pet image reset!";
+            Games.Save(pet);
 
-                await AutoReactAsync();
-                return null;
-            }
+            if (url == null) return $"{CustomEmoji.Check} Pet image reset!";
+            await AutoReactAsync();
+            return null;
         }
 
 
@@ -312,14 +299,13 @@ namespace PacManBot.Commands.Modules
                         
                     await ReplyAsync(response);
                 }
+                return null;
             }
             else
             {
                 pet.timesPetSinceTimerStart += 1;
-                await ReplyAsync(pet.DoPet());
+                return pet.DoPet();
             }
-
-            return null;
         }
 
 
@@ -329,11 +315,9 @@ namespace PacManBot.Commands.Modules
             if (args == "") return "You must specify a user!";
 
             var user = await Context.ParseUserAsync(args);
-
             if (user == null) return "Can't find that user!";
 
             pet = Games.GetForUser<PetGame>(user.Id);
-
             if (pet == null) return "This person doesn't have a pet :(";
 
             await ReplyAsync(pet.GetContent(), pet.GetEmbed(user));
