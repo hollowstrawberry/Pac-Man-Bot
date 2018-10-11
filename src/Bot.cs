@@ -103,7 +103,7 @@ namespace PacManBot
 
         private async Task UpdateGuildCountAsync()
         {
-            try // I have to wrap discarded async methods in a try block so that exceptions don't go silent
+            try // Wrap discarded async methods in a try block so that exceptions don't go silent
             {
                 var now = DateTime.Now;
 

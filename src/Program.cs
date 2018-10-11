@@ -22,7 +22,7 @@ namespace PacManBot
     /// </summary>
     public static class Program
     {
-        public static readonly string Version = Assembly.GetExecutingAssembly().GetName().Version.ToString().TrimEnd(".0");
+        public static readonly string Version = Assembly.GetEntryAssembly().GetName().Version.ToString().TrimEnd(".0");
 
 
         static async Task Main()

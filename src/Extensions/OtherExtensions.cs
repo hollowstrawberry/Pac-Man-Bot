@@ -11,20 +11,7 @@ namespace PacManBot.Extensions
         /// <summary>Gets a service of type <typeparamref name="T"/> from a <see cref="IServiceProvider"/>. 
         /// Throws an exception if one is not found. I didn't like the long name of the original.</summary>
         public static T Get<T>(this IServiceProvider provider) => provider.GetRequiredService<T>();
-
-
-        /// <summary>Returns the given number rounded up to a <see cref="int"/>.</summary>
-        public static int Ceiling(this double num) => (int)Math.Ceiling(num);
-
-        /// <summary>Returns the given number rounded down to an <see cref="int"/>.</summary>
-        public static int Floor(this double num) => (int)Math.Floor(num);
-
-        /// <summary>Returns the given number rounded to a number of decimals.</summary>
-        public static double Round(this double num, int decimals) => Math.Round(num, decimals);
-
-        /// <summary>Returns the given number rounded up or down to the nearest <see cref="int"/>.</summary>
-        public static int Round(this double num) => (int)Math.Round(num);
-
+        
 
         /// <summary>
         /// Converts a <see cref="TimeSpan"/> into a string listing days, hours, minutes and seconds.

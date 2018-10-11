@@ -23,7 +23,7 @@ namespace PacManBot.Services
                     "Microsoft.EntityFrameworkCore", "Newtonsoft.Json",
                     "Discord", "Discord.Rest", "Discord.Commands", "Discord.WebSocket",
                     "PacManBot", "PacManBot.Constants", "PacManBot.Utils", "PacManBot.Extensions", 
-                    "PacManBot.Games", "PacManBot.Games.Concrete",
+                    "PacManBot.Games", "PacManBot.Games.Concrete", "PacManBot.Games.Concrete.Rpg",
                     "PacManBot.Commands", "PacManBot.Commands.Modules",
                     "PacManBot.Services", "PacManBot.Services.Database"
                 )
