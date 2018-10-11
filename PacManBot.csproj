@@ -21,12 +21,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="api\**" />
     <Compile Remove="_Screenshots\**" />
     <Compile Remove="_Resources\**" />
     <Compile Remove="_site\**" />
+    <None Remove="api\**" />
     <None Remove="_Screenshots\**" />
     <None Remove="_Resources\**" />
     <None Remove="_site\**" />
+    <EmbeddedResource Remove="api\**" />
     <EmbeddedResource Remove="_Screenshots\**" />
     <EmbeddedResource Remove="_Resources\**" />
     <EmbeddedResource Remove="_site\**" />
