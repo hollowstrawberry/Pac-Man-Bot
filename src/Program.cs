@@ -9,6 +9,7 @@ using Discord.Commands;
 using Discord.WebSocket;
 using PacManBot.Services;
 using PacManBot.Constants;
+using PacManBot.Extensions;
 
 
 // Made by Samrux for fun
@@ -21,7 +22,7 @@ namespace PacManBot
     /// </summary>
     public static class Program
     {
-        public static readonly string Version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+        public static readonly string Version = Assembly.GetExecutingAssembly().GetName().Version.ToString().TrimEnd(".0");
 
 
         static async Task Main()

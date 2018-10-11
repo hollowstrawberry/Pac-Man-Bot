@@ -13,17 +13,30 @@ namespace PacManBot.Extensions
 
 
         /// <summary>Retrieves a string with the end trimmed off if the original exceeds the provided maximum length.</summary>
-        public static string Truncate(this string value, int maxLength)
-            => value.Substring(0, Math.Min(maxLength, value.Length));
-
+        public static string Truncate(this string source, int maxLength)
+            => source.Substring(0, Math.Min(maxLength, source.Length));
 
         /// <summary>Retrieves a string with the beginning trimmed off if the original exceeds the provided maximum length.</summary>
-        public static string TruncateStart(this string value, int maxLength)
-            => value.Substring(Math.Max(0, value.Length - maxLength));
+        public static string TruncateStart(this string source, int maxLength)
+            => source.Substring(Math.Max(0, source.Length - maxLength));
+
+
+        /// <summary>Removes an instance of the given suffix string from the source, if found.</summary>
+        public static string TrimEnd(this string source, string suffix)
+            => source.EndsWith(suffix) ? source.Substring(0, source.Length - suffix.Length) : source;
+
+        /// <summary>Removes an instance of the given prefix string from the source, if found.</summary>
+        public static string TrimStart(this string source, string prefix)
+            => source.StartsWith(prefix) ? source.Substring(prefix.Length) : source;
+
+        /// <summary>Removes an instance of the given string from the start and end of the source, if found.</summary>
+        public static string Trim(this string source, string value)
+            => source.TrimStart(value).TrimEnd(value);
 
 
         /// <summary>Determines whether the beginning or end of a string matches the specified value.</summary>
-        public static bool StartsOrEndsWith(this string text, string value) => text.StartsWith(value) || text.EndsWith(value);
+        public static bool StartsOrEndsWith(this string text, string value)
+            => text.StartsWith(value) || text.EndsWith(value);
 
         /// <summary>Determines whether the beginning or end of a string matches the specified value
         /// when compared using the specified comparison option.</summary>
@@ -46,14 +59,14 @@ namespace PacManBot.Extensions
 
         /// <summary>Replaces all occurrences of the specified "before" values
         /// with their corresponding "after" values, inside a string.</summary>
-        public static string ReplaceMany(this string text, params (string before, string after)[] replacements)
-            => text.ReplaceMany((IEnumerable<(string, string)>)replacements);
+        public static string ReplaceMany(this string source, params (string before, string after)[] replacements)
+            => source.ReplaceMany((IEnumerable<(string, string)>)replacements);
 
         /// <summary>Replaces all occurrences of the specified "before" values
         /// with their corresponding "after" values, inside a string.</summary>
-        public static string ReplaceMany(this string text, IEnumerable<(string before, string after)> replacements)
+        public static string ReplaceMany(this string source, IEnumerable<(string before, string after)> replacements)
         {
-            var sb = new StringBuilder(text);
+            var sb = new StringBuilder(source);
             foreach (var (before, after) in replacements) sb.Replace(before, after);
             return sb.ToString();
         }
@@ -101,9 +114,9 @@ namespace PacManBot.Extensions
         /// <param name="start">The starting index of the slice. Loops around if negative.</param>
         /// <param name="stop">The index the slice goes up to, excluding itself. Loops around if negative.</param>
         /// <param name="step">The increment between each character index. Traverses backwards if negative.</param>
-        public static string Slice(this string str, int? start = null, int? stop = null, int step = 1)
+        public static string Slice(this string source, int? start = null, int? stop = null, int step = 1)
         {
-            return CollectionExtensions.Slice(str, start, stop, step).JoinString();
+            return CollectionExtensions.Slice(source, start, stop, step).JoinString();
         }
 
 
