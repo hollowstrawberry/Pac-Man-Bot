@@ -17,11 +17,11 @@ namespace PacManBot.Commands.Modules
     [Name("📁General"), Remarks("1")]
     public class GeneralModule : BaseCustomModule
     {
-        private static readonly IEnumerable<string> GameNames = typeof(BaseGame).Assembly.GetTypes()
-            .Where(t => t.IsSubclassOf(typeof(BaseGame)) && t.IsClass && !t.IsAbstract)
-            .Select(t => (BaseGame)Activator.CreateInstance(t, true))
-            .OrderBy(t => t.GameIndex)
-            .Select(t => t.GameName);
+        private static readonly IEnumerable<string> GameNames = ReflectionExtensions.AllTypes
+            .MakeObjects<BaseGame>()
+            .OrderBy(g => g.GameIndex)
+            .Select(g => g.GameName)
+            .ToArray();
 
 
         public GeneralModule(IServiceProvider services) : base(services) {}

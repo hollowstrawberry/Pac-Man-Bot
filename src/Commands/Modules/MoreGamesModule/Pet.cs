@@ -45,7 +45,7 @@ namespace PacManBot.Commands.Modules
 
 
         private static readonly IEnumerable<MethodInfo> PetMethods = typeof(MoreGamesModule).GetMethods()
-            .Where(x => x.GetCustomAttribute<PetCommandAttribute>()?.VerifyMethod(x) != null)
+            .Where(x => x.Get<PetCommandAttribute>()?.VerifyMethod(x) != null)
             .ToArray();
 
         public string AdoptPetMessage => $"You don't have a pet yet! Do `{Prefix}pet adopt` to adopt one.";
@@ -82,13 +82,13 @@ namespace PacManBot.Commands.Modules
             else
             {
                 var pet = Games.GetForUser<PetGame>(Context.User.Id);
-                if (pet == null && command.GetCustomAttribute<RequiresPetAttribute>() != null)
+                if (pet == null && command.Get<RequiresPetAttribute>() != null)
                 {
                     await ReplyAsync(AdoptPetMessage);
                     return;
                 }
 
-                string response = await (Task<string>)command.Invoke(this, new object[] { pet, args });
+                string response = await command.Invoke<Task<string>>(this, pet, args);
                 if (response != null) await ReplyAsync(response);
             }
         }

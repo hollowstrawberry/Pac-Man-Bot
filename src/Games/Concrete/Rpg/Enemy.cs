@@ -70,7 +70,7 @@ namespace PacManBot.Games.Concrete.Rpg
         /// <summary>Clones an enemy of this type, ready for battle.</summary>
         public Enemy MakeNew()
         {
-            return (Enemy)Activator.CreateInstance(GetType(), true);
+            return GetType().CreateInstance<Enemy>();
         }
 
 

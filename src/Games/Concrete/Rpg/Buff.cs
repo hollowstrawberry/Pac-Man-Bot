@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.Serialization;
+using PacManBot.Extensions;
 
 namespace PacManBot.Games.Concrete.Rpg
 {
@@ -35,7 +36,7 @@ namespace PacManBot.Games.Concrete.Rpg
         /// <summary>Clones a buff of this type, ready for use.</summary>
         public Buff MakeNew(int duration)
         {
-            var buff = (Buff)Activator.CreateInstance(GetType());
+            var buff = GetType().CreateInstance<Buff>();
             buff.timeLeft = duration;
             return buff;
         }

@@ -52,7 +52,7 @@ namespace PacManBot.Games
         {
             if (typeof(TGame).IsAbstract) throw new ArgumentException("Cannot instatiate abstract class");
 
-            var game = (TGame)Activator.CreateInstance(typeof(TGame), true);
+            var game = typeof(TGame).CreateInstance<TGame>();
             await game.Initialize(channelId, players, services);
             return game;
         }

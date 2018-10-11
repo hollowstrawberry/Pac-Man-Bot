@@ -2,7 +2,6 @@
 using System.IO;
 using System.Text;
 using System.Linq;
-using System.Reflection;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
 using Newtonsoft.Json;
@@ -18,7 +17,11 @@ namespace PacManBot.Services
     /// </summary>
     public class GameService
     {
-        private static readonly IReadOnlyDictionary<string, Type> StoreableGameTypes = GetStoreableGameTypes();
+        private static readonly IEnumerable<(string key, Type type)> StoreableGameTypes = ReflectionExtensions.AllTypes
+            .SubclassesOf<IStoreableGame>()
+            .Select(t => (t.CreateInstance<IStoreableGame>().FilenameKey, t))
+            .OrderByDescending(t => t.FilenameKey.Length)
+            .ToArray();
 
         private static readonly JsonSerializerSettings GameJsonSettings = new JsonSerializerSettings
         {
@@ -26,20 +29,17 @@ namespace PacManBot.Services
             TypeNameHandling = TypeNameHandling.Auto,
         };
 
-
         private readonly LoggingService logger;
         private readonly ConcurrentDictionary<ulong, IChannelGame> games;
         private readonly ConcurrentDictionary<(ulong, Type), IUserGame> userGames;
 
+
         /// <summary>Enumerates through all active channel-specific games concurrently.</summary>
         public IEnumerable<IChannelGame> AllChannelGames => games.Select(x => x.Value);
-
         /// <summary>Enumerates through all active user-specific games concurrently.</summary>
         public IEnumerable<IUserGame> AllUserGames => userGames.Select(x => x.Value);
-
         /// <summary>Enumerates through all active games of any type.</summary>
         public IEnumerable<IBaseGame> AllGames => AllChannelGames.Cast<IBaseGame>().Concat(AllUserGames.Cast<IBaseGame>());
-
 
 
         public GameService(LoggingService logger)
@@ -147,7 +147,7 @@ namespace PacManBot.Services
                 {
                     try
                     {
-                        Type gameType = StoreableGameTypes.First(x => file.Contains(x.Key)).Value;
+                        Type gameType = StoreableGameTypes.First(x => file.Contains(x.key)).type;
                         var game = (IStoreableGame)JsonConvert.DeserializeObject(File.ReadAllText(file), gameType, GameJsonSettings);
                         game.PostDeserialize(gameServices);
 
@@ -166,18 +166,6 @@ namespace PacManBot.Services
 
             logger.Log(LogSeverity.Info, LogSource.Storage,
                        $"Loaded {games.Count + userGames.Count} games{$" with {fail} errors".If(fail > 0)}");
-        }
-
-
-
-        private static IReadOnlyDictionary<string, Type> GetStoreableGameTypes()
-        {
-            return Assembly.GetAssembly(typeof(IStoreableGame)).GetTypes()
-                .Where(t => t.IsClass && !t.IsAbstract && t.GetInterfaces().Contains(typeof(IStoreableGame)))
-                .Select(x => KeyValuePair.Create(((IStoreableGame)Activator.CreateInstance(x, true)).FilenameKey, x))
-                .OrderByDescending(x => x.Key.Length)
-                .AsDictionary()
-                .AsReadOnly();
         }
     }
 }

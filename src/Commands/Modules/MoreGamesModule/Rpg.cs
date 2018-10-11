@@ -47,7 +47,7 @@ namespace PacManBot.Commands.Modules
 
 
         private static readonly IEnumerable<MethodInfo> RpgMethods = typeof(MoreGamesModule).GetMethods()
-            .Where(x => x.GetCustomAttribute<RpgCommandAttribute>()?.VerifyMethod(x) != null)
+            .Where(x => x.Get<RpgCommandAttribute>()?.VerifyMethod(x) != null)
             .ToArray();
 
 
@@ -77,7 +77,7 @@ namespace PacManBot.Commands.Modules
             var game = Games.GetForUser<RpgGame>(Context.User.Id);
 
             var command = RpgMethods
-                .FirstOrDefault(x => x.GetCustomAttribute<RpgCommandAttribute>().Names.Contains(commandName));
+                .FirstOrDefault(x => x.Get<RpgCommandAttribute>().Names.Contains(commandName));
 
             if (command == null)
             {
@@ -95,13 +95,13 @@ namespace PacManBot.Commands.Modules
             }
             else
             {
-                if (game == null && command.GetCustomAttribute<NotRequiresRpgAttribute>() == null)
+                if (game == null && command.Get<NotRequiresRpgAttribute>() == null)
                 {
                     await ReplyAsync($"You can use `{Prefix}rpg start` to start your adventure.");
                     return;
                 }
 
-                string response = await (Task<string>)command.Invoke(this, new object[] { game, args });
+                string response = await command.Invoke<Task<string>>(this, game, args);
                 if (response != null) await ReplyAsync(response);
             }
         }

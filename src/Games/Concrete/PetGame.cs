@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Reflection;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Discord;
@@ -175,7 +174,7 @@ namespace PacManBot.Games.Concrete
                 // Grab all of this object's properties with the achievement attribute, 
                 // assigning whether they've been obtained by the current instance
                 return GetType().GetProperties()
-                    .Select(x => x.GetCustomAttribute<AchievementAttribute>()?.WithObtained((bool)x.GetMethod.Invoke(this, null)))
+                    .Select(x => x.Get<AchievementAttribute>()?.WithObtained(x.GetMethod.Invoke<bool>(this)))
                     .Where(x => x != null)
                     .ToList().Sorted();
             }

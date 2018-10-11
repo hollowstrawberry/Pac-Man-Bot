@@ -43,10 +43,7 @@ namespace PacManBot.Games.Concrete.Rpg
 
         private static IReadOnlyDictionary<string, T> GetTypes<T>() where T : IKeyable
         {
-            return typeof(RpgGame).Assembly.GetTypes()
-                .Where(t => t.IsClass && !t.IsAbstract && t.IsSubclassOf(typeof(T)))
-                .Select(t => (T)Activator.CreateInstance(t, true))
-                .ToDictionary(i => i.Key).AsReadOnly();
+            return ReflectionExtensions.AllTypes.MakeObjects<T>().ToDictionary(i => i.Key).AsReadOnly();
         }
     }
 }

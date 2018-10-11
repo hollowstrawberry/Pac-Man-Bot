@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using Discord.Commands;
+using PacManBot.Extensions;
 using ParameterInfo = System.Reflection.ParameterInfo; // Disambiguation
 
 namespace PacManBot.Commands
@@ -23,7 +24,6 @@ namespace PacManBot.Commands
         private static PropertyInfo Context { get; }
         private static MethodInfo BeforeExecute { get; }
 
-
         static ModuleBuilder()
         {
             ModuleType = typeof(TModule);
@@ -31,8 +31,6 @@ namespace PacManBot.Commands
             Context = ModuleType.GetProperty("Context").DeclaringType.GetProperty("Context");
             BeforeExecute = ModuleType.GetRuntimeMethods().First(x => x.Name == "BeforeExecute");
         }
-
-
 
 
         /// <summary>
@@ -63,7 +61,7 @@ namespace PacManBot.Commands
             var module = (TModule)Constructor.Invoke(parameters);
 
             Context.SetValue(module, context, BindingFlags.NonPublic | BindingFlags.Instance, null, null, null);
-            if (beforeExecute) BeforeExecute.Invoke(module, new object[] { null });
+            if (beforeExecute) BeforeExecute.Invoke(module);
 
             return module;
         }
