@@ -21,7 +21,7 @@ namespace PacManBot
     /// </summary>
     public static class Program
     {
-        public const string Version = "4.0.7";
+        public static readonly string Version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
 
         static async Task Main()

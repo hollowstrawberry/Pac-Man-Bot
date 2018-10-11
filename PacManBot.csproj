@@ -6,6 +6,10 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <PreserveCompilationContext>false</PreserveCompilationContext>
     <RootNamespace>PacManBot</RootNamespace>
+    <Version>4.0.8</Version>
+    <Authors>Samuel Briones Molina</Authors>
+    <Product>Pac-Man Bot</Product>
+    <Company></Company>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
