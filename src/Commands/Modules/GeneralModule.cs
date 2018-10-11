@@ -9,7 +9,6 @@ using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using PacManBot.Games;
-using PacManBot.Services;
 using PacManBot.Constants;
 using PacManBot.Extensions;
 
@@ -59,7 +58,7 @@ namespace PacManBot.Commands.Modules
         {
             if (command == null)
             {
-                await ReplyAsync(await Help.MakeAllHelp(Context, false));
+                await ReplyAsync(await Help.MakeAllHelp(Context, expanded: false));
             }
             else
             {
@@ -74,7 +73,7 @@ namespace PacManBot.Commands.Modules
         [Summary("Show a complete list of all commands including their parameters and a short description.")]
         public async Task SendAllHelpExpanded()
         {
-            await ReplyAsync(await Help.MakeAllHelp(Context, true));
+            await ReplyAsync(await Help.MakeAllHelp(Context, expanded: true));
         }
 
 

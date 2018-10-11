@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
     <link rel="stylesheet" href="../styles/docfx.css">
     <link rel="stylesheet" href="../styles/main.css">
-    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:navrel" content="">
     <meta property="docfx:tocrel" content="toc.html">
     
     
@@ -139,13 +139,16 @@
       <a class="xref" href="PacManBot.Games.Concrete.Rpg.Entity.html#PacManBot_Games_Concrete_Rpg_Entity_AttackFormula_System_Int32_System_Boolean_">Entity.AttackFormula(Int32, Boolean)</a>
     </div>
     <div>
+      <a class="xref" href="PacManBot.Games.Concrete.Rpg.Entity.html#PacManBot_Games_Concrete_Rpg_Entity_HasBuff__1">Entity.HasBuff&lt;TBuff&gt;()</a>
+    </div>
+    <div>
       <a class="xref" href="PacManBot.Games.Concrete.Rpg.Entity.html#PacManBot_Games_Concrete_Rpg_Entity_HasBuff_System_String_">Entity.HasBuff(String)</a>
     </div>
     <div>
-      <a class="xref" href="PacManBot.Games.Concrete.Rpg.Entity.html#PacManBot_Games_Concrete_Rpg_Entity_AddBuff_PacManBot_Games_Concrete_Rpg_Buff_System_Int32_">Entity.AddBuff(Buff, Int32)</a>
+      <a class="xref" href="PacManBot.Games.Concrete.Rpg.Entity.html#PacManBot_Games_Concrete_Rpg_Entity_AddBuff_PacManBot_Games_Concrete_Rpg_Buff_System_Nullable_System_Int32__">Entity.AddBuff(Buff, Nullable&lt;Int32&gt;)</a>
     </div>
     <div>
-      <a class="xref" href="PacManBot.Games.Concrete.Rpg.Entity.html#PacManBot_Games_Concrete_Rpg_Entity_AddBuff_System_String_System_Int32_">Entity.AddBuff(String, Int32)</a>
+      <a class="xref" href="PacManBot.Games.Concrete.Rpg.Entity.html#PacManBot_Games_Concrete_Rpg_Entity_AddBuff__1_System_Int32_">Entity.AddBuff&lt;TBuff&gt;(Int32)</a>
     </div>
     <div>
       <span class="xref">System.Object.Equals(System.Object)</span>
@@ -519,6 +522,32 @@ public int Level { get; set; }</code></pre>
   </table>
   
   
+  <a id="PacManBot_Games_Concrete_Rpg_RpgPlayer_ManaRegen_" data-uid="PacManBot.Games.Concrete.Rpg.RpgPlayer.ManaRegen*"></a>
+  <h4 id="PacManBot_Games_Concrete_Rpg_RpgPlayer_ManaRegen" data-uid="PacManBot.Games.Concrete.Rpg.RpgPlayer.ManaRegen">ManaRegen</h4>
+  <div class="markdown level1 summary"><p>Mana regenerated after each battle.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int ManaRegen { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
   <a id="PacManBot_Games_Concrete_Rpg_RpgPlayer_MaxMana_" data-uid="PacManBot.Games.Concrete.Rpg.RpgPlayer.MaxMana*"></a>
   <h4 id="PacManBot_Games_Concrete_Rpg_RpgPlayer_MaxMana" data-uid="PacManBot.Games.Concrete.Rpg.RpgPlayer.MaxMana">MaxMana</h4>
   <div class="markdown level1 summary"><p>The player's maximum mana.</p>
@@ -727,13 +756,13 @@ public int MaxMana { get; set; }</code></pre>
   
   
   <a id="PacManBot_Games_Concrete_Rpg_RpgPlayer_Profile_" data-uid="PacManBot.Games.Concrete.Rpg.RpgPlayer.Profile*"></a>
-  <h4 id="PacManBot_Games_Concrete_Rpg_RpgPlayer_Profile_System_String_" data-uid="PacManBot.Games.Concrete.Rpg.RpgPlayer.Profile(System.String)">Profile(String)</h4>
+  <h4 id="PacManBot_Games_Concrete_Rpg_RpgPlayer_Profile_System_String_System_Boolean_" data-uid="PacManBot.Games.Concrete.Rpg.RpgPlayer.Profile(System.String,System.Boolean)">Profile(String, Boolean)</h4>
   <div class="markdown level1 summary"><p>Obtain a Discord embed with this person's profile.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public EmbedBuilder Profile(string channelPrefix = &quot;&quot;)</code></pre>
+    <pre><code class="lang-csharp hljs">public EmbedBuilder Profile(string channelPrefix = &quot;&quot;, bool reaction = false)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -748,6 +777,11 @@ public int MaxMana { get; set; }</code></pre>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">channelPrefix</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">reaction</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -798,13 +832,13 @@ public int MaxMana { get; set; }</code></pre>
   
   
   <a id="PacManBot_Games_Concrete_Rpg_RpgPlayer_Skills_" data-uid="PacManBot.Games.Concrete.Rpg.RpgPlayer.Skills*"></a>
-  <h4 id="PacManBot_Games_Concrete_Rpg_RpgPlayer_Skills_System_String_" data-uid="PacManBot.Games.Concrete.Rpg.RpgPlayer.Skills(System.String)">Skills(String)</h4>
+  <h4 id="PacManBot_Games_Concrete_Rpg_RpgPlayer_Skills_System_String_System_Boolean_" data-uid="PacManBot.Games.Concrete.Rpg.RpgPlayer.Skills(System.String,System.Boolean)">Skills(String, Boolean)</h4>
   <div class="markdown level1 summary"><p>Obtain a Discord embed displaying this person's skills.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public EmbedBuilder Skills(string channelPrefix = &quot;&quot;)</code></pre>
+    <pre><code class="lang-csharp hljs">public EmbedBuilder Skills(string channelPrefix = &quot;&quot;, bool reaction = false)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -819,6 +853,11 @@ public int MaxMana { get; set; }</code></pre>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">channelPrefix</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">reaction</span></td>
         <td></td>
       </tr>
     </tbody>

@@ -345,19 +345,6 @@ references:
   isSpec: "True"
   fullName: PacManBot.Commands.BaseCustomModule.AutoReactAsync
   nameWithType: BaseCustomModule.AutoReactAsync
-- uid: PacManBot.Commands.BaseCustomModule.BeforeExecute(Discord.Commands.CommandInfo)
-  name: BeforeExecute(CommandInfo)
-  href: api/PacManBot.Commands.BaseCustomModule.html#PacManBot_Commands_BaseCustomModule_BeforeExecute_Discord_Commands_CommandInfo_
-  commentId: M:PacManBot.Commands.BaseCustomModule.BeforeExecute(Discord.Commands.CommandInfo)
-  fullName: PacManBot.Commands.BaseCustomModule.BeforeExecute(Discord.Commands.CommandInfo)
-  nameWithType: BaseCustomModule.BeforeExecute(CommandInfo)
-- uid: PacManBot.Commands.BaseCustomModule.BeforeExecute*
-  name: BeforeExecute
-  href: api/PacManBot.Commands.BaseCustomModule.html#PacManBot_Commands_BaseCustomModule_BeforeExecute_
-  commentId: Overload:PacManBot.Commands.BaseCustomModule.BeforeExecute
-  isSpec: "True"
-  fullName: PacManBot.Commands.BaseCustomModule.BeforeExecute
-  nameWithType: BaseCustomModule.BeforeExecute
 - uid: PacManBot.Commands.BaseCustomModule.Content
   name: Content
   href: api/PacManBot.Commands.BaseCustomModule.html#PacManBot_Commands_BaseCustomModule_Content
@@ -406,6 +393,19 @@ references:
   fullName.vb: PacManBot.Commands.BaseCustomModule.GetModule(Of TModule)()
   nameWithType: BaseCustomModule.GetModule<TModule>()
   nameWithType.vb: BaseCustomModule.GetModule(Of TModule)()
+- uid: PacManBot.Commands.BaseCustomModule.Help
+  name: Help
+  href: api/PacManBot.Commands.BaseCustomModule.html#PacManBot_Commands_BaseCustomModule_Help
+  commentId: P:PacManBot.Commands.BaseCustomModule.Help
+  fullName: PacManBot.Commands.BaseCustomModule.Help
+  nameWithType: BaseCustomModule.Help
+- uid: PacManBot.Commands.BaseCustomModule.Help*
+  name: Help
+  href: api/PacManBot.Commands.BaseCustomModule.html#PacManBot_Commands_BaseCustomModule_Help_
+  commentId: Overload:PacManBot.Commands.BaseCustomModule.Help
+  isSpec: "True"
+  fullName: PacManBot.Commands.BaseCustomModule.Help
+  nameWithType: BaseCustomModule.Help
 - uid: PacManBot.Commands.BaseCustomModule.Logger
   name: Logger
   href: api/PacManBot.Commands.BaseCustomModule.html#PacManBot_Commands_BaseCustomModule_Logger
@@ -1054,19 +1054,6 @@ references:
   isSpec: "True"
   fullName: PacManBot.Commands.Modules.GeneralModule.BlobDance
   nameWithType: GeneralModule.BlobDance
-- uid: PacManBot.Commands.Modules.GeneralModule.Commands
-  name: Commands
-  href: api/PacManBot.Commands.Modules.GeneralModule.html#PacManBot_Commands_Modules_GeneralModule_Commands
-  commentId: P:PacManBot.Commands.Modules.GeneralModule.Commands
-  fullName: PacManBot.Commands.Modules.GeneralModule.Commands
-  nameWithType: GeneralModule.Commands
-- uid: PacManBot.Commands.Modules.GeneralModule.Commands*
-  name: Commands
-  href: api/PacManBot.Commands.Modules.GeneralModule.html#PacManBot_Commands_Modules_GeneralModule_Commands_
-  commentId: Overload:PacManBot.Commands.Modules.GeneralModule.Commands
-  isSpec: "True"
-  fullName: PacManBot.Commands.Modules.GeneralModule.Commands
-  nameWithType: GeneralModule.Commands
 - uid: PacManBot.Commands.Modules.GeneralModule.DoNothing
   name: DoNothing()
   href: api/PacManBot.Commands.Modules.GeneralModule.html#PacManBot_Commands_Modules_GeneralModule_DoNothing
@@ -1106,19 +1093,6 @@ references:
   isSpec: "True"
   fullName: PacManBot.Commands.Modules.GeneralModule.GetServerPrefix
   nameWithType: GeneralModule.GetServerPrefix
-- uid: PacManBot.Commands.Modules.GeneralModule.Help
-  name: Help
-  href: api/PacManBot.Commands.Modules.GeneralModule.html#PacManBot_Commands_Modules_GeneralModule_Help
-  commentId: P:PacManBot.Commands.Modules.GeneralModule.Help
-  fullName: PacManBot.Commands.Modules.GeneralModule.Help
-  nameWithType: GeneralModule.Help
-- uid: PacManBot.Commands.Modules.GeneralModule.Help*
-  name: Help
-  href: api/PacManBot.Commands.Modules.GeneralModule.html#PacManBot_Commands_Modules_GeneralModule_Help_
-  commentId: Overload:PacManBot.Commands.Modules.GeneralModule.Help
-  isSpec: "True"
-  fullName: PacManBot.Commands.Modules.GeneralModule.Help
-  nameWithType: GeneralModule.Help
 - uid: PacManBot.Commands.Modules.GeneralModule.Neat
   name: Neat()
   href: api/PacManBot.Commands.Modules.GeneralModule.html#PacManBot_Commands_Modules_GeneralModule_Neat
@@ -1223,6 +1197,19 @@ references:
   isSpec: "True"
   fullName: PacManBot.Commands.Modules.GeneralModule.SendBotServer
   nameWithType: GeneralModule.SendBotServer
+- uid: PacManBot.Commands.Modules.GeneralModule.SendDonationInfo
+  name: SendDonationInfo()
+  href: api/PacManBot.Commands.Modules.GeneralModule.html#PacManBot_Commands_Modules_GeneralModule_SendDonationInfo
+  commentId: M:PacManBot.Commands.Modules.GeneralModule.SendDonationInfo
+  fullName: PacManBot.Commands.Modules.GeneralModule.SendDonationInfo()
+  nameWithType: GeneralModule.SendDonationInfo()
+- uid: PacManBot.Commands.Modules.GeneralModule.SendDonationInfo*
+  name: SendDonationInfo
+  href: api/PacManBot.Commands.Modules.GeneralModule.html#PacManBot_Commands_Modules_GeneralModule_SendDonationInfo_
+  commentId: Overload:PacManBot.Commands.Modules.GeneralModule.SendDonationInfo
+  isSpec: "True"
+  fullName: PacManBot.Commands.Modules.GeneralModule.SendDonationInfo
+  nameWithType: GeneralModule.SendDonationInfo
 - uid: PacManBot.Commands.Modules.GeneralModule.SendFeedback(System.String)
   name: SendFeedback(String)
   href: api/PacManBot.Commands.Modules.GeneralModule.html#PacManBot_Commands_Modules_GeneralModule_SendFeedback_System_String_
@@ -1391,19 +1378,6 @@ references:
   isSpec: "True"
   fullName: PacManBot.Commands.Modules.MoreGamesModule.CancelGame
   nameWithType: MoreGamesModule.CancelGame
-- uid: PacManBot.Commands.Modules.MoreGamesModule.Help
-  name: Help
-  href: api/PacManBot.Commands.Modules.MoreGamesModule.html#PacManBot_Commands_Modules_MoreGamesModule_Help
-  commentId: P:PacManBot.Commands.Modules.MoreGamesModule.Help
-  fullName: PacManBot.Commands.Modules.MoreGamesModule.Help
-  nameWithType: MoreGamesModule.Help
-- uid: PacManBot.Commands.Modules.MoreGamesModule.Help*
-  name: Help
-  href: api/PacManBot.Commands.Modules.MoreGamesModule.html#PacManBot_Commands_Modules_MoreGamesModule_Help_
-  commentId: Overload:PacManBot.Commands.Modules.MoreGamesModule.Help
-  isSpec: "True"
-  fullName: PacManBot.Commands.Modules.MoreGamesModule.Help
-  nameWithType: MoreGamesModule.Help
 - uid: PacManBot.Commands.Modules.MoreGamesModule.JoinUno(Discord.WebSocket.SocketGuildUser)
   name: JoinUno(SocketGuildUser)
   href: api/PacManBot.Commands.Modules.MoreGamesModule.html#PacManBot_Commands_Modules_MoreGamesModule_JoinUno_Discord_WebSocket_SocketGuildUser_
@@ -1547,6 +1521,71 @@ references:
   isSpec: "True"
   fullName: PacManBot.Commands.Modules.MoreGamesModule.PetRelease
   nameWithType: MoreGamesModule.PetRelease
+- uid: PacManBot.Commands.Modules.MoreGamesModule.PetSendExact(PacManBot.Games.Concrete.PetGame,System.String)
+  name: PetSendExact(PetGame, String)
+  href: api/PacManBot.Commands.Modules.MoreGamesModule.html#PacManBot_Commands_Modules_MoreGamesModule_PetSendExact_PacManBot_Games_Concrete_PetGame_System_String_
+  commentId: M:PacManBot.Commands.Modules.MoreGamesModule.PetSendExact(PacManBot.Games.Concrete.PetGame,System.String)
+  fullName: PacManBot.Commands.Modules.MoreGamesModule.PetSendExact(PacManBot.Games.Concrete.PetGame, System.String)
+  nameWithType: MoreGamesModule.PetSendExact(PetGame, String)
+- uid: PacManBot.Commands.Modules.MoreGamesModule.PetSendExact*
+  name: PetSendExact
+  href: api/PacManBot.Commands.Modules.MoreGamesModule.html#PacManBot_Commands_Modules_MoreGamesModule_PetSendExact_
+  commentId: Overload:PacManBot.Commands.Modules.MoreGamesModule.PetSendExact
+  isSpec: "True"
+  fullName: PacManBot.Commands.Modules.MoreGamesModule.PetSendExact
+  nameWithType: MoreGamesModule.PetSendExact
+- uid: PacManBot.Commands.Modules.MoreGamesModule.PetSendHelp(PacManBot.Games.Concrete.PetGame,System.String)
+  name: PetSendHelp(PetGame, String)
+  href: api/PacManBot.Commands.Modules.MoreGamesModule.html#PacManBot_Commands_Modules_MoreGamesModule_PetSendHelp_PacManBot_Games_Concrete_PetGame_System_String_
+  commentId: M:PacManBot.Commands.Modules.MoreGamesModule.PetSendHelp(PacManBot.Games.Concrete.PetGame,System.String)
+  fullName: PacManBot.Commands.Modules.MoreGamesModule.PetSendHelp(PacManBot.Games.Concrete.PetGame, System.String)
+  nameWithType: MoreGamesModule.PetSendHelp(PetGame, String)
+- uid: PacManBot.Commands.Modules.MoreGamesModule.PetSendHelp*
+  name: PetSendHelp
+  href: api/PacManBot.Commands.Modules.MoreGamesModule.html#PacManBot_Commands_Modules_MoreGamesModule_PetSendHelp_
+  commentId: Overload:PacManBot.Commands.Modules.MoreGamesModule.PetSendHelp
+  isSpec: "True"
+  fullName: PacManBot.Commands.Modules.MoreGamesModule.PetSendHelp
+  nameWithType: MoreGamesModule.PetSendHelp
+- uid: PacManBot.Commands.Modules.MoreGamesModule.PetSendProfile(PacManBot.Games.Concrete.PetGame,System.String)
+  name: PetSendProfile(PetGame, String)
+  href: api/PacManBot.Commands.Modules.MoreGamesModule.html#PacManBot_Commands_Modules_MoreGamesModule_PetSendProfile_PacManBot_Games_Concrete_PetGame_System_String_
+  commentId: M:PacManBot.Commands.Modules.MoreGamesModule.PetSendProfile(PacManBot.Games.Concrete.PetGame,System.String)
+  fullName: PacManBot.Commands.Modules.MoreGamesModule.PetSendProfile(PacManBot.Games.Concrete.PetGame, System.String)
+  nameWithType: MoreGamesModule.PetSendProfile(PetGame, String)
+- uid: PacManBot.Commands.Modules.MoreGamesModule.PetSendProfile*
+  name: PetSendProfile
+  href: api/PacManBot.Commands.Modules.MoreGamesModule.html#PacManBot_Commands_Modules_MoreGamesModule_PetSendProfile_
+  commentId: Overload:PacManBot.Commands.Modules.MoreGamesModule.PetSendProfile
+  isSpec: "True"
+  fullName: PacManBot.Commands.Modules.MoreGamesModule.PetSendProfile
+  nameWithType: MoreGamesModule.PetSendProfile
+- uid: PacManBot.Commands.Modules.MoreGamesModule.PetSendStats(PacManBot.Games.Concrete.PetGame,System.String)
+  name: PetSendStats(PetGame, String)
+  href: api/PacManBot.Commands.Modules.MoreGamesModule.html#PacManBot_Commands_Modules_MoreGamesModule_PetSendStats_PacManBot_Games_Concrete_PetGame_System_String_
+  commentId: M:PacManBot.Commands.Modules.MoreGamesModule.PetSendStats(PacManBot.Games.Concrete.PetGame,System.String)
+  fullName: PacManBot.Commands.Modules.MoreGamesModule.PetSendStats(PacManBot.Games.Concrete.PetGame, System.String)
+  nameWithType: MoreGamesModule.PetSendStats(PetGame, String)
+- uid: PacManBot.Commands.Modules.MoreGamesModule.PetSendStats*
+  name: PetSendStats
+  href: api/PacManBot.Commands.Modules.MoreGamesModule.html#PacManBot_Commands_Modules_MoreGamesModule_PetSendStats_
+  commentId: Overload:PacManBot.Commands.Modules.MoreGamesModule.PetSendStats
+  isSpec: "True"
+  fullName: PacManBot.Commands.Modules.MoreGamesModule.PetSendStats
+  nameWithType: MoreGamesModule.PetSendStats
+- uid: PacManBot.Commands.Modules.MoreGamesModule.PetSendUser(PacManBot.Games.Concrete.PetGame,System.String)
+  name: PetSendUser(PetGame, String)
+  href: api/PacManBot.Commands.Modules.MoreGamesModule.html#PacManBot_Commands_Modules_MoreGamesModule_PetSendUser_PacManBot_Games_Concrete_PetGame_System_String_
+  commentId: M:PacManBot.Commands.Modules.MoreGamesModule.PetSendUser(PacManBot.Games.Concrete.PetGame,System.String)
+  fullName: PacManBot.Commands.Modules.MoreGamesModule.PetSendUser(PacManBot.Games.Concrete.PetGame, System.String)
+  nameWithType: MoreGamesModule.PetSendUser(PetGame, String)
+- uid: PacManBot.Commands.Modules.MoreGamesModule.PetSendUser*
+  name: PetSendUser
+  href: api/PacManBot.Commands.Modules.MoreGamesModule.html#PacManBot_Commands_Modules_MoreGamesModule_PetSendUser_
+  commentId: Overload:PacManBot.Commands.Modules.MoreGamesModule.PetSendUser
+  isSpec: "True"
+  fullName: PacManBot.Commands.Modules.MoreGamesModule.PetSendUser
+  nameWithType: MoreGamesModule.PetSendUser
 - uid: PacManBot.Commands.Modules.MoreGamesModule.PetSleep(PacManBot.Games.Concrete.PetGame,System.String)
   name: PetSleep(PetGame, String)
   href: api/PacManBot.Commands.Modules.MoreGamesModule.html#PacManBot_Commands_Modules_MoreGamesModule_PetSleep_PacManBot_Games_Concrete_PetGame_System_String_
@@ -1677,6 +1716,19 @@ references:
   isSpec: "True"
   fullName: PacManBot.Commands.Modules.MoreGamesModule.RpgSendHelp
   nameWithType: MoreGamesModule.RpgSendHelp
+- uid: PacManBot.Commands.Modules.MoreGamesModule.RpgSendManual(PacManBot.Games.Concrete.RpgGame,System.String)
+  name: RpgSendManual(RpgGame, String)
+  href: api/PacManBot.Commands.Modules.MoreGamesModule.html#PacManBot_Commands_Modules_MoreGamesModule_RpgSendManual_PacManBot_Games_Concrete_RpgGame_System_String_
+  commentId: M:PacManBot.Commands.Modules.MoreGamesModule.RpgSendManual(PacManBot.Games.Concrete.RpgGame,System.String)
+  fullName: PacManBot.Commands.Modules.MoreGamesModule.RpgSendManual(PacManBot.Games.Concrete.RpgGame, System.String)
+  nameWithType: MoreGamesModule.RpgSendManual(RpgGame, String)
+- uid: PacManBot.Commands.Modules.MoreGamesModule.RpgSendManual*
+  name: RpgSendManual
+  href: api/PacManBot.Commands.Modules.MoreGamesModule.html#PacManBot_Commands_Modules_MoreGamesModule_RpgSendManual_
+  commentId: Overload:PacManBot.Commands.Modules.MoreGamesModule.RpgSendManual
+  isSpec: "True"
+  fullName: PacManBot.Commands.Modules.MoreGamesModule.RpgSendManual
+  nameWithType: MoreGamesModule.RpgSendManual
 - uid: PacManBot.Commands.Modules.MoreGamesModule.RpgSendSkills(PacManBot.Games.Concrete.RpgGame,System.String)
   name: RpgSendSkills(RpgGame, String)
   href: api/PacManBot.Commands.Modules.MoreGamesModule.html#PacManBot_Commands_Modules_MoreGamesModule_RpgSendSkills_PacManBot_Games_Concrete_RpgGame_System_String_
@@ -1794,84 +1846,6 @@ references:
   isSpec: "True"
   fullName: PacManBot.Commands.Modules.MoreGamesModule.RubiksCube
   nameWithType: MoreGamesModule.RubiksCube
-- uid: PacManBot.Commands.Modules.MoreGamesModule.SendPetExact(PacManBot.Games.Concrete.PetGame,System.String)
-  name: SendPetExact(PetGame, String)
-  href: api/PacManBot.Commands.Modules.MoreGamesModule.html#PacManBot_Commands_Modules_MoreGamesModule_SendPetExact_PacManBot_Games_Concrete_PetGame_System_String_
-  commentId: M:PacManBot.Commands.Modules.MoreGamesModule.SendPetExact(PacManBot.Games.Concrete.PetGame,System.String)
-  fullName: PacManBot.Commands.Modules.MoreGamesModule.SendPetExact(PacManBot.Games.Concrete.PetGame, System.String)
-  nameWithType: MoreGamesModule.SendPetExact(PetGame, String)
-- uid: PacManBot.Commands.Modules.MoreGamesModule.SendPetExact*
-  name: SendPetExact
-  href: api/PacManBot.Commands.Modules.MoreGamesModule.html#PacManBot_Commands_Modules_MoreGamesModule_SendPetExact_
-  commentId: Overload:PacManBot.Commands.Modules.MoreGamesModule.SendPetExact
-  isSpec: "True"
-  fullName: PacManBot.Commands.Modules.MoreGamesModule.SendPetExact
-  nameWithType: MoreGamesModule.SendPetExact
-- uid: PacManBot.Commands.Modules.MoreGamesModule.SendPetHelp(PacManBot.Games.Concrete.PetGame,System.String)
-  name: SendPetHelp(PetGame, String)
-  href: api/PacManBot.Commands.Modules.MoreGamesModule.html#PacManBot_Commands_Modules_MoreGamesModule_SendPetHelp_PacManBot_Games_Concrete_PetGame_System_String_
-  commentId: M:PacManBot.Commands.Modules.MoreGamesModule.SendPetHelp(PacManBot.Games.Concrete.PetGame,System.String)
-  fullName: PacManBot.Commands.Modules.MoreGamesModule.SendPetHelp(PacManBot.Games.Concrete.PetGame, System.String)
-  nameWithType: MoreGamesModule.SendPetHelp(PetGame, String)
-- uid: PacManBot.Commands.Modules.MoreGamesModule.SendPetHelp*
-  name: SendPetHelp
-  href: api/PacManBot.Commands.Modules.MoreGamesModule.html#PacManBot_Commands_Modules_MoreGamesModule_SendPetHelp_
-  commentId: Overload:PacManBot.Commands.Modules.MoreGamesModule.SendPetHelp
-  isSpec: "True"
-  fullName: PacManBot.Commands.Modules.MoreGamesModule.SendPetHelp
-  nameWithType: MoreGamesModule.SendPetHelp
-- uid: PacManBot.Commands.Modules.MoreGamesModule.SendPetProfile(PacManBot.Games.Concrete.PetGame,System.String)
-  name: SendPetProfile(PetGame, String)
-  href: api/PacManBot.Commands.Modules.MoreGamesModule.html#PacManBot_Commands_Modules_MoreGamesModule_SendPetProfile_PacManBot_Games_Concrete_PetGame_System_String_
-  commentId: M:PacManBot.Commands.Modules.MoreGamesModule.SendPetProfile(PacManBot.Games.Concrete.PetGame,System.String)
-  fullName: PacManBot.Commands.Modules.MoreGamesModule.SendPetProfile(PacManBot.Games.Concrete.PetGame, System.String)
-  nameWithType: MoreGamesModule.SendPetProfile(PetGame, String)
-- uid: PacManBot.Commands.Modules.MoreGamesModule.SendPetProfile*
-  name: SendPetProfile
-  href: api/PacManBot.Commands.Modules.MoreGamesModule.html#PacManBot_Commands_Modules_MoreGamesModule_SendPetProfile_
-  commentId: Overload:PacManBot.Commands.Modules.MoreGamesModule.SendPetProfile
-  isSpec: "True"
-  fullName: PacManBot.Commands.Modules.MoreGamesModule.SendPetProfile
-  nameWithType: MoreGamesModule.SendPetProfile
-- uid: PacManBot.Commands.Modules.MoreGamesModule.SendPetStats(PacManBot.Games.Concrete.PetGame,System.String)
-  name: SendPetStats(PetGame, String)
-  href: api/PacManBot.Commands.Modules.MoreGamesModule.html#PacManBot_Commands_Modules_MoreGamesModule_SendPetStats_PacManBot_Games_Concrete_PetGame_System_String_
-  commentId: M:PacManBot.Commands.Modules.MoreGamesModule.SendPetStats(PacManBot.Games.Concrete.PetGame,System.String)
-  fullName: PacManBot.Commands.Modules.MoreGamesModule.SendPetStats(PacManBot.Games.Concrete.PetGame, System.String)
-  nameWithType: MoreGamesModule.SendPetStats(PetGame, String)
-- uid: PacManBot.Commands.Modules.MoreGamesModule.SendPetStats*
-  name: SendPetStats
-  href: api/PacManBot.Commands.Modules.MoreGamesModule.html#PacManBot_Commands_Modules_MoreGamesModule_SendPetStats_
-  commentId: Overload:PacManBot.Commands.Modules.MoreGamesModule.SendPetStats
-  isSpec: "True"
-  fullName: PacManBot.Commands.Modules.MoreGamesModule.SendPetStats
-  nameWithType: MoreGamesModule.SendPetStats
-- uid: PacManBot.Commands.Modules.MoreGamesModule.SendRpgManual(PacManBot.Games.Concrete.RpgGame,System.String)
-  name: SendRpgManual(RpgGame, String)
-  href: api/PacManBot.Commands.Modules.MoreGamesModule.html#PacManBot_Commands_Modules_MoreGamesModule_SendRpgManual_PacManBot_Games_Concrete_RpgGame_System_String_
-  commentId: M:PacManBot.Commands.Modules.MoreGamesModule.SendRpgManual(PacManBot.Games.Concrete.RpgGame,System.String)
-  fullName: PacManBot.Commands.Modules.MoreGamesModule.SendRpgManual(PacManBot.Games.Concrete.RpgGame, System.String)
-  nameWithType: MoreGamesModule.SendRpgManual(RpgGame, String)
-- uid: PacManBot.Commands.Modules.MoreGamesModule.SendRpgManual*
-  name: SendRpgManual
-  href: api/PacManBot.Commands.Modules.MoreGamesModule.html#PacManBot_Commands_Modules_MoreGamesModule_SendRpgManual_
-  commentId: Overload:PacManBot.Commands.Modules.MoreGamesModule.SendRpgManual
-  isSpec: "True"
-  fullName: PacManBot.Commands.Modules.MoreGamesModule.SendRpgManual
-  nameWithType: MoreGamesModule.SendRpgManual
-- uid: PacManBot.Commands.Modules.MoreGamesModule.SendUserPet(PacManBot.Games.Concrete.PetGame,System.String)
-  name: SendUserPet(PetGame, String)
-  href: api/PacManBot.Commands.Modules.MoreGamesModule.html#PacManBot_Commands_Modules_MoreGamesModule_SendUserPet_PacManBot_Games_Concrete_PetGame_System_String_
-  commentId: M:PacManBot.Commands.Modules.MoreGamesModule.SendUserPet(PacManBot.Games.Concrete.PetGame,System.String)
-  fullName: PacManBot.Commands.Modules.MoreGamesModule.SendUserPet(PacManBot.Games.Concrete.PetGame, System.String)
-  nameWithType: MoreGamesModule.SendUserPet(PetGame, String)
-- uid: PacManBot.Commands.Modules.MoreGamesModule.SendUserPet*
-  name: SendUserPet
-  href: api/PacManBot.Commands.Modules.MoreGamesModule.html#PacManBot_Commands_Modules_MoreGamesModule_SendUserPet_
-  commentId: Overload:PacManBot.Commands.Modules.MoreGamesModule.SendUserPet
-  isSpec: "True"
-  fullName: PacManBot.Commands.Modules.MoreGamesModule.SendUserPet
-  nameWithType: MoreGamesModule.SendUserPet
 - uid: PacManBot.Commands.Modules.MoreGamesModule.Start5TicTacToeVs(Discord.WebSocket.SocketGuildUser)
   name: Start5TicTacToeVs(SocketGuildUser)
   href: api/PacManBot.Commands.Modules.MoreGamesModule.html#PacManBot_Commands_Modules_MoreGamesModule_Start5TicTacToeVs_Discord_WebSocket_SocketGuildUser_
@@ -10300,18 +10274,15 @@ references:
   isSpec: "True"
   fullName: PacManBot.Games.Concrete.Rpg.Entity.Entity
   nameWithType: Entity.Entity
-- uid: PacManBot.Games.Concrete.Rpg.Entity.AddBuff(PacManBot.Games.Concrete.Rpg.Buff,System.Int32)
-  name: AddBuff(Buff, Int32)
-  href: api/PacManBot.Games.Concrete.Rpg.Entity.html#PacManBot_Games_Concrete_Rpg_Entity_AddBuff_PacManBot_Games_Concrete_Rpg_Buff_System_Int32_
-  commentId: M:PacManBot.Games.Concrete.Rpg.Entity.AddBuff(PacManBot.Games.Concrete.Rpg.Buff,System.Int32)
-  fullName: PacManBot.Games.Concrete.Rpg.Entity.AddBuff(PacManBot.Games.Concrete.Rpg.Buff, System.Int32)
-  nameWithType: Entity.AddBuff(Buff, Int32)
-- uid: PacManBot.Games.Concrete.Rpg.Entity.AddBuff(System.String,System.Int32)
-  name: AddBuff(String, Int32)
-  href: api/PacManBot.Games.Concrete.Rpg.Entity.html#PacManBot_Games_Concrete_Rpg_Entity_AddBuff_System_String_System_Int32_
-  commentId: M:PacManBot.Games.Concrete.Rpg.Entity.AddBuff(System.String,System.Int32)
-  fullName: PacManBot.Games.Concrete.Rpg.Entity.AddBuff(System.String, System.Int32)
-  nameWithType: Entity.AddBuff(String, Int32)
+- uid: PacManBot.Games.Concrete.Rpg.Entity.AddBuff(PacManBot.Games.Concrete.Rpg.Buff,System.Nullable{System.Int32})
+  name: AddBuff(Buff, Nullable<Int32>)
+  href: api/PacManBot.Games.Concrete.Rpg.Entity.html#PacManBot_Games_Concrete_Rpg_Entity_AddBuff_PacManBot_Games_Concrete_Rpg_Buff_System_Nullable_System_Int32__
+  commentId: M:PacManBot.Games.Concrete.Rpg.Entity.AddBuff(PacManBot.Games.Concrete.Rpg.Buff,System.Nullable{System.Int32})
+  name.vb: AddBuff(Buff, Nullable(Of Int32))
+  fullName: PacManBot.Games.Concrete.Rpg.Entity.AddBuff(PacManBot.Games.Concrete.Rpg.Buff, System.Nullable<System.Int32>)
+  fullName.vb: PacManBot.Games.Concrete.Rpg.Entity.AddBuff(PacManBot.Games.Concrete.Rpg.Buff, System.Nullable(Of System.Int32))
+  nameWithType: Entity.AddBuff(Buff, Nullable<Int32>)
+  nameWithType.vb: Entity.AddBuff(Buff, Nullable(Of Int32))
 - uid: PacManBot.Games.Concrete.Rpg.Entity.AddBuff*
   name: AddBuff
   href: api/PacManBot.Games.Concrete.Rpg.Entity.html#PacManBot_Games_Concrete_Rpg_Entity_AddBuff_
@@ -10319,6 +10290,15 @@ references:
   isSpec: "True"
   fullName: PacManBot.Games.Concrete.Rpg.Entity.AddBuff
   nameWithType: Entity.AddBuff
+- uid: PacManBot.Games.Concrete.Rpg.Entity.AddBuff``1(System.Int32)
+  name: AddBuff<TBuff>(Int32)
+  href: api/PacManBot.Games.Concrete.Rpg.Entity.html#PacManBot_Games_Concrete_Rpg_Entity_AddBuff__1_System_Int32_
+  commentId: M:PacManBot.Games.Concrete.Rpg.Entity.AddBuff``1(System.Int32)
+  name.vb: AddBuff(Of TBuff)(Int32)
+  fullName: PacManBot.Games.Concrete.Rpg.Entity.AddBuff<TBuff>(System.Int32)
+  fullName.vb: PacManBot.Games.Concrete.Rpg.Entity.AddBuff(Of TBuff)(System.Int32)
+  nameWithType: Entity.AddBuff<TBuff>(Int32)
+  nameWithType.vb: Entity.AddBuff(Of TBuff)(Int32)
 - uid: PacManBot.Games.Concrete.Rpg.Entity.Attack(PacManBot.Games.Concrete.Rpg.Entity)
   name: Attack(Entity)
   href: api/PacManBot.Games.Concrete.Rpg.Entity.html#PacManBot_Games_Concrete_Rpg_Entity_Attack_PacManBot_Games_Concrete_Rpg_Entity_
@@ -10475,6 +10455,15 @@ references:
   isSpec: "True"
   fullName: PacManBot.Games.Concrete.Rpg.Entity.HasBuff
   nameWithType: Entity.HasBuff
+- uid: PacManBot.Games.Concrete.Rpg.Entity.HasBuff``1
+  name: HasBuff<TBuff>()
+  href: api/PacManBot.Games.Concrete.Rpg.Entity.html#PacManBot_Games_Concrete_Rpg_Entity_HasBuff__1
+  commentId: M:PacManBot.Games.Concrete.Rpg.Entity.HasBuff``1
+  name.vb: HasBuff(Of TBuff)()
+  fullName: PacManBot.Games.Concrete.Rpg.Entity.HasBuff<TBuff>()
+  fullName.vb: PacManBot.Games.Concrete.Rpg.Entity.HasBuff(Of TBuff)()
+  nameWithType: Entity.HasBuff<TBuff>()
+  nameWithType.vb: Entity.HasBuff(Of TBuff)()
 - uid: PacManBot.Games.Concrete.Rpg.Entity.Hit(System.Int32,PacManBot.Games.Concrete.Rpg.DamageType,PacManBot.Games.Concrete.Rpg.MagicType)
   name: Hit(Int32, DamageType, MagicType)
   href: api/PacManBot.Games.Concrete.Rpg.Entity.html#PacManBot_Games_Concrete_Rpg_Entity_Hit_System_Int32_PacManBot_Games_Concrete_Rpg_DamageType_PacManBot_Games_Concrete_Rpg_MagicType_
@@ -10776,6 +10765,12 @@ references:
   commentId: F:PacManBot.Games.Concrete.Rpg.MagicType.Fire
   fullName: PacManBot.Games.Concrete.Rpg.MagicType.Fire
   nameWithType: MagicType.Fire
+- uid: PacManBot.Games.Concrete.Rpg.MagicType.Magicless
+  name: Magicless
+  href: api/PacManBot.Games.Concrete.Rpg.MagicType.html#PacManBot_Games_Concrete_Rpg_MagicType_Magicless
+  commentId: F:PacManBot.Games.Concrete.Rpg.MagicType.Magicless
+  fullName: PacManBot.Games.Concrete.Rpg.MagicType.Magicless
+  nameWithType: MagicType.Magicless
 - uid: PacManBot.Games.Concrete.Rpg.MagicType.None
   name: None
   href: api/PacManBot.Games.Concrete.Rpg.MagicType.html#PacManBot_Games_Concrete_Rpg_MagicType_None
@@ -11074,6 +11069,19 @@ references:
   isSpec: "True"
   fullName: PacManBot.Games.Concrete.Rpg.RpgPlayer.Mana
   nameWithType: RpgPlayer.Mana
+- uid: PacManBot.Games.Concrete.Rpg.RpgPlayer.ManaRegen
+  name: ManaRegen
+  href: api/PacManBot.Games.Concrete.Rpg.RpgPlayer.html#PacManBot_Games_Concrete_Rpg_RpgPlayer_ManaRegen
+  commentId: P:PacManBot.Games.Concrete.Rpg.RpgPlayer.ManaRegen
+  fullName: PacManBot.Games.Concrete.Rpg.RpgPlayer.ManaRegen
+  nameWithType: RpgPlayer.ManaRegen
+- uid: PacManBot.Games.Concrete.Rpg.RpgPlayer.ManaRegen*
+  name: ManaRegen
+  href: api/PacManBot.Games.Concrete.Rpg.RpgPlayer.html#PacManBot_Games_Concrete_Rpg_RpgPlayer_ManaRegen_
+  commentId: Overload:PacManBot.Games.Concrete.Rpg.RpgPlayer.ManaRegen
+  isSpec: "True"
+  fullName: PacManBot.Games.Concrete.Rpg.RpgPlayer.ManaRegen
+  nameWithType: RpgPlayer.ManaRegen
 - uid: PacManBot.Games.Concrete.Rpg.RpgPlayer.MaxMana
   name: MaxMana
   href: api/PacManBot.Games.Concrete.Rpg.RpgPlayer.html#PacManBot_Games_Concrete_Rpg_RpgPlayer_MaxMana
@@ -11113,12 +11121,12 @@ references:
   isSpec: "True"
   fullName: PacManBot.Games.Concrete.Rpg.RpgPlayer.NextLevelExp
   nameWithType: RpgPlayer.NextLevelExp
-- uid: PacManBot.Games.Concrete.Rpg.RpgPlayer.Profile(System.String)
-  name: Profile(String)
-  href: api/PacManBot.Games.Concrete.Rpg.RpgPlayer.html#PacManBot_Games_Concrete_Rpg_RpgPlayer_Profile_System_String_
-  commentId: M:PacManBot.Games.Concrete.Rpg.RpgPlayer.Profile(System.String)
-  fullName: PacManBot.Games.Concrete.Rpg.RpgPlayer.Profile(System.String)
-  nameWithType: RpgPlayer.Profile(String)
+- uid: PacManBot.Games.Concrete.Rpg.RpgPlayer.Profile(System.String,System.Boolean)
+  name: Profile(String, Boolean)
+  href: api/PacManBot.Games.Concrete.Rpg.RpgPlayer.html#PacManBot_Games_Concrete_Rpg_RpgPlayer_Profile_System_String_System_Boolean_
+  commentId: M:PacManBot.Games.Concrete.Rpg.RpgPlayer.Profile(System.String,System.Boolean)
+  fullName: PacManBot.Games.Concrete.Rpg.RpgPlayer.Profile(System.String, System.Boolean)
+  nameWithType: RpgPlayer.Profile(String, Boolean)
 - uid: PacManBot.Games.Concrete.Rpg.RpgPlayer.Profile*
   name: Profile
   href: api/PacManBot.Games.Concrete.Rpg.RpgPlayer.html#PacManBot_Games_Concrete_Rpg_RpgPlayer_Profile_
@@ -11151,12 +11159,12 @@ references:
   commentId: F:PacManBot.Games.Concrete.Rpg.RpgPlayer.skillPoints
   fullName: PacManBot.Games.Concrete.Rpg.RpgPlayer.skillPoints
   nameWithType: RpgPlayer.skillPoints
-- uid: PacManBot.Games.Concrete.Rpg.RpgPlayer.Skills(System.String)
-  name: Skills(String)
-  href: api/PacManBot.Games.Concrete.Rpg.RpgPlayer.html#PacManBot_Games_Concrete_Rpg_RpgPlayer_Skills_System_String_
-  commentId: M:PacManBot.Games.Concrete.Rpg.RpgPlayer.Skills(System.String)
-  fullName: PacManBot.Games.Concrete.Rpg.RpgPlayer.Skills(System.String)
-  nameWithType: RpgPlayer.Skills(String)
+- uid: PacManBot.Games.Concrete.Rpg.RpgPlayer.Skills(System.String,System.Boolean)
+  name: Skills(String, Boolean)
+  href: api/PacManBot.Games.Concrete.Rpg.RpgPlayer.html#PacManBot_Games_Concrete_Rpg_RpgPlayer_Skills_System_String_System_Boolean_
+  commentId: M:PacManBot.Games.Concrete.Rpg.RpgPlayer.Skills(System.String,System.Boolean)
+  fullName: PacManBot.Games.Concrete.Rpg.RpgPlayer.Skills(System.String, System.Boolean)
+  nameWithType: RpgPlayer.Skills(String, Boolean)
 - uid: PacManBot.Games.Concrete.Rpg.RpgPlayer.Skills*
   name: Skills
   href: api/PacManBot.Games.Concrete.Rpg.RpgPlayer.html#PacManBot_Games_Concrete_Rpg_RpgPlayer_Skills_
@@ -13952,6 +13960,12 @@ references:
   isSpec: "True"
   fullName: PacManBot.Games.Concrete.RpgGame.ResetBattle
   nameWithType: RpgGame.ResetBattle
+- uid: PacManBot.Games.Concrete.RpgGame.SkillsEmote
+  name: SkillsEmote
+  href: api/PacManBot.Games.Concrete.RpgGame.html#PacManBot_Games_Concrete_RpgGame_SkillsEmote
+  commentId: F:PacManBot.Games.Concrete.RpgGame.SkillsEmote
+  fullName: PacManBot.Games.Concrete.RpgGame.SkillsEmote
+  nameWithType: RpgGame.SkillsEmote
 - uid: PacManBot.Games.Concrete.RpgGame.StartFight(System.Nullable{System.UInt64})
   name: StartFight(Nullable<UInt64>)
   href: api/PacManBot.Games.Concrete.RpgGame.html#PacManBot_Games_Concrete_RpgGame_StartFight_System_Nullable_System_UInt64__

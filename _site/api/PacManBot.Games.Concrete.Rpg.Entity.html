@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
     <link rel="stylesheet" href="../styles/docfx.css">
     <link rel="stylesheet" href="../styles/main.css">
-    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:navrel" content="">
     <meta property="docfx:tocrel" content="toc.html">
     
     
@@ -529,13 +529,13 @@ public int MaxLife { get; set; }</code></pre>
   
   
   <a id="PacManBot_Games_Concrete_Rpg_Entity_AddBuff_" data-uid="PacManBot.Games.Concrete.Rpg.Entity.AddBuff*"></a>
-  <h4 id="PacManBot_Games_Concrete_Rpg_Entity_AddBuff_PacManBot_Games_Concrete_Rpg_Buff_System_Int32_" data-uid="PacManBot.Games.Concrete.Rpg.Entity.AddBuff(PacManBot.Games.Concrete.Rpg.Buff,System.Int32)">AddBuff(Buff, Int32)</h4>
-  <div class="markdown level1 summary"><p>Safely adds a buff to this entity.</p>
+  <h4 id="PacManBot_Games_Concrete_Rpg_Entity_AddBuff_PacManBot_Games_Concrete_Rpg_Buff_System_Nullable_System_Int32__" data-uid="PacManBot.Games.Concrete.Rpg.Entity.AddBuff(PacManBot.Games.Concrete.Rpg.Buff,System.Nullable{System.Int32})">AddBuff(Buff, Nullable&lt;Int32&gt;)</h4>
+  <div class="markdown level1 summary"><p>Safely adds a new buff to this entity.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void AddBuff(Buff buff, int duration)</code></pre>
+    <pre><code class="lang-csharp hljs">public void AddBuff(Buff buff, int? duration = default(int? ))</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -553,7 +553,7 @@ public int MaxLife { get; set; }</code></pre>
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.Int32</span></td>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
         <td><span class="parametername">duration</span></td>
         <td></td>
       </tr>
@@ -562,13 +562,14 @@ public int MaxLife { get; set; }</code></pre>
   
   
   <a id="PacManBot_Games_Concrete_Rpg_Entity_AddBuff_" data-uid="PacManBot.Games.Concrete.Rpg.Entity.AddBuff*"></a>
-  <h4 id="PacManBot_Games_Concrete_Rpg_Entity_AddBuff_System_String_System_Int32_" data-uid="PacManBot.Games.Concrete.Rpg.Entity.AddBuff(System.String,System.Int32)">AddBuff(String, Int32)</h4>
+  <h4 id="PacManBot_Games_Concrete_Rpg_Entity_AddBuff__1_System_Int32_" data-uid="PacManBot.Games.Concrete.Rpg.Entity.AddBuff``1(System.Int32)">AddBuff&lt;TBuff&gt;(Int32)</h4>
   <div class="markdown level1 summary"><p>Safely adds a buff to this entity.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void AddBuff(string buff, int duration)</code></pre>
+    <pre><code class="lang-csharp hljs">public void AddBuff&lt;TBuff&gt;(int duration)
+    where TBuff : Buff</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -581,13 +582,23 @@ public int MaxLife { get; set; }</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">buff</span></td>
-        <td></td>
-      </tr>
-      <tr>
         <td><span class="xref">System.Int32</span></td>
         <td><span class="parametername">duration</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">TBuff</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -722,6 +733,48 @@ public int MaxLife { get; set; }</code></pre>
     <tbody>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="PacManBot_Games_Concrete_Rpg_Entity_HasBuff_" data-uid="PacManBot.Games.Concrete.Rpg.Entity.HasBuff*"></a>
+  <h4 id="PacManBot_Games_Concrete_Rpg_Entity_HasBuff__1" data-uid="PacManBot.Games.Concrete.Rpg.Entity.HasBuff``1">HasBuff&lt;TBuff&gt;()</h4>
+  <div class="markdown level1 summary"><p>Returns whether this entity contains a buff of the given type.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool HasBuff&lt;TBuff&gt;()
+    where TBuff : Buff</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">TBuff</span></td>
         <td></td>
       </tr>
     </tbody>

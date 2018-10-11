@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
     <link rel="stylesheet" href="../styles/docfx.css">
     <link rel="stylesheet" href="../styles/main.css">
-    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:navrel" content="">
     <meta property="docfx:tocrel" content="toc.html">
     
     
@@ -103,13 +103,13 @@
       <a class="xref" href="PacManBot.Commands.BaseCustomModule.html#PacManBot_Commands_BaseCustomModule_Games">BaseCustomModule.Games</a>
     </div>
     <div>
-      <a class="xref" href="PacManBot.Commands.BaseCustomModule.html#PacManBot_Commands_BaseCustomModule_Prefix">BaseCustomModule.Prefix</a>
+      <a class="xref" href="PacManBot.Commands.BaseCustomModule.html#PacManBot_Commands_BaseCustomModule_Help">BaseCustomModule.Help</a>
     </div>
     <div>
       <a class="xref" href="PacManBot.Commands.BaseCustomModule.html#PacManBot_Commands_BaseCustomModule_AbsolutePrefix">BaseCustomModule.AbsolutePrefix</a>
     </div>
     <div>
-      <a class="xref" href="PacManBot.Commands.BaseCustomModule.html#PacManBot_Commands_BaseCustomModule_BeforeExecute_Discord_Commands_CommandInfo_">BaseCustomModule.BeforeExecute(CommandInfo)</a>
+      <a class="xref" href="PacManBot.Commands.BaseCustomModule.html#PacManBot_Commands_BaseCustomModule_Prefix">BaseCustomModule.Prefix</a>
     </div>
     <div>
       <a class="xref" href="PacManBot.Commands.BaseCustomModule.html#PacManBot_Commands_BaseCustomModule_AfterExecute_Discord_Commands_CommandInfo_">BaseCustomModule.AfterExecute(CommandInfo)</a>
@@ -131,6 +131,9 @@
     </div>
     <div>
       <a class="xref" href="PacManBot.Commands.BaseCustomModule.html#PacManBot_Commands_BaseCustomModule_GetModule__1">BaseCustomModule.GetModule&lt;TModule&gt;()</a>
+    </div>
+    <div>
+      <span class="xref">Discord.Commands.ModuleBase&lt;Discord.Commands.ShardedCommandContext&gt;.BeforeExecute(Discord.Commands.CommandInfo)</span>
     </div>
     <div>
       <span class="xref">Discord.Commands.ModuleBase&lt;Discord.Commands.ShardedCommandContext&gt;.OnModuleBuilding(Discord.Commands.CommandService, Discord.Commands.Builders.ModuleBuilder)</span>
@@ -221,31 +224,6 @@ public class MoreGamesModule : BaseCustomModule, IModuleBase</code></pre>
     <tbody>
       <tr>
         <td><span class="xref">System.String</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="PacManBot_Commands_Modules_MoreGamesModule_Help_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.Help*"></a>
-  <h4 id="PacManBot_Commands_Modules_MoreGamesModule_Help" data-uid="PacManBot.Commands.Modules.MoreGamesModule.Help">Help</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public HelpService Help { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="PacManBot.Services.HelpService.html">HelpService</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -384,7 +362,7 @@ public Task LeaveUno(SocketGuildUser user = null)</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Task PetAdopt(PetGame pet, string args)</code></pre>
+    <pre><code class="lang-csharp hljs">public Task&lt;string&gt; PetAdopt(PetGame pet, string args)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -418,7 +396,7 @@ public Task LeaveUno(SocketGuildUser user = null)</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -431,7 +409,7 @@ public Task LeaveUno(SocketGuildUser user = null)</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Task PetClean(PetGame pet, string args)</code></pre>
+    <pre><code class="lang-csharp hljs">public Task&lt;string&gt; PetClean(PetGame pet, string args)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -465,7 +443,7 @@ public Task LeaveUno(SocketGuildUser user = null)</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -478,7 +456,7 @@ public Task LeaveUno(SocketGuildUser user = null)</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Task PetFeed(PetGame pet, string args)</code></pre>
+    <pre><code class="lang-csharp hljs">public Task&lt;string&gt; PetFeed(PetGame pet, string args)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -512,7 +490,7 @@ public Task LeaveUno(SocketGuildUser user = null)</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -525,7 +503,7 @@ public Task LeaveUno(SocketGuildUser user = null)</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Task PetImage(PetGame pet, string args)</code></pre>
+    <pre><code class="lang-csharp hljs">public Task&lt;string&gt; PetImage(PetGame pet, string args)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -559,7 +537,7 @@ public Task LeaveUno(SocketGuildUser user = null)</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -578,7 +556,7 @@ public Task LeaveUno(SocketGuildUser user = null)</code></pre>
 [Priority(5)]
 [Remarks(&quot;Adopt your own pet!&quot;)]
 [Summary(&quot;**__Pet Commands__**\n\n**{prefix}pet** - Check on your pet or adopt if you don't have one\n**{prefix}pet stats [user]** - Check your pet or another's statistics and unlocks\n**{prefix}pet name &lt;name&gt;** - Name your pet\n**{prefix}pet image &lt;image&gt;** - Give your pet an image\n\n**{prefix}pet feed** - Fills your pet's Satiation and restores a little Energy\n**{prefix}pet clean** - Fills your pet's Hygiene\n**{prefix}pet play [user]** - Fills your pet's Happinness. It requires Energy, and consumes a little of every stat. You can make your pet play with another user's pet, in which case they get Happiness for free\n**{prefix}pet sleep/wakeup** - Sleep to restore Energy over time\n\n**{prefix}pet help** - This list of commands\n**{prefix}pet pet** - Pet your pet\n**{prefix}pet user &lt;user&gt;** - See another person's pet\n**{prefix}pet adopt [name]** - Adopt a new pet!\n**{prefix}pet release** - Gives your pet to a loving family that will take care of it (Deletes pet forever)&quot;)]
-public Task PetMaster(string commandName = &quot;&quot;, [Remainder] string args = null)</code></pre>
+public Task PetMaster(string commandName = &quot;&quot;, [Remainder] string args = &quot;&quot;)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -625,7 +603,7 @@ public Task PetMaster(string commandName = &quot;&quot;, [Remainder] string args
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Task PetName(PetGame pet, string args)</code></pre>
+    <pre><code class="lang-csharp hljs">public Task&lt;string&gt; PetName(PetGame pet, string args)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -659,7 +637,7 @@ public Task PetMaster(string commandName = &quot;&quot;, [Remainder] string args
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -672,7 +650,7 @@ public Task PetMaster(string commandName = &quot;&quot;, [Remainder] string args
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Task PetPet(PetGame pet, string args)</code></pre>
+    <pre><code class="lang-csharp hljs">public Task&lt;string&gt; PetPet(PetGame pet, string args)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -706,7 +684,7 @@ public Task PetMaster(string commandName = &quot;&quot;, [Remainder] string args
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -719,7 +697,7 @@ public Task PetMaster(string commandName = &quot;&quot;, [Remainder] string args
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Task PetPlay(PetGame pet, string args)</code></pre>
+    <pre><code class="lang-csharp hljs">public Task&lt;string&gt; PetPlay(PetGame pet, string args)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -753,7 +731,7 @@ public Task PetMaster(string commandName = &quot;&quot;, [Remainder] string args
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -766,7 +744,7 @@ public Task PetMaster(string commandName = &quot;&quot;, [Remainder] string args
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Task PetRelease(PetGame pet, string args)</code></pre>
+    <pre><code class="lang-csharp hljs">public Task&lt;string&gt; PetRelease(PetGame pet, string args)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -800,7 +778,242 @@ public Task PetMaster(string commandName = &quot;&quot;, [Remainder] string args
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="PacManBot_Commands_Modules_MoreGamesModule_PetSendExact_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.PetSendExact*"></a>
+  <h4 id="PacManBot_Commands_Modules_MoreGamesModule_PetSendExact_PacManBot_Games_Concrete_PetGame_System_String_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.PetSendExact(PacManBot.Games.Concrete.PetGame,System.String)">PetSendExact(PetGame, String)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;string&gt; PetSendExact(PetGame pet, string args)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="PacManBot.Games.Concrete.PetGame.html">PetGame</a></td>
+        <td><span class="parametername">pet</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">args</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="PacManBot_Commands_Modules_MoreGamesModule_PetSendHelp_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.PetSendHelp*"></a>
+  <h4 id="PacManBot_Commands_Modules_MoreGamesModule_PetSendHelp_PacManBot_Games_Concrete_PetGame_System_String_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.PetSendHelp(PacManBot.Games.Concrete.PetGame,System.String)">PetSendHelp(PetGame, String)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;string&gt; PetSendHelp(PetGame pet, string args)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="PacManBot.Games.Concrete.PetGame.html">PetGame</a></td>
+        <td><span class="parametername">pet</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">args</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="PacManBot_Commands_Modules_MoreGamesModule_PetSendProfile_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.PetSendProfile*"></a>
+  <h4 id="PacManBot_Commands_Modules_MoreGamesModule_PetSendProfile_PacManBot_Games_Concrete_PetGame_System_String_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.PetSendProfile(PacManBot.Games.Concrete.PetGame,System.String)">PetSendProfile(PetGame, String)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;string&gt; PetSendProfile(PetGame pet, string args)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="PacManBot.Games.Concrete.PetGame.html">PetGame</a></td>
+        <td><span class="parametername">pet</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">args</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="PacManBot_Commands_Modules_MoreGamesModule_PetSendStats_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.PetSendStats*"></a>
+  <h4 id="PacManBot_Commands_Modules_MoreGamesModule_PetSendStats_PacManBot_Games_Concrete_PetGame_System_String_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.PetSendStats(PacManBot.Games.Concrete.PetGame,System.String)">PetSendStats(PetGame, String)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;string&gt; PetSendStats(PetGame pet, string args)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="PacManBot.Games.Concrete.PetGame.html">PetGame</a></td>
+        <td><span class="parametername">pet</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">args</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="PacManBot_Commands_Modules_MoreGamesModule_PetSendUser_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.PetSendUser*"></a>
+  <h4 id="PacManBot_Commands_Modules_MoreGamesModule_PetSendUser_PacManBot_Games_Concrete_PetGame_System_String_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.PetSendUser(PacManBot.Games.Concrete.PetGame,System.String)">PetSendUser(PetGame, String)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;string&gt; PetSendUser(PetGame pet, string args)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="PacManBot.Games.Concrete.PetGame.html">PetGame</a></td>
+        <td><span class="parametername">pet</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">args</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -813,7 +1026,7 @@ public Task PetMaster(string commandName = &quot;&quot;, [Remainder] string args
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Task PetSleep(PetGame pet, string args)</code></pre>
+    <pre><code class="lang-csharp hljs">public Task&lt;string&gt; PetSleep(PetGame pet, string args)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -847,7 +1060,7 @@ public Task PetMaster(string commandName = &quot;&quot;, [Remainder] string args
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -860,7 +1073,7 @@ public Task PetMaster(string commandName = &quot;&quot;, [Remainder] string args
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Task PetWake(PetGame pet, string args)</code></pre>
+    <pre><code class="lang-csharp hljs">public Task&lt;string&gt; PetWake(PetGame pet, string args)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -894,7 +1107,7 @@ public Task PetMaster(string commandName = &quot;&quot;, [Remainder] string args
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -952,7 +1165,7 @@ public Task PlayMessage([Remainder] string args = &quot;&quot;)</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Task RpgCancelBattle(RpgGame game, string args)</code></pre>
+    <pre><code class="lang-csharp hljs">public Task&lt;string&gt; RpgCancelBattle(RpgGame game, string args)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -986,7 +1199,7 @@ public Task PlayMessage([Remainder] string args = &quot;&quot;)</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -999,7 +1212,7 @@ public Task PlayMessage([Remainder] string args = &quot;&quot;)</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Task RpgDelete(RpgGame game, string args)</code></pre>
+    <pre><code class="lang-csharp hljs">public Task&lt;string&gt; RpgDelete(RpgGame game, string args)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -1033,7 +1246,7 @@ public Task PlayMessage([Remainder] string args = &quot;&quot;)</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -1046,7 +1259,7 @@ public Task PlayMessage([Remainder] string args = &quot;&quot;)</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Task RpgEquip(RpgGame game, string args)</code></pre>
+    <pre><code class="lang-csharp hljs">public Task&lt;string&gt; RpgEquip(RpgGame game, string args)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -1080,7 +1293,7 @@ public Task PlayMessage([Remainder] string args = &quot;&quot;)</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -1093,7 +1306,7 @@ public Task PlayMessage([Remainder] string args = &quot;&quot;)</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Task RpgHeal(RpgGame game, string args)</code></pre>
+    <pre><code class="lang-csharp hljs">public Task&lt;string&gt; RpgHeal(RpgGame game, string args)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -1127,7 +1340,7 @@ public Task PlayMessage([Remainder] string args = &quot;&quot;)</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -1144,7 +1357,7 @@ public Task PlayMessage([Remainder] string args = &quot;&quot;)</code></pre>
 [Remarks(&quot;Play an RPG game&quot;)]
 [Parameters(&quot;[command]&quot;)]
 [Priority(4)]
-[Summary(&quot;Play ReactionRPG, a new game where you beat monsters and level up.\n\n**__Commands:__**\n**{prefix}rpg manual** - See detailed instructions for the game.\n\n**{prefix}rpg** - Start a new battle or resend the current battle.\n**{prefix}rpg pvp &lt;player&gt;** - Challenge a user to a battle, or accept a user's challenge.\n**{prefix}rpg equip &lt;item&gt;** - Equip an item in your inventory.\n**{prefix}rpg heal** - Refill your HP, only once per battle.\n**{prefix}rpg cancel** - Cancel a battle, dying instantly against monsters.\n\n**{prefix}rpg profile** - Check a summary of your hero.\n**{prefix}rpg skills** - Check your hero's skills lines and active skills.\n**{prefix}rpg spend &lt;skill&gt; &lt;amount&gt;** - Spend skill points on a skill line.\n**{prefix}rpg name &lt;name&gt;** - Change your hero's name.\n**{prefix}rpg color &lt;color&gt;** - Change the color of your hero's profile.\n**{prefix}rpg reset** - Delete your hero.&quot;)]
+[Summary(&quot;Play ReactionRPG, a new game where you beat monsters and level up.\nThe game is yours. You can play in **any channel** anywhere you go, even DMs with the bot.\n\n**__Commands:__**\n**{prefix}rpg manual** - See detailed instructions for the game.\n\n**{prefix}rpg** - Start a new battle or resend the current battle.\n**{prefix}rpg pvp &lt;player&gt;** - Challenge a user to a battle, or accept a user's challenge.\n**{prefix}rpg equip &lt;item&gt;** - Equip an item in your inventory.\n**{prefix}rpg heal** - Refill your HP, only once per battle.\n**{prefix}rpg cancel** - Cancel a battle, dying instantly against monsters.\n\n**{prefix}rpg profile** - Check a summary of your hero.\n**{prefix}rpg skills** - Check your hero's skills lines and active skills.\n**{prefix}rpg spend &lt;skill&gt; &lt;amount&gt;** - Spend skill points on a skill line.\n**{prefix}rpg name &lt;name&gt;** - Change your hero's name.\n**{prefix}rpg color &lt;color&gt;** - Change the color of your hero's profile.\n**{prefix}rpg reset** - Delete your hero.&quot;)]
 public Task RpgMaster(string commandName = &quot;&quot;, [Remainder] string args = &quot;&quot;)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
@@ -1192,7 +1405,7 @@ public Task RpgMaster(string commandName = &quot;&quot;, [Remainder] string args
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Task RpgProfile(RpgGame game, string args)</code></pre>
+    <pre><code class="lang-csharp hljs">public Task&lt;string&gt; RpgProfile(RpgGame game, string args)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -1226,7 +1439,7 @@ public Task RpgMaster(string commandName = &quot;&quot;, [Remainder] string args
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -1239,7 +1452,7 @@ public Task RpgMaster(string commandName = &quot;&quot;, [Remainder] string args
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Task RpgSendHelp(RpgGame game, string args)</code></pre>
+    <pre><code class="lang-csharp hljs">public Task&lt;string&gt; RpgSendHelp(RpgGame game, string args)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -1273,7 +1486,54 @@ public Task RpgMaster(string commandName = &quot;&quot;, [Remainder] string args
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="PacManBot_Commands_Modules_MoreGamesModule_RpgSendManual_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.RpgSendManual*"></a>
+  <h4 id="PacManBot_Commands_Modules_MoreGamesModule_RpgSendManual_PacManBot_Games_Concrete_RpgGame_System_String_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.RpgSendManual(PacManBot.Games.Concrete.RpgGame,System.String)">RpgSendManual(RpgGame, String)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;string&gt; RpgSendManual(RpgGame game, string args)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="PacManBot.Games.Concrete.RpgGame.html">RpgGame</a></td>
+        <td><span class="parametername">game</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">args</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -1286,7 +1546,7 @@ public Task RpgMaster(string commandName = &quot;&quot;, [Remainder] string args
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Task RpgSendSkills(RpgGame game, string args)</code></pre>
+    <pre><code class="lang-csharp hljs">public Task&lt;string&gt; RpgSendSkills(RpgGame game, string args)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -1320,7 +1580,7 @@ public Task RpgMaster(string commandName = &quot;&quot;, [Remainder] string args
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -1333,7 +1593,7 @@ public Task RpgMaster(string commandName = &quot;&quot;, [Remainder] string args
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Task RpgSetColor(RpgGame game, string args)</code></pre>
+    <pre><code class="lang-csharp hljs">public Task&lt;string&gt; RpgSetColor(RpgGame game, string args)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -1367,7 +1627,7 @@ public Task RpgMaster(string commandName = &quot;&quot;, [Remainder] string args
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -1380,7 +1640,7 @@ public Task RpgMaster(string commandName = &quot;&quot;, [Remainder] string args
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Task RpgSetName(RpgGame game, string args)</code></pre>
+    <pre><code class="lang-csharp hljs">public Task&lt;string&gt; RpgSetName(RpgGame game, string args)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -1414,7 +1674,7 @@ public Task RpgMaster(string commandName = &quot;&quot;, [Remainder] string args
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -1427,7 +1687,7 @@ public Task RpgMaster(string commandName = &quot;&quot;, [Remainder] string args
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Task RpgSkills(RpgGame game, string args)</code></pre>
+    <pre><code class="lang-csharp hljs">public Task&lt;string&gt; RpgSkills(RpgGame game, string args)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -1461,7 +1721,7 @@ public Task RpgMaster(string commandName = &quot;&quot;, [Remainder] string args
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -1474,7 +1734,7 @@ public Task RpgMaster(string commandName = &quot;&quot;, [Remainder] string args
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Task RpgStart(RpgGame game, string args)</code></pre>
+    <pre><code class="lang-csharp hljs">public Task&lt;string&gt; RpgStart(RpgGame game, string args)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -1508,7 +1768,7 @@ public Task RpgMaster(string commandName = &quot;&quot;, [Remainder] string args
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -1521,7 +1781,7 @@ public Task RpgMaster(string commandName = &quot;&quot;, [Remainder] string args
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Task RpgStartBattle(RpgGame game, string args)</code></pre>
+    <pre><code class="lang-csharp hljs">public Task&lt;string&gt; RpgStartBattle(RpgGame game, string args)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -1555,7 +1815,7 @@ public Task RpgMaster(string commandName = &quot;&quot;, [Remainder] string args
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -1568,7 +1828,7 @@ public Task RpgMaster(string commandName = &quot;&quot;, [Remainder] string args
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Task RpgStartPvpBattle(RpgGame game, string args)</code></pre>
+    <pre><code class="lang-csharp hljs">public Task&lt;string&gt; RpgStartPvpBattle(RpgGame game, string args)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -1602,7 +1862,7 @@ public Task RpgMaster(string commandName = &quot;&quot;, [Remainder] string args
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -1615,7 +1875,7 @@ public Task RpgMaster(string commandName = &quot;&quot;, [Remainder] string args
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Task RpgUseActiveSkill(RpgGame game, Skill skill)</code></pre>
+    <pre><code class="lang-csharp hljs">public Task&lt;string&gt; RpgUseActiveSkill(RpgGame game, Skill skill)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -1649,7 +1909,7 @@ public Task RpgMaster(string commandName = &quot;&quot;, [Remainder] string args
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -1681,288 +1941,6 @@ public Task RubiksCube([Remainder] string input = &quot;&quot;)</code></pre>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">input</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="PacManBot_Commands_Modules_MoreGamesModule_SendPetExact_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.SendPetExact*"></a>
-  <h4 id="PacManBot_Commands_Modules_MoreGamesModule_SendPetExact_PacManBot_Games_Concrete_PetGame_System_String_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.SendPetExact(PacManBot.Games.Concrete.PetGame,System.String)">SendPetExact(PetGame, String)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Task SendPetExact(PetGame pet, string args)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="PacManBot.Games.Concrete.PetGame.html">PetGame</a></td>
-        <td><span class="parametername">pet</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">args</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="PacManBot_Commands_Modules_MoreGamesModule_SendPetHelp_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.SendPetHelp*"></a>
-  <h4 id="PacManBot_Commands_Modules_MoreGamesModule_SendPetHelp_PacManBot_Games_Concrete_PetGame_System_String_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.SendPetHelp(PacManBot.Games.Concrete.PetGame,System.String)">SendPetHelp(PetGame, String)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Task SendPetHelp(PetGame pet, string args)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="PacManBot.Games.Concrete.PetGame.html">PetGame</a></td>
-        <td><span class="parametername">pet</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">args</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="PacManBot_Commands_Modules_MoreGamesModule_SendPetProfile_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.SendPetProfile*"></a>
-  <h4 id="PacManBot_Commands_Modules_MoreGamesModule_SendPetProfile_PacManBot_Games_Concrete_PetGame_System_String_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.SendPetProfile(PacManBot.Games.Concrete.PetGame,System.String)">SendPetProfile(PetGame, String)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Task SendPetProfile(PetGame pet, string args)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="PacManBot.Games.Concrete.PetGame.html">PetGame</a></td>
-        <td><span class="parametername">pet</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">args</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="PacManBot_Commands_Modules_MoreGamesModule_SendPetStats_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.SendPetStats*"></a>
-  <h4 id="PacManBot_Commands_Modules_MoreGamesModule_SendPetStats_PacManBot_Games_Concrete_PetGame_System_String_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.SendPetStats(PacManBot.Games.Concrete.PetGame,System.String)">SendPetStats(PetGame, String)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Task SendPetStats(PetGame pet, string args)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="PacManBot.Games.Concrete.PetGame.html">PetGame</a></td>
-        <td><span class="parametername">pet</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">args</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="PacManBot_Commands_Modules_MoreGamesModule_SendRpgManual_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.SendRpgManual*"></a>
-  <h4 id="PacManBot_Commands_Modules_MoreGamesModule_SendRpgManual_PacManBot_Games_Concrete_RpgGame_System_String_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.SendRpgManual(PacManBot.Games.Concrete.RpgGame,System.String)">SendRpgManual(RpgGame, String)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Task SendRpgManual(RpgGame game, string args)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="PacManBot.Games.Concrete.RpgGame.html">RpgGame</a></td>
-        <td><span class="parametername">game</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">args</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="PacManBot_Commands_Modules_MoreGamesModule_SendUserPet_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.SendUserPet*"></a>
-  <h4 id="PacManBot_Commands_Modules_MoreGamesModule_SendUserPet_PacManBot_Games_Concrete_PetGame_System_String_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.SendUserPet(PacManBot.Games.Concrete.PetGame,System.String)">SendUserPet(PetGame, String)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Task SendUserPet(PetGame pet, string args)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="PacManBot.Games.Concrete.PetGame.html">PetGame</a></td>
-        <td><span class="parametername">pet</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">args</span></td>
         <td></td>
       </tr>
     </tbody>
