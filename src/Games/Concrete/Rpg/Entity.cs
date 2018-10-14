@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Text;
 using System.Linq;
-using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Collections.Generic;
 using PacManBot.Extensions;
 
 namespace PacManBot.Games.Concrete.Rpg
@@ -119,14 +119,14 @@ namespace PacManBot.Games.Concrete.Rpg
         public virtual string Attack(Entity target)
         {
             bool crit = Bot.Random.NextDouble() < CritChance;
-            int dealt = target.Hit(AttackFormula(Damage, crit), DamageType, MagicType);
+            int dealt = target.Hit(ModifiedDamage(Damage, crit), DamageType, MagicType);
 
             return $"{this} dealt {dealt} damage to {target}. {"Critical hit!".If(crit)} ";
         }
 
 
-        /// <summary>Generates an attack using damage calculations.</summary>
-        public static int AttackFormula(int baseDmg, bool crit)
+        /// <summary>Applies final damage modifications to use on an attack.</summary>
+        public static int ModifiedDamage(int baseDmg, bool crit)
         {
             return baseDmg <= 0 ? 0 : (baseDmg * (crit ? 2 : 1) * Bot.Random.NextDouble(0.85, 1.15)).Ceiling();
         }

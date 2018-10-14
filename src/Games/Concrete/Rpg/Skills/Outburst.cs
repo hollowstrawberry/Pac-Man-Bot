@@ -14,7 +14,7 @@ namespace PacManBot.Games.Concrete.Rpg.Skills
         public override string Effect(RpgGame game)
         {
             bool crit = Bot.Random.NextDouble() < game.player.CritChance;
-            int dmg = Entity.AttackFormula(game.player.Damage * 2, crit);
+            int dmg = Entity.ModifiedDamage(game.player.Damage * 2, crit);
             if (crit) dmg = (dmg * 2.0 / 3.0).Round(); // Crits too OP
 
             var target = Bot.Random.Choose(game.Opponents);

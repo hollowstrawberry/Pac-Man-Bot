@@ -20,7 +20,7 @@ namespace PacManBot.Games.Concrete.Rpg.Skills
             foreach (var enemy in game.Opponents)
             {
                 bool crit = Bot.Random.NextDouble() < game.player.CritChance;
-                int dealt = enemy.Hit(Entity.AttackFormula(dmg, crit), game.player.DamageType, game.player.MagicType);
+                int dealt = enemy.Hit(Entity.ModifiedDamage(dmg, crit), game.player.DamageType, game.player.MagicType);
                 hits.Add($"{enemy} for {dealt}{"(!)".If(crit)}");
             }
 

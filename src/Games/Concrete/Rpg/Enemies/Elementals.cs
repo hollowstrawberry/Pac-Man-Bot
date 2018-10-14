@@ -220,7 +220,7 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
             for (int i = 0; i < attacks.Length; i++)
             {
                 bool crit = Bot.Random.NextDouble() < CritChance;
-                int dmg = target.Hit(AttackFormula(Damage, crit), DamageType, MagicType);
+                int dmg = target.Hit(ModifiedDamage(Damage, crit), DamageType, MagicType);
 
                 attacks[i] = $"{dmg}" + " (!)".If(crit);
             }
@@ -292,7 +292,7 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
             foreach (var element in EnumTraits<MagicType>.Values.Skip(1))
             {
                 bool crit = Bot.Random.NextDouble() < CritChance;
-                int dmg = AttackFormula(Damage / 4, crit);
+                int dmg = ModifiedDamage(Damage / 4, crit);
                 attacks.Add($"{target.Hit(dmg, DamageType, element)}{"(!)".If(crit)}");
             }
 
