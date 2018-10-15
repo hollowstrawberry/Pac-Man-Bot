@@ -90,6 +90,7 @@ namespace PacManBot
             var provider = services.BuildServiceProvider();
 
             await commands.AddModulesAsync(Assembly.GetEntryAssembly(), provider);
+            provider.Get<HelpService>().BuildCommandHelp();
 
 
             // Let's go

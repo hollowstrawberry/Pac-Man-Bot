@@ -2,7 +2,6 @@
 using System.Text;
 using System.Linq;
 using System.Collections.Generic;
-using System.Collections.Concurrent;
 using Discord;
 using Discord.Commands;
 using PacManBot.Commands;
@@ -23,9 +22,8 @@ namespace PacManBot.Services
 
         private readonly Color embedColor = Colors.PacManYellow;
 
-        private ConcurrentDictionary<string, CommandHelpInfo> internalHelpInfo;
-        private ConcurrentDictionary<string, CommandHelpInfo> HelpInfo
-            => internalHelpInfo ?? (internalHelpInfo = BuildHelpInfo());
+        private IReadOnlyDictionary<string, CommandHelpInfo> helpInfo;
+        private IReadOnlyDictionary<string, IEnumerable<CommandHelpInfo>> modulesHelpInfo;
 
 
         /// <summary>
@@ -140,28 +138,38 @@ namespace PacManBot.Services
         }
 
 
-        private ConcurrentDictionary<string, CommandHelpInfo> BuildHelpInfo()
+        /// <summary>Gathers all information this service needs from CommandService.</summary>
+        public void BuildCommandHelp()
         {
-            var dict = new ConcurrentDictionary<string, CommandHelpInfo>();
+            var allCommands = commands.Commands
+                .OrderByDescending(c => c.Priority)
+                .Distinct(CommandEqComp.Instance)
+                .ToArray();
 
-            foreach (var com in commands.Commands.OrderByDescending(c => c.Priority))
+            var tempHelpInfo = new Dictionary<string, CommandHelpInfo>();
+            foreach (var com in allCommands)
             {
                 var help = new CommandHelpInfo(com);
                 foreach (var alias in com.Aliases)
                 {
-                    string key = alias.ToLower();
-                    if (!dict.ContainsKey(key)) dict[key] = help;
+                    tempHelpInfo[alias.ToLower()] = help;
                 }
             }
+            helpInfo = tempHelpInfo;
 
-            return dict;
+            modulesHelpInfo = allCommands
+                .GroupBy(c => c.Module)
+                .OrderBy(g => g.Key.Remarks)
+                .ToDictionary(
+                    g => g.Key.Name,
+                    g => g.Select(c => helpInfo[c.Name.ToLower()])
+                        .ToArray().AsEnumerable());
         }
-
 
 
         public EmbedBuilder MakeHelp(string commandName, string prefix = "")
         {
-            if (!HelpInfo.TryGetValue(commandName.ToLower(), out var help)) return null;
+            if (!helpInfo.TryGetValue(commandName.ToLower(), out var help)) return null;
 
             var embed = new EmbedBuilder
             {
@@ -193,37 +201,38 @@ namespace PacManBot.Services
                 Color = embedColor,
             };
 
-            foreach (var module in commands.Modules.OrderBy(m => m.Remarks))
+            foreach (var module in modulesHelpInfo)
             {
                 var moduleText = new StringBuilder();
 
-                foreach (var command in module.Commands.OrderByDescending(c => c.Priority).Distinct(CommandEqComp.Instance))
+                foreach (var command in module.Value)
                 {
-                    var help = HelpInfo[command.Name.ToLower()];
-
-                    if (!help.Hidden)
+                    if (!command.Hidden)
                     {
-                        var conditions = await command.CheckPreconditionsAsync(context, services);
+                        var conditions = await command.Command.CheckPreconditionsAsync(context, services);
                         if (!conditions.IsSuccess) continue;
 
                         if (expanded)
                         {
-                            moduleText.Append($"**{command.Name} {help.Parameters}**");
-                            if (help.Remarks != "") moduleText.Append($" — *{help.Remarks}*");
+                            moduleText.Append($"**{command.Command.Name} {command.Parameters}**");
+                            if (command.Remarks != "") moduleText.Append($" — *{command.Remarks}*");
                             moduleText.Append("\n");
                         }
                         else
                         {
-                            moduleText.Append($"**{command.Name}**, ");
+                            moduleText.Append($"**{command.Command.Name}**, ");
                         }
                     }
                 }
 
-                if (!expanded && module.Name.Contains("Pac-Man")) moduleText.Append("**bump**, **cancel**");
+                if (!expanded && module.Key.Contains("Pac-Man"))
+                {
+                    moduleText.Append("**bump**, **cancel**"); // This is hardcoded for completeness
+                }
 
                 if (moduleText.Length > 0)
                 {
-                    embed.AddField(module.Name, moduleText.ToString().Trim(' ', ',', '\n'));
+                    embed.AddField(module.Key, moduleText.ToString().Trim(' ', ',', '\n'));
                 }
             }
 
@@ -233,7 +242,7 @@ namespace PacManBot.Services
 
         private class CommandEqComp : IEqualityComparer<CommandInfo>
         {
-            public static CommandEqComp Instance = new CommandEqComp();
+            public static readonly CommandEqComp Instance = new CommandEqComp();
 
             public bool Equals(CommandInfo x, CommandInfo y) => x.Name == y.Name;
             public int GetHashCode(CommandInfo obj) => obj.Name.GetHashCode();
