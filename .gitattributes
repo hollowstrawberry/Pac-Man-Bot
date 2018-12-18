@@ -4,6 +4,12 @@
 * text=auto
 
 ###############################################################################
+# Only read .cs files for project language checking
+###############################################################################
+* linguist-vendored
+*.cs linguist-vendored=false
+
+###############################################################################
 # Set default behavior for command prompt diff.
 #
 # This is need for earlier builds of msysgit that does not have it on by
