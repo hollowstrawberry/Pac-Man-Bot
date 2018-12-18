@@ -17,6 +17,9 @@ namespace PacManBot
         /// <summary>Secret token used to connect to Discord. Must be provided for the bot to run.</summary>
         [DataMember] public readonly string discordToken;
 
+        /// <summary>Bot list websites to send requests to. Unnecessary.</summary>
+        [DataMember] public readonly string[] httpDomain = { };
+
         /// <summary>Secret tokens to send requests to bot list websites. Unnecessary.</summary>
         [DataMember] public readonly string[] httpToken = { };
 

@@ -114,14 +114,14 @@ namespace PacManBot
 
                     await client.SetGameAsync($"{botConfig.defaultPrefix}help | {guilds} guilds");
 
+                    // Update bot list websites
+                    if (botConfig.httpDomain.Length == 0 || botConfig.httpToken.Length == 0) return;
+
                     using (var httpClient = new HttpClient())
                     {
-                        string[] website = { "bots.discord.pw", "discordbots.org" };
-                        for (int i = 0; i < website.Length && i < botConfig.httpToken.Length; i++)
+                        for (int i = 0; i < botConfig.httpDomain.Length && i < botConfig.httpToken.Length; i++)
                         {
-                            if (string.IsNullOrWhiteSpace(botConfig.httpToken[i])) continue;
-
-                            string requesturi = $"https://{website[i]}/api/bots/{client.CurrentUser.Id}/stats";
+                            string requesturi = $"https://{botConfig.httpDomain[i]}/api/bots/{client.CurrentUser.Id}/stats";
 
                             var content = new StringContent(
                                 $"{{\"server_count\": {guilds}}}", System.Text.Encoding.UTF8, "application/json");
@@ -131,7 +131,7 @@ namespace PacManBot
 
                             await logger.Log(
                                 response.IsSuccessStatusCode ? LogSeverity.Verbose : LogSeverity.Warning,
-                                $"Sent guild count to {website[i]} - {(response.IsSuccessStatusCode ? "Success" : $"Response:\n{response}")}");
+                                $"Sent guild count to {botConfig.httpDomain[i]} - {(response.IsSuccessStatusCode ? "Success" : $"Response:\n{response}")}");
                         }
                     }
 
