@@ -121,7 +121,7 @@ namespace PacManBot
                     {
                         for (int i = 0; i < botConfig.httpDomain.Length && i < botConfig.httpToken.Length; i++)
                         {
-                            string requesturi = $"https://{botConfig.httpDomain[i]}/api/bots/{client.CurrentUser.Id}/stats";
+                            string requesturi = botConfig.httpDomain[i].Replace("{id}", $"{client.CurrentUser.Id}");
 
                             var content = new StringContent(
                                 $"{{\"server_count\": {guilds}}}", System.Text.Encoding.UTF8, "application/json");
