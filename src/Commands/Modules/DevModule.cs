@@ -335,7 +335,7 @@ namespace PacManBot.Commands.Modules
 
         [Command("log"), HideHelp]
         [Summary("Stores an entry in the bot logs. Developer only")]
-        public async Task LogSomething([Remainder]string message)
+        public async Task DoLog([Remainder]string message)
         {
             await Logger.Log(LogSeverity.Info, LogSource.Owner, message);
             await AutoReactAsync();
@@ -351,6 +351,20 @@ namespace PacManBot.Commands.Modules
             GC.Collect();
 
             await AutoReactAsync();
+        }
+
+
+        [Command("emotes"), Alias("showemotes"), HideHelp]
+        [Summary("Sends all emote codes in this server. Developer only.")]
+        [RequireContext(ContextType.Guild)]
+        public async Task SendServerEmotes()
+        {
+            string emotes = Context.Guild.Emotes
+                .OrderBy(x => x.Animated)
+                .Select(x => x.Mention())
+                .JoinString("\n");
+
+            await ReplyAsync($"```{emotes}```");
         }
 
 

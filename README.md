@@ -63,7 +63,7 @@ If you instead want to use your own copy of the emotes, here are the steps:
 
 1. Grab the emote images from the [_Resources/Emotes/](https://github.com/Samrux/Pac-Man-Bot/tree/master/_Resources/Emotes) folder.  
 2. Upload them to a Discord server that your bot has access to.  
-3. Obtain all of their codes. There are bots to do this automatically, but you can also send an emote's code in chat (on desktop) by putting a backslash before it in a message, like: `\:pacman:`  
+3. Obtain all of their codes. You can do this quickly using the bot's 'emotes' developer command.
 4. Modify your `src/Constants/CustomEmoji.cs` file with all the new codes.  
 5. You can then build the bot again and test if the emotes are displaying correctly.
 

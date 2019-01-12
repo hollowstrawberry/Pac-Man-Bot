@@ -131,7 +131,7 @@ namespace PacManBot
 
                             await logger.Log(
                                 response.IsSuccessStatusCode ? LogSeverity.Verbose : LogSeverity.Warning,
-                                $"Sent guild count to {botConfig.httpDomain[i]} - {(response.IsSuccessStatusCode ? "Success" : $"Response:\n{response}")}");
+                                $"Sent guild count to {requesturi} - {(response.IsSuccessStatusCode ? "Success" : $"Response:\n{response}")}");
                         }
                     }
 
