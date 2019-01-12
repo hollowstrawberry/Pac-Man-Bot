@@ -60,6 +60,7 @@ namespace PacManBot
                 TotalShards = botConfig.shardCount,
                 LogLevel = botConfig.clientLogLevel,
                 MessageCacheSize = botConfig.messageCacheSize,
+                ConnectionTimeout = botConfig.connectionTimeout,
                 DefaultRetryMode = RetryMode.RetryRatelimit,
             };
 

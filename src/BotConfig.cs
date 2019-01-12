@@ -41,6 +41,9 @@ namespace PacManBot
         /// <summary>How many messages to keep on memory per channel. Keep it to a reasonable amount.</summary>
         [DataMember] public readonly int messageCacheSize = 100;
 
+        /// <summary>How long in milliseconds until the gateway connection to Discord times out.</summary>
+        [DataMember] public readonly int connectionTimeout = 30000;
+
         /// <summary>How many messages to log from the client. See <see cref="LogSeverity"/> for possible values.</summary>
         [DataMember] public readonly LogSeverity clientLogLevel = LogSeverity.Verbose;
 
