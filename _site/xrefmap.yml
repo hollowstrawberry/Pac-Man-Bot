@@ -112,6 +112,12 @@ references:
   commentId: F:PacManBot.BotConfig.discordToken
   fullName: PacManBot.BotConfig.discordToken
   nameWithType: BotConfig.discordToken
+- uid: PacManBot.BotConfig.httpDomain
+  name: httpDomain
+  href: api/PacManBot.BotConfig.html#PacManBot_BotConfig_httpDomain
+  commentId: F:PacManBot.BotConfig.httpDomain
+  fullName: PacManBot.BotConfig.httpDomain
+  nameWithType: BotConfig.httpDomain
 - uid: PacManBot.BotConfig.httpToken
   name: httpToken
   href: api/PacManBot.BotConfig.html#PacManBot_BotConfig_httpToken
@@ -799,6 +805,19 @@ references:
   isSpec: "True"
   fullName: PacManBot.Commands.Modules.DevModule.DoGarbageCollect
   nameWithType: DevModule.DoGarbageCollect
+- uid: PacManBot.Commands.Modules.DevModule.DoLog(System.String)
+  name: DoLog(String)
+  href: api/PacManBot.Commands.Modules.DevModule.html#PacManBot_Commands_Modules_DevModule_DoLog_System_String_
+  commentId: M:PacManBot.Commands.Modules.DevModule.DoLog(System.String)
+  fullName: PacManBot.Commands.Modules.DevModule.DoLog(System.String)
+  nameWithType: DevModule.DoLog(String)
+- uid: PacManBot.Commands.Modules.DevModule.DoLog*
+  name: DoLog
+  href: api/PacManBot.Commands.Modules.DevModule.html#PacManBot_Commands_Modules_DevModule_DoLog_
+  commentId: Overload:PacManBot.Commands.Modules.DevModule.DoLog
+  isSpec: "True"
+  fullName: PacManBot.Commands.Modules.DevModule.DoLog
+  nameWithType: DevModule.DoLog
 - uid: PacManBot.Commands.Modules.DevModule.DoRemoteGameMoves(System.String[])
   name: DoRemoteGameMoves(String[])
   href: api/PacManBot.Commands.Modules.DevModule.html#PacManBot_Commands_Modules_DevModule_DoRemoteGameMoves_System_String___
@@ -828,19 +847,6 @@ references:
   isSpec: "True"
   fullName: PacManBot.Commands.Modules.DevModule.GetGuildMembers
   nameWithType: DevModule.GetGuildMembers
-- uid: PacManBot.Commands.Modules.DevModule.LogSomething(System.String)
-  name: LogSomething(String)
-  href: api/PacManBot.Commands.Modules.DevModule.html#PacManBot_Commands_Modules_DevModule_LogSomething_System_String_
-  commentId: M:PacManBot.Commands.Modules.DevModule.LogSomething(System.String)
-  fullName: PacManBot.Commands.Modules.DevModule.LogSomething(System.String)
-  nameWithType: DevModule.LogSomething(String)
-- uid: PacManBot.Commands.Modules.DevModule.LogSomething*
-  name: LogSomething
-  href: api/PacManBot.Commands.Modules.DevModule.html#PacManBot_Commands_Modules_DevModule_LogSomething_
-  commentId: Overload:PacManBot.Commands.Modules.DevModule.LogSomething
-  isSpec: "True"
-  fullName: PacManBot.Commands.Modules.DevModule.LogSomething
-  nameWithType: DevModule.LogSomething
 - uid: PacManBot.Commands.Modules.DevModule.ReadFile(System.Int32,System.Int32,System.String)
   name: ReadFile(Int32, Int32, String)
   href: api/PacManBot.Commands.Modules.DevModule.html#PacManBot_Commands_Modules_DevModule_ReadFile_System_Int32_System_Int32_System_String_
@@ -931,6 +937,19 @@ references:
   isSpec: "True"
   fullName: PacManBot.Commands.Modules.DevModule.Scripting
   nameWithType: DevModule.Scripting
+- uid: PacManBot.Commands.Modules.DevModule.SendServerEmotes
+  name: SendServerEmotes()
+  href: api/PacManBot.Commands.Modules.DevModule.html#PacManBot_Commands_Modules_DevModule_SendServerEmotes
+  commentId: M:PacManBot.Commands.Modules.DevModule.SendServerEmotes
+  fullName: PacManBot.Commands.Modules.DevModule.SendServerEmotes()
+  nameWithType: DevModule.SendServerEmotes()
+- uid: PacManBot.Commands.Modules.DevModule.SendServerEmotes*
+  name: SendServerEmotes
+  href: api/PacManBot.Commands.Modules.DevModule.html#PacManBot_Commands_Modules_DevModule_SendServerEmotes_
+  commentId: Overload:PacManBot.Commands.Modules.DevModule.SendServerEmotes
+  isSpec: "True"
+  fullName: PacManBot.Commands.Modules.DevModule.SendServerEmotes
+  nameWithType: DevModule.SendServerEmotes
 - uid: PacManBot.Commands.Modules.DevModule.SetAvatar(System.String)
   name: SetAvatar(String)
   href: api/PacManBot.Commands.Modules.DevModule.html#PacManBot_Commands_Modules_DevModule_SetAvatar_System_String_
@@ -1729,19 +1748,6 @@ references:
   isSpec: "True"
   fullName: PacManBot.Commands.Modules.MoreGamesModule.RpgSendManual
   nameWithType: MoreGamesModule.RpgSendManual
-- uid: PacManBot.Commands.Modules.MoreGamesModule.RpgSendSkills(PacManBot.Games.Concrete.RpgGame,System.String)
-  name: RpgSendSkills(RpgGame, String)
-  href: api/PacManBot.Commands.Modules.MoreGamesModule.html#PacManBot_Commands_Modules_MoreGamesModule_RpgSendSkills_PacManBot_Games_Concrete_RpgGame_System_String_
-  commentId: M:PacManBot.Commands.Modules.MoreGamesModule.RpgSendSkills(PacManBot.Games.Concrete.RpgGame,System.String)
-  fullName: PacManBot.Commands.Modules.MoreGamesModule.RpgSendSkills(PacManBot.Games.Concrete.RpgGame, System.String)
-  nameWithType: MoreGamesModule.RpgSendSkills(RpgGame, String)
-- uid: PacManBot.Commands.Modules.MoreGamesModule.RpgSendSkills*
-  name: RpgSendSkills
-  href: api/PacManBot.Commands.Modules.MoreGamesModule.html#PacManBot_Commands_Modules_MoreGamesModule_RpgSendSkills_
-  commentId: Overload:PacManBot.Commands.Modules.MoreGamesModule.RpgSendSkills
-  isSpec: "True"
-  fullName: PacManBot.Commands.Modules.MoreGamesModule.RpgSendSkills
-  nameWithType: MoreGamesModule.RpgSendSkills
 - uid: PacManBot.Commands.Modules.MoreGamesModule.RpgSetColor(PacManBot.Games.Concrete.RpgGame,System.String)
   name: RpgSetColor(RpgGame, String)
   href: api/PacManBot.Commands.Modules.MoreGamesModule.html#PacManBot_Commands_Modules_MoreGamesModule_RpgSetColor_PacManBot_Games_Concrete_RpgGame_System_String_
@@ -1781,6 +1787,19 @@ references:
   isSpec: "True"
   fullName: PacManBot.Commands.Modules.MoreGamesModule.RpgSkills
   nameWithType: MoreGamesModule.RpgSkills
+- uid: PacManBot.Commands.Modules.MoreGamesModule.RpgSpendSkills(PacManBot.Games.Concrete.RpgGame,System.String)
+  name: RpgSpendSkills(RpgGame, String)
+  href: api/PacManBot.Commands.Modules.MoreGamesModule.html#PacManBot_Commands_Modules_MoreGamesModule_RpgSpendSkills_PacManBot_Games_Concrete_RpgGame_System_String_
+  commentId: M:PacManBot.Commands.Modules.MoreGamesModule.RpgSpendSkills(PacManBot.Games.Concrete.RpgGame,System.String)
+  fullName: PacManBot.Commands.Modules.MoreGamesModule.RpgSpendSkills(PacManBot.Games.Concrete.RpgGame, System.String)
+  nameWithType: MoreGamesModule.RpgSpendSkills(RpgGame, String)
+- uid: PacManBot.Commands.Modules.MoreGamesModule.RpgSpendSkills*
+  name: RpgSpendSkills
+  href: api/PacManBot.Commands.Modules.MoreGamesModule.html#PacManBot_Commands_Modules_MoreGamesModule_RpgSpendSkills_
+  commentId: Overload:PacManBot.Commands.Modules.MoreGamesModule.RpgSpendSkills
+  isSpec: "True"
+  fullName: PacManBot.Commands.Modules.MoreGamesModule.RpgSpendSkills
+  nameWithType: MoreGamesModule.RpgSpendSkills
 - uid: PacManBot.Commands.Modules.MoreGamesModule.RpgStart(PacManBot.Games.Concrete.RpgGame,System.String)
   name: RpgStart(RpgGame, String)
   href: api/PacManBot.Commands.Modules.MoreGamesModule.html#PacManBot_Commands_Modules_MoreGamesModule_RpgStart_PacManBot_Games_Concrete_RpgGame_System_String_
@@ -3248,38 +3267,63 @@ references:
   isSpec: "True"
   fullName: PacManBot.Extensions.GameExtensions.ToPos
   nameWithType: GameExtensions.ToPos
+- uid: PacManBot.Extensions.NumberExtensions
+  name: NumberExtensions
+  href: api/PacManBot.Extensions.NumberExtensions.html
+  commentId: T:PacManBot.Extensions.NumberExtensions
+  fullName: PacManBot.Extensions.NumberExtensions
+  nameWithType: NumberExtensions
+- uid: PacManBot.Extensions.NumberExtensions.Ceiling(System.Double)
+  name: Ceiling(Double)
+  href: api/PacManBot.Extensions.NumberExtensions.html#PacManBot_Extensions_NumberExtensions_Ceiling_System_Double_
+  commentId: M:PacManBot.Extensions.NumberExtensions.Ceiling(System.Double)
+  fullName: PacManBot.Extensions.NumberExtensions.Ceiling(System.Double)
+  nameWithType: NumberExtensions.Ceiling(Double)
+- uid: PacManBot.Extensions.NumberExtensions.Ceiling*
+  name: Ceiling
+  href: api/PacManBot.Extensions.NumberExtensions.html#PacManBot_Extensions_NumberExtensions_Ceiling_
+  commentId: Overload:PacManBot.Extensions.NumberExtensions.Ceiling
+  isSpec: "True"
+  fullName: PacManBot.Extensions.NumberExtensions.Ceiling
+  nameWithType: NumberExtensions.Ceiling
+- uid: PacManBot.Extensions.NumberExtensions.Floor(System.Double)
+  name: Floor(Double)
+  href: api/PacManBot.Extensions.NumberExtensions.html#PacManBot_Extensions_NumberExtensions_Floor_System_Double_
+  commentId: M:PacManBot.Extensions.NumberExtensions.Floor(System.Double)
+  fullName: PacManBot.Extensions.NumberExtensions.Floor(System.Double)
+  nameWithType: NumberExtensions.Floor(Double)
+- uid: PacManBot.Extensions.NumberExtensions.Floor*
+  name: Floor
+  href: api/PacManBot.Extensions.NumberExtensions.html#PacManBot_Extensions_NumberExtensions_Floor_
+  commentId: Overload:PacManBot.Extensions.NumberExtensions.Floor
+  isSpec: "True"
+  fullName: PacManBot.Extensions.NumberExtensions.Floor
+  nameWithType: NumberExtensions.Floor
+- uid: PacManBot.Extensions.NumberExtensions.Round(System.Double)
+  name: Round(Double)
+  href: api/PacManBot.Extensions.NumberExtensions.html#PacManBot_Extensions_NumberExtensions_Round_System_Double_
+  commentId: M:PacManBot.Extensions.NumberExtensions.Round(System.Double)
+  fullName: PacManBot.Extensions.NumberExtensions.Round(System.Double)
+  nameWithType: NumberExtensions.Round(Double)
+- uid: PacManBot.Extensions.NumberExtensions.Round(System.Double,System.Int32)
+  name: Round(Double, Int32)
+  href: api/PacManBot.Extensions.NumberExtensions.html#PacManBot_Extensions_NumberExtensions_Round_System_Double_System_Int32_
+  commentId: M:PacManBot.Extensions.NumberExtensions.Round(System.Double,System.Int32)
+  fullName: PacManBot.Extensions.NumberExtensions.Round(System.Double, System.Int32)
+  nameWithType: NumberExtensions.Round(Double, Int32)
+- uid: PacManBot.Extensions.NumberExtensions.Round*
+  name: Round
+  href: api/PacManBot.Extensions.NumberExtensions.html#PacManBot_Extensions_NumberExtensions_Round_
+  commentId: Overload:PacManBot.Extensions.NumberExtensions.Round
+  isSpec: "True"
+  fullName: PacManBot.Extensions.NumberExtensions.Round
+  nameWithType: NumberExtensions.Round
 - uid: PacManBot.Extensions.OtherExtensions
   name: OtherExtensions
   href: api/PacManBot.Extensions.OtherExtensions.html
   commentId: T:PacManBot.Extensions.OtherExtensions
   fullName: PacManBot.Extensions.OtherExtensions
   nameWithType: OtherExtensions
-- uid: PacManBot.Extensions.OtherExtensions.Ceiling(System.Double)
-  name: Ceiling(Double)
-  href: api/PacManBot.Extensions.OtherExtensions.html#PacManBot_Extensions_OtherExtensions_Ceiling_System_Double_
-  commentId: M:PacManBot.Extensions.OtherExtensions.Ceiling(System.Double)
-  fullName: PacManBot.Extensions.OtherExtensions.Ceiling(System.Double)
-  nameWithType: OtherExtensions.Ceiling(Double)
-- uid: PacManBot.Extensions.OtherExtensions.Ceiling*
-  name: Ceiling
-  href: api/PacManBot.Extensions.OtherExtensions.html#PacManBot_Extensions_OtherExtensions_Ceiling_
-  commentId: Overload:PacManBot.Extensions.OtherExtensions.Ceiling
-  isSpec: "True"
-  fullName: PacManBot.Extensions.OtherExtensions.Ceiling
-  nameWithType: OtherExtensions.Ceiling
-- uid: PacManBot.Extensions.OtherExtensions.Floor(System.Double)
-  name: Floor(Double)
-  href: api/PacManBot.Extensions.OtherExtensions.html#PacManBot_Extensions_OtherExtensions_Floor_System_Double_
-  commentId: M:PacManBot.Extensions.OtherExtensions.Floor(System.Double)
-  fullName: PacManBot.Extensions.OtherExtensions.Floor(System.Double)
-  nameWithType: OtherExtensions.Floor(Double)
-- uid: PacManBot.Extensions.OtherExtensions.Floor*
-  name: Floor
-  href: api/PacManBot.Extensions.OtherExtensions.html#PacManBot_Extensions_OtherExtensions_Floor_
-  commentId: Overload:PacManBot.Extensions.OtherExtensions.Floor
-  isSpec: "True"
-  fullName: PacManBot.Extensions.OtherExtensions.Floor
-  nameWithType: OtherExtensions.Floor
 - uid: PacManBot.Extensions.OtherExtensions.Get*
   name: Get
   href: api/PacManBot.Extensions.OtherExtensions.html#PacManBot_Extensions_OtherExtensions_Get_
@@ -3315,25 +3359,6 @@ references:
   isSpec: "True"
   fullName: PacManBot.Extensions.OtherExtensions.Humanized
   nameWithType: OtherExtensions.Humanized
-- uid: PacManBot.Extensions.OtherExtensions.Round(System.Double)
-  name: Round(Double)
-  href: api/PacManBot.Extensions.OtherExtensions.html#PacManBot_Extensions_OtherExtensions_Round_System_Double_
-  commentId: M:PacManBot.Extensions.OtherExtensions.Round(System.Double)
-  fullName: PacManBot.Extensions.OtherExtensions.Round(System.Double)
-  nameWithType: OtherExtensions.Round(Double)
-- uid: PacManBot.Extensions.OtherExtensions.Round(System.Double,System.Int32)
-  name: Round(Double, Int32)
-  href: api/PacManBot.Extensions.OtherExtensions.html#PacManBot_Extensions_OtherExtensions_Round_System_Double_System_Int32_
-  commentId: M:PacManBot.Extensions.OtherExtensions.Round(System.Double,System.Int32)
-  fullName: PacManBot.Extensions.OtherExtensions.Round(System.Double, System.Int32)
-  nameWithType: OtherExtensions.Round(Double, Int32)
-- uid: PacManBot.Extensions.OtherExtensions.Round*
-  name: Round
-  href: api/PacManBot.Extensions.OtherExtensions.html#PacManBot_Extensions_OtherExtensions_Round_
-  commentId: Overload:PacManBot.Extensions.OtherExtensions.Round
-  isSpec: "True"
-  fullName: PacManBot.Extensions.OtherExtensions.Round
-  nameWithType: OtherExtensions.Round
 - uid: PacManBot.Extensions.RandomExtensions
   name: RandomExtensions
   href: api/PacManBot.Extensions.RandomExtensions.html
@@ -3404,6 +3429,107 @@ references:
   fullName.vb: PacManBot.Extensions.RandomExtensions.Shuffle(Of T)(System.Random, System.Collections.Generic.IList(Of T))
   nameWithType: RandomExtensions.Shuffle<T>(Random, IList<T>)
   nameWithType.vb: RandomExtensions.Shuffle(Of T)(Random, IList(Of T))
+- uid: PacManBot.Extensions.ReflectionExtensions
+  name: ReflectionExtensions
+  href: api/PacManBot.Extensions.ReflectionExtensions.html
+  commentId: T:PacManBot.Extensions.ReflectionExtensions
+  fullName: PacManBot.Extensions.ReflectionExtensions
+  nameWithType: ReflectionExtensions
+- uid: PacManBot.Extensions.ReflectionExtensions.AllTypes
+  name: AllTypes
+  href: api/PacManBot.Extensions.ReflectionExtensions.html#PacManBot_Extensions_ReflectionExtensions_AllTypes
+  commentId: F:PacManBot.Extensions.ReflectionExtensions.AllTypes
+  fullName: PacManBot.Extensions.ReflectionExtensions.AllTypes
+  nameWithType: ReflectionExtensions.AllTypes
+- uid: PacManBot.Extensions.ReflectionExtensions.CreateInstance*
+  name: CreateInstance
+  href: api/PacManBot.Extensions.ReflectionExtensions.html#PacManBot_Extensions_ReflectionExtensions_CreateInstance_
+  commentId: Overload:PacManBot.Extensions.ReflectionExtensions.CreateInstance
+  isSpec: "True"
+  fullName: PacManBot.Extensions.ReflectionExtensions.CreateInstance
+  nameWithType: ReflectionExtensions.CreateInstance
+- uid: PacManBot.Extensions.ReflectionExtensions.CreateInstance``1(System.Type)
+  name: CreateInstance<T>(Type)
+  href: api/PacManBot.Extensions.ReflectionExtensions.html#PacManBot_Extensions_ReflectionExtensions_CreateInstance__1_System_Type_
+  commentId: M:PacManBot.Extensions.ReflectionExtensions.CreateInstance``1(System.Type)
+  name.vb: CreateInstance(Of T)(Type)
+  fullName: PacManBot.Extensions.ReflectionExtensions.CreateInstance<T>(System.Type)
+  fullName.vb: PacManBot.Extensions.ReflectionExtensions.CreateInstance(Of T)(System.Type)
+  nameWithType: ReflectionExtensions.CreateInstance<T>(Type)
+  nameWithType.vb: ReflectionExtensions.CreateInstance(Of T)(Type)
+- uid: PacManBot.Extensions.ReflectionExtensions.Get*
+  name: Get
+  href: api/PacManBot.Extensions.ReflectionExtensions.html#PacManBot_Extensions_ReflectionExtensions_Get_
+  commentId: Overload:PacManBot.Extensions.ReflectionExtensions.Get
+  isSpec: "True"
+  fullName: PacManBot.Extensions.ReflectionExtensions.Get
+  nameWithType: ReflectionExtensions.Get
+- uid: PacManBot.Extensions.ReflectionExtensions.Get``1(System.Reflection.MemberInfo)
+  name: Get<TAttribute>(MemberInfo)
+  href: api/PacManBot.Extensions.ReflectionExtensions.html#PacManBot_Extensions_ReflectionExtensions_Get__1_System_Reflection_MemberInfo_
+  commentId: M:PacManBot.Extensions.ReflectionExtensions.Get``1(System.Reflection.MemberInfo)
+  name.vb: Get(Of TAttribute)(MemberInfo)
+  fullName: PacManBot.Extensions.ReflectionExtensions.Get<TAttribute>(System.Reflection.MemberInfo)
+  fullName.vb: PacManBot.Extensions.ReflectionExtensions.Get(Of TAttribute)(System.Reflection.MemberInfo)
+  nameWithType: ReflectionExtensions.Get<TAttribute>(MemberInfo)
+  nameWithType.vb: ReflectionExtensions.Get(Of TAttribute)(MemberInfo)
+- uid: PacManBot.Extensions.ReflectionExtensions.Invoke(System.Reflection.MethodInfo,System.Object,System.Object[])
+  name: Invoke(MethodInfo, Object, Object[])
+  href: api/PacManBot.Extensions.ReflectionExtensions.html#PacManBot_Extensions_ReflectionExtensions_Invoke_System_Reflection_MethodInfo_System_Object_System_Object___
+  commentId: M:PacManBot.Extensions.ReflectionExtensions.Invoke(System.Reflection.MethodInfo,System.Object,System.Object[])
+  name.vb: Invoke(MethodInfo, Object, Object())
+  fullName: PacManBot.Extensions.ReflectionExtensions.Invoke(System.Reflection.MethodInfo, System.Object, System.Object[])
+  fullName.vb: PacManBot.Extensions.ReflectionExtensions.Invoke(System.Reflection.MethodInfo, System.Object, System.Object())
+  nameWithType: ReflectionExtensions.Invoke(MethodInfo, Object, Object[])
+  nameWithType.vb: ReflectionExtensions.Invoke(MethodInfo, Object, Object())
+- uid: PacManBot.Extensions.ReflectionExtensions.Invoke*
+  name: Invoke
+  href: api/PacManBot.Extensions.ReflectionExtensions.html#PacManBot_Extensions_ReflectionExtensions_Invoke_
+  commentId: Overload:PacManBot.Extensions.ReflectionExtensions.Invoke
+  isSpec: "True"
+  fullName: PacManBot.Extensions.ReflectionExtensions.Invoke
+  nameWithType: ReflectionExtensions.Invoke
+- uid: PacManBot.Extensions.ReflectionExtensions.Invoke``1(System.Reflection.MethodInfo,System.Object,System.Object[])
+  name: Invoke<TResult>(MethodInfo, Object, Object[])
+  href: api/PacManBot.Extensions.ReflectionExtensions.html#PacManBot_Extensions_ReflectionExtensions_Invoke__1_System_Reflection_MethodInfo_System_Object_System_Object___
+  commentId: M:PacManBot.Extensions.ReflectionExtensions.Invoke``1(System.Reflection.MethodInfo,System.Object,System.Object[])
+  name.vb: Invoke(Of TResult)(MethodInfo, Object, Object())
+  fullName: PacManBot.Extensions.ReflectionExtensions.Invoke<TResult>(System.Reflection.MethodInfo, System.Object, System.Object[])
+  fullName.vb: PacManBot.Extensions.ReflectionExtensions.Invoke(Of TResult)(System.Reflection.MethodInfo, System.Object, System.Object())
+  nameWithType: ReflectionExtensions.Invoke<TResult>(MethodInfo, Object, Object[])
+  nameWithType.vb: ReflectionExtensions.Invoke(Of TResult)(MethodInfo, Object, Object())
+- uid: PacManBot.Extensions.ReflectionExtensions.MakeObjects*
+  name: MakeObjects
+  href: api/PacManBot.Extensions.ReflectionExtensions.html#PacManBot_Extensions_ReflectionExtensions_MakeObjects_
+  commentId: Overload:PacManBot.Extensions.ReflectionExtensions.MakeObjects
+  isSpec: "True"
+  fullName: PacManBot.Extensions.ReflectionExtensions.MakeObjects
+  nameWithType: ReflectionExtensions.MakeObjects
+- uid: PacManBot.Extensions.ReflectionExtensions.MakeObjects``1(System.Collections.Generic.IEnumerable{System.Type})
+  name: MakeObjects<T>(IEnumerable<Type>)
+  href: api/PacManBot.Extensions.ReflectionExtensions.html#PacManBot_Extensions_ReflectionExtensions_MakeObjects__1_System_Collections_Generic_IEnumerable_System_Type__
+  commentId: M:PacManBot.Extensions.ReflectionExtensions.MakeObjects``1(System.Collections.Generic.IEnumerable{System.Type})
+  name.vb: MakeObjects(Of T)(IEnumerable(Of Type))
+  fullName: PacManBot.Extensions.ReflectionExtensions.MakeObjects<T>(System.Collections.Generic.IEnumerable<System.Type>)
+  fullName.vb: PacManBot.Extensions.ReflectionExtensions.MakeObjects(Of T)(System.Collections.Generic.IEnumerable(Of System.Type))
+  nameWithType: ReflectionExtensions.MakeObjects<T>(IEnumerable<Type>)
+  nameWithType.vb: ReflectionExtensions.MakeObjects(Of T)(IEnumerable(Of Type))
+- uid: PacManBot.Extensions.ReflectionExtensions.SubclassesOf*
+  name: SubclassesOf
+  href: api/PacManBot.Extensions.ReflectionExtensions.html#PacManBot_Extensions_ReflectionExtensions_SubclassesOf_
+  commentId: Overload:PacManBot.Extensions.ReflectionExtensions.SubclassesOf
+  isSpec: "True"
+  fullName: PacManBot.Extensions.ReflectionExtensions.SubclassesOf
+  nameWithType: ReflectionExtensions.SubclassesOf
+- uid: PacManBot.Extensions.ReflectionExtensions.SubclassesOf``1(System.Collections.Generic.IEnumerable{System.Type})
+  name: SubclassesOf<T>(IEnumerable<Type>)
+  href: api/PacManBot.Extensions.ReflectionExtensions.html#PacManBot_Extensions_ReflectionExtensions_SubclassesOf__1_System_Collections_Generic_IEnumerable_System_Type__
+  commentId: M:PacManBot.Extensions.ReflectionExtensions.SubclassesOf``1(System.Collections.Generic.IEnumerable{System.Type})
+  name.vb: SubclassesOf(Of T)(IEnumerable(Of Type))
+  fullName: PacManBot.Extensions.ReflectionExtensions.SubclassesOf<T>(System.Collections.Generic.IEnumerable<System.Type>)
+  fullName.vb: PacManBot.Extensions.ReflectionExtensions.SubclassesOf(Of T)(System.Collections.Generic.IEnumerable(Of System.Type))
+  nameWithType: ReflectionExtensions.SubclassesOf<T>(IEnumerable<Type>)
+  nameWithType.vb: ReflectionExtensions.SubclassesOf(Of T)(IEnumerable(Of Type))
 - uid: PacManBot.Extensions.StringExtensions
   name: StringExtensions
   href: api/PacManBot.Extensions.StringExtensions.html
@@ -3552,6 +3678,45 @@ references:
   isSpec: "True"
   fullName: PacManBot.Extensions.StringExtensions.StartsOrEndsWith
   nameWithType: StringExtensions.StartsOrEndsWith
+- uid: PacManBot.Extensions.StringExtensions.Trim(System.String,System.String)
+  name: Trim(String, String)
+  href: api/PacManBot.Extensions.StringExtensions.html#PacManBot_Extensions_StringExtensions_Trim_System_String_System_String_
+  commentId: M:PacManBot.Extensions.StringExtensions.Trim(System.String,System.String)
+  fullName: PacManBot.Extensions.StringExtensions.Trim(System.String, System.String)
+  nameWithType: StringExtensions.Trim(String, String)
+- uid: PacManBot.Extensions.StringExtensions.Trim*
+  name: Trim
+  href: api/PacManBot.Extensions.StringExtensions.html#PacManBot_Extensions_StringExtensions_Trim_
+  commentId: Overload:PacManBot.Extensions.StringExtensions.Trim
+  isSpec: "True"
+  fullName: PacManBot.Extensions.StringExtensions.Trim
+  nameWithType: StringExtensions.Trim
+- uid: PacManBot.Extensions.StringExtensions.TrimEnd(System.String,System.String)
+  name: TrimEnd(String, String)
+  href: api/PacManBot.Extensions.StringExtensions.html#PacManBot_Extensions_StringExtensions_TrimEnd_System_String_System_String_
+  commentId: M:PacManBot.Extensions.StringExtensions.TrimEnd(System.String,System.String)
+  fullName: PacManBot.Extensions.StringExtensions.TrimEnd(System.String, System.String)
+  nameWithType: StringExtensions.TrimEnd(String, String)
+- uid: PacManBot.Extensions.StringExtensions.TrimEnd*
+  name: TrimEnd
+  href: api/PacManBot.Extensions.StringExtensions.html#PacManBot_Extensions_StringExtensions_TrimEnd_
+  commentId: Overload:PacManBot.Extensions.StringExtensions.TrimEnd
+  isSpec: "True"
+  fullName: PacManBot.Extensions.StringExtensions.TrimEnd
+  nameWithType: StringExtensions.TrimEnd
+- uid: PacManBot.Extensions.StringExtensions.TrimStart(System.String,System.String)
+  name: TrimStart(String, String)
+  href: api/PacManBot.Extensions.StringExtensions.html#PacManBot_Extensions_StringExtensions_TrimStart_System_String_System_String_
+  commentId: M:PacManBot.Extensions.StringExtensions.TrimStart(System.String,System.String)
+  fullName: PacManBot.Extensions.StringExtensions.TrimStart(System.String, System.String)
+  nameWithType: StringExtensions.TrimStart(String, String)
+- uid: PacManBot.Extensions.StringExtensions.TrimStart*
+  name: TrimStart
+  href: api/PacManBot.Extensions.StringExtensions.html#PacManBot_Extensions_StringExtensions_TrimStart_
+  commentId: Overload:PacManBot.Extensions.StringExtensions.TrimStart
+  isSpec: "True"
+  fullName: PacManBot.Extensions.StringExtensions.TrimStart
+  nameWithType: StringExtensions.TrimStart
 - uid: PacManBot.Extensions.StringExtensions.Truncate(System.String,System.Int32)
   name: Truncate(String, Int32)
   href: api/PacManBot.Extensions.StringExtensions.html#PacManBot_Extensions_StringExtensions_Truncate_System_String_System_Int32_
@@ -10312,19 +10477,6 @@ references:
   isSpec: "True"
   fullName: PacManBot.Games.Concrete.Rpg.Entity.Attack
   nameWithType: Entity.Attack
-- uid: PacManBot.Games.Concrete.Rpg.Entity.AttackFormula(System.Int32,System.Boolean)
-  name: AttackFormula(Int32, Boolean)
-  href: api/PacManBot.Games.Concrete.Rpg.Entity.html#PacManBot_Games_Concrete_Rpg_Entity_AttackFormula_System_Int32_System_Boolean_
-  commentId: M:PacManBot.Games.Concrete.Rpg.Entity.AttackFormula(System.Int32,System.Boolean)
-  fullName: PacManBot.Games.Concrete.Rpg.Entity.AttackFormula(System.Int32, System.Boolean)
-  nameWithType: Entity.AttackFormula(Int32, Boolean)
-- uid: PacManBot.Games.Concrete.Rpg.Entity.AttackFormula*
-  name: AttackFormula
-  href: api/PacManBot.Games.Concrete.Rpg.Entity.html#PacManBot_Games_Concrete_Rpg_Entity_AttackFormula_
-  commentId: Overload:PacManBot.Games.Concrete.Rpg.Entity.AttackFormula
-  isSpec: "True"
-  fullName: PacManBot.Games.Concrete.Rpg.Entity.AttackFormula
-  nameWithType: Entity.AttackFormula
 - uid: PacManBot.Games.Concrete.Rpg.Entity.Buffs
   name: Buffs
   href: api/PacManBot.Games.Concrete.Rpg.Entity.html#PacManBot_Games_Concrete_Rpg_Entity_Buffs
@@ -10542,6 +10694,19 @@ references:
   isSpec: "True"
   fullName: PacManBot.Games.Concrete.Rpg.Entity.MaxLife
   nameWithType: Entity.MaxLife
+- uid: PacManBot.Games.Concrete.Rpg.Entity.ModifiedDamage(System.Int32,System.Boolean)
+  name: ModifiedDamage(Int32, Boolean)
+  href: api/PacManBot.Games.Concrete.Rpg.Entity.html#PacManBot_Games_Concrete_Rpg_Entity_ModifiedDamage_System_Int32_System_Boolean_
+  commentId: M:PacManBot.Games.Concrete.Rpg.Entity.ModifiedDamage(System.Int32,System.Boolean)
+  fullName: PacManBot.Games.Concrete.Rpg.Entity.ModifiedDamage(System.Int32, System.Boolean)
+  nameWithType: Entity.ModifiedDamage(Int32, Boolean)
+- uid: PacManBot.Games.Concrete.Rpg.Entity.ModifiedDamage*
+  name: ModifiedDamage
+  href: api/PacManBot.Games.Concrete.Rpg.Entity.html#PacManBot_Games_Concrete_Rpg_Entity_ModifiedDamage_
+  commentId: Overload:PacManBot.Games.Concrete.Rpg.Entity.ModifiedDamage
+  isSpec: "True"
+  fullName: PacManBot.Games.Concrete.Rpg.Entity.ModifiedDamage
+  nameWithType: Entity.ModifiedDamage
 - uid: PacManBot.Games.Concrete.Rpg.Entity.Name
   name: Name
   href: api/PacManBot.Games.Concrete.Rpg.Entity.html#PacManBot_Games_Concrete_Rpg_Entity_Name
@@ -16675,6 +16840,19 @@ references:
   isSpec: "True"
   fullName: PacManBot.Services.HelpService.HelpService
   nameWithType: HelpService.HelpService
+- uid: PacManBot.Services.HelpService.BuildCommandHelp
+  name: BuildCommandHelp()
+  href: api/PacManBot.Services.HelpService.html#PacManBot_Services_HelpService_BuildCommandHelp
+  commentId: M:PacManBot.Services.HelpService.BuildCommandHelp
+  fullName: PacManBot.Services.HelpService.BuildCommandHelp()
+  nameWithType: HelpService.BuildCommandHelp()
+- uid: PacManBot.Services.HelpService.BuildCommandHelp*
+  name: BuildCommandHelp
+  href: api/PacManBot.Services.HelpService.html#PacManBot_Services_HelpService_BuildCommandHelp_
+  commentId: Overload:PacManBot.Services.HelpService.BuildCommandHelp
+  isSpec: "True"
+  fullName: PacManBot.Services.HelpService.BuildCommandHelp
+  nameWithType: HelpService.BuildCommandHelp
 - uid: PacManBot.Services.HelpService.MakeAllHelp(Discord.Commands.ICommandContext,System.Boolean)
   name: MakeAllHelp(ICommandContext, Boolean)
   href: api/PacManBot.Services.HelpService.html#PacManBot_Services_HelpService_MakeAllHelp_Discord_Commands_ICommandContext_System_Boolean_
@@ -16955,6 +17133,19 @@ references:
   isSpec: "True"
   fullName: PacManBot.Services.StorageService.AllowsAutoresponse
   nameWithType: StorageService.AllowsAutoresponse
+- uid: PacManBot.Services.StorageService.AllowsAutoresponseAsync(Discord.IGuild)
+  name: AllowsAutoresponseAsync(IGuild)
+  href: api/PacManBot.Services.StorageService.html#PacManBot_Services_StorageService_AllowsAutoresponseAsync_Discord_IGuild_
+  commentId: M:PacManBot.Services.StorageService.AllowsAutoresponseAsync(Discord.IGuild)
+  fullName: PacManBot.Services.StorageService.AllowsAutoresponseAsync(Discord.IGuild)
+  nameWithType: StorageService.AllowsAutoresponseAsync(IGuild)
+- uid: PacManBot.Services.StorageService.AllowsAutoresponseAsync*
+  name: AllowsAutoresponseAsync
+  href: api/PacManBot.Services.StorageService.html#PacManBot_Services_StorageService_AllowsAutoresponseAsync_
+  commentId: Overload:PacManBot.Services.StorageService.AllowsAutoresponseAsync
+  isSpec: "True"
+  fullName: PacManBot.Services.StorageService.AllowsAutoresponseAsync
+  nameWithType: StorageService.AllowsAutoresponseAsync
 - uid: PacManBot.Services.StorageService.DefaultPrefix
   name: DefaultPrefix
   href: api/PacManBot.Services.StorageService.html#PacManBot_Services_StorageService_DefaultPrefix
@@ -16987,6 +17178,19 @@ references:
   isSpec: "True"
   fullName: PacManBot.Services.StorageService.GetGuildPrefix
   nameWithType: StorageService.GetGuildPrefix
+- uid: PacManBot.Services.StorageService.GetGuildPrefixAsync(Discord.IGuild)
+  name: GetGuildPrefixAsync(IGuild)
+  href: api/PacManBot.Services.StorageService.html#PacManBot_Services_StorageService_GetGuildPrefixAsync_Discord_IGuild_
+  commentId: M:PacManBot.Services.StorageService.GetGuildPrefixAsync(Discord.IGuild)
+  fullName: PacManBot.Services.StorageService.GetGuildPrefixAsync(Discord.IGuild)
+  nameWithType: StorageService.GetGuildPrefixAsync(IGuild)
+- uid: PacManBot.Services.StorageService.GetGuildPrefixAsync*
+  name: GetGuildPrefixAsync
+  href: api/PacManBot.Services.StorageService.html#PacManBot_Services_StorageService_GetGuildPrefixAsync_
+  commentId: Overload:PacManBot.Services.StorageService.GetGuildPrefixAsync
+  isSpec: "True"
+  fullName: PacManBot.Services.StorageService.GetGuildPrefixAsync
+  nameWithType: StorageService.GetGuildPrefixAsync
 - uid: PacManBot.Services.StorageService.GetPrefix(Discord.Commands.ICommandContext)
   name: GetPrefix(ICommandContext)
   href: api/PacManBot.Services.StorageService.html#PacManBot_Services_StorageService_GetPrefix_Discord_Commands_ICommandContext_
@@ -17053,6 +17257,19 @@ references:
   isSpec: "True"
   fullName: PacManBot.Services.StorageService.RequiresPrefix
   nameWithType: StorageService.RequiresPrefix
+- uid: PacManBot.Services.StorageService.RequiresPrefixAsync(Discord.IChannel)
+  name: RequiresPrefixAsync(IChannel)
+  href: api/PacManBot.Services.StorageService.html#PacManBot_Services_StorageService_RequiresPrefixAsync_Discord_IChannel_
+  commentId: M:PacManBot.Services.StorageService.RequiresPrefixAsync(Discord.IChannel)
+  fullName: PacManBot.Services.StorageService.RequiresPrefixAsync(Discord.IChannel)
+  nameWithType: StorageService.RequiresPrefixAsync(IChannel)
+- uid: PacManBot.Services.StorageService.RequiresPrefixAsync*
+  name: RequiresPrefixAsync
+  href: api/PacManBot.Services.StorageService.html#PacManBot_Services_StorageService_RequiresPrefixAsync_
+  commentId: Overload:PacManBot.Services.StorageService.RequiresPrefixAsync
+  isSpec: "True"
+  fullName: PacManBot.Services.StorageService.RequiresPrefixAsync
+  nameWithType: StorageService.RequiresPrefixAsync
 - uid: PacManBot.Services.StorageService.SetGuildPrefix(System.UInt64,System.String)
   name: SetGuildPrefix(UInt64, String)
   href: api/PacManBot.Services.StorageService.html#PacManBot_Services_StorageService_SetGuildPrefix_System_UInt64_System_String_
