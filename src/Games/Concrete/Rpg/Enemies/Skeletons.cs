@@ -117,7 +117,6 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
             MaxLife = 100;
             DamageType = DamageType.Blunt;
             DamageResistance[DamageType.Magic] = 0.15;
-            DamageResistance[DamageType.Blunt] = 0.15;
         }
 
         public override string Attack(Entity target)
