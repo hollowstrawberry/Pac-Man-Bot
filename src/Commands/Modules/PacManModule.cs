@@ -39,7 +39,7 @@ namespace PacManBot.Commands.Modules
             if (existingGame != null)
             {
                 await ReplyAsync(existingGame.UserId.Contains(Context.User.Id) ?
-                    $"You're already playing a game in this channel!\nUse `{Prefix}cancel` if you want to cancel it." :
+                    $"You're already playing a game in this channel!\nUse `{Prefix}cancel` if you want to cancel it or `{Prefix}bump` to bring it to the bottom." :
                     $"There is already a different game in this channel!\nWait until it's finished or try doing `{Prefix}cancel`");
                 return;
             }
