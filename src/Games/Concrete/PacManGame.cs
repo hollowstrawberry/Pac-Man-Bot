@@ -101,7 +101,7 @@ namespace PacManBot.Games.Concrete
                     throw new InvalidMapException("Map is completely solid");
                 }
 
-                string[] lines = value.Split('\n');
+                string[] lines = value.NormalizeLineEndings().Split('\n').ToArray();
                 int width = lines[0].Length, height = lines.Length;
                 map = new char[width, height];
 

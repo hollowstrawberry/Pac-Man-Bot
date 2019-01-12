@@ -72,6 +72,13 @@ namespace PacManBot.Extensions
         }
 
 
+        /// <summary>Converts CRLF and CR line endings into LF line endings.</summary>
+        public static string NormalizeLineEndings(this string source)
+        {
+            return source.Replace("\r\n", "\n").Replace("\r", "\n");
+        }
+
+
         /// <summary>
         /// Returns the percentage similarity of two strings using a Levenshtein algorithm.
         /// </summary>
