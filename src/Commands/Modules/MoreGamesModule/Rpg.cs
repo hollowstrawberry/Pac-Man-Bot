@@ -88,6 +88,7 @@ namespace PacManBot.Commands.Modules
                 {
                     await ReplyAsync($"Unknown RPG command! Do `{Prefix}rpg manual` for game instructions," +
                         $" or `{Prefix}rpg help` for a list of commands.");
+                    return;
                 }
 
                 string response = await RpgUseActiveSkill(game, skill);
