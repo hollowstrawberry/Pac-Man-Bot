@@ -112,6 +112,8 @@ namespace PacManBot.Services
         {
             try
             {
+                if (!channel.BotCan(ChannelPermission.ReadMessageHistory)) return;
+
                 var message = reaction.Message.Value ?? await messageData.GetOrDownloadAsync();
 
                 if (reaction.UserId != client.CurrentUser.Id && message?.Author.Id == client.CurrentUser.Id)
