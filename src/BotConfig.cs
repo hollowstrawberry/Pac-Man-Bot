@@ -38,6 +38,9 @@ namespace PacManBot
         /// <summary>Number of shards to divide the bot into. 1 shard per 1000 guilds is enough.</summary>
         [DataMember] public readonly int shardCount = 1;
 
+        /// <summary>Whether the bot should close at midnight, in order for the OS to handle its restart.</summary>
+        [DataMember] public readonly bool scheduledRestart = false;
+
         /// <summary>How many messages to keep on memory per channel. Keep it to a reasonable amount.</summary>
         [DataMember] public readonly int messageCacheSize = 100;
 

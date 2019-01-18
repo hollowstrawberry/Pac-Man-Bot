@@ -283,7 +283,7 @@ namespace PacManBot.Games.Concrete
             bool continueInput = true;
 
             Dir newDir = Dir.None;
-            switch (input)
+            switch (input) // The enum values should be the same but I shouldn't rely on it, thus a switch
             {
                 case PacManInput.Up:    newDir = Dir.Up; break;
                 case PacManInput.Right: newDir = Dir.Right; break;
@@ -356,29 +356,11 @@ namespace PacManBot.Games.Concrete
                 // Ghosts
                 foreach (Ghost ghost in ghosts)
                 {
-                    bool didAi = false;
-                    while (true) // Checks player collision before and after AI
-                    {
-                        if (pacMan.pos == ghost.pos) // Collision
-                        {
-                            if (ghost.mode == GhostMode.Frightened)
-                            {
-                                ghost.pauseTime = 6;
-                                ghost.mode = CurrentGhostMode(); // Removes frightened State
-                                score += 200 * (int)Math.Pow(2, pacMan.ghostStreak); // Each ghost gives double the points of the last
-                                pacMan.ghostStreak++;
-                            }
-                            else State = State.Lose;
+                    if (pacMan.pos == ghost.pos) OnGhostCollision(ghost, ref continueInput);
+                    if (State != State.Active) return;
 
-                            continueInput = false;
-                            didAi = true;
-                        }
-
-                        if (didAi || State != State.Active) break; // Doesn't run AI twice, or if the user already won
-
-                        GhostAi(ghost); // Full ghost behavior
-                        didAi = true;
-                    }
+                    GhostAi(ghost);
+                    if (pacMan.pos == ghost.pos) OnGhostCollision(ghost, ref continueInput);
                 }
 
                 if (pacMan.power > 0) pacMan.power--;
@@ -391,6 +373,25 @@ namespace PacManBot.Games.Concrete
             {
                 games.Save(this);
             }
+        }
+
+
+        private void OnGhostCollision(Ghost ghost, ref bool continueInput)
+        {
+            if (ghost.mode == GhostMode.Frightened)
+            {
+                ghost.pauseTime = 6;
+                ghost.pos = ghost.origin;
+                ghost.mode = CurrentGhostMode(); // Removes frightened State
+                score += 200 * (int)Math.Pow(2, pacMan.ghostStreak); // Each ghost gives double the points of the last
+                pacMan.ghostStreak++;
+            }
+            else
+            {
+                State = State.Lose;
+            }
+
+            continueInput = false;
         }
 
 

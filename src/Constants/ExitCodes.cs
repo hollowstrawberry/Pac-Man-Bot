@@ -5,6 +5,7 @@ namespace PacManBot.Constants
     {
         public const int
             ReconnectionTimeout = 666,
-            ManualReboot = 42;
+            ManualReboot = 42,
+            ScheduledReboot = 2;
     }
 }

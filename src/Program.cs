@@ -89,6 +89,7 @@ namespace PacManBot
                 .AddSingleton<ScriptingService>();
 
             var provider = services.BuildServiceProvider();
+            foreach (var service in services) provider.GetService(service.ServiceType); // Initializes in order
 
             await commands.AddModulesAsync(Assembly.GetEntryAssembly(), provider);
             provider.Get<HelpService>().BuildCommandHelp();

@@ -74,7 +74,7 @@ namespace PacManBot.Commands.Modules
 
             // Waits a bit to finish up whatever it might be doing at the moment
             await Context.Message.AddReactionAsync(CustomEmoji.ELoading, Bot.DefaultOptions);
-            await Task.Delay(5000);
+            await Task.Delay(10_000);
             await AutoReactAsync();
             await Context.Message.RemoveReactionAsync(CustomEmoji.ELoading, Context.Client.CurrentUser, Bot.DefaultOptions);
 
@@ -359,12 +359,11 @@ namespace PacManBot.Commands.Modules
         [RequireContext(ContextType.Guild)]
         public async Task SendServerEmotes()
         {
-            string emotes = Context.Guild.Emotes
+            var emotes = Context.Guild.Emotes
                 .OrderBy(x => x.Animated)
-                .Select(x => x.Mention())
-                .JoinString("\n");
+                .Select(x => x.Mention());
 
-            await ReplyAsync($"```{emotes}```");
+            await ReplyAsync($"```{emotes.JoinString("\n")}```".Truncate(2000));
         }
 
 
