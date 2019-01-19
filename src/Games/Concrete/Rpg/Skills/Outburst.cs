@@ -13,11 +13,11 @@ namespace PacManBot.Games.Concrete.Rpg.Skills
 
         public override string Effect(RpgGame game)
         {
-            bool crit = Bot.Random.NextDouble() < game.player.CritChance;
+            bool crit = Program.Random.NextDouble() < game.player.CritChance;
             int dmg = Entity.ModifiedDamage(game.player.Damage * 2, crit);
             if (crit) dmg = (dmg * 2.0 / 3.0).Round(); // Crits too OP
 
-            var target = Bot.Random.Choose(game.Opponents);
+            var target = Program.Random.Choose(game.Opponents);
 
             string effectMessage = game.player.weapon.GetWeapon().AttackEffects(game.player, target);
             int dealt = target.Hit(dmg, game.player.DamageType, game.player.MagicType);

@@ -105,7 +105,7 @@ namespace PacManBot.Games
                         : Content.gameNotWinTexts;
                 }
 
-                return Message = Bot.Random.Choose(texts);
+                return Message = Program.Random.Choose(texts);
             }
 
             if (State == State.Active)

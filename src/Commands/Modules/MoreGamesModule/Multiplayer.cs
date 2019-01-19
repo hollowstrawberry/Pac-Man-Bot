@@ -43,7 +43,7 @@ namespace PacManBot.Commands.Modules
                     }
                     catch (Exception e) when (e is OperationCanceledException || e is TimeoutException || e is HttpException) { }
 
-                    await Task.Delay(Bot.Random.Next(2000, 3001));
+                    await Task.Delay(Program.Random.Next(2000, 3001));
                 }
 
                 Games.Remove(game);

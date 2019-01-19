@@ -114,7 +114,7 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
         public override string Attack(Entity target)
         {
             string result = base.Attack(target);
-            if (Bot.Random.OneIn(3)) result += $"\n{Name} attacks a second time!\n{base.Attack(target)}";
+            if (Program.Random.OneIn(3)) result += $"\n{Name} attacks a second time!\n{base.Attack(target)}";
             return result;
         }
     }
@@ -144,14 +144,14 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
         public override string Attack(Entity target)
         {
             string msg = "";
-            if (Bot.Random.OneIn(4) && rain == 0)
+            if (Program.Random.OneIn(4) && rain == 0)
             {
                 rain = 6;
                 msg += "\nA downpour started!";
             }
             if (rain > 0)
             {
-                int rainDmg = target.HasBuff<Immune>() ? 0 : Bot.Random.Next(3, 6);
+                int rainDmg = target.HasBuff<Immune>() ? 0 : Program.Random.Next(3, 6);
                 target.Life -= rainDmg;
                 msg += $"\n{target} takes {rainDmg} damage from the rain.";
                 if (!target.HasBuff<Wet>()) target.AddBuff<Wet>(2);
@@ -185,7 +185,7 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
 
         public override string Attack(Entity target)
         {
-            int heal = Bot.Random.Next(3, 9);
+            int heal = Program.Random.Next(3, 9);
             string msg = Life == MaxLife ? "" : $"\n{Name}'s roots recover {heal} HP.";
             Life += heal;
             return base.Attack(target) + msg;
@@ -214,12 +214,12 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
 
         public override string Attack(Entity target)
         {
-            if (Bot.Random.OneIn(3)) target.AddBuff<Burn>(2);
+            if (Program.Random.OneIn(3)) target.AddBuff<Burn>(2);
 
             var attacks = new string[3];
             for (int i = 0; i < attacks.Length; i++)
             {
-                bool crit = Bot.Random.NextDouble() < CritChance;
+                bool crit = Program.Random.NextDouble() < CritChance;
                 int dmg = target.Hit(ModifiedDamage(Damage, crit), DamageType, MagicType);
 
                 attacks[i] = $"{dmg}" + " (!)".If(crit);
@@ -251,7 +251,7 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
         public override string Attack(Entity target)
         {
             string msg = "";
-            double rand = Bot.Random.NextDouble();
+            double rand = Program.Random.NextDouble();
             if (rand < 0.3)
             {
                 msg += $"{target} got burned!";
@@ -291,7 +291,7 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
             var attacks = new List<string>(4);
             foreach (var element in EnumTraits<MagicType>.Values.Skip(1))
             {
-                bool crit = Bot.Random.NextDouble() < CritChance;
+                bool crit = Program.Random.NextDouble() < CritChance;
                 int dmg = ModifiedDamage(Damage / 4, crit);
                 attacks.Add($"{target.Hit(dmg, DamageType, element)}{"(!)".If(crit)}");
             }

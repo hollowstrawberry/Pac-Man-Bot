@@ -138,7 +138,7 @@ namespace PacManBot.Games.Concrete
             var moves = TryCompleteLines(Turn, 4) ?? TryCompleteLines(Turn.Opponent, 4) ?? // Win or avoid losing
                         TryCompleteFlyingLines(Turn) ?? TryCompleteFlyingLines(Turn.Opponent); // Forced win / forced lose situations
 
-            if (Time < 2 && board[2, 2] == Player.None && Bot.Random.Next(4) > 0) moves = new List<Pos> { (2, 2) };
+            if (Time < 2 && board[2, 2] == Player.None && Program.Random.Next(4) > 0) moves = new List<Pos> { (2, 2) };
 
             if (moves == null) // Lines of 3
             {
@@ -170,7 +170,7 @@ namespace PacManBot.Games.Concrete
                 }
             }
 
-            Pos choice = Bot.Random.Choose(moves);
+            Pos choice = Program.Random.Choose(moves);
             Input($"{(char)('A' + choice.x)}{1 + choice.y}");
         }
 

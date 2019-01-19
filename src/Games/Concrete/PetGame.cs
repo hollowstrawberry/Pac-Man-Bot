@@ -346,12 +346,12 @@ namespace PacManBot.Games.Concrete
             var now = DateTime.Now;
             double hours = (now - lastUpdated).TotalHours;
 
-            satiation = Math.Max(0, satiation - hours * Bot.Random.NextDouble(0.75, 1.25));
-            happiness = Math.Max(0, happiness - hours * 1.1 * Bot.Random.NextDouble(0.75, 1.25));
-            hygiene = Math.Max(0, hygiene - hours * 0.7 * Bot.Random.NextDouble(0.75, 1.25));
+            satiation = Math.Max(0, satiation - hours * Program.Random.NextDouble(0.75, 1.25));
+            happiness = Math.Max(0, happiness - hours * 1.1 * Program.Random.NextDouble(0.75, 1.25));
+            hygiene = Math.Max(0, hygiene - hours * 0.7 * Program.Random.NextDouble(0.75, 1.25));
 
-            double asleepMult = 4 * Bot.Random.NextDouble(0.75, 1.25);
-            double awakeMult = -1.2 * Bot.Random.NextDouble(0.75, 1.25);
+            double asleepMult = 4 * Program.Random.NextDouble(0.75, 1.25);
+            double awakeMult = -1.2 * Program.Random.NextDouble(0.75, 1.25);
             energy = Math.Max(0, energy + hours * (asleep ? asleepMult : awakeMult));
             if (asleep && energy >= MaxStat) // Wakes up
             {
@@ -482,12 +482,12 @@ namespace PacManBot.Games.Concrete
 
             do
             {
-                if (achievements.SuperPetting && Bot.Random.OneIn(4))
+                if (achievements.SuperPetting && Program.Random.OneIn(4))
                 {
                     super = true;
-                    pet = Bot.Random.Choose(Content.superPettingMessages);
+                    pet = Program.Random.Choose(Content.superPettingMessages);
                 }
-                else pet = Bot.Random.Choose(Content.pettingMessages);
+                else pet = Program.Random.Choose(Content.pettingMessages);
 
                 var match = Regex.Match(pet, @"{-?[0-9]+}");
                 if (match.Success)

@@ -48,7 +48,7 @@ namespace PacManBot.Games.Concrete.Rpg.Weapons
 
         public override string AttackEffects(RpgPlayer wielder, Entity target)
         {
-            int heal = Bot.Random.Next(3, 7);
+            int heal = Program.Random.Next(3, 7);
             wielder.Life += heal;
             return $"{wielder} restores {heal} HP!";
         }
@@ -68,9 +68,9 @@ namespace PacManBot.Games.Concrete.Rpg.Weapons
         public override string AttackEffects(RpgPlayer wielder, Entity target)
         {
             bool active = false;
-            if (Bot.Random.OneIn(10))
+            if (Program.Random.OneIn(10))
             {
-                var buff = Bot.Random.Choose(new[] { nameof(Buffs.CritBuff), nameof(Buffs.Fury) });
+                var buff = Program.Random.Choose(new[] { nameof(Buffs.CritBuff), nameof(Buffs.Fury) });
                 if (!wielder.HasBuff(buff))
                 {
                     active = true;
@@ -96,7 +96,7 @@ namespace PacManBot.Games.Concrete.Rpg.Weapons
 
         public override string AttackEffects(RpgPlayer wielder, Entity target)
         {
-            if (Bot.Random.OneIn(3) && !target.HasBuff<Blinded>())
+            if (Program.Random.OneIn(3) && !target.HasBuff<Blinded>())
             {
                 target.AddBuff<Blinded>(5);
                 return $"{target} is blinded by awesomeness!";

@@ -335,7 +335,7 @@ namespace PacManBot.Games.Concrete
                     pellets--;
                     if ((pellets == FruitTrigger1 || pellets == FruitTrigger2) && fruitSpawnPos.x >= 0)
                     {
-                        fruitTimer = Bot.Random.Next(25, 30 + 1);
+                        fruitTimer = Program.Random.Next(25, 30 + 1);
                     }
 
                     score += (tile == CharPowerPellet) ? 50 : 10;
@@ -615,7 +615,7 @@ namespace PacManBot.Games.Concrete
             else if (ghost.mode == GhostMode.Frightened) // Turns randomly at intersections
             {
                 var dirs = AllDirs.Where(x => x != ghost.dir.Opposite() && NonSolid(ghost.pos + x)).ToArray();
-                ghost.dir = Bot.Random.Choose(dirs);
+                ghost.dir = Program.Random.Choose(dirs);
             }
             else // Track target
             {

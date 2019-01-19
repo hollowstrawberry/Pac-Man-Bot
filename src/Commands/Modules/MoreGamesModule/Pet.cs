@@ -150,7 +150,7 @@ namespace PacManBot.Commands.Modules
         public async Task<string> PetFeed(PetGame pet, string args)
         {
             if (!pet.TryFeed()) return $"{CustomEmoji.Cross} Your pet is already full! (-1 energy)";
-            await Context.Message.AddReactionAsync(Bot.Random.Choose(Content.petFoodEmotes).ToEmoji());
+            await Context.Message.AddReactionAsync(Program.Random.Choose(Content.petFoodEmotes).ToEmoji());
             return null;
         }
 
@@ -159,7 +159,7 @@ namespace PacManBot.Commands.Modules
         public async Task<string> PetClean(PetGame pet, string args)
         {
             if (!pet.TryClean()) return $"{CustomEmoji.Cross} Your pet is already clean! (-1 energy)";
-            await Context.Message.AddReactionAsync(Bot.Random.Choose(Content.petCleanEmotes).ToEmoji());
+            await Context.Message.AddReactionAsync(Program.Random.Choose(Content.petCleanEmotes).ToEmoji());
             return null;
         }
 
@@ -182,7 +182,7 @@ namespace PacManBot.Commands.Modules
 
             if (pet.TryPlay())
             {
-                var playEmote = Bot.Random.Choose(Content.petPlayEmotes).ToEmoji();
+                var playEmote = Program.Random.Choose(Content.petPlayEmotes).ToEmoji();
 
                 if (otherPet == null) await Context.Message.AddReactionAsync(playEmote);
                 else
@@ -219,7 +219,7 @@ namespace PacManBot.Commands.Modules
 
             string message = pet.asleep ? "Your pet is already sleeping." : "Your pet is now asleep.";
             if (!pet.asleep) pet.ToggleSleep();
-            return Task.FromResult($"{Bot.Random.Choose(Content.petSleepEmotes)} {message}");
+            return Task.FromResult($"{Program.Random.Choose(Content.petSleepEmotes)} {message}");
         }
 
 

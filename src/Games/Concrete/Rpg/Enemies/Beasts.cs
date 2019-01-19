@@ -135,7 +135,7 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
         public override string Attack(Entity target)
         {
             string msg = "";
-            if (!target.HasBuff<Vulnerable>() && Bot.Random.OneIn(3))
+            if (!target.HasBuff<Vulnerable>() && Program.Random.OneIn(3))
             {
                 msg = $"{target} is now vulnerable!";
                 target.AddBuff<Vulnerable>(3);
@@ -168,7 +168,7 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
         public override string Attack(Entity target)
         {
             string msg = "";
-            if (!target.HasBuff<Blinded>() && Bot.Random.OneIn(3))
+            if (!target.HasBuff<Blinded>() && Program.Random.OneIn(3))
             {
                 msg = $"{target} got slime in their eyes!";
                 target.AddBuff<Blinded>(3);
@@ -202,7 +202,7 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
             {
                 for (int i = 0; i < attacks.Length; i++)
                 {
-                    int dmg = Bot.Random.Next(1, 3);
+                    int dmg = Program.Random.Next(1, 3);
                     target.Life -= dmg;
                     attacks[i] = dmg;
                 }

@@ -254,13 +254,13 @@ namespace PacManBot.Games.Concrete
                 }
             }
 
-            Bot.Random.Shuffle(drawPile);
+            Program.Random.Shuffle(drawPile);
             discardPile = new List<Card> { drawPile.Pop() };
 
             while (TopCard.CardsToDraw > 0 || TopCard.Type == CardType.Skip) // Invalid first cards
             {
                 drawPile.Add(discardPile.Pop());
-                drawPile.Swap(drawPile.Count - 1, Bot.Random.Next(drawPile.Count - 1));
+                drawPile.Swap(drawPile.Count - 1, Program.Random.Next(drawPile.Count - 1));
                 discardPile.Add(drawPile.Pop());
             }
 
@@ -423,7 +423,7 @@ namespace PacManBot.Games.Concrete
                 {
                     State = State.Completed;
                     Winner = Turn;
-                    if (CurrentPlayer.id == client.CurrentUser.Id) gameLog.Add($"\n {Bot.Random.Choose(Content.gameWinTexts)}");
+                    if (CurrentPlayer.id == client.CurrentUser.Id) gameLog.Add($"\n {Program.Random.Choose(Content.gameWinTexts)}");
                     return;
                 }
 
@@ -464,11 +464,11 @@ namespace PacManBot.Games.Concrete
                 Card choice;
 
                 var niceCards = playable.Where(x => x.Type >= CardType.Skip).ToList();
-                if (players[FollowingTurn].cards.Count <= 2 && niceCards.Count > 0) choice = Bot.Random.Choose(niceCards);
+                if (players[FollowingTurn].cards.Count <= 2 && niceCards.Count > 0) choice = Program.Random.Choose(niceCards);
                 else
                 {
                     var noWilds = playable.Where(x => x.Color != CardColor.Black).ToList();
-                    choice = Bot.Random.Choose(noWilds.Count > 0 ? noWilds : playable); // Leaves wilds for last
+                    choice = Program.Random.Choose(noWilds.Count > 0 ? noWilds : playable); // Leaves wilds for last
                 }
 
                 if (choice.Color == CardColor.Black && CurrentPlayer.cards.Count > 1)
@@ -477,11 +477,11 @@ namespace PacManBot.Games.Concrete
                 }
 
                 input = choice.ToString();
-                if (CurrentPlayer.cards.Count == 2 && !Bot.Random.OneIn(10)) input += "uno"; // Sometimes "forgets" to say uno
+                if (CurrentPlayer.cards.Count == 2 && !Program.Random.OneIn(10)) input += "uno"; // Sometimes "forgets" to say uno
             }
 
             var forgot = players.FirstOrDefault(x => x.uno == UnoState.Forgot);
-            if (forgot != null && (forgot.User.IsBot || !Bot.Random.OneIn(3))) // Sometimes calls out
+            if (forgot != null && (forgot.User.IsBot || !Program.Random.OneIn(3))) // Sometimes calls out
             {
                 Callout(forgot);
             }
@@ -492,10 +492,10 @@ namespace PacManBot.Games.Concrete
         private static CardColor HighestColor(List<Card> cards)
         {
             var groups = cards.GroupBy(c => c.Color).Where(x => x.Key != CardColor.Black);
-            if (groups.Count() == 0) return Bot.Random.Choose(EnumTraits<CardColor>.Values);
+            if (groups.Count() == 0) return Program.Random.Choose(EnumTraits<CardColor>.Values);
 
             int max = groups.Select(x => x.Count()).Max();
-            return Bot.Random.Choose(groups.Where(x => x.Count() == max).Select(x => x.Key).ToList());
+            return Program.Random.Choose(groups.Where(x => x.Count() == max).Select(x => x.Key).ToList());
         }
 
 
@@ -582,7 +582,7 @@ namespace PacManBot.Games.Concrete
             {
                 if (drawPile.Count == 0)
                 {
-                    Bot.Random.Shuffle(discardPile);
+                    Program.Random.Shuffle(discardPile);
                     drawPile = discardPile.ToList();
                     discardPile = new List<Card> { drawPile.Pop() };
                     gameLog.Add("• Shuffled and turned over the discard pile.");

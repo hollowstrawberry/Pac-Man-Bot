@@ -72,7 +72,7 @@ namespace PacManBot.Games.Concrete.Rpg.Weapons
 
         public override string AttackEffects(RpgPlayer wielder, Entity target)
         {
-            if (Bot.Random.OneIn(5) && !target.HasBuff<Burn>())
+            if (Program.Random.OneIn(5) && !target.HasBuff<Burn>())
             {
                 target.AddBuff<Burn>(4);
                 return $"{target} got burned!";

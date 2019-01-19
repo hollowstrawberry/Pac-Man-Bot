@@ -118,7 +118,7 @@ namespace PacManBot.Games.Concrete.Rpg
         /// <summary>Deals damage to another entity applying damage calculations, and returns an attack message.</summary>
         public virtual string Attack(Entity target)
         {
-            bool crit = Bot.Random.NextDouble() < CritChance;
+            bool crit = Program.Random.NextDouble() < CritChance;
             int dealt = target.Hit(ModifiedDamage(Damage, crit), DamageType, MagicType);
 
             return $"{this} dealt {dealt} damage to {target}. {"Critical hit!".If(crit)} ";
@@ -128,7 +128,7 @@ namespace PacManBot.Games.Concrete.Rpg
         /// <summary>Applies final damage modifications to use on an attack.</summary>
         public static int ModifiedDamage(int baseDmg, bool crit)
         {
-            return baseDmg <= 0 ? 0 : (baseDmg * (crit ? 2 : 1) * Bot.Random.NextDouble(0.85, 1.15)).Ceiling();
+            return baseDmg <= 0 ? 0 : (baseDmg * (crit ? 2 : 1) * Program.Random.NextDouble(0.85, 1.15)).Ceiling();
         }
 
 

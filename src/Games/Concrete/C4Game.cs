@@ -179,7 +179,7 @@ namespace PacManBot.Games.Concrete
             int leastLoses = moves.Min(x => x.Value);
             var finalOptions = moves.Where(x => x.Value == leastLoses).Select(x => x.Key).ToList();
 
-            Input($"{1 + Bot.Random.Choose(finalOptions)}");
+            Input($"{1 + Program.Random.Choose(finalOptions)}");
         }
 
 

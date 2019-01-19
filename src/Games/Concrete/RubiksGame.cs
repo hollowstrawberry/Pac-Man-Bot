@@ -225,7 +225,7 @@ namespace PacManBot.Games.Concrete
         public void Scramble(int amount = 40)
         {
             var turns = new string[] { "F", "U", "R", "L", "D", "B", };
-            var moves = new Range(amount).Select(x => new Move(Bot.Random.Choose(turns), Bot.Random.Next(1, 4)));
+            var moves = new Range(amount).Select(x => new Move(Program.Random.Choose(turns), Program.Random.Next(1, 4)));
 
             Time = -amount; // Done before so it saves the game at 0
             DoMoves(moves);

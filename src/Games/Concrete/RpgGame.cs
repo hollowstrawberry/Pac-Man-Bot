@@ -117,16 +117,16 @@ namespace PacManBot.Games.Concrete
                 .Take(10)
                 .ToList();
 
-            enemies.Add(Bot.Random.Choose(possible).MakeNew());
+            enemies.Add(Program.Random.Choose(possible).MakeNew());
 
-            if (!Bot.Random.OneIn(player.Level - enemies[0].Level)) // 2 levels below
+            if (!Program.Random.OneIn(player.Level - enemies[0].Level)) // 2 levels below
             {
                 possible = possible.Where(x => x.Level <= player.Level - 2).ToList();
-                enemies.Add(Bot.Random.Choose(possible).MakeNew());
+                enemies.Add(Program.Random.Choose(possible).MakeNew());
 
-                if (!Bot.Random.OneIn(Math.Max(0, player.Level - enemies[1].Level - 3))) // 5 levels below
+                if (!Program.Random.OneIn(Math.Max(0, player.Level - enemies[1].Level - 3))) // 5 levels below
                 {
-                    enemies.Add(Bot.Random.Choose(possible).MakeNew());
+                    enemies.Add(Program.Random.Choose(possible).MakeNew());
                 }
             }
         }
