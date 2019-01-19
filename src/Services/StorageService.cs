@@ -139,16 +139,20 @@ namespace PacManBot.Services
         }
 
         /// <summary>Whether the specified channel requires a prefix for commands.
-        /// Provides the benefit of an asynchronous database access if one is necessary.</summary>
+        /// Provides the benefit of an asynchronous database access if it is necessary.</summary>
         public async Task<bool> RequiresPrefixAsync(IChannel channel)
         {
             if (cachedNeedsPrefix.TryGetValue(channel.Id, out bool needs)) return needs;
 
-            using (var db = MakeDbContext())
+            if (channel is IGuildChannel)
             {
-                needs = channel is IGuildChannel && await db.NoPrefixGuildChannels.FindAsync(channel.Id) == null;
+                using (var db = MakeDbContext())
+                {
+                    needs = await db.NoPrefixGuildChannels.FindAsync(channel.Id) == null;
+                }
             }
-
+            else needs = false;
+            
             cachedNeedsPrefix.TryAdd(channel.Id, needs);
             return needs;
         }
@@ -192,7 +196,7 @@ namespace PacManBot.Services
         }
 
         /// <summary>Whether the specified guild is set to allow message autoresponses.
-        /// Provides the benefit of an asynchronous database access if one is necessary.</summary>
+        /// Provides the benefit of an asynchronous database access if it is necessary.</summary>
         public async Task<bool> AllowsAutoresponseAsync(IGuild guild)
         {
             if (guild == null) return true;

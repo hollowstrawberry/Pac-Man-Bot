@@ -29,6 +29,7 @@ namespace PacManBot.Services
             TypeNameHandling = TypeNameHandling.Auto,
         };
 
+        private readonly IServiceProvider services;
         private readonly LoggingService logger;
         private readonly ConcurrentDictionary<ulong, IChannelGame> games;
         private readonly ConcurrentDictionary<(ulong, Type), IUserGame> userGames;
@@ -42,9 +43,11 @@ namespace PacManBot.Services
         public IEnumerable<IBaseGame> AllGames => AllChannelGames.Cast<IBaseGame>().Concat(AllUserGames.Cast<IBaseGame>());
 
 
-        public GameService(LoggingService logger)
+        public GameService(IServiceProvider services, LoggingService logger)
         {
+            this.services = services;
             this.logger = logger;
+
             games = new ConcurrentDictionary<ulong, IChannelGame>();
             userGames = new ConcurrentDictionary<(ulong, Type), IUserGame>();
         }
@@ -126,7 +129,7 @@ namespace PacManBot.Services
 
 
         /// <summary>Reload the entire game collection from disk.</summary>
-        public void LoadGames(IServiceProvider gameServices)
+        public void LoadGames()
         {
             games.Clear();
             userGames.Clear();
@@ -149,7 +152,7 @@ namespace PacManBot.Services
                     {
                         Type gameType = StoreableGameTypes.First(x => file.Contains(x.key)).type;
                         var game = (IStoreableGame)JsonConvert.DeserializeObject(File.ReadAllText(file), gameType, GameJsonSettings);
-                        game.PostDeserialize(gameServices);
+                        game.PostDeserialize(services);
 
                         if (game is IUserGame uGame) userGames.TryAdd((uGame.OwnerId, uGame.GetType()), uGame);
                         else if (game is IChannelGame cGame) games.TryAdd(cGame.ChannelId, cGame);

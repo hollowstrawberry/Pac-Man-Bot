@@ -19,26 +19,29 @@ namespace PacManBot.Services
     /// </summary>
     public class InputService
     {
+        private readonly IServiceProvider services;
         private readonly DiscordShardedClient client;
         private readonly CommandService commands;
         private readonly StorageService storage;
         private readonly LoggingService logger;
         private readonly GameService games;
-        private readonly BotConfig botConfig;
-        private readonly IServiceProvider provider;
+
+        private readonly ulong[] bannedChannels;
 
         private static readonly Regex WakaRegex = new Regex(@"^(w+a+k+a+\W*)+$", RegexOptions.IgnoreCase);
 
 
-        public InputService(IServiceProvider provider)
+        public InputService(IServiceProvider services, DiscordShardedClient client, CommandService commands,
+            StorageService storage, LoggingService logger, GameService games, BotConfig config)
         {
-            this.provider = provider;
-            client = provider.Get<DiscordShardedClient>();
-            commands = provider.Get<CommandService>();
-            storage = provider.Get<StorageService>();
-            logger = provider.Get<LoggingService>();
-            games = provider.Get<GameService>();
-            botConfig = provider.Get<BotConfig>();
+            this.services = services;
+            this.client = client;
+            this.commands = commands;
+            this.storage = storage;
+            this.logger = logger;
+            this.games = games;   
+
+            bannedChannels = config.bannedChannels;
         }
 
 
@@ -88,7 +91,7 @@ namespace PacManBot.Services
         {
             try // Wrap discarded async methods in a try block so that exceptions don't go silent
             {
-                if (botConfig.bannedChannels.Contains(genericMessage.Channel.Id))
+                if (bannedChannels.Contains(genericMessage.Channel.Id))
                 {
                     if (genericMessage.Channel is IGuildChannel guildChannel) await guildChannel.Guild.LeaveAsync();
                     return;
@@ -142,7 +145,7 @@ namespace PacManBot.Services
                 || message.HasStringPrefix($"{prefix} ", ref commandPosition) || message.HasStringPrefix(prefix, ref commandPosition)
                 || !(await storage.RequiresPrefixAsync(context.Channel)))
             {
-                var result = await commands.ExecuteAsync(context, commandPosition, provider);
+                var result = await commands.ExecuteAsync(context, commandPosition, services);
 
                 if (result.IsSuccess) return true;
                 else if (!result.ErrorReason.Contains("Unknown command"))

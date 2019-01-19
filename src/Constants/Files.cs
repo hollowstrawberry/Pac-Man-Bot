@@ -12,6 +12,7 @@
             FeedbackLog = "logs/feedback.txt",
             CustomMapLog = "logs/custom.txt",
             GameFolder = "games/",
-            GameExtension = ".json";
+            GameExtension = ".json",
+            ManualRestart = "restart";
     }
 }

@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using PacManBot.Utils;
 using PacManBot.Services;
 using PacManBot.Constants;
 using PacManBot.Extensions;
@@ -18,11 +19,15 @@ using PacManBot.Extensions;
 namespace PacManBot
 {
     /// <summary>
-    /// Program that sets up and runs the bot.
+    /// Program that sets up and starts the bot.
     /// </summary>
     public static class Program
     {
+        /// <summary>The bot program's displayed version.</summary>
         public static readonly string Version = Assembly.GetEntryAssembly().GetName().Version.ToString().TrimEnd(".0");
+
+        /// <summary>The random number generator used throughout the program.</summary>
+        public static readonly ConcurrentRandom Random = new ConcurrentRandom();
 
 
         static async Task Main()
@@ -38,29 +43,29 @@ namespace PacManBot
 
 
             // Set up configuration
-            BotConfig botConfig;
+            BotConfig config;
             try
             {
-                botConfig = JsonConvert.DeserializeObject<BotConfig>(File.ReadAllText(Files.Config));
-                botConfig.LoadContent(File.ReadAllText(Files.Contents));
+                config = JsonConvert.DeserializeObject<BotConfig>(File.ReadAllText(Files.Config));
+                config.LoadContent(File.ReadAllText(Files.Contents));
             }
             catch (JsonReaderException e)
             {
                 throw new InvalidOperationException("The file does not contain valid JSON. Correct the mistake and try again.", e);
             }
 
-            if (string.IsNullOrWhiteSpace(botConfig.discordToken))
+            if (string.IsNullOrWhiteSpace(config.discordToken))
             {
                 throw new InvalidOperationException(
-                    $"Missing {nameof(botConfig.discordToken)} in {Files.Config}: Bot can't run");
+                    $"Missing {nameof(config.discordToken)} in {Files.Config}: Bot can't run");
             }
 
 
             var clientConfig = new DiscordSocketConfig {
-                TotalShards = botConfig.shardCount,
-                LogLevel = botConfig.clientLogLevel,
-                MessageCacheSize = botConfig.messageCacheSize,
-                ConnectionTimeout = botConfig.connectionTimeout,
+                TotalShards = config.shardCount,
+                LogLevel = config.clientLogLevel,
+                MessageCacheSize = config.messageCacheSize,
+                ConnectionTimeout = config.connectionTimeout,
                 DefaultRetryMode = RetryMode.RetryRatelimit,
             };
 
@@ -68,7 +73,7 @@ namespace PacManBot
 
 
             var commandConfig = new CommandServiceConfig {
-                LogLevel = botConfig.commandLogLevel,
+                LogLevel = config.commandLogLevel,
                 DefaultRunMode = RunMode.Async,
                 CaseSensitiveCommands = false,
             };
@@ -76,27 +81,28 @@ namespace PacManBot
             var commands = new CommandService(commandConfig);
 
             // Set up services
-            var services = new ServiceCollection()
+            var serviceCollection = new ServiceCollection()
+                .AddSingleton<Bot>()
+                .AddSingleton(config)
                 .AddSingleton(client)
                 .AddSingleton(commands)
-                .AddSingleton(botConfig)
                 .AddSingleton<LoggingService>()
                 .AddSingleton<StorageService>()
+                .AddSingleton<InputService>()
                 .AddSingleton<GameService>()
                 .AddSingleton<HelpService>()
-                .AddSingleton<InputService>()
                 .AddSingleton<SchedulingService>()
                 .AddSingleton<ScriptingService>();
 
-            var provider = services.BuildServiceProvider();
-            foreach (var service in services) provider.GetService(service.ServiceType); // Initializes in order
+            var services = serviceCollection.BuildServiceProvider();
 
-            await commands.AddModulesAsync(Assembly.GetEntryAssembly(), provider);
-            provider.Get<HelpService>().BuildCommandHelp();
+            await commands.AddModulesAsync(Assembly.GetEntryAssembly(), services);
+            services.Get<HelpService>().BuildCommandHelp();
+            services.Get<GameService>().LoadGames();
 
 
             // Let's go
-            await new Bot(botConfig, provider).StartAsync();
+            await services.Get<Bot>().StartAsync();
 
             await Task.Delay(-1);
         }

@@ -7,7 +7,7 @@ namespace PacManBot.Services
 {
     /// <summary>
     /// Executes code and returns the result using predefined options, always garbage-collecting afterwards.
-    /// Thank you to oatmeal and amibu
+    /// Thank you to oatmeal and amibu.
     /// </summary>
     public class ScriptingService
     {

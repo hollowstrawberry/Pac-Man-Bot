@@ -23,13 +23,13 @@ namespace PacManBot.Commands.Modules
     [RequireDeveloper, BetterRequireBotPermission(ChannelPermission.AddReactions)]
     public class DevModule : BaseCustomModule
     {
-        private BotConfig internalConfig;
+        private Bot internalBot;
         private ScriptingService internalScripting;
         private PacManDbContext internalDb;
 
-        public BotConfig Config => internalConfig ?? (internalConfig = Services.Get<BotConfig>());
+        public Bot Bot => internalBot ?? (internalBot = Services.Get<Bot>());
         public ScriptingService Scripting => internalScripting ?? (internalScripting = Services.Get<ScriptingService>());
-        public PacManDbContext Db => internalDb ?? (internalDb = new PacManDbContext(Config.dbConnectionString));
+        public PacManDbContext Db => internalDb ?? (internalDb = new PacManDbContext(Bot.Config.dbConnectionString));
 
 
         public DevModule(IServiceProvider services) : base(services) {}
@@ -66,19 +66,14 @@ namespace PacManBot.Commands.Modules
 
 
         [Command("$restart"), Alias("$shutdown"), HideHelp]
-        [Summary("Stops all input for a few seconds then shuts down the bot. Developer only.")]
+        [Summary("Shuts down the bot. Developer only.")]
         public async Task ShutDown()
         {
-            Services.Get<InputService>().StopListening();
-            await Logger.Log(LogSeverity.Info, LogSource.Owner, "Preparing to shut down.");
+            var message = await ReplyAsync(CustomEmoji.Loading);
+            File.WriteAllText(Files.ManualRestart, $"{message.Channel.Id}/{message.Id}");
 
-            // Waits a bit to finish up whatever it might be doing at the moment
-            await Context.Message.AddReactionAsync(CustomEmoji.ELoading, Bot.DefaultOptions);
-            await Task.Delay(10_000);
-            await AutoReactAsync();
-            await Context.Message.RemoveReactionAsync(CustomEmoji.ELoading, Context.Client.CurrentUser, Bot.DefaultOptions);
-
-            await Logger.Log(LogSeverity.Info, LogSource.Owner, "Shutting down.");
+            await Logger.Log(LogSeverity.Info, LogSource.Owner, "Restarting");
+            await Bot.StopAsync();
             Environment.Exit(ExitCodes.ManualReboot);
         }
 
@@ -321,7 +316,7 @@ namespace PacManBot.Commands.Modules
         {
             try
             {
-                Config.LoadContent(File.ReadAllText(Files.Contents));
+                Bot.Config.LoadContent(File.ReadAllText(Files.Contents));
                 await Logger.Log(LogSeverity.Info, "Reloaded bot content");
                 await AutoReactAsync();
             }

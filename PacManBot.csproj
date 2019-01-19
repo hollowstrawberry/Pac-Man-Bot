@@ -6,7 +6,7 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <PreserveCompilationContext>false</PreserveCompilationContext>
     <RootNamespace>PacManBot</RootNamespace>
-    <Version>4.0.13</Version>
+    <Version>4.0.15</Version>
     <Authors>Samuel Briones Molina</Authors>
     <Product>Pac-Man Bot</Product>
     <Company></Company>

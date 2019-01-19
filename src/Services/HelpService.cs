@@ -130,11 +130,11 @@ namespace PacManBot.Services
 
 
 
-        public HelpService(IServiceProvider services)
+        public HelpService(IServiceProvider services, CommandService commands, StorageService storage)
         {
             this.services = services;
-            commands = services.Get<CommandService>();
-            storage = services.Get<StorageService>();
+            this.commands = commands;
+            this.storage = storage;
         }
 
 

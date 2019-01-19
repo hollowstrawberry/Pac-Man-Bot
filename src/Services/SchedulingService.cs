@@ -12,37 +12,50 @@ using PacManBot.Extensions;
 
 namespace PacManBot.Services
 {
+
     /// <summary>
     /// Routinely executes specific actions such as connection checks.
     /// </summary>
     public class SchedulingService
     {
         private readonly DiscordShardedClient client;
-        private readonly StorageService storage;
         private readonly LoggingService logger;
         private readonly InputService input;
         private readonly GameService games;
+        private readonly bool scheduledRestart;
 
-        public List<Timer> timers;
         private CancellationTokenSource cancelShutdown = new CancellationTokenSource();
 
+        /// <summary>All active scheduled actions.</summary>
+        public List<Timer> timers;
 
-        public SchedulingService(IServiceProvider services)
+        /// <summary>Fired when a scheduled restart is due.</summary>
+        public event RestartHandler Restart;
+        public delegate Task RestartHandler();
+        
+
+        public SchedulingService(BotConfig config, DiscordShardedClient client,
+            LoggingService logger, GameService games, InputService input)
         {
-            client = services.Get<DiscordShardedClient>();
-            storage = services.Get<StorageService>();
-            logger = services.Get<LoggingService>();
-            games = services.Get<GameService>();
-            input = services.Get<InputService>();
-            var config = services.Get<BotConfig>();
+            this.client = client;
+            this.logger = logger;
+            this.games = games;
+            this.input = input;
 
+            scheduledRestart = config.scheduledRestart;
+        }
+
+
+        /// <summary>Starts scheduling all predefined actions.</summary>
+        public void StartTimers()
+        {
             timers = new List<Timer>
             {
-                new Timer(CheckConnection, null, TimeSpan.FromMinutes(10), TimeSpan.FromMinutes(10)),
+                new Timer(CheckConnection, null, TimeSpan.FromMinutes(5), TimeSpan.FromMinutes(10)),
                 new Timer(DeleteOldGames, null, TimeSpan.Zero, TimeSpan.FromSeconds(10))
             };
 
-            if (config.scheduledRestart)
+            if (scheduledRestart)
             {
                 TimeSpan timeToGo = TimeSpan.FromDays(1) - DateTime.Now.TimeOfDay;
                 if (timeToGo < TimeSpan.FromMinutes(60)) timeToGo += TimeSpan.FromDays(1);
@@ -51,6 +64,19 @@ namespace PacManBot.Services
             }
 
             client.ShardConnected += OnShardConnected;
+        }
+
+
+        /// <summary>Cease all scheduled actions</summary>
+        public void StopTimers()
+        {
+            client.ShardConnected -= OnShardConnected;
+
+            cancelShutdown.Cancel();
+            cancelShutdown = new CancellationTokenSource();
+
+            foreach(var timer in timers) timer.Dispose();
+            timers = new List<Timer>();
         }
 
 
@@ -67,8 +93,7 @@ namespace PacManBot.Services
 
 
 
-        /// <summary>Scheduled action that ensures the connection to Discord and, if not, prepares a reboot.</summary>
-        public async void CheckConnection(object state)
+        private async void CheckConnection(object state)
         {
             if (client.AllShardsConnected()) return;
 
@@ -77,7 +102,7 @@ namespace PacManBot.Services
             try
             {
                 await Task.Delay(TimeSpan.FromMinutes(2), cancelShutdown.Token);
-                await logger.Log(LogSeverity.Critical, LogSource.Scheduling, "Reconnection timed out. Shutting down...");
+                await logger.Log(LogSeverity.Critical, LogSource.Scheduling, "Reconnection timed out. Shutting down");
                 Environment.Exit(ExitCodes.ReconnectionTimeout);
             }
             catch (OperationCanceledException)
@@ -87,8 +112,7 @@ namespace PacManBot.Services
         }
 
 
-        /// <summary>Scheduled action that scans existing games and removes expired ones.</summary>
-        public async void DeleteOldGames(object state)
+        private async void DeleteOldGames(object state)
         {
             var now = DateTime.Now;
             int count = 0;
@@ -127,15 +151,13 @@ namespace PacManBot.Services
         }
 
 
-        /// <summary>Scheduled task that prepares a safe shutdown in order to restart.</summary>
-        public async void RestartBot(object state)
+        private async void RestartBot(object state)
         {
-            input.StopListening();
+            if (Restart == null) return;
 
-            // Just waits a bit to finish up whatever it might be doing at the moment
-            await logger.Log(LogSeverity.Info, LogSource.Scheduling, "Preparing to shut down.");
-            await Task.Delay(10_000);
-            await logger.Log(LogSeverity.Info, LogSource.Scheduling, "Shutting down.");
+            await logger.Log(LogSeverity.Info, LogSource.Scheduling, "Preparing to restart");
+            await Restart.Invoke();
+            await logger.Log(LogSeverity.Info, LogSource.Scheduling, "Restarting");
             Environment.Exit(ExitCodes.ScheduledReboot);
         }
     }
