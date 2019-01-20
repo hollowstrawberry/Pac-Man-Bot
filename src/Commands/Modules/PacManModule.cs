@@ -39,8 +39,8 @@ namespace PacManBot.Commands.Modules
             if (existingGame != null)
             {
                 await ReplyAsync(existingGame.UserId.Contains(Context.User.Id) ?
-                    $"You're already playing a game in this channel!\nUse `{Prefix}cancel` if you want to cancel it or `{Prefix}bump` to bring it to the bottom." :
-                    $"There is already a different game in this channel!\nWait until it's finished or try doing `{Prefix}cancel`");
+                    $"You're already playing a game in this channel!\nUse `{Context.Prefix}cancel` if you want to cancel it or `{Context.Prefix}bump` to bring it to the bottom." :
+                    $"There is already a different game in this channel!\nWait until it's finished or try doing `{Context.Prefix}cancel`");
                 return;
             }
 
@@ -62,14 +62,14 @@ namespace PacManBot.Commands.Modules
             catch (InvalidMapException e) when (customMap != null)
             {
                 await Logger.Log(LogSeverity.Debug, LogSource.Game, $"Failed to create custom game: {e.Message}");
-                await ReplyAsync($"The provided map is invalid: {e.Message}.\nUse the `{Prefix}custom` command for more info.");
+                await ReplyAsync($"The provided map is invalid: {e.Message}.\nUse the `{Context.Prefix}custom` command for more info.");
                 return;
             }
             catch (Exception e)
             {
                 await Logger.Log(LogSeverity.Error, LogSource.Game, $"{e}");
                 await ReplyAsync("There was an error starting the game. " +
-                                 $"Please try again or contact the author of the bot using `{Prefix}feedback`");
+                                 $"Please try again or contact the author of the bot using `{Context.Prefix}feedback`");
                 return;
             }
 
@@ -139,7 +139,7 @@ namespace PacManBot.Commands.Modules
             }
             if (min < 1 || max < 1 || max < min)
             {
-                await ReplyAsync($"Invalid range of scores. Try `{Prefix}help lb` for more info");
+                await ReplyAsync($"Invalid range of scores. Try `{Context.Prefix}help lb` for more info");
                 return;
             }
 
@@ -230,7 +230,7 @@ namespace PacManBot.Commands.Modules
         [Summary("Using this command will display detailed help about the custom Pac-Man maps that you can design and play yourself!")]
         public async Task SayCustomMapHelp()
         {
-            string message = Content.customHelp.Replace("{prefix}", Prefix);
+            string message = Content.customHelp.Replace("{prefix}", Context.Prefix);
 
             var embed = new EmbedBuilder { Color = Colors.PacManYellow };
             foreach (var (name, url) in Content.customLinks)

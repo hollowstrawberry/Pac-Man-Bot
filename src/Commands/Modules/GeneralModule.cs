@@ -36,7 +36,7 @@ namespace PacManBot.Commands.Modules
             var embed = new EmbedBuilder
             {
                 Title = $"{CustomEmoji.PacMan} __**Pac-Man Bot**__",
-                Description = Content.about.Replace("{prefix}", Prefix),
+                Description = Content.about.Replace("{prefix}", Context.Prefix),
                 Color = Colors.PacManYellow,
             };
             embed.AddField("Total guilds", $"{Context.Client.Guilds.Count}", true);
@@ -63,8 +63,8 @@ namespace PacManBot.Commands.Modules
             }
             else
             {
-                var embed = Commands.GetCommandHelp(command, Prefix);
-                string message = embed == null ? $"Can't find a command with that name. Use `{Prefix}help` for a list of commands." : "";
+                var embed = Commands.GetCommandHelp(command, Context.Prefix);
+                string message = embed == null ? $"Can't find a command with that name. Use `{Context.Prefix}help` for a list of commands." : "";
                 await ReplyAsync(message, embed);
             }
         }
@@ -131,11 +131,11 @@ namespace PacManBot.Commands.Modules
             }
             else
             {
-                message = $"Prefix for this server is set to `{AbsolutePrefix}`" +
-                          " (the default)".If(AbsolutePrefix == Storage.DefaultPrefix) +
-                          $". It can be changed using the command `{Prefix}setprefix`";
+                message = $"Prefix for this server is set to `{Context.FixedPrefix}`" +
+                          " (the default)".If(Context.FixedPrefix == Storage.DefaultPrefix) +
+                          $". It can be changed using the command `{Context.Prefix}setprefix`";
 
-                if (Prefix == "")
+                if (Context.Prefix == "")
                 {
                     message += "\n\nThis channel is in **No Prefix mode**, and using the prefix is unnecessary.\n" +
                                "Use `help toggleprefix` for more info.";

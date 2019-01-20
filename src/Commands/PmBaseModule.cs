@@ -9,10 +9,10 @@ using PacManBot.Services;
 namespace PacManBot.Commands
 {
     /// <summary>
-    /// The base for Pac-Man Bot modules, containing their main services and some utilities.
+    /// The base for Pac-Man Bot modules, including their main services and some utilities.
     /// </summary>
     /// <remarks>Service properties are loaded lazily.</remarks>
-    public abstract class PmBaseModule : ModuleBase<ShardedCommandContext>
+    public abstract class PmBaseModule : ModuleBase<PmCommandContext>
     {
         /// <summary>Consistent and sane <see cref="RequestOptions"/> to be used in most Discord requests.</summary>
         public static readonly RequestOptions DefaultOptions = PmBot.DefaultOptions;
@@ -23,8 +23,6 @@ namespace PacManBot.Commands
         private StorageService internalStorage;
         private GameService internalGames;
         private PmCommandService internalCommands;
-        private string internalPrefix;
-        private string internalAbsPrefix;
 
 
         /// <summary>All of this program's services, required to supply new objects such as games.</summary>
@@ -40,12 +38,6 @@ namespace PacManBot.Commands
         public GameService Games => internalGames ?? (internalGames = Services.Get<GameService>());
         /// <summary>Provides help for commands.</summary>
         public PmCommandService Commands => internalCommands ?? (internalCommands = Services.Get<PmCommandService>());
-
-        /// <summary>The prefix accepted in this context, even if none is necessary.</summary>
-        public string AbsolutePrefix => internalAbsPrefix ?? (internalAbsPrefix = Storage.GetGuildPrefix(Context.Guild));
-        /// <summary>The relative prefix used in this context. Might be empty in DMs and other cases.</summary>
-        public string Prefix => internalPrefix ?? (internalPrefix = Storage.RequiresPrefix(Context) ? AbsolutePrefix : "");
-
 
 
         protected PmBaseModule(IServiceProvider services)
@@ -91,6 +83,6 @@ namespace PacManBot.Commands
 
         /// <summary>Creates an instance of a different module. This shouldn't ever be used. I'm a madman.</summary>
         public TModule GetModule<TModule>() where TModule : PmBaseModule
-            => ModuleBuilder<TModule, ShardedCommandContext>.Create(Context, Services);
+            => ModuleBuilder<TModule, PmCommandContext>.Create(Context, Services);
     }
 }

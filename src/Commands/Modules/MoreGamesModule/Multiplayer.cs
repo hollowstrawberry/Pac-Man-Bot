@@ -19,8 +19,8 @@ namespace PacManBot.Commands.Modules
             if (existingGame != null)
             {
                 await ReplyAsync(existingGame.UserId.Contains(Context.User.Id)
-                    ? $"You're already playing a game in this channel!\nUse `{Prefix}cancel` if you want to cancel it."
-                    : $"There is already a different game in this channel!\nWait until it's finished or try doing `{Prefix}cancel`");
+                    ? $"You're already playing a game in this channel!\nUse `{Context.Prefix}cancel` if you want to cancel it."
+                    : $"There is already a different game in this channel!\nWait until it's finished or try doing `{Context.Prefix}cancel`");
                 return;
             }
 
@@ -166,7 +166,7 @@ namespace PacManBot.Commands.Modules
 
         [Command("uno help"), Alias("uno h", "uno rules", "uno commands"), Priority(-1), HideHelp]
         [Summary("Gives rules and commands for the Uno game.")]
-        public async Task UnoHelp() => await ReplyAsync(Commands.GetCommandHelp("uno", Prefix));
+        public async Task UnoHelp() => await ReplyAsync(Commands.GetCommandHelp("uno", Context.Prefix));
 
 
         [Command("uno join"), Alias("uno add", "uno invite"), Priority(-1), HideHelp]
@@ -185,7 +185,7 @@ namespace PacManBot.Commands.Modules
             var game = Games.GetForChannel<UnoGame>(Context.Channel.Id);
             if (game == null)
             {
-                await ReplyAsync($"There's no Uno game in this channel! Use `{Prefix}uno` to start.");
+                await ReplyAsync($"There's no Uno game in this channel! Use `{Context.Prefix}uno` to start.");
                 return;
             }
             if (game.UserId.Contains(user.Id))
@@ -195,7 +195,7 @@ namespace PacManBot.Commands.Modules
             }
             if (!self && !user.IsBot)
             {
-                await ReplyAsync($"{user.Mention} You're being invited to play {game.GameName}. Do `{Prefix}uno join` to join.");
+                await ReplyAsync($"{user.Mention} You're being invited to play {game.GameName}. Do `{Context.Prefix}uno join` to join.");
                 return;
             }
 
@@ -224,7 +224,7 @@ namespace PacManBot.Commands.Modules
             var game = Games.GetForChannel<UnoGame>(Context.Channel.Id);
             if (game == null)
             {
-                await ReplyAsync($"There's no Uno game in this channel! Use `{Prefix}uno` to start.");
+                await ReplyAsync($"There's no Uno game in this channel! Use `{Context.Prefix}uno` to start.");
                 return;
             }
             if (!game.UserId.Contains(user.Id))

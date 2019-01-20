@@ -85,7 +85,7 @@ namespace PacManBot.Services
                 || message.HasStringPrefix(prefix, ref commandPosition)
                 || !await storage.RequiresPrefixAsync(message.Channel))
             {
-                var context = new ShardedCommandContext(client, message);
+                var context = new PmCommandContext(message, services);
                 var res = await ExecuteAsync(context, commandPosition, services, MultiMatchHandling.Best);
 
                 if (res.IsSuccess) return ExecuteResult.FromSuccess();
@@ -164,7 +164,7 @@ namespace PacManBot.Services
         }
 
 
-        private string CommandErrorReason(string baseError, SocketCommandContext context, string prefix)
+        private string CommandErrorReason(string baseError, ICommandContext context, string prefix)
         {
             if (baseError.Contains("requires") && context.Guild == null)
                 return "You need to be in a guild to use this command!";

@@ -17,7 +17,7 @@ namespace PacManBot.Commands.Modules
         public ModModule(IServiceProvider services) : base(services) { }
 
 
-        string ContactMessage => $"Please try again or, if the problem persists, contact the bot owner using `{Prefix}feedback`.";
+        string ContactMessage => $"Please try again or, if the problem persists, contact the bot owner using `{Context.Prefix}feedback`.";
 
 
         [Command("say"), Remarks("Make the bot say anything")]
@@ -39,7 +39,7 @@ namespace PacManBot.Commands.Modules
             if (Context.BotCan(ChannelPermission.ManageMessages))
             {
                 int _ = 0;
-                toDelete.Concat(messages.Where(x => x.Content.StartsWith(AbsolutePrefix) && !x.Content.StartsWith("<@")
+                toDelete.Concat(messages.Where(x => x.Content.StartsWith(Context.FixedPrefix) && !x.Content.StartsWith("<@")
                                                || x.HasMentionPrefix(Context.Client.CurrentUser, ref _)));
             }
 
@@ -66,7 +66,7 @@ namespace PacManBot.Commands.Modules
         {
             string error = null;
             if (string.IsNullOrWhiteSpace(prefix))
-                error = $"The guild prefix can't be empty. If you don't want a prefix in a channel, check out `{Prefix}toggleprefix`";
+                error = $"The guild prefix can't be empty. If you don't want a prefix in a channel, check out `{Context.Prefix}toggleprefix`";
             else if (prefix.ContainsAny("*", "_", "~", "`", "\\"))
                 error = "The prefix can't contain markdown special characters: *_~\\`\\\\";
             else if (prefix.Length > 32)
@@ -136,7 +136,7 @@ namespace PacManBot.Commands.Modules
                     Storage.ToggleChannelGuildPrefix(channelId);
                     await ReplyAsync(
                         $"{CustomEmoji.Check} The {channel.Mention} channel is back to **Normal mode** " +
-                        $"(Prefix: `{AbsolutePrefix}`)");
+                        $"(Prefix: `{Context.FixedPrefix}`)");
                 }
                 else
                 {
@@ -151,10 +151,10 @@ namespace PacManBot.Commands.Modules
                     {
                         await ReplyAsync(
                             $"❗__**Warning**__\nYou're about to set this channel to **No Prefix mode**.\n" +
-                            $"All commands will work without the need of a prefix such as `{Prefix}`\n" +
+                            $"All commands will work without the need of a prefix such as `{Context.Prefix}`\n" +
                             $"This can lead to a lot of *unnecessary spam*. It's a good idea only in " +
                             $"dedicated channels, for example named \"#pacman\" or \"#botspam\".\n\n" +
-                            $"To set this channel to No Prefix mode, please do `{Prefix}toggleprefix {channelId}`");
+                            $"To set this channel to No Prefix mode, please do `{Context.Prefix}toggleprefix {channelId}`");
                     }
                 }
             }

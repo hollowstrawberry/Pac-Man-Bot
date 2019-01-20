@@ -86,8 +86,8 @@ namespace PacManBot.Commands.Modules
 
                 if (skill == null)
                 {
-                    await ReplyAsync($"Unknown RPG command! Do `{Prefix}rpg manual` for game instructions," +
-                        $" or `{Prefix}rpg help` for a list of commands.");
+                    await ReplyAsync($"Unknown RPG command! Do `{Context.Prefix}rpg manual` for game instructions," +
+                        $" or `{Context.Prefix}rpg help` for a list of commands.");
                     return;
                 }
 
@@ -98,7 +98,7 @@ namespace PacManBot.Commands.Modules
             {
                 if (game == null && command.Get<NotRequiresRpgAttribute>() == null)
                 {
-                    await ReplyAsync($"You can use `{Prefix}rpg start` to start your adventure.");
+                    await ReplyAsync($"You can use `{Context.Prefix}rpg start` to start your adventure.");
                     return;
                 }
 
@@ -216,7 +216,7 @@ namespace PacManBot.Commands.Modules
         [RpgCommand("profile", "p", "stats", "inventory", "inv")]
         public async Task<string> RpgProfile(RpgGame game, string args)
         {
-            await ReplyAsync(game.player.Profile(Prefix));
+            await ReplyAsync(game.player.Profile(Context.Prefix));
             return null;
         }
 
@@ -224,7 +224,7 @@ namespace PacManBot.Commands.Modules
         [RpgCommand("skills", "skill", "s", "spells")]
         public async Task<string> RpgSkills(RpgGame game, string args)
         {
-            await ReplyAsync(game.player.Skills(Prefix));
+            await ReplyAsync(game.player.Skills(Context.Prefix));
             return null;
         }
 
@@ -306,7 +306,7 @@ namespace PacManBot.Commands.Modules
                 {
                     game.CancelRequests();
                     game.lastEmote = RpgGame.ProfileEmote;
-                    await message.ModifyAsync(m => m.Embed = game.player.Profile(Prefix, true).Build(),
+                    await message.ModifyAsync(m => m.Embed = game.player.Profile(Context.Prefix, true).Build(),
                         game.GetRequestOptions());
                 }
 
@@ -377,7 +377,7 @@ namespace PacManBot.Commands.Modules
                     $"**[{sk.Name}]**" +
                     $"\n*{sk.Description}*" +
                     $"\nMana cost: {sk.ManaCost}{CustomEmoji.Mana}" +
-                    $"\nUse with the command: `{Prefix}rpg {sk.Shortcut}`");
+                    $"\nUse with the command: `{Context.Prefix}rpg {sk.Shortcut}`");
             }
 
             if (game.State == State.Active && !game.IsPvp)
@@ -387,7 +387,7 @@ namespace PacManBot.Commands.Modules
                 {
                     game.CancelRequests();
                     game.lastEmote = RpgGame.SkillsEmote;
-                    await message.ModifyAsync(m => m.Embed = game.player.Skills(Prefix, true).Build(),
+                    await message.ModifyAsync(m => m.Embed = game.player.Skills(Context.Prefix, true).Build(),
                         game.GetRequestOptions());
                 }
             }
@@ -504,7 +504,7 @@ namespace PacManBot.Commands.Modules
             {
                 game.StartFight(otherUser.Id);
                 game.isPvpTurn = false;
-                string content = $"{otherUser.Mention} do **{Prefix}rpg pvp {Context.User.Mention}** " +
+                string content = $"{otherUser.Mention} do **{Context.Prefix}rpg pvp {Context.User.Mention}** " +
                                  $"to accept the challenge. You should heal first.";
 
                 var msg = await ReplyAsync(content, game.FightPvP());
@@ -542,7 +542,7 @@ namespace PacManBot.Commands.Modules
             }
 
             return $"❗ You're about to completely delete your progress in ReactionRPG. This is not reversible." +
-                   $"\nDo **{Prefix}rpg reset {game.player.Name}** if you're sure you want to end your adventure.";
+                   $"\nDo **{Context.Prefix}rpg reset {game.player.Name}** if you're sure you want to end your adventure.";
         }
 
 
@@ -565,15 +565,15 @@ namespace PacManBot.Commands.Modules
                 $"Welcome to ReactionRPG{$", {game?.player.Name}".If(game != null)}!" +
                 $"\nThis game consists of battling enemies, levelling up and unlocking skills." +
                 $"\nYou can play in *any channel*, even in DMs with the bot." +
-                $"\nUse the command **{Prefix}rpg help** for a list of commands." +
-                $"\nUse **{Prefix}rpg profile** to see your hero's profile, and **{Prefix}rpg name/color** to personalize it.",
+                $"\nUse the command **{Context.Prefix}rpg help** for a list of commands." +
+                $"\nUse **{Context.Prefix}rpg profile** to see your hero's profile, and **{Context.Prefix}rpg name/color** to personalize it.",
             };
 
             embed.AddField(new EmbedFieldBuilder
             {
                 Name = "⚔ Battles",
                 Value =
-                $"To start a battle or re-send the current battle, use the command **{Prefix}rpg**" +
+                $"To start a battle or re-send the current battle, use the command **{Context.Prefix}rpg**" +
                 $"\nWhen in a battle, you can use the _message reactions_ to perform an action." +
                 $"\nSelect a number {RpgGame.EmoteNumberInputs[0]} of an enemy to attack. " +
                 $"You can also select {RpgGame.MenuEmote} to inspect your enemies, " +
@@ -585,10 +585,10 @@ namespace PacManBot.Commands.Modules
                 Name = "📁 Utilities",
                 Value =
                 $"You will get hurt in battle, and if you die you will lose EXP. To recover" +
-                $" {CustomEmoji.Life}and {CustomEmoji.Mana}, use **{Prefix}rpg heal**" +
+                $" {CustomEmoji.Life}and {CustomEmoji.Mana}, use **{Context.Prefix}rpg heal**" +
                 $" - It can only be used once per battle." +
                 $"\nYou will unlock equipment as you progress. When you have an item in your inventory," +
-                $" you can equip it using **{Prefix}rpg equip [item]** - You can switch weapons at any time," +
+                $" you can equip it using **{Context.Prefix}rpg equip [item]** - You can switch weapons at any time," +
                 $" but you can't switch armors mid-battle.",
             });
 
@@ -598,8 +598,8 @@ namespace PacManBot.Commands.Modules
                 Value =
                 $"When you level up you gain __skill points__, which you can spend." +
                 $"\nThere are three skill lines: __Power__ (attack), __Grit__ (defense) and __Focus__ (crit chance). " +
-                $"\nYou can view your skills page using **{Prefix}rpg skills** - " +
-                $"To spend points in a skill line use **{Prefix}rpg spend [skill] [amount]**\n" +
+                $"\nYou can view your skills page using **{Context.Prefix}rpg skills** - " +
+                $"To spend points in a skill line use **{Context.Prefix}rpg spend [skill] [amount]**\n" +
                 $"You can unlock __active skills__, which can be used during battle and cost {CustomEmoji.Mana}. " +
                 $"To use an active skill you unlocked, use that skill's command which can be found in the skills page.",
             });

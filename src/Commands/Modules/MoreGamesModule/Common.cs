@@ -101,7 +101,7 @@ namespace PacManBot.Commands.Modules
         [Summary("Do **{prefix}help** for games and commands.")]
         public async Task PlayMessage([Remainder]string args = "")
         {
-            await ReplyAsync($"To see a list of commands you can use and games you can play, do **{Prefix}help**");
+            await ReplyAsync($"To see a list of commands you can use and games you can play, do **{Context.Prefix}help**");
         }
     }
 }
