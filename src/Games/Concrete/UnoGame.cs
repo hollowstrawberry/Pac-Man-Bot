@@ -1,16 +1,16 @@
 ﻿using System;
-using System.Text;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
+using System.Text;
+using System.Threading.Tasks;
 using Discord;
 using Discord.Net;
 using Discord.WebSocket;
-using PacManBot.Utils;
-using PacManBot.Services;
 using PacManBot.Constants;
 using PacManBot.Extensions;
+using PacManBot.Services;
+using PacManBot.Utils;
 
 namespace PacManBot.Games.Concrete
 {

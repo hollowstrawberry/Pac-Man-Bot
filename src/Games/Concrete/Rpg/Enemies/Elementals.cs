@@ -1,9 +1,9 @@
-﻿using System.Linq;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
+using PacManBot.Extensions;
 using PacManBot.Games.Concrete.Rpg.Buffs;
 using PacManBot.Utils;
-using PacManBot.Extensions;
 
 namespace PacManBot.Games.Concrete.Rpg.Enemies
 {

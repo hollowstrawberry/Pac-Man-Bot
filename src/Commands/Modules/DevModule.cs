@@ -1,21 +1,21 @@
 using System;
-using System.IO;
-using System.Text;
-using System.Linq;
 using System.Diagnostics;
-using System.Threading.Tasks;
+using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text;
+using System.Threading.Tasks;
+using Discord;
+using Discord.Commands;
+using Discord.Net;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using Discord;
-using Discord.Net;
-using Discord.Commands;
-using PacManBot.Games;
-using PacManBot.Utils;
-using PacManBot.Services;
-using PacManBot.Services.Database;
 using PacManBot.Constants;
 using PacManBot.Extensions;
+using PacManBot.Games;
+using PacManBot.Services;
+using PacManBot.Services.Database;
+using PacManBot.Utils;
 
 namespace PacManBot.Commands.Modules
 {

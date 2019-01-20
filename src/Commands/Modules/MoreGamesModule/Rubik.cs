@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
-using Discord.Net;
 using Discord.Commands;
+using Discord.Net;
 using PacManBot.Constants;
 using PacManBot.Games.Concrete;
 

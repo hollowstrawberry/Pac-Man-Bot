@@ -2,14 +2,13 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
+using Discord;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
-using Discord;
-using Discord.WebSocket;
-using PacManBot.Utils;
-using PacManBot.Services;
 using PacManBot.Constants;
 using PacManBot.Extensions;
+using PacManBot.Services;
+using PacManBot.Utils;
 
 
 // Made by Samrux for fun

@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Linq;
-using System.Collections.Generic;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using PacManBot.Utils;
 
 namespace PacManBot.Extensions

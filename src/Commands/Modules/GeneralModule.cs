@@ -1,16 +1,16 @@
 using System;
-using System.IO;
-using System.Text;
-using System.Linq;
-using System.Diagnostics;
-using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
-using PacManBot.Games;
 using PacManBot.Constants;
 using PacManBot.Extensions;
+using PacManBot.Games;
 
 namespace PacManBot.Commands.Modules
 {

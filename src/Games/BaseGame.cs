@@ -1,9 +1,8 @@
 using System;
 using System.Threading;
 using Discord;
-using Discord.WebSocket;
-using PacManBot.Services;
 using PacManBot.Extensions;
+using PacManBot.Services;
 
 namespace PacManBot.Games
 {

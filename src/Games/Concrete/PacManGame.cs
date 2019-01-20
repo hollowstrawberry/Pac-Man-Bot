@@ -1,9 +1,9 @@
 using System;
-using System.IO;
-using System.Text;
-using System.Linq;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Runtime.Serialization;
+using System.Text;
 using Discord;
 using PacManBot.Constants;
 using PacManBot.Extensions;

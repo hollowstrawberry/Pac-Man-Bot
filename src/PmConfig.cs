@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Linq;
 using System.Runtime.Serialization;
-using Newtonsoft.Json;
 using Discord;
-using PacManBot.Constants;
-using PacManBot.Extensions;
 using Discord.Commands;
 using Discord.WebSocket;
+using Newtonsoft.Json;
+using PacManBot.Constants;
+using PacManBot.Extensions;
 
 namespace PacManBot
 {

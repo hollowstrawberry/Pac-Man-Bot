@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Net;
 using Discord.WebSocket;
-using PacManBot.Services;
 using PacManBot.Constants;
 using PacManBot.Extensions;
+using PacManBot.Services;
 
 namespace PacManBot
 {

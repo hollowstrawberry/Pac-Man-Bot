@@ -1,13 +1,13 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 using Discord;
 using Discord.WebSocket;
-using PacManBot.Utils;
 using PacManBot.Constants;
 using PacManBot.Extensions;
+using PacManBot.Utils;
 
 namespace PacManBot.Games.Concrete
 {

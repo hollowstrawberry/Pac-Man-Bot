@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Runtime.Serialization;
+using Discord;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Discord;
 using PacManBot.Constants;
 
 namespace PacManBot.Games

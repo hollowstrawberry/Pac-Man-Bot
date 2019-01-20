@@ -1,14 +1,14 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 using Discord;
 using Discord.Net;
 using Discord.WebSocket;
-using PacManBot.Games;
 using PacManBot.Constants;
 using PacManBot.Extensions;
+using PacManBot.Games;
 
 namespace PacManBot.Services
 {

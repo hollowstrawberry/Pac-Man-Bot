@@ -1,14 +1,14 @@
 ﻿using System;
-using System.Text.RegularExpressions;
-using System.Linq;
 using System.Drawing;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using PacManBot.Constants;
-using SystemColor = System.Drawing.Color;
 using DiscordColor = Discord.Color;
+using SystemColor = System.Drawing.Color;
 
 namespace PacManBot.Extensions
 {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using PacManBot.Games;
 using PacManBot.Constants;
+using PacManBot.Games;
 
 namespace PacManBot.Extensions
 {

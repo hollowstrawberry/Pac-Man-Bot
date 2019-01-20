@@ -1,14 +1,14 @@
 ﻿using System;
-using System.IO;
-using System.Text;
-using System.Linq;
-using System.Collections.Generic;
 using System.Collections.Concurrent;
-using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
 using Discord;
-using PacManBot.Games;
+using Newtonsoft.Json;
 using PacManBot.Constants;
 using PacManBot.Extensions;
+using PacManBot.Games;
 
 namespace PacManBot.Services
 {

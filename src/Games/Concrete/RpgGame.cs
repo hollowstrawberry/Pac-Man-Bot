@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Text;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
+using System.Text;
 using Discord;
-using PacManBot.Games.Concrete.Rpg;
 using PacManBot.Constants;
 using PacManBot.Extensions;
+using PacManBot.Games.Concrete.Rpg;
 
 namespace PacManBot.Games.Concrete
 {

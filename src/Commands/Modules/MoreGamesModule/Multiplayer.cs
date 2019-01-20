@@ -2,12 +2,12 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Discord;
-using Discord.Net;
 using Discord.Commands;
+using Discord.Net;
 using Discord.WebSocket;
+using PacManBot.Extensions;
 using PacManBot.Games;
 using PacManBot.Games.Concrete;
-using PacManBot.Extensions;
 
 namespace PacManBot.Commands.Modules
 {

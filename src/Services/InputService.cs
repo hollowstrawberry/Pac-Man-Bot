@@ -3,14 +3,14 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Discord;
-using Discord.Net;
 using Discord.Commands;
+using Discord.Net;
 using Discord.WebSocket;
+using PacManBot.Constants;
+using PacManBot.Extensions;
 using PacManBot.Games;
 using PacManBot.Games.Concrete;
 using PacManBot.Services.Database;
-using PacManBot.Constants;
-using PacManBot.Extensions;
 
 namespace PacManBot.Services
 {

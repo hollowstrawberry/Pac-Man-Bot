@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
-using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
+using Microsoft.CodeAnalysis.Scripting;
 
 namespace PacManBot.Services
 {

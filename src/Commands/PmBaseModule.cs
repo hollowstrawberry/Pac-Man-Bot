@@ -2,9 +2,9 @@
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
-using PacManBot.Services;
 using PacManBot.Constants;
 using PacManBot.Extensions;
+using PacManBot.Services;
 
 namespace PacManBot.Commands
 {

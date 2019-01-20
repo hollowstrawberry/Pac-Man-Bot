@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Text;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Collections.Generic;
+using System.Text;
 using PacManBot.Extensions;
 
 namespace PacManBot.Games.Concrete.Rpg

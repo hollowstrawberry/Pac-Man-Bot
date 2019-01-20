@@ -2,8 +2,8 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Discord.WebSocket;
-using PacManBot.Games;
 using PacManBot.Extensions;
+using PacManBot.Games;
 
 namespace PacManBot.Services.Database
 {

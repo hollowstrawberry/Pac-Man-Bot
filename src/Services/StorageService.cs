@@ -1,15 +1,14 @@
 using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Collections.Generic;
-using System.Collections.Concurrent;
 using Discord;
 using Discord.Commands;
-using Discord.WebSocket;
-using PacManBot.Utils;
-using PacManBot.Services.Database;
 using PacManBot.Constants;
 using PacManBot.Extensions;
+using PacManBot.Services.Database;
+using PacManBot.Utils;
 
 namespace PacManBot.Services
 {

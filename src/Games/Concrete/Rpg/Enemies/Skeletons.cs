@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
-using PacManBot.Games.Concrete.Rpg.Buffs;
 using PacManBot.Extensions;
+using PacManBot.Games.Concrete.Rpg.Buffs;
 
 namespace PacManBot.Games.Concrete.Rpg.Enemies
 {
