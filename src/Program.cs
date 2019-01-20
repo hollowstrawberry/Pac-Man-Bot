@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Discord;
-using Discord.Commands;
 using Discord.WebSocket;
 using PacManBot.Utils;
 using PacManBot.Services;
@@ -71,33 +70,26 @@ namespace PacManBot
 
             var client = new DiscordShardedClient(clientConfig);
 
-
-            var commandConfig = new CommandServiceConfig {
-                LogLevel = config.commandLogLevel,
-                DefaultRunMode = RunMode.Async,
-                CaseSensitiveCommands = false,
-            };
-
-            var commands = new CommandService(commandConfig);
-
             // Set up services
             var serviceCollection = new ServiceCollection()
                 .AddSingleton<Bot>()
                 .AddSingleton(config)
                 .AddSingleton(client)
-                .AddSingleton(commands)
                 .AddSingleton<LoggingService>()
                 .AddSingleton<StorageService>()
+                .AddSingleton<PmCommandService>()
                 .AddSingleton<InputService>()
                 .AddSingleton<GameService>()
-                .AddSingleton<HelpService>()
+                .AddSingleton<PmCommandService>()
                 .AddSingleton<SchedulingService>()
                 .AddSingleton<ScriptingService>();
 
             var services = serviceCollection.BuildServiceProvider();
+            var logger = services.Get<LoggingService>();
 
-            await commands.AddModulesAsync(Assembly.GetEntryAssembly(), services);
-            services.Get<HelpService>().BuildCommandHelp();
+            await logger.Log(LogSeverity.Info, "Booting up...");
+
+            await services.Get<PmCommandService>().AddModulesAsync();
             services.Get<GameService>().LoadGames();
 
 

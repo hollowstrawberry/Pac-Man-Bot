@@ -22,7 +22,7 @@ namespace PacManBot.Commands
         private LoggingService internalLogger;
         private StorageService internalStorage;
         private GameService internalGames;
-        private HelpService internalHelp;
+        private PmCommandService internalCommands;
         private string internalPrefix;
         private string internalAbsPrefix;
 
@@ -39,7 +39,7 @@ namespace PacManBot.Commands
         /// <summary>Gives access to active games.</summary>
         public GameService Games => internalGames ?? (internalGames = Services.Get<GameService>());
         /// <summary>Provides help for commands.</summary>
-        public HelpService Help => internalHelp ?? (internalHelp = Services.Get<HelpService>());
+        public PmCommandService Commands => internalCommands ?? (internalCommands = Services.Get<PmCommandService>());
 
         /// <summary>The prefix accepted in this context, even if none is necessary.</summary>
         public string AbsolutePrefix => internalAbsPrefix ?? (internalAbsPrefix = Storage.GetGuildPrefix(Context.Guild));

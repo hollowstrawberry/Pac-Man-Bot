@@ -52,7 +52,7 @@ namespace PacManBot.Commands.Modules
 
                 case "h":
                 case "help":
-                    await ReplyAsync(Help.MakeHelp("rubik", Prefix));
+                    await ReplyAsync(Commands.GetCommandHelp("rubik", Prefix));
                     return;
 
 

@@ -21,7 +21,7 @@ namespace PacManBot.Services
     {
         private readonly IServiceProvider services;
         private readonly DiscordShardedClient client;
-        private readonly CommandService commands;
+        private readonly PmCommandService commands;
         private readonly StorageService storage;
         private readonly LoggingService logger;
         private readonly GameService games;
@@ -31,7 +31,7 @@ namespace PacManBot.Services
         private static readonly Regex WakaRegex = new Regex(@"^(w+a+k+a+\W*)+$", RegexOptions.IgnoreCase);
 
 
-        public InputService(IServiceProvider services, DiscordShardedClient client, CommandService commands,
+        public InputService(IServiceProvider services, DiscordShardedClient client, PmCommandService commands,
             StorageService storage, LoggingService logger, GameService games, BotConfig config)
         {
             this.services = services;
@@ -39,7 +39,7 @@ namespace PacManBot.Services
             this.commands = commands;
             this.storage = storage;
             this.logger = logger;
-            this.games = games;   
+            this.games = games;
 
             bannedChannels = config.bannedChannels;
         }
@@ -66,30 +66,30 @@ namespace PacManBot.Services
 
         private Task OnMessageReceived(SocketMessage m)
         {
-            _ = OnMessageReceivedAsync(m); // Fire and forget
+            OnMessageReceivedAsync(m); // Fire and forget
             return Task.CompletedTask;
         }
 
 
         private Task OnReactionAdded(Cacheable<IUserMessage, ulong> m, ISocketMessageChannel c, SocketReaction r)
         {
-            _ = OnReactionChangedAsync(m, c, r);
+            OnReactionChangedAsync(m, c, r);
             return Task.CompletedTask;
         }
 
 
         private Task OnReactionRemoved(Cacheable<IUserMessage, ulong> m, ISocketMessageChannel c, SocketReaction r)
         {
-            _ = OnReactionChangedAsync(m, c, r);
+            OnReactionChangedAsync(m, c, r);
             return Task.CompletedTask;
         }
 
 
 
 
-        private async Task OnMessageReceivedAsync(SocketMessage genericMessage)
+        private async void OnMessageReceivedAsync(SocketMessage genericMessage)
         {
-            try // Wrap discarded async methods in a try block so that exceptions don't go silent
+            try
             {
                 if (bannedChannels.Contains(genericMessage.Channel.Id))
                 {
@@ -101,7 +101,7 @@ namespace PacManBot.Services
                     && message.Channel.BotCan(ChannelPermission.SendMessages))
                 {
                     // Only runs one
-                    _ = await MessageGameInputAsync(message) || await CommandAsync(message) || await AutoresponseAsync(message);
+                    if (await MessageGameInputAsync(message) || await CommandAsync(message) || await AutoresponseAsync(message)) { }
                 }
             }
             catch (Exception e)
@@ -111,7 +111,7 @@ namespace PacManBot.Services
         }
 
 
-        private async Task OnReactionChangedAsync(Cacheable<IUserMessage, ulong> messageData, ISocketMessageChannel channel, SocketReaction reaction)
+        private async void OnReactionChangedAsync(Cacheable<IUserMessage, ulong> messageData, ISocketMessageChannel channel, SocketReaction reaction)
         {
             try
             {
@@ -133,42 +133,25 @@ namespace PacManBot.Services
 
 
 
-        /// <summary>Tries to find and execute a command, returns whether it is successful.</summary>
+        /// <summary>Tries to find and execute a command. Returns whether it is successful.</summary>
         private async Task<bool> CommandAsync(SocketUserMessage message)
         {
-            var context = new ShardedCommandContext(client, message);
-
-            string prefix = await storage.GetGuildPrefixAsync(context.Guild);
-            int commandPosition = 0;
-            
-            if (message.HasMentionPrefix(client.CurrentUser, ref commandPosition)
-                || message.HasStringPrefix($"{prefix} ", ref commandPosition) || message.HasStringPrefix(prefix, ref commandPosition)
-                || !(await storage.RequiresPrefixAsync(context.Channel)))
+            var result = await commands.TryExecuteAsync(message);
+            if (result.IsSuccess) return true;
+            else if (result.Error != CommandError.UnknownCommand && result.ErrorReason != null)
             {
-                var result = await commands.ExecuteAsync(context, commandPosition, services);
+                await logger.Log(LogSeverity.Verbose, LogSource.Command,
+                    $"\"{message}\" by {message.Author.FullName()} in {message.Channel.FullName()} " +
+                    $"couldn't be executed. {result.ErrorReason}");
 
-                if (result.IsSuccess) return true;
-                else if (!result.ErrorReason.Contains("Unknown command"))
-                {
-                    await logger.Log(LogSeverity.Verbose, LogSource.Command,
-                                     $"\"{message}\" by {message.Author.FullName()} in {context.Channel.FullName()} " +
-                                     $"couldn't be executed. {result.ErrorReason}");
-
-                    string reply = CommandErrorReply(result.ErrorReason, context);
-                    if (reply != null && context.BotCan(ChannelPermission.SendMessages))
-                    {
-                        await context.Channel.SendMessageAsync(reply, options: Bot.DefaultOptions);
-                    }
-
-                    return true;
-                }
+                await message.Channel.SendMessageAsync(result.ErrorReason, options: Bot.DefaultOptions);
             }
 
             return false;
         }
 
 
-        /// <summary>Tries to find special messages to respond to, returns whether it is successful.</summary>
+        /// <summary>Tries to find special messages to respond to. Returns whether it is successful.</summary>
         private async Task<bool> AutoresponseAsync(SocketUserMessage message)
         {
             if (!(message.Channel is SocketGuildChannel gChannel) || await storage.AllowsAutoresponseAsync(gChannel.Guild))
@@ -190,7 +173,7 @@ namespace PacManBot.Services
         }
 
 
-        /// <summary>Tries to find a game and execute message input, returns whether it is successful.</summary>
+        /// <summary>Tries to find a game and execute message input. Returns whether it is successful.</summary>
         private async Task<bool> MessageGameInputAsync(SocketUserMessage message)
         {
             var game = games.GetForChannel<IMessagesGame>(message.Channel.Id);
@@ -211,7 +194,7 @@ namespace PacManBot.Services
         }
 
 
-        /// <summary>Tries to find a game and execute reaction input, returns whether it is successful.</summary>
+        /// <summary>Tries to find a game and execute reaction input. Returns whether it is successful.</summary>
         private async Task<bool> ReactionGameInputAsync(IUserMessage message, ISocketMessageChannel channel, SocketReaction reaction)
         {
             var game = games.AllGames
@@ -296,46 +279,6 @@ namespace PacManBot.Services
 
             game.CancelRequests();
             await gameMessage.ModifyAsync(game.GetMessageUpdate(), game.GetRequestOptions());
-        }
-
-
-
-
-        private string CommandErrorReply(string error, SocketCommandContext context)
-        {
-            string help = $"Please use `{storage.GetPrefix(context)}help [command name]` or try again.";
-
-            if (error.Contains("requires") && context.Guild == null)
-                return "You need to be in a guild to use this command!";
-
-            if (error.Contains("Bot requires"))
-                return $"This bot is missing the permission**{Regex.Replace(error.Split(' ').Last(), @"([A-Z])", @" $1")}**!";
-
-            if (error.Contains("User requires"))
-                return $"You need the permission**{Regex.Replace(error.Split(' ').Last(), @"([A-Z])", @" $1")}** to use this command!";
-
-            if (error.Contains("User not found"))
-                return "Can't find the specified user!";
-
-            if (error.Contains("Failed to parse"))
-                return $"Invalid command parameters! {help}";
-
-            if (error.Contains("too few parameters"))
-                return $"Missing command parameters! {help}";
-
-            if (error.Contains("too many parameters"))
-                return $"Too many parameters! {help}";
-
-            if (error.Contains("must be used in a guild"))
-                return "You need to be in a guild to use this command!";
-
-            if (error.ContainsAny("quoted parameter", "one character of whitespace"))
-                return "Incorrect use of quotes in command parameters.";
-
-            if (error.Contains("Timeout"))
-                return "You're using that command too much. Please try again later.";
-
-            return null;
         }
     }
 }

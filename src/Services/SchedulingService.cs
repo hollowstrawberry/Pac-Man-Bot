@@ -20,7 +20,6 @@ namespace PacManBot.Services
     {
         private readonly DiscordShardedClient client;
         private readonly LoggingService logger;
-        private readonly InputService input;
         private readonly GameService games;
         private readonly bool scheduledRestart;
 
@@ -30,17 +29,14 @@ namespace PacManBot.Services
         public List<Timer> timers;
 
         /// <summary>Fired when a scheduled restart is due.</summary>
-        public event RestartHandler Restart;
-        public delegate Task RestartHandler();
+        public event Func<Task> PrepareRestart;
         
 
-        public SchedulingService(BotConfig config, DiscordShardedClient client,
-            LoggingService logger, GameService games, InputService input)
+        public SchedulingService(BotConfig config, DiscordShardedClient client, LoggingService logger, GameService games)
         {
             this.client = client;
             this.logger = logger;
             this.games = games;
-            this.input = input;
 
             scheduledRestart = config.scheduledRestart;
         }
@@ -153,10 +149,8 @@ namespace PacManBot.Services
 
         private async void RestartBot(object state)
         {
-            if (Restart == null) return;
-
             await logger.Log(LogSeverity.Info, LogSource.Scheduling, "Preparing to restart");
-            await Restart.Invoke();
+            await PrepareRestart.Invoke();
             await logger.Log(LogSeverity.Info, LogSource.Scheduling, "Restarting");
             Environment.Exit(ExitCodes.ScheduledReboot);
         }

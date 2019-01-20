@@ -58,11 +58,11 @@ namespace PacManBot.Commands.Modules
         {
             if (command == null)
             {
-                await ReplyAsync(await Help.MakeAllHelp(Context, expanded: false));
+                await ReplyAsync(await Commands.GetAllHelp(Context, expanded: false));
             }
             else
             {
-                var embed = Help.MakeHelp(command, Prefix);
+                var embed = Commands.GetCommandHelp(command, Prefix);
                 string message = embed == null ? $"Can't find a command with that name. Use `{Prefix}help` for a list of commands." : "";
                 await ReplyAsync(message, embed);
             }
@@ -73,7 +73,7 @@ namespace PacManBot.Commands.Modules
         [Summary("Show a complete list of all commands including their parameters and a short description.")]
         public async Task SendAllHelpExpanded()
         {
-            await ReplyAsync(await Help.MakeAllHelp(Context, expanded: true));
+            await ReplyAsync(await Commands.GetAllHelp(Context, expanded: true));
         }
 
 

@@ -166,7 +166,7 @@ namespace PacManBot.Commands.Modules
 
         [Command("uno help"), Alias("uno h", "uno rules", "uno commands"), Priority(-1), HideHelp]
         [Summary("Gives rules and commands for the Uno game.")]
-        public async Task UnoHelp() => await ReplyAsync(Help.MakeHelp("uno", Prefix));
+        public async Task UnoHelp() => await ReplyAsync(Commands.GetCommandHelp("uno", Prefix));
 
 
         [Command("uno join"), Alias("uno add", "uno invite"), Priority(-1), HideHelp]

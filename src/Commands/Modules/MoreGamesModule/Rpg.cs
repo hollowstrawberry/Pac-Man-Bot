@@ -549,7 +549,7 @@ namespace PacManBot.Commands.Modules
         [RpgCommand("help", "commands"), NotRequiresRpg]
         public async Task<string> RpgSendHelp(RpgGame game, string args)
         {
-            await ReplyAsync(Help.MakeHelp("rpg"));
+            await ReplyAsync(Commands.GetCommandHelp("rpg"));
             return null;
         }
 

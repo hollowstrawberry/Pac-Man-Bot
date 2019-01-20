@@ -63,7 +63,7 @@ namespace PacManBot
         {
             input.StartListening();
             schedule.StartTimers();
-            schedule.Restart += StopAsync;
+            schedule.PrepareRestart += StopAsync;
             client.JoinedGuild += OnJoinedGuild;
             client.LeftGuild += OnLeftGuild;
             client.ChannelDestroyed += OnChannelDestroyed;

@@ -269,7 +269,7 @@ namespace PacManBot.Commands.Modules
         [PetCommand("help", "h")]
         public async Task<string> PetSendHelp(PetGame pet, string args)
         {
-            await ReplyAsync(Help.MakeHelp("pet", Prefix));
+            await ReplyAsync(Commands.GetCommandHelp("pet", Prefix));
             return null;
         }
 

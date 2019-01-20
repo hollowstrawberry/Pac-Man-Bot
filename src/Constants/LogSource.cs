@@ -8,7 +8,7 @@
         public const string
             Bot = "Bot",
             Game = "Game",
-            Command = "Command",
+            Command = "Commands",
             Storage = "Storage",
             Scheduling = "Scheduling",
             Owner = "Owner",
