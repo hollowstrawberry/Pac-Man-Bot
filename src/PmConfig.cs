@@ -5,14 +5,16 @@ using Newtonsoft.Json;
 using Discord;
 using PacManBot.Constants;
 using PacManBot.Extensions;
+using Discord.Commands;
+using Discord.WebSocket;
 
 namespace PacManBot
 {
     /// <summary>
-    /// Contains the runtime settings of the bot loaded from file.
+    /// Contains the runtime settings of the bot.
     /// </summary>
     [DataContract]
-    public class BotConfig
+    public class PmConfig
     {
         /// <summary>Secret token used to connect to Discord. Must be provided for the bot to run.</summary>
         [DataMember] public readonly string discordToken;
@@ -62,16 +64,14 @@ namespace PacManBot
 
 
 
-        /// <summary>Content used throughout the bot. Set using <see cref="LoadContent(string)"/>.</summary>
-        public BotContent Content { get; private set; }
 
 
         /// <summary>Reloads <see cref="Content"/> from the provided json.</summary>
         public void LoadContent(string json)
         {
-            var cont = JsonConvert.DeserializeObject<BotContent>(json);
+            var cont = JsonConvert.DeserializeObject<PmContent>(json);
 
-            var missingFields = typeof(BotContent).GetFields().Where(x => x.GetValue(cont) == null).ToList();
+            var missingFields = typeof(PmContent).GetFields().Where(x => x.GetValue(cont) == null).ToList();
             if (missingFields.Count > 0)
             {
                 throw new InvalidOperationException(
@@ -86,5 +86,29 @@ namespace PacManBot
 
             Content = cont;
         }
+
+
+        /// <summary>Content used throughout the bot. Set using <see cref="LoadContent(string)"/>.</summary>
+        public PmContent Content { get; private set; }
+
+
+        /// <summary>Gets a configuration object for a <see cref="DiscordSocketClient"/>.</summary>
+        public DiscordSocketConfig ClientConfig => new DiscordSocketConfig
+        {
+            TotalShards = shardCount,
+            LogLevel = clientLogLevel,
+            MessageCacheSize = messageCacheSize,
+            ConnectionTimeout = connectionTimeout,
+            DefaultRetryMode = RetryMode.RetryRatelimit,
+        };
+
+
+        /// <summary>Gets a configuration object for a <see cref="CommandService"/>.</summary>
+        public CommandServiceConfig CommandConfig => new CommandServiceConfig
+        {
+            LogLevel = commandLogLevel,
+            DefaultRunMode = RunMode.Async,
+            CaseSensitiveCommands = false,
+        };
     }
 }

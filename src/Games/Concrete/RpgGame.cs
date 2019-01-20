@@ -214,7 +214,7 @@ namespace PacManBot.Games.Concrete
                     string lvlUp = player.TryLevelUp();
                     if (lvlUp != null)
                     {
-                        Channel.SendMessageAsync(options: Bot.DefaultOptions, text:
+                        Channel.SendMessageAsync(options: PmBot.DefaultOptions, text:
                             $"\n⏫ Level up! {lvlUp}" +
                             "\n⭐ **You reached the maximum level! Congratulations!**".If(player.Level == RpgPlayer.LevelCap));
                     }

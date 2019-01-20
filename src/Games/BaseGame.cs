@@ -12,13 +12,13 @@ namespace PacManBot.Games
     /// </summary>
     public abstract class BaseGame : IBaseGame
     {
-        protected DiscordShardedClient client;
-        protected BotConfig botConfig;
+        protected PmDiscordClient client;
+        protected PmConfig config;
         protected LoggingService logger;
         protected StorageService storage;
         protected GameService games;
 
-        protected BotContent Content => botConfig.Content;
+        protected PmContent Content => config.Content;
 
         /// <summary>Used to manage previous game tasks such as 
         /// ongoing Discord message editions to prevent them from piling up when new ones come in.</summary>
@@ -78,8 +78,8 @@ namespace PacManBot.Games
         /// <summary>Sets the services that will be used by this game instance.</summary>
         protected virtual void SetServices(IServiceProvider services)
         {
-            botConfig = services.Get<BotConfig>();
-            client = services.Get<DiscordShardedClient>();
+            config = services.Get<PmConfig>();
+            client = services.Get<PmDiscordClient>();
             logger = services.Get<LoggingService>();
             storage = services.Get<StorageService>();
             games = services.Get<GameService>();

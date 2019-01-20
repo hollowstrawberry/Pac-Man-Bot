@@ -8,6 +8,7 @@ using Discord;
 using Discord.Net;
 using Discord.WebSocket;
 using PacManBot.Utils;
+using PacManBot.Services;
 using PacManBot.Constants;
 using PacManBot.Extensions;
 
@@ -124,7 +125,7 @@ namespace PacManBot.Games.Concrete
             [DataMember] public List<Card> cards = new List<Card>();
             [DataMember] public UnoState uno = UnoState.None;
 
-            public DiscordShardedClient client;
+            public PmDiscordClient client;
             public IUserMessage message;
             private IUser user;
         
@@ -134,7 +135,7 @@ namespace PacManBot.Games.Concrete
 
             private UnoPlayer() { } // Used in serialization
 
-            public UnoPlayer(IUser user, DiscordShardedClient client)
+            public UnoPlayer(IUser user, PmDiscordClient client)
             {
                 id = user.Id;
                 this.user = user;
@@ -691,7 +692,7 @@ namespace PacManBot.Games.Concrete
             if (player.message == null) resend = true;
             else
             {
-                try { await player.message.ModifyAsync(m => m.Embed = embed.Build(), Bot.DefaultOptions); }
+                try { await player.message.ModifyAsync(m => m.Embed = embed.Build(), PmBot.DefaultOptions); }
                 catch (HttpException) { resend = true; }
             }
 
@@ -699,7 +700,7 @@ namespace PacManBot.Games.Concrete
             {
                 try
                 {
-                    player.message = await player.User.SendMessageAsync(embed: embed.Build(), options: Bot.DefaultOptions);
+                    player.message = await player.User.SendMessageAsync(embed: embed.Build(), options: PmBot.DefaultOptions);
                 }
                 catch (HttpException e) when (e.DiscordCode == 50007) // Can't send DMs
                 {

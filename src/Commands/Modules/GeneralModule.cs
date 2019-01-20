@@ -15,7 +15,7 @@ using PacManBot.Extensions;
 namespace PacManBot.Commands.Modules
 {
     [Name("📁General"), Remarks("1")]
-    public class GeneralModule : BaseCustomModule
+    public class GeneralModule : PmBaseModule
     {
         private static readonly IEnumerable<string> GameNames = ReflectionExtensions.AllTypes
             .MakeObjects<BaseGame>()
@@ -237,7 +237,7 @@ namespace PacManBot.Commands.Modules
                 await ReplyAsync($"{CustomEmoji.Check} Message sent. Thank you!");
                 string content = $"```diff\n+Feedback received: {Context.User.FullName()}```\n{message}".Truncate(2000);
 
-                var app = await Context.Client.GetApplicationInfoAsync(Bot.DefaultOptions);
+                var app = await Context.Client.GetApplicationInfoAsync(PmBot.DefaultOptions);
                 await app.Owner.SendMessageAsync(content, options: DefaultOptions);
             }
             catch (Exception e)
@@ -253,7 +253,7 @@ namespace PacManBot.Commands.Modules
         [Command("party"), Alias("blob", "dance"), HideHelp]
         [Summary("Takes a number which can be either an amount of emotes to send or a message ID to react to. " +
                  "Reacts to the command by default.")]
-        [BetterRequireBotPermission(ChannelPermission.UseExternalEmojis | ChannelPermission.AddReactions)]
+        [PmRequireBotPermission(ChannelPermission.UseExternalEmojis | ChannelPermission.AddReactions)]
         public async Task BlobDance(ulong number = 0)
         {
             if (number < 1) await Context.Message.AddReactionAsync(CustomEmoji.ERapidBlobDance, DefaultOptions);
@@ -272,8 +272,8 @@ namespace PacManBot.Commands.Modules
 
         [Command("spamparty"), Alias("spamblob", "spamdance"), HideHelp]
         [Summary("Reacts to everything with a blob dance emote. Only usable by a moderator.")]
-        [BetterRequireUserPermission(ChannelPermission.ManageMessages)]
-        [BetterRequireBotPermission(ChannelPermission.AddReactions)]
+        [PmRequireUserPermission(ChannelPermission.ManageMessages)]
+        [PmRequireBotPermission(ChannelPermission.AddReactions)]
         public async Task SpamDance(int amount = 5)
         {
             var messages = await Context.Channel.GetMessagesAsync(Math.Min(amount, 10)).FlattenAsync();

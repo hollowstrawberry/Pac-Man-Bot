@@ -33,7 +33,7 @@ namespace PacManBot.Services.Database
         }
 
 
-        public string GetUsername(DiscordShardedClient client)
+        public string GetUsername(BaseSocketClient client)
         {
             return client?.GetUser(UserId)?.NameandDisc() ?? Username ?? "Unknown";
         }
@@ -41,7 +41,7 @@ namespace PacManBot.Services.Database
 
         public override string ToString() => ToString(null);
 
-        public string ToString(DiscordShardedClient client)
+        public string ToString(BaseSocketClient client)
         {
             return $"({State}) {Score} points in {Turns} turns by user " +
                    $"{GetUsername(client).SanitizeMarkdown().SanitizeMentions()}";

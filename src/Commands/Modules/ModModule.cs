@@ -11,8 +11,8 @@ using PacManBot.Extensions;
 namespace PacManBot.Commands.Modules
 {
     [Name(CustomEmoji.Staff + "Mod"), Remarks("5")]
-    [BetterRequireUserPermission(GuildPermission.ManageMessages)]
-    public class ModModule : BaseCustomModule
+    [PmRequireUserPermission(GuildPermission.ManageMessages)]
+    public class ModModule : PmBaseModule
     {
         public ModModule(IServiceProvider services) : base(services) { }
 
@@ -29,7 +29,7 @@ namespace PacManBot.Commands.Modules
         [Command("clear"), Alias("clean", "cl"), Remarks("Clear this bot's messages and commands")]
         [Summary("Clears all commands and messages for *this bot only*, from the last [amount] messages, " +
                  "or the last 10 messages by default.\nOnly users with the Manage Messages permission can use this command.")]
-        [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory)]
+        [PmRequireBotPermission(ChannelPermission.ReadMessageHistory)]
         public async Task ClearCommandMessages(int amount = 10)
         {
             var messages = (await Context.Channel.GetMessagesAsync(amount).FlattenAsync()).OfType<IUserMessage>();
@@ -61,7 +61,7 @@ namespace PacManBot.Commands.Modules
         [Command("setprefix"), Remarks("Set a custom prefix for this server")]
         [Summary("Change the custom prefix for this server. Requires the user to have the Manage Guild permission.\n" +
                  "Prefixes can't contain these characters: \\* \\_ \\~ \\` \\\\")]
-        [BetterRequireUserPermission(GuildPermission.ManageGuild)]
+        [PmRequireUserPermission(GuildPermission.ManageGuild)]
         public async Task SetServerPrefix(string prefix)
         {
             string error = null;
@@ -96,7 +96,7 @@ namespace PacManBot.Commands.Modules
         [Command("togglewaka"), Remarks("Turn off bot autoresponses in the server")]
         [Summary("The bot normally responds every time a message contains purely multiples of \"waka\", " +
                  "unless it's turned off server-wide using this command. Requires the user to have the Manage Guild permission.")]
-        [BetterRequireUserPermission(GuildPermission.ManageGuild)]
+        [PmRequireUserPermission(GuildPermission.ManageGuild)]
         public async Task ToggleWakaResponse()
         {
             try
@@ -121,7 +121,7 @@ namespace PacManBot.Commands.Modules
                  "asked to confirm the change for the current channel.\n\n" +
                  "**Warning!** This can result in a lot of unnecessary spam. Only use this if you're sure. " +
                  "It's a good idea only in dedicated channels, for example named \"#pacman\" or \"#botspam\"")]
-        [BetterRequireUserPermission(GuildPermission.ManageChannels)]
+        [PmRequireUserPermission(GuildPermission.ManageChannels)]
         public async Task ToggleNoPrefix([Remainder]string arg = "")
         {
             bool specified = ulong.TryParse(arg, out ulong channelId) && Context.Guild.TextChannels.Any(x => x.Id == channelId);

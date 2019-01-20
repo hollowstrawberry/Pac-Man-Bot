@@ -20,7 +20,7 @@ namespace PacManBot.Services
     public class PmCommandService : CommandService
     {
         private readonly IServiceProvider services;
-        private readonly DiscordShardedClient client;
+        private readonly PmDiscordClient client;
         private readonly LoggingService logger;
         private readonly StorageService storage;
 
@@ -28,9 +28,9 @@ namespace PacManBot.Services
         private IReadOnlyDictionary<string, IEnumerable<CommandHelp>> moduleHelp;
 
 
-        public PmCommandService(IServiceProvider services, BotConfig config,
-            DiscordShardedClient client, LoggingService logger, StorageService storage)
-            : base(GetCommandConfig(config))
+        public PmCommandService(IServiceProvider services, PmConfig config,
+            PmDiscordClient client, LoggingService logger, StorageService storage)
+            : base(config.CommandConfig)
         {
             this.services = services;
             this.client = client;
@@ -40,22 +40,11 @@ namespace PacManBot.Services
             Log += logger.Log;
         }
 
-        
-        private static CommandServiceConfig GetCommandConfig(BotConfig config)
-        {
-            return new CommandServiceConfig
-            {
-                LogLevel = config.commandLogLevel,
-                DefaultRunMode = RunMode.Async,
-                CaseSensitiveCommands = false,
-            };
-        }
-
 
         /// <summary>Adds all command modules in this assembly.</summary>
         public async Task AddModulesAsync()
         {
-            await AddModulesAsync(typeof(BaseCustomModule).Assembly, services);
+            await AddModulesAsync(typeof(PmBaseModule).Assembly, services);
 
             var allCommands = Commands
                 .OrderByDescending(c => c.Priority)

@@ -12,9 +12,9 @@ using PacManBot.Extensions;
 namespace PacManBot.Commands.Modules
 {
     [Name("👾More Games"), Remarks("3")]
-    [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.EmbedLinks |
+    [PmRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.EmbedLinks |
                                 ChannelPermission.UseExternalEmojis | ChannelPermission.AddReactions)]
-    public partial class MoreGamesModule : BaseCustomModule
+    public partial class MoreGamesModule : PmBaseModule
     {
         public MoreGamesModule(IServiceProvider services) : base(services) {}
 

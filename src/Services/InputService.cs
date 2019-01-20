@@ -20,7 +20,7 @@ namespace PacManBot.Services
     public class InputService
     {
         private readonly IServiceProvider services;
-        private readonly DiscordShardedClient client;
+        private readonly PmDiscordClient client;
         private readonly PmCommandService commands;
         private readonly StorageService storage;
         private readonly LoggingService logger;
@@ -31,8 +31,8 @@ namespace PacManBot.Services
         private static readonly Regex WakaRegex = new Regex(@"^(w+a+k+a+\W*)+$", RegexOptions.IgnoreCase);
 
 
-        public InputService(IServiceProvider services, DiscordShardedClient client, PmCommandService commands,
-            StorageService storage, LoggingService logger, GameService games, BotConfig config)
+        public InputService(IServiceProvider services, PmDiscordClient client, PmCommandService commands,
+            StorageService storage, LoggingService logger, GameService games, PmConfig config)
         {
             this.services = services;
             this.client = client;
@@ -144,7 +144,7 @@ namespace PacManBot.Services
                     $"\"{message}\" by {message.Author.FullName()} in {message.Channel.FullName()} " +
                     $"couldn't be executed. {result.ErrorReason}");
 
-                await message.Channel.SendMessageAsync(result.ErrorReason, options: Bot.DefaultOptions);
+                await message.Channel.SendMessageAsync(result.ErrorReason, options: PmBot.DefaultOptions);
             }
 
             return false;
@@ -158,13 +158,13 @@ namespace PacManBot.Services
             {
                 if (WakaRegex.IsMatch(message.Content))
                 {
-                    await message.Channel.SendMessageAsync("waka", options: Bot.DefaultOptions);
+                    await message.Channel.SendMessageAsync("waka", options: PmBot.DefaultOptions);
                     await logger.Log(LogSeverity.Verbose, $"Waka at {message.Channel.FullName()}");
                     return true;
                 }
                 else if (message.Content == "sudo neat")
                 {
-                    await message.Channel.SendMessageAsync("neat", options: Bot.DefaultOptions);
+                    await message.Channel.SendMessageAsync("neat", options: PmBot.DefaultOptions);
                     return true;
                 }
             }
@@ -239,13 +239,13 @@ namespace PacManBot.Services
             if (gameMessage != null && message.Channel.BotCan(ChannelPermission.ManageMessages))
             {
                 await gameMessage.ModifyAsync(game.GetMessageUpdate(), requestOptions);
-                await message.DeleteAsync(Bot.DefaultOptions);
+                await message.DeleteAsync(PmBot.DefaultOptions);
             }
             else
             {
                 var newMsg = await message.Channel.SendMessageAsync(game.GetContent(), false, game.GetEmbed()?.Build(), requestOptions);
                 game.MessageId = newMsg.Id;
-                if (gameMessage != null) await gameMessage.DeleteAsync(Bot.DefaultOptions);
+                if (gameMessage != null) await gameMessage.DeleteAsync(PmBot.DefaultOptions);
             }
         }
 
@@ -273,7 +273,7 @@ namespace PacManBot.Services
 
                 if (channel.BotCan(ChannelPermission.ManageMessages))
                 {
-                    await gameMessage.RemoveAllReactionsAsync(Bot.DefaultOptions);
+                    await gameMessage.RemoveAllReactionsAsync(PmBot.DefaultOptions);
                 }
             }
 

@@ -14,9 +14,9 @@ using PacManBot.Extensions;
 namespace PacManBot
 {
     /// <summary>
-    /// Runs an instance of the Discord bot and handles some events from the Discord.Net API.
+    /// Runs an instance of Pac-Man Bot and handles its connection to Discord.
     /// </summary>
-    public class Bot
+    public class PmBot
     {
         public static readonly RequestOptions DefaultOptions = new RequestOptions {
             RetryMode = RetryMode.RetryRatelimit,
@@ -24,9 +24,9 @@ namespace PacManBot
         };
 
         /// <summary>Runtime configuration of the bot.</summary>
-        public BotConfig Config { get; }
+        public PmConfig Config { get; }
 
-        private readonly DiscordShardedClient client;
+        private readonly PmDiscordClient client;
         private readonly LoggingService logger;
         private readonly StorageService storage;
         private readonly GameService games;
@@ -37,7 +37,7 @@ namespace PacManBot
         private DateTime lastGuildCountUpdate = DateTime.MinValue;
 
 
-        public Bot(BotConfig config, DiscordShardedClient client, LoggingService logger,
+        public PmBot(PmConfig config, PmDiscordClient client, LoggingService logger,
             StorageService storage, GameService games, InputService input, SchedulingService schedule)
         {
             Config = config;

@@ -12,13 +12,13 @@ namespace PacManBot.Commands
     /// The base for Pac-Man Bot modules, containing their main services and some utilities.
     /// </summary>
     /// <remarks>Service properties are loaded lazily.</remarks>
-    public abstract class BaseCustomModule : ModuleBase<ShardedCommandContext>
+    public abstract class PmBaseModule : ModuleBase<ShardedCommandContext>
     {
         /// <summary>Consistent and sane <see cref="RequestOptions"/> to be used in most Discord requests.</summary>
-        public static readonly RequestOptions DefaultOptions = Bot.DefaultOptions;
+        public static readonly RequestOptions DefaultOptions = PmBot.DefaultOptions;
 
 
-        private BotContent internalContent;
+        private PmContent internalContent;
         private LoggingService internalLogger;
         private StorageService internalStorage;
         private GameService internalGames;
@@ -31,7 +31,7 @@ namespace PacManBot.Commands
         public IServiceProvider Services { get; }
 
         /// <summary>Contents used throughout the bot.</summary>
-        public BotContent Content => internalContent ?? (internalContent = Services.Get<BotConfig>().Content);
+        public PmContent Content => internalContent ?? (internalContent = Services.Get<PmConfig>().Content);
         /// <summary>Logs everything in the console and on disk.</summary>
         public LoggingService Logger => internalLogger ?? (internalLogger = Services.Get<LoggingService>());
         /// <summary>Gives access to the bot's database.</summary>
@@ -48,7 +48,7 @@ namespace PacManBot.Commands
 
 
 
-        protected BaseCustomModule(IServiceProvider services)
+        protected PmBaseModule(IServiceProvider services)
         {
             Services = services;
         }
@@ -90,7 +90,7 @@ namespace PacManBot.Commands
 
 
         /// <summary>Creates an instance of a different module. This shouldn't ever be used. I'm a madman.</summary>
-        public TModule GetModule<TModule>() where TModule : BaseCustomModule
+        public TModule GetModule<TModule>() where TModule : PmBaseModule
             => ModuleBuilder<TModule, ShardedCommandContext>.Create(Context, Services);
     }
 }

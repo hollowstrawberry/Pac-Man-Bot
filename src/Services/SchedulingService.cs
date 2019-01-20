@@ -18,7 +18,7 @@ namespace PacManBot.Services
     /// </summary>
     public class SchedulingService
     {
-        private readonly DiscordShardedClient client;
+        private readonly PmDiscordClient client;
         private readonly LoggingService logger;
         private readonly GameService games;
         private readonly bool scheduledRestart;
@@ -32,7 +32,7 @@ namespace PacManBot.Services
         public event Func<Task> PrepareRestart;
         
 
-        public SchedulingService(BotConfig config, DiscordShardedClient client, LoggingService logger, GameService games)
+        public SchedulingService(PmConfig config, PmDiscordClient client, LoggingService logger, GameService games)
         {
             this.client = client;
             this.logger = logger;
@@ -139,7 +139,7 @@ namespace PacManBot.Services
                     try
                     {
                         var gameMessage = await game.GetMessage();
-                        if (gameMessage != null) await gameMessage.ModifyAsync(game.GetMessageUpdate(), Bot.DefaultOptions);
+                        if (gameMessage != null) await gameMessage.ModifyAsync(game.GetMessageUpdate(), PmBot.DefaultOptions);
                     }
                     catch (HttpException) { } // Something happened to the message, we can ignore it
                 }

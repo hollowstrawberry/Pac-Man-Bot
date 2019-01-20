@@ -20,14 +20,14 @@ using PacManBot.Extensions;
 namespace PacManBot.Commands.Modules
 {
     [Name(CustomEmoji.Discord + "Developer"), Remarks("0")]
-    [RequireDeveloper, BetterRequireBotPermission(ChannelPermission.AddReactions)]
-    public class DevModule : BaseCustomModule
+    [RequireDeveloper, PmRequireBotPermission(ChannelPermission.AddReactions)]
+    public class DevModule : PmBaseModule
     {
-        private Bot internalBot;
+        private PmBot internalBot;
         private ScriptingService internalScripting;
         private PacManDbContext internalDb;
 
-        public Bot Bot => internalBot ?? (internalBot = Services.Get<Bot>());
+        public PmBot Bot => internalBot ?? (internalBot = Services.Get<PmBot>());
         public ScriptingService Scripting => internalScripting ?? (internalScripting = Services.Get<ScriptingService>());
         public PacManDbContext Db => internalDb ?? (internalDb = new PacManDbContext(Bot.Config.dbConnectionString));
 
@@ -398,7 +398,7 @@ namespace PacManBot.Commands.Modules
 
         [Command("sudo clear"), Alias("sudoclear", "sudo cl", "wipe"), HideHelp]
         [Summary("Clear all messages in a range. Developer only.")]
-        [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.ManageMessages)]
+        [PmRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.ManageMessages)]
         public async Task ClearAllMessages(int amount = 10)
         {
             foreach (var message in await Context.Channel

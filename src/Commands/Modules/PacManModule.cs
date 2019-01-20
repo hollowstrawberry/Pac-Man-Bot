@@ -15,9 +15,9 @@ using PacManBot.Extensions;
 namespace PacManBot.Commands.Modules
 {
     [Name("🎮Pac-Man"), Remarks("2")]
-    [BetterRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.EmbedLinks |
+    [PmRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.EmbedLinks |
                                 ChannelPermission.UseExternalEmojis | ChannelPermission.AddReactions)]
-    public class PacManModule : BaseCustomModule
+    public class PacManModule : PmBaseModule
     {
         public PacManModule(IServiceProvider services) : base(services) { }
 
@@ -214,8 +214,7 @@ namespace PacManBot.Commands.Modules
                 var embed = new EmbedBuilder
                 {
                     Title = "🏆 __**Pac-Man Global Leaderboard**__ 🏆",
-                    Description = $"Highest score {time.Humanized()}:\n" +
-                                    scores.First().ToString(Context.Client),
+                    Description = $"Highest score {time.Humanized()}:\n" + scores.First().ToString(Context.Client),
                     Color = Colors.PacManYellow
                 };
 

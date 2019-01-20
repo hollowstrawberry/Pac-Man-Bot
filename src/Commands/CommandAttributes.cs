@@ -49,8 +49,8 @@ namespace PacManBot.Commands
     {
         public override async Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, CommandInfo command, IServiceProvider services)
         {
-            var config = services.Get<BotConfig>();
-            var app = await context.Client.GetApplicationInfoAsync(Bot.DefaultOptions);
+            var config = services.Get<PmConfig>();
+            var app = await context.Client.GetApplicationInfoAsync(PmBot.DefaultOptions);
             ulong userId = context.User.Id;
 
             bool success = app?.Owner?.Id == userId || config.developers.Contains(userId);
@@ -63,18 +63,18 @@ namespace PacManBot.Commands
     /// The original permission preconditions from Discord.Net had a wrong value for DM permissions,
     /// and didn't list all missing permissions in the error message. I hope to delete this one day.
     /// </summary>
-    public abstract class BasePermissionAttribute : PreconditionAttribute
+    public abstract class PmBasePermissionAttribute : PreconditionAttribute
     {
         protected GuildPermission? guildPerms;
         protected ChannelPermission? channelPerms;
 
 
-        protected BasePermissionAttribute(ChannelPermission channelPerms)
+        protected PmBasePermissionAttribute(ChannelPermission channelPerms)
         {
             this.channelPerms = channelPerms;
         }
 
-        protected BasePermissionAttribute(GuildPermission guildPerms)
+        protected PmBasePermissionAttribute(GuildPermission guildPerms)
         {
             this.guildPerms = guildPerms;
         }
@@ -109,10 +109,10 @@ namespace PacManBot.Commands
     /// Indicates this command can't run unless the bot has the specified permissions.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-    public class BetterRequireBotPermissionAttribute : BasePermissionAttribute
+    public class PmRequireBotPermissionAttribute : PmBasePermissionAttribute
     {
-        public BetterRequireBotPermissionAttribute(ChannelPermission channelPerms) : base(channelPerms) { }
-        public BetterRequireBotPermissionAttribute(GuildPermission guildPerms) : base(guildPerms) { }
+        public PmRequireBotPermissionAttribute(ChannelPermission channelPerms) : base(channelPerms) { }
+        public PmRequireBotPermissionAttribute(GuildPermission guildPerms) : base(guildPerms) { }
 
 
         public override async Task<PreconditionResult> CheckPermissionsAsync(
@@ -127,10 +127,10 @@ namespace PacManBot.Commands
     /// Indicates this command can't run unless the user calling it has the specified permissions.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-    public class BetterRequireUserPermissionAttribute : BasePermissionAttribute
+    public class PmRequireUserPermissionAttribute : PmBasePermissionAttribute
     {
-        public BetterRequireUserPermissionAttribute(ChannelPermission channelPerms) : base(channelPerms) { }
-        public BetterRequireUserPermissionAttribute(GuildPermission guildPerms) : base(guildPerms) { }
+        public PmRequireUserPermissionAttribute(ChannelPermission channelPerms) : base(channelPerms) { }
+        public PmRequireUserPermissionAttribute(GuildPermission guildPerms) : base(guildPerms) { }
 
 
         public override Task<PreconditionResult> CheckPermissionsAsync(

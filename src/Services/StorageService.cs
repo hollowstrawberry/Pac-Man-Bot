@@ -18,7 +18,7 @@ namespace PacManBot.Services
     /// </summary>
     public class StorageService
     {
-        private readonly DiscordShardedClient client;
+        private readonly PmDiscordClient client;
         private readonly LoggingService logger;
         private readonly string dbConnection;
 
@@ -33,7 +33,7 @@ namespace PacManBot.Services
         private PacManDbContext MakeDbContext() => new PacManDbContext(dbConnection);
 
 
-        public StorageService(BotConfig config, DiscordShardedClient client, LoggingService logger)
+        public StorageService(PmConfig config, PmDiscordClient client, LoggingService logger)
         {
             this.client = client;
             this.logger = logger;

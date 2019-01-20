@@ -42,10 +42,10 @@ namespace PacManBot
 
 
             // Set up configuration
-            BotConfig config;
+            PmConfig config;
             try
             {
-                config = JsonConvert.DeserializeObject<BotConfig>(File.ReadAllText(Files.Config));
+                config = JsonConvert.DeserializeObject<PmConfig>(File.ReadAllText(Files.Config));
                 config.LoadContent(File.ReadAllText(Files.Contents));
             }
             catch (JsonReaderException e)
@@ -60,21 +60,11 @@ namespace PacManBot
             }
 
 
-            var clientConfig = new DiscordSocketConfig {
-                TotalShards = config.shardCount,
-                LogLevel = config.clientLogLevel,
-                MessageCacheSize = config.messageCacheSize,
-                ConnectionTimeout = config.connectionTimeout,
-                DefaultRetryMode = RetryMode.RetryRatelimit,
-            };
-
-            var client = new DiscordShardedClient(clientConfig);
-
             // Set up services
             var serviceCollection = new ServiceCollection()
-                .AddSingleton<Bot>()
                 .AddSingleton(config)
-                .AddSingleton(client)
+                .AddSingleton<PmBot>()
+                .AddSingleton<PmDiscordClient>()
                 .AddSingleton<LoggingService>()
                 .AddSingleton<StorageService>()
                 .AddSingleton<PmCommandService>()
@@ -85,16 +75,14 @@ namespace PacManBot
                 .AddSingleton<ScriptingService>();
 
             var services = serviceCollection.BuildServiceProvider();
-            var logger = services.Get<LoggingService>();
 
-            await logger.Log(LogSeverity.Info, "Booting up...");
-
+            await services.Get<LoggingService>().Log(LogSeverity.Info, "Booting up...");
             await services.Get<PmCommandService>().AddModulesAsync();
             services.Get<GameService>().LoadGames();
 
 
             // Let's go
-            await services.Get<Bot>().StartAsync();
+            await services.Get<PmBot>().StartAsync();
 
             await Task.Delay(-1);
         }

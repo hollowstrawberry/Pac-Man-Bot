@@ -49,14 +49,14 @@ namespace PacManBot.Extensions
         /// The value will be null if the message doesn't exist, is not accesible, or isn't a user message.</summary>
         public static async Task<IUserMessage> GetUserMessageAsync(this ISocketMessageChannel channel, ulong id)
         {
-            return await channel.GetMessageAsync(id, options: Bot.DefaultOptions) as IUserMessage;
+            return await channel.GetMessageAsync(id, options: PmBot.DefaultOptions) as IUserMessage;
         }
 
 
         /// <summary>Attempts to react to a given message using custom cross and check emojis depending on the condition.</summary>
         public static async Task AutoReactAsync(this IUserMessage message, bool success = true)
         {
-            await message.AddReactionAsync(success ? CustomEmoji.ECheck : CustomEmoji.ECross, Bot.DefaultOptions);
+            await message.AddReactionAsync(success ? CustomEmoji.ECheck : CustomEmoji.ECross, PmBot.DefaultOptions);
         }
 
 

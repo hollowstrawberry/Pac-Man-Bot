@@ -21,7 +21,7 @@ namespace PacManBot.Services
         public string LogFile => $"{LogDirectory}{DateTime.Now:yyyy-MM-dd}.txt";
 
 
-        public LoggingService(BotConfig config, DiscordShardedClient client)
+        public LoggingService(PmConfig config, PmDiscordClient client)
         {
             logExclude = config.logExclude;
 
