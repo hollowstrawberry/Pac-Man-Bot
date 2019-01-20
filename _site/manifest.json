@@ -9,10 +9,10 @@
       "output": {
         ".html": {
           "relative_path": "README.html",
-          "hash": "rI9dJbgMM0HLZMMKrWibDg=="
+          "hash": "7SGJ3nbE2jPkZl+NN8mJtA=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -21,7 +21,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Commands.ExampleUsageAttribute.html",
-          "hash": "pzvpKlvek1xVfgbpx6Dfew=="
+          "hash": "Lc+VurL+ndZW80IW2Jd+7Q=="
         }
       },
       "is_incremental": false,
@@ -33,7 +33,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Commands.HideHelpAttribute.html",
-          "hash": "HVy69IQwmen4vO0MT2CuVQ=="
+          "hash": "1NVvVv2lONyuRQVwCpbOcA=="
         }
       },
       "is_incremental": false,
@@ -45,7 +45,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Commands.ModuleBuilder-2.html",
-          "hash": "MLzOjxhJrzMildU2EAHKxg=="
+          "hash": "xI6Ul50E4Nm41nWjPiFJRA=="
         }
       },
       "is_incremental": false,
@@ -57,7 +57,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Commands.Modules.DevModule.html",
-          "hash": "neJLcGg0MOswAspK4B4iJA=="
+          "hash": "gfpfsRNKWQDiHLzcnjOIFw=="
         }
       },
       "is_incremental": false,
@@ -69,7 +69,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Commands.Modules.GeneralModule.html",
-          "hash": "QvOKcb1Lzi4dbFCd5aYOAw=="
+          "hash": "tanBGdSWt8NYHSJy8Ejsiw=="
         }
       },
       "is_incremental": false,
@@ -81,7 +81,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Commands.Modules.ModModule.html",
-          "hash": "jGztYAZOfnWJcZvGmuzfjA=="
+          "hash": "J5TKCRqC86+DAxtgKFaIDg=="
         }
       },
       "is_incremental": false,
@@ -93,7 +93,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Commands.Modules.MoreGamesModule.html",
-          "hash": "zqjPMFQ2YDJaReuBXNoj3w=="
+          "hash": "+NN+xD0/9qKTyJg5ak4heA=="
         }
       },
       "is_incremental": false,
@@ -105,7 +105,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Commands.Modules.PacManModule.html",
-          "hash": "KyYx22b2KwXjNtA6P8qCjQ=="
+          "hash": "RIA94wGzsSGE4BQpEglqVQ=="
         }
       },
       "is_incremental": false,
@@ -117,7 +117,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Commands.Modules.html",
-          "hash": "2blMNDbqBKovrvVJFL3RRQ=="
+          "hash": "9Qjt3lXP+OLSx6nvrfb6gA=="
         }
       },
       "is_incremental": false,
@@ -129,7 +129,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Commands.ParametersAttribute.html",
-          "hash": "3n3QHtYPmdF+PSGxC2CcbA=="
+          "hash": "cxXwPQ0F7/vdusc5DRlNDQ=="
         }
       },
       "is_incremental": false,
@@ -141,7 +141,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Commands.PmBaseModule.html",
-          "hash": "y3VukKtyTcRqpUf44ffDmQ=="
+          "hash": "Fqj26bcphRwMWFJCib5QTw=="
         }
       },
       "is_incremental": false,
@@ -153,7 +153,19 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Commands.PmBasePermissionAttribute.html",
-          "hash": "eEvjZ80l0+KoSHt/0QZOfQ=="
+          "hash": "EEQv5TOt1e/z1a/O3voMgQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Commands.PmCommandContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Commands.PmCommandContext.html",
+          "hash": "DWvnaPe4JM5ElYRnfdRRDA=="
         }
       },
       "is_incremental": false,
@@ -165,7 +177,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Commands.PmRequireBotPermissionAttribute.html",
-          "hash": "AIerWVvzTcRi/NolqaCyGQ=="
+          "hash": "/WLYfUK9AlInj2cN/CBRqA=="
         }
       },
       "is_incremental": false,
@@ -177,7 +189,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Commands.PmRequireUserPermissionAttribute.html",
-          "hash": "jlySqmTP6ISiOfT9VzwZZg=="
+          "hash": "xi7Er3x57DK3LxAgMFUlYw=="
         }
       },
       "is_incremental": false,
@@ -189,7 +201,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Commands.RequireDeveloperAttribute.html",
-          "hash": "bR2pIUP1T1V1trDeQF7yuw=="
+          "hash": "O4j2JSi9eTTmnngu7wKmJw=="
         }
       },
       "is_incremental": false,
@@ -201,7 +213,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Commands.html",
-          "hash": "xghWTKpdVqQHalDzTcnKlg=="
+          "hash": "B4NBJdjq49YiAqClUKKjEQ=="
         }
       },
       "is_incremental": false,
@@ -213,7 +225,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Constants.Colors.html",
-          "hash": "hSpr5VK3g7QLosw8qrQ85Q=="
+          "hash": "GYCWLs0UpjxI5H8aCNUaBQ=="
         }
       },
       "is_incremental": false,
@@ -225,7 +237,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Constants.CustomEmoji.html",
-          "hash": "NEgJFdTYQznHprucXO/qlA=="
+          "hash": "eTpodx7ilk7f2BicYocK3g=="
         }
       },
       "is_incremental": false,
@@ -237,7 +249,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Constants.ExitCodes.html",
-          "hash": "HwUKLx9krx3iXNl/gPoN6A=="
+          "hash": "R5+wmv3BjWHvQjq6111hbw=="
         }
       },
       "is_incremental": false,
@@ -249,7 +261,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Constants.Files.html",
-          "hash": "b062v8p8ZCEEAIZRtLKfJw=="
+          "hash": "cORa5bYVkMtWvN353Ls4ig=="
         }
       },
       "is_incremental": false,
@@ -261,7 +273,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Constants.LogSource.html",
-          "hash": "hbuElMCErtPUo4qs6PlDFg=="
+          "hash": "eqcWdwFalJq5fSHgBsySyQ=="
         }
       },
       "is_incremental": false,
@@ -273,7 +285,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Constants.html",
-          "hash": "DTZ+VJedmld5uM8Hdo6Erw=="
+          "hash": "vI1GdWBH8LeTSNGVtEm4yA=="
         }
       },
       "is_incremental": false,
@@ -285,7 +297,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Extensions.CollectionExtensions.html",
-          "hash": "79AlJnlu1+BrhcO/MzsCCA=="
+          "hash": "m6fpKKfH+RJg4RleQx8ZXA=="
         }
       },
       "is_incremental": false,
@@ -297,7 +309,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Extensions.DiscordExtensions.html",
-          "hash": "cyWLlNfWH3YoUGqkk9M12A=="
+          "hash": "4lRzgMko2hDxLLrgAgxddA=="
         }
       },
       "is_incremental": false,
@@ -309,7 +321,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Extensions.GameExtensions.html",
-          "hash": "XhlRZDZxzxfXw/mW+tRScw=="
+          "hash": "S2RF8r5fewzRmACdqGJ6sQ=="
         }
       },
       "is_incremental": false,
@@ -321,7 +333,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Extensions.NumberExtensions.html",
-          "hash": "YOEPXiF+D6ewDYlJjl+HnQ=="
+          "hash": "yfd4jCHA7+5SA1VK9CE5Vg=="
         }
       },
       "is_incremental": false,
@@ -333,7 +345,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Extensions.OtherExtensions.html",
-          "hash": "W4Y9jruRZO9UH2NloKv+rA=="
+          "hash": "L7TO9qhkV6wvku+DwwnK9Q=="
         }
       },
       "is_incremental": false,
@@ -345,7 +357,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Extensions.RandomExtensions.html",
-          "hash": "dEsLVfzzy10WDmhROocpkw=="
+          "hash": "slfopfTncUJ8ZQa69qVTnw=="
         }
       },
       "is_incremental": false,
@@ -357,7 +369,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Extensions.ReflectionExtensions.html",
-          "hash": "YYW1lFYjf8BMTQ9A5sbZGA=="
+          "hash": "SBGvzDMpURPHeJ/3nrkqng=="
         }
       },
       "is_incremental": false,
@@ -369,7 +381,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Extensions.StringExtensions.html",
-          "hash": "w5vcoahJqndPMRfyB/YPfA=="
+          "hash": "WvJsukJSHpJL1LdniW0kPw=="
         }
       },
       "is_incremental": false,
@@ -381,7 +393,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Extensions.html",
-          "hash": "ekJCTR9JwL6rfP7C+XNWgA=="
+          "hash": "4UGeZGSNah6AtM65lBaI5A=="
         }
       },
       "is_incremental": false,
@@ -393,7 +405,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.BaseGame.html",
-          "hash": "wYZwi3QT4VgteN7k9s6C5w=="
+          "hash": "FxEeMpQm1SaplS/YWu60kQ=="
         }
       },
       "is_incremental": false,
@@ -405,7 +417,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Board-1.html",
-          "hash": "gPex0sUUPkfNbUfDEBsvGA=="
+          "hash": "Bn2np7OihPL4uZ3bu0O8yw=="
         }
       },
       "is_incremental": false,
@@ -417,7 +429,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.ChannelGame.html",
-          "hash": "7YC9wpZul8mUe9WyHU+71A=="
+          "hash": "ZZEultdCTgCn5vd4inzkLA=="
         }
       },
       "is_incremental": false,
@@ -429,7 +441,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.C4Game.html",
-          "hash": "CLfxJRa20LViVsfgW0HmoQ=="
+          "hash": "dShzMguUvD4FdF6SyBPYyA=="
         }
       },
       "is_incremental": false,
@@ -441,7 +453,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.InvalidMapException.html",
-          "hash": "QWQ2QrRBVZxYFJODPL6KeQ=="
+          "hash": "m4gNyfjXylaAob3djJXl3Q=="
         }
       },
       "is_incremental": false,
@@ -453,7 +465,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.PacManGame.PacManInput.html",
-          "hash": "TJTMn59HMrWhnj1so+X3HQ=="
+          "hash": "v5XRBZJmd+HKphxlDc4ehg=="
         }
       },
       "is_incremental": false,
@@ -465,7 +477,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.PacManGame.html",
-          "hash": "+nSRRS/pkgVxA61w3kH7jQ=="
+          "hash": "roBULIhpvjEetVp63N5IxA=="
         }
       },
       "is_incremental": false,
@@ -477,7 +489,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.PetGame.AchievementAttribute.html",
-          "hash": "l4oolOzeKN978T6596IbJA=="
+          "hash": "nZ54Glj0/q/3/JgCZkzSkg=="
         }
       },
       "is_incremental": false,
@@ -489,7 +501,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.PetGame.Achievements.html",
-          "hash": "bdMU871TOYa/iRtiUV279Q=="
+          "hash": "OMPWs3bj9biKNf18NQPe/w=="
         }
       },
       "is_incremental": false,
@@ -501,7 +513,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.PetGame.html",
-          "hash": "M+HQH6uEFNlKw3ZSkuxuLA=="
+          "hash": "RzKGLAmQn3Upi92VVwRU3g=="
         }
       },
       "is_incremental": false,
@@ -513,7 +525,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Armor.html",
-          "hash": "apjfEf8reQvdZNKqqHBKMg=="
+          "hash": "wpDJF5HssswjcAWmBpxIHA=="
         }
       },
       "is_incremental": false,
@@ -525,7 +537,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Armors.BluntArmor.html",
-          "hash": "LJyqnuTVO6iNDL9vEoqrWQ=="
+          "hash": "5TAUvs+Rr42pyzX9rZojUw=="
         }
       },
       "is_incremental": false,
@@ -537,7 +549,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Armors.Clothes.html",
-          "hash": "hWeWeG7IM5Fmzue/R2pVvA=="
+          "hash": "H960EeoDNr525/gmzhghKA=="
         }
       },
       "is_incremental": false,
@@ -549,7 +561,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Armors.CuttingArmor.html",
-          "hash": "xw0MpviSpZb9/WYhW17cog=="
+          "hash": "fV/g1E83iPDLtI5JBq4g1A=="
         }
       },
       "is_incremental": false,
@@ -561,7 +573,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Armors.MagicArmor.html",
-          "hash": "ZTyhBE++mKU8moalVnUOcg=="
+          "hash": "c7EPmrBTSnj8exLvIVG0cA=="
         }
       },
       "is_incremental": false,
@@ -573,7 +585,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Armors.NinjaSuit.html",
-          "hash": "cmt7igkt8an+FePtgOZ+ew=="
+          "hash": "alk3e37lkvPelNI0HahRpw=="
         }
       },
       "is_incremental": false,
@@ -585,7 +597,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Armors.NoobArmor.html",
-          "hash": "ammWr9BQgJ8NkFD3gl1CAQ=="
+          "hash": "TxtwfVgL+9u8vauObTf3oQ=="
         }
       },
       "is_incremental": false,
@@ -597,7 +609,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Armors.PierceArmor.html",
-          "hash": "X0CP1dl0P1GECvHpbJ4KUA=="
+          "hash": "jihoOJYJqPhyM3zkpPJOYQ=="
         }
       },
       "is_incremental": false,
@@ -609,7 +621,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Armors.SpectreArmor.html",
-          "hash": "pVRwsWv/8MTA84Uwpt/pZg=="
+          "hash": "1qi/Qp+qG8oUyENvXaMzJA=="
         }
       },
       "is_incremental": false,
@@ -621,7 +633,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Armors.TitanArmor.html",
-          "hash": "wIGdmcqPkk+anb6UodqaXQ=="
+          "hash": "MjJc8CO+Tom3MnxZqgYaDg=="
         }
       },
       "is_incremental": false,
@@ -633,7 +645,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Armors.html",
-          "hash": "q4BJWWXpb6HswaeKfJ342w=="
+          "hash": "Bcic9Ddgo+croW2BZu+O+g=="
         }
       },
       "is_incremental": false,
@@ -645,7 +657,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Buff.html",
-          "hash": "X/EeKZRmxdydj5IuBSED9w=="
+          "hash": "f8wC5OA3jpkfWc290wL8aQ=="
         }
       },
       "is_incremental": false,
@@ -657,7 +669,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Buffs.Blinded.html",
-          "hash": "uGZr5tQ1E6nX2HiO4H1oWg=="
+          "hash": "XGVqAvaqgE+v0iHD/9PV6A=="
         }
       },
       "is_incremental": false,
@@ -669,7 +681,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Buffs.Blocking.html",
-          "hash": "dITdOYHBQaHTNcJGzzXT1Q=="
+          "hash": "Kl1KtprJiZivqA8Dw/o/SA=="
         }
       },
       "is_incremental": false,
@@ -681,7 +693,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Buffs.Burn.html",
-          "hash": "se0qjMzi5M8NKu/WBpcWpA=="
+          "hash": "fsE+Kzv0s74EEQGRPvP+oA=="
         }
       },
       "is_incremental": false,
@@ -693,7 +705,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Buffs.CritBuff.html",
-          "hash": "7Tk4BqUM2XKInXm34945sw=="
+          "hash": "XnJIWZThvKMR2/9aMK1Kmw=="
         }
       },
       "is_incremental": false,
@@ -705,7 +717,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Buffs.Fury.html",
-          "hash": "8GIOk6S3PNCfwRvtTyTh6w=="
+          "hash": "6ufJf1qP24bCOp7RzB7t3Q=="
         }
       },
       "is_incremental": false,
@@ -717,7 +729,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Buffs.Immune.html",
-          "hash": "9r/rUtWfpZaO7eV/DKnsZQ=="
+          "hash": "euctJK/bIbXdAjAz77737Q=="
         }
       },
       "is_incremental": false,
@@ -729,7 +741,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Buffs.Vulnerable.html",
-          "hash": "cChPqWF2cXRw9M6Vl5N7CQ=="
+          "hash": "XGHulGl2Cf2zHzYId+WTJg=="
         }
       },
       "is_incremental": false,
@@ -741,7 +753,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Buffs.Wet.html",
-          "hash": "fTlOTME9urgeQK7YXy2n/g=="
+          "hash": "A/HhKTbhnB3qDk0r4QX1Aw=="
         }
       },
       "is_incremental": false,
@@ -753,7 +765,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Buffs.html",
-          "hash": "MjlvIs7JhYT3/IqPhkD4Cg=="
+          "hash": "70vxFO04QitNLcu5b2TB1A=="
         }
       },
       "is_incremental": false,
@@ -765,7 +777,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.DamageType.html",
-          "hash": "IkXxCqBziWyjDxBZBfYVng=="
+          "hash": "X7Q/vwWSFP0Pwa4n2zU6gw=="
         }
       },
       "is_incremental": false,
@@ -777,7 +789,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.AirElemental1.html",
-          "hash": "y0liMkZ9q3CfKSgzYk3wbA=="
+          "hash": "QFwlwyg+4UU512qUB1dsuA=="
         }
       },
       "is_incremental": false,
@@ -789,7 +801,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.AirElemental2.html",
-          "hash": "3ad3JrUi8f0dGoTFcAJ7JQ=="
+          "hash": "+QnSo7c691/7HGh9oDTDbg=="
         }
       },
       "is_incremental": false,
@@ -801,7 +813,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.AllElemental1.html",
-          "hash": "uedeueBImT+ldPHugml2QA=="
+          "hash": "QLySPKdKpRXxWGg0sH+3Vg=="
         }
       },
       "is_incremental": false,
@@ -813,7 +825,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.Bear.html",
-          "hash": "tJlfxdYaVXh7YKWzCW+RTQ=="
+          "hash": "SKwTvRjnXZvXHP5mwtyypg=="
         }
       },
       "is_incremental": false,
@@ -825,7 +837,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.BlueSlime.html",
-          "hash": "kNmi1hbMKZuJyjFLwfD+pQ=="
+          "hash": "loBHt+IkdooBxC8wPWNFqA=="
         }
       },
       "is_incremental": false,
@@ -837,7 +849,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.EarthElemental1.html",
-          "hash": "BpF4fj92GwbXtYuLzXVHBA=="
+          "hash": "b7qV1db16etAEdDeUI/wDA=="
         }
       },
       "is_incremental": false,
@@ -849,7 +861,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.EarthElemental2.html",
-          "hash": "HZEcNKgggcF9RuvZPiqzKA=="
+          "hash": "dz+JJifj8xlBHCG8gz2ucw=="
         }
       },
       "is_incremental": false,
@@ -861,7 +873,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.FireElemental1.html",
-          "hash": "2OpOATaEi97tUsqyKYZgHg=="
+          "hash": "JtGuc6REDCRkwN8eSCXh3g=="
         }
       },
       "is_incremental": false,
@@ -873,7 +885,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.FireElemental2.html",
-          "hash": "0S63WiBbt5lnq3EkY3gRHw=="
+          "hash": "5spi+PrT0IWLG68lMP88cQ=="
         }
       },
       "is_incremental": false,
@@ -885,7 +897,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.Flop.html",
-          "hash": "HYeyU0iAhduVqseJLXVCgQ=="
+          "hash": "kXPIdbk+8dj9mDDXLqe1qg=="
         }
       },
       "is_incremental": false,
@@ -897,7 +909,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.Goblin.html",
-          "hash": "r79DupTYzBrjkm3AFJIpYQ=="
+          "hash": "dMMbpb/YTdPUjgagc0J1KA=="
         }
       },
       "is_incremental": false,
@@ -909,7 +921,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.MamaOinx.html",
-          "hash": "LkZ8UHwlFZM2mnC1ymkBrA=="
+          "hash": "1A3E45M6Pk8FQX19PSeO6Q=="
         }
       },
       "is_incremental": false,
@@ -921,7 +933,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.MechaBear.html",
-          "hash": "jnfoMPVZjFfUwGtb2dzoLg=="
+          "hash": "HPZLV2Qde1ZD+Opdlb7a2w=="
         }
       },
       "is_incremental": false,
@@ -933,7 +945,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.MechaFlopper.html",
-          "hash": "6ghgpe0MvlSDw3DlrMA3QQ=="
+          "hash": "3cvKDZiOwXdDemAT6E/oYA=="
         }
       },
       "is_incremental": false,
@@ -945,7 +957,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.MechaOinx.html",
-          "hash": "i0+RMJQYJqhu/EYxE+C4aA=="
+          "hash": "bq9LP8Uv4NFJMGWHOS0uuA=="
         }
       },
       "is_incremental": false,
@@ -957,7 +969,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.Oinx.html",
-          "hash": "ucDNal7LS6FqCdjW1EETmw=="
+          "hash": "O0+FKNU/S3Y2lUui853/RQ=="
         }
       },
       "is_incremental": false,
@@ -969,7 +981,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.Rat.html",
-          "hash": "BiT6EefczOU8OOlmAEv3gQ=="
+          "hash": "VnHp+bH4d0wVzrq9CPHSwA=="
         }
       },
       "is_incremental": false,
@@ -981,7 +993,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.Skeleton.html",
-          "hash": "qEJSmnqMyI4lQgD4OiNYGQ=="
+          "hash": "d4fugS9kw+oCi2QxTeHRDg=="
         }
       },
       "is_incremental": false,
@@ -993,7 +1005,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.Skeleton2.html",
-          "hash": "3Bw3EIScQkOh7bR3OEUxmw=="
+          "hash": "IjR4rLUBvyIQ+QpOGCy7Zg=="
         }
       },
       "is_incremental": false,
@@ -1005,7 +1017,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.Skeleton3.html",
-          "hash": "nvPHPGpawzDonlOL1dvT+w=="
+          "hash": "I+CZ7i1qFVDqtjRqBpxzoQ=="
         }
       },
       "is_incremental": false,
@@ -1017,7 +1029,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.Skeleton4.html",
-          "hash": "kPC0t5F/Nzd29d1exxY21w=="
+          "hash": "yre/3PX91qIF8tR/GuBUmg=="
         }
       },
       "is_incremental": false,
@@ -1029,7 +1041,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.Skeleton5.html",
-          "hash": "CPKmwFn0gpD2RyTVDhlbSA=="
+          "hash": "LsRe8fWMF/CXPfCjSxZeAQ=="
         }
       },
       "is_incremental": false,
@@ -1041,7 +1053,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.Skeleton6.html",
-          "hash": "waHK8EDAy7ZQIbmDnRjmoA=="
+          "hash": "+W+Mo0inf/aV3CaUkBY/Iw=="
         }
       },
       "is_incremental": false,
@@ -1053,7 +1065,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.SkeletonKing.html",
-          "hash": "UGsmiuGkYln7oXpCDbO2Pg=="
+          "hash": "7YlN3PLLVReWvAn0eqvw7g=="
         }
       },
       "is_incremental": false,
@@ -1065,7 +1077,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.Slime.html",
-          "hash": "8+6z15f8guVzQJ+ZsBW6/w=="
+          "hash": "+mBFrwnnX8udg1sinxjynA=="
         }
       },
       "is_incremental": false,
@@ -1077,7 +1089,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.Slime3.html",
-          "hash": "WyaIg1g4Th2qAVtlfUHd5g=="
+          "hash": "/oqDEkfFiMMVGfp1x5BGlQ=="
         }
       },
       "is_incremental": false,
@@ -1089,7 +1101,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.WaterElemental1.html",
-          "hash": "NxQB3XPjV/gcgFyHbIwBuA=="
+          "hash": "si8foRxPMIq0uEmxjnOdFg=="
         }
       },
       "is_incremental": false,
@@ -1101,7 +1113,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.WaterElemental2.html",
-          "hash": "u9lHWX/uuN0mOwTm33pAlg=="
+          "hash": "yAkOTP4YkQLeO7yoB8t7Ig=="
         }
       },
       "is_incremental": false,
@@ -1113,7 +1125,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.html",
-          "hash": "Gy3nrWOkhqG2rZLIe1px9w=="
+          "hash": "FYf5fIMZiuKjAwXH9k0Fcg=="
         }
       },
       "is_incremental": false,
@@ -1125,7 +1137,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemy.html",
-          "hash": "VufhSzqTS6fprzE66z4tWA=="
+          "hash": "MltJciBrBhsUSKeLqXIaFQ=="
         }
       },
       "is_incremental": false,
@@ -1137,7 +1149,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Entity.html",
-          "hash": "sQTke1qhIj8WrzOEI4sL9g=="
+          "hash": "K88hi1JaezAUTBc05GoaUw=="
         }
       },
       "is_incremental": false,
@@ -1149,7 +1161,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Equipment.html",
-          "hash": "ARdliBvIZUo1NxnIU0m9qg=="
+          "hash": "dFy69uI1Lu/Fcd6mkSrp3w=="
         }
       },
       "is_incremental": false,
@@ -1161,7 +1173,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.IKeyable.html",
-          "hash": "YYRBZBYV5L9oLrvTi2GJVw=="
+          "hash": "ZbTPGooXV+nVu/dvjxjZkQ=="
         }
       },
       "is_incremental": false,
@@ -1173,7 +1185,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Item.html",
-          "hash": "rUyfOhWXyeNs+Dt2PdMu1A=="
+          "hash": "WantXBcB7zALe5CcESLiyg=="
         }
       },
       "is_incremental": false,
@@ -1185,7 +1197,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.MagicType.html",
-          "hash": "jI+KdyeLAOHbiLe/AWfG9A=="
+          "hash": "1sB88w2F7Agt52uFndJbLQ=="
         }
       },
       "is_incremental": false,
@@ -1197,7 +1209,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.RpgExtensions.html",
-          "hash": "hJnNjumDBOczwU77eOdw/g=="
+          "hash": "IEfmItGB58xv4Xvhzc+rsg=="
         }
       },
       "is_incremental": false,
@@ -1209,7 +1221,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.RpgPlayer.html",
-          "hash": "ATOaTR7wXI5F/zajR5rf9A=="
+          "hash": "AzPokm+SgYanK/OqtIbsRw=="
         }
       },
       "is_incremental": false,
@@ -1221,7 +1233,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Skill.html",
-          "hash": "/o0M2KeKjycbp0zxvhqerw=="
+          "hash": "WsmWsBTZH+x7b6jELGXfwQ=="
         }
       },
       "is_incremental": false,
@@ -1233,7 +1245,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.SkillType.html",
-          "hash": "0vniMVjVqplfgc7wo1PMFg=="
+          "hash": "6xcI4RbOD8sGfu0i7JKhNQ=="
         }
       },
       "is_incremental": false,
@@ -1245,7 +1257,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Skills.FocusAim.html",
-          "hash": "yfl9sTuP1g6x8MNejVYq3A=="
+          "hash": "RT9yXmoXXALeWZObCoX8+w=="
         }
       },
       "is_incremental": false,
@@ -1257,7 +1269,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Skills.FuriousResolve.html",
-          "hash": "1ccG3XMKB4zUwfjUA6+ZRA=="
+          "hash": "FNvnkBsdGqpZzeY+P4B6aA=="
         }
       },
       "is_incremental": false,
@@ -1269,7 +1281,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Skills.Outburst.html",
-          "hash": "9ObtdNPyjRSBlVkqYCSvDw=="
+          "hash": "3aHhWe6o3feXQ0Pp/pz2oQ=="
         }
       },
       "is_incremental": false,
@@ -1281,7 +1293,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Skills.ReadyBlock.html",
-          "hash": "lUdjD0OLLSnbDWAVdoDRgQ=="
+          "hash": "o+mFqD8B+EcaLE2XQ/KGhA=="
         }
       },
       "is_incremental": false,
@@ -1293,7 +1305,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Skills.SiphonStrike.html",
-          "hash": "648hL8RdtZeGNqGK8apckw=="
+          "hash": "iTAUnCKWmTeZsQYV0jRbMQ=="
         }
       },
       "is_incremental": false,
@@ -1305,7 +1317,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Skills.StealthBolt.html",
-          "hash": "9u5GmAc1BHwJvoXugpJrOA=="
+          "hash": "POFsBm1zT7nbpcTF6MWSZg=="
         }
       },
       "is_incremental": false,
@@ -1317,7 +1329,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Skills.WideAssault.html",
-          "hash": "kx25iDX+qKzZ/dh2t0JlgQ=="
+          "hash": "HRSOEPIjonuZv9fKIYdCoA=="
         }
       },
       "is_incremental": false,
@@ -1329,7 +1341,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Skills.html",
-          "hash": "WLcLEJQRKq1EtbFDsDI9qg=="
+          "hash": "jjBHCgATg+9MJwgBGEbTkA=="
         }
       },
       "is_incremental": false,
@@ -1341,7 +1353,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Weapon.html",
-          "hash": "36j/aH7dz5jZS/XgAQNLGA=="
+          "hash": "cw8czQML3ODi3YOzMoWsuA=="
         }
       },
       "is_incremental": false,
@@ -1353,7 +1365,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Weapons.Bow.html",
-          "hash": "PuGYrxegtyhtZPCg3zV1dA=="
+          "hash": "nd6FiMi2k0iDDPK2xenRaA=="
         }
       },
       "is_incremental": false,
@@ -1365,7 +1377,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Weapons.Dagger.html",
-          "hash": "LaD8hPemhRN9bMca2JBY0Q=="
+          "hash": "8kWfWLn6ZT6bNkzmUQeocA=="
         }
       },
       "is_incremental": false,
@@ -1377,7 +1389,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Weapons.EarthSpell.html",
-          "hash": "TOY2rUsjRInD2tbyciywYw=="
+          "hash": "BH6v3m/Z1pFtHVCRmWS8cw=="
         }
       },
       "is_incremental": false,
@@ -1389,7 +1401,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Weapons.FireScroll.html",
-          "hash": "QZbhfw5lA+An48U48ZKffw=="
+          "hash": "wb/9VvmG1hJrCQ87iCEYkA=="
         }
       },
       "is_incremental": false,
@@ -1401,7 +1413,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Weapons.Fists.html",
-          "hash": "nILEIrNbHK7JMb9TN5MwZg=="
+          "hash": "uGnGtYQvqVDNkY4jhE9agg=="
         }
       },
       "is_incremental": false,
@@ -1413,7 +1425,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Weapons.ForestSword.html",
-          "hash": "GGKsi7pudDaGzE0tF9p0NA=="
+          "hash": "1aUJAiYgF34tg2ljaPSNZA=="
         }
       },
       "is_incremental": false,
@@ -1425,7 +1437,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Weapons.ImportantSword.html",
-          "hash": "soM71P2HO2xKCHkSg8cs/w=="
+          "hash": "TIEYYPKyibFC0YgA8hMkDg=="
         }
       },
       "is_incremental": false,
@@ -1437,7 +1449,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Weapons.Longbow.html",
-          "hash": "eB1mAndTg8MGBTg4UfWaGg=="
+          "hash": "IdmsLwI6Ol3S7IhqI3QAlw=="
         }
       },
       "is_incremental": false,
@@ -1449,7 +1461,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Weapons.Mace.html",
-          "hash": "vxOKBnVntMYyZOyChlwEnw=="
+          "hash": "JWfBGAaH5LHD0rYzkcc7Dw=="
         }
       },
       "is_incremental": false,
@@ -1461,7 +1473,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Weapons.QuestSword.html",
-          "hash": "owRBoY692aTMQ24rqn3xKA=="
+          "hash": "URMqNoXUItfghpwi8jFnPA=="
         }
       },
       "is_incremental": false,
@@ -1473,7 +1485,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Weapons.Shield.html",
-          "hash": "fvWEpY6VWJ3c0rsXRqBM8g=="
+          "hash": "sSyVbuBhYu7E0Cdc77SKxA=="
         }
       },
       "is_incremental": false,
@@ -1485,7 +1497,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Weapons.Shortsword.html",
-          "hash": "lxTTIX3ZhQb/74Y22L5jeA=="
+          "hash": "8xwpAqKGMMBtgabk1sxH3A=="
         }
       },
       "is_incremental": false,
@@ -1497,7 +1509,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Weapons.SimpleSpell.html",
-          "hash": "mtKRiERuOw2IGPrJ1SkJ+A=="
+          "hash": "wRLu+ZzoTS7kOENsYKrpfw=="
         }
       },
       "is_incremental": false,
@@ -1509,7 +1521,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Weapons.Stick.html",
-          "hash": "HFlo3BthB9ws2rqB0GzdMw=="
+          "hash": "KeKq8eAXVB/3Myx91CNszg=="
         }
       },
       "is_incremental": false,
@@ -1521,7 +1533,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Weapons.TitanHammer.html",
-          "hash": "Mt+vErPd8t99ZUPXbk2SiQ=="
+          "hash": "A/YzQO0ckNYjNvaiLggl2g=="
         }
       },
       "is_incremental": false,
@@ -1533,7 +1545,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Weapons.html",
-          "hash": "t7UVpQd+bRm+0RqybWpttQ=="
+          "hash": "ViEdhNp2xtNWJZeXLKP2Kg=="
         }
       },
       "is_incremental": false,
@@ -1545,7 +1557,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.html",
-          "hash": "p2dODEVDW7L0MKPTjWzEcg=="
+          "hash": "8gEfnhlw41EKkDLjSn5ZCg=="
         }
       },
       "is_incremental": false,
@@ -1557,7 +1569,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.RpgGame.html",
-          "hash": "P9d8euCY3b/R3ZU2K6+s5g=="
+          "hash": "IUYaW/buA7U2XbdxSsJZug=="
         }
       },
       "is_incremental": false,
@@ -1569,7 +1581,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.RubiksGame.Move.html",
-          "hash": "UBCxr6VgWpbGLhtbBxc7zg=="
+          "hash": "YpHiL8otUX4wSOEztPuRNg=="
         }
       },
       "is_incremental": false,
@@ -1581,7 +1593,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.RubiksGame.Sticker.html",
-          "hash": "NS9g/fjNOQFNU84i/eLJpw=="
+          "hash": "WCteTBhCJcVPZzDqAMzn5Q=="
         }
       },
       "is_incremental": false,
@@ -1593,7 +1605,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.RubiksGame.html",
-          "hash": "9DOMT997Oa0qc6fx0k9qOQ=="
+          "hash": "sd75M/MrhokyCpT8A0rxIA=="
         }
       },
       "is_incremental": false,
@@ -1605,7 +1617,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.TTT5Game.html",
-          "hash": "mLZQUBNSRE/YVvLSPyygDA=="
+          "hash": "Ni2ALvIlZ1fLEvyQUq9xog=="
         }
       },
       "is_incremental": false,
@@ -1617,7 +1629,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.TTTGame.html",
-          "hash": "CJEVnQpMWft/2zerulv+Hg=="
+          "hash": "yhJmarwyv8TOSbTBLqwnYg=="
         }
       },
       "is_incremental": false,
@@ -1629,7 +1641,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.UnoGame.html",
-          "hash": "PzCsn2TLr5ULlwOfeXkzWQ=="
+          "hash": "b42TZBHBUJaxEtmK/j5wbg=="
         }
       },
       "is_incremental": false,
@@ -1641,7 +1653,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.html",
-          "hash": "gvghSf2Pkt/8xs60gRGe1g=="
+          "hash": "ih76w/5ZT/49rQDDewq4JA=="
         }
       },
       "is_incremental": false,
@@ -1653,7 +1665,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Dir.html",
-          "hash": "ElTPlk6YJ0IZTuL8pcpbDg=="
+          "hash": "Of2MFkeZsyDNpwmywbH59g=="
         }
       },
       "is_incremental": false,
@@ -1665,7 +1677,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.IBaseGame.html",
-          "hash": "Mu989ezX0W6+p7W+35+uqw=="
+          "hash": "XwJ9Hht0D4pATRmIJpN5ig=="
         }
       },
       "is_incremental": false,
@@ -1677,7 +1689,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.IChannelGame.html",
-          "hash": "5op7FVNSzBd+pql8KSGQSw=="
+          "hash": "2IA8QflKY+ocEHel3tErEw=="
         }
       },
       "is_incremental": false,
@@ -1689,7 +1701,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.IMessagesGame.html",
-          "hash": "0tnYbRkrQsCmqpnIO+WT+Q=="
+          "hash": "Ya/JfrmyfzrH0EfpePB/Mg=="
         }
       },
       "is_incremental": false,
@@ -1701,7 +1713,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.IMultiplayerGame.html",
-          "hash": "4lXnipLFhK6jYNTBcddE7w=="
+          "hash": "2JYzB3qZZhP8t+hQqBNw5w=="
         }
       },
       "is_incremental": false,
@@ -1713,7 +1725,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.IReactionsGame.html",
-          "hash": "VH/EiNi7E370wQI7R6I3vQ=="
+          "hash": "9i7VndroQJcQO2S7UChT2w=="
         }
       },
       "is_incremental": false,
@@ -1725,7 +1737,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.IStoreableGame.html",
-          "hash": "WFly+UXdUIsu0Y3PDpf/iA=="
+          "hash": "sI4XBYknrb3a9H5ynrLtCw=="
         }
       },
       "is_incremental": false,
@@ -1737,7 +1749,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.IUserGame.html",
-          "hash": "srJx+65RsyhTdKGS3l431Q=="
+          "hash": "S3CCjbjuz3qtuimrTkSNVQ=="
         }
       },
       "is_incremental": false,
@@ -1749,7 +1761,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.MultiplayerGame.html",
-          "hash": "JB8LJRY8SUCwhf+NeCDNMg=="
+          "hash": "wETic/6QyJUtCxs9bXBEzA=="
         }
       },
       "is_incremental": false,
@@ -1761,7 +1773,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Player.html",
-          "hash": "3Fgq9MR4KI5Pb/Zx8rkGaw=="
+          "hash": "1AGdzftgo2oCtpMtVs/o4g=="
         }
       },
       "is_incremental": false,
@@ -1773,7 +1785,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Pos.html",
-          "hash": "R5L46hxNNR4dCo4MMHiCrA=="
+          "hash": "UdesoWj86EpiIqOUN5JLaQ=="
         }
       },
       "is_incremental": false,
@@ -1785,7 +1797,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.State.html",
-          "hash": "eHEdB29Q3QN+5UtDn8n9/g=="
+          "hash": "UCpIsLYFPO4OYiGY/k87lQ=="
         }
       },
       "is_incremental": false,
@@ -1797,7 +1809,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.html",
-          "hash": "Nue4tUu54AwtnfGwW/GGLQ=="
+          "hash": "nmhAXIDFdwhL3yUq2blDXw=="
         }
       },
       "is_incremental": false,
@@ -1809,7 +1821,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.PmBot.html",
-          "hash": "LB4w396bdSNWJ4fnWmjLWA=="
+          "hash": "cQ/ChWGEWP0Qzh6QkjmB1w=="
         }
       },
       "is_incremental": false,
@@ -1821,7 +1833,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.PmConfig.html",
-          "hash": "xgOEQYmJcIKLlGmZuzu4tw=="
+          "hash": "l1YVX7AV02yCm9v3q4/1Bg=="
         }
       },
       "is_incremental": false,
@@ -1833,7 +1845,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.PmContent.html",
-          "hash": "6kDiWHZAwSsnZYGSsGy8Vw=="
+          "hash": "gwI1JUXoJVkSqz3dzqLh1g=="
         }
       },
       "is_incremental": false,
@@ -1845,7 +1857,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Program.html",
-          "hash": "IoQZLmwWRRdO+Q5rhBjxOA=="
+          "hash": "o2MI2tKukg0LhGqUaDnZ0A=="
         }
       },
       "is_incremental": false,
@@ -1857,7 +1869,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Services.Database.GuildPrefix.html",
-          "hash": "snQJ5mhAGapELucA561wRQ=="
+          "hash": "75I24vGlxSxzaXnd1Kq/pg=="
         }
       },
       "is_incremental": false,
@@ -1869,7 +1881,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Services.Database.NoAutoresponseGuild.html",
-          "hash": "9yQG3rH5jN4zpDWFJmuiqw=="
+          "hash": "y2gugW9JbeIMwc3Mflqk0w=="
         }
       },
       "is_incremental": false,
@@ -1881,7 +1893,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Services.Database.NoPrefixGuildChannel.html",
-          "hash": "caoSLJQ9uAVEKxV6mYlozA=="
+          "hash": "7UmZ9hSbnadlLIgHZkuOtg=="
         }
       },
       "is_incremental": false,
@@ -1893,7 +1905,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Services.Database.PacManDbContext.html",
-          "hash": "dRlmfHGfCVdmMWxPHfOkEA=="
+          "hash": "mZiXyNLqHFrQzz/rpkY9vg=="
         }
       },
       "is_incremental": false,
@@ -1905,7 +1917,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Services.Database.ScoreEntry.html",
-          "hash": "gQ4Vi5k0VIti5QEOSzacmQ=="
+          "hash": "VfqfxSPL/OkRgJ9t380sBw=="
         }
       },
       "is_incremental": false,
@@ -1917,7 +1929,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Services.Database.html",
-          "hash": "28OHO6ZIXp09jwTQmVksdQ=="
+          "hash": "9p454H+JqueH5EGOPkaPlA=="
         }
       },
       "is_incremental": false,
@@ -1929,7 +1941,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Services.GameService.html",
-          "hash": "eK3/7BE9NlJSwGQ/4186mg=="
+          "hash": "NKjkEgcUiPanhX23VesFTQ=="
         }
       },
       "is_incremental": false,
@@ -1941,7 +1953,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Services.InputService.html",
-          "hash": "YXKaQzccTZ8kIuu+6OPeuw=="
+          "hash": "BJNtCHDUTn6lJzS90cz4bQ=="
         }
       },
       "is_incremental": false,
@@ -1953,7 +1965,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Services.LoggingService.html",
-          "hash": "OowJEtyNDE/dXC339pyasQ=="
+          "hash": "CbL3woXEADA67kpEEPCDng=="
         }
       },
       "is_incremental": false,
@@ -1965,7 +1977,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Services.PmCommandService.html",
-          "hash": "0GaPPjIjrQ8FG+eVcZolYw=="
+          "hash": "Cl+s/8xxM6AnSjPBUTR/ug=="
         }
       },
       "is_incremental": false,
@@ -1977,7 +1989,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Services.PmDiscordClient.html",
-          "hash": "Qzz8Km1ZLn1mEc1FgjN88Q=="
+          "hash": "1aGBKnd+QuyimZA0EUso5Q=="
         }
       },
       "is_incremental": false,
@@ -1989,7 +2001,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Services.SchedulingService.html",
-          "hash": "/2L3HoHqnW9fe0E+5PA2dA=="
+          "hash": "IR04fviTZdCQD6743Gy3qQ=="
         }
       },
       "is_incremental": false,
@@ -2001,7 +2013,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Services.ScriptingService.html",
-          "hash": "sprRq8Fjf8poT8tjG4/iwg=="
+          "hash": "KwK2Vmq3KqhjD8AE+s7YoA=="
         }
       },
       "is_incremental": false,
@@ -2013,7 +2025,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Services.StorageService.html",
-          "hash": "MN3DeDc0XXrbtYcajIZWdg=="
+          "hash": "Gy2+l/N/zItAlFElIRJPeQ=="
         }
       },
       "is_incremental": false,
@@ -2025,7 +2037,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Services.html",
-          "hash": "KKw4cUdWUOMm4rNVtAiGww=="
+          "hash": "yD0BQKaZMnIWXDw/t1JwLg=="
         }
       },
       "is_incremental": false,
@@ -2037,7 +2049,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Utils.Brainfuck.BrainfuckException.html",
-          "hash": "cOZMoV+X3M7NwOfO/Zmvbg=="
+          "hash": "HvKNzQxN9cc2lRpzf8FVpA=="
         }
       },
       "is_incremental": false,
@@ -2049,7 +2061,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Utils.Brainfuck.html",
-          "hash": "VoMcxHWyNEFt0owxaAVmAQ=="
+          "hash": "a+/KoNnmlmHJBZ3xvCmgNw=="
         }
       },
       "is_incremental": false,
@@ -2061,7 +2073,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Utils.CommandHelp.html",
-          "hash": "YEg/8i0Yp8LkhxQIdXJJqQ=="
+          "hash": "eFjNaFqckB48b4ISDjBMWQ=="
         }
       },
       "is_incremental": false,
@@ -2073,7 +2085,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Utils.ConcurrentRandom.html",
-          "hash": "KypsWz2s2Jhal2CzuE+kjQ=="
+          "hash": "vFHSdj+TGnqXKVkNoiMMSA=="
         }
       },
       "is_incremental": false,
@@ -2085,7 +2097,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Utils.EnumTraits-1.html",
-          "hash": "I3LyJq1MixI6I6vL1RNbpw=="
+          "hash": "v+AnBzbUsjmBYTWZ+Q//xQ=="
         }
       },
       "is_incremental": false,
@@ -2097,7 +2109,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Utils.LoopedList-1.html",
-          "hash": "Cwv+lksdMzkQzPt8KSi4Mw=="
+          "hash": "z6chRYdFeo/mHlutv66rxA=="
         }
       },
       "is_incremental": false,
@@ -2109,7 +2121,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Utils.Range.html",
-          "hash": "+o+JRg2l/c5IQAlebOMhbA=="
+          "hash": "HnXkYZ+kvJ1vhARDwEGJOw=="
         }
       },
       "is_incremental": false,
@@ -2121,7 +2133,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Utils.TimePeriod.html",
-          "hash": "oczDP1A2cYuU29+2uXEbPg=="
+          "hash": "WxgBiuRkDMB7M5flMk+lng=="
         }
       },
       "is_incremental": false,
@@ -2133,7 +2145,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Utils.WebUtil.html",
-          "hash": "MbSCaqqY6FMJZCYJvLhiog=="
+          "hash": "scXShmvSJZOd7ynZZl3U8g=="
         }
       },
       "is_incremental": false,
@@ -2145,7 +2157,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Utils.html",
-          "hash": "i2Q5NdCnz94fJmtG5vai/g=="
+          "hash": "fiRMla6zv/7uxecpzJF6hQ=="
         }
       },
       "is_incremental": false,
@@ -2157,19 +2169,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.html",
-          "hash": "RyjPC3wj9XWXglO2xn5twA=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "Conceptual",
-      "source_relative_path": "api/index.md",
-      "output": {
-        ".html": {
-          "relative_path": "api/index.html",
-          "hash": "5zhRTwqlYT8KfZUKiBHVUQ=="
+          "hash": "EjrHL66E/Ak81wjBdJ7bCQ=="
         }
       },
       "is_incremental": false,
@@ -2181,55 +2181,7 @@
       "output": {
         ".html": {
           "relative_path": "api/toc.html",
-          "hash": "jTLbZnB6xZrMXQmKnC9lsA=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "Conceptual",
-      "source_relative_path": "articles/intro.md",
-      "output": {
-        ".html": {
-          "relative_path": "articles/intro.html",
-          "hash": "878RNTbNqm9XcVaHbQAfsQ=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "Toc",
-      "source_relative_path": "articles/toc.yml",
-      "output": {
-        ".html": {
-          "relative_path": "articles/toc.html",
-          "hash": "t7iiFrmuYmrKWisdq+lN6Q=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "Conceptual",
-      "source_relative_path": "index.md",
-      "output": {
-        ".html": {
-          "relative_path": "index.html",
-          "hash": "h4SA/dY+pYN1o1hcrldg+Q=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "Toc",
-      "source_relative_path": "toc.yml",
-      "output": {
-        ".html": {
-          "relative_path": "toc.html",
-          "hash": "k+/dkjFuwAVS32HduMpmBw=="
+          "hash": "PMRLJ9L0+1u1eCNvjMW0mQ=="
         }
       },
       "is_incremental": false,
@@ -2239,8 +2191,7 @@
   "incremental_info": [
     {
       "status": {
-        "can_incremental": false,
-        "details": "Disable incremental build by force rebuild option.",
+        "can_incremental": true,
         "incrementalPhase": "build"
       },
       "processors": {
@@ -2249,20 +2200,20 @@
           "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build"
         },
-        "ManagedReferenceDocumentProcessor": {
-          "can_incremental": false,
+        "ConceptualDocumentProcessor": {
+          "can_incremental": true,
           "incrementalPhase": "build"
         },
-        "ConceptualDocumentProcessor": {
-          "can_incremental": false,
+        "ManagedReferenceDocumentProcessor": {
+          "can_incremental": true,
           "incrementalPhase": "build"
         }
       }
     },
     {
       "status": {
-        "can_incremental": false,
-        "details": "Cannot support incremental post processing, the reason is: it's disabled.",
+        "can_incremental": true,
+        "details": "Can support incremental post processing.",
         "incrementalPhase": "postProcessing"
       },
       "processors": {}

@@ -48,7 +48,7 @@ namespace PacManBot.Commands.Modules
             .Where(x => x.Get<PetCommandAttribute>()?.VerifyMethod(x) != null)
             .ToArray();
 
-        public string AdoptPetMessage => $"You don't have a pet yet! Do `{Prefix}pet adopt` to adopt one.";
+        public string AdoptPetMessage => $"You don't have a pet yet! Do `{Context.Prefix}pet adopt` to adopt one.";
 
 
         [Command("pet"), Alias("gotchi", "wakagotchi", "clockagotchi"), Parameters("[command]"), Priority(5)]
@@ -77,7 +77,7 @@ namespace PacManBot.Commands.Modules
 
             if (command == null)
             {
-                await ReplyAsync($"Unknown pet command! Do `{Prefix}pet help` for help");
+                await ReplyAsync($"Unknown pet command! Do `{Context.Prefix}pet help` for help");
             }
             else
             {
@@ -269,7 +269,7 @@ namespace PacManBot.Commands.Modules
         [PetCommand("help", "h")]
         public async Task<string> PetSendHelp(PetGame pet, string args)
         {
-            await ReplyAsync(Commands.GetCommandHelp("pet", Prefix));
+            await ReplyAsync(Commands.GetCommandHelp("pet", Context.Prefix));
             return null;
         }
 
@@ -349,7 +349,7 @@ namespace PacManBot.Commands.Modules
 
             return $"❗ Are you sure you want to delete {pet.petName}? It will be gone forever, " +
                    $"along with your stats and achievements, and you can't get it back. " +
-                   $"Do **{Prefix}pet release {pet.petName}** to release.";
+                   $"Do **{Context.Prefix}pet release {pet.petName}** to release.";
         }
     }
 }

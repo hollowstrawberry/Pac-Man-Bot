@@ -442,7 +442,7 @@ namespace PacManBot.Games.Concrete
         }
 
 
-        /// <summary>Toggles a pet between sleep and awake.</summary
+        /// <summary>Toggles a pet between sleep and awake.</summary>
         public void ToggleSleep()
         {
             asleep = !asleep;

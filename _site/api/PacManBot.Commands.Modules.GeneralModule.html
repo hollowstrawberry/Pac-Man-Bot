@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
     <link rel="stylesheet" href="../styles/docfx.css">
     <link rel="stylesheet" href="../styles/main.css">
-    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:navrel" content="">
     <meta property="docfx:tocrel" content="toc.html">
     
     
@@ -78,7 +78,7 @@
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><span class="xref">Discord.Commands.ModuleBase</span>&lt;<span class="xref">Discord.Commands.ShardedCommandContext</span>&gt;</div>
+    <div class="level1"><span class="xref">Discord.Commands.ModuleBase</span>&lt;<a class="xref" href="PacManBot.Commands.PmCommandContext.html">PmCommandContext</a>&gt;</div>
     <div class="level2"><a class="xref" href="PacManBot.Commands.PmBaseModule.html">PmBaseModule</a></div>
     <div class="level3"><span class="xref">GeneralModule</span></div>
   </div>
@@ -106,12 +106,6 @@
       <a class="xref" href="PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_Commands">PmBaseModule.Commands</a>
     </div>
     <div>
-      <a class="xref" href="PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_AbsolutePrefix">PmBaseModule.AbsolutePrefix</a>
-    </div>
-    <div>
-      <a class="xref" href="PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_Prefix">PmBaseModule.Prefix</a>
-    </div>
-    <div>
       <a class="xref" href="PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_AfterExecute_Discord_Commands_CommandInfo_">PmBaseModule.AfterExecute(CommandInfo)</a>
     </div>
     <div>
@@ -133,13 +127,13 @@
       <a class="xref" href="PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_GetModule__1">PmBaseModule.GetModule&lt;TModule&gt;()</a>
     </div>
     <div>
-      <span class="xref">Discord.Commands.ModuleBase&lt;Discord.Commands.ShardedCommandContext&gt;.BeforeExecute(Discord.Commands.CommandInfo)</span>
+      <span class="xref">Discord.Commands.ModuleBase&lt;PacManBot.Commands.PmCommandContext&gt;.BeforeExecute(Discord.Commands.CommandInfo)</span>
     </div>
     <div>
-      <span class="xref">Discord.Commands.ModuleBase&lt;Discord.Commands.ShardedCommandContext&gt;.OnModuleBuilding(Discord.Commands.CommandService, Discord.Commands.Builders.ModuleBuilder)</span>
+      <span class="xref">Discord.Commands.ModuleBase&lt;PacManBot.Commands.PmCommandContext&gt;.OnModuleBuilding(Discord.Commands.CommandService, Discord.Commands.Builders.ModuleBuilder)</span>
     </div>
     <div>
-      <span class="xref">Discord.Commands.ModuleBase&lt;Discord.Commands.ShardedCommandContext&gt;.Context</span>
+      <span class="xref">Discord.Commands.ModuleBase&lt;PacManBot.Commands.PmCommandContext&gt;.Context</span>
     </div>
     <div>
       <span class="xref">System.Object.Equals(System.Object)</span>
@@ -169,6 +163,7 @@
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[Name(&quot;&#128193;General&quot;)]
 [Remarks(&quot;1&quot;)]
+[PmRequireBotPermission(ChannelPermission.EmbedLinks | ChannelPermission.UseExternalEmojis)]
 public class GeneralModule : PmBaseModule, IModuleBase</code></pre>
   </div>
   <h3 id="constructors">Constructors
@@ -178,7 +173,7 @@ public class GeneralModule : PmBaseModule, IModuleBase</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_GeneralModule__ctor_System_IServiceProvider_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.GeneralModule.%23ctor(System.IServiceProvider)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/GeneralModule.cs/#L27">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/GeneralModule.cs/#L28">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_GeneralModule__ctor_" data-uid="PacManBot.Commands.Modules.GeneralModule.#ctor*"></a>
   <h4 id="PacManBot_Commands_Modules_GeneralModule__ctor_System_IServiceProvider_" data-uid="PacManBot.Commands.Modules.GeneralModule.#ctor(System.IServiceProvider)">GeneralModule(IServiceProvider)</h4>
@@ -212,7 +207,7 @@ public class GeneralModule : PmBaseModule, IModuleBase</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_GeneralModule_BlobDance_System_UInt64_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.GeneralModule.BlobDance(System.UInt64)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/GeneralModule.cs/#L253">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/GeneralModule.cs/#L254">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_GeneralModule_BlobDance_" data-uid="PacManBot.Commands.Modules.GeneralModule.BlobDance*"></a>
   <h4 id="PacManBot_Commands_Modules_GeneralModule_BlobDance_System_UInt64_" data-uid="PacManBot.Commands.Modules.GeneralModule.BlobDance(System.UInt64)">BlobDance(UInt64)</h4>
@@ -263,7 +258,7 @@ public Task BlobDance(ulong number = 0UL)</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_GeneralModule_DoNothing.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.GeneralModule.DoNothing%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/GeneralModule.cs/#L295">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/GeneralModule.cs/#L296">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_GeneralModule_DoNothing_" data-uid="PacManBot.Commands.Modules.GeneralModule.DoNothing*"></a>
   <h4 id="PacManBot_Commands_Modules_GeneralModule_DoNothing" data-uid="PacManBot.Commands.Modules.GeneralModule.DoNothing">DoNothing()</h4>
@@ -296,7 +291,7 @@ public Task DoNothing()</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_GeneralModule_GameStats_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.GeneralModule.GameStats(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/GeneralModule.cs/#L102">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/GeneralModule.cs/#L103">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_GeneralModule_GameStats_" data-uid="PacManBot.Commands.Modules.GeneralModule.GameStats*"></a>
   <h4 id="PacManBot_Commands_Modules_GeneralModule_GameStats_System_String_" data-uid="PacManBot.Commands.Modules.GeneralModule.GameStats(System.String)">GameStats(String)</h4>
@@ -348,7 +343,7 @@ public Task GameStats([Remainder] string uselessArgs = &quot;&quot;)</code></pre
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_GeneralModule_GetServerPrefix.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.GeneralModule.GetServerPrefix%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/GeneralModule.cs/#L121">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/GeneralModule.cs/#L122">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_GeneralModule_GetServerPrefix_" data-uid="PacManBot.Commands.Modules.GeneralModule.GetServerPrefix*"></a>
   <h4 id="PacManBot_Commands_Modules_GeneralModule_GetServerPrefix" data-uid="PacManBot.Commands.Modules.GeneralModule.GetServerPrefix">GetServerPrefix()</h4>
@@ -380,7 +375,7 @@ public Task GetServerPrefix()</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_GeneralModule_Neat.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.GeneralModule.Neat%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/GeneralModule.cs/#L287">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/GeneralModule.cs/#L288">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_GeneralModule_Neat_" data-uid="PacManBot.Commands.Modules.GeneralModule.Neat*"></a>
   <h4 id="PacManBot_Commands_Modules_GeneralModule_Neat" data-uid="PacManBot.Commands.Modules.GeneralModule.Neat">Neat()</h4>
@@ -412,7 +407,7 @@ public Task Neat()</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_GeneralModule_Nice.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.GeneralModule.Nice%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/GeneralModule.cs/#L290">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/GeneralModule.cs/#L291">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_GeneralModule_Nice_" data-uid="PacManBot.Commands.Modules.GeneralModule.Nice*"></a>
   <h4 id="PacManBot_Commands_Modules_GeneralModule_Nice" data-uid="PacManBot.Commands.Modules.GeneralModule.Nice">Nice()</h4>
@@ -444,7 +439,7 @@ public Task Nice()</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_GeneralModule_Ping_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.GeneralModule.Ping(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/GeneralModule.cs/#L81">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/GeneralModule.cs/#L82">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_GeneralModule_Ping_" data-uid="PacManBot.Commands.Modules.GeneralModule.Ping*"></a>
   <h4 id="PacManBot_Commands_Modules_GeneralModule_Ping_System_String_" data-uid="PacManBot.Commands.Modules.GeneralModule.Ping(System.String)">Ping(String)</h4>
@@ -496,7 +491,7 @@ public Task Ping([Remainder] string uselessArgs = &quot;&quot;)</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_GeneralModule_SendAllHelpExpanded.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.GeneralModule.SendAllHelpExpanded%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/GeneralModule.cs/#L72">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/GeneralModule.cs/#L73">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_GeneralModule_SendAllHelpExpanded_" data-uid="PacManBot.Commands.Modules.GeneralModule.SendAllHelpExpanded*"></a>
   <h4 id="PacManBot_Commands_Modules_GeneralModule_SendAllHelpExpanded" data-uid="PacManBot.Commands.Modules.GeneralModule.SendAllHelpExpanded">SendAllHelpExpanded()</h4>
@@ -530,7 +525,7 @@ public Task SendAllHelpExpanded()</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_GeneralModule_SendBotGitHub.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.GeneralModule.SendBotGitHub%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/GeneralModule.cs/#L190">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/GeneralModule.cs/#L191">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_GeneralModule_SendBotGitHub_" data-uid="PacManBot.Commands.Modules.GeneralModule.SendBotGitHub*"></a>
   <h4 id="PacManBot_Commands_Modules_GeneralModule_SendBotGitHub" data-uid="PacManBot.Commands.Modules.GeneralModule.SendBotGitHub">SendBotGitHub()</h4>
@@ -564,7 +559,7 @@ public Task SendBotGitHub()</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_GeneralModule_SendBotInfo.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.GeneralModule.SendBotInfo%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/GeneralModule.cs/#L31">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/GeneralModule.cs/#L32">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_GeneralModule_SendBotInfo_" data-uid="PacManBot.Commands.Modules.GeneralModule.SendBotInfo*"></a>
   <h4 id="PacManBot_Commands_Modules_GeneralModule_SendBotInfo" data-uid="PacManBot.Commands.Modules.GeneralModule.SendBotInfo">SendBotInfo()</h4>
@@ -598,7 +593,7 @@ public Task SendBotInfo()</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_GeneralModule_SendBotInvite.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.GeneralModule.SendBotInvite%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/GeneralModule.cs/#L148">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/GeneralModule.cs/#L149">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_GeneralModule_SendBotInvite_" data-uid="PacManBot.Commands.Modules.GeneralModule.SendBotInvite*"></a>
   <h4 id="PacManBot_Commands_Modules_GeneralModule_SendBotInvite" data-uid="PacManBot.Commands.Modules.GeneralModule.SendBotInvite">SendBotInvite()</h4>
@@ -632,7 +627,7 @@ public Task SendBotInvite()</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_GeneralModule_SendBotServer.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.GeneralModule.SendBotServer%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/GeneralModule.cs/#L173">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/GeneralModule.cs/#L174">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_GeneralModule_SendBotServer_" data-uid="PacManBot.Commands.Modules.GeneralModule.SendBotServer*"></a>
   <h4 id="PacManBot_Commands_Modules_GeneralModule_SendBotServer" data-uid="PacManBot.Commands.Modules.GeneralModule.SendBotServer">SendBotServer()</h4>
@@ -666,7 +661,7 @@ public Task SendBotServer()</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_GeneralModule_SendDonationInfo.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.GeneralModule.SendDonationInfo%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/GeneralModule.cs/#L208">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/GeneralModule.cs/#L209">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_GeneralModule_SendDonationInfo_" data-uid="PacManBot.Commands.Modules.GeneralModule.SendDonationInfo*"></a>
   <h4 id="PacManBot_Commands_Modules_GeneralModule_SendDonationInfo" data-uid="PacManBot.Commands.Modules.GeneralModule.SendDonationInfo">SendDonationInfo()</h4>
@@ -700,7 +695,7 @@ public Task SendDonationInfo()</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_GeneralModule_SendFeedback_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.GeneralModule.SendFeedback(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/GeneralModule.cs/#L229">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/GeneralModule.cs/#L230">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_GeneralModule_SendFeedback_" data-uid="PacManBot.Commands.Modules.GeneralModule.SendFeedback*"></a>
   <h4 id="PacManBot_Commands_Modules_GeneralModule_SendFeedback_System_String_" data-uid="PacManBot.Commands.Modules.GeneralModule.SendFeedback(System.String)">SendFeedback(String)</h4>
@@ -751,7 +746,7 @@ public Task SendFeedback([Remainder] string message)</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_GeneralModule_SendHelp_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.GeneralModule.SendHelp(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/GeneralModule.cs/#L54">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/GeneralModule.cs/#L55">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_GeneralModule_SendHelp_" data-uid="PacManBot.Commands.Modules.GeneralModule.SendHelp*"></a>
   <h4 id="PacManBot_Commands_Modules_GeneralModule_SendHelp_System_String_" data-uid="PacManBot.Commands.Modules.GeneralModule.SendHelp(System.String)">SendHelp(String)</h4>
@@ -803,7 +798,7 @@ public Task SendHelp([Remainder] string command = null)</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_GeneralModule_SpamDance_System_Int32_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.GeneralModule.SpamDance(System.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/GeneralModule.cs/#L273">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/GeneralModule.cs/#L274">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_GeneralModule_SpamDance_" data-uid="PacManBot.Commands.Modules.GeneralModule.SpamDance*"></a>
   <h4 id="PacManBot_Commands_Modules_GeneralModule_SpamDance_System_Int32_" data-uid="PacManBot.Commands.Modules.GeneralModule.SpamDance(System.Int32)">SpamDance(Int32)</h4>

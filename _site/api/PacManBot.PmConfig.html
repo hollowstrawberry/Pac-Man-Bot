@@ -1,0 +1,753 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class PmConfig
+   </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class PmConfig
+   ">
+    <meta name="generator" content="docfx 2.40.7.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="PacManBot.PmConfig">
+  
+  
+  <h1 id="PacManBot_PmConfig" data-uid="PacManBot.PmConfig" class="text-break">Class PmConfig
+  </h1>
+  <div class="markdown level0 summary"><p>Contains the runtime settings of the bot.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><span class="xref">PmConfig</span></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="PacManBot.html">PacManBot</a></h6>
+  <h6><strong>Assembly</strong>: Pacman.dll</h6>
+  <h5 id="PacManBot_PmConfig_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[DataContract]
+public class PmConfig</code></pre>
+  </div>
+  <h3 id="fields">Fields
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_PmConfig_bannedChannels.md&amp;value=---%0Auid%3A%20PacManBot.PmConfig.bannedChannels%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/PmConfig.cs/#L62">View Source</a>
+  </span>
+  <h4 id="PacManBot_PmConfig_bannedChannels" data-uid="PacManBot.PmConfig.bannedChannels">bannedChannels</h4>
+  <div class="markdown level1 summary"><p>Until a long-term solution to command spam attacks is found, I can just ban channels from using the bot.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[DataMember]
+public readonly ulong[] bannedChannels</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt64</span>[]</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_PmConfig_clientLogLevel.md&amp;value=---%0Auid%3A%20PacManBot.PmConfig.clientLogLevel%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/PmConfig.cs/#L53">View Source</a>
+  </span>
+  <h4 id="PacManBot_PmConfig_clientLogLevel" data-uid="PacManBot.PmConfig.clientLogLevel">clientLogLevel</h4>
+  <div class="markdown level1 summary"><p>How many messages to log from the client. See <span class="xref">Discord.LogSeverity</span> for possible values.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[DataMember]
+public readonly LogSeverity clientLogLevel</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Discord.LogSeverity</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_PmConfig_commandLogLevel.md&amp;value=---%0Auid%3A%20PacManBot.PmConfig.commandLogLevel%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/PmConfig.cs/#L56">View Source</a>
+  </span>
+  <h4 id="PacManBot_PmConfig_commandLogLevel" data-uid="PacManBot.PmConfig.commandLogLevel">commandLogLevel</h4>
+  <div class="markdown level1 summary"><p>How many messages to log from command calls. See <span class="xref">Discord.LogSeverity</span> for possible values.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[DataMember]
+public readonly LogSeverity commandLogLevel</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Discord.LogSeverity</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_PmConfig_connectionTimeout.md&amp;value=---%0Auid%3A%20PacManBot.PmConfig.connectionTimeout%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/PmConfig.cs/#L50">View Source</a>
+  </span>
+  <h4 id="PacManBot_PmConfig_connectionTimeout" data-uid="PacManBot.PmConfig.connectionTimeout">connectionTimeout</h4>
+  <div class="markdown level1 summary"><p>How long in milliseconds until the gateway connection to Discord times out.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[DataMember]
+public readonly int connectionTimeout</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_PmConfig_dbConnectionString.md&amp;value=---%0Auid%3A%20PacManBot.PmConfig.dbConnectionString%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/PmConfig.cs/#L38">View Source</a>
+  </span>
+  <h4 id="PacManBot_PmConfig_dbConnectionString" data-uid="PacManBot.PmConfig.dbConnectionString">dbConnectionString</h4>
+  <div class="markdown level1 summary"><p>The string that defines the connection to the SQLite database in <a class="xref" href="PacManBot.Services.StorageService.html">StorageService</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[DataMember]
+public readonly string dbConnectionString</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_PmConfig_defaultPrefix.md&amp;value=---%0Auid%3A%20PacManBot.PmConfig.defaultPrefix%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/PmConfig.cs/#L29">View Source</a>
+  </span>
+  <h4 id="PacManBot_PmConfig_defaultPrefix" data-uid="PacManBot.PmConfig.defaultPrefix">defaultPrefix</h4>
+  <div class="markdown level1 summary"><p>The prefix used for all guilds that don't set a custom prefix.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[DataMember]
+public readonly string defaultPrefix</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_PmConfig_developers.md&amp;value=---%0Auid%3A%20PacManBot.PmConfig.developers%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/PmConfig.cs/#L32">View Source</a>
+  </span>
+  <h4 id="PacManBot_PmConfig_developers" data-uid="PacManBot.PmConfig.developers">developers</h4>
+  <div class="markdown level1 summary"><p>User IDs of users to be considered developers and able to use developer commands. Dangerous.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[DataMember]
+public readonly ulong[] developers</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt64</span>[]</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_PmConfig_discordToken.md&amp;value=---%0Auid%3A%20PacManBot.PmConfig.discordToken%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/PmConfig.cs/#L20">View Source</a>
+  </span>
+  <h4 id="PacManBot_PmConfig_discordToken" data-uid="PacManBot.PmConfig.discordToken">discordToken</h4>
+  <div class="markdown level1 summary"><p>Secret token used to connect to Discord. Must be provided for the bot to run.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[DataMember]
+public readonly string discordToken</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_PmConfig_httpDomain.md&amp;value=---%0Auid%3A%20PacManBot.PmConfig.httpDomain%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/PmConfig.cs/#L23">View Source</a>
+  </span>
+  <h4 id="PacManBot_PmConfig_httpDomain" data-uid="PacManBot.PmConfig.httpDomain">httpDomain</h4>
+  <div class="markdown level1 summary"><p>Bot list websites to send requests to. Unnecessary.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[DataMember]
+public readonly string[] httpDomain</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span>[]</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_PmConfig_httpToken.md&amp;value=---%0Auid%3A%20PacManBot.PmConfig.httpToken%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/PmConfig.cs/#L26">View Source</a>
+  </span>
+  <h4 id="PacManBot_PmConfig_httpToken" data-uid="PacManBot.PmConfig.httpToken">httpToken</h4>
+  <div class="markdown level1 summary"><p>Secret tokens to send requests to bot list websites. Unnecessary.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[DataMember]
+public readonly string[] httpToken</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span>[]</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_PmConfig_logExclude.md&amp;value=---%0Auid%3A%20PacManBot.PmConfig.logExclude%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/PmConfig.cs/#L59">View Source</a>
+  </span>
+  <h4 id="PacManBot_PmConfig_logExclude" data-uid="PacManBot.PmConfig.logExclude">logExclude</h4>
+  <div class="markdown level1 summary"><p>Strings that when found cause a log event to be ignored. Use with caution.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[DataMember]
+public readonly string[] logExclude</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span>[]</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_PmConfig_messageCacheSize.md&amp;value=---%0Auid%3A%20PacManBot.PmConfig.messageCacheSize%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/PmConfig.cs/#L47">View Source</a>
+  </span>
+  <h4 id="PacManBot_PmConfig_messageCacheSize" data-uid="PacManBot.PmConfig.messageCacheSize">messageCacheSize</h4>
+  <div class="markdown level1 summary"><p>How many messages to keep on memory per channel. Keep it to a reasonable amount.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[DataMember]
+public readonly int messageCacheSize</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_PmConfig_scheduledRestart.md&amp;value=---%0Auid%3A%20PacManBot.PmConfig.scheduledRestart%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/PmConfig.cs/#L44">View Source</a>
+  </span>
+  <h4 id="PacManBot_PmConfig_scheduledRestart" data-uid="PacManBot.PmConfig.scheduledRestart">scheduledRestart</h4>
+  <div class="markdown level1 summary"><p>Whether the bot should close at midnight, in order for the OS to handle its restart.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[DataMember]
+public readonly bool scheduledRestart</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_PmConfig_shardCount.md&amp;value=---%0Auid%3A%20PacManBot.PmConfig.shardCount%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/PmConfig.cs/#L41">View Source</a>
+  </span>
+  <h4 id="PacManBot_PmConfig_shardCount" data-uid="PacManBot.PmConfig.shardCount">shardCount</h4>
+  <div class="markdown level1 summary"><p>Number of shards to divide the bot into. 1 shard per 1000 guilds is enough.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[DataMember]
+public readonly int shardCount</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_PmConfig_testers.md&amp;value=---%0Auid%3A%20PacManBot.PmConfig.testers%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/PmConfig.cs/#L35">View Source</a>
+  </span>
+  <h4 id="PacManBot_PmConfig_testers" data-uid="PacManBot.PmConfig.testers">testers</h4>
+  <div class="markdown level1 summary"><p>User IDs of people helping test and debug the bot. Effects may change at any point.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[DataMember]
+public readonly ulong[] testers</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt64</span>[]</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_PmConfig_ClientConfig.md&amp;value=---%0Auid%3A%20PacManBot.PmConfig.ClientConfig%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/PmConfig.cs/#L96">View Source</a>
+  </span>
+  <a id="PacManBot_PmConfig_ClientConfig_" data-uid="PacManBot.PmConfig.ClientConfig*"></a>
+  <h4 id="PacManBot_PmConfig_ClientConfig" data-uid="PacManBot.PmConfig.ClientConfig">ClientConfig</h4>
+  <div class="markdown level1 summary"><p>Gets a configuration object for a <span class="xref">Discord.WebSocket.DiscordSocketClient</span>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public DiscordSocketConfig ClientConfig { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Discord.WebSocket.DiscordSocketConfig</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_PmConfig_CommandConfig.md&amp;value=---%0Auid%3A%20PacManBot.PmConfig.CommandConfig%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/PmConfig.cs/#L107">View Source</a>
+  </span>
+  <a id="PacManBot_PmConfig_CommandConfig_" data-uid="PacManBot.PmConfig.CommandConfig*"></a>
+  <h4 id="PacManBot_PmConfig_CommandConfig" data-uid="PacManBot.PmConfig.CommandConfig">CommandConfig</h4>
+  <div class="markdown level1 summary"><p>Gets a configuration object for a <span class="xref">Discord.Commands.CommandService</span>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public CommandServiceConfig CommandConfig { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Discord.Commands.CommandServiceConfig</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_PmConfig_Content.md&amp;value=---%0Auid%3A%20PacManBot.PmConfig.Content%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/PmConfig.cs/#L92">View Source</a>
+  </span>
+  <a id="PacManBot_PmConfig_Content_" data-uid="PacManBot.PmConfig.Content*"></a>
+  <h4 id="PacManBot_PmConfig_Content" data-uid="PacManBot.PmConfig.Content">Content</h4>
+  <div class="markdown level1 summary"><p>Content used throughout the bot. Set using <a class="xref" href="PacManBot.PmConfig.html#PacManBot_PmConfig_LoadContent_System_String_">LoadContent(String)</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public PmContent Content { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="PacManBot.PmContent.html">PmContent</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_PmConfig_LoadContent_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.PmConfig.LoadContent(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/PmConfig.cs/#L70">View Source</a>
+  </span>
+  <a id="PacManBot_PmConfig_LoadContent_" data-uid="PacManBot.PmConfig.LoadContent*"></a>
+  <h4 id="PacManBot_PmConfig_LoadContent_System_String_" data-uid="PacManBot.PmConfig.LoadContent(System.String)">LoadContent(String)</h4>
+  <div class="markdown level1 summary"><p>Reloads <a class="xref" href="PacManBot.PmConfig.html#PacManBot_PmConfig_Content">Content</a> from the provided json.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void LoadContent(string json)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">json</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_PmConfig.md&amp;value=---%0Auid%3A%20PacManBot.PmConfig%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/PmConfig.cs/#L16" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

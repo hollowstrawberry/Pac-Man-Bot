@@ -8,23 +8,21 @@
 *.userprefs
 
 # Folders
-.vs/
-.vscode/
-obj/
-bin/**/logs/
-bin/**/games/
-bin/Debug/
-bin/Release/
-bin/_Backup
-api/
+/.vs/
+/.vscode/
+/obj/
+/bin/**/logs/
+/bin/**/games/
+/bin/Debug/
+/bin/Release/
+/bin/_Backup
+/api/
 
 # Files
-bin/*/**/config.bot
+/bin/*/**/config.bot
 **/prefixes.bot
 **/scoreboard.bot
 **/wakaexclude.bot
-docfx.json
-toc.yml
 
 # Formats
 *.lnk

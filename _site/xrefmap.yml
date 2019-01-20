@@ -1571,19 +1571,6 @@ references:
   isSpec: "True"
   fullName: PacManBot.Commands.PmBaseModule.PmBaseModule
   nameWithType: PmBaseModule.PmBaseModule
-- uid: PacManBot.Commands.PmBaseModule.AbsolutePrefix
-  name: AbsolutePrefix
-  href: api/PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_AbsolutePrefix
-  commentId: P:PacManBot.Commands.PmBaseModule.AbsolutePrefix
-  fullName: PacManBot.Commands.PmBaseModule.AbsolutePrefix
-  nameWithType: PmBaseModule.AbsolutePrefix
-- uid: PacManBot.Commands.PmBaseModule.AbsolutePrefix*
-  name: AbsolutePrefix
-  href: api/PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_AbsolutePrefix_
-  commentId: Overload:PacManBot.Commands.PmBaseModule.AbsolutePrefix
-  isSpec: "True"
-  fullName: PacManBot.Commands.PmBaseModule.AbsolutePrefix
-  nameWithType: PmBaseModule.AbsolutePrefix
 - uid: PacManBot.Commands.PmBaseModule.AfterExecute(Discord.Commands.CommandInfo)
   name: AfterExecute(CommandInfo)
   href: api/PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_AfterExecute_Discord_Commands_CommandInfo_
@@ -1684,19 +1671,6 @@ references:
   isSpec: "True"
   fullName: PacManBot.Commands.PmBaseModule.Logger
   nameWithType: PmBaseModule.Logger
-- uid: PacManBot.Commands.PmBaseModule.Prefix
-  name: Prefix
-  href: api/PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_Prefix
-  commentId: P:PacManBot.Commands.PmBaseModule.Prefix
-  fullName: PacManBot.Commands.PmBaseModule.Prefix
-  nameWithType: PmBaseModule.Prefix
-- uid: PacManBot.Commands.PmBaseModule.Prefix*
-  name: Prefix
-  href: api/PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_Prefix_
-  commentId: Overload:PacManBot.Commands.PmBaseModule.Prefix
-  isSpec: "True"
-  fullName: PacManBot.Commands.PmBaseModule.Prefix
-  nameWithType: PmBaseModule.Prefix
 - uid: PacManBot.Commands.PmBaseModule.ReplyAsync(Discord.EmbedBuilder,Discord.RequestOptions)
   name: ReplyAsync(EmbedBuilder, RequestOptions)
   href: api/PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_ReplyAsync_Discord_EmbedBuilder_Discord_RequestOptions_
@@ -1804,6 +1778,64 @@ references:
   commentId: F:PacManBot.Commands.PmBasePermissionAttribute.guildPerms
   fullName: PacManBot.Commands.PmBasePermissionAttribute.guildPerms
   nameWithType: PmBasePermissionAttribute.guildPerms
+- uid: PacManBot.Commands.PmCommandContext
+  name: PmCommandContext
+  href: api/PacManBot.Commands.PmCommandContext.html
+  commentId: T:PacManBot.Commands.PmCommandContext
+  fullName: PacManBot.Commands.PmCommandContext
+  nameWithType: PmCommandContext
+- uid: PacManBot.Commands.PmCommandContext.#ctor(Discord.WebSocket.SocketUserMessage,System.IServiceProvider)
+  name: PmCommandContext(SocketUserMessage, IServiceProvider)
+  href: api/PacManBot.Commands.PmCommandContext.html#PacManBot_Commands_PmCommandContext__ctor_Discord_WebSocket_SocketUserMessage_System_IServiceProvider_
+  commentId: M:PacManBot.Commands.PmCommandContext.#ctor(Discord.WebSocket.SocketUserMessage,System.IServiceProvider)
+  fullName: PacManBot.Commands.PmCommandContext.PmCommandContext(Discord.WebSocket.SocketUserMessage, System.IServiceProvider)
+  nameWithType: PmCommandContext.PmCommandContext(SocketUserMessage, IServiceProvider)
+- uid: PacManBot.Commands.PmCommandContext.#ctor*
+  name: PmCommandContext
+  href: api/PacManBot.Commands.PmCommandContext.html#PacManBot_Commands_PmCommandContext__ctor_
+  commentId: Overload:PacManBot.Commands.PmCommandContext.#ctor
+  isSpec: "True"
+  fullName: PacManBot.Commands.PmCommandContext.PmCommandContext
+  nameWithType: PmCommandContext.PmCommandContext
+- uid: PacManBot.Commands.PmCommandContext.Client
+  name: Client
+  href: api/PacManBot.Commands.PmCommandContext.html#PacManBot_Commands_PmCommandContext_Client
+  commentId: P:PacManBot.Commands.PmCommandContext.Client
+  fullName: PacManBot.Commands.PmCommandContext.Client
+  nameWithType: PmCommandContext.Client
+- uid: PacManBot.Commands.PmCommandContext.Client*
+  name: Client
+  href: api/PacManBot.Commands.PmCommandContext.html#PacManBot_Commands_PmCommandContext_Client_
+  commentId: Overload:PacManBot.Commands.PmCommandContext.Client
+  isSpec: "True"
+  fullName: PacManBot.Commands.PmCommandContext.Client
+  nameWithType: PmCommandContext.Client
+- uid: PacManBot.Commands.PmCommandContext.FixedPrefix
+  name: FixedPrefix
+  href: api/PacManBot.Commands.PmCommandContext.html#PacManBot_Commands_PmCommandContext_FixedPrefix
+  commentId: P:PacManBot.Commands.PmCommandContext.FixedPrefix
+  fullName: PacManBot.Commands.PmCommandContext.FixedPrefix
+  nameWithType: PmCommandContext.FixedPrefix
+- uid: PacManBot.Commands.PmCommandContext.FixedPrefix*
+  name: FixedPrefix
+  href: api/PacManBot.Commands.PmCommandContext.html#PacManBot_Commands_PmCommandContext_FixedPrefix_
+  commentId: Overload:PacManBot.Commands.PmCommandContext.FixedPrefix
+  isSpec: "True"
+  fullName: PacManBot.Commands.PmCommandContext.FixedPrefix
+  nameWithType: PmCommandContext.FixedPrefix
+- uid: PacManBot.Commands.PmCommandContext.Prefix
+  name: Prefix
+  href: api/PacManBot.Commands.PmCommandContext.html#PacManBot_Commands_PmCommandContext_Prefix
+  commentId: P:PacManBot.Commands.PmCommandContext.Prefix
+  fullName: PacManBot.Commands.PmCommandContext.Prefix
+  nameWithType: PmCommandContext.Prefix
+- uid: PacManBot.Commands.PmCommandContext.Prefix*
+  name: Prefix
+  href: api/PacManBot.Commands.PmCommandContext.html#PacManBot_Commands_PmCommandContext_Prefix_
+  commentId: Overload:PacManBot.Commands.PmCommandContext.Prefix
+  isSpec: "True"
+  fullName: PacManBot.Commands.PmCommandContext.Prefix
+  nameWithType: PmCommandContext.Prefix
 - uid: PacManBot.Commands.PmRequireBotPermissionAttribute
   name: PmRequireBotPermissionAttribute
   href: api/PacManBot.Commands.PmRequireBotPermissionAttribute.html
@@ -15390,15 +15422,12 @@ references:
   isSpec: "True"
   fullName: PacManBot.Games.MultiplayerGame.Message
   nameWithType: MultiplayerGame.Message
-- uid: PacManBot.Games.MultiplayerGame.NextPlayer(System.Nullable{PacManBot.Games.Player})
-  name: NextPlayer(Nullable<Player>)
-  href: api/PacManBot.Games.MultiplayerGame.html#PacManBot_Games_MultiplayerGame_NextPlayer_System_Nullable_PacManBot_Games_Player__
-  commentId: M:PacManBot.Games.MultiplayerGame.NextPlayer(System.Nullable{PacManBot.Games.Player})
-  name.vb: NextPlayer(Nullable(Of Player))
-  fullName: PacManBot.Games.MultiplayerGame.NextPlayer(System.Nullable<PacManBot.Games.Player>)
-  fullName.vb: PacManBot.Games.MultiplayerGame.NextPlayer(System.Nullable(Of PacManBot.Games.Player))
-  nameWithType: MultiplayerGame.NextPlayer(Nullable<Player>)
-  nameWithType.vb: MultiplayerGame.NextPlayer(Nullable(Of Player))
+- uid: PacManBot.Games.MultiplayerGame.NextPlayer
+  name: NextPlayer()
+  href: api/PacManBot.Games.MultiplayerGame.html#PacManBot_Games_MultiplayerGame_NextPlayer
+  commentId: M:PacManBot.Games.MultiplayerGame.NextPlayer
+  fullName: PacManBot.Games.MultiplayerGame.NextPlayer()
+  nameWithType: MultiplayerGame.NextPlayer()
 - uid: PacManBot.Games.MultiplayerGame.NextPlayer*
   name: NextPlayer
   href: api/PacManBot.Games.MultiplayerGame.html#PacManBot_Games_MultiplayerGame_NextPlayer_
@@ -15406,15 +15435,12 @@ references:
   isSpec: "True"
   fullName: PacManBot.Games.MultiplayerGame.NextPlayer
   nameWithType: MultiplayerGame.NextPlayer
-- uid: PacManBot.Games.MultiplayerGame.PreviousPlayer(System.Nullable{PacManBot.Games.Player})
-  name: PreviousPlayer(Nullable<Player>)
-  href: api/PacManBot.Games.MultiplayerGame.html#PacManBot_Games_MultiplayerGame_PreviousPlayer_System_Nullable_PacManBot_Games_Player__
-  commentId: M:PacManBot.Games.MultiplayerGame.PreviousPlayer(System.Nullable{PacManBot.Games.Player})
-  name.vb: PreviousPlayer(Nullable(Of Player))
-  fullName: PacManBot.Games.MultiplayerGame.PreviousPlayer(System.Nullable<PacManBot.Games.Player>)
-  fullName.vb: PacManBot.Games.MultiplayerGame.PreviousPlayer(System.Nullable(Of PacManBot.Games.Player))
-  nameWithType: MultiplayerGame.PreviousPlayer(Nullable<Player>)
-  nameWithType.vb: MultiplayerGame.PreviousPlayer(Nullable(Of Player))
+- uid: PacManBot.Games.MultiplayerGame.PreviousPlayer
+  name: PreviousPlayer()
+  href: api/PacManBot.Games.MultiplayerGame.html#PacManBot_Games_MultiplayerGame_PreviousPlayer
+  commentId: M:PacManBot.Games.MultiplayerGame.PreviousPlayer
+  fullName: PacManBot.Games.MultiplayerGame.PreviousPlayer()
+  nameWithType: MultiplayerGame.PreviousPlayer()
 - uid: PacManBot.Games.MultiplayerGame.PreviousPlayer*
   name: PreviousPlayer
   href: api/PacManBot.Games.MultiplayerGame.html#PacManBot_Games_MultiplayerGame_PreviousPlayer_

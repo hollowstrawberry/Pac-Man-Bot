@@ -32,8 +32,8 @@ namespace PacManBot.Commands.Modules
                 case "moves":
                 case "notation":
                     string moveHelp =
-                        $"You can give a sequence of turns using the **{Prefix}rubik** command, " +
-                        $"with turns separated by spaces.\nYou can do **{Prefix}rubik help** for a few more commands.\n\n" +
+                        $"You can give a sequence of turns using the **{Context.Prefix}rubik** command, " +
+                        $"with turns separated by spaces.\nYou can do **{Context.Prefix}rubik help** for a few more commands.\n\n" +
                         "**Simple turns:** U, D, L, R, F, B\nThese are the basic clockwise turns of the cube. " +
                         "They stand for the Up, Down, Left, Right, Front and Back sides.\n" +
                         "**Counterclockwise turns:** Add `'`. Example: U', R'\n" +
@@ -52,7 +52,7 @@ namespace PacManBot.Commands.Modules
 
                 case "h":
                 case "help":
-                    await ReplyAsync(Commands.GetCommandHelp("rubik", Prefix));
+                    await ReplyAsync(Commands.GetCommandHelp("rubik", Context.Prefix));
                     return;
 
 
@@ -84,7 +84,7 @@ namespace PacManBot.Commands.Modules
                         if (!cube.TryDoMoves(input))
                         {
                             await ReplyAsync($"{CustomEmoji.Cross} Invalid sequence of moves. " +
-                                             $"Do **{Prefix}rubik help** for commands.");
+                                             $"Do **{Context.Prefix}rubik help** for commands.");
                             return;
                         }
                     }
