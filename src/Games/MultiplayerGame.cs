@@ -125,23 +125,19 @@ namespace PacManBot.Games
 
 
         /// <summary>Returns the next player in order, looping back to the first if necessary.</summary>
-        protected Player NextPlayer(Player? turn = null)
+        protected Player NextPlayer()
         {
-            if (turn == null) turn = Turn;
-
-            if (turn == Player.Tie) return Player.Tie;
-            else if (turn >= 0 && turn < UserId.Length - 1) return turn.Value + 1;
+            if (Turn == Player.Tie) return Player.Tie;
+            else if (Turn >= 0 && Turn < UserId.Length - 1) return Turn + 1;
             else return 0;
         }
 
 
         /// <summary>Returns the previous player in order, loopingback to the last if necessary.</summary>
-        protected Player PreviousPlayer(Player? turn = null)
+        protected Player PreviousPlayer()
         {
-            if (turn == null) turn = Turn;
-
-            if (turn == Player.Tie) return Player.Tie;
-            if (turn > 0 && turn < UserId.Length) return turn.Value - 1;
+            if (Turn == Player.Tie) return Player.Tie;
+            if (Turn > 0 && Turn < UserId.Length) return Turn - 1;
             return UserId.Length - 1;
         }
 

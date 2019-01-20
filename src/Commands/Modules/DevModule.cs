@@ -20,7 +20,8 @@ using PacManBot.Utils;
 namespace PacManBot.Commands.Modules
 {
     [Name(CustomEmoji.Discord + "Developer"), Remarks("0")]
-    [RequireDeveloper, PmRequireBotPermission(ChannelPermission.AddReactions)]
+    [RequireDeveloper]
+    [PmRequireBotPermission(ChannelPermission.AddReactions)]
     public class DevModule : PmBaseModule
     {
         private PmBot internalBot;

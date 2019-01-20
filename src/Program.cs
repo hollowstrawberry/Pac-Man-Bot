@@ -75,7 +75,7 @@ namespace PacManBot
 
             var services = serviceCollection.BuildServiceProvider();
 
-            await services.Get<LoggingService>().Log(LogSeverity.Info, "Booting up...");
+            await services.Get<LoggingService>().Log(LogSeverity.Info, $"Pac-Man Bot v{Version}");
             await services.Get<PmCommandService>().AddModulesAsync();
             services.Get<GameService>().LoadGames();
 

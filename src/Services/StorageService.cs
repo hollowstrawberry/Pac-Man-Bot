@@ -43,6 +43,12 @@ namespace PacManBot.Services
             cachedPrefixes = new ConcurrentDictionary<ulong, string>();
             cachedAllowsAutoresponse = new ConcurrentDictionary<ulong, bool>();
             cachedNeedsPrefix = new ConcurrentDictionary<ulong, bool>();
+
+            using (var db = MakeDbContext())
+            {
+                db.Database.EnsureCreated();
+                logger.Log(LogSeverity.Info, LogSource.Storage, "Database ready");
+            }
         }
 
 

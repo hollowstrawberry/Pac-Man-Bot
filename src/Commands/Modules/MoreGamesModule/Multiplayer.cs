@@ -234,7 +234,7 @@ namespace PacManBot.Commands.Modules
             }
             if (!self && !user.IsBot && (game.UserId[game.Turn] != user.Id || (DateTime.Now - game.LastPlayed) < TimeSpan.FromMinutes(1)))
             {
-                await ReplyAsync("To remove another user they have to be inactive for at least 1 minute during their turn.");
+                await ReplyAsync("To remove another user they must be inactive for at least 1 minute during their turn.");
             }
 
             game.RemovePlayer(user);

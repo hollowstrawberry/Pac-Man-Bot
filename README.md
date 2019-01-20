@@ -31,7 +31,7 @@ The full project documentation can be found [here](https://rawgit.com/Samrux/Pac
 If you feel like the public bot doesn't fit your needs, you can host your own Pac-Man bot. For hosting, you will need to either dedicate a machine to keep it running, or use a paid VPS service such as [DigitalOcean](https://m.do.co/c/7cbf69c956b7), which I use.  
 First, install the [.NET Core runtime here](https://www.microsoft.com/net/download).  
 Once that's installed, you will need the bot's compiled files. If you're on 64-bit Linux and want to run the latest version, you can clone the [linux-release](https://github.com/Samrux/Pac-Man-Bot/tree/linux-release) branch. If you're on a different system or would like to maintain and run your own fork, please refer to *"Compiling Pac-Man Bot"* below.  
-Make sure that the files found in [bin/](https://github.com/Samrux/Pac-Man-Bot/tree/master/bin) (`config.json`, `contents.json`, `database.sqlite`) are in the same folder as the rest of the bot's files.  
+Make sure that the files found in [bin/](https://github.com/Samrux/Pac-Man-Bot/tree/master/bin) (`config.json` and `contents.json`) are in the same folder as the rest of the bot's compiled files.  
 &nbsp;  
 Then, you'll need to set-up a Discord application for the bot to attach to. For this, you'll need to go to the [developers](https://discordapp.com/developers/applications/) page, create an application, give it a name, and add a bot to it in the Bot tab. Make sure to give the bot a name and avatar, too.  
 Once your application's ready, copy its token and put it as the value for `discordToken` in your `config.json` file.  

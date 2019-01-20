@@ -61,7 +61,7 @@ namespace PacManBot.Games.Concrete
         [DataMember] public override Player Winner { get; protected set; }
 
         private Card TopCard { get => discardPile[0]; set => discardPile[0] = value; }
-        private UnoPlayer CurrentPlayer => players[Turn];
+        private UnoPlayer CurrentPlayer => (Turn >= 0 && Turn < players.Count) ? players[Turn] : players[0];
         private Player FollowingTurn => reversed ? PreviousPlayer() : NextPlayer();
         private Player PrecedingTurn => reversed ? NextPlayer() : PreviousPlayer();
 

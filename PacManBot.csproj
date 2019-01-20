@@ -6,7 +6,7 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <PreserveCompilationContext>false</PreserveCompilationContext>
     <RootNamespace>PacManBot</RootNamespace>
-    <Version>4.0.15</Version>
+    <Version>4.0.16</Version>
     <Authors>Samuel Briones Molina</Authors>
     <Product>Pac-Man Bot</Product>
     <Company></Company>
@@ -58,10 +58,6 @@
     <PackageReference Include="Discord.Net.Rpc" Version="2.0.0-beta-00860" />
     <PackageReference Include="Discord.Net.Webhook" Version="2.0.1" />
     <PackageReference Include="Discord.Net.WebSocket" Version="2.0.1" />
-    <PackageReference Include="docfx.console" Version="2.40.7">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="2.10.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.Scripting" Version="2.10.0" />
     <PackageReference Include="Microsoft.Data.SQLite" Version="2.2.1" />
