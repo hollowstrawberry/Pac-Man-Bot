@@ -17,90 +17,6 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/PacManBot.Bot.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/PacManBot.Bot.html",
-          "hash": "bhxVqLJ+Cy9wKO8vc6pkqg=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/PacManBot.BotConfig.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/PacManBot.BotConfig.html",
-          "hash": "ugrf+cr3xL2N+5UOy11qAQ=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/PacManBot.BotContent.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/PacManBot.BotContent.html",
-          "hash": "fmaRtY+38fs8nttY0AEqNg=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/PacManBot.Commands.BaseCustomModule.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/PacManBot.Commands.BaseCustomModule.html",
-          "hash": "gWigRxSlKzv5kpnPwksklg=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/PacManBot.Commands.BasePermissionAttribute.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/PacManBot.Commands.BasePermissionAttribute.html",
-          "hash": "QtlN91fqyOFgiGAknVKV9A=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/PacManBot.Commands.BetterRequireBotPermissionAttribute.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/PacManBot.Commands.BetterRequireBotPermissionAttribute.html",
-          "hash": "GEpj8as7GTbhEltCff/O/g=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/PacManBot.Commands.BetterRequireUserPermissionAttribute.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/PacManBot.Commands.BetterRequireUserPermissionAttribute.html",
-          "hash": "eTjyjkJ9P+5KEWXOG8SvCg=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
       "source_relative_path": "api/PacManBot.Commands.ExampleUsageAttribute.yml",
       "output": {
         ".html": {
@@ -141,7 +57,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Commands.Modules.DevModule.html",
-          "hash": "RMXZkxk2zXTMd2sMMuQUow=="
+          "hash": "neJLcGg0MOswAspK4B4iJA=="
         }
       },
       "is_incremental": false,
@@ -153,7 +69,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Commands.Modules.GeneralModule.html",
-          "hash": "G8EXuZpGWhAzLWbiBEMb/w=="
+          "hash": "QvOKcb1Lzi4dbFCd5aYOAw=="
         }
       },
       "is_incremental": false,
@@ -165,7 +81,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Commands.Modules.ModModule.html",
-          "hash": "+4jQA8N2NB536hGvfgTgxg=="
+          "hash": "jGztYAZOfnWJcZvGmuzfjA=="
         }
       },
       "is_incremental": false,
@@ -177,7 +93,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Commands.Modules.MoreGamesModule.html",
-          "hash": "8uNsvwya92gaZO01yiXujg=="
+          "hash": "zqjPMFQ2YDJaReuBXNoj3w=="
         }
       },
       "is_incremental": false,
@@ -189,7 +105,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Commands.Modules.PacManModule.html",
-          "hash": "Erzd0vX2vBzQPcvm/JfzQg=="
+          "hash": "KyYx22b2KwXjNtA6P8qCjQ=="
         }
       },
       "is_incremental": false,
@@ -221,6 +137,54 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Commands.PmBaseModule.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Commands.PmBaseModule.html",
+          "hash": "y3VukKtyTcRqpUf44ffDmQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Commands.PmBasePermissionAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Commands.PmBasePermissionAttribute.html",
+          "hash": "eEvjZ80l0+KoSHt/0QZOfQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Commands.PmRequireBotPermissionAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Commands.PmRequireBotPermissionAttribute.html",
+          "hash": "AIerWVvzTcRi/NolqaCyGQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Commands.PmRequireUserPermissionAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Commands.PmRequireUserPermissionAttribute.html",
+          "hash": "jlySqmTP6ISiOfT9VzwZZg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/PacManBot.Commands.RequireDeveloperAttribute.yml",
       "output": {
         ".html": {
@@ -237,7 +201,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Commands.html",
-          "hash": "+wwiCFgqHrnsGPMO0N0uHA=="
+          "hash": "xghWTKpdVqQHalDzTcnKlg=="
         }
       },
       "is_incremental": false,
@@ -273,7 +237,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Constants.ExitCodes.html",
-          "hash": "GEXq5IjRaPMntzMFM9GJ9A=="
+          "hash": "HwUKLx9krx3iXNl/gPoN6A=="
         }
       },
       "is_incremental": false,
@@ -285,7 +249,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Constants.Files.html",
-          "hash": "a2JUCHschYs0xbOHd5a5DQ=="
+          "hash": "b062v8p8ZCEEAIZRtLKfJw=="
         }
       },
       "is_incremental": false,
@@ -297,7 +261,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Constants.LogSource.html",
-          "hash": "E9zXhqQrq1RQUZw1s3omfw=="
+          "hash": "hbuElMCErtPUo4qs6PlDFg=="
         }
       },
       "is_incremental": false,
@@ -405,7 +369,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Extensions.StringExtensions.html",
-          "hash": "ONyLn+/5UkerJONUfUxekQ=="
+          "hash": "w5vcoahJqndPMRfyB/YPfA=="
         }
       },
       "is_incremental": false,
@@ -429,7 +393,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.BaseGame.html",
-          "hash": "s6Iu1FB3axmH3T4MBBnbXA=="
+          "hash": "wYZwi3QT4VgteN7k9s6C5w=="
         }
       },
       "is_incremental": false,
@@ -453,7 +417,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.ChannelGame.html",
-          "hash": "X4OBBDMGWqnUY5/JKmTt6A=="
+          "hash": "7YC9wpZul8mUe9WyHU+71A=="
         }
       },
       "is_incremental": false,
@@ -465,7 +429,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.C4Game.html",
-          "hash": "lew5nhxGmvHOMFUhytlMnQ=="
+          "hash": "CLfxJRa20LViVsfgW0HmoQ=="
         }
       },
       "is_incremental": false,
@@ -501,7 +465,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.PacManGame.html",
-          "hash": "DmHU4MsqK2uUq1QrvUcesQ=="
+          "hash": "+nSRRS/pkgVxA61w3kH7jQ=="
         }
       },
       "is_incremental": false,
@@ -537,7 +501,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.PetGame.html",
-          "hash": "Y0UL34ngrCVwKG+Vp9b7qw=="
+          "hash": "M+HQH6uEFNlKw3ZSkuxuLA=="
         }
       },
       "is_incremental": false,
@@ -681,7 +645,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Buff.html",
-          "hash": "+kPL9D6PMyaj6u7IUlyl3Q=="
+          "hash": "X/EeKZRmxdydj5IuBSED9w=="
         }
       },
       "is_incremental": false,
@@ -1065,7 +1029,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.Skeleton5.html",
-          "hash": "XPAfQS2SosGoeR4M/FudyA=="
+          "hash": "CPKmwFn0gpD2RyTVDhlbSA=="
         }
       },
       "is_incremental": false,
@@ -1077,7 +1041,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.Skeleton6.html",
-          "hash": "eadNP9o3DC4OXZP9l5Rn4A=="
+          "hash": "waHK8EDAy7ZQIbmDnRjmoA=="
         }
       },
       "is_incremental": false,
@@ -1089,7 +1053,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemies.SkeletonKing.html",
-          "hash": "oOZ01U6zglw9h0CinYFl8Q=="
+          "hash": "UGsmiuGkYln7oXpCDbO2Pg=="
         }
       },
       "is_incremental": false,
@@ -1161,7 +1125,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.Enemy.html",
-          "hash": "j+67NY+r714ZXGG5pwN2IA=="
+          "hash": "VufhSzqTS6fprzE66z4tWA=="
         }
       },
       "is_incremental": false,
@@ -1233,7 +1197,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.Rpg.RpgExtensions.html",
-          "hash": "vr3hgyOVuXomH1jKCqCNVw=="
+          "hash": "hJnNjumDBOczwU77eOdw/g=="
         }
       },
       "is_incremental": false,
@@ -1593,7 +1557,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.RpgGame.html",
-          "hash": "g4SImv1bWVhiKzyBjniodg=="
+          "hash": "P9d8euCY3b/R3ZU2K6+s5g=="
         }
       },
       "is_incremental": false,
@@ -1629,7 +1593,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.RubiksGame.html",
-          "hash": "33FOhxyPcKVzPM2gn3hGlw=="
+          "hash": "9DOMT997Oa0qc6fx0k9qOQ=="
         }
       },
       "is_incremental": false,
@@ -1641,7 +1605,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.TTT5Game.html",
-          "hash": "2XpcF+T9CGgZCNA1gfdziQ=="
+          "hash": "mLZQUBNSRE/YVvLSPyygDA=="
         }
       },
       "is_incremental": false,
@@ -1653,7 +1617,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.TTTGame.html",
-          "hash": "xz3Jmtv712VVIP0iwQhpOA=="
+          "hash": "CJEVnQpMWft/2zerulv+Hg=="
         }
       },
       "is_incremental": false,
@@ -1665,7 +1629,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.UnoGame.html",
-          "hash": "8fPXAXBoF7KOo7a9MtsN4g=="
+          "hash": "PzCsn2TLr5ULlwOfeXkzWQ=="
         }
       },
       "is_incremental": false,
@@ -1785,7 +1749,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.MultiplayerGame.html",
-          "hash": "Dw9eSBNdzMPyG+iu+0e7Yg=="
+          "hash": "JB8LJRY8SUCwhf+NeCDNMg=="
         }
       },
       "is_incremental": false,
@@ -1841,11 +1805,47 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.PmBot.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.PmBot.html",
+          "hash": "LB4w396bdSNWJ4fnWmjLWA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.PmConfig.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.PmConfig.html",
+          "hash": "xgOEQYmJcIKLlGmZuzu4tw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.PmContent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.PmContent.html",
+          "hash": "6kDiWHZAwSsnZYGSsGy8Vw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/PacManBot.Program.yml",
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Program.html",
-          "hash": "PZvVYuQYLeMYgAI7Rk+e2w=="
+          "hash": "IoQZLmwWRRdO+Q5rhBjxOA=="
         }
       },
       "is_incremental": false,
@@ -1905,7 +1905,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Services.Database.ScoreEntry.html",
-          "hash": "eyXvnzlXU6gZNrOpHR9A1w=="
+          "hash": "gQ4Vi5k0VIti5QEOSzacmQ=="
         }
       },
       "is_incremental": false,
@@ -1929,19 +1929,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Services.GameService.html",
-          "hash": "00zwhHCnJs/Fkgm5QenI+w=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/PacManBot.Services.HelpService.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/PacManBot.Services.HelpService.html",
-          "hash": "ce3cGBpdtx7oALxnPEJFbA=="
+          "hash": "eK3/7BE9NlJSwGQ/4186mg=="
         }
       },
       "is_incremental": false,
@@ -1953,7 +1941,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Services.InputService.html",
-          "hash": "XjF6NjTKOJCaxz2oX7gIWg=="
+          "hash": "YXKaQzccTZ8kIuu+6OPeuw=="
         }
       },
       "is_incremental": false,
@@ -1965,7 +1953,31 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Services.LoggingService.html",
-          "hash": "qu9gG81qPMLlj3HCSY5pfA=="
+          "hash": "OowJEtyNDE/dXC339pyasQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Services.PmCommandService.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Services.PmCommandService.html",
+          "hash": "0GaPPjIjrQ8FG+eVcZolYw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Services.PmDiscordClient.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Services.PmDiscordClient.html",
+          "hash": "Qzz8Km1ZLn1mEc1FgjN88Q=="
         }
       },
       "is_incremental": false,
@@ -1977,7 +1989,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Services.SchedulingService.html",
-          "hash": "ZLrCJfj+cPKzvW8ypHYadw=="
+          "hash": "/2L3HoHqnW9fe0E+5PA2dA=="
         }
       },
       "is_incremental": false,
@@ -1989,7 +2001,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Services.ScriptingService.html",
-          "hash": "nfBwVIxqpmNsSCGuvlO9XA=="
+          "hash": "sprRq8Fjf8poT8tjG4/iwg=="
         }
       },
       "is_incremental": false,
@@ -2001,7 +2013,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Services.StorageService.html",
-          "hash": "2brZk+H8H4soHZ/SqbhorA=="
+          "hash": "MN3DeDc0XXrbtYcajIZWdg=="
         }
       },
       "is_incremental": false,
@@ -2013,7 +2025,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Services.html",
-          "hash": "ooQ59Rz4BYlyrAiXMCDtlA=="
+          "hash": "KKw4cUdWUOMm4rNVtAiGww=="
         }
       },
       "is_incremental": false,
@@ -2038,6 +2050,18 @@
         ".html": {
           "relative_path": "api/PacManBot.Utils.Brainfuck.html",
           "hash": "VoMcxHWyNEFt0owxaAVmAQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Utils.CommandHelp.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Utils.CommandHelp.html",
+          "hash": "YEg/8i0Yp8LkhxQIdXJJqQ=="
         }
       },
       "is_incremental": false,
@@ -2121,7 +2145,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Utils.html",
-          "hash": "/8iRlLJ2qOC0kvSQDPTSXA=="
+          "hash": "i2Q5NdCnz94fJmtG5vai/g=="
         }
       },
       "is_incremental": false,
@@ -2133,7 +2157,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.html",
-          "hash": "DtvCzAl1UDQb4jyUPRspeA=="
+          "hash": "RyjPC3wj9XWXglO2xn5twA=="
         }
       },
       "is_incremental": false,
@@ -2157,7 +2181,7 @@
       "output": {
         ".html": {
           "relative_path": "api/toc.html",
-          "hash": "Yugne4/U1uj5dUzjkA1nOw=="
+          "hash": "jTLbZnB6xZrMXQmKnC9lsA=="
         }
       },
       "is_incremental": false,
@@ -2225,11 +2249,11 @@
           "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build"
         },
-        "ConceptualDocumentProcessor": {
+        "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build"
         },
-        "ManagedReferenceDocumentProcessor": {
+        "ConceptualDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build"
         }
