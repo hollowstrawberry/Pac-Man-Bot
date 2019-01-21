@@ -51,49 +51,6 @@ references:
   commentId: T:PacManBot.Commands.HideHelpAttribute
   fullName: PacManBot.Commands.HideHelpAttribute
   nameWithType: HideHelpAttribute
-- uid: PacManBot.Commands.ModuleBuilder`2
-  name: ModuleBuilder<TModule, TContext>
-  href: api/PacManBot.Commands.ModuleBuilder-2.html
-  commentId: T:PacManBot.Commands.ModuleBuilder`2
-  name.vb: ModuleBuilder(Of TModule, TContext)
-  fullName: PacManBot.Commands.ModuleBuilder<TModule, TContext>
-  fullName.vb: PacManBot.Commands.ModuleBuilder(Of TModule, TContext)
-  nameWithType: ModuleBuilder<TModule, TContext>
-  nameWithType.vb: ModuleBuilder(Of TModule, TContext)
-- uid: PacManBot.Commands.ModuleBuilder`2.Create(`1,System.IServiceProvider,System.Boolean)
-  name: Create(TContext, IServiceProvider, Boolean)
-  href: api/PacManBot.Commands.ModuleBuilder-2.html#PacManBot_Commands_ModuleBuilder_2_Create__1_System_IServiceProvider_System_Boolean_
-  commentId: M:PacManBot.Commands.ModuleBuilder`2.Create(`1,System.IServiceProvider,System.Boolean)
-  fullName: PacManBot.Commands.ModuleBuilder<TModule, TContext>.Create(TContext, System.IServiceProvider, System.Boolean)
-  fullName.vb: PacManBot.Commands.ModuleBuilder(Of TModule, TContext).Create(TContext, System.IServiceProvider, System.Boolean)
-  nameWithType: ModuleBuilder<TModule, TContext>.Create(TContext, IServiceProvider, Boolean)
-  nameWithType.vb: ModuleBuilder(Of TModule, TContext).Create(TContext, IServiceProvider, Boolean)
-- uid: PacManBot.Commands.ModuleBuilder`2.Create*
-  name: Create
-  href: api/PacManBot.Commands.ModuleBuilder-2.html#PacManBot_Commands_ModuleBuilder_2_Create_
-  commentId: Overload:PacManBot.Commands.ModuleBuilder`2.Create
-  isSpec: "True"
-  fullName: PacManBot.Commands.ModuleBuilder<TModule, TContext>.Create
-  fullName.vb: PacManBot.Commands.ModuleBuilder(Of TModule, TContext).Create
-  nameWithType: ModuleBuilder<TModule, TContext>.Create
-  nameWithType.vb: ModuleBuilder(Of TModule, TContext).Create
-- uid: PacManBot.Commands.ModuleBuilder`2.SetConstructor(System.Reflection.ConstructorInfo)
-  name: SetConstructor(ConstructorInfo)
-  href: api/PacManBot.Commands.ModuleBuilder-2.html#PacManBot_Commands_ModuleBuilder_2_SetConstructor_System_Reflection_ConstructorInfo_
-  commentId: M:PacManBot.Commands.ModuleBuilder`2.SetConstructor(System.Reflection.ConstructorInfo)
-  fullName: PacManBot.Commands.ModuleBuilder<TModule, TContext>.SetConstructor(System.Reflection.ConstructorInfo)
-  fullName.vb: PacManBot.Commands.ModuleBuilder(Of TModule, TContext).SetConstructor(System.Reflection.ConstructorInfo)
-  nameWithType: ModuleBuilder<TModule, TContext>.SetConstructor(ConstructorInfo)
-  nameWithType.vb: ModuleBuilder(Of TModule, TContext).SetConstructor(ConstructorInfo)
-- uid: PacManBot.Commands.ModuleBuilder`2.SetConstructor*
-  name: SetConstructor
-  href: api/PacManBot.Commands.ModuleBuilder-2.html#PacManBot_Commands_ModuleBuilder_2_SetConstructor_
-  commentId: Overload:PacManBot.Commands.ModuleBuilder`2.SetConstructor
-  isSpec: "True"
-  fullName: PacManBot.Commands.ModuleBuilder<TModule, TContext>.SetConstructor
-  fullName.vb: PacManBot.Commands.ModuleBuilder(Of TModule, TContext).SetConstructor
-  nameWithType: ModuleBuilder<TModule, TContext>.SetConstructor
-  nameWithType.vb: ModuleBuilder(Of TModule, TContext).SetConstructor
 - uid: PacManBot.Commands.Modules
   name: PacManBot.Commands.Modules
   href: api/PacManBot.Commands.Modules.html
@@ -106,32 +63,6 @@ references:
   commentId: T:PacManBot.Commands.Modules.DevModule
   fullName: PacManBot.Commands.Modules.DevModule
   nameWithType: DevModule
-- uid: PacManBot.Commands.Modules.DevModule.#ctor(System.IServiceProvider)
-  name: DevModule(IServiceProvider)
-  href: api/PacManBot.Commands.Modules.DevModule.html#PacManBot_Commands_Modules_DevModule__ctor_System_IServiceProvider_
-  commentId: M:PacManBot.Commands.Modules.DevModule.#ctor(System.IServiceProvider)
-  fullName: PacManBot.Commands.Modules.DevModule.DevModule(System.IServiceProvider)
-  nameWithType: DevModule.DevModule(IServiceProvider)
-- uid: PacManBot.Commands.Modules.DevModule.#ctor*
-  name: DevModule
-  href: api/PacManBot.Commands.Modules.DevModule.html#PacManBot_Commands_Modules_DevModule__ctor_
-  commentId: Overload:PacManBot.Commands.Modules.DevModule.#ctor
-  isSpec: "True"
-  fullName: PacManBot.Commands.Modules.DevModule.DevModule
-  nameWithType: DevModule.DevModule
-- uid: PacManBot.Commands.Modules.DevModule.AfterExecute(Discord.Commands.CommandInfo)
-  name: AfterExecute(CommandInfo)
-  href: api/PacManBot.Commands.Modules.DevModule.html#PacManBot_Commands_Modules_DevModule_AfterExecute_Discord_Commands_CommandInfo_
-  commentId: M:PacManBot.Commands.Modules.DevModule.AfterExecute(Discord.Commands.CommandInfo)
-  fullName: PacManBot.Commands.Modules.DevModule.AfterExecute(Discord.Commands.CommandInfo)
-  nameWithType: DevModule.AfterExecute(CommandInfo)
-- uid: PacManBot.Commands.Modules.DevModule.AfterExecute*
-  name: AfterExecute
-  href: api/PacManBot.Commands.Modules.DevModule.html#PacManBot_Commands_Modules_DevModule_AfterExecute_
-  commentId: Overload:PacManBot.Commands.Modules.DevModule.AfterExecute
-  isSpec: "True"
-  fullName: PacManBot.Commands.Modules.DevModule.AfterExecute
-  nameWithType: DevModule.AfterExecute
 - uid: PacManBot.Commands.Modules.DevModule.Bot
   name: Bot
   href: api/PacManBot.Commands.Modules.DevModule.html#PacManBot_Commands_Modules_DevModule_Bot
@@ -171,19 +102,6 @@ references:
   isSpec: "True"
   fullName: PacManBot.Commands.Modules.DevModule.ClearGameMessages
   nameWithType: DevModule.ClearGameMessages
-- uid: PacManBot.Commands.Modules.DevModule.Db
-  name: Db
-  href: api/PacManBot.Commands.Modules.DevModule.html#PacManBot_Commands_Modules_DevModule_Db
-  commentId: P:PacManBot.Commands.Modules.DevModule.Db
-  fullName: PacManBot.Commands.Modules.DevModule.Db
-  nameWithType: DevModule.Db
-- uid: PacManBot.Commands.Modules.DevModule.Db*
-  name: Db
-  href: api/PacManBot.Commands.Modules.DevModule.html#PacManBot_Commands_Modules_DevModule_Db_
-  commentId: Overload:PacManBot.Commands.Modules.DevModule.Db
-  isSpec: "True"
-  fullName: PacManBot.Commands.Modules.DevModule.Db
-  nameWithType: DevModule.Db
 - uid: PacManBot.Commands.Modules.DevModule.DoGarbageCollect
   name: DoGarbageCollect()
   href: api/PacManBot.Commands.Modules.DevModule.html#PacManBot_Commands_Modules_DevModule_DoGarbageCollect
@@ -342,6 +260,19 @@ references:
   isSpec: "True"
   fullName: PacManBot.Commands.Modules.DevModule.SendServerEmotes
   nameWithType: DevModule.SendServerEmotes
+- uid: PacManBot.Commands.Modules.DevModule.Services
+  name: Services
+  href: api/PacManBot.Commands.Modules.DevModule.html#PacManBot_Commands_Modules_DevModule_Services
+  commentId: P:PacManBot.Commands.Modules.DevModule.Services
+  fullName: PacManBot.Commands.Modules.DevModule.Services
+  nameWithType: DevModule.Services
+- uid: PacManBot.Commands.Modules.DevModule.Services*
+  name: Services
+  href: api/PacManBot.Commands.Modules.DevModule.html#PacManBot_Commands_Modules_DevModule_Services_
+  commentId: Overload:PacManBot.Commands.Modules.DevModule.Services
+  isSpec: "True"
+  fullName: PacManBot.Commands.Modules.DevModule.Services
+  nameWithType: DevModule.Services
 - uid: PacManBot.Commands.Modules.DevModule.SetAvatar(System.String)
   name: SetAvatar(String)
   href: api/PacManBot.Commands.Modules.DevModule.html#PacManBot_Commands_Modules_DevModule_SetAvatar_System_String_
@@ -439,19 +370,6 @@ references:
   commentId: T:PacManBot.Commands.Modules.GeneralModule
   fullName: PacManBot.Commands.Modules.GeneralModule
   nameWithType: GeneralModule
-- uid: PacManBot.Commands.Modules.GeneralModule.#ctor(System.IServiceProvider)
-  name: GeneralModule(IServiceProvider)
-  href: api/PacManBot.Commands.Modules.GeneralModule.html#PacManBot_Commands_Modules_GeneralModule__ctor_System_IServiceProvider_
-  commentId: M:PacManBot.Commands.Modules.GeneralModule.#ctor(System.IServiceProvider)
-  fullName: PacManBot.Commands.Modules.GeneralModule.GeneralModule(System.IServiceProvider)
-  nameWithType: GeneralModule.GeneralModule(IServiceProvider)
-- uid: PacManBot.Commands.Modules.GeneralModule.#ctor*
-  name: GeneralModule
-  href: api/PacManBot.Commands.Modules.GeneralModule.html#PacManBot_Commands_Modules_GeneralModule__ctor_
-  commentId: Overload:PacManBot.Commands.Modules.GeneralModule.#ctor
-  isSpec: "True"
-  fullName: PacManBot.Commands.Modules.GeneralModule.GeneralModule
-  nameWithType: GeneralModule.GeneralModule
 - uid: PacManBot.Commands.Modules.GeneralModule.BlobDance(System.UInt64)
   name: BlobDance(UInt64)
   href: api/PacManBot.Commands.Modules.GeneralModule.html#PacManBot_Commands_Modules_GeneralModule_BlobDance_System_UInt64_
@@ -465,6 +383,19 @@ references:
   isSpec: "True"
   fullName: PacManBot.Commands.Modules.GeneralModule.BlobDance
   nameWithType: GeneralModule.BlobDance
+- uid: PacManBot.Commands.Modules.GeneralModule.Commands
+  name: Commands
+  href: api/PacManBot.Commands.Modules.GeneralModule.html#PacManBot_Commands_Modules_GeneralModule_Commands
+  commentId: P:PacManBot.Commands.Modules.GeneralModule.Commands
+  fullName: PacManBot.Commands.Modules.GeneralModule.Commands
+  nameWithType: GeneralModule.Commands
+- uid: PacManBot.Commands.Modules.GeneralModule.Commands*
+  name: Commands
+  href: api/PacManBot.Commands.Modules.GeneralModule.html#PacManBot_Commands_Modules_GeneralModule_Commands_
+  commentId: Overload:PacManBot.Commands.Modules.GeneralModule.Commands
+  isSpec: "True"
+  fullName: PacManBot.Commands.Modules.GeneralModule.Commands
+  nameWithType: GeneralModule.Commands
 - uid: PacManBot.Commands.Modules.GeneralModule.DoNothing
   name: DoNothing()
   href: api/PacManBot.Commands.Modules.GeneralModule.html#PacManBot_Commands_Modules_GeneralModule_DoNothing
@@ -666,19 +597,6 @@ references:
   commentId: T:PacManBot.Commands.Modules.ModModule
   fullName: PacManBot.Commands.Modules.ModModule
   nameWithType: ModModule
-- uid: PacManBot.Commands.Modules.ModModule.#ctor(System.IServiceProvider)
-  name: ModModule(IServiceProvider)
-  href: api/PacManBot.Commands.Modules.ModModule.html#PacManBot_Commands_Modules_ModModule__ctor_System_IServiceProvider_
-  commentId: M:PacManBot.Commands.Modules.ModModule.#ctor(System.IServiceProvider)
-  fullName: PacManBot.Commands.Modules.ModModule.ModModule(System.IServiceProvider)
-  nameWithType: ModModule.ModModule(IServiceProvider)
-- uid: PacManBot.Commands.Modules.ModModule.#ctor*
-  name: ModModule
-  href: api/PacManBot.Commands.Modules.ModModule.html#PacManBot_Commands_Modules_ModModule__ctor_
-  commentId: Overload:PacManBot.Commands.Modules.ModModule.#ctor
-  isSpec: "True"
-  fullName: PacManBot.Commands.Modules.ModModule.ModModule
-  nameWithType: ModModule.ModModule
 - uid: PacManBot.Commands.Modules.ModModule.ClearCommandMessages(System.Int32)
   name: ClearCommandMessages(Int32)
   href: api/PacManBot.Commands.Modules.ModModule.html#PacManBot_Commands_Modules_ModModule_ClearCommandMessages_System_Int32_
@@ -750,19 +668,6 @@ references:
   commentId: T:PacManBot.Commands.Modules.MoreGamesModule
   fullName: PacManBot.Commands.Modules.MoreGamesModule
   nameWithType: MoreGamesModule
-- uid: PacManBot.Commands.Modules.MoreGamesModule.#ctor(System.IServiceProvider)
-  name: MoreGamesModule(IServiceProvider)
-  href: api/PacManBot.Commands.Modules.MoreGamesModule.html#PacManBot_Commands_Modules_MoreGamesModule__ctor_System_IServiceProvider_
-  commentId: M:PacManBot.Commands.Modules.MoreGamesModule.#ctor(System.IServiceProvider)
-  fullName: PacManBot.Commands.Modules.MoreGamesModule.MoreGamesModule(System.IServiceProvider)
-  nameWithType: MoreGamesModule.MoreGamesModule(IServiceProvider)
-- uid: PacManBot.Commands.Modules.MoreGamesModule.#ctor*
-  name: MoreGamesModule
-  href: api/PacManBot.Commands.Modules.MoreGamesModule.html#PacManBot_Commands_Modules_MoreGamesModule__ctor_
-  commentId: Overload:PacManBot.Commands.Modules.MoreGamesModule.#ctor
-  isSpec: "True"
-  fullName: PacManBot.Commands.Modules.MoreGamesModule.MoreGamesModule
-  nameWithType: MoreGamesModule.MoreGamesModule
 - uid: PacManBot.Commands.Modules.MoreGamesModule.AdoptPetMessage
   name: AdoptPetMessage
   href: api/PacManBot.Commands.Modules.MoreGamesModule.html#PacManBot_Commands_Modules_MoreGamesModule_AdoptPetMessage
@@ -789,6 +694,19 @@ references:
   isSpec: "True"
   fullName: PacManBot.Commands.Modules.MoreGamesModule.CancelGame
   nameWithType: MoreGamesModule.CancelGame
+- uid: PacManBot.Commands.Modules.MoreGamesModule.Commands
+  name: Commands
+  href: api/PacManBot.Commands.Modules.MoreGamesModule.html#PacManBot_Commands_Modules_MoreGamesModule_Commands
+  commentId: P:PacManBot.Commands.Modules.MoreGamesModule.Commands
+  fullName: PacManBot.Commands.Modules.MoreGamesModule.Commands
+  nameWithType: MoreGamesModule.Commands
+- uid: PacManBot.Commands.Modules.MoreGamesModule.Commands*
+  name: Commands
+  href: api/PacManBot.Commands.Modules.MoreGamesModule.html#PacManBot_Commands_Modules_MoreGamesModule_Commands_
+  commentId: Overload:PacManBot.Commands.Modules.MoreGamesModule.Commands
+  isSpec: "True"
+  fullName: PacManBot.Commands.Modules.MoreGamesModule.Commands
+  nameWithType: MoreGamesModule.Commands
 - uid: PacManBot.Commands.Modules.MoreGamesModule.JoinUno(Discord.WebSocket.SocketGuildUser)
   name: JoinUno(SocketGuildUser)
   href: api/PacManBot.Commands.Modules.MoreGamesModule.html#PacManBot_Commands_Modules_MoreGamesModule_JoinUno_Discord_WebSocket_SocketGuildUser_
@@ -1257,6 +1175,19 @@ references:
   isSpec: "True"
   fullName: PacManBot.Commands.Modules.MoreGamesModule.RubiksCube
   nameWithType: MoreGamesModule.RubiksCube
+- uid: PacManBot.Commands.Modules.MoreGamesModule.Services
+  name: Services
+  href: api/PacManBot.Commands.Modules.MoreGamesModule.html#PacManBot_Commands_Modules_MoreGamesModule_Services
+  commentId: P:PacManBot.Commands.Modules.MoreGamesModule.Services
+  fullName: PacManBot.Commands.Modules.MoreGamesModule.Services
+  nameWithType: MoreGamesModule.Services
+- uid: PacManBot.Commands.Modules.MoreGamesModule.Services*
+  name: Services
+  href: api/PacManBot.Commands.Modules.MoreGamesModule.html#PacManBot_Commands_Modules_MoreGamesModule_Services_
+  commentId: Overload:PacManBot.Commands.Modules.MoreGamesModule.Services
+  isSpec: "True"
+  fullName: PacManBot.Commands.Modules.MoreGamesModule.Services
+  nameWithType: MoreGamesModule.Services
 - uid: PacManBot.Commands.Modules.MoreGamesModule.Start5TicTacToeVs(Discord.WebSocket.SocketGuildUser)
   name: Start5TicTacToeVs(SocketGuildUser)
   href: api/PacManBot.Commands.Modules.MoreGamesModule.html#PacManBot_Commands_Modules_MoreGamesModule_Start5TicTacToeVs_Discord_WebSocket_SocketGuildUser_
@@ -1399,19 +1330,6 @@ references:
   commentId: T:PacManBot.Commands.Modules.PacManModule
   fullName: PacManBot.Commands.Modules.PacManModule
   nameWithType: PacManModule
-- uid: PacManBot.Commands.Modules.PacManModule.#ctor(System.IServiceProvider)
-  name: PacManModule(IServiceProvider)
-  href: api/PacManBot.Commands.Modules.PacManModule.html#PacManBot_Commands_Modules_PacManModule__ctor_System_IServiceProvider_
-  commentId: M:PacManBot.Commands.Modules.PacManModule.#ctor(System.IServiceProvider)
-  fullName: PacManBot.Commands.Modules.PacManModule.PacManModule(System.IServiceProvider)
-  nameWithType: PacManModule.PacManModule(IServiceProvider)
-- uid: PacManBot.Commands.Modules.PacManModule.#ctor*
-  name: PacManModule
-  href: api/PacManBot.Commands.Modules.PacManModule.html#PacManBot_Commands_Modules_PacManModule__ctor_
-  commentId: Overload:PacManBot.Commands.Modules.PacManModule.#ctor
-  isSpec: "True"
-  fullName: PacManBot.Commands.Modules.PacManModule.PacManModule
-  nameWithType: PacManModule.PacManModule
 - uid: PacManBot.Commands.Modules.PacManModule.AddControls(PacManBot.Games.Concrete.PacManGame,Discord.IUserMessage)
   name: AddControls(PacManGame, IUserMessage)
   href: api/PacManBot.Commands.Modules.PacManModule.html#PacManBot_Commands_Modules_PacManModule_AddControls_PacManBot_Games_Concrete_PacManGame_Discord_IUserMessage_
@@ -1507,6 +1425,19 @@ references:
   isSpec: "True"
   fullName: PacManBot.Commands.Modules.PacManModule.SendTopScores
   nameWithType: PacManModule.SendTopScores
+- uid: PacManBot.Commands.Modules.PacManModule.Services
+  name: Services
+  href: api/PacManBot.Commands.Modules.PacManModule.html#PacManBot_Commands_Modules_PacManModule_Services
+  commentId: P:PacManBot.Commands.Modules.PacManModule.Services
+  fullName: PacManBot.Commands.Modules.PacManModule.Services
+  nameWithType: PacManModule.Services
+- uid: PacManBot.Commands.Modules.PacManModule.Services*
+  name: Services
+  href: api/PacManBot.Commands.Modules.PacManModule.html#PacManBot_Commands_Modules_PacManModule_Services_
+  commentId: Overload:PacManBot.Commands.Modules.PacManModule.Services
+  isSpec: "True"
+  fullName: PacManBot.Commands.Modules.PacManModule.Services
+  nameWithType: PacManModule.Services
 - uid: PacManBot.Commands.Modules.PacManModule.StartGameInstance(System.String)
   name: StartGameInstance(String)
   href: api/PacManBot.Commands.Modules.PacManModule.html#PacManBot_Commands_Modules_PacManModule_StartGameInstance_System_String_
@@ -1558,19 +1489,6 @@ references:
   commentId: T:PacManBot.Commands.PmBaseModule
   fullName: PacManBot.Commands.PmBaseModule
   nameWithType: PmBaseModule
-- uid: PacManBot.Commands.PmBaseModule.#ctor(System.IServiceProvider)
-  name: PmBaseModule(IServiceProvider)
-  href: api/PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule__ctor_System_IServiceProvider_
-  commentId: M:PacManBot.Commands.PmBaseModule.#ctor(System.IServiceProvider)
-  fullName: PacManBot.Commands.PmBaseModule.PmBaseModule(System.IServiceProvider)
-  nameWithType: PmBaseModule.PmBaseModule(IServiceProvider)
-- uid: PacManBot.Commands.PmBaseModule.#ctor*
-  name: PmBaseModule
-  href: api/PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule__ctor_
-  commentId: Overload:PacManBot.Commands.PmBaseModule.#ctor
-  isSpec: "True"
-  fullName: PacManBot.Commands.PmBaseModule.PmBaseModule
-  nameWithType: PmBaseModule.PmBaseModule
 - uid: PacManBot.Commands.PmBaseModule.AfterExecute(Discord.Commands.CommandInfo)
   name: AfterExecute(CommandInfo)
   href: api/PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_AfterExecute_Discord_Commands_CommandInfo_
@@ -1597,19 +1515,19 @@ references:
   isSpec: "True"
   fullName: PacManBot.Commands.PmBaseModule.AutoReactAsync
   nameWithType: PmBaseModule.AutoReactAsync
-- uid: PacManBot.Commands.PmBaseModule.Commands
-  name: Commands
-  href: api/PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_Commands
-  commentId: P:PacManBot.Commands.PmBaseModule.Commands
-  fullName: PacManBot.Commands.PmBaseModule.Commands
-  nameWithType: PmBaseModule.Commands
-- uid: PacManBot.Commands.PmBaseModule.Commands*
-  name: Commands
-  href: api/PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_Commands_
-  commentId: Overload:PacManBot.Commands.PmBaseModule.Commands
+- uid: PacManBot.Commands.PmBaseModule.Config
+  name: Config
+  href: api/PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_Config
+  commentId: P:PacManBot.Commands.PmBaseModule.Config
+  fullName: PacManBot.Commands.PmBaseModule.Config
+  nameWithType: PmBaseModule.Config
+- uid: PacManBot.Commands.PmBaseModule.Config*
+  name: Config
+  href: api/PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_Config_
+  commentId: Overload:PacManBot.Commands.PmBaseModule.Config
   isSpec: "True"
-  fullName: PacManBot.Commands.PmBaseModule.Commands
-  nameWithType: PmBaseModule.Commands
+  fullName: PacManBot.Commands.PmBaseModule.Config
+  nameWithType: PmBaseModule.Config
 - uid: PacManBot.Commands.PmBaseModule.Content
   name: Content
   href: api/PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_Content
@@ -1642,22 +1560,6 @@ references:
   isSpec: "True"
   fullName: PacManBot.Commands.PmBaseModule.Games
   nameWithType: PmBaseModule.Games
-- uid: PacManBot.Commands.PmBaseModule.GetModule*
-  name: GetModule
-  href: api/PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_GetModule_
-  commentId: Overload:PacManBot.Commands.PmBaseModule.GetModule
-  isSpec: "True"
-  fullName: PacManBot.Commands.PmBaseModule.GetModule
-  nameWithType: PmBaseModule.GetModule
-- uid: PacManBot.Commands.PmBaseModule.GetModule``1
-  name: GetModule<TModule>()
-  href: api/PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_GetModule__1
-  commentId: M:PacManBot.Commands.PmBaseModule.GetModule``1
-  name.vb: GetModule(Of TModule)()
-  fullName: PacManBot.Commands.PmBaseModule.GetModule<TModule>()
-  fullName.vb: PacManBot.Commands.PmBaseModule.GetModule(Of TModule)()
-  nameWithType: PmBaseModule.GetModule<TModule>()
-  nameWithType.vb: PmBaseModule.GetModule(Of TModule)()
 - uid: PacManBot.Commands.PmBaseModule.Logger
   name: Logger
   href: api/PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_Logger
@@ -1702,19 +1604,6 @@ references:
   isSpec: "True"
   fullName: PacManBot.Commands.PmBaseModule.ReplyAsync
   nameWithType: PmBaseModule.ReplyAsync
-- uid: PacManBot.Commands.PmBaseModule.Services
-  name: Services
-  href: api/PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_Services
-  commentId: P:PacManBot.Commands.PmBaseModule.Services
-  fullName: PacManBot.Commands.PmBaseModule.Services
-  nameWithType: PmBaseModule.Services
-- uid: PacManBot.Commands.PmBaseModule.Services*
-  name: Services
-  href: api/PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_Services_
-  commentId: Overload:PacManBot.Commands.PmBaseModule.Services
-  isSpec: "True"
-  fullName: PacManBot.Commands.PmBaseModule.Services
-  nameWithType: PmBaseModule.Services
 - uid: PacManBot.Commands.PmBaseModule.Storage
   name: Storage
   href: api/PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_Storage

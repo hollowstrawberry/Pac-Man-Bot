@@ -129,40 +129,6 @@
   <h5 id="PacManBot_Commands_PmBaseModule_remarks"><strong>Remarks</strong></h5>
   <div class="markdown level0 remarks"><p>Service properties are loaded lazily.</p>
 </div>
-  <h3 id="constructors">Constructors
-  </h3>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_PmBaseModule__ctor_System_IServiceProvider_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.PmBaseModule.%23ctor(System.IServiceProvider)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/PmBaseModule.cs/#L43">View Source</a>
-  </span>
-  <a id="PacManBot_Commands_PmBaseModule__ctor_" data-uid="PacManBot.Commands.PmBaseModule.#ctor*"></a>
-  <h4 id="PacManBot_Commands_PmBaseModule__ctor_System_IServiceProvider_" data-uid="PacManBot.Commands.PmBaseModule.#ctor(System.IServiceProvider)">PmBaseModule(IServiceProvider)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected PmBaseModule(IServiceProvider services)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.IServiceProvider</span></td>
-        <td><span class="parametername">services</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
   <h3 id="fields">Fields
   </h3>
   <span class="small pull-right mobile-hide">
@@ -199,19 +165,19 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_PmBaseModule_Commands.md&amp;value=---%0Auid%3A%20PacManBot.Commands.PmBaseModule.Commands%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_PmBaseModule_Config.md&amp;value=---%0Auid%3A%20PacManBot.Commands.PmBaseModule.Config%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/PmBaseModule.cs/#L40">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/PmBaseModule.cs/#L21">View Source</a>
   </span>
-  <a id="PacManBot_Commands_PmBaseModule_Commands_" data-uid="PacManBot.Commands.PmBaseModule.Commands*"></a>
-  <h4 id="PacManBot_Commands_PmBaseModule_Commands" data-uid="PacManBot.Commands.PmBaseModule.Commands">Commands</h4>
-  <div class="markdown level1 summary"><p>Provides help for commands.</p>
+  <a id="PacManBot_Commands_PmBaseModule_Config_" data-uid="PacManBot.Commands.PmBaseModule.Config*"></a>
+  <h4 id="PacManBot_Commands_PmBaseModule_Config" data-uid="PacManBot.Commands.PmBaseModule.Config">Config</h4>
+  <div class="markdown level1 summary"><p>Runtime settings of the bot.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public PmCommandService Commands { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public PmConfig Config { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -223,7 +189,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="PacManBot.Services.PmCommandService.html">PmCommandService</a></td>
+        <td><a class="xref" href="PacManBot.PmConfig.html">PmConfig</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -233,11 +199,11 @@
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_PmBaseModule_Content.md&amp;value=---%0Auid%3A%20PacManBot.Commands.PmBaseModule.Content%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/PmBaseModule.cs/#L32">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/PmBaseModule.cs/#L23">View Source</a>
   </span>
   <a id="PacManBot_Commands_PmBaseModule_Content_" data-uid="PacManBot.Commands.PmBaseModule.Content*"></a>
   <h4 id="PacManBot_Commands_PmBaseModule_Content" data-uid="PacManBot.Commands.PmBaseModule.Content">Content</h4>
-  <div class="markdown level1 summary"><p>Contents used throughout the bot.</p>
+  <div class="markdown level1 summary"><p>Content used throughout the bot.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -264,7 +230,7 @@
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_PmBaseModule_Games.md&amp;value=---%0Auid%3A%20PacManBot.Commands.PmBaseModule.Games%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/PmBaseModule.cs/#L38">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/PmBaseModule.cs/#L29">View Source</a>
   </span>
   <a id="PacManBot_Commands_PmBaseModule_Games_" data-uid="PacManBot.Commands.PmBaseModule.Games*"></a>
   <h4 id="PacManBot_Commands_PmBaseModule_Games" data-uid="PacManBot.Commands.PmBaseModule.Games">Games</h4>
@@ -273,7 +239,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public GameService Games { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public GameService Games { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -295,7 +261,7 @@
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_PmBaseModule_Logger.md&amp;value=---%0Auid%3A%20PacManBot.Commands.PmBaseModule.Logger%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/PmBaseModule.cs/#L34">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/PmBaseModule.cs/#L25">View Source</a>
   </span>
   <a id="PacManBot_Commands_PmBaseModule_Logger_" data-uid="PacManBot.Commands.PmBaseModule.Logger*"></a>
   <h4 id="PacManBot_Commands_PmBaseModule_Logger" data-uid="PacManBot.Commands.PmBaseModule.Logger">Logger</h4>
@@ -304,7 +270,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public LoggingService Logger { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public LoggingService Logger { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -323,41 +289,10 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_PmBaseModule_Services.md&amp;value=---%0Auid%3A%20PacManBot.Commands.PmBaseModule.Services%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/PmBaseModule.cs/#L29">View Source</a>
-  </span>
-  <a id="PacManBot_Commands_PmBaseModule_Services_" data-uid="PacManBot.Commands.PmBaseModule.Services*"></a>
-  <h4 id="PacManBot_Commands_PmBaseModule_Services" data-uid="PacManBot.Commands.PmBaseModule.Services">Services</h4>
-  <div class="markdown level1 summary"><p>All of this program's services, required to supply new objects such as games.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public IServiceProvider Services { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.IServiceProvider</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_PmBaseModule_Storage.md&amp;value=---%0Auid%3A%20PacManBot.Commands.PmBaseModule.Storage%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/PmBaseModule.cs/#L36">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/PmBaseModule.cs/#L27">View Source</a>
   </span>
   <a id="PacManBot_Commands_PmBaseModule_Storage_" data-uid="PacManBot.Commands.PmBaseModule.Storage*"></a>
   <h4 id="PacManBot_Commands_PmBaseModule_Storage" data-uid="PacManBot.Commands.PmBaseModule.Storage">Storage</h4>
@@ -366,7 +301,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public StorageService Storage { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public StorageService Storage { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -390,7 +325,7 @@
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_PmBaseModule_AfterExecute_Discord_Commands_CommandInfo_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.PmBaseModule.AfterExecute(Discord.Commands.CommandInfo)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/PmBaseModule.cs/#L49">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/PmBaseModule.cs/#L32">View Source</a>
   </span>
   <a id="PacManBot_Commands_PmBaseModule_AfterExecute_" data-uid="PacManBot.Commands.PmBaseModule.AfterExecute*"></a>
   <h4 id="PacManBot_Commands_PmBaseModule_AfterExecute_Discord_Commands_CommandInfo_" data-uid="PacManBot.Commands.PmBaseModule.AfterExecute(Discord.Commands.CommandInfo)">AfterExecute(CommandInfo)</h4>
@@ -424,7 +359,7 @@
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_PmBaseModule_AutoReactAsync_System_Boolean_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.PmBaseModule.AutoReactAsync(System.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/PmBaseModule.cs/#L80">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/PmBaseModule.cs/#L63">View Source</a>
   </span>
   <a id="PacManBot_Commands_PmBaseModule_AutoReactAsync_" data-uid="PacManBot.Commands.PmBaseModule.AutoReactAsync*"></a>
   <h4 id="PacManBot_Commands_PmBaseModule_AutoReactAsync_System_Boolean_" data-uid="PacManBot.Commands.PmBaseModule.AutoReactAsync(System.Boolean)">AutoReactAsync(Boolean)</h4>
@@ -469,57 +404,10 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_PmBaseModule_GetModule__1.md&amp;value=---%0Auid%3A%20PacManBot.Commands.PmBaseModule.GetModule%60%601%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/PmBaseModule.cs/#L85">View Source</a>
-  </span>
-  <a id="PacManBot_Commands_PmBaseModule_GetModule_" data-uid="PacManBot.Commands.PmBaseModule.GetModule*"></a>
-  <h4 id="PacManBot_Commands_PmBaseModule_GetModule__1" data-uid="PacManBot.Commands.PmBaseModule.GetModule``1">GetModule&lt;TModule&gt;()</h4>
-  <div class="markdown level1 summary"><p>Creates an instance of a different module. This shouldn't ever be used. I'm a madman.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public TModule GetModule&lt;TModule&gt;()
-    where TModule : PmBaseModule</code></pre>
-  </div>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">TModule</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="typeParameters">Type Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="parametername">TModule</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_PmBaseModule_ReplyAsync_Discord_EmbedBuilder_Discord_RequestOptions_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.PmBaseModule.ReplyAsync(Discord.EmbedBuilder%2CDiscord.RequestOptions)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/PmBaseModule.cs/#L74">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/PmBaseModule.cs/#L57">View Source</a>
   </span>
   <a id="PacManBot_Commands_PmBaseModule_ReplyAsync_" data-uid="PacManBot.Commands.PmBaseModule.ReplyAsync*"></a>
   <h4 id="PacManBot_Commands_PmBaseModule_ReplyAsync_Discord_EmbedBuilder_Discord_RequestOptions_" data-uid="PacManBot.Commands.PmBaseModule.ReplyAsync(Discord.EmbedBuilder,Discord.RequestOptions)">ReplyAsync(EmbedBuilder, RequestOptions)</h4>
@@ -572,7 +460,7 @@
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_PmBaseModule_ReplyAsync_System_Object_Discord_EmbedBuilder_Discord_RequestOptions_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.PmBaseModule.ReplyAsync(System.Object%2CDiscord.EmbedBuilder%2CDiscord.RequestOptions)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/PmBaseModule.cs/#L64">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/PmBaseModule.cs/#L47">View Source</a>
   </span>
   <a id="PacManBot_Commands_PmBaseModule_ReplyAsync_" data-uid="PacManBot.Commands.PmBaseModule.ReplyAsync*"></a>
   <h4 id="PacManBot_Commands_PmBaseModule_ReplyAsync_System_Object_Discord_EmbedBuilder_Discord_RequestOptions_" data-uid="PacManBot.Commands.PmBaseModule.ReplyAsync(System.Object,Discord.EmbedBuilder,Discord.RequestOptions)">ReplyAsync(Object, EmbedBuilder, RequestOptions)</h4>
@@ -630,7 +518,7 @@
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_PmBaseModule_ReplyAsync_System_Object_Discord_RequestOptions_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.PmBaseModule.ReplyAsync(System.Object%2CDiscord.RequestOptions)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/PmBaseModule.cs/#L69">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/PmBaseModule.cs/#L52">View Source</a>
   </span>
   <a id="PacManBot_Commands_PmBaseModule_ReplyAsync_" data-uid="PacManBot.Commands.PmBaseModule.ReplyAsync*"></a>
   <h4 id="PacManBot_Commands_PmBaseModule_ReplyAsync_System_Object_Discord_RequestOptions_" data-uid="PacManBot.Commands.PmBaseModule.ReplyAsync(System.Object,Discord.RequestOptions)">ReplyAsync(Object, RequestOptions)</h4>
@@ -683,7 +571,7 @@
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_PmBaseModule_ReplyAsync_System_String_System_Boolean_Discord_Embed_Discord_RequestOptions_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.PmBaseModule.ReplyAsync(System.String%2CSystem.Boolean%2CDiscord.Embed%2CDiscord.RequestOptions)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/PmBaseModule.cs/#L57">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/PmBaseModule.cs/#L40">View Source</a>
   </span>
   <a id="PacManBot_Commands_PmBaseModule_ReplyAsync_" data-uid="PacManBot.Commands.PmBaseModule.ReplyAsync*"></a>
   <h4 id="PacManBot_Commands_PmBaseModule_ReplyAsync_System_String_System_Boolean_Discord_Embed_Discord_RequestOptions_" data-uid="PacManBot.Commands.PmBaseModule.ReplyAsync(System.String,System.Boolean,Discord.Embed,Discord.RequestOptions)">ReplyAsync(String, Boolean, Embed, RequestOptions)</h4>

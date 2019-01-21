@@ -19,7 +19,7 @@ namespace PacManBot.Commands.Modules
                                 ChannelPermission.UseExternalEmojis | ChannelPermission.AddReactions)]
     public class PacManModule : PmBaseModule
     {
-        public PacManModule(IServiceProvider services) : base(services) { }
+        public IServiceProvider Services { get; set; }
 
 
         private const int MaxDisplayedScores = 20;

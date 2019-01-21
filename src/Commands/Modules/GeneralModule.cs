@@ -11,6 +11,7 @@ using Discord.WebSocket;
 using PacManBot.Constants;
 using PacManBot.Extensions;
 using PacManBot.Games;
+using PacManBot.Services;
 
 namespace PacManBot.Commands.Modules
 {
@@ -25,8 +26,7 @@ namespace PacManBot.Commands.Modules
             .ToArray();
 
 
-        public GeneralModule(IServiceProvider services) : base(services) {}
-
+        public PmCommandService Commands { get; set; }
 
 
         [Command("about"), Alias("info"), Remarks("About this bot")]

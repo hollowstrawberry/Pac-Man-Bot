@@ -68,6 +68,7 @@ namespace PacManBot
             client.LeftGuild += OnLeftGuild;
             client.ChannelDestroyed += OnChannelDestroyed;
 
+            await client.SetStatusAsync(UserStatus.Online);
             UpdateGuildCount();
 
             if (File.Exists(Files.ManualRestart))
@@ -92,6 +93,8 @@ namespace PacManBot
         /// <summary>Safely stop most activity from the bot and disconnect from Discord.</summary>
         public async Task StopAsync()
         {
+            await client.SetStatusAsync(UserStatus.DoNotDisturb); // why not
+
             input.StopListening();
             schedule.StopTimers();
             client.ShardReady -= OnShardReady;

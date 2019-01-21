@@ -24,25 +24,9 @@ namespace PacManBot.Commands.Modules
     [PmRequireBotPermission(ChannelPermission.AddReactions)]
     public class DevModule : PmBaseModule
     {
-        private PmBot internalBot;
-        private ScriptingService internalScripting;
-        private PacManDbContext internalDb;
-
-        public PmBot Bot => internalBot ?? (internalBot = Services.Get<PmBot>());
-        public ScriptingService Scripting => internalScripting ?? (internalScripting = Services.Get<ScriptingService>());
-        public PacManDbContext Db => internalDb ?? (internalDb = new PacManDbContext(Bot.Config.dbConnectionString));
-
-
-        public DevModule(IServiceProvider services) : base(services) {}
-
-
-        protected override void AfterExecute(CommandInfo command)
-        {
-            base.AfterExecute(command);
-            internalDb?.Dispose();
-        }
-
-
+        public PmBot Bot { get; set; }
+        public ScriptingService Scripting { get; set; }
+        public IServiceProvider Services { get; set; }
 
 
         [Command("dev"), Alias("devcommands"), Remarks("List developer commands")]
@@ -210,24 +194,26 @@ namespace PacManBot.Commands.Modules
 
             try
             {
-                using (var command = Db.Database.GetDbConnection().CreateCommand())
+                using (var db = new PacManDbContext(Bot.Config.dbConnectionString))
                 {
-                    command.CommandText = query;
-                    Db.Database.OpenConnection();
-                    using (var result = command.ExecuteReader())
+                    using (var command = db.Database.GetDbConnection().CreateCommand())
                     {
-                        affected = result.RecordsAffected;
-                        while (result.Read())
+                        command.CommandText = query;
+                        db.Database.OpenConnection();
+                        using (var result = command.ExecuteReader())
                         {
-                            object[] values = new object[result.FieldCount];
-                            result.GetValues(values);
-
-                            for (int i = 0; i < values.Length; i++) // Adds quotes to strings
+                            affected = result.RecordsAffected;
+                            while (result.Read())
                             {
-                                if (values[i] is string str && str.ContainsAny(" ", "\n")) values[i] = $"\"{values[i]}\"";
-                            }
+                                object[] values = new object[result.FieldCount];
+                                result.GetValues(values);
 
-                            table.AppendLine(values?.JoinString("  "));
+                                for (int i = 0; i < values.Length; i++)
+                                    if (values[i] is string str && str.ContainsAny(" ", "\n"))
+                                        values[i] = $"\"{values[i]}\"";
+
+                                table.AppendLine(values?.JoinString("  "));
+                            }
                         }
                     }
                 }

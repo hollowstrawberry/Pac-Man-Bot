@@ -14,9 +14,6 @@ namespace PacManBot.Commands.Modules
     [PmRequireUserPermission(GuildPermission.ManageMessages)]
     public class ModModule : PmBaseModule
     {
-        public ModModule(IServiceProvider services) : base(services) { }
-
-
         string ContactMessage => $"Please try again or, if the problem persists, contact the bot owner using `{Context.Prefix}feedback`.";
 
 

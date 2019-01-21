@@ -17,33 +17,16 @@ namespace PacManBot.Commands
         /// <summary>Consistent and sane <see cref="RequestOptions"/> to be used in most Discord requests.</summary>
         public static readonly RequestOptions DefaultOptions = PmBot.DefaultOptions;
 
-
-        private PmContent internalContent;
-        private LoggingService internalLogger;
-        private StorageService internalStorage;
-        private GameService internalGames;
-        private PmCommandService internalCommands;
-
-
-        /// <summary>All of this program's services, required to supply new objects such as games.</summary>
-        public IServiceProvider Services { get; }
-
-        /// <summary>Contents used throughout the bot.</summary>
-        public PmContent Content => internalContent ?? (internalContent = Services.Get<PmConfig>().Content);
+        /// <summary>Runtime settings of the bot.</summary>
+        public PmConfig Config { get; set; }
+        /// <summary>Content used throughout the bot.</summary>
+        public PmContent Content => Config.Content;
         /// <summary>Logs everything in the console and on disk.</summary>
-        public LoggingService Logger => internalLogger ?? (internalLogger = Services.Get<LoggingService>());
+        public LoggingService Logger { get; set; }
         /// <summary>Gives access to the bot's database.</summary>
-        public StorageService Storage => internalStorage ?? (internalStorage = Services.Get<StorageService>());
+        public StorageService Storage { get; set; }
         /// <summary>Gives access to active games.</summary>
-        public GameService Games => internalGames ?? (internalGames = Services.Get<GameService>());
-        /// <summary>Provides help for commands.</summary>
-        public PmCommandService Commands => internalCommands ?? (internalCommands = Services.Get<PmCommandService>());
-
-
-        protected PmBaseModule(IServiceProvider services)
-        {
-            Services = services;
-        }
+        public GameService Games { get; set; }
 
 
         protected override async void AfterExecute(CommandInfo command)
@@ -79,10 +62,5 @@ namespace PacManBot.Commands
         /// <summary>Reacts to the command's calling message with a check or cross.</summary>
         public async Task AutoReactAsync(bool success = true)
             => await Context.Message.AutoReactAsync(success);
-
-
-        /// <summary>Creates an instance of a different module. This shouldn't ever be used. I'm a madman.</summary>
-        public TModule GetModule<TModule>() where TModule : PmBaseModule
-            => ModuleBuilder<TModule, PmCommandContext>.Create(Context, Services);
     }
 }

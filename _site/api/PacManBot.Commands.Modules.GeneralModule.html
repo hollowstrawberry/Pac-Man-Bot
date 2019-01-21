@@ -88,7 +88,7 @@
       <a class="xref" href="PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_DefaultOptions">PmBaseModule.DefaultOptions</a>
     </div>
     <div>
-      <a class="xref" href="PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_Services">PmBaseModule.Services</a>
+      <a class="xref" href="PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_Config">PmBaseModule.Config</a>
     </div>
     <div>
       <a class="xref" href="PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_Content">PmBaseModule.Content</a>
@@ -101,9 +101,6 @@
     </div>
     <div>
       <a class="xref" href="PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_Games">PmBaseModule.Games</a>
-    </div>
-    <div>
-      <a class="xref" href="PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_Commands">PmBaseModule.Commands</a>
     </div>
     <div>
       <a class="xref" href="PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_AfterExecute_Discord_Commands_CommandInfo_">PmBaseModule.AfterExecute(CommandInfo)</a>
@@ -122,9 +119,6 @@
     </div>
     <div>
       <a class="xref" href="PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_AutoReactAsync_System_Boolean_">PmBaseModule.AutoReactAsync(Boolean)</a>
-    </div>
-    <div>
-      <a class="xref" href="PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_GetModule__1">PmBaseModule.GetModule&lt;TModule&gt;()</a>
     </div>
     <div>
       <span class="xref">Discord.Commands.ModuleBase&lt;PacManBot.Commands.PmCommandContext&gt;.BeforeExecute(Discord.Commands.CommandInfo)</span>
@@ -166,36 +160,34 @@
 [PmRequireBotPermission(ChannelPermission.EmbedLinks | ChannelPermission.UseExternalEmojis)]
 public class GeneralModule : PmBaseModule, IModuleBase</code></pre>
   </div>
-  <h3 id="constructors">Constructors
+  <h3 id="properties">Properties
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_GeneralModule__ctor_System_IServiceProvider_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.GeneralModule.%23ctor(System.IServiceProvider)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_GeneralModule_Commands.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.GeneralModule.Commands%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/GeneralModule.cs/#L28">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/GeneralModule.cs/#L29">View Source</a>
   </span>
-  <a id="PacManBot_Commands_Modules_GeneralModule__ctor_" data-uid="PacManBot.Commands.Modules.GeneralModule.#ctor*"></a>
-  <h4 id="PacManBot_Commands_Modules_GeneralModule__ctor_System_IServiceProvider_" data-uid="PacManBot.Commands.Modules.GeneralModule.#ctor(System.IServiceProvider)">GeneralModule(IServiceProvider)</h4>
+  <a id="PacManBot_Commands_Modules_GeneralModule_Commands_" data-uid="PacManBot.Commands.Modules.GeneralModule.Commands*"></a>
+  <h4 id="PacManBot_Commands_Modules_GeneralModule_Commands" data-uid="PacManBot.Commands.Modules.GeneralModule.Commands">Commands</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public GeneralModule(IServiceProvider services)</code></pre>
+    <pre><code class="lang-csharp hljs">public PmCommandService Commands { get; set; }</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
+  <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
       <tr>
         <th>Type</th>
-        <th>Name</th>
         <th>Description</th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.IServiceProvider</span></td>
-        <td><span class="parametername">services</span></td>
+        <td><a class="xref" href="PacManBot.Services.PmCommandService.html">PmCommandService</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -856,7 +848,7 @@ public Task SpamDance(int amount = 5)</code></pre>
                     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_GeneralModule.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.GeneralModule%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/GeneralModule.cs/#L17" class="contribution-link">View Source</a>
+                    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/GeneralModule.cs/#L18" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

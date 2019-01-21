@@ -88,7 +88,7 @@
       <a class="xref" href="PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_DefaultOptions">PmBaseModule.DefaultOptions</a>
     </div>
     <div>
-      <a class="xref" href="PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_Services">PmBaseModule.Services</a>
+      <a class="xref" href="PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_Config">PmBaseModule.Config</a>
     </div>
     <div>
       <a class="xref" href="PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_Content">PmBaseModule.Content</a>
@@ -101,9 +101,6 @@
     </div>
     <div>
       <a class="xref" href="PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_Games">PmBaseModule.Games</a>
-    </div>
-    <div>
-      <a class="xref" href="PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_Commands">PmBaseModule.Commands</a>
     </div>
     <div>
       <a class="xref" href="PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_AfterExecute_Discord_Commands_CommandInfo_">PmBaseModule.AfterExecute(CommandInfo)</a>
@@ -122,9 +119,6 @@
     </div>
     <div>
       <a class="xref" href="PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_AutoReactAsync_System_Boolean_">PmBaseModule.AutoReactAsync(Boolean)</a>
-    </div>
-    <div>
-      <a class="xref" href="PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_GetModule__1">PmBaseModule.GetModule&lt;TModule&gt;()</a>
     </div>
     <div>
       <span class="xref">Discord.Commands.ModuleBase&lt;PacManBot.Commands.PmCommandContext&gt;.BeforeExecute(Discord.Commands.CommandInfo)</span>
@@ -166,40 +160,6 @@
 [PmRequireUserPermission(GuildPermission.ManageMessages)]
 public class ModModule : PmBaseModule, IModuleBase</code></pre>
   </div>
-  <h3 id="constructors">Constructors
-  </h3>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_ModModule__ctor_System_IServiceProvider_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.ModModule.%23ctor(System.IServiceProvider)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/ModModule.cs/#L17">View Source</a>
-  </span>
-  <a id="PacManBot_Commands_Modules_ModModule__ctor_" data-uid="PacManBot.Commands.Modules.ModModule.#ctor*"></a>
-  <h4 id="PacManBot_Commands_Modules_ModModule__ctor_System_IServiceProvider_" data-uid="PacManBot.Commands.Modules.ModModule.#ctor(System.IServiceProvider)">ModModule(IServiceProvider)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ModModule(IServiceProvider services)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.IServiceProvider</span></td>
-        <td><span class="parametername">services</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
   <h3 id="methods">Methods
   </h3>
   <span class="small pull-right mobile-hide">
@@ -207,7 +167,7 @@ public class ModModule : PmBaseModule, IModuleBase</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_ModModule_ClearCommandMessages_System_Int32_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.ModModule.ClearCommandMessages(System.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/ModModule.cs/#L29">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/ModModule.cs/#L26">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_ModModule_ClearCommandMessages_" data-uid="PacManBot.Commands.Modules.ModModule.ClearCommandMessages*"></a>
   <h4 id="PacManBot_Commands_Modules_ModModule_ClearCommandMessages_System_Int32_" data-uid="PacManBot.Commands.Modules.ModModule.ClearCommandMessages(System.Int32)">ClearCommandMessages(Int32)</h4>
@@ -259,7 +219,7 @@ public Task ClearCommandMessages(int amount = 10)</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_ModModule_Say_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.ModModule.Say(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/ModModule.cs/#L23">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/ModModule.cs/#L20">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_ModModule_Say_" data-uid="PacManBot.Commands.Modules.ModModule.Say*"></a>
   <h4 id="PacManBot_Commands_Modules_ModModule_Say_System_String_" data-uid="PacManBot.Commands.Modules.ModModule.Say(System.String)">Say(String)</h4>
@@ -309,7 +269,7 @@ public Task Say([Remainder] string message)</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_ModModule_SetServerPrefix_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.ModModule.SetServerPrefix(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/ModModule.cs/#L61">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/ModModule.cs/#L58">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_ModModule_SetServerPrefix_" data-uid="PacManBot.Commands.Modules.ModModule.SetServerPrefix*"></a>
   <h4 id="PacManBot_Commands_Modules_ModModule_SetServerPrefix_System_String_" data-uid="PacManBot.Commands.Modules.ModModule.SetServerPrefix(System.String)">SetServerPrefix(String)</h4>
@@ -360,7 +320,7 @@ public Task SetServerPrefix(string prefix)</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_ModModule_ToggleNoPrefix_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.ModModule.ToggleNoPrefix(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/ModModule.cs/#L116">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/ModModule.cs/#L113">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_ModModule_ToggleNoPrefix_" data-uid="PacManBot.Commands.Modules.ModModule.ToggleNoPrefix*"></a>
   <h4 id="PacManBot_Commands_Modules_ModModule_ToggleNoPrefix_System_String_" data-uid="PacManBot.Commands.Modules.ModModule.ToggleNoPrefix(System.String)">ToggleNoPrefix(String)</h4>
@@ -413,7 +373,7 @@ public Task ToggleNoPrefix([Remainder] string arg = &quot;&quot;)</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_ModModule_ToggleWakaResponse.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.ModModule.ToggleWakaResponse%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/ModModule.cs/#L96">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/ModModule.cs/#L93">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_ModModule_ToggleWakaResponse_" data-uid="PacManBot.Commands.Modules.ModModule.ToggleWakaResponse*"></a>
   <h4 id="PacManBot_Commands_Modules_ModModule_ToggleWakaResponse" data-uid="PacManBot.Commands.Modules.ModModule.ToggleWakaResponse">ToggleWakaResponse()</h4>

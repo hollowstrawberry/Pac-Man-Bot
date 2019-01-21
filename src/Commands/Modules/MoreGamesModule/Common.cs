@@ -7,6 +7,7 @@ using Discord.Net;
 using PacManBot.Extensions;
 using PacManBot.Games;
 using PacManBot.Games.Concrete;
+using PacManBot.Services;
 
 namespace PacManBot.Commands.Modules
 {
@@ -15,9 +16,8 @@ namespace PacManBot.Commands.Modules
                                 ChannelPermission.UseExternalEmojis | ChannelPermission.AddReactions)]
     public partial class MoreGamesModule : PmBaseModule
     {
-        public MoreGamesModule(IServiceProvider services) : base(services) {}
-
-
+        public IServiceProvider Services { get; set; }
+        public PmCommandService Commands { get; set; }
 
 
         [Command("bump"), Alias("b", "refresh", "r", "move"), Priority(-4)]
