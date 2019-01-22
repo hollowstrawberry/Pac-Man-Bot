@@ -61,7 +61,7 @@ namespace PacManBot.Games.Concrete
         [DataMember] public override Player Winner { get; protected set; }
 
         private Card TopCard { get => discardPile[0]; set => discardPile[0] = value; }
-        private UnoPlayer CurrentPlayer => (Turn >= 0 && Turn < players.Count) ? players[Turn] : players[0];
+        private UnoPlayer CurrentPlayer => players[Turn];
         private Player FollowingTurn => reversed ? PreviousPlayer() : NextPlayer();
         private Player PrecedingTurn => reversed ? NextPlayer() : PreviousPlayer();
 
@@ -270,7 +270,7 @@ namespace PacManBot.Games.Concrete
             var toInvite = players.Skip(1).Where(x => !x.IsBot);
             var toAdd = players.Where(x => !toInvite.Contains(x));
 
-            if (toInvite.Count() > 0)
+            if (toInvite.Any())
             {
                 var mentions = toInvite.Select(x => x.Mention);
                 string inviteMsg = $"{string.Join(", ", mentions)} You've been invited to play Uno. " +
@@ -281,6 +281,8 @@ namespace PacManBot.Games.Concrete
             foreach (var player in toAdd) await AddPlayer(player);
 
             ApplyCardEffect();
+
+            if (Turn < 0 || Turn >= players.Length) Turn = 0; // There's an error I don't know how is caused or how to fix
 
             games.Save(this);
         }
@@ -493,7 +495,7 @@ namespace PacManBot.Games.Concrete
         private static CardColor HighestColor(List<Card> cards)
         {
             var groups = cards.GroupBy(c => c.Color).Where(x => x.Key != CardColor.Black);
-            if (groups.Count() == 0) return Program.Random.Choose(EnumTraits<CardColor>.Values);
+            if (!groups.Any()) return Program.Random.Choose(EnumTraits<CardColor>.Values);
 
             int max = groups.Select(x => x.Count()).Max();
             return Program.Random.Choose(groups.Where(x => x.Count() == max).Select(x => x.Key).ToList());

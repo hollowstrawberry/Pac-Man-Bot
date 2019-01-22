@@ -54,7 +54,7 @@ namespace PacManBot.Services
 
 
         /// <summary>Retrieves the prefix used in a particular context, or an empty string if none is necessary.</summary>
-        public string GetPrefix(ICommandContext context) => GetPrefix(context.Channel);
+        public string GetPrefix(ICommandContext context) => GetPrefix(context?.Channel);
 
         /// <summary>Retrieves the prefix used in a particular channel, or an empty string if none is necessary.</summary>
         public string GetPrefix(ulong channelId) => GetPrefix(client.GetMessageChannel(channelId));
@@ -124,7 +124,7 @@ namespace PacManBot.Services
 
 
         /// <summary>Whether the specified context requires a prefix for commands.</summary>
-        public bool RequiresPrefix(ICommandContext context) => RequiresPrefix(context.Channel);
+        public bool RequiresPrefix(ICommandContext context) => RequiresPrefix(context?.Channel);
 
         /// <summary>Whether the specified channel requires a prefix for commands.</summary>
         public bool RequiresPrefix(ulong channelId) => RequiresPrefix(client.GetChannel(channelId));
@@ -132,6 +132,7 @@ namespace PacManBot.Services
         /// <summary>Whether the specified channel requires a prefix for commands.</summary>
         public bool RequiresPrefix(IChannel channel)
         {
+            if (channel == null) return false;
             if (cachedNeedsPrefix.TryGetValue(channel.Id, out bool needs)) return needs;
 
             using (var db = MakeDbContext())
@@ -147,6 +148,7 @@ namespace PacManBot.Services
         /// Provides the benefit of an asynchronous database access if it is necessary.</summary>
         public async Task<bool> RequiresPrefixAsync(IChannel channel)
         {
+            if (channel == null) return false;
             if (cachedNeedsPrefix.TryGetValue(channel.Id, out bool needs)) return needs;
 
             if (channel is IGuildChannel)
@@ -184,7 +186,7 @@ namespace PacManBot.Services
 
 
         /// <summary>Whether the specified guild is set to allow message autoresponses.</summary>
-        public bool AllowsAutoresponse(IGuild guild) => guild == null ? true : AllowsAutoresponse(guild.Id);
+        public bool AllowsAutoresponse(IGuild guild) => guild == null || AllowsAutoresponse(guild.Id);
 
         /// <summary>Whether the specified guild is set to allow message autoresponses.</summary>
         public bool AllowsAutoresponse(ulong guildId)
