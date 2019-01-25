@@ -20,7 +20,7 @@ namespace PacManBot.Commands
         /// <summary>Content used throughout the bot.</summary>
         public PmContent Content => Config.Content;
         /// <summary>Logs everything in the console and on disk.</summary>
-        public LoggingService Logger { get; set; }
+        public LoggingService Log { get; set; }
         /// <summary>Gives access to the bot's database.</summary>
         public StorageService Storage { get; set; }
         /// <summary>Gives access to active games.</summary>

@@ -96,7 +96,7 @@ To start a custom game, send **{prefix}play \\`\\`\\`map\\`\\`\\`** or **{prefix
  **4.** Any character except a space or a special character is a wall.",
 
 "customLinks": [
-    {"Item1":"Original game map", "Item2":"https://github.com/Samrux/Pac-Man-Bot/blob/master/bin/contents.bot"},
+    {"Item1":"Original game map", "Item2":"https://github.com/Samrux/Pac-Man-Bot/blob/master/bin/contents.json"},
     {"Item1":"Custom map examples", "Item2":"https://github.com/Samrux/Pac-Man-Bot/blob/master/Example%20custom%20maps.txt"}
 ],
 

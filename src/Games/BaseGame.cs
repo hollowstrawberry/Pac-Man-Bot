@@ -13,7 +13,7 @@ namespace PacManBot.Games
     {
         protected PmDiscordClient client;
         protected PmConfig config;
-        protected LoggingService logger;
+        protected LoggingService log;
         protected StorageService storage;
         protected GameService games;
 
@@ -79,7 +79,7 @@ namespace PacManBot.Games
         {
             config = services.Get<PmConfig>();
             client = services.Get<PmDiscordClient>();
-            logger = services.Get<LoggingService>();
+            log = services.Get<LoggingService>();
             storage = services.Get<StorageService>();
             games = services.Get<GameService>();
         }

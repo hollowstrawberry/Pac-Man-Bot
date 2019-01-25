@@ -61,13 +61,13 @@ namespace PacManBot.Commands.Modules
             }
             catch (InvalidMapException e) when (customMap != null)
             {
-                await Logger.Log(LogSeverity.Debug, LogSource.Game, $"Failed to create custom game: {e.Message}");
+                await Log.DebugAsync($"Failed to create custom game: {e.Message}", LogSource.Game);
                 await ReplyAsync($"The provided map is invalid: {e.Message}.\nUse the `{Context.Prefix}custom` command for more info.");
                 return;
             }
             catch (Exception e)
             {
-                await Logger.Log(LogSeverity.Error, LogSource.Game, $"{e}");
+                await Log.ErrorAsync(e);
                 await ReplyAsync("There was an error starting the game. " +
                                  $"Please try again or contact the author of the bot using `{Context.Prefix}feedback`");
                 return;
@@ -105,7 +105,7 @@ namespace PacManBot.Commands.Modules
             catch (OperationCanceledException) { }
             catch (Exception e)
             {
-                if (!(e is HttpException || e is TimeoutException)) await Logger.Log(LogSeverity.Error, $"{e}");
+                if (!(e is HttpException || e is TimeoutException)) await Log.ErrorAsync(e);
                 await AutoReactAsync(false);
                 return;
             }

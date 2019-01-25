@@ -23,7 +23,7 @@ namespace PacManBot.Services
         private readonly PmDiscordClient client;
         private readonly PmCommandService commands;
         private readonly StorageService storage;
-        private readonly LoggingService logger;
+        private readonly LoggingService log;
         private readonly GameService games;
 
         private readonly ulong[] bannedChannels;
@@ -32,13 +32,13 @@ namespace PacManBot.Services
 
 
         public InputService(IServiceProvider services, PmDiscordClient client, PmCommandService commands,
-            StorageService storage, LoggingService logger, GameService games, PmConfig config)
+            StorageService storage, LoggingService log, GameService games, PmConfig config)
         {
             this.services = services;
             this.client = client;
             this.commands = commands;
             this.storage = storage;
-            this.logger = logger;
+            this.log = log;
             this.games = games;
 
             bannedChannels = config.bannedChannels;
@@ -98,7 +98,7 @@ namespace PacManBot.Services
                 }
 
                 if (genericMessage is SocketUserMessage message && !message.Author.IsBot
-                    && message.Channel.BotCan(ChannelPermission.SendMessages))
+                    && await message.Channel.BotCan(ChannelPermission.SendMessages))
                 {
                     // Only runs one
                     if (await MessageGameInputAsync(message) || await CommandAsync(message) || await AutoresponseAsync(message)) { }
@@ -106,7 +106,7 @@ namespace PacManBot.Services
             }
             catch (Exception e)
             {
-                await logger.Log(LogSeverity.Error, $"{e}");
+                await log.ErrorAsync(e);
             }
         }
 
@@ -115,7 +115,7 @@ namespace PacManBot.Services
         {
             try
             {
-                if (!channel.BotCan(ChannelPermission.ReadMessageHistory)) return;
+                if (!await channel.BotCan(ChannelPermission.ReadMessageHistory)) return;
 
                 var message = reaction.Message.Value ?? await messageData.GetOrDownloadAsync();
 
@@ -126,7 +126,7 @@ namespace PacManBot.Services
             }
             catch (Exception e)
             {
-                await logger.Log(LogSeverity.Error, $"{e}");
+                await log.ErrorAsync(e);
             }
         }
 
@@ -155,7 +155,7 @@ namespace PacManBot.Services
                 if (WakaRegex.IsMatch(message.Content))
                 {
                     await message.Channel.SendMessageAsync("waka", options: PmBot.DefaultOptions);
-                    await logger.Log(LogSeverity.Verbose, $"Waka at {message.Channel.FullName()}");
+                    await log.VerboseAsync($"Waka at {message.Channel.FullName()}");
                     return true;
                 }
                 else if (message.Content == "sudo neat")
@@ -182,8 +182,8 @@ namespace PacManBot.Services
             catch (Exception e) when (e is OperationCanceledException || e is TimeoutException) { }
             catch (HttpException e)
             {
-                await logger.Log(LogSeverity.Warning, LogSource.Game,
-                                 $"During {game.GetType().Name} input in {game.ChannelId}: {e.Message}");
+                await log.WarningAsync($"During {game.GetType().Name} input in {game.ChannelId}: {e.Message}",
+                    LogSource.Game);
             }
 
             return true;
@@ -206,7 +206,7 @@ namespace PacManBot.Services
             catch (Exception e) when (e is OperationCanceledException || e is TimeoutException) { }
             catch (HttpException e)
             {
-                await logger.Log(LogSeverity.Warning, game.GameName, $"During input in {game.ChannelId}: {e.Message}");
+                await log.WarningAsync($"During input in {game.ChannelId}: {e.Message}", game.GameName);
             }
 
             return true;
@@ -219,8 +219,9 @@ namespace PacManBot.Services
         {
             var gameMessage = await game.GetMessage();
 
-            await logger.Log(LogSeverity.Verbose, game.GameName,
-                             $"Input {message.Content} by {message.Author.FullName()} in {message.Channel.FullName()}");
+            await log.VerboseAsync(
+                $"Input {message.Content} by {message.Author.FullName()} in {message.Channel.FullName()}",
+                game.GameName);
 
             game.Input(message.Content, message.Author.Id);
             if (game is MultiplayerGame mGame)
@@ -232,7 +233,7 @@ namespace PacManBot.Services
             game.CancelRequests();
             var requestOptions = game.GetRequestOptions();
 
-            if (gameMessage != null && message.Channel.BotCan(ChannelPermission.ManageMessages))
+            if (gameMessage != null && await message.Channel.BotCan(ChannelPermission.ManageMessages))
             {
                 await gameMessage.ModifyAsync(game.GetMessageUpdate(), requestOptions);
                 await message.DeleteAsync(PmBot.DefaultOptions);
@@ -252,8 +253,9 @@ namespace PacManBot.Services
             var channel = gameMessage.Channel;
             var guild = (channel as IGuildChannel)?.Guild;
 
-            await logger.Log(LogSeverity.Verbose, game.GameName, 
-                             $"Input {reaction.Emote.Name} by {user.FullName()} in {channel.FullName()}");
+            await log.VerboseAsync(
+                $"Input {reaction.Emote.Name} by {user.FullName()} in {channel.FullName()}",
+                game.GameName);
 
             game.Input(reaction.Emote, user.Id);
 
@@ -267,7 +269,7 @@ namespace PacManBot.Services
                         user.NameandDisc(), $"{guild?.Name}/{channel.Name}", DateTime.Now));
                 }
 
-                if (channel.BotCan(ChannelPermission.ManageMessages))
+                if (await channel.BotCan(ChannelPermission.ManageMessages))
                 {
                     await gameMessage.RemoveAllReactionsAsync(PmBot.DefaultOptions);
                 }

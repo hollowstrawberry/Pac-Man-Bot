@@ -14,7 +14,8 @@ namespace PacManBot.Extensions
 {
     public static class DiscordExtensions
     {
-        public const ChannelPermission CorrectDmPermissions = (ChannelPermission)37080128;
+        /// <summary>Discord permissions in a DM channel. The value is currently wrong in Discord.Net.</summary>
+        public const ChannelPermission DmPermissions = (ChannelPermission)37080128;
 
 
 
@@ -108,11 +109,14 @@ namespace PacManBot.Extensions
 
 
         /// <summary>Whether the bot has the permission to perform an action in the given chanel.</summary>
-        public static bool BotCan(this IChannel channel, ChannelPermission permission)
+        public static async Task<bool> BotCan(this IChannel channel, ChannelPermission permission)
         {
-            var perms = channel is IGuildChannel gchannel
-                ? (ChannelPermission)gchannel.Guild.GetCurrentUserAsync().Result.GetPermissions(gchannel).RawValue
-                : CorrectDmPermissions;
+            var perms = DmPermissions;
+            if (channel is IGuildChannel gchannel)
+            {
+                var user = await gchannel.Guild.GetCurrentUserAsync();
+                perms = (ChannelPermission)user.GetPermissions(gchannel).RawValue;
+            }
 
             return perms.HasFlag(permission);
         }
@@ -121,9 +125,12 @@ namespace PacManBot.Extensions
         /// <summary>Whether the bot has the permission to perform an action given the command context.</summary>
         public static bool BotCan(this SocketCommandContext context, ChannelPermission permission)
         {
-            var perms = context.Guild != null
-                ? (ChannelPermission)context.Guild.CurrentUser.GetPermissions(context.Channel as IGuildChannel).RawValue
-                : CorrectDmPermissions;
+            var perms = DmPermissions;
+            if (context.Channel is IGuildChannel gchannel)
+            {
+                var user = context.Guild.CurrentUser;
+                perms = (ChannelPermission)user.GetPermissions(gchannel).RawValue;
+            }
 
             return perms.HasFlag(permission);
         }
@@ -132,9 +139,12 @@ namespace PacManBot.Extensions
         /// <summary>Whether the user who called this context's command has the permission to perform an action.</summary>
         public static bool UserCan(this SocketCommandContext context, ChannelPermission permission)
         {
-            var perms = context.Guild != null
-                ? (ChannelPermission)context.Guild.GetUser(context.User.Id).GetPermissions(context.Channel as IGuildChannel).RawValue
-                : CorrectDmPermissions;
+            var perms = DmPermissions;
+            if (context.Channel is IGuildChannel gchannel)
+            {
+                var user = context.Guild.GetUser(context.User.Id);
+                perms = (ChannelPermission)user.GetPermissions(gchannel).RawValue;
+            }
 
             return perms.HasFlag(permission);
         }

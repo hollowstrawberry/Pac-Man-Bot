@@ -30,7 +30,7 @@ namespace PacManBot.Services
         };
 
         private readonly IServiceProvider services;
-        private readonly LoggingService logger;
+        private readonly LoggingService log;
         private readonly ConcurrentDictionary<ulong, IChannelGame> games;
         private readonly ConcurrentDictionary<(ulong, Type), IUserGame> userGames;
 
@@ -43,10 +43,10 @@ namespace PacManBot.Services
         public IEnumerable<IBaseGame> AllGames => AllChannelGames.Cast<IBaseGame>().Concat(AllUserGames.Cast<IBaseGame>());
 
 
-        public GameService(IServiceProvider services, LoggingService logger)
+        public GameService(IServiceProvider services, LoggingService log)
         {
             this.services = services;
-            this.logger = logger;
+            this.log = log;
 
             games = new ConcurrentDictionary<ulong, IChannelGame>();
             userGames = new ConcurrentDictionary<(ulong, Type), IUserGame>();
@@ -87,7 +87,7 @@ namespace PacManBot.Services
 
         /// <summary>Permanently deletes a game from the collection of channel games or user games, 
         /// as well as its savefile if there is one.</summary>
-        public void Remove(IBaseGame game, bool log = true)
+        public void Remove(IBaseGame game, bool doLog = true)
         {
             try
             {
@@ -107,14 +107,14 @@ namespace PacManBot.Services
                     success = games.TryRemove(cGame.ChannelId);
                 }
 
-                if (success && log)
+                if (success && doLog)
                 {
-                    logger.Log(LogSeverity.Verbose, LogSource.Game, $"Removed {game.GetType().Name} at {game.IdentifierId()}");
+                    log.VerboseAsync($"Removed {game.GetType().Name} at {game.IdentifierId()}", LogSource.Game);
                 }
             }
             catch (Exception e)
             {
-                logger.Log(LogSeverity.Error, LogSource.Game, $"Trying to remove game at {game.IdentifierId()}: {e}");
+                log.ErrorAsync($"Trying to remove game at {game.IdentifierId()}: {e}", LogSource.Game);
             }
         }
 
@@ -137,7 +137,7 @@ namespace PacManBot.Services
             if (!Directory.Exists(Files.GameFolder))
             {
                 Directory.CreateDirectory(Files.GameFolder);
-                logger.Log(LogSeverity.Warning, LogSource.Game, $"Created missing directory \"{Files.GameFolder}\"");
+                log.WarningAsync($"Created missing directory \"{Files.GameFolder}\"", LogSource.Game);
                 return;
             }
 
@@ -159,16 +159,17 @@ namespace PacManBot.Services
                     }
                     catch (Exception e)
                     {
-                        logger.Log(firstFail ? LogSeverity.Error : LogSeverity.Verbose, LogSource.Game,
-                                   $"Couldn't load game at {file}: {(firstFail ? e.ToString() : e.Message)}");
+                        log.Log(
+                            $"Couldn't load game at {file}: {(firstFail ? e.ToString() : e.Message)}",
+                            firstFail ? LogSeverity.Error : LogSeverity.Verbose, LogSource.Game);
                         fail++;
                         firstFail = false;
                     }
                 }
             }
 
-            logger.Log(LogSeverity.Info, LogSource.Game,
-                       $"Loaded {games.Count + userGames.Count} games{$" with {fail} errors".If(fail > 0)}");
+            log.InfoAsync($"Loaded {games.Count + userGames.Count} games{$" with {fail} errors".If(fail > 0)}",
+                LogSource.Game);
         }
     }
 }

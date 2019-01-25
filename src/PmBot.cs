@@ -27,7 +27,7 @@ namespace PacManBot
         public PmConfig Config { get; }
 
         private readonly PmDiscordClient client;
-        private readonly LoggingService logger;
+        private readonly LoggingService log;
         private readonly StorageService storage;
         private readonly GameService games;
         private readonly InputService input;
@@ -38,12 +38,12 @@ namespace PacManBot
         private DateTime lastGuildCountUpdate = DateTime.MinValue;
 
 
-        public PmBot(PmConfig config, PmDiscordClient client, LoggingService logger, StorageService storage,
+        public PmBot(PmConfig config, PmDiscordClient client, LoggingService log, StorageService storage,
             GameService games, InputService input, PmCommandService commands, SchedulingService schedule)
         {
             Config = config;
             this.client = client;
-            this.logger = logger;
+            this.log = log;
             this.storage = storage;
             this.games = games;
             this.input = input;
@@ -58,7 +58,7 @@ namespace PacManBot
             await commands.AddAllModulesAsync();
             games.LoadGames();
 
-            client.Log += logger.ClientLog;
+            client.Log += log.ClientLog;
             client.ShardReady += OnShardReady;
             await client.LoginAsync(TokenType.Bot, Config.discordToken);
             await client.StartAsync();
@@ -90,7 +90,7 @@ namespace PacManBot
                 }
                 catch (HttpException e)
                 {
-                    await logger.Log(LogSeverity.Error, $"{e}");
+                    await log.ErrorAsync(e);
                 }
             }
         }
@@ -121,7 +121,7 @@ namespace PacManBot
         {
             if (++shardsReady == client.Shards.Count)
             {
-                if (client.Shards.Count > 1) await logger.Log(LogSeverity.Info, "All shards ready");
+                if (client.Shards.Count > 1) await log.InfoAsync("All shards ready");
                 await ReadyAsync();
             }
         }
@@ -160,7 +160,7 @@ namespace PacManBot
             }
             catch (Exception e)
             {
-                await logger.Log(LogSeverity.Error, $"{e}");
+                await log.ErrorAsync(e);
             }
         }
 
@@ -187,13 +187,13 @@ namespace PacManBot
                     httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(Config.httpToken[i]);
                     var response = await httpClient.PostAsync(requesturi, content);
 
-                    await logger.Log(
-                        response.IsSuccessStatusCode ? LogSeverity.Verbose : LogSeverity.Warning,
-                        $"Sent guild count to {requesturi} - {(response.IsSuccessStatusCode ? "Success" : $"Response:\n{response}")}");
+                    await log.LogAsync(
+                        $"Sent guild count to {requesturi} - {(response.IsSuccessStatusCode ? "Success" : $"Response:\n{response}")}",
+                        response.IsSuccessStatusCode ? LogSeverity.Verbose : LogSeverity.Warning);
                 }
             }
 
-            await logger.Log(LogSeverity.Info, $"Guild count updated to {guilds}");
+            await log.InfoAsync($"Guild count updated to {guilds}");
         }
     }
 }

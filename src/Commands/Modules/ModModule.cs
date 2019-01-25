@@ -48,8 +48,7 @@ namespace PacManBot.Commands.Modules
                 }
                 catch (Exception e) when (e is HttpException || e is TimeoutException)
                 {
-                    await Logger.Log(LogSeverity.Warning,
-                                     $"Couldn't delete message {message.Id} in {Context.Channel.FullName()}: {e.Message}");
+                    await Log.WarningAsync($"Couldn't delete message {message.Id} in {Context.Channel.FullName()}: {e.Message}");
                 }
             }
         }
@@ -80,7 +79,7 @@ namespace PacManBot.Commands.Modules
             {
                 Storage.SetGuildPrefix(Context.Guild.Id, prefix);
                 await ReplyAsync($"{CustomEmoji.Check} Prefix for this server has been successfully set to `{prefix}`");
-                await Logger.Log(LogSeverity.Info, $"Prefix for server {Context.Guild.Id} set to {prefix}");
+                await Log.InfoAsync($"Prefix for server {Context.Guild.Id} set to {prefix}");
             }
             catch (Exception)
             {
@@ -100,7 +99,7 @@ namespace PacManBot.Commands.Modules
             {
                 bool waka = Storage.ToggleAutoresponse(Context.Guild.Id);
                 await ReplyAsync($"{CustomEmoji.Check} Autoresponses turned **{(waka ? "ON" : "OFF")}** in this server.");
-                await Logger.Log(LogSeverity.Info, $"Autoresponses turned {(waka ? "on" : "off")} in {Context.Guild.Id}");
+                await Log.InfoAsync($"Autoresponses turned {(waka ? "on" : "off")} in {Context.Guild.Id}");
             }
             catch (Exception)
             {

@@ -28,7 +28,7 @@ namespace PacManBot.Services
 
         private readonly IServiceProvider services;
         private readonly PmDiscordClient client;
-        private readonly LoggingService logger;
+        private readonly LoggingService log;
         private readonly StorageService storage;
 
         private IReadOnlyDictionary<string, CommandHelp> commandHelp;
@@ -36,12 +36,12 @@ namespace PacManBot.Services
 
 
         public PmCommandService(IServiceProvider services, PmConfig config,
-            PmDiscordClient client, LoggingService logger, StorageService storage)
+            PmDiscordClient client, LoggingService log, StorageService storage)
             : base(CommandConfig)
         {
             this.services = services;
             this.client = client;
-            this.logger = logger;
+            this.log = log;
             this.storage = storage;
 
             CommandExecuted += LogCommand;
@@ -77,7 +77,7 @@ namespace PacManBot.Services
                     g => g.Select(c => commandHelp[c.Name.ToLower()])
                         .ToArray().AsEnumerable());
 
-            logger.Log(LogSeverity.Info, LogSource.Command, $"Added {allCommands.Length} commands");
+            log.Info($"Added {allCommands.Length} commands", LogSource.Command);
         }
 
 
@@ -87,16 +87,16 @@ namespace PacManBot.Services
 
             if (result.IsSuccess)
             {
-                await logger.Log(
-                    LogSeverity.Verbose, LogSource.Command,
-                    $"Executed \"{context.Message.Content}\" for {context.User.FullName()} in {context.Channel.FullName()}");
+                await log.VerboseAsync(
+                    $"Executed \"{context.Message.Content}\" for {context.User.FullName()} in {context.Channel.FullName()}",
+                    LogSource.Command);
             }
             else if (result is ExecuteResult execResult && execResult.Exception != null)
             {
-                await logger.Log(
-                    LogSeverity.Error, LogSource.Command,
+                await log.ErrorAsync(
                     $"Executing \"{context.Message.Content}\" for {context.User.FullName()} " +
-                    $"in {context.Channel.FullName()}: {execResult.Exception}");
+                    $"in {context.Channel.FullName()}: {execResult.Exception}",
+                    LogSource.Command);
             }
         }
         

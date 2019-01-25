@@ -18,7 +18,7 @@ namespace PacManBot.Services
     public class StorageService
     {
         private readonly PmDiscordClient client;
-        private readonly LoggingService logger;
+        private readonly LoggingService log;
         private readonly string dbConnection;
 
 
@@ -32,10 +32,10 @@ namespace PacManBot.Services
         private PacManDbContext MakeDbContext() => new PacManDbContext(dbConnection);
 
 
-        public StorageService(PmConfig config, PmDiscordClient client, LoggingService logger)
+        public StorageService(PmConfig config, PmDiscordClient client, LoggingService log)
         {
             this.client = client;
-            this.logger = logger;
+            this.log = log;
 
             DefaultPrefix = config.defaultPrefix;
             dbConnection = config.dbConnectionString;
@@ -47,7 +47,7 @@ namespace PacManBot.Services
             using (var db = MakeDbContext())
             {
                 db.Database.EnsureCreated();
-                logger.Log(LogSeverity.Info, LogSource.Storage, "Database ready");
+                log.InfoAsync("Database ready", LogSource.Storage);
             }
         }
 
@@ -249,7 +249,7 @@ namespace PacManBot.Services
                 db.SaveChanges();
             }
 
-            logger.Log(LogSeverity.Info, LogSource.Storage, $"New scoreboard entry: {entry}");
+            log.InfoAsync($"New scoreboard entry: {entry}", LogSource.Storage);
         }
 
 
@@ -268,7 +268,7 @@ namespace PacManBot.Services
                 if (userId != null) scores = scores.Where(x => x.UserId == userId);
 
                 var list = scores.OrderByDescending(x => x.Score).Skip(start).Take(amount).ToList();
-                logger.Log(LogSeverity.Info, LogSource.Storage, $"Grabbed {list.Count} score entries");
+                log.InfoAsync($"Grabbed {list.Count} score entries", LogSource.Storage);
                 return list;
             }
         }

@@ -243,7 +243,7 @@ namespace PacManBot.Commands.Modules
             }
             catch (Exception e)
             {
-                await Logger.Log(LogSeverity.Error, $"{e}");
+                await Log.ErrorAsync(e);
                 await ReplyAsync("Oops, I didn't catch that, please try again. Maybe the developer screwed up");
             }
         }
@@ -296,6 +296,6 @@ namespace PacManBot.Commands.Modules
         [Command("command"), ExampleUsage("help play"), HideHelp]
         [Summary("This is not a real command. If you want to see help for a specific command, please do `{prefix}help [command name]`, " +
                  "where \"[command name]\" is the name of a command.")]
-        public async Task DoNothing() => await Logger.Log(LogSeverity.Info, "Someone tried to do \"<command\"");
+        public async Task DoNothing() => await Log.InfoAsync("Someone tried to do \"<command\"");
     }
 }

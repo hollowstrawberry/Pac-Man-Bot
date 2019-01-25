@@ -57,7 +57,7 @@ namespace PacManBot.Commands.Modules
             var message = await ReplyAsync(CustomEmoji.Loading);
             File.WriteAllText(Files.ManualRestart, $"{message.Channel.Id}/{message.Id}");
 
-            await Logger.Log(LogSeverity.Info, LogSource.Owner, "Restarting");
+            await Log.InfoAsync("Restarting", LogSource.Owner);
             await Bot.StopAsync();
             Environment.Exit(ExitCodes.ManualReboot);
         }
@@ -166,13 +166,13 @@ namespace PacManBot.Commands.Modules
             try
             {
                 result = await Scripting.EvalAsync(code, this);
-                await Logger.Log(LogSeverity.Debug, LogSource.Eval, $"Successfully executed:\n {code}");
+                await Log.DebugAsync($"Successfully executed:\n {code}", LogSource.Eval);
                 await AutoReactAsync(true);
             }
             catch (Exception e)
             {
                 result = e.Message;
-                await Logger.Log(LogSeverity.Debug, LogSource.Eval, $"{e}");
+                await Log.DebugAsync($"{e}", LogSource.Eval);
                 await AutoReactAsync(false);
             }
 
@@ -290,7 +290,7 @@ namespace PacManBot.Commands.Modules
             }
             catch (Exception e)
             {
-                await Logger.Log(LogSeverity.Debug, $"{e.Message}");
+                await Log.DebugAsync($"{e.Message}");
                 await AutoReactAsync(false);
                 await ReplyAsync($"```{e.Message}```");
             }
@@ -304,12 +304,12 @@ namespace PacManBot.Commands.Modules
             try
             {
                 Bot.Config.LoadContent(File.ReadAllText(Files.Contents));
-                await Logger.Log(LogSeverity.Info, "Reloaded bot content");
+                await Log.InfoAsync("Reloaded bot content");
                 await AutoReactAsync();
             }
             catch (Exception e)
             {
-                await Logger.Log(LogSeverity.Error, $"Failed to load bot content: {e}");
+                await Log.ErrorAsync($"Failed to load bot content: {e}");
                 await ReplyAsync($"```{e.Message}```");
             }
         }
@@ -319,7 +319,7 @@ namespace PacManBot.Commands.Modules
         [Summary("Stores an entry in the bot logs. Developer only")]
         public async Task DoLog([Remainder]string message)
         {
-            await Logger.Log(LogSeverity.Info, LogSource.Owner, message);
+            await Log.InfoAsync(message, LogSource.Owner);
             await AutoReactAsync();
         }
 
@@ -360,7 +360,7 @@ namespace PacManBot.Commands.Modules
             }
             catch (Exception e)
             {
-                await Logger.Log(LogSeverity.Debug, $"{e.Message}");
+                await Log.DebugAsync($"{e.Message}");
                 await ReplyAsync($"```{e.Message}```");
             }
         }
@@ -398,8 +398,7 @@ namespace PacManBot.Commands.Modules
                 }
                 catch (HttpException e)
                 {
-                    await Logger.Log(LogSeverity.Warning,
-                                     $"Couldn't delete message {message.Id} in {Context.Channel.FullName()}: {e.Message}");
+                    await Log.WarningAsync($"Couldn't delete message {message.Id} in {Context.Channel.FullName()}: {e.Message}");
                 }
             }
         }
@@ -434,7 +433,7 @@ namespace PacManBot.Commands.Modules
                 }
                 catch (Exception e)
                 {
-                    await Logger.Log(LogSeverity.Debug, $"While executing debug game input: {e.Message}");
+                    await Log.DebugAsync($"While executing debug game input: {e.Message}");
                     success = false;
                 }
             }

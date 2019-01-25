@@ -527,7 +527,7 @@ namespace PacManBot.Games.Concrete
             }
             catch (Exception e)
             {
-                logger.Log(LogSeverity.Error, LogSource.Game, $"{e}").GetAwaiter().GetResult();
+                log.Error(e, LogSource.Game);
                 return $"```There was an error displaying the game. {"Make sure your custom map is valid. ".If(custom)}" +
                        $"If this problem persists, please contact the author of the bot using the " +
                        $"{storage.GetPrefix(Channel)}feedback command.```";

@@ -19,7 +19,7 @@ namespace PacManBot.Services
     public class SchedulingService
     {
         private readonly PmDiscordClient client;
-        private readonly LoggingService logger;
+        private readonly LoggingService log;
         private readonly GameService games;
         private readonly bool scheduledRestart;
 
@@ -32,10 +32,10 @@ namespace PacManBot.Services
         public event Func<Task> PrepareRestart;
         
 
-        public SchedulingService(PmConfig config, PmDiscordClient client, LoggingService logger, GameService games)
+        public SchedulingService(PmConfig config, PmDiscordClient client, LoggingService log, GameService games)
         {
             this.client = client;
-            this.logger = logger;
+            this.log = log;
             this.games = games;
 
             scheduledRestart = config.scheduledRestart;
@@ -93,17 +93,17 @@ namespace PacManBot.Services
         {
             if (client.AllShardsConnected()) return;
 
-            await logger.Log(LogSeverity.Info, LogSource.Scheduling, "A shard is disconnected. Waiting for reconnection...");
+            await log.InfoAsync("A shard is disconnected. Waiting for reconnection...", LogSource.Scheduling);
 
             try
             {
                 await Task.Delay(TimeSpan.FromMinutes(2), cancelShutdown.Token);
-                await logger.Log(LogSeverity.Critical, LogSource.Scheduling, "Reconnection timed out. Shutting down");
+                await log.FatalAsync("Reconnection timed out. Shutting down", LogSource.Scheduling);
                 Environment.Exit(ExitCodes.ReconnectionTimeout);
             }
             catch (OperationCanceledException)
             {
-                await logger.Log(LogSeverity.Info, LogSource.Scheduling, "All shards reconnected. Shutdown aborted");
+                await log.InfoAsync("All shards reconnected. Shutdown aborted", LogSource.Scheduling);
             }
         }
 
@@ -128,7 +128,7 @@ namespace PacManBot.Services
 
             if (count > 0)
             {
-                await logger.Log(LogSeverity.Info, LogSource.Scheduling, $"Removed {count} expired game{"s".If(count > 1)}");
+                await log.InfoAsync($"Removed {count} expired game{"s".If(count > 1)}", LogSource.Scheduling);
             }
 
 
@@ -149,9 +149,9 @@ namespace PacManBot.Services
 
         private async void RestartBot(object state)
         {
-            await logger.Log(LogSeverity.Info, LogSource.Scheduling, "Preparing to restart");
+            await log.InfoAsync("Preparing to restart", LogSource.Scheduling);
             await PrepareRestart.Invoke();
-            await logger.Log(LogSeverity.Info, LogSource.Scheduling, "Restarting");
+            await log.InfoAsync("Restarting", LogSource.Scheduling);
             Environment.Exit(ExitCodes.ScheduledReboot);
         }
     }

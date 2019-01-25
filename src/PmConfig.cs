@@ -49,8 +49,11 @@ namespace PacManBot
         /// <summary>How long in milliseconds until the gateway connection to Discord times out.</summary>
         [DataMember] public readonly int connectionTimeout = 30000;
 
-        /// <summary>How many messages to log from the client. See <see cref="LogSeverity"/> for possible values.</summary>
-        [DataMember] public readonly LogSeverity clientLogLevel = LogSeverity.Verbose;
+        /// <summary>How many messages this program should log. See <see cref="LogSeverity"/> for possible values.</summary>
+        [DataMember] public readonly LogSeverity logLevel = LogSeverity.Debug;
+
+        /// <summary>How many messages to log coming from the Discord client. See <see cref="LogSeverity"/> for possible values.</summary>
+        [DataMember] public readonly LogSeverity clientLogLevel = LogSeverity.Info;
 
         /// <summary>Strings that when found cause a log event to be ignored. Use with caution.</summary>
         [DataMember] public readonly string[] logExclude = { };

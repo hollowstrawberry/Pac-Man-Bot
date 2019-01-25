@@ -94,7 +94,7 @@ namespace PacManBot.Commands
             else
             {
                 var currentPerms = user == null
-                    ? DiscordExtensions.CorrectDmPermissions // They got these wrong in the library
+                    ? DiscordExtensions.DmPermissions
                     : (ChannelPermission)user.GetPermissions(context.Channel as IGuildChannel).RawValue;
 
                 return currentPerms.HasFlag(channelPerms)
