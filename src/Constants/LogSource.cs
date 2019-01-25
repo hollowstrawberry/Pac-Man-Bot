@@ -7,7 +7,7 @@
     {
         public const string
             Bot = "Bot",
-            Game = "Game",
+            Game = "Games",
             Command = "Commands",
             Storage = "Storage",
             Scheduling = "Scheduling",

@@ -52,9 +52,6 @@ namespace PacManBot
         /// <summary>How many messages to log from the client. See <see cref="LogSeverity"/> for possible values.</summary>
         [DataMember] public readonly LogSeverity clientLogLevel = LogSeverity.Verbose;
 
-        /// <summary>How many messages to log from command calls. See <see cref="LogSeverity"/> for possible values.</summary>
-        [DataMember] public readonly LogSeverity commandLogLevel = LogSeverity.Verbose;
-
         /// <summary>Strings that when found cause a log event to be ignored. Use with caution.</summary>
         [DataMember] public readonly string[] logExclude = { };
 
@@ -100,15 +97,6 @@ namespace PacManBot
             MessageCacheSize = messageCacheSize,
             ConnectionTimeout = connectionTimeout,
             DefaultRetryMode = RetryMode.RetryRatelimit,
-        };
-
-
-        /// <summary>Gets a configuration object for a <see cref="CommandService"/>.</summary>
-        public CommandServiceConfig CommandConfig => new CommandServiceConfig
-        {
-            LogLevel = commandLogLevel,
-            DefaultRunMode = RunMode.Async,
-            CaseSensitiveCommands = false,
         };
     }
 }

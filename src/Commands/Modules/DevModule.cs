@@ -454,5 +454,14 @@ namespace PacManBot.Commands.Modules
 
             await AutoReactAsync(success);
         }
+
+
+        [Command("throw"), HideHelp]
+        [Summary("Throws an error. Developer only.")]
+        public async Task ThrowError(bool arg = true)
+        {
+            if (arg) throw new Exception("oops");
+            else await ReplyAsync("no");
+        }
     }
 }

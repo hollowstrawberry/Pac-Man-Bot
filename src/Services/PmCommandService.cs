@@ -19,6 +19,13 @@ namespace PacManBot.Services
     /// </summary>
     public class PmCommandService : CommandService
     {
+        private static readonly CommandServiceConfig CommandConfig = new CommandServiceConfig
+        {
+            DefaultRunMode = RunMode.Async,
+            CaseSensitiveCommands = false,
+            LogLevel = 0,
+        };
+
         private readonly IServiceProvider services;
         private readonly PmDiscordClient client;
         private readonly LoggingService logger;
@@ -30,19 +37,19 @@ namespace PacManBot.Services
 
         public PmCommandService(IServiceProvider services, PmConfig config,
             PmDiscordClient client, LoggingService logger, StorageService storage)
-            : base(config.CommandConfig)
+            : base(CommandConfig)
         {
             this.services = services;
             this.client = client;
             this.logger = logger;
             this.storage = storage;
 
-            Log += logger.Log;
+            CommandExecuted += LogCommand;
         }
 
 
         /// <summary>Adds all command modules in this assembly.</summary>
-        public async Task AddModulesAsync()
+        public async Task AddAllModulesAsync()
         {
             await AddModulesAsync(typeof(PmBaseModule).Assembly, services);
 
@@ -70,8 +77,30 @@ namespace PacManBot.Services
                     g => g.Select(c => commandHelp[c.Name.ToLower()])
                         .ToArray().AsEnumerable());
 
-            await logger.Log(LogSeverity.Info, LogSource.Command, $"Added {allCommands.Length} commands");
+            logger.Log(LogSeverity.Info, LogSource.Command, $"Added {allCommands.Length} commands");
         }
+
+
+        private async Task LogCommand(Optional<CommandInfo> command, ICommandContext context, IResult result)
+        {
+            if (!command.IsSpecified) return;
+
+            if (result.IsSuccess)
+            {
+                await logger.Log(
+                    LogSeverity.Verbose, LogSource.Command,
+                    $"Executed \"{context.Message.Content}\" for {context.User.FullName()} in {context.Channel.FullName()}");
+            }
+            else if (result is ExecuteResult execResult && execResult.Exception != null)
+            {
+                await logger.Log(
+                    LogSeverity.Error, LogSource.Command,
+                    $"Executing \"{context.Message.Content}\" for {context.User.FullName()} " +
+                    $"in {context.Channel.FullName()}: {execResult.Exception}");
+            }
+        }
+        
+
 
 
         /// <summary>Attempts to find and execute a command.</summary>
@@ -96,8 +125,10 @@ namespace PacManBot.Services
                     return ExecuteResult.FromError(error, reason);
                 }
             }
-
-            return ExecuteResult.FromError(CommandError.UnknownCommand, null);
+            else
+            {
+                return ExecuteResult.FromError(CommandError.UnknownCommand, "Unknown command.");
+            }
         }
 
 

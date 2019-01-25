@@ -140,10 +140,6 @@ namespace PacManBot.Services
             if (result.IsSuccess) return true;
             else if (result.Error != CommandError.UnknownCommand && result.ErrorReason != null)
             {
-                await logger.Log(LogSeverity.Verbose, LogSource.Command,
-                    $"\"{message}\" by {message.Author.FullName()} in {message.Channel.FullName()} " +
-                    $"couldn't be executed. {result.ErrorReason}");
-
                 await message.Channel.SendMessageAsync(result.ErrorReason, options: PmBot.DefaultOptions);
             }
 

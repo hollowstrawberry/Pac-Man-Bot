@@ -19,54 +19,49 @@ namespace PacManBot.Services
         public string LogFile => $"{LogDirectory}{DateTime.Now:yyyy-MM-dd}.txt";
 
 
-        public LoggingService(PmConfig config, PmDiscordClient client)
+        public LoggingService(PmConfig config)
         {
             logExclude = config.logExclude;
-
-            client.Log += Log;
         }
 
 
-
         /// <summary>Logs an entry to the console and to disk.</summary>
-        public async Task Log(LogMessage message)
+        public async Task Log(LogSeverity severity, string source, string message)
         {
             if (!Directory.Exists(LogDirectory)) Directory.CreateDirectory(LogDirectory);
             if (!File.Exists(LogFile)) File.Create(LogFile).Dispose();
 
-            if (logExclude != null &&
-                ((message.Message?.ContainsAny(logExclude) ?? false)
-                || (message.Exception?.ToString().ContainsAny(logExclude) ?? false)))
-            {
-                return;
-            }
+            if (message.ContainsAny(logExclude)) return;
 
-            string logText = $"{DateTime.Now:hh:mm:ss} [{message.Severity}] " +
-                             $"{message.Source.Replace("Shard #", "Gateway")}: {message.Message}{message.Exception}";
+            string logText = $"{DateTime.Now:hh:mm:ss} [{severity}] {source}: {message}\n";
+
+            await Console.Out.WriteAsync(logText);
 
             for (int i = 0; i <= WriteAttempts; ++i)
             {
                 try
                 {
-                    await File.AppendAllTextAsync(LogFile, $"{logText}\n"); // Write the log text to a file
+                    await File.AppendAllTextAsync(LogFile, logText);
                     break;
                 }
-                catch (IOException) when (i < WriteAttempts) { await Task.Delay(1); }
+                catch (IOException) when (i < WriteAttempts) { await Task.Delay(10); }
             }
-
-            await Console.Out.WriteLineAsync(logText); // Write the log text to the console
         }
 
-        /// <summary>Logs an entry to the console and to disk.</summary>
-        public Task Log(LogSeverity severity, string source, string message) => Log(new LogMessage(severity, source, message));
+        /// <summary>Logs an entry to the console and to disk, using the default source name.</summary>
+        public Task Log(LogSeverity severity, string message) => Log(severity, LogSource.Bot, message);
 
-        /// <summary>Logs an entry to the console and to disk, using the default log source name.</summary>
-        public Task Log(LogSeverity severity, string message) => Log(new LogMessage(severity, LogSource.Bot, message));
+        /// <summary>Logs an entry to the console and to disk, using the default severity.</summary>
+        public Task Log(string source, string message) => Log(LogSeverity.Verbose, source, message);
 
-        /// <summary>Logs an entry to the console and to disk, using the default log severity.</summary>
-        public Task Log(string source, string message) => Log(new LogMessage(LogSeverity.Verbose, source, message));
+        /// <summary>Logs an entry to the console and to disk, using the default severity and source name.</summary>
+        public Task Log(string message) => Log(LogSeverity.Verbose, LogSource.Bot, message);
 
-        /// <summary>Logs an entry to the console and to disk, using the default log severity and name source.</summary>
-        public Task Log(string message) => Log(new LogMessage(LogSeverity.Verbose, LogSource.Bot, message));
+
+        /// <summary>Logs an entry to the console and to disk, hooked from a discord client.</summary>
+        public Task ClientLog(LogMessage log)
+        {
+            return Log(log.Severity, log.Source.Replace("Shard #", "Gateway"), $"{log.Message}{log.Exception}");
+        }
     }
 }

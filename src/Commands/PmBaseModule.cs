@@ -1,8 +1,6 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
-using PacManBot.Constants;
 using PacManBot.Extensions;
 using PacManBot.Services;
 
@@ -14,7 +12,7 @@ namespace PacManBot.Commands
     /// <remarks>Service properties are loaded lazily.</remarks>
     public abstract class PmBaseModule : ModuleBase<PmCommandContext>
     {
-        /// <summary>Consistent and sane <see cref="RequestOptions"/> to be used in most Discord requests.</summary>
+        /// <summary>Useful <see cref="RequestOptions"/> to be used in most Discord requests.</summary>
         public static readonly RequestOptions DefaultOptions = PmBot.DefaultOptions;
 
         /// <summary>Runtime settings of the bot.</summary>
@@ -27,13 +25,6 @@ namespace PacManBot.Commands
         public StorageService Storage { get; set; }
         /// <summary>Gives access to active games.</summary>
         public GameService Games { get; set; }
-
-
-        protected override async void AfterExecute(CommandInfo command)
-        {
-            await Logger.Log(LogSeverity.Verbose, LogSource.Command,
-                             $"Executed {command.Name} for {Context.User.FullName()} in {Context.Channel.FullName()}");
-        }
 
 
         /// <summary>Sends a message in the current context, using the default options if not specified.</summary>

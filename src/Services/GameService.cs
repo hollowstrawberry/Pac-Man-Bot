@@ -109,12 +109,12 @@ namespace PacManBot.Services
 
                 if (success && log)
                 {
-                    logger.Log(LogSeverity.Verbose, LogSource.Storage, $"Removed {game.GetType().Name} at {game.IdentifierId()}");
+                    logger.Log(LogSeverity.Verbose, LogSource.Game, $"Removed {game.GetType().Name} at {game.IdentifierId()}");
                 }
             }
             catch (Exception e)
             {
-                logger.Log(LogSeverity.Error, LogSource.Storage, $"Trying to remove game at {game.IdentifierId()}: {e}");
+                logger.Log(LogSeverity.Error, LogSource.Game, $"Trying to remove game at {game.IdentifierId()}: {e}");
             }
         }
 
@@ -137,7 +137,7 @@ namespace PacManBot.Services
             if (!Directory.Exists(Files.GameFolder))
             {
                 Directory.CreateDirectory(Files.GameFolder);
-                logger.Log(LogSeverity.Warning, LogSource.Storage, $"Created missing directory \"{Files.GameFolder}\"");
+                logger.Log(LogSeverity.Warning, LogSource.Game, $"Created missing directory \"{Files.GameFolder}\"");
                 return;
             }
 
@@ -159,7 +159,7 @@ namespace PacManBot.Services
                     }
                     catch (Exception e)
                     {
-                        logger.Log(firstFail ? LogSeverity.Error : LogSeverity.Verbose, LogSource.Storage,
+                        logger.Log(firstFail ? LogSeverity.Error : LogSeverity.Verbose, LogSource.Game,
                                    $"Couldn't load game at {file}: {(firstFail ? e.ToString() : e.Message)}");
                         fail++;
                         firstFail = false;
@@ -167,7 +167,7 @@ namespace PacManBot.Services
                 }
             }
 
-            logger.Log(LogSeverity.Info, LogSource.Storage,
+            logger.Log(LogSeverity.Info, LogSource.Game,
                        $"Loaded {games.Count + userGames.Count} games{$" with {fail} errors".If(fail > 0)}");
         }
     }

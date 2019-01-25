@@ -31,14 +31,15 @@ namespace PacManBot
         private readonly StorageService storage;
         private readonly GameService games;
         private readonly InputService input;
+        private readonly PmCommandService commands;
         private readonly SchedulingService schedule;
 
         private int shardsReady;
         private DateTime lastGuildCountUpdate = DateTime.MinValue;
 
 
-        public PmBot(PmConfig config, PmDiscordClient client, LoggingService logger,
-            StorageService storage, GameService games, InputService input, SchedulingService schedule)
+        public PmBot(PmConfig config, PmDiscordClient client, LoggingService logger, StorageService storage,
+            GameService games, InputService input, PmCommandService commands, SchedulingService schedule)
         {
             Config = config;
             this.client = client;
@@ -46,13 +47,18 @@ namespace PacManBot
             this.storage = storage;
             this.games = games;
             this.input = input;
+            this.commands = commands;
             this.schedule = schedule;
         }
 
 
-        /// <summary>Starts the bot's connection to Discord.</summary>
+        /// <summary>Starts the bot and its connection to Discord.</summary>
         public async Task StartAsync()
         {
+            await commands.AddAllModulesAsync();
+            games.LoadGames();
+
+            client.Log += logger.ClientLog;
             client.ShardReady += OnShardReady;
             await client.LoginAsync(TokenType.Bot, Config.discordToken);
             await client.StartAsync();
