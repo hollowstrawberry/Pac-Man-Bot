@@ -100,6 +100,13 @@ namespace PacManBot.Commands.Modules
         }
 
 
+        [Command("say"), Remarks("Make the bot say anything"), Priority(-1)]
+        [Summary("Repeats back any message.")]
+        [RequireContext(ContextType.DM)]
+        public async Task Say([Remainder]string message)
+            => await ReplyAsync(message.SanitizeMentions());
+
+
         [Command("games"), Alias("gamestats"), Parameters(""), Remarks("Info about the bot's current games")]
         [Summary("Shows information about all active games managed by the bot.")]
         public async Task GameStats([Remainder]string uselessArgs = "")

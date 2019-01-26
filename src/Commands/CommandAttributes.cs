@@ -68,6 +68,9 @@ namespace PacManBot.Commands
         protected GuildPermission? guildPerms;
         protected ChannelPermission? channelPerms;
 
+        protected IGuildUser user;
+        protected string name;
+
 
         protected PmBasePermissionAttribute(ChannelPermission channelPerms)
         {
@@ -80,16 +83,24 @@ namespace PacManBot.Commands
         }
 
 
-        protected PreconditionResult CheckPermissions(ICommandContext context, CommandInfo command, IGuildUser user, string name)
+        public override Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, CommandInfo command, IServiceProvider services)
         {
+            PreconditionResult result;
+
             if (guildPerms.HasValue)
             {
-                if (user == null) return PreconditionResult.FromError($"{name} requires guild permissions but is not in a guild");
-                var currentPerms = (GuildPermission)user.GuildPermissions.RawValue;
+                if (user == null)
+                {
+                    result = PreconditionResult.FromError($"{name} requires guild permissions but is not in a guild");
+                }
+                else
+                {
+                    var currentPerms = (GuildPermission)user.GuildPermissions.RawValue;
 
-                return currentPerms.HasFlag(guildPerms)
-                    ? PreconditionResult.FromSuccess()                                 //This gets the perms that are missing
-                    : PreconditionResult.FromError($"{name} requires guild permission {(guildPerms ^ currentPerms) & guildPerms}");
+                    result = currentPerms.HasFlag(guildPerms)
+                        ? PreconditionResult.FromSuccess()                                 //This gets the perms that are missing
+                        : PreconditionResult.FromError($"{name} requires guild permission {(guildPerms ^ currentPerms) & guildPerms}");
+                }
             }
             else
             {
@@ -97,10 +108,12 @@ namespace PacManBot.Commands
                     ? DiscordExtensions.DmPermissions
                     : (ChannelPermission)user.GetPermissions(context.Channel as IGuildChannel).RawValue;
 
-                return currentPerms.HasFlag(channelPerms)
+                result = currentPerms.HasFlag(channelPerms)
                     ? PreconditionResult.FromSuccess()
                     : PreconditionResult.FromError($"{name} requires guild permission {(channelPerms ^ currentPerms) & channelPerms}");
             }
+
+            return Task.FromResult(result);
         }
     }
 
@@ -114,11 +127,11 @@ namespace PacManBot.Commands
         public PmRequireBotPermissionAttribute(ChannelPermission channelPerms) : base(channelPerms) { }
         public PmRequireBotPermissionAttribute(GuildPermission guildPerms) : base(guildPerms) { }
 
-
-        public override async Task<PreconditionResult> CheckPermissionsAsync(
-            ICommandContext context, CommandInfo command, IServiceProvider services)
+        public override async Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, CommandInfo command, IServiceProvider services)
         {
-            return CheckPermissions(context, command, context.Guild == null ? null : await context.Guild.GetCurrentUserAsync(), "Bot");
+            user = context.Guild == null ? null : await context.Guild.GetCurrentUserAsync();
+            name = "Bot";
+            return await base.CheckPermissionsAsync(context, command, services);
         }
     }
 
@@ -132,11 +145,11 @@ namespace PacManBot.Commands
         public PmRequireUserPermissionAttribute(ChannelPermission channelPerms) : base(channelPerms) { }
         public PmRequireUserPermissionAttribute(GuildPermission guildPerms) : base(guildPerms) { }
 
-
-        public override Task<PreconditionResult> CheckPermissionsAsync(
-            ICommandContext context, CommandInfo command, IServiceProvider services)
+        public override async Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, CommandInfo command, IServiceProvider services)
         {
-            return Task.FromResult(CheckPermissions(context, command, context.User as IGuildUser, "User"));
+            user = context.User as IGuildUser;
+            name = "User";
+            return await base.CheckPermissionsAsync(context, command, services);
         }
     }
 }

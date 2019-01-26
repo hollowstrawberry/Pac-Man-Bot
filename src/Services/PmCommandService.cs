@@ -45,7 +45,7 @@ namespace PacManBot.Services
             this.log = log;
             this.storage = storage;
 
-            CommandExecuted += LogCommand;
+            CommandExecuted += OnCommandExecuted;
         }
 
 
@@ -82,60 +82,48 @@ namespace PacManBot.Services
         }
 
 
-        private Task LogCommand(Optional<CommandInfo> command, ICommandContext context, IResult result)
+        /// <summary>Finds and executes a command.</summary>
+        public async Task ExecuteAsync(SocketUserMessage message, int commandPos)
         {
-            if (!command.IsSpecified) return Task.CompletedTask;
+            var context = new PmCommandContext(message, commandPos, services);
+            await ExecuteAsync(context, commandPos, services, MultiMatchHandling.Best);
+        }
 
-            int pos = ((PmCommandContext)context).Position;
-            string commandText = context.Message.Content.Substring(pos);
+
+        private async Task OnCommandExecuted(Optional<CommandInfo> command, ICommandContext genericContext, IResult result)
+        {
+            if (!(genericContext is PmCommandContext context))
+            {
+                log.Error($"On command executed: Expected PmCommandContext, got {genericContext.GetType()}");
+                return;
+            }
+
+            var errorReply = CommandErrorReply(result, context);
+            if (errorReply != null) await context.Channel.SendMessageAsync(errorReply, options: PmBot.DefaultOptions);
+
+
+            if (!command.IsSpecified) return;
+
+            string user = context.User.FullName();
+            string channel = context.Channel.FullName();
+            string commandText = context.Message.Content.Substring(context.Position);
             if (commandText.Length > 40) commandText = commandText.Truncate(37) + "...";
 
             if (result.IsSuccess)
             {
-                log.Verbose(
-                    $"Executed \"{commandText}\" for {context.User.FullName()} in {context.Channel.FullName()}",
-                    LogSource.Command);
+                log.Verbose($"Executed \"{commandText}\" for {user} in {channel}", LogSource.Command);
             }
             else if (result is ExecuteResult execResult && execResult.Exception != null)
             {
-                log.Exception(
-                    $"Executing \"{commandText}\" for {context.User.FullName()} in {context.Channel.FullName()}",
-                    execResult.Exception, LogSource.Command);
-            }
-
-            return Task.CompletedTask;
-        }
-        
-
-
-
-        /// <summary>Attempts to find and execute a command.</summary>
-        public async Task<ExecuteResult> TryExecuteAsync(SocketUserMessage message)
-        {
-            string prefix = await storage.GetGuildPrefixAsync((message.Channel as SocketGuildChannel)?.Guild);
-            int commandPosition = 0;
-
-            if (message.HasMentionPrefix(client.CurrentUser, ref commandPosition)
-                || message.HasStringPrefix($"{prefix} ", ref commandPosition)
-                || message.HasStringPrefix(prefix, ref commandPosition)
-                || !await storage.RequiresPrefixAsync(message.Channel))
-            {
-                var context = new PmCommandContext(message, commandPosition, services);
-                var res = await ExecuteAsync(context, commandPosition, services, MultiMatchHandling.Best);
-
-                if (res.IsSuccess) return ExecuteResult.FromSuccess();
-                else
-                {
-                    var error = res.Error ?? CommandError.Unsuccessful;
-                    var reason = CommandErrorReason(res.ErrorReason, context, prefix);
-                    return ExecuteResult.FromError(error, reason);
-                }
+                log.Exception($"Executing \"{commandText}\" for {user} in {channel}", execResult.Exception, LogSource.Command);
             }
             else
             {
-                return ExecuteResult.FromError(CommandError.UnknownCommand, "Unknown command.");
+                log.Verbose($"Couldn't execute \"{commandText}\" for {user} in {channel}: {result.ErrorReason}", LogSource.Command);
             }
         }
+
+
 
 
         /// <summary>Gets a message embed of the user manual for a command.</summary>
@@ -201,42 +189,56 @@ namespace PacManBot.Services
         }
 
 
-        private string CommandErrorReason(string baseError, ICommandContext context, string prefix)
+
+
+        private string CommandErrorReply(IResult result, PmCommandContext context)
         {
-            if (baseError.Contains("requires") && context.Guild == null)
-                return "You need to be in a guild to use this command!";
+            var error = result.ErrorReason;
+            var type = result.Error ?? CommandError.Unsuccessful;
 
-            if (baseError.Contains("Bot requires"))
-                return $"This bot is missing the permission**{Regex.Replace(baseError.Split(' ').Last(), @"([A-Z])", @" $1")}**!";
+            if (type == CommandError.UnknownCommand)
+            {
+                if (context.Guild == null || context.Message.MentionedUsers.Contains(client.CurrentUser))
+                    return $"Unknown command! Send `{context.Prefix}help` for a list.";
 
-            if (baseError.Contains("User requires"))
-                return $"You need the permission**{Regex.Replace(baseError.Split(' ').Last(), @"([A-Z])", @" $1")}** to use this command!";
-
-            if (baseError.Contains("User not found"))
-                return "Can't find the specified user!";
-
-            if (baseError.Contains("Failed to parse"))
-                return $"Invalid command parameters! Please use `{prefix}help [command name]` or try again.";
-
-            if (baseError.Contains("too few parameters"))
-                return $"Missing command parameters! Please use `{prefix}help [command name]` or try again.";
-
-            if (baseError.Contains("too many parameters"))
-                return $"Too many parameters! Please use `{prefix}help [command name]` or try again.";
-
-            if (baseError.Contains("must be used in a guild"))
-                return "You need to be in a guild to use this command!";
-
-            if (baseError.ContainsAny("quoted parameter", "one character of whitespace"))
-                return "Incorrect use of quotes in command parameters.";
-
-            if (baseError.Contains("Timeout"))
-                return "You're using that command too much. Please try again later.";
-
-            if (baseError.Contains("must be an owner"))
                 return null;
+            }
+            if (type == CommandError.ParseFailed)
+            {
+                if (error.ContainsAny("quoted parameter", "one character of whitespace"))
+                    return "Incorrect use of quotes in command parameters.";
 
-            return baseError;
+                return $"Invalid command parameters! Please use `{context.Prefix}help [command name]` or try again.";
+            }
+            if (type == CommandError.BadArgCount)
+            {
+                if (error.Contains("few"))
+                    return $"Missing command parameters! Please use `{context.Prefix}help [command name]` or try again.";
+                if (error.Contains("many"))
+                    return $"Too many parameters! Please use `{context.Prefix}help [command name]` or try again.";
+            }
+            if (type == CommandError.ObjectNotFound)
+            {
+                if (error.StartsWith("User"))
+                    return "Can't find the specified user!";
+                if (error.StartsWith("Channel"))
+                    return "Can't find the specified channel!";
+            }
+            if (type == CommandError.UnmetPrecondition)
+            {
+                if (error.Contains("owner"))
+                    return null;
+                if (context.Guild == null)
+                    return "You need to be in a guild to use this command!";
+                if (error.StartsWith("Bot"))
+                    return $"This bot is missing the permission**{Regex.Replace(error.Split(' ').Last(), @"([A-Z])", @" $1")}**!";
+                if (error.StartsWith("User"))
+                    return $"You need the permission**{Regex.Replace(error.Split(' ').Last(), @"([A-Z])", @" $1")}** to use this command!";
+                if (error.StartsWith("Invalid context"))
+                    return "This command can only be used in DMs with the bot, or if you have the right permissions.";
+            }
+
+            return error;
         }
 
 

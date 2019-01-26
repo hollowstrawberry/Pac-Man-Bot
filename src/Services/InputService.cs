@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using PacManBot.Commands;
 using PacManBot.Extensions;
 using PacManBot.Games;
 using PacManBot.Games.Concrete;
@@ -134,11 +135,15 @@ namespace PacManBot.Services
         /// <summary>Tries to find and execute a command. Returns whether it is successful.</summary>
         private async Task<bool> CommandAsync(SocketUserMessage message)
         {
-            var result = await commands.TryExecuteAsync(message);
-            if (result.IsSuccess) return true;
-            else if (result.Error != CommandError.UnknownCommand && result.ErrorReason != null)
+            string prefix = await storage.GetGuildPrefixAsync((message.Channel as SocketGuildChannel)?.Guild);
+            int commandPosition = 0;
+
+            if (message.HasMentionPrefix(client.CurrentUser, ref commandPosition)
+                || message.HasStringPrefix($"{prefix} ", ref commandPosition)
+                || message.HasStringPrefix(prefix, ref commandPosition)
+                || !await storage.RequiresPrefixAsync(message.Channel))
             {
-                await message.Channel.SendMessageAsync(result.ErrorReason, options: PmBot.DefaultOptions);
+                await commands.ExecuteAsync(message, commandPosition);
             }
 
             return false;

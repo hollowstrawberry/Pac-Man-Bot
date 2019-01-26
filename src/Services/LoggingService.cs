@@ -63,7 +63,7 @@ namespace PacManBot.Services
             string source = log.Source.Replace("Shard #", "Gateway");
 
             // To the purposes of this bot, these warnings are expected and thus serve no purpose
-            if (log.Severity == LogSeverity.Warning)
+            if (log.Severity == LogSeverity.Warning && log.Message != null)
             {
                 if (log.Source == "Rest")
                 {
