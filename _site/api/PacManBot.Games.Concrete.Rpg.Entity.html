@@ -83,33 +83,11 @@
       <div class="level2"><a class="xref" href="PacManBot.Games.Concrete.Rpg.Enemy.html">Enemy</a></div>
       <div class="level2"><a class="xref" href="PacManBot.Games.Concrete.Rpg.RpgPlayer.html">RpgPlayer</a></div>
   </div>
-  <div class="inheritedMembers">
-    <h5>Inherited Members</h5>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetHashCode()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
-  </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="PacManBot.Games.Concrete.Rpg.html">PacManBot.Games.Concrete.Rpg</a></h6>
   <h6><strong>Assembly</strong>: Pacman.dll</h6>
   <h5 id="PacManBot_Games_Concrete_Rpg_Entity_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[DataContract]
-public abstract class Entity</code></pre>
+    <pre><code class="lang-csharp hljs">public abstract class Entity : object</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -144,8 +122,7 @@ public abstract class Entity</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[DataMember]
-public List&lt;Buff&gt; Buffs { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public List&lt;Buff&gt; Buffs { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -157,7 +134,7 @@ public List&lt;Buff&gt; Buffs { get; }</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="PacManBot.Games.Concrete.Rpg.Buff.html">Buff</a>&gt;</td>
+        <td><span class="xref">List</span>&lt;<a class="xref" href="PacManBot.Games.Concrete.Rpg.Buff.html">Buff</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -238,8 +215,7 @@ public List&lt;Buff&gt; Buffs { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[DataMember]
-public Dictionary&lt;DamageType, int&gt; DamageBoost { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Dictionary&lt;DamageType, int&gt; DamageBoost { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -251,7 +227,7 @@ public Dictionary&lt;DamageType, int&gt; DamageBoost { get; set; }</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.Dictionary</span>&lt;<a class="xref" href="PacManBot.Games.Concrete.Rpg.DamageType.html">DamageType</a>, <span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="xref">Dictionary</span>&lt;<a class="xref" href="PacManBot.Games.Concrete.Rpg.DamageType.html">DamageType</a>, <span class="xref">System.Int32</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -301,8 +277,7 @@ public Dictionary&lt;DamageType, int&gt; DamageBoost { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[DataMember]
-public Dictionary&lt;DamageType, double&gt; DamageResistance { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Dictionary&lt;DamageType, double&gt; DamageResistance { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -314,7 +289,7 @@ public Dictionary&lt;DamageType, double&gt; DamageResistance { get; set; }</code
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.Dictionary</span>&lt;<a class="xref" href="PacManBot.Games.Concrete.Rpg.DamageType.html">DamageType</a>, <span class="xref">System.Double</span>&gt;</td>
+        <td><span class="xref">Dictionary</span>&lt;<a class="xref" href="PacManBot.Games.Concrete.Rpg.DamageType.html">DamageType</a>, <span class="xref">System.Double</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -333,8 +308,7 @@ public Dictionary&lt;DamageType, double&gt; DamageResistance { get; set; }</code
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[DataMember]
-public DamageType DamageType { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public DamageType DamageType { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -459,8 +433,7 @@ It's automatically clamped between 0 and <a class="xref" href="PacManBot.Games.C
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[DataMember]
-public Dictionary&lt;MagicType, int&gt; MagicBoost { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Dictionary&lt;MagicType, int&gt; MagicBoost { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -472,7 +445,7 @@ public Dictionary&lt;MagicType, int&gt; MagicBoost { get; set; }</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.Dictionary</span>&lt;<a class="xref" href="PacManBot.Games.Concrete.Rpg.MagicType.html">MagicType</a>, <span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="xref">Dictionary</span>&lt;<a class="xref" href="PacManBot.Games.Concrete.Rpg.MagicType.html">MagicType</a>, <span class="xref">System.Int32</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -491,8 +464,7 @@ public Dictionary&lt;MagicType, int&gt; MagicBoost { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[DataMember]
-public Dictionary&lt;MagicType, double&gt; MagicResistance { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Dictionary&lt;MagicType, double&gt; MagicResistance { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -504,7 +476,7 @@ public Dictionary&lt;MagicType, double&gt; MagicResistance { get; set; }</code><
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.Dictionary</span>&lt;<a class="xref" href="PacManBot.Games.Concrete.Rpg.MagicType.html">MagicType</a>, <span class="xref">System.Double</span>&gt;</td>
+        <td><span class="xref">Dictionary</span>&lt;<a class="xref" href="PacManBot.Games.Concrete.Rpg.MagicType.html">MagicType</a>, <span class="xref">System.Double</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -523,8 +495,7 @@ public Dictionary&lt;MagicType, double&gt; MagicResistance { get; set; }</code><
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[DataMember]
-public MagicType MagicType { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public MagicType MagicType { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -555,8 +526,7 @@ public MagicType MagicType { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[DataMember]
-public int MaxLife { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public int MaxLife { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -620,7 +590,7 @@ public int MaxLife { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void AddBuff(Buff buff, int? duration = default(int? ))</code></pre>
+    <pre><code class="lang-csharp hljs">public void AddBuff(Buff buff, int? duration = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -1008,8 +978,6 @@ public int MaxLife { get; set; }</code></pre>
       </tr>
     </tbody>
   </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">System.Object.ToString()</span></div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_Rpg_Entity_UpdateStats.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.Rpg.Entity.UpdateStats%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>

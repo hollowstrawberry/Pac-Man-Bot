@@ -87,35 +87,11 @@
     <h5>Implements</h5>
     <div><a class="xref" href="PacManBot.Games.IBaseGame.html">IBaseGame</a></div>
   </div>
-  <div class="inheritedMembers">
-    <h5>Inherited Members</h5>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetHashCode()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ToString()</span>
-    </div>
-  </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="PacManBot.Games.html">PacManBot.Games</a></h6>
   <h6><strong>Assembly</strong>: Pacman.dll</h6>
   <h5 id="PacManBot_Games_BaseGame_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public abstract class BaseGame : IBaseGame</code></pre>
+    <pre><code class="lang-csharp hljs">public abstract class BaseGame : object, IBaseGame</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -137,13 +113,13 @@
   </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_BaseGame__ctor_System_UInt64___System_IServiceProvider_.md&amp;value=---%0Auid%3A%20PacManBot.Games.BaseGame.%23ctor(System.UInt64%5B%5D%2CSystem.IServiceProvider)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_BaseGame__ctor_System_UInt64___IServiceProvider_.md&amp;value=---%0Auid%3A%20PacManBot.Games.BaseGame.%23ctor(System.UInt64%5B%5D%2CIServiceProvider)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/BaseGame.cs/#L66">View Source</a>
   </span>
   <a id="PacManBot_Games_BaseGame__ctor_" data-uid="PacManBot.Games.BaseGame.#ctor*"></a>
-  <h4 id="PacManBot_Games_BaseGame__ctor_System_UInt64___System_IServiceProvider_" data-uid="PacManBot.Games.BaseGame.#ctor(System.UInt64[],System.IServiceProvider)">BaseGame(UInt64[], IServiceProvider)</h4>
+  <h4 id="PacManBot_Games_BaseGame__ctor_System_UInt64___IServiceProvider_" data-uid="PacManBot.Games.BaseGame.#ctor(System.UInt64[],IServiceProvider)">BaseGame(UInt64[], IServiceProvider)</h4>
   <div class="markdown level1 summary"><p>Creates a new game instance with the specified players.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -167,7 +143,7 @@
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.IServiceProvider</span></td>
+        <td><span class="xref">IServiceProvider</span></td>
         <td><span class="parametername">services</span></td>
         <td></td>
       </tr>
@@ -259,7 +235,7 @@ ongoing Discord message editions to prevent them from piling up when new ones co
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.CancellationTokenSource</span></td>
+        <td><span class="xref">CancellationTokenSource</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -295,17 +271,17 @@ ongoing Discord message editions to prevent them from piling up when new ones co
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_BaseGame_logger.md&amp;value=---%0Auid%3A%20PacManBot.Games.BaseGame.logger%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_BaseGame_log.md&amp;value=---%0Auid%3A%20PacManBot.Games.BaseGame.log%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/BaseGame.cs/#L16">View Source</a>
   </span>
-  <h4 id="PacManBot_Games_BaseGame_logger" data-uid="PacManBot.Games.BaseGame.logger">logger</h4>
+  <h4 id="PacManBot_Games_BaseGame_log" data-uid="PacManBot.Games.BaseGame.log">log</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected LoggingService logger</code></pre>
+    <pre><code class="lang-csharp hljs">protected LoggingService log</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -409,7 +385,7 @@ ongoing Discord message editions to prevent them from piling up when new ones co
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.TimeSpan</span></td>
+        <td><span class="xref">TimeSpan</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -502,7 +478,7 @@ ongoing Discord message editions to prevent them from piling up when new ones co
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.DateTime</span></td>
+        <td><span class="xref">DateTime</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -533,7 +509,7 @@ ongoing Discord message editions to prevent them from piling up when new ones co
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Discord.IUser</span></td>
+        <td><span class="xref">IUser</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -690,7 +666,7 @@ ongoing Discord message editions to prevent them from piling up when new ones co
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Discord.EmbedBuilder</span></td>
+        <td><span class="xref">EmbedBuilder</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -802,7 +778,7 @@ ongoing Discord message editions to prevent them from piling up when new ones co
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Discord.EmbedBuilder</span></td>
+        <td><span class="xref">EmbedBuilder</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -816,7 +792,7 @@ ongoing Discord message editions to prevent them from piling up when new ones co
   </span>
   <a id="PacManBot_Games_BaseGame_GetMessageUpdate_" data-uid="PacManBot.Games.BaseGame.GetMessageUpdate*"></a>
   <h4 id="PacManBot_Games_BaseGame_GetMessageUpdate" data-uid="PacManBot.Games.BaseGame.GetMessageUpdate">GetMessageUpdate()</h4>
-  <div class="markdown level1 summary"><p>Creates a delegate to be passed to <span class="xref">Discord.IUserMessage.ModifyAsync(System.Action{Discord.MessageProperties},Discord.RequestOptions)</span>.
+  <div class="markdown level1 summary"><p>Creates a delegate to be passed to <see cref="!:IUserMessage.ModifyAsync(Action&lt;MessageProperties>, RequestOptions)"></see>.
 The message will be updated with the latest content and embed from this game.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -834,7 +810,7 @@ The message will be updated with the latest content and embed from this game.</p
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Action</span>&lt;<span class="xref">Discord.MessageProperties</span>&gt;</td>
+        <td><span class="xref">Action</span>&lt;<span class="xref">MessageProperties</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -848,7 +824,7 @@ The message will be updated with the latest content and embed from this game.</p
   </span>
   <a id="PacManBot_Games_BaseGame_GetRequestOptions_" data-uid="PacManBot.Games.BaseGame.GetRequestOptions*"></a>
   <h4 id="PacManBot_Games_BaseGame_GetRequestOptions" data-uid="PacManBot.Games.BaseGame.GetRequestOptions">GetRequestOptions()</h4>
-  <div class="markdown level1 summary"><p>Creates a <span class="xref">Discord.RequestOptions</span> to be used in Discord tasks related to this game,
+  <div class="markdown level1 summary"><p>Creates a <see cref="!:RequestOptions"></see> to be used in Discord tasks related to this game,
 such as message editions. Tasks with these options can be cancelled using <a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_CancelRequests">CancelRequests()</a>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -866,20 +842,20 @@ such as message editions. Tasks with these options can be cancelled using <a cla
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Discord.RequestOptions</span></td>
+        <td><span class="xref">RequestOptions</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_BaseGame_SetServices_System_IServiceProvider_.md&amp;value=---%0Auid%3A%20PacManBot.Games.BaseGame.SetServices(System.IServiceProvider)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_BaseGame_SetServices_IServiceProvider_.md&amp;value=---%0Auid%3A%20PacManBot.Games.BaseGame.SetServices(IServiceProvider)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/BaseGame.cs/#L78">View Source</a>
   </span>
   <a id="PacManBot_Games_BaseGame_SetServices_" data-uid="PacManBot.Games.BaseGame.SetServices*"></a>
-  <h4 id="PacManBot_Games_BaseGame_SetServices_System_IServiceProvider_" data-uid="PacManBot.Games.BaseGame.SetServices(System.IServiceProvider)">SetServices(IServiceProvider)</h4>
+  <h4 id="PacManBot_Games_BaseGame_SetServices_IServiceProvider_" data-uid="PacManBot.Games.BaseGame.SetServices(IServiceProvider)">SetServices(IServiceProvider)</h4>
   <div class="markdown level1 summary"><p>Sets the services that will be used by this game instance.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -898,7 +874,7 @@ such as message editions. Tasks with these options can be cancelled using <a cla
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.IServiceProvider</span></td>
+        <td><span class="xref">IServiceProvider</span></td>
         <td><span class="parametername">services</span></td>
         <td></td>
       </tr>
@@ -907,10 +883,6 @@ such as message editions. Tasks with these options can be cancelled using <a cla
   <h3 id="implements">Implements</h3>
   <div>
       <a class="xref" href="PacManBot.Games.IBaseGame.html">IBaseGame</a>
-  </div>
-  <h3 id="extensionmethods">Extension Methods</h3>
-  <div>
-      <a class="xref" href="PacManBot.Extensions.GameExtensions.html#PacManBot_Extensions_GameExtensions_IdentifierId_PacManBot_Games_IBaseGame_">GameExtensions.IdentifierId(IBaseGame)</a>
   </div>
 </article>
           </div>

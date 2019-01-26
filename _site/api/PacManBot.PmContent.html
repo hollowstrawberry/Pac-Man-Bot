@@ -81,36 +81,11 @@
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><span class="xref">PmContent</span></div>
   </div>
-  <div class="inheritedMembers">
-    <h5>Inherited Members</h5>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetHashCode()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ToString()</span>
-    </div>
-  </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="PacManBot.html">PacManBot</a></h6>
   <h6><strong>Assembly</strong>: Pacman.dll</h6>
   <h5 id="PacManBot_PmContent_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[DataContract]
-public class PmContent</code></pre>
+    <pre><code class="lang-csharp hljs">public class PmContent : object</code></pre>
   </div>
   <h3 id="fields">Fields
   </h3>
@@ -127,8 +102,7 @@ public class PmContent</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[DataMember]
-public readonly string about</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly string about</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -158,8 +132,7 @@ public readonly string about</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[DataMember]
-public readonly (string name, string desc)[] aboutFields</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly (string name, string desc)[] aboutFields</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -189,8 +162,7 @@ public readonly (string name, string desc)[] aboutFields</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[DataMember]
-public readonly string customHelp</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly string customHelp</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -220,8 +192,7 @@ public readonly string customHelp</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[DataMember]
-public readonly (string name, string url)[] customLinks</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly (string name, string url)[] customLinks</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -251,8 +222,7 @@ public readonly (string name, string url)[] customLinks</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[DataMember]
-public readonly string gameHelp</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly string gameHelp</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -282,8 +252,7 @@ public readonly string gameHelp</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[DataMember]
-public readonly string gameMap</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly string gameMap</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -313,8 +282,7 @@ public readonly string gameMap</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[DataMember]
-public readonly string[] gameNotWinTexts</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly string[] gameNotWinTexts</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -344,8 +312,7 @@ public readonly string[] gameNotWinTexts</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[DataMember]
-public readonly string[] gamePlayingTexts</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly string[] gamePlayingTexts</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -375,8 +342,7 @@ public readonly string[] gamePlayingTexts</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[DataMember]
-public readonly string[] gameStartTexts</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly string[] gameStartTexts</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -406,8 +372,7 @@ public readonly string[] gameStartTexts</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[DataMember]
-public readonly string[] gameWinTexts</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly string[] gameWinTexts</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -437,8 +402,7 @@ public readonly string[] gameWinTexts</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[DataMember]
-public readonly string githubLink</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly string githubLink</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -468,8 +432,7 @@ public readonly string githubLink</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[DataMember]
-public readonly string inviteLink</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly string inviteLink</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -499,8 +462,7 @@ public readonly string inviteLink</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[DataMember]
-public readonly string[] petCleanEmotes</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly string[] petCleanEmotes</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -530,8 +492,7 @@ public readonly string[] petCleanEmotes</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[DataMember]
-public readonly string[] petFoodEmotes</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly string[] petFoodEmotes</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -561,8 +522,7 @@ public readonly string[] petFoodEmotes</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[DataMember]
-public readonly string petImageUrl</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly string petImageUrl</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -592,8 +552,7 @@ public readonly string petImageUrl</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[DataMember]
-public readonly string[] petPlayEmotes</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly string[] petPlayEmotes</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -623,8 +582,7 @@ public readonly string[] petPlayEmotes</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[DataMember]
-public readonly string[] petSleepEmotes</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly string[] petSleepEmotes</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -654,8 +612,7 @@ public readonly string[] petSleepEmotes</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[DataMember]
-public readonly string[] pettingMessages</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly string[] pettingMessages</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -685,8 +642,7 @@ public readonly string[] pettingMessages</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[DataMember]
-public readonly string serverLink</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly string serverLink</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -716,8 +672,7 @@ public readonly string serverLink</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[DataMember]
-public readonly string[] superPettingMessages</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly string[] superPettingMessages</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">

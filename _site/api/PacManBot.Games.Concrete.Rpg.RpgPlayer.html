@@ -150,31 +150,12 @@
     <div>
       <a class="xref" href="PacManBot.Games.Concrete.Rpg.Entity.html#PacManBot_Games_Concrete_Rpg_Entity_AddBuff__1_System_Int32_">Entity.AddBuff&lt;TBuff&gt;(Int32)</a>
     </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetHashCode()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="PacManBot.Games.Concrete.Rpg.html">PacManBot.Games.Concrete.Rpg</a></h6>
   <h6><strong>Assembly</strong>: Pacman.dll</h6>
   <h5 id="PacManBot_Games_Concrete_Rpg_RpgPlayer_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[DataContract]
-public class RpgPlayer : Entity</code></pre>
+    <pre><code class="lang-csharp hljs">public class RpgPlayer : Entity</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -225,8 +206,7 @@ public class RpgPlayer : Entity</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[DataMember]
-public string armor</code></pre>
+    <pre><code class="lang-csharp hljs">public string armor</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -256,8 +236,7 @@ public string armor</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[DataMember]
-public int experience</code></pre>
+    <pre><code class="lang-csharp hljs">public int experience</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -287,8 +266,7 @@ public int experience</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[DataMember]
-public List&lt;string&gt; inventory</code></pre>
+    <pre><code class="lang-csharp hljs">public List&lt;string&gt; inventory</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -300,7 +278,7 @@ public List&lt;string&gt; inventory</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.List</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td><span class="xref">List</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -318,7 +296,7 @@ public List&lt;string&gt; inventory</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public const int LevelCap = 50</code></pre>
+    <pre><code class="lang-csharp hljs">public const int LevelCap = null</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -348,7 +326,7 @@ public List&lt;string&gt; inventory</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public const int SkillMax = 30</code></pre>
+    <pre><code class="lang-csharp hljs">public const int SkillMax = null</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -378,8 +356,7 @@ public List&lt;string&gt; inventory</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[DataMember]
-public int skillPoints</code></pre>
+    <pre><code class="lang-csharp hljs">public int skillPoints</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -409,8 +386,7 @@ public int skillPoints</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[DataMember]
-public Dictionary&lt;SkillType, int&gt; spentSkill</code></pre>
+    <pre><code class="lang-csharp hljs">public Dictionary&lt;SkillType, int&gt; spentSkill</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -422,7 +398,7 @@ public Dictionary&lt;SkillType, int&gt; spentSkill</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.Dictionary</span>&lt;<a class="xref" href="PacManBot.Games.Concrete.Rpg.SkillType.html">SkillType</a>, <span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="xref">Dictionary</span>&lt;<a class="xref" href="PacManBot.Games.Concrete.Rpg.SkillType.html">SkillType</a>, <span class="xref">System.Int32</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -440,8 +416,7 @@ public Dictionary&lt;SkillType, int&gt; spentSkill</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[DataMember]
-public string weapon</code></pre>
+    <pre><code class="lang-csharp hljs">public string weapon</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -486,7 +461,7 @@ public string weapon</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="PacManBot.Games.Concrete.Rpg.Equipment.html">Equipment</a>&gt;</td>
+        <td><span class="xref">IEnumerable</span>&lt;<a class="xref" href="PacManBot.Games.Concrete.Rpg.Equipment.html">Equipment</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -517,7 +492,7 @@ public string weapon</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Discord.Color</span></td>
+        <td><span class="xref">Color</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -536,8 +511,7 @@ public string weapon</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[DataMember]
-public int Level { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public int Level { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -630,8 +604,7 @@ public int Level { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[DataMember]
-public int MaxMana { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public int MaxMana { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -738,7 +711,7 @@ public int MaxMana { get; set; }</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="PacManBot.Games.Concrete.Rpg.Skill.html">Skill</a>&gt;</td>
+        <td><span class="xref">List</span>&lt;<a class="xref" href="PacManBot.Games.Concrete.Rpg.Skill.html">Skill</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -860,19 +833,19 @@ public int MaxMana { get; set; }</code></pre>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_Rpg_RpgPlayer_Profile_System_String_System_Boolean_.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.Rpg.RpgPlayer.Profile(System.String%2CSystem.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_Rpg_RpgPlayer_Profile_System_String_System_Boolean_System_Boolean_.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.Rpg.RpgPlayer.Profile(System.String%2CSystem.Boolean%2CSystem.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/Rpg/RpgPlayer.cs/#L213">View Source</a>
   </span>
   <a id="PacManBot_Games_Concrete_Rpg_RpgPlayer_Profile_" data-uid="PacManBot.Games.Concrete.Rpg.RpgPlayer.Profile*"></a>
-  <h4 id="PacManBot_Games_Concrete_Rpg_RpgPlayer_Profile_System_String_System_Boolean_" data-uid="PacManBot.Games.Concrete.Rpg.RpgPlayer.Profile(System.String,System.Boolean)">Profile(String, Boolean)</h4>
+  <h4 id="PacManBot_Games_Concrete_Rpg_RpgPlayer_Profile_System_String_System_Boolean_System_Boolean_" data-uid="PacManBot.Games.Concrete.Rpg.RpgPlayer.Profile(System.String,System.Boolean,System.Boolean)">Profile(String, Boolean, Boolean)</h4>
   <div class="markdown level1 summary"><p>Obtain a Discord embed with this person's profile.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public EmbedBuilder Profile(string channelPrefix = &quot;&quot;, bool reaction = false)</code></pre>
+    <pre><code class="lang-csharp hljs">public EmbedBuilder Profile(string channelPrefix = &quot;&quot;, bool own = true, bool reaction = false)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -887,6 +860,11 @@ public int MaxMana { get; set; }</code></pre>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">channelPrefix</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">own</span></td>
         <td></td>
       </tr>
       <tr>
@@ -906,7 +884,7 @@ public int MaxMana { get; set; }</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Discord.EmbedBuilder</span></td>
+        <td><span class="xref">EmbedBuilder</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -949,7 +927,7 @@ public int MaxMana { get; set; }</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_Rpg_RpgPlayer_Skills_System_String_System_Boolean_.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.Rpg.RpgPlayer.Skills(System.String%2CSystem.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/Rpg/RpgPlayer.cs/#L253">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/Rpg/RpgPlayer.cs/#L257">View Source</a>
   </span>
   <a id="PacManBot_Games_Concrete_Rpg_RpgPlayer_Skills_" data-uid="PacManBot.Games.Concrete.Rpg.RpgPlayer.Skills*"></a>
   <h4 id="PacManBot_Games_Concrete_Rpg_RpgPlayer_Skills_System_String_System_Boolean_" data-uid="PacManBot.Games.Concrete.Rpg.RpgPlayer.Skills(System.String,System.Boolean)">Skills(String, Boolean)</h4>
@@ -992,7 +970,7 @@ public int MaxMana { get; set; }</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Discord.EmbedBuilder</span></td>
+        <td><span class="xref">EmbedBuilder</span></td>
         <td></td>
       </tr>
     </tbody>

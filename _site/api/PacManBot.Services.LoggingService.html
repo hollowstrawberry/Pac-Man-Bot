@@ -73,7 +73,7 @@
   
   <h1 id="PacManBot_Services_LoggingService" data-uid="PacManBot.Services.LoggingService" class="text-break">Class LoggingService
   </h1>
-  <div class="markdown level0 summary"><p>Receives and logs messages to the console and on disk, from everywhere in the bot.</p>
+  <div class="markdown level0 summary"><p>Receives and logs messages from everywhere in the bot.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
@@ -81,52 +81,28 @@
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><span class="xref">LoggingService</span></div>
   </div>
-  <div class="inheritedMembers">
-    <h5>Inherited Members</h5>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetHashCode()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ToString()</span>
-    </div>
-  </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="PacManBot.Services.html">PacManBot.Services</a></h6>
   <h6><strong>Assembly</strong>: Pacman.dll</h6>
   <h5 id="PacManBot_Services_LoggingService_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class LoggingService</code></pre>
+    <pre><code class="lang-csharp hljs">public class LoggingService : IDisposable</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Services_LoggingService__ctor_PacManBot_PmConfig_PacManBot_Services_PmDiscordClient_.md&amp;value=---%0Auid%3A%20PacManBot.Services.LoggingService.%23ctor(PacManBot.PmConfig%2CPacManBot.Services.PmDiscordClient)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Services_LoggingService__ctor_PacManBot_PmConfig_.md&amp;value=---%0Auid%3A%20PacManBot.Services.LoggingService.%23ctor(PacManBot.PmConfig)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Services/LoggingService.cs/#L22">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Services/LoggingService.cs/#L23">View Source</a>
   </span>
   <a id="PacManBot_Services_LoggingService__ctor_" data-uid="PacManBot.Services.LoggingService.#ctor*"></a>
-  <h4 id="PacManBot_Services_LoggingService__ctor_PacManBot_PmConfig_PacManBot_Services_PmDiscordClient_" data-uid="PacManBot.Services.LoggingService.#ctor(PacManBot.PmConfig,PacManBot.Services.PmDiscordClient)">LoggingService(PmConfig, PmDiscordClient)</h4>
+  <h4 id="PacManBot_Services_LoggingService__ctor_PacManBot_PmConfig_" data-uid="PacManBot.Services.LoggingService.#ctor(PacManBot.PmConfig)">LoggingService(PmConfig)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public LoggingService(PmConfig config, PmDiscordClient client)</code></pre>
+    <pre><code class="lang-csharp hljs">public LoggingService(PmConfig config)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -143,93 +119,25 @@
         <td><span class="parametername">config</span></td>
         <td></td>
       </tr>
-      <tr>
-        <td><a class="xref" href="PacManBot.Services.PmDiscordClient.html">PmDiscordClient</a></td>
-        <td><span class="parametername">client</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h3 id="fields">Fields
-  </h3>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Services_LoggingService_LogDirectory.md&amp;value=---%0Auid%3A%20PacManBot.Services.LoggingService.LogDirectory%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Services/LoggingService.cs/#L18">View Source</a>
-  </span>
-  <h4 id="PacManBot_Services_LoggingService_LogDirectory" data-uid="PacManBot.Services.LoggingService.LogDirectory">LogDirectory</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public const string LogDirectory = &quot;logs/&quot;</code></pre>
-  </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h3 id="properties">Properties
-  </h3>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Services_LoggingService_LogFile.md&amp;value=---%0Auid%3A%20PacManBot.Services.LoggingService.LogFile%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Services/LoggingService.cs/#L19">View Source</a>
-  </span>
-  <a id="PacManBot_Services_LoggingService_LogFile_" data-uid="PacManBot.Services.LoggingService.LogFile*"></a>
-  <h4 id="PacManBot_Services_LoggingService_LogFile" data-uid="PacManBot.Services.LoggingService.LogFile">LogFile</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string LogFile { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td></td>
-      </tr>
     </tbody>
   </table>
   <h3 id="methods">Methods
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Services_LoggingService_Log_Discord_LogMessage_.md&amp;value=---%0Auid%3A%20PacManBot.Services.LoggingService.Log(Discord.LogMessage)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Services_LoggingService_ClientLog_LogMessage_.md&amp;value=---%0Auid%3A%20PacManBot.Services.LoggingService.ClientLog(LogMessage)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Services/LoggingService.cs/#L32">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Services/LoggingService.cs/#L39">View Source</a>
   </span>
-  <a id="PacManBot_Services_LoggingService_Log_" data-uid="PacManBot.Services.LoggingService.Log*"></a>
-  <h4 id="PacManBot_Services_LoggingService_Log_Discord_LogMessage_" data-uid="PacManBot.Services.LoggingService.Log(Discord.LogMessage)">Log(LogMessage)</h4>
-  <div class="markdown level1 summary"><p>Logs an entry to the console and to disk.</p>
+  <a id="PacManBot_Services_LoggingService_ClientLog_" data-uid="PacManBot.Services.LoggingService.ClientLog*"></a>
+  <h4 id="PacManBot_Services_LoggingService_ClientLog_LogMessage_" data-uid="PacManBot.Services.LoggingService.ClientLog(LogMessage)">ClientLog(LogMessage)</h4>
+  <div class="markdown level1 summary"><p>Logs a message sent from a discord client.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Task Log(LogMessage message)</code></pre>
+    <pre><code class="lang-csharp hljs">public Task ClientLog(LogMessage log)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -242,8 +150,8 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Discord.LogMessage</span></td>
-        <td><span class="parametername">message</span></td>
+        <td><span class="xref">LogMessage</span></td>
+        <td><span class="parametername">log</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -258,26 +166,26 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td><span class="xref">Task</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Services_LoggingService_Log_Discord_LogSeverity_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Services.LoggingService.Log(Discord.LogSeverity%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Services_LoggingService_Debug_System_String_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Services.LoggingService.Debug(System.String%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Services/LoggingService.cs/#L64">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Services/LoggingService.cs/#L71">View Source</a>
   </span>
-  <a id="PacManBot_Services_LoggingService_Log_" data-uid="PacManBot.Services.LoggingService.Log*"></a>
-  <h4 id="PacManBot_Services_LoggingService_Log_Discord_LogSeverity_System_String_" data-uid="PacManBot.Services.LoggingService.Log(Discord.LogSeverity,System.String)">Log(LogSeverity, String)</h4>
-  <div class="markdown level1 summary"><p>Logs an entry to the console and to disk, using the default log source name.</p>
+  <a id="PacManBot_Services_LoggingService_Debug_" data-uid="PacManBot.Services.LoggingService.Debug*"></a>
+  <h4 id="PacManBot_Services_LoggingService_Debug_System_String_System_String_" data-uid="PacManBot.Services.LoggingService.Debug(System.String,System.String)">Debug(String, String)</h4>
+  <div class="markdown level1 summary"><p>Logs a message.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Task Log(LogSeverity severity, string message)</code></pre>
+    <pre><code class="lang-csharp hljs">public void Debug(string message, string source = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -289,48 +197,49 @@
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td><span class="xref">Discord.LogSeverity</span></td>
-        <td><span class="parametername">severity</span></td>
-        <td></td>
-      </tr>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">message</span></td>
         <td></td>
       </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
       <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">source</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Services_LoggingService_Log_Discord_LogSeverity_System_String_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Services.LoggingService.Log(Discord.LogSeverity%2CSystem.String%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Services_LoggingService_Dispose.md&amp;value=---%0Auid%3A%20PacManBot.Services.LoggingService.Dispose%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Services/LoggingService.cs/#L61">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Services/LoggingService.cs/#L96">View Source</a>
   </span>
-  <a id="PacManBot_Services_LoggingService_Log_" data-uid="PacManBot.Services.LoggingService.Log*"></a>
-  <h4 id="PacManBot_Services_LoggingService_Log_Discord_LogSeverity_System_String_System_String_" data-uid="PacManBot.Services.LoggingService.Log(Discord.LogSeverity,System.String,System.String)">Log(LogSeverity, String, String)</h4>
-  <div class="markdown level1 summary"><p>Logs an entry to the console and to disk.</p>
+  <a id="PacManBot_Services_LoggingService_Dispose_" data-uid="PacManBot.Services.LoggingService.Dispose*"></a>
+  <h4 id="PacManBot_Services_LoggingService_Dispose" data-uid="PacManBot.Services.LoggingService.Dispose">Dispose()</h4>
+  <div class="markdown level1 summary"><p>Release all resources used for logging.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Task Log(LogSeverity severity, string source, string message)</code></pre>
+    <pre><code class="lang-csharp hljs">public void Dispose()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Services_LoggingService_Error_System_String_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Services.LoggingService.Error(System.String%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Services/LoggingService.cs/#L87">View Source</a>
+  </span>
+  <a id="PacManBot_Services_LoggingService_Error_" data-uid="PacManBot.Services.LoggingService.Error*"></a>
+  <h4 id="PacManBot_Services_LoggingService_Error_System_String_System_String_" data-uid="PacManBot.Services.LoggingService.Error(System.String,System.String)">Error(String, String)</h4>
+  <div class="markdown level1 summary"><p>Logs a message.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Error(string message, string source = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -343,7 +252,170 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Discord.LogSeverity</span></td>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">message</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">source</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Services_LoggingService_Exception_System_String_Exception_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Services.LoggingService.Exception(System.String%2CException%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Services/LoggingService.cs/#L56">View Source</a>
+  </span>
+  <a id="PacManBot_Services_LoggingService_Exception_" data-uid="PacManBot.Services.LoggingService.Exception*"></a>
+  <h4 id="PacManBot_Services_LoggingService_Exception_System_String_Exception_System_String_" data-uid="PacManBot.Services.LoggingService.Exception(System.String,Exception,System.String)">Exception(String, Exception, String)</h4>
+  <div class="markdown level1 summary"><p>Logs an exception. Connection-related exceptions will be treated as warnings,
+while any other exception will be treated as an error.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Exception(string message, Exception e, string source = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">message</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">Exception</span></td>
+        <td><span class="parametername">e</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">source</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Services_LoggingService_Fatal_System_String_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Services.LoggingService.Fatal(System.String%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Services/LoggingService.cs/#L91">View Source</a>
+  </span>
+  <a id="PacManBot_Services_LoggingService_Fatal_" data-uid="PacManBot.Services.LoggingService.Fatal*"></a>
+  <h4 id="PacManBot_Services_LoggingService_Fatal_System_String_System_String_" data-uid="PacManBot.Services.LoggingService.Fatal(System.String,System.String)">Fatal(String, String)</h4>
+  <div class="markdown level1 summary"><p>Logs a message.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Fatal(string message, string source = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">message</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">source</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Services_LoggingService_Info_System_String_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Services.LoggingService.Info(System.String%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Services/LoggingService.cs/#L79">View Source</a>
+  </span>
+  <a id="PacManBot_Services_LoggingService_Info_" data-uid="PacManBot.Services.LoggingService.Info*"></a>
+  <h4 id="PacManBot_Services_LoggingService_Info_System_String_System_String_" data-uid="PacManBot.Services.LoggingService.Info(System.String,System.String)">Info(String, String)</h4>
+  <div class="markdown level1 summary"><p>Logs a message.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Info(string message, string source = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">message</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">source</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Services_LoggingService_Log_System_String_LogSeverity_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Services.LoggingService.Log(System.String%2CLogSeverity%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Services/LoggingService.cs/#L47">View Source</a>
+  </span>
+  <a id="PacManBot_Services_LoggingService_Log_" data-uid="PacManBot.Services.LoggingService.Log*"></a>
+  <h4 id="PacManBot_Services_LoggingService_Log_System_String_LogSeverity_System_String_" data-uid="PacManBot.Services.LoggingService.Log(System.String,LogSeverity,System.String)">Log(String, LogSeverity, String)</h4>
+  <div class="markdown level1 summary"><p>Logs a message.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Log(string message, LogSeverity severity, string source = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">message</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">LogSeverity</span></td>
         <td><span class="parametername">severity</span></td>
         <td></td>
       </tr>
@@ -352,43 +424,23 @@
         <td><span class="parametername">source</span></td>
         <td></td>
       </tr>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">message</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
-        <td></td>
-      </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Services_LoggingService_Log_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Services.LoggingService.Log(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Services_LoggingService_Verbose_System_String_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Services.LoggingService.Verbose(System.String%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Services/LoggingService.cs/#L70">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Services/LoggingService.cs/#L75">View Source</a>
   </span>
-  <a id="PacManBot_Services_LoggingService_Log_" data-uid="PacManBot.Services.LoggingService.Log*"></a>
-  <h4 id="PacManBot_Services_LoggingService_Log_System_String_" data-uid="PacManBot.Services.LoggingService.Log(System.String)">Log(String)</h4>
-  <div class="markdown level1 summary"><p>Logs an entry to the console and to disk, using the default log severity and name source.</p>
+  <a id="PacManBot_Services_LoggingService_Verbose_" data-uid="PacManBot.Services.LoggingService.Verbose*"></a>
+  <h4 id="PacManBot_Services_LoggingService_Verbose_System_String_System_String_" data-uid="PacManBot.Services.LoggingService.Verbose(System.String,System.String)">Verbose(String, String)</h4>
+  <div class="markdown level1 summary"><p>Logs a message.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Task Log(string message)</code></pre>
+    <pre><code class="lang-csharp hljs">public void Verbose(string message, string source = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -405,72 +457,47 @@
         <td><span class="parametername">message</span></td>
         <td></td>
       </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Services_LoggingService_Log_System_String_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Services.LoggingService.Log(System.String%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Services/LoggingService.cs/#L67">View Source</a>
-  </span>
-  <a id="PacManBot_Services_LoggingService_Log_" data-uid="PacManBot.Services.LoggingService.Log*"></a>
-  <h4 id="PacManBot_Services_LoggingService_Log_System_String_System_String_" data-uid="PacManBot.Services.LoggingService.Log(System.String,System.String)">Log(String, String)</h4>
-  <div class="markdown level1 summary"><p>Logs an entry to the console and to disk, using the default log severity.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Task Log(string source, string message)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">source</span></td>
         <td></td>
       </tr>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">message</span></td>
-        <td></td>
-      </tr>
     </tbody>
   </table>
-  <h5 class="returns">Returns</h5>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Services_LoggingService_Warning_System_String_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Services.LoggingService.Warning(System.String%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Services/LoggingService.cs/#L83">View Source</a>
+  </span>
+  <a id="PacManBot_Services_LoggingService_Warning_" data-uid="PacManBot.Services.LoggingService.Warning*"></a>
+  <h4 id="PacManBot_Services_LoggingService_Warning_System_String_System_String_" data-uid="PacManBot.Services.LoggingService.Warning(System.String,System.String)">Warning(String, String)</h4>
+  <div class="markdown level1 summary"><p>Logs a message.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Warning(string message, string source = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
       <tr>
         <th>Type</th>
+        <th>Name</th>
         <th>Description</th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">message</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">source</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -486,7 +513,7 @@
                     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Services_LoggingService.md&amp;value=---%0Auid%3A%20PacManBot.Services.LoggingService%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Services/LoggingService.cs/#L13" class="contribution-link">View Source</a>
+                    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Services/LoggingService.cs/#L16" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

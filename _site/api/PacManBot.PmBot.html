@@ -81,52 +81,28 @@
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><span class="xref">PmBot</span></div>
   </div>
-  <div class="inheritedMembers">
-    <h5>Inherited Members</h5>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetHashCode()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ToString()</span>
-    </div>
-  </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="PacManBot.html">PacManBot</a></h6>
   <h6><strong>Assembly</strong>: Pacman.dll</h6>
   <h5 id="PacManBot_PmBot_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class PmBot</code></pre>
+    <pre><code class="lang-csharp hljs">public class PmBot : object</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_PmBot__ctor_PacManBot_PmConfig_PacManBot_Services_PmDiscordClient_PacManBot_Services_LoggingService_PacManBot_Services_StorageService_PacManBot_Services_GameService_PacManBot_Services_InputService_PacManBot_Services_SchedulingService_.md&amp;value=---%0Auid%3A%20PacManBot.PmBot.%23ctor(PacManBot.PmConfig%2CPacManBot.Services.PmDiscordClient%2CPacManBot.Services.LoggingService%2CPacManBot.Services.StorageService%2CPacManBot.Services.GameService%2CPacManBot.Services.InputService%2CPacManBot.Services.SchedulingService)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_PmBot__ctor_PacManBot_PmConfig_PacManBot_Services_PmDiscordClient_PacManBot_Services_LoggingService_PacManBot_Services_StorageService_PacManBot_Services_GameService_PacManBot_Services_InputService_PacManBot_Services_PmCommandService_PacManBot_Services_SchedulingService_.md&amp;value=---%0Auid%3A%20PacManBot.PmBot.%23ctor(PacManBot.PmConfig%2CPacManBot.Services.PmDiscordClient%2CPacManBot.Services.LoggingService%2CPacManBot.Services.StorageService%2CPacManBot.Services.GameService%2CPacManBot.Services.InputService%2CPacManBot.Services.PmCommandService%2CPacManBot.Services.SchedulingService)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/PmBot.cs/#L40">View Source</a>
   </span>
   <a id="PacManBot_PmBot__ctor_" data-uid="PacManBot.PmBot.#ctor*"></a>
-  <h4 id="PacManBot_PmBot__ctor_PacManBot_PmConfig_PacManBot_Services_PmDiscordClient_PacManBot_Services_LoggingService_PacManBot_Services_StorageService_PacManBot_Services_GameService_PacManBot_Services_InputService_PacManBot_Services_SchedulingService_" data-uid="PacManBot.PmBot.#ctor(PacManBot.PmConfig,PacManBot.Services.PmDiscordClient,PacManBot.Services.LoggingService,PacManBot.Services.StorageService,PacManBot.Services.GameService,PacManBot.Services.InputService,PacManBot.Services.SchedulingService)">PmBot(PmConfig, PmDiscordClient, LoggingService, StorageService, GameService, InputService, SchedulingService)</h4>
+  <h4 id="PacManBot_PmBot__ctor_PacManBot_PmConfig_PacManBot_Services_PmDiscordClient_PacManBot_Services_LoggingService_PacManBot_Services_StorageService_PacManBot_Services_GameService_PacManBot_Services_InputService_PacManBot_Services_PmCommandService_PacManBot_Services_SchedulingService_" data-uid="PacManBot.PmBot.#ctor(PacManBot.PmConfig,PacManBot.Services.PmDiscordClient,PacManBot.Services.LoggingService,PacManBot.Services.StorageService,PacManBot.Services.GameService,PacManBot.Services.InputService,PacManBot.Services.PmCommandService,PacManBot.Services.SchedulingService)">PmBot(PmConfig, PmDiscordClient, LoggingService, StorageService, GameService, InputService, PmCommandService, SchedulingService)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public PmBot(PmConfig config, PmDiscordClient client, LoggingService logger, StorageService storage, GameService games, InputService input, SchedulingService schedule)</code></pre>
+    <pre><code class="lang-csharp hljs">public PmBot(PmConfig config, PmDiscordClient client, LoggingService log, StorageService storage, GameService games, InputService input, PmCommandService commands, SchedulingService schedule)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -150,7 +126,7 @@
       </tr>
       <tr>
         <td><a class="xref" href="PacManBot.Services.LoggingService.html">LoggingService</a></td>
-        <td><span class="parametername">logger</span></td>
+        <td><span class="parametername">log</span></td>
         <td></td>
       </tr>
       <tr>
@@ -169,6 +145,11 @@
         <td></td>
       </tr>
       <tr>
+        <td><a class="xref" href="PacManBot.Services.PmCommandService.html">PmCommandService</a></td>
+        <td><span class="parametername">commands</span></td>
+        <td></td>
+      </tr>
+      <tr>
         <td><a class="xref" href="PacManBot.Services.SchedulingService.html">SchedulingService</a></td>
         <td><span class="parametername">schedule</span></td>
         <td></td>
@@ -182,7 +163,7 @@
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_PmBot_DefaultOptions.md&amp;value=---%0Auid%3A%20PacManBot.PmBot.DefaultOptions%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/PmBot.cs/#L21">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/PmBot.cs/#L20">View Source</a>
   </span>
   <h4 id="PacManBot_PmBot_DefaultOptions" data-uid="PacManBot.PmBot.DefaultOptions">DefaultOptions</h4>
   <div class="markdown level1 summary"></div>
@@ -201,7 +182,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Discord.RequestOptions</span></td>
+        <td><span class="xref">RequestOptions</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -213,7 +194,7 @@
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_PmBot_Config.md&amp;value=---%0Auid%3A%20PacManBot.PmBot.Config%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/PmBot.cs/#L27">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/PmBot.cs/#L26">View Source</a>
   </span>
   <a id="PacManBot_PmBot_Config_" data-uid="PacManBot.PmBot.Config*"></a>
   <h4 id="PacManBot_PmBot_Config" data-uid="PacManBot.PmBot.Config">Config</h4>
@@ -246,11 +227,11 @@
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_PmBot_StartAsync.md&amp;value=---%0Auid%3A%20PacManBot.PmBot.StartAsync%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/PmBot.cs/#L54">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/PmBot.cs/#L55">View Source</a>
   </span>
   <a id="PacManBot_PmBot_StartAsync_" data-uid="PacManBot.PmBot.StartAsync*"></a>
   <h4 id="PacManBot_PmBot_StartAsync" data-uid="PacManBot.PmBot.StartAsync">StartAsync()</h4>
-  <div class="markdown level1 summary"><p>Starts the bot's connection to Discord.</p>
+  <div class="markdown level1 summary"><p>Starts the bot and its connection to Discord.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -267,7 +248,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td><span class="xref">Task</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -277,7 +258,7 @@
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_PmBot_StopAsync.md&amp;value=---%0Auid%3A%20PacManBot.PmBot.StopAsync%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/PmBot.cs/#L94">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/PmBot.cs/#L101">View Source</a>
   </span>
   <a id="PacManBot_PmBot_StopAsync_" data-uid="PacManBot.PmBot.StopAsync*"></a>
   <h4 id="PacManBot_PmBot_StopAsync" data-uid="PacManBot.PmBot.StopAsync">StopAsync()</h4>
@@ -298,7 +279,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td><span class="xref">Task</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -314,7 +295,7 @@
                     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_PmBot.md&amp;value=---%0Auid%3A%20PacManBot.PmBot%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/PmBot.cs/#L19" class="contribution-link">View Source</a>
+                    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/PmBot.cs/#L18" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

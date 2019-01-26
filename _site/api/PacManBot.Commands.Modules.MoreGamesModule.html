@@ -78,9 +78,8 @@
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><span class="xref">Discord.Commands.ModuleBase</span>&lt;<a class="xref" href="PacManBot.Commands.PmCommandContext.html">PmCommandContext</a>&gt;</div>
-    <div class="level2"><a class="xref" href="PacManBot.Commands.PmBaseModule.html">PmBaseModule</a></div>
-    <div class="level3"><span class="xref">MoreGamesModule</span></div>
+    <div class="level1"><a class="xref" href="PacManBot.Commands.PmBaseModule.html">PmBaseModule</a></div>
+    <div class="level2"><span class="xref">MoreGamesModule</span></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
@@ -94,7 +93,7 @@
       <a class="xref" href="PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_Content">PmBaseModule.Content</a>
     </div>
     <div>
-      <a class="xref" href="PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_Logger">PmBaseModule.Logger</a>
+      <a class="xref" href="PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_Log">PmBaseModule.Log</a>
     </div>
     <div>
       <a class="xref" href="PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_Storage">PmBaseModule.Storage</a>
@@ -103,62 +102,26 @@
       <a class="xref" href="PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_Games">PmBaseModule.Games</a>
     </div>
     <div>
-      <a class="xref" href="PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_AfterExecute_Discord_Commands_CommandInfo_">PmBaseModule.AfterExecute(CommandInfo)</a>
+      <a class="xref" href="PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_ReplyAsync_System_String_System_Boolean_Embed_RequestOptions_">PmBaseModule.ReplyAsync(String, Boolean, Embed, RequestOptions)</a>
     </div>
     <div>
-      <a class="xref" href="PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_ReplyAsync_System_String_System_Boolean_Discord_Embed_Discord_RequestOptions_">PmBaseModule.ReplyAsync(String, Boolean, Embed, RequestOptions)</a>
+      <a class="xref" href="PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_ReplyAsync_System_Object_EmbedBuilder_RequestOptions_">PmBaseModule.ReplyAsync(Object, EmbedBuilder, RequestOptions)</a>
     </div>
     <div>
-      <a class="xref" href="PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_ReplyAsync_System_Object_Discord_EmbedBuilder_Discord_RequestOptions_">PmBaseModule.ReplyAsync(Object, EmbedBuilder, RequestOptions)</a>
+      <a class="xref" href="PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_ReplyAsync_System_Object_RequestOptions_">PmBaseModule.ReplyAsync(Object, RequestOptions)</a>
     </div>
     <div>
-      <a class="xref" href="PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_ReplyAsync_System_Object_Discord_RequestOptions_">PmBaseModule.ReplyAsync(Object, RequestOptions)</a>
-    </div>
-    <div>
-      <a class="xref" href="PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_ReplyAsync_Discord_EmbedBuilder_Discord_RequestOptions_">PmBaseModule.ReplyAsync(EmbedBuilder, RequestOptions)</a>
+      <a class="xref" href="PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_ReplyAsync_EmbedBuilder_RequestOptions_">PmBaseModule.ReplyAsync(EmbedBuilder, RequestOptions)</a>
     </div>
     <div>
       <a class="xref" href="PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_AutoReactAsync_System_Boolean_">PmBaseModule.AutoReactAsync(Boolean)</a>
-    </div>
-    <div>
-      <span class="xref">Discord.Commands.ModuleBase&lt;PacManBot.Commands.PmCommandContext&gt;.BeforeExecute(Discord.Commands.CommandInfo)</span>
-    </div>
-    <div>
-      <span class="xref">Discord.Commands.ModuleBase&lt;PacManBot.Commands.PmCommandContext&gt;.OnModuleBuilding(Discord.Commands.CommandService, Discord.Commands.Builders.ModuleBuilder)</span>
-    </div>
-    <div>
-      <span class="xref">Discord.Commands.ModuleBase&lt;PacManBot.Commands.PmCommandContext&gt;.Context</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetHashCode()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ToString()</span>
     </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="PacManBot.Commands.Modules.html">PacManBot.Commands.Modules</a></h6>
   <h6><strong>Assembly</strong>: Pacman.dll</h6>
   <h5 id="PacManBot_Commands_Modules_MoreGamesModule_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[Name(&quot;&#128126;More Games&quot;)]
-[Remarks(&quot;3&quot;)]
-[PmRequireBotPermission(ChannelPermission.AddReactions | ChannelPermission.EmbedLinks | ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis)]
-public class MoreGamesModule : PmBaseModule, IModuleBase</code></pre>
+    <pre><code class="lang-csharp hljs">public class MoreGamesModule : PmBaseModule</code></pre>
   </div>
   <h3 id="properties">Properties
   </h3>
@@ -247,7 +210,7 @@ public class MoreGamesModule : PmBaseModule, IModuleBase</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.IServiceProvider</span></td>
+        <td><span class="xref">IServiceProvider</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -267,12 +230,7 @@ public class MoreGamesModule : PmBaseModule, IModuleBase</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[Command(&quot;cancel&quot;)]
-[Alias(new string[]{&quot;end&quot;})]
-[Priority(-5)]
-[Remarks(&quot;Cancel any game you're playing. Always usable by moderators&quot;)]
-[Summary(&quot;Cancels the current game in this channel, but only if you started or if nobody has played in over a minute. Always usable by users with the Manage Messages permission.&quot;)]
-public Task CancelGame()</code></pre>
+    <pre><code class="lang-csharp hljs">public Task CancelGame()</code></pre>
   </div>
   <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -284,30 +242,25 @@ public Task CancelGame()</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td><span class="xref">Task</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_MoreGamesModule_JoinUno_Discord_WebSocket_SocketGuildUser_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.MoreGamesModule.JoinUno(Discord.WebSocket.SocketGuildUser)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_MoreGamesModule_JoinUno_SocketGuildUser_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.MoreGamesModule.JoinUno(SocketGuildUser)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Multiplayer.cs/#L172">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_MoreGamesModule_JoinUno_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.JoinUno*"></a>
-  <h4 id="PacManBot_Commands_Modules_MoreGamesModule_JoinUno_Discord_WebSocket_SocketGuildUser_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.JoinUno(Discord.WebSocket.SocketGuildUser)">JoinUno(SocketGuildUser)</h4>
+  <h4 id="PacManBot_Commands_Modules_MoreGamesModule_JoinUno_SocketGuildUser_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.JoinUno(SocketGuildUser)">JoinUno(SocketGuildUser)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[Command(&quot;uno join&quot;)]
-[Alias(new string[]{&quot;uno add&quot;, &quot;uno invite&quot;})]
-[Priority(-1)]
-[Summary(&quot;Joins an ongoing Uno game in this channel. Fails if the game is full or if there aren't enough cards to draw for you.\nYou can also invite a bot or another user to play.&quot;)]
-[RequireContext(ContextType.Guild)]
-public Task JoinUno(SocketGuildUser user = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public Task JoinUno(SocketGuildUser user = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -320,7 +273,7 @@ public Task JoinUno(SocketGuildUser user = null)</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Discord.WebSocket.SocketGuildUser</span></td>
+        <td><span class="xref">SocketGuildUser</span></td>
         <td><span class="parametername">user</span></td>
         <td></td>
       </tr>
@@ -336,30 +289,25 @@ public Task JoinUno(SocketGuildUser user = null)</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td><span class="xref">Task</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_MoreGamesModule_LeaveUno_Discord_WebSocket_SocketGuildUser_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.MoreGamesModule.LeaveUno(Discord.WebSocket.SocketGuildUser)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_MoreGamesModule_LeaveUno_SocketGuildUser_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.MoreGamesModule.LeaveUno(SocketGuildUser)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Multiplayer.cs/#L212">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_MoreGamesModule_LeaveUno_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.LeaveUno*"></a>
-  <h4 id="PacManBot_Commands_Modules_MoreGamesModule_LeaveUno_Discord_WebSocket_SocketGuildUser_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.LeaveUno(Discord.WebSocket.SocketGuildUser)">LeaveUno(SocketGuildUser)</h4>
+  <h4 id="PacManBot_Commands_Modules_MoreGamesModule_LeaveUno_SocketGuildUser_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.LeaveUno(SocketGuildUser)">LeaveUno(SocketGuildUser)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[Command(&quot;uno leave&quot;)]
-[Alias(new string[]{&quot;uno remove&quot;, &quot;uno kick&quot;})]
-[Priority(-1)]
-[Summary(&quot;Leaves the Uno game in this channel.\nYou can also remove a bot or inactive player.&quot;)]
-[RequireContext(ContextType.Guild)]
-public Task LeaveUno(SocketGuildUser user = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public Task LeaveUno(SocketGuildUser user = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -372,7 +320,7 @@ public Task LeaveUno(SocketGuildUser user = null)</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Discord.WebSocket.SocketGuildUser</span></td>
+        <td><span class="xref">SocketGuildUser</span></td>
         <td><span class="parametername">user</span></td>
         <td></td>
       </tr>
@@ -388,7 +336,7 @@ public Task LeaveUno(SocketGuildUser user = null)</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td><span class="xref">Task</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -398,7 +346,7 @@ public Task LeaveUno(SocketGuildUser user = null)</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_MoreGamesModule_PetAdopt_PacManBot_Games_Concrete_PetGame_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.MoreGamesModule.PetAdopt(PacManBot.Games.Concrete.PetGame%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Pet.cs/#L328">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Pet.cs/#L332">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_MoreGamesModule_PetAdopt_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.PetAdopt*"></a>
   <h4 id="PacManBot_Commands_Modules_MoreGamesModule_PetAdopt_PacManBot_Games_Concrete_PetGame_System_String_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.PetAdopt(PacManBot.Games.Concrete.PetGame,System.String)">PetAdopt(PetGame, String)</h4>
@@ -440,7 +388,7 @@ public Task LeaveUno(SocketGuildUser user = null)</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td><span class="xref">Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -450,7 +398,7 @@ public Task LeaveUno(SocketGuildUser user = null)</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_MoreGamesModule_PetClean_PacManBot_Games_Concrete_PetGame_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.MoreGamesModule.PetClean(PacManBot.Games.Concrete.PetGame%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Pet.cs/#L158">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Pet.cs/#L162">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_MoreGamesModule_PetClean_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.PetClean*"></a>
   <h4 id="PacManBot_Commands_Modules_MoreGamesModule_PetClean_PacManBot_Games_Concrete_PetGame_System_String_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.PetClean(PacManBot.Games.Concrete.PetGame,System.String)">PetClean(PetGame, String)</h4>
@@ -492,7 +440,7 @@ public Task LeaveUno(SocketGuildUser user = null)</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td><span class="xref">Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -502,7 +450,7 @@ public Task LeaveUno(SocketGuildUser user = null)</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_MoreGamesModule_PetFeed_PacManBot_Games_Concrete_PetGame_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.MoreGamesModule.PetFeed(PacManBot.Games.Concrete.PetGame%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Pet.cs/#L149">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Pet.cs/#L153">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_MoreGamesModule_PetFeed_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.PetFeed*"></a>
   <h4 id="PacManBot_Commands_Modules_MoreGamesModule_PetFeed_PacManBot_Games_Concrete_PetGame_System_String_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.PetFeed(PacManBot.Games.Concrete.PetGame,System.String)">PetFeed(PetGame, String)</h4>
@@ -544,7 +492,7 @@ public Task LeaveUno(SocketGuildUser user = null)</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td><span class="xref">Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -554,7 +502,7 @@ public Task LeaveUno(SocketGuildUser user = null)</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_MoreGamesModule_PetImage_PacManBot_Games_Concrete_PetGame_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.MoreGamesModule.PetImage(PacManBot.Games.Concrete.PetGame%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Pet.cs/#L250">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Pet.cs/#L254">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_MoreGamesModule_PetImage_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.PetImage*"></a>
   <h4 id="PacManBot_Commands_Modules_MoreGamesModule_PetImage_PacManBot_Games_Concrete_PetGame_System_String_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.PetImage(PacManBot.Games.Concrete.PetGame,System.String)">PetImage(PetGame, String)</h4>
@@ -596,7 +544,7 @@ public Task LeaveUno(SocketGuildUser user = null)</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td><span class="xref">Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -614,13 +562,7 @@ public Task LeaveUno(SocketGuildUser user = null)</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[Command(&quot;pet&quot;)]
-[Alias(new string[]{&quot;gotchi&quot;, &quot;wakagotchi&quot;, &quot;clockagotchi&quot;})]
-[Parameters(&quot;[command]&quot;)]
-[Priority(5)]
-[Remarks(&quot;Adopt your own pet!&quot;)]
-[Summary(&quot;**__Pet Commands__**\n\n**{prefix}pet** - Check on your pet or adopt if you don't have one\n**{prefix}pet stats [user]** - Check your pet or another's statistics and unlocks\n**{prefix}pet name &lt;name&gt;** - Name your pet\n**{prefix}pet image &lt;image&gt;** - Give your pet an image\n\n**{prefix}pet feed** - Fills your pet's Satiation and restores a little Energy\n**{prefix}pet clean** - Fills your pet's Hygiene\n**{prefix}pet play [user]** - Fills your pet's Happinness. It requires Energy, and consumes a little of every stat. You can make your pet play with another user's pet, in which case they get Happiness for free\n**{prefix}pet sleep/wakeup** - Sleep to restore Energy over time\n\n**{prefix}pet help** - This list of commands\n**{prefix}pet pet** - Pet your pet\n**{prefix}pet user &lt;user&gt;** - See another person's pet\n**{prefix}pet adopt [name]** - Adopt a new pet!\n**{prefix}pet release** - Gives your pet to a loving family that will take care of it (Deletes pet forever)&quot;)]
-public Task PetMaster(string commandName = &quot;&quot;, [Remainder] string args = &quot;&quot;)</code></pre>
+    <pre><code class="lang-csharp hljs">public Task PetMaster(string commandName = &quot;&quot;, string args = &quot;&quot;)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -654,7 +596,7 @@ public Task PetMaster(string commandName = &quot;&quot;, [Remainder] string args
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td><span class="xref">Task</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -664,7 +606,7 @@ public Task PetMaster(string commandName = &quot;&quot;, [Remainder] string args
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_MoreGamesModule_PetName_PacManBot_Games_Concrete_PetGame_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.MoreGamesModule.PetName(PacManBot.Games.Concrete.PetGame%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Pet.cs/#L236">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Pet.cs/#L240">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_MoreGamesModule_PetName_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.PetName*"></a>
   <h4 id="PacManBot_Commands_Modules_MoreGamesModule_PetName_PacManBot_Games_Concrete_PetGame_System_String_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.PetName(PacManBot.Games.Concrete.PetGame,System.String)">PetName(PetGame, String)</h4>
@@ -706,7 +648,7 @@ public Task PetMaster(string commandName = &quot;&quot;, [Remainder] string args
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td><span class="xref">Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -716,7 +658,7 @@ public Task PetMaster(string commandName = &quot;&quot;, [Remainder] string args
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_MoreGamesModule_PetPet_PacManBot_Games_Concrete_PetGame_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.MoreGamesModule.PetPet(PacManBot.Games.Concrete.PetGame%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Pet.cs/#L277">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Pet.cs/#L281">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_MoreGamesModule_PetPet_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.PetPet*"></a>
   <h4 id="PacManBot_Commands_Modules_MoreGamesModule_PetPet_PacManBot_Games_Concrete_PetGame_System_String_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.PetPet(PacManBot.Games.Concrete.PetGame,System.String)">PetPet(PetGame, String)</h4>
@@ -758,7 +700,7 @@ public Task PetMaster(string commandName = &quot;&quot;, [Remainder] string args
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td><span class="xref">Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -768,7 +710,7 @@ public Task PetMaster(string commandName = &quot;&quot;, [Remainder] string args
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_MoreGamesModule_PetPlay_PacManBot_Games_Concrete_PetGame_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.MoreGamesModule.PetPlay(PacManBot.Games.Concrete.PetGame%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Pet.cs/#L167">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Pet.cs/#L171">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_MoreGamesModule_PetPlay_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.PetPlay*"></a>
   <h4 id="PacManBot_Commands_Modules_MoreGamesModule_PetPlay_PacManBot_Games_Concrete_PetGame_System_String_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.PetPlay(PacManBot.Games.Concrete.PetGame,System.String)">PetPlay(PetGame, String)</h4>
@@ -810,7 +752,7 @@ public Task PetMaster(string commandName = &quot;&quot;, [Remainder] string args
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td><span class="xref">Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -820,7 +762,7 @@ public Task PetMaster(string commandName = &quot;&quot;, [Remainder] string args
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_MoreGamesModule_PetRelease_PacManBot_Games_Concrete_PetGame_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.MoreGamesModule.PetRelease(PacManBot.Games.Concrete.PetGame%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Pet.cs/#L340">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Pet.cs/#L344">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_MoreGamesModule_PetRelease_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.PetRelease*"></a>
   <h4 id="PacManBot_Commands_Modules_MoreGamesModule_PetRelease_PacManBot_Games_Concrete_PetGame_System_String_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.PetRelease(PacManBot.Games.Concrete.PetGame,System.String)">PetRelease(PetGame, String)</h4>
@@ -862,7 +804,7 @@ public Task PetMaster(string commandName = &quot;&quot;, [Remainder] string args
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td><span class="xref">Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -872,7 +814,7 @@ public Task PetMaster(string commandName = &quot;&quot;, [Remainder] string args
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_MoreGamesModule_PetSendExact_PacManBot_Games_Concrete_PetGame_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.MoreGamesModule.PetSendExact(PacManBot.Games.Concrete.PetGame%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Pet.cs/#L107">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Pet.cs/#L111">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_MoreGamesModule_PetSendExact_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.PetSendExact*"></a>
   <h4 id="PacManBot_Commands_Modules_MoreGamesModule_PetSendExact_PacManBot_Games_Concrete_PetGame_System_String_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.PetSendExact(PacManBot.Games.Concrete.PetGame,System.String)">PetSendExact(PetGame, String)</h4>
@@ -914,7 +856,7 @@ public Task PetMaster(string commandName = &quot;&quot;, [Remainder] string args
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td><span class="xref">Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -924,7 +866,7 @@ public Task PetMaster(string commandName = &quot;&quot;, [Remainder] string args
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_MoreGamesModule_PetSendHelp_PacManBot_Games_Concrete_PetGame_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.MoreGamesModule.PetSendHelp(PacManBot.Games.Concrete.PetGame%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Pet.cs/#L269">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Pet.cs/#L273">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_MoreGamesModule_PetSendHelp_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.PetSendHelp*"></a>
   <h4 id="PacManBot_Commands_Modules_MoreGamesModule_PetSendHelp_PacManBot_Games_Concrete_PetGame_System_String_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.PetSendHelp(PacManBot.Games.Concrete.PetGame,System.String)">PetSendHelp(PetGame, String)</h4>
@@ -966,7 +908,7 @@ public Task PetMaster(string commandName = &quot;&quot;, [Remainder] string args
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td><span class="xref">Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -976,7 +918,7 @@ public Task PetMaster(string commandName = &quot;&quot;, [Remainder] string args
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_MoreGamesModule_PetSendProfile_PacManBot_Games_Concrete_PetGame_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.MoreGamesModule.PetSendProfile(PacManBot.Games.Concrete.PetGame%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Pet.cs/#L99">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Pet.cs/#L103">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_MoreGamesModule_PetSendProfile_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.PetSendProfile*"></a>
   <h4 id="PacManBot_Commands_Modules_MoreGamesModule_PetSendProfile_PacManBot_Games_Concrete_PetGame_System_String_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.PetSendProfile(PacManBot.Games.Concrete.PetGame,System.String)">PetSendProfile(PetGame, String)</h4>
@@ -1018,7 +960,7 @@ public Task PetMaster(string commandName = &quot;&quot;, [Remainder] string args
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td><span class="xref">Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -1028,7 +970,7 @@ public Task PetMaster(string commandName = &quot;&quot;, [Remainder] string args
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_MoreGamesModule_PetSendStats_PacManBot_Games_Concrete_PetGame_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.MoreGamesModule.PetSendStats(PacManBot.Games.Concrete.PetGame%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Pet.cs/#L128">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Pet.cs/#L132">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_MoreGamesModule_PetSendStats_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.PetSendStats*"></a>
   <h4 id="PacManBot_Commands_Modules_MoreGamesModule_PetSendStats_PacManBot_Games_Concrete_PetGame_System_String_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.PetSendStats(PacManBot.Games.Concrete.PetGame,System.String)">PetSendStats(PetGame, String)</h4>
@@ -1070,7 +1012,7 @@ public Task PetMaster(string commandName = &quot;&quot;, [Remainder] string args
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td><span class="xref">Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -1080,7 +1022,7 @@ public Task PetMaster(string commandName = &quot;&quot;, [Remainder] string args
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_MoreGamesModule_PetSendUser_PacManBot_Games_Concrete_PetGame_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.MoreGamesModule.PetSendUser(PacManBot.Games.Concrete.PetGame%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Pet.cs/#L312">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Pet.cs/#L316">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_MoreGamesModule_PetSendUser_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.PetSendUser*"></a>
   <h4 id="PacManBot_Commands_Modules_MoreGamesModule_PetSendUser_PacManBot_Games_Concrete_PetGame_System_String_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.PetSendUser(PacManBot.Games.Concrete.PetGame,System.String)">PetSendUser(PetGame, String)</h4>
@@ -1122,7 +1064,7 @@ public Task PetMaster(string commandName = &quot;&quot;, [Remainder] string args
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td><span class="xref">Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -1132,7 +1074,7 @@ public Task PetMaster(string commandName = &quot;&quot;, [Remainder] string args
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_MoreGamesModule_PetSleep_PacManBot_Games_Concrete_PetGame_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.MoreGamesModule.PetSleep(PacManBot.Games.Concrete.PetGame%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Pet.cs/#L209">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Pet.cs/#L213">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_MoreGamesModule_PetSleep_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.PetSleep*"></a>
   <h4 id="PacManBot_Commands_Modules_MoreGamesModule_PetSleep_PacManBot_Games_Concrete_PetGame_System_String_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.PetSleep(PacManBot.Games.Concrete.PetGame,System.String)">PetSleep(PetGame, String)</h4>
@@ -1174,7 +1116,7 @@ public Task PetMaster(string commandName = &quot;&quot;, [Remainder] string args
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td><span class="xref">Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -1184,7 +1126,7 @@ public Task PetMaster(string commandName = &quot;&quot;, [Remainder] string args
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_MoreGamesModule_PetWake_PacManBot_Games_Concrete_PetGame_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.MoreGamesModule.PetWake(PacManBot.Games.Concrete.PetGame%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Pet.cs/#L226">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Pet.cs/#L230">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_MoreGamesModule_PetWake_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.PetWake*"></a>
   <h4 id="PacManBot_Commands_Modules_MoreGamesModule_PetWake_PacManBot_Games_Concrete_PetGame_System_String_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.PetWake(PacManBot.Games.Concrete.PetGame,System.String)">PetWake(PetGame, String)</h4>
@@ -1226,7 +1168,7 @@ public Task PetMaster(string commandName = &quot;&quot;, [Remainder] string args
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td><span class="xref">Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -1244,10 +1186,7 @@ public Task PetMaster(string commandName = &quot;&quot;, [Remainder] string args
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[Command(&quot;play&quot;)]
-[Parameters(&quot;&quot;)]
-[Summary(&quot;Do **{prefix}help** for games and commands.&quot;)]
-public Task PlayMessage([Remainder] string args = &quot;&quot;)</code></pre>
+    <pre><code class="lang-csharp hljs">public Task PlayMessage(string args = &quot;&quot;)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -1276,7 +1215,7 @@ public Task PlayMessage([Remainder] string args = &quot;&quot;)</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td><span class="xref">Task</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -1286,7 +1225,7 @@ public Task PlayMessage([Remainder] string args = &quot;&quot;)</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_MoreGamesModule_RpgCancelBattle_PacManBot_Games_Concrete_RpgGame_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.MoreGamesModule.RpgCancelBattle(PacManBot.Games.Concrete.RpgGame%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Rpg.cs/#L435">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Rpg.cs/#L448">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_MoreGamesModule_RpgCancelBattle_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.RpgCancelBattle*"></a>
   <h4 id="PacManBot_Commands_Modules_MoreGamesModule_RpgCancelBattle_PacManBot_Games_Concrete_RpgGame_System_String_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.RpgCancelBattle(PacManBot.Games.Concrete.RpgGame,System.String)">RpgCancelBattle(RpgGame, String)</h4>
@@ -1328,7 +1267,7 @@ public Task PlayMessage([Remainder] string args = &quot;&quot;)</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td><span class="xref">Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -1338,7 +1277,7 @@ public Task PlayMessage([Remainder] string args = &quot;&quot;)</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_MoreGamesModule_RpgDelete_PacManBot_Games_Concrete_RpgGame_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.MoreGamesModule.RpgDelete(PacManBot.Games.Concrete.RpgGame%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Rpg.cs/#L534">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Rpg.cs/#L547">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_MoreGamesModule_RpgDelete_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.RpgDelete*"></a>
   <h4 id="PacManBot_Commands_Modules_MoreGamesModule_RpgDelete_PacManBot_Games_Concrete_RpgGame_System_String_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.RpgDelete(PacManBot.Games.Concrete.RpgGame,System.String)">RpgDelete(RpgGame, String)</h4>
@@ -1380,7 +1319,7 @@ public Task PlayMessage([Remainder] string args = &quot;&quot;)</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td><span class="xref">Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -1390,7 +1329,7 @@ public Task PlayMessage([Remainder] string args = &quot;&quot;)</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_MoreGamesModule_RpgEquip_PacManBot_Games_Concrete_RpgGame_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.MoreGamesModule.RpgEquip(PacManBot.Games.Concrete.RpgGame%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Rpg.cs/#L274">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Rpg.cs/#L287">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_MoreGamesModule_RpgEquip_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.RpgEquip*"></a>
   <h4 id="PacManBot_Commands_Modules_MoreGamesModule_RpgEquip_PacManBot_Games_Concrete_RpgGame_System_String_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.RpgEquip(PacManBot.Games.Concrete.RpgGame,System.String)">RpgEquip(RpgGame, String)</h4>
@@ -1432,7 +1371,7 @@ public Task PlayMessage([Remainder] string args = &quot;&quot;)</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td><span class="xref">Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -1442,7 +1381,7 @@ public Task PlayMessage([Remainder] string args = &quot;&quot;)</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_MoreGamesModule_RpgHeal_PacManBot_Games_Concrete_RpgGame_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.MoreGamesModule.RpgHeal(PacManBot.Games.Concrete.RpgGame%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Rpg.cs/#L233">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Rpg.cs/#L246">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_MoreGamesModule_RpgHeal_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.RpgHeal*"></a>
   <h4 id="PacManBot_Commands_Modules_MoreGamesModule_RpgHeal_PacManBot_Games_Concrete_RpgGame_System_String_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.RpgHeal(PacManBot.Games.Concrete.RpgGame,System.String)">RpgHeal(RpgGame, String)</h4>
@@ -1484,7 +1423,7 @@ public Task PlayMessage([Remainder] string args = &quot;&quot;)</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td><span class="xref">Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -1502,12 +1441,7 @@ public Task PlayMessage([Remainder] string args = &quot;&quot;)</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[Command(&quot;rpg&quot;)]
-[Remarks(&quot;Play an RPG game&quot;)]
-[Parameters(&quot;[command]&quot;)]
-[Priority(4)]
-[Summary(&quot;Play ReactionRPG, a new game where you beat monsters and level up.\nThe game is yours. You can play in **any channel** anywhere you go, even DMs with the bot.\n\n**__Commands:__**\n**{prefix}rpg manual** - See detailed instructions for the game.\n\n**{prefix}rpg** - Start a new battle or resend the current battle.\n**{prefix}rpg pvp &lt;player&gt;** - Challenge a user to a battle, or accept a user's challenge.\n**{prefix}rpg equip &lt;item&gt;** - Equip an item in your inventory.\n**{prefix}rpg heal** - Refill your HP, only once per battle.\n**{prefix}rpg cancel** - Cancel a battle, dying instantly against monsters.\n\n**{prefix}rpg profile** - Check a summary of your hero.\n**{prefix}rpg skills** - Check your hero's skills lines and active skills.\n**{prefix}rpg spend &lt;skill&gt; &lt;amount&gt;** - Spend skill points on a skill line.\n**{prefix}rpg name &lt;name&gt;** - Change your hero's name.\n**{prefix}rpg color &lt;color&gt;** - Change the color of your hero's profile.\n**{prefix}rpg reset** - Delete your hero.&quot;)]
-public Task RpgMaster(string commandName = &quot;&quot;, [Remainder] string args = &quot;&quot;)</code></pre>
+    <pre><code class="lang-csharp hljs">public Task RpgMaster(string commandName = &quot;&quot;, string args = &quot;&quot;)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -1541,7 +1475,7 @@ public Task RpgMaster(string commandName = &quot;&quot;, [Remainder] string args
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td><span class="xref">Task</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -1551,7 +1485,7 @@ public Task RpgMaster(string commandName = &quot;&quot;, [Remainder] string args
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_MoreGamesModule_RpgProfile_PacManBot_Games_Concrete_RpgGame_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.MoreGamesModule.RpgProfile(PacManBot.Games.Concrete.RpgGame%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Rpg.cs/#L216">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Rpg.cs/#L220">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_MoreGamesModule_RpgProfile_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.RpgProfile*"></a>
   <h4 id="PacManBot_Commands_Modules_MoreGamesModule_RpgProfile_PacManBot_Games_Concrete_RpgGame_System_String_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.RpgProfile(PacManBot.Games.Concrete.RpgGame,System.String)">RpgProfile(RpgGame, String)</h4>
@@ -1593,7 +1527,7 @@ public Task RpgMaster(string commandName = &quot;&quot;, [Remainder] string args
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td><span class="xref">Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -1603,7 +1537,7 @@ public Task RpgMaster(string commandName = &quot;&quot;, [Remainder] string args
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_MoreGamesModule_RpgSendHelp_PacManBot_Games_Concrete_RpgGame_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.MoreGamesModule.RpgSendHelp(PacManBot.Games.Concrete.RpgGame%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Rpg.cs/#L549">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Rpg.cs/#L562">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_MoreGamesModule_RpgSendHelp_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.RpgSendHelp*"></a>
   <h4 id="PacManBot_Commands_Modules_MoreGamesModule_RpgSendHelp_PacManBot_Games_Concrete_RpgGame_System_String_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.RpgSendHelp(PacManBot.Games.Concrete.RpgGame,System.String)">RpgSendHelp(RpgGame, String)</h4>
@@ -1645,7 +1579,7 @@ public Task RpgMaster(string commandName = &quot;&quot;, [Remainder] string args
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td><span class="xref">Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -1655,7 +1589,7 @@ public Task RpgMaster(string commandName = &quot;&quot;, [Remainder] string args
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_MoreGamesModule_RpgSendManual_PacManBot_Games_Concrete_RpgGame_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.MoreGamesModule.RpgSendManual(PacManBot.Games.Concrete.RpgGame%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Rpg.cs/#L557">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Rpg.cs/#L570">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_MoreGamesModule_RpgSendManual_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.RpgSendManual*"></a>
   <h4 id="PacManBot_Commands_Modules_MoreGamesModule_RpgSendManual_PacManBot_Games_Concrete_RpgGame_System_String_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.RpgSendManual(PacManBot.Games.Concrete.RpgGame,System.String)">RpgSendManual(RpgGame, String)</h4>
@@ -1697,7 +1631,7 @@ public Task RpgMaster(string commandName = &quot;&quot;, [Remainder] string args
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td><span class="xref">Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -1707,7 +1641,7 @@ public Task RpgMaster(string commandName = &quot;&quot;, [Remainder] string args
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_MoreGamesModule_RpgSetColor_PacManBot_Games_Concrete_RpgGame_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.MoreGamesModule.RpgSetColor(PacManBot.Games.Concrete.RpgGame%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Rpg.cs/#L413">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Rpg.cs/#L426">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_MoreGamesModule_RpgSetColor_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.RpgSetColor*"></a>
   <h4 id="PacManBot_Commands_Modules_MoreGamesModule_RpgSetColor_PacManBot_Games_Concrete_RpgGame_System_String_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.RpgSetColor(PacManBot.Games.Concrete.RpgGame,System.String)">RpgSetColor(RpgGame, String)</h4>
@@ -1749,7 +1683,7 @@ public Task RpgMaster(string commandName = &quot;&quot;, [Remainder] string args
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td><span class="xref">Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -1759,7 +1693,7 @@ public Task RpgMaster(string commandName = &quot;&quot;, [Remainder] string args
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_MoreGamesModule_RpgSetName_PacManBot_Games_Concrete_RpgGame_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.MoreGamesModule.RpgSetName(PacManBot.Games.Concrete.RpgGame%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Rpg.cs/#L399">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Rpg.cs/#L412">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_MoreGamesModule_RpgSetName_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.RpgSetName*"></a>
   <h4 id="PacManBot_Commands_Modules_MoreGamesModule_RpgSetName_PacManBot_Games_Concrete_RpgGame_System_String_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.RpgSetName(PacManBot.Games.Concrete.RpgGame,System.String)">RpgSetName(RpgGame, String)</h4>
@@ -1801,7 +1735,7 @@ public Task RpgMaster(string commandName = &quot;&quot;, [Remainder] string args
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td><span class="xref">Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -1811,7 +1745,7 @@ public Task RpgMaster(string commandName = &quot;&quot;, [Remainder] string args
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_MoreGamesModule_RpgSkills_PacManBot_Games_Concrete_RpgGame_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.MoreGamesModule.RpgSkills(PacManBot.Games.Concrete.RpgGame%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Rpg.cs/#L224">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Rpg.cs/#L237">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_MoreGamesModule_RpgSkills_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.RpgSkills*"></a>
   <h4 id="PacManBot_Commands_Modules_MoreGamesModule_RpgSkills_PacManBot_Games_Concrete_RpgGame_System_String_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.RpgSkills(PacManBot.Games.Concrete.RpgGame,System.String)">RpgSkills(RpgGame, String)</h4>
@@ -1853,7 +1787,7 @@ public Task RpgMaster(string commandName = &quot;&quot;, [Remainder] string args
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td><span class="xref">Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -1863,7 +1797,7 @@ public Task RpgMaster(string commandName = &quot;&quot;, [Remainder] string args
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_MoreGamesModule_RpgSpendSkills_PacManBot_Games_Concrete_RpgGame_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.MoreGamesModule.RpgSpendSkills(PacManBot.Games.Concrete.RpgGame%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Rpg.cs/#L323">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Rpg.cs/#L336">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_MoreGamesModule_RpgSpendSkills_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.RpgSpendSkills*"></a>
   <h4 id="PacManBot_Commands_Modules_MoreGamesModule_RpgSpendSkills_PacManBot_Games_Concrete_RpgGame_System_String_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.RpgSpendSkills(PacManBot.Games.Concrete.RpgGame,System.String)">RpgSpendSkills(RpgGame, String)</h4>
@@ -1905,7 +1839,7 @@ public Task RpgMaster(string commandName = &quot;&quot;, [Remainder] string args
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td><span class="xref">Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -1915,7 +1849,7 @@ public Task RpgMaster(string commandName = &quot;&quot;, [Remainder] string args
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_MoreGamesModule_RpgStart_PacManBot_Games_Concrete_RpgGame_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.MoreGamesModule.RpgStart(PacManBot.Games.Concrete.RpgGame%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Rpg.cs/#L520">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Rpg.cs/#L533">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_MoreGamesModule_RpgStart_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.RpgStart*"></a>
   <h4 id="PacManBot_Commands_Modules_MoreGamesModule_RpgStart_PacManBot_Games_Concrete_RpgGame_System_String_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.RpgStart(PacManBot.Games.Concrete.RpgGame,System.String)">RpgStart(RpgGame, String)</h4>
@@ -1957,7 +1891,7 @@ public Task RpgMaster(string commandName = &quot;&quot;, [Remainder] string args
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td><span class="xref">Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -1967,7 +1901,7 @@ public Task RpgMaster(string commandName = &quot;&quot;, [Remainder] string args
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_MoreGamesModule_RpgStartBattle_PacManBot_Games_Concrete_RpgGame_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.MoreGamesModule.RpgStartBattle(PacManBot.Games.Concrete.RpgGame%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Rpg.cs/#L113">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Rpg.cs/#L117">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_MoreGamesModule_RpgStartBattle_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.RpgStartBattle*"></a>
   <h4 id="PacManBot_Commands_Modules_MoreGamesModule_RpgStartBattle_PacManBot_Games_Concrete_RpgGame_System_String_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.RpgStartBattle(PacManBot.Games.Concrete.RpgGame,System.String)">RpgStartBattle(RpgGame, String)</h4>
@@ -2009,7 +1943,7 @@ public Task RpgMaster(string commandName = &quot;&quot;, [Remainder] string args
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td><span class="xref">Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -2019,7 +1953,7 @@ public Task RpgMaster(string commandName = &quot;&quot;, [Remainder] string args
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_MoreGamesModule_RpgStartPvpBattle_PacManBot_Games_Concrete_RpgGame_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.MoreGamesModule.RpgStartPvpBattle(PacManBot.Games.Concrete.RpgGame%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Rpg.cs/#L466">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Rpg.cs/#L479">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_MoreGamesModule_RpgStartPvpBattle_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.RpgStartPvpBattle*"></a>
   <h4 id="PacManBot_Commands_Modules_MoreGamesModule_RpgStartPvpBattle_PacManBot_Games_Concrete_RpgGame_System_String_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.RpgStartPvpBattle(PacManBot.Games.Concrete.RpgGame,System.String)">RpgStartPvpBattle(RpgGame, String)</h4>
@@ -2061,7 +1995,7 @@ public Task RpgMaster(string commandName = &quot;&quot;, [Remainder] string args
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td><span class="xref">Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -2071,7 +2005,7 @@ public Task RpgMaster(string commandName = &quot;&quot;, [Remainder] string args
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_MoreGamesModule_RpgUseActiveSkill_PacManBot_Games_Concrete_RpgGame_PacManBot_Games_Concrete_Rpg_Skill_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.MoreGamesModule.RpgUseActiveSkill(PacManBot.Games.Concrete.RpgGame%2CPacManBot.Games.Concrete.Rpg.Skill)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Rpg.cs/#L155">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Rpg.cs/#L159">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_MoreGamesModule_RpgUseActiveSkill_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.RpgUseActiveSkill*"></a>
   <h4 id="PacManBot_Commands_Modules_MoreGamesModule_RpgUseActiveSkill_PacManBot_Games_Concrete_RpgGame_PacManBot_Games_Concrete_Rpg_Skill_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.RpgUseActiveSkill(PacManBot.Games.Concrete.RpgGame,PacManBot.Games.Concrete.Rpg.Skill)">RpgUseActiveSkill(RpgGame, Skill)</h4>
@@ -2113,7 +2047,7 @@ public Task RpgMaster(string commandName = &quot;&quot;, [Remainder] string args
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td><span class="xref">Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -2131,11 +2065,7 @@ public Task RpgMaster(string commandName = &quot;&quot;, [Remainder] string args
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[Command(&quot;rubik&quot;)]
-[Alias(new string[]{&quot;rubiks&quot;, &quot;rubix&quot;, &quot;rb&quot;, &quot;rbx&quot;})]
-[Remarks(&quot;Your personal rubik's cube&quot;)]
-[Summary(&quot;Gives you a personal Rubik's Cube that you can take to any server or in DMs with the bot.\n\n__**Commands:**__\n**{prefix}rubik [sequence]** - Execute a sequence of turns to apply on the cube.\n**{prefix}rubik moves** - Show notation help to control the cube.\n**{prefix}rubik scramble** - Scrambles the cube pieces completely.\n**{prefix}rubik reset** - Delete the cube, going back to its solved state.\n**{prefix}rubik showguide** - Toggle the help displayed below the cube. For pros.&quot;)]
-public Task RubiksCube([Remainder] string input = &quot;&quot;)</code></pre>
+    <pre><code class="lang-csharp hljs">public Task RubiksCube(string input = &quot;&quot;)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -2164,29 +2094,25 @@ public Task RubiksCube([Remainder] string input = &quot;&quot;)</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td><span class="xref">Task</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_MoreGamesModule_Start5TicTacToeVs_Discord_WebSocket_SocketGuildUser_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.MoreGamesModule.Start5TicTacToeVs(Discord.WebSocket.SocketGuildUser)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_MoreGamesModule_Start5TicTacToeVs_SocketGuildUser_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.MoreGamesModule.Start5TicTacToeVs(SocketGuildUser)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Multiplayer.cs/#L90">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_MoreGamesModule_Start5TicTacToeVs_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.Start5TicTacToeVs*"></a>
-  <h4 id="PacManBot_Commands_Modules_MoreGamesModule_Start5TicTacToeVs_Discord_WebSocket_SocketGuildUser_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.Start5TicTacToeVs(Discord.WebSocket.SocketGuildUser)">Start5TicTacToeVs(SocketGuildUser)</h4>
+  <h4 id="PacManBot_Commands_Modules_MoreGamesModule_Start5TicTacToeVs_SocketGuildUser_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.Start5TicTacToeVs(SocketGuildUser)">Start5TicTacToeVs(SocketGuildUser)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[Command(&quot;5ttt vs&quot;)]
-[Alias(new string[]{&quot;ttt5 vs&quot;, &quot;5tictactoe vs&quot;, &quot;5tic vs&quot;})]
-[Priority(-1)]
-[Summary(&quot;Make the bot challenge a user... or another bot&quot;)]
-public Task Start5TicTacToeVs(SocketGuildUser opponent)</code></pre>
+    <pre><code class="lang-csharp hljs">public Task Start5TicTacToeVs(SocketGuildUser opponent)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -2199,7 +2125,7 @@ public Task Start5TicTacToeVs(SocketGuildUser opponent)</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Discord.WebSocket.SocketGuildUser</span></td>
+        <td><span class="xref">SocketGuildUser</span></td>
         <td><span class="parametername">opponent</span></td>
         <td></td>
       </tr>
@@ -2215,30 +2141,25 @@ public Task Start5TicTacToeVs(SocketGuildUser opponent)</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td><span class="xref">Task</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_MoreGamesModule_StartConnectFour_Discord_WebSocket_SocketGuildUser_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.MoreGamesModule.StartConnectFour(Discord.WebSocket.SocketGuildUser)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_MoreGamesModule_StartConnectFour_SocketGuildUser_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.MoreGamesModule.StartConnectFour(SocketGuildUser)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Multiplayer.cs/#L98">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_MoreGamesModule_StartConnectFour_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.StartConnectFour*"></a>
-  <h4 id="PacManBot_Commands_Modules_MoreGamesModule_StartConnectFour_Discord_WebSocket_SocketGuildUser_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.StartConnectFour(Discord.WebSocket.SocketGuildUser)">StartConnectFour(SocketGuildUser)</h4>
+  <h4 id="PacManBot_Commands_Modules_MoreGamesModule_StartConnectFour_SocketGuildUser_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.StartConnectFour(SocketGuildUser)">StartConnectFour(SocketGuildUser)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[Command(&quot;connect4&quot;)]
-[Alias(new string[]{&quot;c4&quot;, &quot;four&quot;})]
-[Priority(1)]
-[Remarks(&quot;Play Connect Four with another user or the bot&quot;)]
-[Summary(&quot;You can choose a guild member to invite as an opponent using a mention, username, nickname or user ID. Otherwise, you'll play against the bot.\n\n You play by sending the number of a free cell (1 to 7) in chat while it is your turn, and to win you must make a line of 3 symbols in any direction\n\nDo `{prefix}cancel` to end the game or `{prefix}bump` to move it to the bottom of the chat. The game times out in case of extended inactivity.\n\nYou can also make the bot challenge another user or bot with `{prefix}c4 vs &lt;opponent&gt;`&quot;)]
-public Task StartConnectFour(SocketGuildUser opponent = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public Task StartConnectFour(SocketGuildUser opponent = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -2251,7 +2172,7 @@ public Task StartConnectFour(SocketGuildUser opponent = null)</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Discord.WebSocket.SocketGuildUser</span></td>
+        <td><span class="xref">SocketGuildUser</span></td>
         <td><span class="parametername">opponent</span></td>
         <td></td>
       </tr>
@@ -2267,29 +2188,25 @@ public Task StartConnectFour(SocketGuildUser opponent = null)</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td><span class="xref">Task</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_MoreGamesModule_StartConnectFoureVs_Discord_WebSocket_SocketGuildUser_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.MoreGamesModule.StartConnectFoureVs(Discord.WebSocket.SocketGuildUser)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_MoreGamesModule_StartConnectFoureVs_SocketGuildUser_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.MoreGamesModule.StartConnectFoureVs(SocketGuildUser)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Multiplayer.cs/#L110">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_MoreGamesModule_StartConnectFoureVs_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.StartConnectFoureVs*"></a>
-  <h4 id="PacManBot_Commands_Modules_MoreGamesModule_StartConnectFoureVs_Discord_WebSocket_SocketGuildUser_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.StartConnectFoureVs(Discord.WebSocket.SocketGuildUser)">StartConnectFoureVs(SocketGuildUser)</h4>
+  <h4 id="PacManBot_Commands_Modules_MoreGamesModule_StartConnectFoureVs_SocketGuildUser_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.StartConnectFoureVs(SocketGuildUser)">StartConnectFoureVs(SocketGuildUser)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[Command(&quot;connect4 vs&quot;)]
-[Alias(new string[]{&quot;c4 vs&quot;, &quot;four vs&quot;})]
-[Priority(-1)]
-[Summary(&quot;Make the bot challenge a user... or another bot&quot;)]
-public Task StartConnectFoureVs(SocketGuildUser opponent)</code></pre>
+    <pre><code class="lang-csharp hljs">public Task StartConnectFoureVs(SocketGuildUser opponent)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -2302,7 +2219,7 @@ public Task StartConnectFoureVs(SocketGuildUser opponent)</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Discord.WebSocket.SocketGuildUser</span></td>
+        <td><span class="xref">SocketGuildUser</span></td>
         <td><span class="parametername">opponent</span></td>
         <td></td>
       </tr>
@@ -2318,30 +2235,25 @@ public Task StartConnectFoureVs(SocketGuildUser opponent)</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td><span class="xref">Task</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_MoreGamesModule_StartTicTacToe_Discord_WebSocket_SocketGuildUser_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.MoreGamesModule.StartTicTacToe(Discord.WebSocket.SocketGuildUser)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_MoreGamesModule_StartTicTacToe_SocketGuildUser_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.MoreGamesModule.StartTicTacToe(SocketGuildUser)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Multiplayer.cs/#L58">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_MoreGamesModule_StartTicTacToe_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.StartTicTacToe*"></a>
-  <h4 id="PacManBot_Commands_Modules_MoreGamesModule_StartTicTacToe_Discord_WebSocket_SocketGuildUser_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.StartTicTacToe(Discord.WebSocket.SocketGuildUser)">StartTicTacToe(SocketGuildUser)</h4>
+  <h4 id="PacManBot_Commands_Modules_MoreGamesModule_StartTicTacToe_SocketGuildUser_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.StartTicTacToe(SocketGuildUser)">StartTicTacToe(SocketGuildUser)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[Command(&quot;tictactoe&quot;)]
-[Alias(new string[]{&quot;ttt&quot;, &quot;tic&quot;})]
-[Priority(1)]
-[Remarks(&quot;Play Tic-Tac-Toe with another user or the bot&quot;)]
-[Summary(&quot;You can choose a guild member to invite as an opponent using a mention, username, nickname or user ID. Otherwise, you'll play against the bot.\n\nYou play by sending the number of a free cell (1 to 9) in chat while it is your turn, and to win you must make a line of 3 symbols in any direction\n\nDo `{prefix}cancel` to end the game or `{prefix}bump` to move it to the bottom of the chat. The game times out in case of extended inactivity.\n\nYou can also make the bot challenge another user or bot with `{prefix}ttt vs &lt;opponent&gt;`&quot;)]
-public Task StartTicTacToe(SocketGuildUser opponent = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public Task StartTicTacToe(SocketGuildUser opponent = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -2354,7 +2266,7 @@ public Task StartTicTacToe(SocketGuildUser opponent = null)</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Discord.WebSocket.SocketGuildUser</span></td>
+        <td><span class="xref">SocketGuildUser</span></td>
         <td><span class="parametername">opponent</span></td>
         <td></td>
       </tr>
@@ -2370,30 +2282,25 @@ public Task StartTicTacToe(SocketGuildUser opponent = null)</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td><span class="xref">Task</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_MoreGamesModule_StartTicTacToe5_Discord_WebSocket_SocketGuildUser_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.MoreGamesModule.StartTicTacToe5(Discord.WebSocket.SocketGuildUser)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_MoreGamesModule_StartTicTacToe5_SocketGuildUser_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.MoreGamesModule.StartTicTacToe5(SocketGuildUser)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Multiplayer.cs/#L78">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_MoreGamesModule_StartTicTacToe5_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.StartTicTacToe5*"></a>
-  <h4 id="PacManBot_Commands_Modules_MoreGamesModule_StartTicTacToe5_Discord_WebSocket_SocketGuildUser_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.StartTicTacToe5(Discord.WebSocket.SocketGuildUser)">StartTicTacToe5(SocketGuildUser)</h4>
+  <h4 id="PacManBot_Commands_Modules_MoreGamesModule_StartTicTacToe5_SocketGuildUser_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.StartTicTacToe5(SocketGuildUser)">StartTicTacToe5(SocketGuildUser)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[Command(&quot;5ttt&quot;)]
-[Alias(new string[]{&quot;ttt5&quot;, &quot;5tictactoe&quot;, &quot;5tic&quot;})]
-[Priority(1)]
-[Remarks(&quot;Play a harder 5-Tic-Tac-Toe with another user or the bot&quot;)]
-[Summary(&quot;You can choose a guild member to invite as an opponent using a mention, username, nickname or user ID. Otherwise, you'll play against the bot.\n\nYou play by sending the column and row of the cell you want to play, for example, \&quot;C4\&quot;. The player who makes the **most lines of 3 symbols** wins. However, if a player makes a lines of **4**, they win instantly.\n\nDo `{prefix}cancel` to end the game or `{prefix}bump` to move it to the bottom of the chat. The game times out in case of extended inactivity.\n\nYou can also make the bot challenge another user or bot with `{prefix}5ttt vs &lt;opponent&gt;`&quot;)]
-public Task StartTicTacToe5(SocketGuildUser opponent = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public Task StartTicTacToe5(SocketGuildUser opponent = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -2406,7 +2313,7 @@ public Task StartTicTacToe5(SocketGuildUser opponent = null)</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Discord.WebSocket.SocketGuildUser</span></td>
+        <td><span class="xref">SocketGuildUser</span></td>
         <td><span class="parametername">opponent</span></td>
         <td></td>
       </tr>
@@ -2422,29 +2329,25 @@ public Task StartTicTacToe5(SocketGuildUser opponent = null)</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td><span class="xref">Task</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_MoreGamesModule_StartTicTacToeVs_Discord_WebSocket_SocketGuildUser_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.MoreGamesModule.StartTicTacToeVs(Discord.WebSocket.SocketGuildUser)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_MoreGamesModule_StartTicTacToeVs_SocketGuildUser_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.MoreGamesModule.StartTicTacToeVs(SocketGuildUser)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Multiplayer.cs/#L70">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_MoreGamesModule_StartTicTacToeVs_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.StartTicTacToeVs*"></a>
-  <h4 id="PacManBot_Commands_Modules_MoreGamesModule_StartTicTacToeVs_Discord_WebSocket_SocketGuildUser_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.StartTicTacToeVs(Discord.WebSocket.SocketGuildUser)">StartTicTacToeVs(SocketGuildUser)</h4>
+  <h4 id="PacManBot_Commands_Modules_MoreGamesModule_StartTicTacToeVs_SocketGuildUser_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.StartTicTacToeVs(SocketGuildUser)">StartTicTacToeVs(SocketGuildUser)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[Command(&quot;tictactoe vs&quot;)]
-[Alias(new string[]{&quot;ttt vs&quot;, &quot;tic vs&quot;})]
-[Priority(-1)]
-[Summary(&quot;Make the bot challenge a user... or another bot&quot;)]
-public Task StartTicTacToeVs(SocketGuildUser opponent)</code></pre>
+    <pre><code class="lang-csharp hljs">public Task StartTicTacToeVs(SocketGuildUser opponent)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -2457,7 +2360,7 @@ public Task StartTicTacToeVs(SocketGuildUser opponent)</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Discord.WebSocket.SocketGuildUser</span></td>
+        <td><span class="xref">SocketGuildUser</span></td>
         <td><span class="parametername">opponent</span></td>
         <td></td>
       </tr>
@@ -2473,32 +2376,25 @@ public Task StartTicTacToeVs(SocketGuildUser opponent)</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td><span class="xref">Task</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_MoreGamesModule_StartUno_Discord_WebSocket_SocketGuildUser___.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.MoreGamesModule.StartUno(Discord.WebSocket.SocketGuildUser%5B%5D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_MoreGamesModule_StartUno_SocketGuildUser___.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.MoreGamesModule.StartUno(SocketGuildUser%5B%5D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Multiplayer.cs/#L119">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_MoreGamesModule_StartUno_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.StartUno*"></a>
-  <h4 id="PacManBot_Commands_Modules_MoreGamesModule_StartUno_Discord_WebSocket_SocketGuildUser___" data-uid="PacManBot.Commands.Modules.MoreGamesModule.StartUno(Discord.WebSocket.SocketGuildUser[])">StartUno(SocketGuildUser[])</h4>
+  <h4 id="PacManBot_Commands_Modules_MoreGamesModule_StartUno_SocketGuildUser___" data-uid="PacManBot.Commands.Modules.MoreGamesModule.StartUno(SocketGuildUser[])">StartUno(SocketGuildUser[])</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[Command(&quot;uno&quot;)]
-[Parameters(&quot;[players]&quot;)]
-[Priority(3)]
-[Remarks(&quot;Play Uno with up to 10 friends and bots&quot;)]
-[ExampleUsage(&quot;uno\nuno @Pac-Man#3944&quot;)]
-[Summary(&quot;__Tip__: Switching back and forth with DMs to see your cards can be tiresome, so try having your cards open in your phone while you're playing in a computer.\n\n__**Commands:**__\n\n &#8226; **{prefix}uno** - Starts a new Uno game for up to 10 players. You can specify players and bots as players. Players can join or leave at any time.\n &#8226; **{prefix}uno bots** - Starts a bot-only game with the specified bots.\n &#8226; **{prefix}uno join** - Join a game or invite a user or bot.\n &#8226; **{prefix}uno leave** - Leave the game or kick a bot or inactive user.\n &#8226; **{prefix}bump** - Move the game to the bottom of the chat.\n &#8226; **{prefix}cancel** - End the game in the current channel.\n\n\n__**Rules:**__\n\n &#8226; Each player is given 7 cards.\n &#8226; The current turn's player must choose to discard a card that matches either the color, number or type of the last card.\n &#8226; If the player doesn't have any matching card, or they don't want to discard any of their cards, they can say \&quot;**draw**\&quot; to draw a card. That card will be discarded immediately if possible.\n &#8226; When you only have one card left, you must say \&quot;**uno**\&quot; (You can add it to your card like \&quot;red4 uno\&quot;, or you can say it directly after if you forget). If you forget, someone else can say \&quot;uno\&quot; to call you out before the next player plays, and you will draw 2 cards.\n &#8226; The first player to lose all of their cards wins the game.\n &#8226; **Special cards:** *Skip* cards make the next player skip a turn. *Reverse* cards change the turn direction, or act like Skip cards with only two players. *Draw* cards force the next player to draw cards and skip a turn. *Wild* cards let you choose the color, and will match with any card.&quot;)]
-[RequireContext(ContextType.Guild)]
-public Task StartUno(params SocketGuildUser[] startingPlayers)</code></pre>
+    <pre><code class="lang-csharp hljs">public Task StartUno(params SocketGuildUser[] startingPlayers)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -2511,7 +2407,7 @@ public Task StartUno(params SocketGuildUser[] startingPlayers)</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Discord.WebSocket.SocketGuildUser</span>[]</td>
+        <td><span class="xref">SocketGuildUser</span>[]</td>
         <td><span class="parametername">startingPlayers</span></td>
         <td></td>
       </tr>
@@ -2527,30 +2423,25 @@ public Task StartUno(params SocketGuildUser[] startingPlayers)</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td><span class="xref">Task</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_MoreGamesModule_StartUnoBots_Discord_WebSocket_SocketGuildUser___.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.MoreGamesModule.StartUnoBots(Discord.WebSocket.SocketGuildUser%5B%5D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_MoreGamesModule_StartUnoBots_SocketGuildUser___.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.MoreGamesModule.StartUnoBots(SocketGuildUser%5B%5D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/MoreGamesModule/Multiplayer.cs/#L156">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_MoreGamesModule_StartUnoBots_" data-uid="PacManBot.Commands.Modules.MoreGamesModule.StartUnoBots*"></a>
-  <h4 id="PacManBot_Commands_Modules_MoreGamesModule_StartUnoBots_Discord_WebSocket_SocketGuildUser___" data-uid="PacManBot.Commands.Modules.MoreGamesModule.StartUnoBots(Discord.WebSocket.SocketGuildUser[])">StartUnoBots(SocketGuildUser[])</h4>
+  <h4 id="PacManBot_Commands_Modules_MoreGamesModule_StartUnoBots_SocketGuildUser___" data-uid="PacManBot.Commands.Modules.MoreGamesModule.StartUnoBots(SocketGuildUser[])">StartUnoBots(SocketGuildUser[])</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[Command(&quot;uno bots&quot;)]
-[Alias(new string[]{&quot;uno bot&quot;, &quot;unobot&quot;, &quot;unobots&quot;})]
-[Parameters(&quot;[bots]&quot;)]
-[Summary(&quot;Start a bot-only uno match.&quot;)]
-[RequireContext(ContextType.Guild)]
-public Task StartUnoBots(params SocketGuildUser[] startingPlayers)</code></pre>
+    <pre><code class="lang-csharp hljs">public Task StartUnoBots(params SocketGuildUser[] startingPlayers)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -2563,7 +2454,7 @@ public Task StartUnoBots(params SocketGuildUser[] startingPlayers)</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Discord.WebSocket.SocketGuildUser</span>[]</td>
+        <td><span class="xref">SocketGuildUser</span>[]</td>
         <td><span class="parametername">startingPlayers</span></td>
         <td></td>
       </tr>
@@ -2579,7 +2470,7 @@ public Task StartUnoBots(params SocketGuildUser[] startingPlayers)</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td><span class="xref">Task</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -2597,11 +2488,7 @@ public Task StartUnoBots(params SocketGuildUser[] startingPlayers)</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[Command(&quot;uno&quot;)]
-[Priority(3)]
-[Remarks(&quot;Play Uno in a 1v1 match with the bot&quot;)]
-[RequireContext(ContextType.DM)]
-public Task StartUnoDm()</code></pre>
+    <pre><code class="lang-csharp hljs">public Task StartUnoDm()</code></pre>
   </div>
   <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -2613,7 +2500,7 @@ public Task StartUnoDm()</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td><span class="xref">Task</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -2631,11 +2518,7 @@ public Task StartUnoDm()</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[Command(&quot;uno help&quot;)]
-[Alias(new string[]{&quot;uno h&quot;, &quot;uno rules&quot;, &quot;uno commands&quot;})]
-[Priority(-1)]
-[Summary(&quot;Gives rules and commands for the Uno game.&quot;)]
-public Task UnoHelp()</code></pre>
+    <pre><code class="lang-csharp hljs">public Task UnoHelp()</code></pre>
   </div>
   <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -2647,7 +2530,7 @@ public Task UnoHelp()</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td><span class="xref">Task</span></td>
         <td></td>
       </tr>
     </tbody>

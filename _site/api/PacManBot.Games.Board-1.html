@@ -81,27 +81,11 @@
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><span class="xref">Board&lt;T&gt;</span></div>
   </div>
-  <div class="inheritedMembers">
-    <h5>Inherited Members</h5>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
-  </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="PacManBot.Games.html">PacManBot.Games</a></h6>
   <h6><strong>Assembly</strong>: Pacman.dll</h6>
   <h5 id="PacManBot_Games_Board_1_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[DataContract]
-public class Board&lt;T&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public class Board&lt;T&gt; : object</code></pre>
   </div>
   <h5 class="typeParameters">Type Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -135,8 +119,7 @@ public class Board&lt;T&gt;</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConstructor]
-public Board(T[, ] values)</code></pre>
+    <pre><code class="lang-csharp hljs">public Board(T[, ] values)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -151,21 +134,6 @@ public Board(T[, ] values)</code></pre>
       <tr>
         <td>T[,]</td>
         <td><span class="parametername">values</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="exceptions">Exceptions</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Condition</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.ArgumentNullException</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -227,8 +195,7 @@ public Board(T[, ] values)</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[DataMember]
-protected readonly T[, ] values</code></pre>
+    <pre><code class="lang-csharp hljs">protected readonly T[, ] values</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -438,7 +405,7 @@ looping to the other side if the coordinates are outside the board.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="PacManBot.Games.Pos.html">Pos</a>&gt;</td>
+        <td><span class="xref">IEnumerable</span>&lt;<a class="xref" href="PacManBot.Games.Pos.html">Pos</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -554,8 +521,6 @@ looping to the other side if the coordinates are outside the board.</p>
       </tr>
     </tbody>
   </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">System.Object.Equals(System.Object)</span></div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Board_1_Fill__0_.md&amp;value=---%0Auid%3A%20PacManBot.Games.Board%601.Fill(%600)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
@@ -606,13 +571,13 @@ looping to the other side if the coordinates are outside the board.</p>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Board_1_Fill_System_Func_PacManBot_Games_Pos__0__.md&amp;value=---%0Auid%3A%20PacManBot.Games.Board%601.Fill(System.Func%7BPacManBot.Games.Pos%2C%600%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Board_1_Fill_Func_PacManBot_Games_Pos__0__.md&amp;value=---%0Auid%3A%20PacManBot.Games.Board%601.Fill(Func%7BPacManBot.Games.Pos%2C%600%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Board.cs/#L110">View Source</a>
   </span>
   <a id="PacManBot_Games_Board_1_Fill_" data-uid="PacManBot.Games.Board`1.Fill*"></a>
-  <h4 id="PacManBot_Games_Board_1_Fill_System_Func_PacManBot_Games_Pos__0__" data-uid="PacManBot.Games.Board`1.Fill(System.Func{PacManBot.Games.Pos,`0})">Fill(Func&lt;Pos, T&gt;)</h4>
+  <h4 id="PacManBot_Games_Board_1_Fill_Func_PacManBot_Games_Pos__0__" data-uid="PacManBot.Games.Board`1.Fill(Func{PacManBot.Games.Pos,`0})">Fill(Func&lt;Pos, T&gt;)</h4>
   <div class="markdown level1 summary"><p>Replaces all the elements in the board using the specified value selector.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -631,7 +596,7 @@ looping to the other side if the coordinates are outside the board.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Func</span>&lt;<a class="xref" href="PacManBot.Games.Pos.html">Pos</a>, T&gt;</td>
+        <td><span class="xref">Func</span>&lt;<a class="xref" href="PacManBot.Games.Pos.html">Pos</a>, T&gt;</td>
         <td><span class="parametername">valueSelector</span></td>
         <td><p>A delegate that returns the desired value at the given position.</p>
 </td>
@@ -683,8 +648,6 @@ looping to the other side if the coordinates are outside the board.</p>
       </tr>
     </tbody>
   </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">System.Object.GetHashCode()</span></div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Board_1_ToString.md&amp;value=---%0Auid%3A%20PacManBot.Games.Board%601.ToString%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
@@ -716,17 +679,15 @@ looping to the other side if the coordinates are outside the board.</p>
       </tr>
     </tbody>
   </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">System.Object.ToString()</span></div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Board_1_ToString_System_Func__0_System_String__.md&amp;value=---%0Auid%3A%20PacManBot.Games.Board%601.ToString(System.Func%7B%600%2CSystem.String%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Board_1_ToString_Func__0_System_String__.md&amp;value=---%0Auid%3A%20PacManBot.Games.Board%601.ToString(Func%7B%600%2CSystem.String%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Board.cs/#L157">View Source</a>
   </span>
   <a id="PacManBot_Games_Board_1_ToString_" data-uid="PacManBot.Games.Board`1.ToString*"></a>
-  <h4 id="PacManBot_Games_Board_1_ToString_System_Func__0_System_String__" data-uid="PacManBot.Games.Board`1.ToString(System.Func{`0,System.String})">ToString(Func&lt;T, String&gt;)</h4>
+  <h4 id="PacManBot_Games_Board_1_ToString_Func__0_System_String__" data-uid="PacManBot.Games.Board`1.ToString(Func{`0,System.String})">ToString(Func&lt;T, String&gt;)</h4>
   <div class="markdown level1 summary"><p>Builds and returns a string representing the board,
 composed of values obtained using the specified selector.</p>
 </div>
@@ -746,7 +707,7 @@ composed of values obtained using the specified selector.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Func</span>&lt;T, <span class="xref">System.String</span>&gt;</td>
+        <td><span class="xref">Func</span>&lt;T, <span class="xref">System.String</span>&gt;</td>
         <td><span class="parametername">stringSelector</span></td>
         <td><p>A delegate that takes a value in the board and returns its desired string representation.</p>
 </td>
@@ -1004,7 +965,7 @@ Positions already loop around when accessing an element in the board, though.</p
   </table>
   <h3 id="extensionmethods">Extension Methods</h3>
   <div>
-      <a class="xref" href="PacManBot.Extensions.GameExtensions.html#PacManBot_Extensions_GameExtensions_FindLines__1_PacManBot_Games_Board___0____0_System_Int32_System_Collections_Generic_List_PacManBot_Games_Pos__">GameExtensions.FindLines&lt;T&gt;(Board&lt;T&gt;, T, Int32, List&lt;Pos&gt;)</a>
+      <a class="xref" href="PacManBot.Extensions.GameExtensions.html#PacManBot_Extensions_GameExtensions_FindLines__1_PacManBot_Games_Board___0____0_System_Int32_List_PacManBot_Games_Pos__">GameExtensions.FindLines&lt;T&gt;(Board&lt;T&gt;, T, Int32, List&lt;Pos&gt;)</a>
   </div>
 </article>
           </div>

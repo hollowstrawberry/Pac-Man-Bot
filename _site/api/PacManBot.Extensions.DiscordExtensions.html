@@ -80,51 +80,28 @@
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><span class="xref">DiscordExtensions</span></div>
   </div>
-  <div class="inheritedMembers">
-    <h5>Inherited Members</h5>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetHashCode()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ToString()</span>
-    </div>
-  </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="PacManBot.Extensions.html">PacManBot.Extensions</a></h6>
   <h6><strong>Assembly</strong>: Pacman.dll</h6>
   <h5 id="PacManBot_Extensions_DiscordExtensions_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static class DiscordExtensions</code></pre>
+    <pre><code class="lang-csharp hljs">public static class DiscordExtensions : object</code></pre>
   </div>
   <h3 id="fields">Fields
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Extensions_DiscordExtensions_CorrectDmPermissions.md&amp;value=---%0Auid%3A%20PacManBot.Extensions.DiscordExtensions.CorrectDmPermissions%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Extensions_DiscordExtensions_DmPermissions.md&amp;value=---%0Auid%3A%20PacManBot.Extensions.DiscordExtensions.DmPermissions%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Extensions/DiscordExtensions.cs/#L17">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Extensions/DiscordExtensions.cs/#L18">View Source</a>
   </span>
-  <h4 id="PacManBot_Extensions_DiscordExtensions_CorrectDmPermissions" data-uid="PacManBot.Extensions.DiscordExtensions.CorrectDmPermissions">CorrectDmPermissions</h4>
-  <div class="markdown level1 summary"></div>
+  <h4 id="PacManBot_Extensions_DiscordExtensions_DmPermissions" data-uid="PacManBot.Extensions.DiscordExtensions.DmPermissions">DmPermissions</h4>
+  <div class="markdown level1 summary"><p>Discord permissions in a DM channel. The value is currently wrong in Discord.Net.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public const ChannelPermission CorrectDmPermissions = ChannelPermission.AddReactions | ChannelPermission.ReadMessages | ChannelPermission.ViewChannel | ChannelPermission.SendMessages | ChannelPermission.EmbedLinks | ChannelPermission.AttachFiles | ChannelPermission.ReadMessageHistory | ChannelPermission.UseExternalEmojis | ChannelPermission.Connect | ChannelPermission.Speak | ChannelPermission.UseVAD</code></pre>
+    <pre><code class="lang-csharp hljs">public const ChannelPermission DmPermissions = null</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -136,7 +113,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Discord.ChannelPermission</span></td>
+        <td><span class="xref">ChannelPermission</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -145,14 +122,14 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Extensions_DiscordExtensions_AllShardsConnected_Discord_WebSocket_DiscordShardedClient_.md&amp;value=---%0Auid%3A%20PacManBot.Extensions.DiscordExtensions.AllShardsConnected(Discord.WebSocket.DiscordShardedClient)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Extensions_DiscordExtensions_AllShardsConnected_DiscordShardedClient_.md&amp;value=---%0Auid%3A%20PacManBot.Extensions.DiscordExtensions.AllShardsConnected(DiscordShardedClient)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Extensions/DiscordExtensions.cs/#L25">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Extensions/DiscordExtensions.cs/#L26">View Source</a>
   </span>
   <a id="PacManBot_Extensions_DiscordExtensions_AllShardsConnected_" data-uid="PacManBot.Extensions.DiscordExtensions.AllShardsConnected*"></a>
-  <h4 id="PacManBot_Extensions_DiscordExtensions_AllShardsConnected_Discord_WebSocket_DiscordShardedClient_" data-uid="PacManBot.Extensions.DiscordExtensions.AllShardsConnected(Discord.WebSocket.DiscordShardedClient)">AllShardsConnected(DiscordShardedClient)</h4>
-  <div class="markdown level1 summary"><p>Whether all the shards in a <span class="xref">Discord.WebSocket.DiscordShardedClient</span> are connected.</p>
+  <h4 id="PacManBot_Extensions_DiscordExtensions_AllShardsConnected_DiscordShardedClient_" data-uid="PacManBot.Extensions.DiscordExtensions.AllShardsConnected(DiscordShardedClient)">AllShardsConnected(DiscordShardedClient)</h4>
+  <div class="markdown level1 summary"><p>Whether all the shards in a <see cref="!:DiscordShardedClient"></see> are connected.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -170,7 +147,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Discord.WebSocket.DiscordShardedClient</span></td>
+        <td><span class="xref">DiscordShardedClient</span></td>
         <td><span class="parametername">client</span></td>
         <td></td>
       </tr>
@@ -193,13 +170,13 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Extensions_DiscordExtensions_AutoReactAsync_Discord_IUserMessage_System_Boolean_.md&amp;value=---%0Auid%3A%20PacManBot.Extensions.DiscordExtensions.AutoReactAsync(Discord.IUserMessage%2CSystem.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Extensions_DiscordExtensions_AutoReactAsync_IUserMessage_System_Boolean_.md&amp;value=---%0Auid%3A%20PacManBot.Extensions.DiscordExtensions.AutoReactAsync(IUserMessage%2CSystem.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Extensions/DiscordExtensions.cs/#L57">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Extensions/DiscordExtensions.cs/#L58">View Source</a>
   </span>
   <a id="PacManBot_Extensions_DiscordExtensions_AutoReactAsync_" data-uid="PacManBot.Extensions.DiscordExtensions.AutoReactAsync*"></a>
-  <h4 id="PacManBot_Extensions_DiscordExtensions_AutoReactAsync_Discord_IUserMessage_System_Boolean_" data-uid="PacManBot.Extensions.DiscordExtensions.AutoReactAsync(Discord.IUserMessage,System.Boolean)">AutoReactAsync(IUserMessage, Boolean)</h4>
+  <h4 id="PacManBot_Extensions_DiscordExtensions_AutoReactAsync_IUserMessage_System_Boolean_" data-uid="PacManBot.Extensions.DiscordExtensions.AutoReactAsync(IUserMessage,System.Boolean)">AutoReactAsync(IUserMessage, Boolean)</h4>
   <div class="markdown level1 summary"><p>Attempts to react to a given message using custom cross and check emojis depending on the condition.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -218,7 +195,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Discord.IUserMessage</span></td>
+        <td><span class="xref">IUserMessage</span></td>
         <td><span class="parametername">message</span></td>
         <td></td>
       </tr>
@@ -239,20 +216,73 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td><span class="xref">Task</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Extensions_DiscordExtensions_BotCan_Discord_Commands_SocketCommandContext_Discord_ChannelPermission_.md&amp;value=---%0Auid%3A%20PacManBot.Extensions.DiscordExtensions.BotCan(Discord.Commands.SocketCommandContext%2CDiscord.ChannelPermission)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Extensions_DiscordExtensions_BotCan_IChannel_ChannelPermission_.md&amp;value=---%0Auid%3A%20PacManBot.Extensions.DiscordExtensions.BotCan(IChannel%2CChannelPermission)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Extensions/DiscordExtensions.cs/#L122">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Extensions/DiscordExtensions.cs/#L112">View Source</a>
   </span>
   <a id="PacManBot_Extensions_DiscordExtensions_BotCan_" data-uid="PacManBot.Extensions.DiscordExtensions.BotCan*"></a>
-  <h4 id="PacManBot_Extensions_DiscordExtensions_BotCan_Discord_Commands_SocketCommandContext_Discord_ChannelPermission_" data-uid="PacManBot.Extensions.DiscordExtensions.BotCan(Discord.Commands.SocketCommandContext,Discord.ChannelPermission)">BotCan(SocketCommandContext, ChannelPermission)</h4>
+  <h4 id="PacManBot_Extensions_DiscordExtensions_BotCan_IChannel_ChannelPermission_" data-uid="PacManBot.Extensions.DiscordExtensions.BotCan(IChannel,ChannelPermission)">BotCan(IChannel, ChannelPermission)</h4>
+  <div class="markdown level1 summary"><p>Whether the bot has the permission to perform an action in the given chanel.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Task&lt;bool&gt; BotCan(this IChannel channel, ChannelPermission permission)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">IChannel</span></td>
+        <td><span class="parametername">channel</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">ChannelPermission</span></td>
+        <td><span class="parametername">permission</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<span class="xref">System.Boolean</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Extensions_DiscordExtensions_BotCan_SocketCommandContext_ChannelPermission_.md&amp;value=---%0Auid%3A%20PacManBot.Extensions.DiscordExtensions.BotCan(SocketCommandContext%2CChannelPermission)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Extensions/DiscordExtensions.cs/#L126">View Source</a>
+  </span>
+  <a id="PacManBot_Extensions_DiscordExtensions_BotCan_" data-uid="PacManBot.Extensions.DiscordExtensions.BotCan*"></a>
+  <h4 id="PacManBot_Extensions_DiscordExtensions_BotCan_SocketCommandContext_ChannelPermission_" data-uid="PacManBot.Extensions.DiscordExtensions.BotCan(SocketCommandContext,ChannelPermission)">BotCan(SocketCommandContext, ChannelPermission)</h4>
   <div class="markdown level1 summary"><p>Whether the bot has the permission to perform an action given the command context.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -271,65 +301,12 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Discord.Commands.SocketCommandContext</span></td>
+        <td><span class="xref">SocketCommandContext</span></td>
         <td><span class="parametername">context</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">Discord.ChannelPermission</span></td>
-        <td><span class="parametername">permission</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Boolean</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Extensions_DiscordExtensions_BotCan_Discord_IChannel_Discord_ChannelPermission_.md&amp;value=---%0Auid%3A%20PacManBot.Extensions.DiscordExtensions.BotCan(Discord.IChannel%2CDiscord.ChannelPermission)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Extensions/DiscordExtensions.cs/#L111">View Source</a>
-  </span>
-  <a id="PacManBot_Extensions_DiscordExtensions_BotCan_" data-uid="PacManBot.Extensions.DiscordExtensions.BotCan*"></a>
-  <h4 id="PacManBot_Extensions_DiscordExtensions_BotCan_Discord_IChannel_Discord_ChannelPermission_" data-uid="PacManBot.Extensions.DiscordExtensions.BotCan(Discord.IChannel,Discord.ChannelPermission)">BotCan(IChannel, ChannelPermission)</h4>
-  <div class="markdown level1 summary"><p>Whether the bot has the permission to perform an action in the given chanel.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static bool BotCan(this IChannel channel, ChannelPermission permission)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">Discord.IChannel</span></td>
-        <td><span class="parametername">channel</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">Discord.ChannelPermission</span></td>
+        <td><span class="xref">ChannelPermission</span></td>
         <td><span class="parametername">permission</span></td>
         <td></td>
       </tr>
@@ -355,7 +332,7 @@
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Extensions_DiscordExtensions_ExtractCode_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Extensions.DiscordExtensions.ExtractCode(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Extensions/DiscordExtensions.cs/#L163">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Extensions/DiscordExtensions.cs/#L173">View Source</a>
   </span>
   <a id="PacManBot_Extensions_DiscordExtensions_ExtractCode_" data-uid="PacManBot.Extensions.DiscordExtensions.ExtractCode*"></a>
   <h4 id="PacManBot_Extensions_DiscordExtensions_ExtractCode_System_String_" data-uid="PacManBot.Extensions.DiscordExtensions.ExtractCode(System.String)">ExtractCode(String)</h4>
@@ -400,13 +377,13 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Extensions_DiscordExtensions_FullName_Discord_IChannel_.md&amp;value=---%0Auid%3A%20PacManBot.Extensions.DiscordExtensions.FullName(Discord.IChannel)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Extensions_DiscordExtensions_FullName_IChannel_.md&amp;value=---%0Auid%3A%20PacManBot.Extensions.DiscordExtensions.FullName(IChannel)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Extensions/DiscordExtensions.cs/#L85">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Extensions/DiscordExtensions.cs/#L86">View Source</a>
   </span>
   <a id="PacManBot_Extensions_DiscordExtensions_FullName_" data-uid="PacManBot.Extensions.DiscordExtensions.FullName*"></a>
-  <h4 id="PacManBot_Extensions_DiscordExtensions_FullName_Discord_IChannel_" data-uid="PacManBot.Extensions.DiscordExtensions.FullName(Discord.IChannel)">FullName(IChannel)</h4>
+  <h4 id="PacManBot_Extensions_DiscordExtensions_FullName_IChannel_" data-uid="PacManBot.Extensions.DiscordExtensions.FullName(IChannel)">FullName(IChannel)</h4>
   <div class="markdown level1 summary"><p>Returns the guild (if applicable), name, and ID of a channel.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -425,7 +402,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Discord.IChannel</span></td>
+        <td><span class="xref">IChannel</span></td>
         <td><span class="parametername">channel</span></td>
         <td></td>
       </tr>
@@ -448,13 +425,13 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Extensions_DiscordExtensions_FullName_Discord_IUser_.md&amp;value=---%0Auid%3A%20PacManBot.Extensions.DiscordExtensions.FullName(Discord.IUser)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Extensions_DiscordExtensions_FullName_IUser_.md&amp;value=---%0Auid%3A%20PacManBot.Extensions.DiscordExtensions.FullName(IUser)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Extensions/DiscordExtensions.cs/#L99">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Extensions/DiscordExtensions.cs/#L100">View Source</a>
   </span>
   <a id="PacManBot_Extensions_DiscordExtensions_FullName_" data-uid="PacManBot.Extensions.DiscordExtensions.FullName*"></a>
-  <h4 id="PacManBot_Extensions_DiscordExtensions_FullName_Discord_IUser_" data-uid="PacManBot.Extensions.DiscordExtensions.FullName(Discord.IUser)">FullName(IUser)</h4>
+  <h4 id="PacManBot_Extensions_DiscordExtensions_FullName_IUser_" data-uid="PacManBot.Extensions.DiscordExtensions.FullName(IUser)">FullName(IUser)</h4>
   <div class="markdown level1 summary"><p>Returns the name, discriminator and ID of a user.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -473,7 +450,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Discord.IUser</span></td>
+        <td><span class="xref">IUser</span></td>
         <td><span class="parametername">user</span></td>
         <td></td>
       </tr>
@@ -496,14 +473,14 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Extensions_DiscordExtensions_GetMessageChannel_Discord_WebSocket_BaseSocketClient_System_UInt64_.md&amp;value=---%0Auid%3A%20PacManBot.Extensions.DiscordExtensions.GetMessageChannel(Discord.WebSocket.BaseSocketClient%2CSystem.UInt64)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Extensions_DiscordExtensions_GetMessageChannel_BaseSocketClient_System_UInt64_.md&amp;value=---%0Auid%3A%20PacManBot.Extensions.DiscordExtensions.GetMessageChannel(BaseSocketClient%2CSystem.UInt64)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Extensions/DiscordExtensions.cs/#L33">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Extensions/DiscordExtensions.cs/#L34">View Source</a>
   </span>
   <a id="PacManBot_Extensions_DiscordExtensions_GetMessageChannel_" data-uid="PacManBot.Extensions.DiscordExtensions.GetMessageChannel*"></a>
-  <h4 id="PacManBot_Extensions_DiscordExtensions_GetMessageChannel_Discord_WebSocket_BaseSocketClient_System_UInt64_" data-uid="PacManBot.Extensions.DiscordExtensions.GetMessageChannel(Discord.WebSocket.BaseSocketClient,System.UInt64)">GetMessageChannel(BaseSocketClient, UInt64)</h4>
-  <div class="markdown level1 summary"><p>Retrieves a <span class="xref">Discord.WebSocket.ISocketMessageChannel</span> from the given client.
+  <h4 id="PacManBot_Extensions_DiscordExtensions_GetMessageChannel_BaseSocketClient_System_UInt64_" data-uid="PacManBot.Extensions.DiscordExtensions.GetMessageChannel(BaseSocketClient,System.UInt64)">GetMessageChannel(BaseSocketClient, UInt64)</h4>
+  <div class="markdown level1 summary"><p>Retrieves a <see cref="!:ISocketMessageChannel"></see> from the given client.
 The value will be null if the channel doesn't exist, is not accesible, or isn't a message channel.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -522,7 +499,7 @@ The value will be null if the channel doesn't exist, is not accesible, or isn't 
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Discord.WebSocket.BaseSocketClient</span></td>
+        <td><span class="xref">BaseSocketClient</span></td>
         <td><span class="parametername">client</span></td>
         <td></td>
       </tr>
@@ -543,21 +520,21 @@ The value will be null if the channel doesn't exist, is not accesible, or isn't 
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Discord.WebSocket.ISocketMessageChannel</span></td>
+        <td><span class="xref">ISocketMessageChannel</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Extensions_DiscordExtensions_GetUserMessageAsync_Discord_WebSocket_ISocketMessageChannel_System_UInt64_.md&amp;value=---%0Auid%3A%20PacManBot.Extensions.DiscordExtensions.GetUserMessageAsync(Discord.WebSocket.ISocketMessageChannel%2CSystem.UInt64)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Extensions_DiscordExtensions_GetUserMessageAsync_ISocketMessageChannel_System_UInt64_.md&amp;value=---%0Auid%3A%20PacManBot.Extensions.DiscordExtensions.GetUserMessageAsync(ISocketMessageChannel%2CSystem.UInt64)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Extensions/DiscordExtensions.cs/#L50">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Extensions/DiscordExtensions.cs/#L51">View Source</a>
   </span>
   <a id="PacManBot_Extensions_DiscordExtensions_GetUserMessageAsync_" data-uid="PacManBot.Extensions.DiscordExtensions.GetUserMessageAsync*"></a>
-  <h4 id="PacManBot_Extensions_DiscordExtensions_GetUserMessageAsync_Discord_WebSocket_ISocketMessageChannel_System_UInt64_" data-uid="PacManBot.Extensions.DiscordExtensions.GetUserMessageAsync(Discord.WebSocket.ISocketMessageChannel,System.UInt64)">GetUserMessageAsync(ISocketMessageChannel, UInt64)</h4>
-  <div class="markdown level1 summary"><p>Retrieves a <span class="xref">Discord.IUserMessage</span> from the given channel.
+  <h4 id="PacManBot_Extensions_DiscordExtensions_GetUserMessageAsync_ISocketMessageChannel_System_UInt64_" data-uid="PacManBot.Extensions.DiscordExtensions.GetUserMessageAsync(ISocketMessageChannel,System.UInt64)">GetUserMessageAsync(ISocketMessageChannel, UInt64)</h4>
+  <div class="markdown level1 summary"><p>Retrieves a <see cref="!:IUserMessage"></see> from the given channel.
 The value will be null if the message doesn't exist, is not accesible, or isn't a user message.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -576,7 +553,7 @@ The value will be null if the message doesn't exist, is not accesible, or isn't 
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Discord.WebSocket.ISocketMessageChannel</span></td>
+        <td><span class="xref">ISocketMessageChannel</span></td>
         <td><span class="parametername">channel</span></td>
         <td></td>
       </tr>
@@ -597,20 +574,20 @@ The value will be null if the message doesn't exist, is not accesible, or isn't 
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">Discord.IUserMessage</span>&gt;</td>
+        <td><span class="xref">Task</span>&lt;<span class="xref">IUserMessage</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Extensions_DiscordExtensions_Mention_Discord_IChannel_.md&amp;value=---%0Auid%3A%20PacManBot.Extensions.DiscordExtensions.Mention(Discord.IChannel)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Extensions_DiscordExtensions_Mention_IChannel_.md&amp;value=---%0Auid%3A%20PacManBot.Extensions.DiscordExtensions.Mention(IChannel)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Extensions/DiscordExtensions.cs/#L71">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Extensions/DiscordExtensions.cs/#L72">View Source</a>
   </span>
   <a id="PacManBot_Extensions_DiscordExtensions_Mention_" data-uid="PacManBot.Extensions.DiscordExtensions.Mention*"></a>
-  <h4 id="PacManBot_Extensions_DiscordExtensions_Mention_Discord_IChannel_" data-uid="PacManBot.Extensions.DiscordExtensions.Mention(Discord.IChannel)">Mention(IChannel)</h4>
+  <h4 id="PacManBot_Extensions_DiscordExtensions_Mention_IChannel_" data-uid="PacManBot.Extensions.DiscordExtensions.Mention(IChannel)">Mention(IChannel)</h4>
   <div class="markdown level1 summary"><p>Returns the mention of a channel to send in chat.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -629,7 +606,7 @@ The value will be null if the message doesn't exist, is not accesible, or isn't 
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Discord.IChannel</span></td>
+        <td><span class="xref">IChannel</span></td>
         <td><span class="parametername">channel</span></td>
         <td></td>
       </tr>
@@ -652,13 +629,13 @@ The value will be null if the message doesn't exist, is not accesible, or isn't 
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Extensions_DiscordExtensions_Mention_Discord_IEmote_.md&amp;value=---%0Auid%3A%20PacManBot.Extensions.DiscordExtensions.Mention(Discord.IEmote)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Extensions_DiscordExtensions_Mention_IEmote_.md&amp;value=---%0Auid%3A%20PacManBot.Extensions.DiscordExtensions.Mention(IEmote)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Extensions/DiscordExtensions.cs/#L64">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Extensions/DiscordExtensions.cs/#L65">View Source</a>
   </span>
   <a id="PacManBot_Extensions_DiscordExtensions_Mention_" data-uid="PacManBot.Extensions.DiscordExtensions.Mention*"></a>
-  <h4 id="PacManBot_Extensions_DiscordExtensions_Mention_Discord_IEmote_" data-uid="PacManBot.Extensions.DiscordExtensions.Mention(Discord.IEmote)">Mention(IEmote)</h4>
+  <h4 id="PacManBot_Extensions_DiscordExtensions_Mention_IEmote_" data-uid="PacManBot.Extensions.DiscordExtensions.Mention(IEmote)">Mention(IEmote)</h4>
   <div class="markdown level1 summary"><p>Returns an emoji or emote in string form.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -677,7 +654,7 @@ The value will be null if the message doesn't exist, is not accesible, or isn't 
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Discord.IEmote</span></td>
+        <td><span class="xref">IEmote</span></td>
         <td><span class="parametername">e</span></td>
         <td></td>
       </tr>
@@ -700,13 +677,13 @@ The value will be null if the message doesn't exist, is not accesible, or isn't 
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Extensions_DiscordExtensions_NameandDisc_Discord_IUser_.md&amp;value=---%0Auid%3A%20PacManBot.Extensions.DiscordExtensions.NameandDisc(Discord.IUser)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Extensions_DiscordExtensions_NameandDisc_IUser_.md&amp;value=---%0Auid%3A%20PacManBot.Extensions.DiscordExtensions.NameandDisc(IUser)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Extensions/DiscordExtensions.cs/#L92">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Extensions/DiscordExtensions.cs/#L93">View Source</a>
   </span>
   <a id="PacManBot_Extensions_DiscordExtensions_NameandDisc_" data-uid="PacManBot.Extensions.DiscordExtensions.NameandDisc*"></a>
-  <h4 id="PacManBot_Extensions_DiscordExtensions_NameandDisc_Discord_IUser_" data-uid="PacManBot.Extensions.DiscordExtensions.NameandDisc(Discord.IUser)">NameandDisc(IUser)</h4>
+  <h4 id="PacManBot_Extensions_DiscordExtensions_NameandDisc_IUser_" data-uid="PacManBot.Extensions.DiscordExtensions.NameandDisc(IUser)">NameandDisc(IUser)</h4>
   <div class="markdown level1 summary"><p>Returns the name and discriminator of a user.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -725,7 +702,7 @@ The value will be null if the message doesn't exist, is not accesible, or isn't 
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Discord.IUser</span></td>
+        <td><span class="xref">IUser</span></td>
         <td><span class="parametername">user</span></td>
         <td></td>
       </tr>
@@ -748,14 +725,14 @@ The value will be null if the message doesn't exist, is not accesible, or isn't 
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Extensions_DiscordExtensions_NameAndGuild_Discord_IChannel_.md&amp;value=---%0Auid%3A%20PacManBot.Extensions.DiscordExtensions.NameAndGuild(Discord.IChannel)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Extensions_DiscordExtensions_NameAndGuild_IChannel_.md&amp;value=---%0Auid%3A%20PacManBot.Extensions.DiscordExtensions.NameAndGuild(IChannel)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Extensions/DiscordExtensions.cs/#L78">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Extensions/DiscordExtensions.cs/#L79">View Source</a>
   </span>
   <a id="PacManBot_Extensions_DiscordExtensions_NameAndGuild_" data-uid="PacManBot.Extensions.DiscordExtensions.NameAndGuild*"></a>
-  <h4 id="PacManBot_Extensions_DiscordExtensions_NameAndGuild_Discord_IChannel_" data-uid="PacManBot.Extensions.DiscordExtensions.NameAndGuild(Discord.IChannel)">NameAndGuild(IChannel)</h4>
-  <div class="markdown level1 summary"><p>Returns the name of a channel, including its guild if it is a <span class="xref">Discord.IGuildChannel</span>.</p>
+  <h4 id="PacManBot_Extensions_DiscordExtensions_NameAndGuild_IChannel_" data-uid="PacManBot.Extensions.DiscordExtensions.NameAndGuild(IChannel)">NameAndGuild(IChannel)</h4>
+  <div class="markdown level1 summary"><p>Returns the name of a channel, including its guild if it is a <see cref="!:IGuildChannel"></see>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -773,7 +750,7 @@ The value will be null if the message doesn't exist, is not accesible, or isn't 
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Discord.IChannel</span></td>
+        <td><span class="xref">IChannel</span></td>
         <td><span class="parametername">channel</span></td>
         <td></td>
       </tr>
@@ -796,13 +773,13 @@ The value will be null if the message doesn't exist, is not accesible, or isn't 
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Extensions_DiscordExtensions_ParseUserAsync_Discord_Commands_ICommandContext_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Extensions.DiscordExtensions.ParseUserAsync(Discord.Commands.ICommandContext%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Extensions_DiscordExtensions_ParseUserAsync_ICommandContext_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Extensions.DiscordExtensions.ParseUserAsync(ICommandContext%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Extensions/DiscordExtensions.cs/#L41">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Extensions/DiscordExtensions.cs/#L42">View Source</a>
   </span>
   <a id="PacManBot_Extensions_DiscordExtensions_ParseUserAsync_" data-uid="PacManBot.Extensions.DiscordExtensions.ParseUserAsync*"></a>
-  <h4 id="PacManBot_Extensions_DiscordExtensions_ParseUserAsync_Discord_Commands_ICommandContext_System_String_" data-uid="PacManBot.Extensions.DiscordExtensions.ParseUserAsync(Discord.Commands.ICommandContext,System.String)">ParseUserAsync(ICommandContext, String)</h4>
+  <h4 id="PacManBot_Extensions_DiscordExtensions_ParseUserAsync_ICommandContext_System_String_" data-uid="PacManBot.Extensions.DiscordExtensions.ParseUserAsync(ICommandContext,System.String)">ParseUserAsync(ICommandContext, String)</h4>
   <div class="markdown level1 summary"><p>Retrieves a user from the given context's guild that best satisfies the given string.
 The string can be a user ID, username or nickname.</p>
 </div>
@@ -822,7 +799,7 @@ The string can be a user ID, username or nickname.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Discord.Commands.ICommandContext</span></td>
+        <td><span class="xref">ICommandContext</span></td>
         <td><span class="parametername">context</span></td>
         <td></td>
       </tr>
@@ -843,7 +820,7 @@ The string can be a user ID, username or nickname.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">Discord.WebSocket.SocketGuildUser</span>&gt;</td>
+        <td><span class="xref">Task</span>&lt;<span class="xref">SocketGuildUser</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -853,7 +830,7 @@ The string can be a user ID, username or nickname.</p>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Extensions_DiscordExtensions_SanitizeMarkdown_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Extensions.DiscordExtensions.SanitizeMarkdown(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Extensions/DiscordExtensions.cs/#L156">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Extensions/DiscordExtensions.cs/#L166">View Source</a>
   </span>
   <a id="PacManBot_Extensions_DiscordExtensions_SanitizeMarkdown_" data-uid="PacManBot.Extensions.DiscordExtensions.SanitizeMarkdown*"></a>
   <h4 id="PacManBot_Extensions_DiscordExtensions_SanitizeMarkdown_System_String_" data-uid="PacManBot.Extensions.DiscordExtensions.SanitizeMarkdown(System.String)">SanitizeMarkdown(String)</h4>
@@ -901,7 +878,7 @@ The string can be a user ID, username or nickname.</p>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Extensions_DiscordExtensions_SanitizeMentions_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Extensions.DiscordExtensions.SanitizeMentions(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Extensions/DiscordExtensions.cs/#L149">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Extensions/DiscordExtensions.cs/#L159">View Source</a>
   </span>
   <a id="PacManBot_Extensions_DiscordExtensions_SanitizeMentions_" data-uid="PacManBot.Extensions.DiscordExtensions.SanitizeMentions*"></a>
   <h4 id="PacManBot_Extensions_DiscordExtensions_SanitizeMentions_System_String_" data-uid="PacManBot.Extensions.DiscordExtensions.SanitizeMentions(System.String)">SanitizeMentions(String)</h4>
@@ -949,16 +926,16 @@ The string can be a user ID, username or nickname.</p>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Extensions_DiscordExtensions_ToColor_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Extensions.DiscordExtensions.ToColor(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Extensions/DiscordExtensions.cs/#L186">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Extensions/DiscordExtensions.cs/#L196">View Source</a>
   </span>
   <a id="PacManBot_Extensions_DiscordExtensions_ToColor_" data-uid="PacManBot.Extensions.DiscordExtensions.ToColor*"></a>
   <h4 id="PacManBot_Extensions_DiscordExtensions_ToColor_System_String_" data-uid="PacManBot.Extensions.DiscordExtensions.ToColor(System.String)">ToColor(String)</h4>
-  <div class="markdown level1 summary"><p>Tries to convert a hexadecimal code or X11 color name into a <span class="xref">Discord.Color</span>.</p>
+  <div class="markdown level1 summary"><p>Tries to convert a hexadecimal code or X11 color name into a <see cref="!:Discord.Color"></see>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static Color? ToColor(this string text)</code></pre>
+    <pre><code class="lang-csharp hljs">public static Discord.Color? ToColor(this string text)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -997,11 +974,11 @@ The string can be a user ID, username or nickname.</p>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Extensions_DiscordExtensions_ToEmoji_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Extensions.DiscordExtensions.ToEmoji(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Extensions/DiscordExtensions.cs/#L179">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Extensions/DiscordExtensions.cs/#L189">View Source</a>
   </span>
   <a id="PacManBot_Extensions_DiscordExtensions_ToEmoji_" data-uid="PacManBot.Extensions.DiscordExtensions.ToEmoji*"></a>
   <h4 id="PacManBot_Extensions_DiscordExtensions_ToEmoji_System_String_" data-uid="PacManBot.Extensions.DiscordExtensions.ToEmoji(System.String)">ToEmoji(String)</h4>
-  <div class="markdown level1 summary"><p>Converts unicode text into an <span class="xref">Discord.Emoji</span> object.
+  <div class="markdown level1 summary"><p>Converts unicode text into an <see cref="!:Emoji"></see> object.
 Succeeds even if the text is not a valid emoji.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -1036,7 +1013,7 @@ Succeeds even if the text is not a valid emoji.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Discord.Emoji</span></td>
+        <td><span class="xref">Emoji</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -1046,7 +1023,7 @@ Succeeds even if the text is not a valid emoji.</p>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Extensions_DiscordExtensions_ToEmote_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Extensions.DiscordExtensions.ToEmote(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Extensions/DiscordExtensions.cs/#L171">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Extensions/DiscordExtensions.cs/#L181">View Source</a>
   </span>
   <a id="PacManBot_Extensions_DiscordExtensions_ToEmote_" data-uid="PacManBot.Extensions.DiscordExtensions.ToEmote*"></a>
   <h4 id="PacManBot_Extensions_DiscordExtensions_ToEmote_System_String_" data-uid="PacManBot.Extensions.DiscordExtensions.ToEmote(System.String)">ToEmote(String)</h4>
@@ -1084,20 +1061,68 @@ Succeeds even if the text is not a valid emoji.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Discord.Emote</span></td>
+        <td><span class="xref">Emote</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Extensions_DiscordExtensions_UserCan_Discord_Commands_SocketCommandContext_Discord_ChannelPermission_.md&amp;value=---%0Auid%3A%20PacManBot.Extensions.DiscordExtensions.UserCan(Discord.Commands.SocketCommandContext%2CDiscord.ChannelPermission)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Extensions_DiscordExtensions_ToSerilog_LogSeverity_.md&amp;value=---%0Auid%3A%20PacManBot.Extensions.DiscordExtensions.ToSerilog(LogSeverity)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Extensions/DiscordExtensions.cs/#L133">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Extensions/DiscordExtensions.cs/#L218">View Source</a>
+  </span>
+  <a id="PacManBot_Extensions_DiscordExtensions_ToSerilog_" data-uid="PacManBot.Extensions.DiscordExtensions.ToSerilog*"></a>
+  <h4 id="PacManBot_Extensions_DiscordExtensions_ToSerilog_LogSeverity_" data-uid="PacManBot.Extensions.DiscordExtensions.ToSerilog(LogSeverity)">ToSerilog(LogSeverity)</h4>
+  <div class="markdown level1 summary"><p>Converts a Discord.Net log level into Serilog a log level.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static LogEventLevel ToSerilog(this LogSeverity level)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">LogSeverity</span></td>
+        <td><span class="parametername">level</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">LogEventLevel</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Extensions_DiscordExtensions_UserCan_SocketCommandContext_ChannelPermission_.md&amp;value=---%0Auid%3A%20PacManBot.Extensions.DiscordExtensions.UserCan(SocketCommandContext%2CChannelPermission)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Extensions/DiscordExtensions.cs/#L140">View Source</a>
   </span>
   <a id="PacManBot_Extensions_DiscordExtensions_UserCan_" data-uid="PacManBot.Extensions.DiscordExtensions.UserCan*"></a>
-  <h4 id="PacManBot_Extensions_DiscordExtensions_UserCan_Discord_Commands_SocketCommandContext_Discord_ChannelPermission_" data-uid="PacManBot.Extensions.DiscordExtensions.UserCan(Discord.Commands.SocketCommandContext,Discord.ChannelPermission)">UserCan(SocketCommandContext, ChannelPermission)</h4>
+  <h4 id="PacManBot_Extensions_DiscordExtensions_UserCan_SocketCommandContext_ChannelPermission_" data-uid="PacManBot.Extensions.DiscordExtensions.UserCan(SocketCommandContext,ChannelPermission)">UserCan(SocketCommandContext, ChannelPermission)</h4>
   <div class="markdown level1 summary"><p>Whether the user who called this context's command has the permission to perform an action.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -1116,12 +1141,12 @@ Succeeds even if the text is not a valid emoji.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Discord.Commands.SocketCommandContext</span></td>
+        <td><span class="xref">SocketCommandContext</span></td>
         <td><span class="parametername">context</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">Discord.ChannelPermission</span></td>
+        <td><span class="xref">ChannelPermission</span></td>
         <td><span class="parametername">permission</span></td>
         <td></td>
       </tr>

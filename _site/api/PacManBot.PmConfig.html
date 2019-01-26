@@ -81,36 +81,11 @@
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><span class="xref">PmConfig</span></div>
   </div>
-  <div class="inheritedMembers">
-    <h5>Inherited Members</h5>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetHashCode()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ToString()</span>
-    </div>
-  </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="PacManBot.html">PacManBot</a></h6>
   <h6><strong>Assembly</strong>: Pacman.dll</h6>
   <h5 id="PacManBot_PmConfig_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[DataContract]
-public class PmConfig</code></pre>
+    <pre><code class="lang-csharp hljs">public class PmConfig : object</code></pre>
   </div>
   <h3 id="fields">Fields
   </h3>
@@ -127,8 +102,7 @@ public class PmConfig</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[DataMember]
-public readonly ulong[] bannedChannels</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly ulong[] bannedChannels</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -150,47 +124,15 @@ public readonly ulong[] bannedChannels</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_PmConfig_clientLogLevel.md&amp;value=---%0Auid%3A%20PacManBot.PmConfig.clientLogLevel%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/PmConfig.cs/#L53">View Source</a>
-  </span>
-  <h4 id="PacManBot_PmConfig_clientLogLevel" data-uid="PacManBot.PmConfig.clientLogLevel">clientLogLevel</h4>
-  <div class="markdown level1 summary"><p>How many messages to log from the client. See <span class="xref">Discord.LogSeverity</span> for possible values.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[DataMember]
-public readonly LogSeverity clientLogLevel</code></pre>
-  </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">Discord.LogSeverity</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_PmConfig_commandLogLevel.md&amp;value=---%0Auid%3A%20PacManBot.PmConfig.commandLogLevel%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/PmConfig.cs/#L56">View Source</a>
   </span>
-  <h4 id="PacManBot_PmConfig_commandLogLevel" data-uid="PacManBot.PmConfig.commandLogLevel">commandLogLevel</h4>
-  <div class="markdown level1 summary"><p>How many messages to log from command calls. See <span class="xref">Discord.LogSeverity</span> for possible values.</p>
+  <h4 id="PacManBot_PmConfig_clientLogLevel" data-uid="PacManBot.PmConfig.clientLogLevel">clientLogLevel</h4>
+  <div class="markdown level1 summary"><p>How many messages to log coming from the Discord client. See <see cref="!:LogSeverity"></see> for possible values.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[DataMember]
-public readonly LogSeverity commandLogLevel</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly LogSeverity clientLogLevel</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -202,7 +144,7 @@ public readonly LogSeverity commandLogLevel</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Discord.LogSeverity</span></td>
+        <td><span class="xref">LogSeverity</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -220,8 +162,7 @@ public readonly LogSeverity commandLogLevel</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[DataMember]
-public readonly int connectionTimeout</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly int connectionTimeout</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -251,8 +192,7 @@ public readonly int connectionTimeout</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[DataMember]
-public readonly string dbConnectionString</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly string dbConnectionString</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -282,8 +222,7 @@ public readonly string dbConnectionString</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[DataMember]
-public readonly string defaultPrefix</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly string defaultPrefix</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -313,8 +252,7 @@ public readonly string defaultPrefix</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[DataMember]
-public readonly ulong[] developers</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly ulong[] developers</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -344,8 +282,7 @@ public readonly ulong[] developers</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[DataMember]
-public readonly string discordToken</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly string discordToken</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -375,8 +312,7 @@ public readonly string discordToken</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[DataMember]
-public readonly string[] httpDomain</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly string[] httpDomain</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -406,8 +342,7 @@ public readonly string[] httpDomain</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[DataMember]
-public readonly string[] httpToken</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly string[] httpToken</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -437,8 +372,7 @@ public readonly string[] httpToken</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[DataMember]
-public readonly string[] logExclude</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly string[] logExclude</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -457,6 +391,36 @@ public readonly string[] logExclude</code></pre>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_PmConfig_logLevel.md&amp;value=---%0Auid%3A%20PacManBot.PmConfig.logLevel%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/PmConfig.cs/#L53">View Source</a>
+  </span>
+  <h4 id="PacManBot_PmConfig_logLevel" data-uid="PacManBot.PmConfig.logLevel">logLevel</h4>
+  <div class="markdown level1 summary"><p>How many messages this program should log. See <see cref="!:LogSeverity"></see> for possible values.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public readonly LogSeverity logLevel</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">LogSeverity</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_PmConfig_messageCacheSize.md&amp;value=---%0Auid%3A%20PacManBot.PmConfig.messageCacheSize%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
@@ -468,8 +432,7 @@ public readonly string[] logExclude</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[DataMember]
-public readonly int messageCacheSize</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly int messageCacheSize</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -499,8 +462,7 @@ public readonly int messageCacheSize</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[DataMember]
-public readonly bool scheduledRestart</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly bool scheduledRestart</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -530,8 +492,7 @@ public readonly bool scheduledRestart</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[DataMember]
-public readonly int shardCount</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly int shardCount</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -561,8 +522,7 @@ public readonly int shardCount</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[DataMember]
-public readonly ulong[] testers</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly ulong[] testers</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -590,7 +550,7 @@ public readonly ulong[] testers</code></pre>
   </span>
   <a id="PacManBot_PmConfig_ClientConfig_" data-uid="PacManBot.PmConfig.ClientConfig*"></a>
   <h4 id="PacManBot_PmConfig_ClientConfig" data-uid="PacManBot.PmConfig.ClientConfig">ClientConfig</h4>
-  <div class="markdown level1 summary"><p>Gets a configuration object for a <span class="xref">Discord.WebSocket.DiscordSocketClient</span>.</p>
+  <div class="markdown level1 summary"><p>Gets a configuration object for a <see cref="!:DiscordSocketClient"></see>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -607,38 +567,7 @@ public readonly ulong[] testers</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Discord.WebSocket.DiscordSocketConfig</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_PmConfig_CommandConfig.md&amp;value=---%0Auid%3A%20PacManBot.PmConfig.CommandConfig%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/PmConfig.cs/#L107">View Source</a>
-  </span>
-  <a id="PacManBot_PmConfig_CommandConfig_" data-uid="PacManBot.PmConfig.CommandConfig*"></a>
-  <h4 id="PacManBot_PmConfig_CommandConfig" data-uid="PacManBot.PmConfig.CommandConfig">CommandConfig</h4>
-  <div class="markdown level1 summary"><p>Gets a configuration object for a <span class="xref">Discord.Commands.CommandService</span>.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public CommandServiceConfig CommandConfig { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">Discord.Commands.CommandServiceConfig</span></td>
+        <td><span class="xref">DiscordSocketConfig</span></td>
         <td></td>
       </tr>
     </tbody>
