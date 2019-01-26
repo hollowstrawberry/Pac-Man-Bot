@@ -96,7 +96,11 @@ namespace PacManBot.Commands.Modules
             }
             else
             {
-                if (game == null && command.Get<NotRequiresRpgAttribute>() == null)
+                if (game != null)
+                {
+                    game.LastPlayed = DateTime.Now;
+                }
+                else if (command.Get<NotRequiresRpgAttribute>() == null)
                 {
                     await ReplyAsync($"You can use `{Context.Prefix}rpg start` to start your adventure.");
                     return;
@@ -315,7 +319,7 @@ namespace PacManBot.Commands.Modules
                 {
                     game.CancelRequests();
                     game.lastEmote = RpgGame.ProfileEmote;
-                    await message.ModifyAsync(m => m.Embed = game.player.Profile(Context.Prefix, true).Build(),
+                    await message.ModifyAsync(m => m.Embed = game.player.Profile(Context.Prefix, reaction: true).Build(),
                         game.GetRequestOptions());
                 }
 

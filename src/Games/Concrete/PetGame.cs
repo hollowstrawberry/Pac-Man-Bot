@@ -362,6 +362,7 @@ namespace PacManBot.Games.Concrete
 
             achievements.DoChecks(this);
             lastUpdated = now;
+            LastPlayed = lastUpdated;
             if (store) games.Save(this);
         }
 
@@ -553,6 +554,7 @@ namespace PacManBot.Games.Concrete
 
         public void PostDeserialize(IServiceProvider services)
         {
+            if (lastUpdated > LastPlayed) LastPlayed = lastUpdated; // Oof
             SetServices(services);
         }
     }

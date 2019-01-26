@@ -17,7 +17,7 @@ namespace PacManBot.Games.Concrete.Rpg
     public class RpgPlayer : Entity
     {
         /// <summary>Maximum level a player can reach.</summary>
-        public const int LevelCap = 50;
+        public const int LevelCap = 55;
         /// <summary>Maximum value an invested skill can have.</summary>
         public const int SkillMax = 30;
 

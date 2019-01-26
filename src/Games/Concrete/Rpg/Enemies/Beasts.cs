@@ -197,7 +197,7 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
 
         public override string Attack(Entity target)
         {
-            var attacks = new int[6];
+            var attacks = new int[5];
             if (!target.HasBuff<Immune>())
             {
                 for (int i = 0; i < attacks.Length; i++)
@@ -254,9 +254,9 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
     {
         public override string Name => "Mecha Flopper";
         public override string Description => "EXTERMINATE.";
-        public override int Level => 45;
+        public override int Level => 42;
         public override int ExpYield => 25;
-        public override int BaseDamage => 35;
+        public override int BaseDamage => 32;
         public override int BaseDefense => 10;
         public override double BaseCritChance => 1.0;
 

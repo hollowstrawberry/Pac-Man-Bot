@@ -102,6 +102,7 @@ namespace PacManBot.Games.Concrete
         {
             State = State.Active;
             lastBattle = DateTime.Now;
+            LastPlayed = lastBattle;
             enemies.Clear();
 
             if (pvpUserId.HasValue)
@@ -407,7 +408,7 @@ namespace PacManBot.Games.Concrete
                 else
                 {
                     lastEmote = emote;
-                    fightEmbed = player.Profile(storage.GetPrefix(Channel), true);
+                    fightEmbed = player.Profile(storage.GetPrefix(Channel), reaction: true);
                 }
             }
             else
@@ -433,6 +434,7 @@ namespace PacManBot.Games.Concrete
 
         public void PostDeserialize(IServiceProvider services)
         {
+            if (lastBattle > LastPlayed) LastPlayed = lastBattle; // Oof.
             SetServices(services);
         }
     }

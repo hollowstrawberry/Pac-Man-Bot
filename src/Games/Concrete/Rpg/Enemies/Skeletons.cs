@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
 using PacManBot.Extensions;
 using PacManBot.Games.Concrete.Rpg.Buffs;
 
@@ -163,8 +164,8 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
 
     public class Skeleton6 : Enemy
     {
-        public override string Name => "Skarlton";
-        public override string Description => "He's from Iceland, I think.";
+        public override string Name => "Skeleton Jones";
+        public override string Description => "A fierce, dead pirate.";
         public override int Level => 40;
         public override int ExpYield => 20;
         public override int BaseDamage => 30;
@@ -176,7 +177,7 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
             MaxLife = 120;
             DamageType = DamageType.Cutting;
             MagicType = MagicType.Water;
-            MagicResistance[MagicType.Water] = 0.3;
+            MagicResistance[MagicType.Water] = 0.25;
         }
 
         public override string Attack(Entity target)
@@ -188,6 +189,50 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
                 msg = $"{this} is going berzerk!\n";
             }
             return msg + base.Attack(target);
+        }
+    }
+
+
+    public class SkeletonLich : Enemy
+    {
+        public override string Name => "Skeleton Lich";
+        public override string Description => "Evil dark lord of bones.";
+        public override int Level => 55;
+        public override int ExpYield => 30;
+        public override int BaseDamage => 70;
+        public override int BaseDefense => 15;
+        public override double BaseCritChance => 0.05;
+
+        [DataMember] private int summonCounter = 1;
+        [DataMember] private int summons = 0;
+
+        public override void SetStats()
+        {
+            MaxLife = 300;
+            DamageType = DamageType.Magic;
+            DamageResistance[DamageType.Magic] = 0.2;
+        }
+
+        public override string Attack(Entity target)
+        {
+            string message = base.Attack(target);
+
+            if (++summonCounter % 3 == 0)
+            {
+                int heal = 30;
+                MaxLife += heal;
+                Life += heal;
+                if (summons++ == 0) message += $"\nThe Lich summons skeletons to aid him! +{heal} HP";
+                else message += $"\nThe Lich summons more skeletons! +{heal} HP";
+            }
+            if (summons > 0)
+            {
+                int dmg = (15 * summons * Program.Random.NextDouble(0.8, 1.2)).Ceiling();
+                target.Life -= dmg;
+                message += $"\nThe Lich's army attacks for {dmg} HP!\n";
+            }
+
+            return message;
         }
     }
 }
