@@ -63,7 +63,7 @@ namespace PacManBot.Commands.Modules
             "\n**{prefix}rpg equip <item>** - Equip an item in your inventory." +
             "\n**{prefix}rpg heal** - Refill your HP, only once per battle." +
             "\n**{prefix}rpg cancel** - Cancel a battle, dying instantly against monsters." +
-            "\n\n**{prefix}rpg profile** - Check a summary of your hero." +
+            "\n\n**{prefix}rpg profile** - Check a summary of your hero (or another person's)." +
             "\n**{prefix}rpg skills** - Check your hero's skills lines and active skills." +
             "\n**{prefix}rpg spend <skill> <amount>** - Spend skill points on a skill line." +
             "\n**{prefix}rpg name <name>** - Change your hero's name." +
@@ -213,10 +213,19 @@ namespace PacManBot.Commands.Modules
 
 
 
-        [RpgCommand("profile", "p", "stats", "inventory", "inv")]
+        [RpgCommand("profile", "p", "stats", "inventory", "inv"), NotRequiresRpg]
         public async Task<string> RpgProfile(RpgGame game, string args)
         {
-            await ReplyAsync(game.player.Profile(Context.Prefix));
+            var otherUser = await Context.ParseUserAsync(args);
+            if (otherUser != null) game = Games.GetForUser<RpgGame>(otherUser.Id);
+
+            if (game == null)
+            {
+                if (otherUser == null) await ReplyAsync($"You can use `{Context.Prefix}rpg start` to start your adventure."); 
+                else await ReplyAsync("This person hasn't started their adventure.");
+            }
+
+            await ReplyAsync(game.player.Profile(Context.Prefix, own: otherUser == null));
             return null;
         }
 
@@ -615,7 +624,7 @@ namespace PacManBot.Commands.Modules
             if (game.IsPvp)
             {
                 try { await message.AddReactionAsync(RpgGame.PvpEmote.ToEmoji(), DefaultOptions); }
-                catch { }
+                catch (HttpException) { }
                 return;
             }
 
@@ -630,7 +639,7 @@ namespace PacManBot.Commands.Modules
                     await message.AddReactionAsync((IEmote)emote.ToEmote() ?? emote.ToEmoji(), DefaultOptions);
                 }
             }
-            catch { }
+            catch (HttpException) { }
         }
     }
 }

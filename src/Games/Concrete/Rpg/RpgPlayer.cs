@@ -210,7 +210,7 @@ namespace PacManBot.Games.Concrete.Rpg
 
 
         /// <summary>Obtain a Discord embed with this person's profile.</summary>
-        public EmbedBuilder Profile(string channelPrefix = "", bool reaction = false)
+        public EmbedBuilder Profile(string channelPrefix = "", bool own = true, bool reaction = false)
         {
             UpdateStats();
 
@@ -218,10 +218,14 @@ namespace PacManBot.Games.Concrete.Rpg
             {
                 Title = $"{Name}'s Profile",
                 Color = Color,
-                Description =
-                $"\n**You have unspent skill points!**\nᅠ\n".If(skillPoints > 0) +
-                (reaction ? "React again for skills" : $"Do **{channelPrefix}rpg skills** for skills."),
             };
+
+            if (own)
+            {
+                embed.Description =
+                    $"\n**You have unspent skill points!**\nᅠ\n".If(skillPoints > 0) +
+                    (reaction ? "React again for skills" : $"Do **{channelPrefix}rpg skills** for skills.");
+            }
 
             string statsDesc = $"**Level {Level}**  (`{experience}/{NextLevelExp} EXP`)" +
                                $"\nStatus: `{Life}/{MaxLife}`{CustomEmoji.Life}`{Mana}/{MaxMana}`{CustomEmoji.Mana}" +
