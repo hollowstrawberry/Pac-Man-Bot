@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Runtime.Serialization;
 using Discord;
-using Discord.Commands;
 using Discord.WebSocket;
 using Newtonsoft.Json;
 using PacManBot.Constants;

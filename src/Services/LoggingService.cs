@@ -1,7 +1,6 @@
 using Serilog;
 using Serilog.Core;
 using System;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Net;
@@ -35,14 +34,6 @@ namespace PacManBot.Services
         }
 
 
-        /// <summary>Logs a message sent from a discord client.</summary>
-        public Task ClientLog(LogMessage log)
-        {
-            Log($"{log.Message}{log.Exception}", log.Severity, log.Source.Replace("Shard #", "Gateway"));
-            return Task.CompletedTask;
-        }
-
-
         /// <summary>Logs a message.</summary>
         public void Log(string message, LogSeverity severity, string source = LogSource.Bot)
         {
@@ -63,6 +54,34 @@ namespace PacManBot.Services
             {
                 Error($"{message}: {e}", source);
             }
+        }
+
+
+        /// <summary>Logs a message sent from a discord client.</summary>
+        public Task ClientLog(LogMessage log)
+        {
+            string source = log.Source.Replace("Shard #", "Gateway");
+
+            // To the purposes of this bot, these warnings are expected and thus serve no purpose
+            if (log.Severity == LogSeverity.Warning)
+            {
+                if (log.Source == "Rest")
+                {
+                    // The library should handle common ratelimits (Note: Most requests use the option RetryRatelimit)
+                    // If ignoring them proves to be a bad idea (it hasn't so far), it would be needed to
+                    // manually implement ratelimit handling for commands and games.
+                    if (log.Message.StartsWith("Rate limit triggered")) return Task.CompletedTask;
+                }
+                else if (log.Source.StartsWith("Gateway"))
+                {
+                    // Unknown object events that are irrelevant.
+                    // These include user voice events and leaving guilds.
+                    if (log.Message.StartsWith("Unknown")) return Task.CompletedTask; // Unknown objects 
+                }
+            }
+
+            Log($"{log.Message}{log.Exception}", log.Severity, source);
+            return Task.CompletedTask;
         }
 
 
