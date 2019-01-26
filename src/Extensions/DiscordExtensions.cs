@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Discord;
+using Discord.Addons.EmojiTools;
 using Discord.Commands;
 using Discord.WebSocket;
 using PacManBot.Constants;
@@ -68,6 +69,14 @@ namespace PacManBot.Extensions
         }
 
 
+        /// <summary>The readable name of this emoji or emote, as opposed to its mention or unicode form.</summary>
+        public static string ReadableName(this IEmote e)
+        {
+            if (e is Emoji em && em.TryGetShorthand(out string name)) return name.Trim(':');
+            else return e.Name;
+        }
+
+
         /// <summary>Returns the mention of a channel to send in chat.</summary>
         public static string Mention(this IChannel channel)
         {
@@ -86,6 +95,13 @@ namespace PacManBot.Extensions
         public static string FullName(this IChannel channel)
         {
             return $"{channel.NameAndGuild()} ({channel.Id})";
+        }
+
+
+        /// <summary>Returns the name and ID of a guild.</summary>
+        public static string FullName(this IGuild guild)
+        {
+            return $"{guild.Name} ({guild.Id})";
         }
 
 

@@ -55,8 +55,7 @@ namespace PacManBot.Services
         /// while any other exception will be treated as an error.</summary>
         public void Exception(string message, Exception e, string source = LogSource.Bot)
         {
-            if (e is HttpException || e is HttpRequestException
-                || e is OperationCanceledException || e is TimeoutException)
+            if (e is HttpException || e is TimeoutException)
             {
                 Warning($"{message}: {e.GetType()}: {e.Message}", source);
             }

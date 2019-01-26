@@ -201,7 +201,7 @@ namespace PacManBot.Services
             }
             catch (Exception e)
             {
-                log.Exception($"During input \"{reaction}\" in {game.Channel.FullName()}", e, game.GameName);
+                log.Exception($"During input \"{reaction.Emote.ReadableName()}\" in {channel.FullName()}", e, game.GameName);
             }
 
             return true;
@@ -225,18 +225,24 @@ namespace PacManBot.Services
             }
             if (game.State != State.Active) games.Remove(game);
 
-            game.CancelRequests();
-            var requestOptions = game.GetRequestOptions();
-
             if (gameMessage != null && await message.Channel.BotCan(ChannelPermission.ManageMessages))
             {
-                await gameMessage.ModifyAsync(game.GetMessageUpdate(), requestOptions);
+                game.CancelRequests();
+                try { await gameMessage.ModifyAsync(game.GetMessageUpdate(), game.GetRequestOptions()); }
+                catch (OperationCanceledException) { }
+
                 await message.DeleteAsync(PmBot.DefaultOptions);
             }
             else
             {
-                var newMsg = await message.Channel.SendMessageAsync(game.GetContent(), false, game.GetEmbed()?.Build(), requestOptions);
-                game.MessageId = newMsg.Id;
+                game.CancelRequests();
+                try
+                {
+                    var newMsg = await message.Channel.SendMessageAsync(game.GetContent(), false, game.GetEmbed()?.Build(), game.GetRequestOptions());
+                    game.MessageId = newMsg.Id;
+                }
+                catch (OperationCanceledException) { }
+
                 if (gameMessage != null) await gameMessage.DeleteAsync(PmBot.DefaultOptions);
             }
         }
@@ -249,7 +255,7 @@ namespace PacManBot.Services
             var guild = (channel as IGuildChannel)?.Guild;
 
             log.Verbose(
-                $"Input {reaction.Emote.Name} by {user.FullName()} in {channel.FullName()}",
+                $"Input {reaction.Emote.ReadableName()} by {user.FullName()} in {channel.FullName()}",
                 game.GameName);
 
             game.Input(reaction.Emote, user.Id);
@@ -271,7 +277,8 @@ namespace PacManBot.Services
             }
 
             game.CancelRequests();
-            await gameMessage.ModifyAsync(game.GetMessageUpdate(), game.GetRequestOptions());
+            try { await gameMessage.ModifyAsync(game.GetMessageUpdate(), game.GetRequestOptions()); }
+            catch (OperationCanceledException) { }
         }
     }
 }

@@ -100,7 +100,11 @@ namespace PacManBot.Commands.Modules
 
             game.CancelRequests();
             var gameMessage = await game.GetMessage();
-            if (gameMessage != null) await gameMessage.ModifyAsync(game.GetMessageUpdate(), game.GetRequestOptions());
+            if (gameMessage != null)
+            {
+                try { await gameMessage.ModifyAsync(game.GetMessageUpdate(), game.GetRequestOptions()); }
+                catch (OperationCanceledException) { }
+            }
 
             await AutoReactAsync();
         }
@@ -251,6 +255,7 @@ namespace PacManBot.Commands.Modules
                 await message.ModifyAsync(game.GetMessageUpdate(), requestOptions); // Restore display to normal
             }
             catch (HttpException) { } // Message is deleted while controls are added
+            catch (TaskCanceledException) { } // Message is edited before the post-controls edit
         }
     }
 }

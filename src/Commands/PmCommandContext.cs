@@ -11,12 +11,13 @@ namespace PacManBot.Commands
     /// </summary>
     public class PmCommandContext : ShardedCommandContext
     {
-        public PmCommandContext(SocketUserMessage msg, IServiceProvider services)
+        public PmCommandContext(SocketUserMessage msg, int commandPosition, IServiceProvider services)
             : base(services.Get<PmDiscordClient>(), msg)
         {
             var storage = services.Get<StorageService>();
             FixedPrefix = storage.GetGuildPrefix(Guild);
             Prefix = storage.RequiresPrefix(this) ? FixedPrefix : "";
+            Position = commandPosition;
         }
 
         /// <summary>Gets the <see cref="PmDiscordClient"/> that the command is executed with.</summary>
@@ -26,5 +27,7 @@ namespace PacManBot.Commands
         public string FixedPrefix { get; }
         /// <summary>The relative prefix used in this context. Might be empty in DMs and other cases.</summary>
         public string Prefix { get; }
+        /// <summary>The position where the command starts in the message.</summary>
+        public int Position { get; }
     }
 }

@@ -86,16 +86,20 @@ namespace PacManBot.Services
         {
             if (!command.IsSpecified) return Task.CompletedTask;
 
+            int pos = ((PmCommandContext)context).Position;
+            string commandText = context.Message.Content.Substring(pos);
+            if (commandText.Length > 40) commandText = commandText.Truncate(37) + "...";
+
             if (result.IsSuccess)
             {
                 log.Verbose(
-                    $"Executed \"{context.Message.Content}\" for {context.User.FullName()} in {context.Channel.FullName()}",
+                    $"Executed \"{commandText}\" for {context.User.FullName()} in {context.Channel.FullName()}",
                     LogSource.Command);
             }
             else if (result is ExecuteResult execResult && execResult.Exception != null)
             {
                 log.Exception(
-                    $"Executing \"{context.Message.Content}\" for {context.User.FullName()} in {context.Channel.FullName()}",
+                    $"Executing \"{commandText}\" for {context.User.FullName()} in {context.Channel.FullName()}",
                     execResult.Exception, LogSource.Command);
             }
 
@@ -116,7 +120,7 @@ namespace PacManBot.Services
                 || message.HasStringPrefix(prefix, ref commandPosition)
                 || !await storage.RequiresPrefixAsync(message.Channel))
             {
-                var context = new PmCommandContext(message, services);
+                var context = new PmCommandContext(message, commandPosition, services);
                 var res = await ExecuteAsync(context, commandPosition, services, MultiMatchHandling.Best);
 
                 if (res.IsSuccess) return ExecuteResult.FromSuccess();

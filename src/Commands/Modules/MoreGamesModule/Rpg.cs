@@ -204,7 +204,8 @@ namespace PacManBot.Commands.Modules
             {
                 Games.Save(game);
                 game.CancelRequests();
-                await gameMsg.ModifyAsync(game.GetMessageUpdate(), game.GetRequestOptions());
+                try { await gameMsg.ModifyAsync(game.GetMessageUpdate(), game.GetRequestOptions()); }
+                catch (OperationCanceledException) { }
             }
 
             if (Context.BotCan(ChannelPermission.ManageMessages)) await Context.Message.DeleteAsync(DefaultOptions);
@@ -270,7 +271,8 @@ namespace PacManBot.Commands.Modules
                     game.lastEmote = "";
                     game.fightEmbed = game.IsPvp ? game.FightPvP() : game.Fight();
                     game.CancelRequests();
-                    await message.ModifyAsync(m => m.Embed = game.fightEmbed.Build(), game.GetRequestOptions());
+                    try { await message.ModifyAsync(m => m.Embed = game.fightEmbed.Build(), game.GetRequestOptions()); }
+                    catch (OperationCanceledException) { }
                 }
 
                 if (Context.BotCan(ChannelPermission.ManageMessages))
@@ -316,10 +318,11 @@ namespace PacManBot.Commands.Modules
                 var message = await game.GetMessage();
                 if (message != null)
                 {
-                    game.CancelRequests();
                     game.lastEmote = RpgGame.ProfileEmote;
-                    await message.ModifyAsync(m => m.Embed = game.player.Profile(Context.Prefix, reaction: true).Build(),
-                        game.GetRequestOptions());
+                    var embed = game.player.Profile(Context.Prefix, reaction: true).Build();
+                    game.CancelRequests();
+                    try { await message.ModifyAsync(m => m.Embed = embed, game.GetRequestOptions()); }
+                    catch (OperationCanceledException) { }
                 }
 
                 if (Context.BotCan(ChannelPermission.ManageMessages))
@@ -397,10 +400,11 @@ namespace PacManBot.Commands.Modules
                 var message = await game.GetMessage();
                 if (message != null)
                 {
-                    game.CancelRequests();
                     game.lastEmote = RpgGame.SkillsEmote;
-                    await message.ModifyAsync(m => m.Embed = game.player.Skills(Context.Prefix, true).Build(),
-                        game.GetRequestOptions());
+                    var embed = game.player.Skills(Context.Prefix, true).Build();
+                    game.CancelRequests();
+                    try { await message.ModifyAsync(m => m.Embed = embed, game.GetRequestOptions()); }
+                    catch (OperationCanceledException) { }
                 }
             }
 
@@ -498,15 +502,15 @@ namespace PacManBot.Commands.Modules
                 await AutoReactAsync();
 
                 var msg = await otherGame.GetMessage();
+                game.fightEmbed = game.FightPvP();
+                game.CancelRequests();
+                game.PvpGame.CancelRequests();
                 try
                 {
-                    game.CancelRequests();
-                    game.PvpGame.CancelRequests();
-                    game.fightEmbed = game.FightPvP();
                     await msg.ModifyAsync(game.GetMessageUpdate(), game.GetRequestOptions());
                     await RpgAddEmotes(msg, game);
                 }
-                catch (HttpException) { }
+                catch (OperationCanceledException) { }
             }
             else if (otherGame.State == State.Active)
             {

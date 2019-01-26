@@ -38,12 +38,17 @@ namespace PacManBot.Commands.Modules
                     {
                         game.BotInput();
                         if (game.MessageId != gameMessage.Id) gameMessage = await game.GetMessage();
-                        game.CancelRequests();
-                        if (gameMessage != null) await gameMessage.ModifyAsync(game.GetMessageUpdate(), game.GetRequestOptions());
+                        if (gameMessage != null)
+                        {
+                            game.CancelRequests();
+                            await gameMessage.ModifyAsync(game.GetMessageUpdate(), game.GetRequestOptions());
+                        }
                     }
-                    catch (Exception e) when (e is OperationCanceledException || e is TimeoutException || e is HttpException) { }
+                    catch (OperationCanceledException) { } 
+                    catch (TimeoutException) { }
+                    catch (HttpException) { }  // All of these are connection-related and ignorable in this situation
 
-                    await Task.Delay(Program.Random.Next(2000, 3001));
+                    await Task.Delay(Program.Random.Next(2500, 4001));
                 }
 
                 Games.Remove(game);
