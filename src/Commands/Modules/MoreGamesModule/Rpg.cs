@@ -96,11 +96,9 @@ namespace PacManBot.Commands.Modules
             }
             else
             {
-                if (game != null)
-                {
-                    game.LastPlayed = DateTime.Now;
-                }
-                else if (command.Get<NotRequiresRpgAttribute>() == null)
+                if (game != null) game.LastPlayed = DateTime.Now;
+
+                if (game == null && command.Get<NotRequiresRpgAttribute>() == null)
                 {
                     await ReplyAsync($"You can use `{Context.Prefix}rpg start` to start your adventure.");
                     return;
@@ -227,6 +225,7 @@ namespace PacManBot.Commands.Modules
             {
                 if (otherUser == null) await ReplyAsync($"You can use `{Context.Prefix}rpg start` to start your adventure."); 
                 else await ReplyAsync("This person hasn't started their adventure.");
+                return null;
             }
 
             await ReplyAsync(game.player.Profile(Context.Prefix, own: otherUser == null));

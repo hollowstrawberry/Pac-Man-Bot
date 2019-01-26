@@ -82,11 +82,7 @@ namespace PacManBot.Commands.Modules
             else
             {
                 var pet = Games.GetForUser<PetGame>(Context.User.Id);
-                if (pet != null)
-                {
-                    pet.LastPlayed = DateTime.Now;
-                }
-                if (command.Get<RequiresPetAttribute>() != null)
+                if (pet == null && command.Get<RequiresPetAttribute>() != null)
                 {
                     await ReplyAsync(AdoptPetMessage);
                     return;
