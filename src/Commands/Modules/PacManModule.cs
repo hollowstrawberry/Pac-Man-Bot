@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Discord;
@@ -16,7 +17,7 @@ namespace PacManBot.Commands.Modules
 {
     [Name("🎮Pac-Man"), Remarks("2")]
     [PmRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.EmbedLinks |
-                                ChannelPermission.UseExternalEmojis | ChannelPermission.AddReactions)]
+                            ChannelPermission.UseExternalEmojis | ChannelPermission.AddReactions)]
     public class PacManModule : PmBaseModule
     {
         public IServiceProvider Services { get; set; }
@@ -61,13 +62,13 @@ namespace PacManBot.Commands.Modules
             }
             catch (InvalidMapException e) when (customMap != null)
             {
-                await Log.DebugAsync($"Failed to create custom game: {e.Message}", LogSource.Game);
+                Log.Debug($"Failed to create custom game: {e.Message}", "Pac-Man");
                 await ReplyAsync($"The provided map is invalid: {e.Message}.\nUse the `{Context.Prefix}custom` command for more info.");
                 return;
             }
             catch (Exception e)
             {
-                await Log.ErrorAsync(e);
+                Log.Exception($"Starting game in {Context.Channel.FullName()}", e, "Pac-Man");
                 await ReplyAsync("There was an error starting the game. " +
                                  $"Please try again or contact the author of the bot using `{Context.Prefix}feedback`");
                 return;
@@ -96,19 +97,10 @@ namespace PacManBot.Commands.Modules
             }
 
             game.mobileDisplay = !game.mobileDisplay;
-            try
-            {
-                game.CancelRequests();
-                var gameMessage = await game.GetMessage();
-                if (gameMessage != null) await gameMessage.ModifyAsync(game.GetMessageUpdate(), game.GetRequestOptions());
-            }
-            catch (OperationCanceledException) { }
-            catch (Exception e)
-            {
-                if (!(e is HttpException || e is TimeoutException)) await Log.ErrorAsync(e);
-                await AutoReactAsync(false);
-                return;
-            }
+
+            game.CancelRequests();
+            var gameMessage = await game.GetMessage();
+            if (gameMessage != null) await gameMessage.ModifyAsync(game.GetMessageUpdate(), game.GetRequestOptions());
 
             await AutoReactAsync();
         }
@@ -258,7 +250,7 @@ namespace PacManBot.Commands.Modules
 
                 await message.ModifyAsync(game.GetMessageUpdate(), requestOptions); // Restore display to normal
             }
-            catch (Exception e) when (e is HttpException || e is TimeoutException || e is OperationCanceledException) { } // Ignore
+            catch (HttpException) { } // Message is deleted while controls are added
         }
     }
 }

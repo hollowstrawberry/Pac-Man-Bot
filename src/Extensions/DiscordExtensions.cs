@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Serilog.Events;
 using System.Drawing;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -203,9 +203,29 @@ namespace PacManBot.Extensions
                 var color = (SystemColor)new ColorConverter().ConvertFromString(text);
                 return new DiscordColor(color.R, color.G, color.B);
             }
-            catch (Exception) // It's always System.Exception, and the inner exception can vary a lot, so screw it
+            catch // It's always System.Exception, and the inner exception can vary a lot, so screw it
             {
                 return null;
+            }
+        }
+
+
+
+
+        // Etc
+
+        /// <summary>Converts a Discord.Net log level into Serilog a log level.</summary>
+        public static LogEventLevel ToSerilog(this LogSeverity level)
+        {
+            switch (level)
+            {
+                case LogSeverity.Critical: return LogEventLevel.Fatal;
+                case LogSeverity.Error:    return LogEventLevel.Error;
+                case LogSeverity.Warning:  return LogEventLevel.Warning;
+                case LogSeverity.Info:     return LogEventLevel.Information;
+                case LogSeverity.Verbose:  return LogEventLevel.Verbose;
+                case LogSeverity.Debug:    return LogEventLevel.Debug;
+                default: return LogEventLevel.Verbose;
             }
         }
     }

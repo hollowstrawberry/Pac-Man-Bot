@@ -47,7 +47,7 @@ namespace PacManBot.Services
             using (var db = MakeDbContext())
             {
                 db.Database.EnsureCreated();
-                log.InfoAsync("Database ready", LogSource.Storage);
+                log.Info("Database ready", LogSource.Storage);
             }
         }
 
@@ -249,7 +249,7 @@ namespace PacManBot.Services
                 db.SaveChanges();
             }
 
-            log.InfoAsync($"New scoreboard entry: {entry}", LogSource.Storage);
+            log.Info($"New scoreboard entry: {entry}", LogSource.Storage);
         }
 
 
@@ -268,7 +268,7 @@ namespace PacManBot.Services
                 if (userId != null) scores = scores.Where(x => x.UserId == userId);
 
                 var list = scores.OrderByDescending(x => x.Score).Skip(start).Take(amount).ToList();
-                log.InfoAsync($"Grabbed {list.Count} score entries", LogSource.Storage);
+                log.Info($"Grabbed {list.Count} score entries", LogSource.Storage);
                 return list;
             }
         }

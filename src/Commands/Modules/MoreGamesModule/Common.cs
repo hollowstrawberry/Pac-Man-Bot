@@ -13,7 +13,7 @@ namespace PacManBot.Commands.Modules
 {
     [Name("👾More Games"), Remarks("3")]
     [PmRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.EmbedLinks |
-                                ChannelPermission.UseExternalEmojis | ChannelPermission.AddReactions)]
+                            ChannelPermission.UseExternalEmojis | ChannelPermission.AddReactions)]
     public partial class MoreGamesModule : PmBaseModule
     {
         public IServiceProvider Services { get; set; }
@@ -36,7 +36,7 @@ namespace PacManBot.Commands.Modules
             try
             {
                 var gameMessage = await game.GetMessage();
-                if (gameMessage != null) await gameMessage.DeleteAsync(DefaultOptions); // Old message
+                if (gameMessage != null) await gameMessage.DeleteAsync(DefaultOptions);
             }
             catch (HttpException) { } // Something happened to the message, can ignore it
 

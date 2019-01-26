@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
-using Discord.Net;
 using Discord.WebSocket;
 using PacManBot.Constants;
 using PacManBot.Extensions;
@@ -46,9 +45,9 @@ namespace PacManBot.Commands.Modules
                 {
                     await message.DeleteAsync(DefaultOptions);
                 }
-                catch (Exception e) when (e is HttpException || e is TimeoutException)
+                catch (Exception e)
                 {
-                    await Log.WarningAsync($"Couldn't delete message {message.Id} in {Context.Channel.FullName()}: {e.Message}");
+                    Log.Warning($"Couldn't delete message {message.Id} in {Context.Channel.FullName()}: {e.Message}");
                 }
             }
         }
@@ -79,12 +78,12 @@ namespace PacManBot.Commands.Modules
             {
                 Storage.SetGuildPrefix(Context.Guild.Id, prefix);
                 await ReplyAsync($"{CustomEmoji.Check} Prefix for this server has been successfully set to `{prefix}`");
-                await Log.InfoAsync($"Prefix for server {Context.Guild.Id} set to {prefix}");
+                Log.Info($"Prefix for server {Context.Guild.Id} set to {prefix}");
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Log.Exception($"Setting prefix for {Context.Guild} ({Context.Guild.Id})", e);
                 await ReplyAsync($"{CustomEmoji.Cross} There was a problem setting the prefix. {ContactMessage}");
-                throw;
             }
         }
 
@@ -99,12 +98,12 @@ namespace PacManBot.Commands.Modules
             {
                 bool waka = Storage.ToggleAutoresponse(Context.Guild.Id);
                 await ReplyAsync($"{CustomEmoji.Check} Autoresponses turned **{(waka ? "ON" : "OFF")}** in this server.");
-                await Log.InfoAsync($"Autoresponses turned {(waka ? "on" : "off")} in {Context.Guild.Id}");
+                Log.Info($"Autoresponses turned {(waka ? "on" : "off")} in {Context.Guild.Id}");
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Log.Exception($"Changing autoresponse setting for {Context.Guild} ({Context.Guild.Id})", e);
                 await ReplyAsync($"{CustomEmoji.Cross} Oops, something went wrong. {ContactMessage}");
-                throw;
             }
         }
 
@@ -154,10 +153,10 @@ namespace PacManBot.Commands.Modules
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Log.Exception($"Toggling prefix for {Context.Channel.FullName()}", e);
                 await ReplyAsync($"{CustomEmoji.Cross} Oops, something went wrong. {ContactMessage}");
-                throw;
             }
         }
     }

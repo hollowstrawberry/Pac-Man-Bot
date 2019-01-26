@@ -57,7 +57,7 @@ namespace PacManBot.Commands.Modules
             var message = await ReplyAsync(CustomEmoji.Loading);
             File.WriteAllText(Files.ManualRestart, $"{message.Channel.Id}/{message.Id}");
 
-            await Log.InfoAsync("Restarting", LogSource.Owner);
+            Log.Info("Restarting", LogSource.Owner);
             await Bot.StopAsync();
             Environment.Exit(ExitCodes.ManualReboot);
         }
@@ -110,7 +110,7 @@ namespace PacManBot.Commands.Modules
                 await Context.Client.CurrentUser.ModifyAsync(x => x.Username = name, DefaultOptions);
                 await AutoReactAsync();
             }
-            catch (Exception)
+            catch
             {
                 await AutoReactAsync(false);
                 throw;
@@ -128,7 +128,7 @@ namespace PacManBot.Commands.Modules
                 await Context.Guild.CurrentUser.ModifyAsync(x => x.Nickname = name, DefaultOptions);
                 await AutoReactAsync();
             }
-            catch (Exception)
+            catch
             {
                 await AutoReactAsync(false);
                 throw;
@@ -146,7 +146,7 @@ namespace PacManBot.Commands.Modules
                 await Context.Client.CurrentUser.ModifyAsync(x => x.Avatar = new Image(path), DefaultOptions);
                 await AutoReactAsync();
             }
-            catch (Exception)
+            catch
             {
                 await AutoReactAsync(false);
                 throw;
@@ -166,13 +166,13 @@ namespace PacManBot.Commands.Modules
             try
             {
                 result = await Scripting.EvalAsync(code, this);
-                await Log.DebugAsync($"Successfully executed:\n {code}", LogSource.Eval);
+                Log.Debug($"Successfully executed:\n {code}", LogSource.Eval);
                 await AutoReactAsync(true);
             }
             catch (Exception e)
             {
                 result = e.Message;
-                await Log.DebugAsync($"{e}", LogSource.Eval);
+                Log.Debug($"{e}", LogSource.Eval);
                 await AutoReactAsync(false);
             }
 
@@ -290,7 +290,7 @@ namespace PacManBot.Commands.Modules
             }
             catch (Exception e)
             {
-                await Log.DebugAsync($"{e.Message}");
+                Log.Debug($"{e.Message}");
                 await AutoReactAsync(false);
                 await ReplyAsync($"```{e.Message}```");
             }
@@ -304,14 +304,15 @@ namespace PacManBot.Commands.Modules
             try
             {
                 Bot.Config.LoadContent(File.ReadAllText(Files.Contents));
-                await Log.InfoAsync("Reloaded bot content");
-                await AutoReactAsync();
             }
             catch (Exception e)
             {
-                await Log.ErrorAsync($"Failed to load bot content: {e}");
+                Log.Error($"Failed to load bot content: {e}");
                 await ReplyAsync($"```{e.Message}```");
             }
+
+            Log.Info("Reloaded bot content");
+            await AutoReactAsync();
         }
 
 
@@ -319,7 +320,7 @@ namespace PacManBot.Commands.Modules
         [Summary("Stores an entry in the bot logs. Developer only")]
         public async Task DoLog([Remainder]string message)
         {
-            await Log.InfoAsync(message, LogSource.Owner);
+            Log.Info(message, LogSource.Owner);
             await AutoReactAsync();
         }
 
@@ -360,8 +361,8 @@ namespace PacManBot.Commands.Modules
             }
             catch (Exception e)
             {
-                await Log.DebugAsync($"{e.Message}");
-                await ReplyAsync($"```{e.Message}```");
+                Log.Debug($"Reading file {filename}: {e.Message}");
+                await ReplyAsync($"```Reading file {filename}: {e.Message}```");
             }
         }
 
@@ -398,7 +399,7 @@ namespace PacManBot.Commands.Modules
                 }
                 catch (HttpException e)
                 {
-                    await Log.WarningAsync($"Couldn't delete message {message.Id} in {Context.Channel.FullName()}: {e.Message}");
+                    Log.Warning($"Couldn't delete message {message.Id} in {Context.Channel.FullName()}: {e.Message}");
                 }
             }
         }
@@ -433,7 +434,7 @@ namespace PacManBot.Commands.Modules
                 }
                 catch (Exception e)
                 {
-                    await Log.DebugAsync($"While executing debug game input: {e.Message}");
+                    Log.Debug($"While executing debug game input: {e}");
                     success = false;
                 }
             }

@@ -93,17 +93,17 @@ namespace PacManBot.Services
         {
             if (client.AllShardsConnected()) return;
 
-            await log.InfoAsync("A shard is disconnected. Waiting for reconnection...", LogSource.Scheduling);
+            log.Info("A shard is disconnected. Waiting for reconnection...", LogSource.Scheduling);
 
             try
             {
                 await Task.Delay(TimeSpan.FromMinutes(2), cancelShutdown.Token);
-                await log.FatalAsync("Reconnection timed out. Shutting down", LogSource.Scheduling);
+                log.Fatal("Reconnection timed out. Shutting down", LogSource.Scheduling);
                 Environment.Exit(ExitCodes.ReconnectionTimeout);
             }
             catch (OperationCanceledException)
             {
-                await log.InfoAsync("All shards reconnected. Shutdown aborted", LogSource.Scheduling);
+                log.Info("All shards reconnected. Shutdown aborted", LogSource.Scheduling);
             }
         }
 
@@ -128,7 +128,7 @@ namespace PacManBot.Services
 
             if (count > 0)
             {
-                await log.InfoAsync($"Removed {count} expired game{"s".If(count > 1)}", LogSource.Scheduling);
+                log.Info($"Removed {count} expired game{"s".If(count > 1)}", LogSource.Scheduling);
             }
 
 
@@ -149,9 +149,8 @@ namespace PacManBot.Services
 
         private async void RestartBot(object state)
         {
-            await log.InfoAsync("Preparing to restart", LogSource.Scheduling);
+            log.Info("Restarting", LogSource.Scheduling);
             await PrepareRestart.Invoke();
-            await log.InfoAsync("Restarting", LogSource.Scheduling);
             Environment.Exit(ExitCodes.ScheduledReboot);
         }
     }

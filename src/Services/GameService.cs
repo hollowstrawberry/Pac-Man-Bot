@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Discord;
 using Newtonsoft.Json;
 using PacManBot.Constants;
@@ -109,12 +110,12 @@ namespace PacManBot.Services
 
                 if (success && doLog)
                 {
-                    log.VerboseAsync($"Removed {game.GetType().Name} at {game.IdentifierId()}", LogSource.Game);
+                    log.Verbose($"Removed {game.GetType().Name} at {game.IdentifierId()}", LogSource.Game);
                 }
             }
             catch (Exception e)
             {
-                log.ErrorAsync($"Trying to remove game at {game.IdentifierId()}: {e}", LogSource.Game);
+                log.Exception($"Removing game at {game.IdentifierId()}", e, LogSource.Game);
             }
         }
 
@@ -129,7 +130,7 @@ namespace PacManBot.Services
 
 
         /// <summary>Reload the entire game collection from disk.</summary>
-        public void LoadGames()
+        public async Task LoadGamesAsync()
         {
             games.Clear();
             userGames.Clear();
@@ -137,38 +138,37 @@ namespace PacManBot.Services
             if (!Directory.Exists(Files.GameFolder))
             {
                 Directory.CreateDirectory(Files.GameFolder);
-                log.WarningAsync($"Created missing directory \"{Files.GameFolder}\"", LogSource.Game);
+                log.Warning($"Created missing directory \"{Files.GameFolder}\"", LogSource.Game);
                 return;
             }
 
             uint fail = 0;
             bool firstFail = true;
 
-            foreach (string file in Directory.GetFiles(Files.GameFolder))
+            foreach (string file in Directory.GetFiles(Files.GameFolder).Where(f => f.EndsWith(Files.GameExtension)))
             {
-                if (file.EndsWith(Files.GameExtension))
+                try
                 {
-                    try
-                    {
-                        Type gameType = StoreableGameTypes.First(x => file.Contains(x.key)).type;
-                        var game = (IStoreableGame)JsonConvert.DeserializeObject(File.ReadAllText(file), gameType, GameJsonSettings);
-                        game.PostDeserialize(services);
+                    Type gameType = StoreableGameTypes.First(x => file.Contains(x.key)).type;
+                    string json = await File.ReadAllTextAsync(file);
+                    var game = (IStoreableGame)JsonConvert.DeserializeObject(json, gameType, GameJsonSettings);
+                    game.PostDeserialize(services);
 
-                        if (game is IUserGame uGame) userGames.TryAdd((uGame.OwnerId, uGame.GetType()), uGame);
-                        else if (game is IChannelGame cGame) games.TryAdd(cGame.ChannelId, cGame);
-                    }
-                    catch (Exception e)
-                    {
-                        log.Log(
-                            $"Couldn't load game at {file}: {(firstFail ? e.ToString() : e.Message)}",
-                            firstFail ? LogSeverity.Error : LogSeverity.Verbose, LogSource.Game);
-                        fail++;
-                        firstFail = false;
-                    }
+                    if (game is IUserGame uGame) userGames.TryAdd((uGame.OwnerId, uGame.GetType()), uGame);
+                    else if (game is IChannelGame cGame) games.TryAdd(cGame.ChannelId, cGame);
+                }
+                catch (Exception e)
+                {
+                    log.Log(
+                        $"Couldn't load game at {file}: {(firstFail ? e.ToString() : e.Message)}",
+                        firstFail ? LogSeverity.Error : LogSeverity.Verbose, LogSource.Game);
+                    fail++;
+                    firstFail = false;
                 }
             }
 
-            log.InfoAsync($"Loaded {games.Count + userGames.Count} games{$" with {fail} errors".If(fail > 0)}",
+            log.Info(
+                $"Loaded {games.Count + userGames.Count} games{$" with {fail} errors".If(fail > 0)}",
                 LogSource.Game);
         }
     }

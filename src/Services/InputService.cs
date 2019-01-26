@@ -4,9 +4,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
-using Discord.Net;
 using Discord.WebSocket;
-using PacManBot.Constants;
 using PacManBot.Extensions;
 using PacManBot.Games;
 using PacManBot.Games.Concrete;
@@ -106,7 +104,7 @@ namespace PacManBot.Services
             }
             catch (Exception e)
             {
-                await log.ErrorAsync(e);
+                log.Exception($"In {genericMessage.Channel.FullName()}", e);
             }
         }
 
@@ -126,7 +124,7 @@ namespace PacManBot.Services
             }
             catch (Exception e)
             {
-                await log.ErrorAsync(e);
+                log.Exception($"In {channel.FullName()}", e);
             }
         }
 
@@ -155,7 +153,7 @@ namespace PacManBot.Services
                 if (WakaRegex.IsMatch(message.Content))
                 {
                     await message.Channel.SendMessageAsync("waka", options: PmBot.DefaultOptions);
-                    await log.VerboseAsync($"Waka at {message.Channel.FullName()}");
+                    log.Verbose($"Waka at {message.Channel.FullName()}");
                     return true;
                 }
                 else if (message.Content == "sudo neat")
@@ -179,11 +177,9 @@ namespace PacManBot.Services
             {
                 await ExecuteGameInputAsync(game, message);
             }
-            catch (Exception e) when (e is OperationCanceledException || e is TimeoutException) { }
-            catch (HttpException e)
+            catch (Exception e)
             {
-                await log.WarningAsync($"During {game.GetType().Name} input in {game.ChannelId}: {e.Message}",
-                    LogSource.Game);
+                log.Exception($"During input \"{message.Content}\" in {game.Channel.FullName()}", e, game.GameName);
             }
 
             return true;
@@ -203,10 +199,9 @@ namespace PacManBot.Services
             {
                 await ExecuteGameInputAsync(game, reaction, message);
             }
-            catch (Exception e) when (e is OperationCanceledException || e is TimeoutException) { }
-            catch (HttpException e)
+            catch (Exception e)
             {
-                await log.WarningAsync($"During input in {game.ChannelId}: {e.Message}", game.GameName);
+                log.Exception($"During input \"{reaction}\" in {game.Channel.FullName()}", e, game.GameName);
             }
 
             return true;
@@ -219,7 +214,7 @@ namespace PacManBot.Services
         {
             var gameMessage = await game.GetMessage();
 
-            await log.VerboseAsync(
+            log.Verbose(
                 $"Input {message.Content} by {message.Author.FullName()} in {message.Channel.FullName()}",
                 game.GameName);
 
@@ -253,7 +248,7 @@ namespace PacManBot.Services
             var channel = gameMessage.Channel;
             var guild = (channel as IGuildChannel)?.Guild;
 
-            await log.VerboseAsync(
+            log.Verbose(
                 $"Input {reaction.Emote.Name} by {user.FullName()} in {channel.FullName()}",
                 game.GameName);
 

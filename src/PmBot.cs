@@ -5,7 +5,6 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Discord;
-using Discord.Net;
 using Discord.WebSocket;
 using PacManBot.Constants;
 using PacManBot.Extensions;
@@ -56,7 +55,7 @@ namespace PacManBot
         public async Task StartAsync()
         {
             await commands.AddAllModulesAsync();
-            games.LoadGames();
+            await games.LoadGamesAsync();
 
             client.Log += log.ClientLog;
             client.ShardReady += OnShardReady;
@@ -77,6 +76,7 @@ namespace PacManBot
             await client.SetStatusAsync(UserStatus.Online);
             UpdateGuildCount();
 
+
             if (File.Exists(Files.ManualRestart))
             {
                 try
@@ -87,10 +87,11 @@ namespace PacManBot
 
                     var message = await client.GetMessageChannel(id[0]).GetUserMessageAsync(id[1]);
                     await message.ModifyAsync(x => x.Content = CustomEmoji.Check);
+                    log.Info("Resumed after manual restart");
                 }
-                catch (HttpException e)
+                catch (Exception e)
                 {
-                    await log.ErrorAsync(e);
+                    log.Warning($"Resuming after manual restart: {e.Message}");
                 }
             }
         }
@@ -112,6 +113,8 @@ namespace PacManBot
 
             await client.LogoutAsync();
             await client.StopAsync();
+
+            log.Dispose();
         }
 
 
@@ -121,7 +124,7 @@ namespace PacManBot
         {
             if (++shardsReady == client.Shards.Count)
             {
-                if (client.Shards.Count > 1) await log.InfoAsync("All shards ready");
+                if (client.Shards.Count > 1) log.Info("All shards ready");
                 await ReadyAsync();
             }
         }
@@ -152,19 +155,20 @@ namespace PacManBot
 
 
 
+        // Meant to be fire-and-forget so Discord can't complain about busy handlers
         private async void UpdateGuildCount()
         {
             try
             {
-                await InnerUpdateGuildCount();
+                await UpdateGuildCountAsync();
             }
             catch (Exception e)
             {
-                await log.ErrorAsync(e);
+                log.Exception($"Updating guild count", e);
             }
         }
 
-        private async Task InnerUpdateGuildCount()
+        private async Task UpdateGuildCountAsync()
         {
             var now = DateTime.Now;
             if ((now - lastGuildCountUpdate).TotalMinutes < 20.0) return;
@@ -187,13 +191,13 @@ namespace PacManBot
                     httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(Config.httpToken[i]);
                     var response = await httpClient.PostAsync(requesturi, content);
 
-                    await log.LogAsync(
+                    log.Log(
                         $"Sent guild count to {requesturi} - {(response.IsSuccessStatusCode ? "Success" : $"Response:\n{response}")}",
                         response.IsSuccessStatusCode ? LogSeverity.Verbose : LogSeverity.Warning);
                 }
             }
 
-            await log.InfoAsync($"Guild count updated to {guilds}");
+            log.Info($"Guild count updated to {guilds}");
         }
     }
 }

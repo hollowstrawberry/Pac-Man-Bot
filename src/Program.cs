@@ -74,7 +74,7 @@ namespace PacManBot
                 .AddSingleton<ScriptingService>();
 
             var services = serviceCollection.BuildServiceProvider();
-            await services.Get<LoggingService>().InfoAsync($"Pac-Man Bot v{Version}");
+            services.Get<LoggingService>().Info($"Pac-Man Bot v{Version}");
 
 
             // Let's go

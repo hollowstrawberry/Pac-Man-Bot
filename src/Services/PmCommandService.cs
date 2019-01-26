@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
+using Discord.Net;
 using Discord.WebSocket;
 using PacManBot.Commands;
 using PacManBot.Constants;
@@ -81,23 +82,24 @@ namespace PacManBot.Services
         }
 
 
-        private async Task LogCommand(Optional<CommandInfo> command, ICommandContext context, IResult result)
+        private Task LogCommand(Optional<CommandInfo> command, ICommandContext context, IResult result)
         {
-            if (!command.IsSpecified) return;
+            if (!command.IsSpecified) return Task.CompletedTask;
 
             if (result.IsSuccess)
             {
-                await log.VerboseAsync(
+                log.Verbose(
                     $"Executed \"{context.Message.Content}\" for {context.User.FullName()} in {context.Channel.FullName()}",
                     LogSource.Command);
             }
             else if (result is ExecuteResult execResult && execResult.Exception != null)
             {
-                await log.ErrorAsync(
-                    $"Executing \"{context.Message.Content}\" for {context.User.FullName()} " +
-                    $"in {context.Channel.FullName()}: {execResult.Exception}",
-                    LogSource.Command);
+                log.Exception(
+                    $"Executing \"{context.Message.Content}\" for {context.User.FullName()} in {context.Channel.FullName()}",
+                    execResult.Exception, LogSource.Command);
             }
+
+            return Task.CompletedTask;
         }
         
 
