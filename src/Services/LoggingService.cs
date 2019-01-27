@@ -65,14 +65,14 @@ namespace PacManBot.Services
             // To the purposes of this bot, these warnings are expected and thus serve no purpose
             if (log.Severity == LogSeverity.Warning && log.Message != null)
             {
-                if (log.Source == "Rest")
+                if (source == "Rest")
                 {
                     // The library should handle common ratelimits (Note: Most requests use the option RetryRatelimit)
                     // If ignoring them proves to be a bad idea (it hasn't so far), it would be needed to
                     // manually implement ratelimit handling for commands and games.
-                    if (log.Message.StartsWith("Rate limit triggered")) return Task.CompletedTask;
+                    if (log.Message.StartsWith("Rate limit")) return Task.CompletedTask;
                 }
-                else if (log.Source.StartsWith("Gateway"))
+                else if (source.StartsWith("Gateway"))
                 {
                     // Unknown object events that are irrelevant.
                     // These include user voice events and leaving guilds.

@@ -196,9 +196,13 @@ namespace PacManBot.Services
             var error = result.ErrorReason;
             var type = result.Error ?? CommandError.Unsuccessful;
 
+            if (type == CommandError.Exception)
+            {
+                return null;
+            }
             if (type == CommandError.UnknownCommand)
             {
-                if (context.Guild == null || context.Message.MentionedUsers.Contains(client.CurrentUser))
+                if (context.Guild == null)
                     return $"Unknown command! Send `{context.Prefix}help` for a list.";
 
                 return null;
