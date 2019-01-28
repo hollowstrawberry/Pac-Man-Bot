@@ -131,7 +131,7 @@
       <a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_Owner">BaseGame.Owner</a>
     </div>
     <div>
-      <a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_SetServices_IServiceProvider_">BaseGame.SetServices(IServiceProvider)</a>
+      <a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_SetServices_System_IServiceProvider_">BaseGame.SetServices(IServiceProvider)</a>
     </div>
     <div>
       <a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_GetRequestOptions">BaseGame.GetRequestOptions()</a>
@@ -145,24 +145,46 @@
     <div>
       <a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_CancelledEmbed">BaseGame.CancelledEmbed()</a>
     </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="PacManBot.Games.Concrete.html">PacManBot.Games.Concrete</a></h6>
   <h6><strong>Assembly</strong>: Pacman.dll</h6>
   <h5 id="PacManBot_Games_Concrete_PacManGame_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class PacManGame : ChannelGame, IReactionsGame, IChannelGame, IStoreableGame, IBaseGame</code></pre>
+    <pre><code class="lang-csharp hljs">[DataContract]
+public class PacManGame : ChannelGame, IReactionsGame, IChannelGame, IStoreableGame, IBaseGame</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PacManGame__ctor_System_UInt64_System_UInt64_System_String_System_Boolean_IServiceProvider_.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PacManGame.%23ctor(System.UInt64%2CSystem.UInt64%2CSystem.String%2CSystem.Boolean%2CIServiceProvider)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PacManGame__ctor_System_UInt64_System_UInt64_System_String_System_Boolean_System_IServiceProvider_.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PacManGame.%23ctor(System.UInt64%2CSystem.UInt64%2CSystem.String%2CSystem.Boolean%2CSystem.IServiceProvider)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PacManGame.cs/#L210">View Source</a>
   </span>
   <a id="PacManBot_Games_Concrete_PacManGame__ctor_" data-uid="PacManBot.Games.Concrete.PacManGame.#ctor*"></a>
-  <h4 id="PacManBot_Games_Concrete_PacManGame__ctor_System_UInt64_System_UInt64_System_String_System_Boolean_IServiceProvider_" data-uid="PacManBot.Games.Concrete.PacManGame.#ctor(System.UInt64,System.UInt64,System.String,System.Boolean,IServiceProvider)">PacManGame(UInt64, UInt64, String, Boolean, IServiceProvider)</h4>
+  <h4 id="PacManBot_Games_Concrete_PacManGame__ctor_System_UInt64_System_UInt64_System_String_System_Boolean_System_IServiceProvider_" data-uid="PacManBot.Games.Concrete.PacManGame.#ctor(System.UInt64,System.UInt64,System.String,System.Boolean,System.IServiceProvider)">PacManGame(UInt64, UInt64, String, Boolean, IServiceProvider)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -200,7 +222,7 @@
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">IServiceProvider</span></td>
+        <td><span class="xref">System.IServiceProvider</span></td>
         <td><span class="parametername">services</span></td>
         <td></td>
       </tr>
@@ -220,7 +242,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool custom</code></pre>
+    <pre><code class="lang-csharp hljs">[DataMember]
+public bool custom</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -261,7 +284,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IReadOnlyDictionary</span>&lt;<span class="xref">IEmote</span>, <a class="xref" href="PacManBot.Games.Concrete.PacManGame.PacManInput.html">PacManGame.PacManInput</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IReadOnlyDictionary</span>&lt;<span class="xref">Discord.IEmote</span>, <a class="xref" href="PacManBot.Games.Concrete.PacManGame.PacManInput.html">PacManGame.PacManInput</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -278,7 +301,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool mobileDisplay</code></pre>
+    <pre><code class="lang-csharp hljs">[DataMember]
+public bool mobileDisplay</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -307,7 +331,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public int score</code></pre>
+    <pre><code class="lang-csharp hljs">[DataMember]
+public int score</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -339,7 +364,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override ulong ChannelId { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[DataMember]
+public override ulong ChannelId { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -383,7 +409,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">TimeSpan</span></td>
+        <td><span class="xref">System.TimeSpan</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -497,7 +523,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override DateTime LastPlayed { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[DataMember]
+public override DateTime LastPlayed { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -509,7 +536,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">DateTime</span></td>
+        <td><span class="xref">System.DateTime</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -529,7 +556,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override ulong MessageId { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[DataMember]
+public override ulong MessageId { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -561,7 +589,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override ulong OwnerId { get; protected set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[DataMember]
+public override ulong OwnerId { get; protected set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -593,7 +622,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override State State { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[DataMember]
+public override State State { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -625,7 +655,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override int Time { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[DataMember]
+public override int Time { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -737,7 +768,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">EmbedBuilder</span></td>
+        <td><span class="xref">Discord.EmbedBuilder</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -746,18 +777,18 @@
   <div><a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_GetEmbed_System_Boolean_">BaseGame.GetEmbed(Boolean)</a></div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PacManGame_Input_IEmote_System_UInt64_.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PacManGame.Input(IEmote%2CSystem.UInt64)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PacManGame_Input_Discord_IEmote_System_UInt64_.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PacManGame.Input(Discord.IEmote%2CSystem.UInt64)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PacManGame.cs/#L260">View Source</a>
   </span>
   <a id="PacManBot_Games_Concrete_PacManGame_Input_" data-uid="PacManBot.Games.Concrete.PacManGame.Input*"></a>
-  <h4 id="PacManBot_Games_Concrete_PacManGame_Input_IEmote_System_UInt64_" data-uid="PacManBot.Games.Concrete.PacManGame.Input(IEmote,System.UInt64)">Input(IEmote, UInt64)</h4>
+  <h4 id="PacManBot_Games_Concrete_PacManGame_Input_Discord_IEmote_System_UInt64_" data-uid="PacManBot.Games.Concrete.PacManGame.Input(Discord.IEmote,System.UInt64)">Input(IEmote, UInt64)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void Input(IEmote emote, ulong userId = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public void Input(IEmote emote, ulong userId = 1UL)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -770,7 +801,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IEmote</span></td>
+        <td><span class="xref">Discord.IEmote</span></td>
         <td><span class="parametername">emote</span></td>
         <td></td>
       </tr>
@@ -783,18 +814,18 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PacManGame_IsInput_IEmote_System_UInt64_.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PacManGame.IsInput(IEmote%2CSystem.UInt64)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PacManGame_IsInput_Discord_IEmote_System_UInt64_.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PacManGame.IsInput(Discord.IEmote%2CSystem.UInt64)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PacManGame.cs/#L254">View Source</a>
   </span>
   <a id="PacManBot_Games_Concrete_PacManGame_IsInput_" data-uid="PacManBot.Games.Concrete.PacManGame.IsInput*"></a>
-  <h4 id="PacManBot_Games_Concrete_PacManGame_IsInput_IEmote_System_UInt64_" data-uid="PacManBot.Games.Concrete.PacManGame.IsInput(IEmote,System.UInt64)">IsInput(IEmote, UInt64)</h4>
+  <h4 id="PacManBot_Games_Concrete_PacManGame_IsInput_Discord_IEmote_System_UInt64_" data-uid="PacManBot.Games.Concrete.PacManGame.IsInput(Discord.IEmote,System.UInt64)">IsInput(IEmote, UInt64)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool IsInput(IEmote emote, ulong userId = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public bool IsInput(IEmote emote, ulong userId = 1UL)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -807,7 +838,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IEmote</span></td>
+        <td><span class="xref">Discord.IEmote</span></td>
         <td><span class="parametername">emote</span></td>
         <td></td>
       </tr>
@@ -835,13 +866,13 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PacManGame_PostDeserialize_IServiceProvider_.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PacManGame.PostDeserialize(IServiceProvider)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PacManGame_PostDeserialize_System_IServiceProvider_.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PacManGame.PostDeserialize(System.IServiceProvider)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PacManGame.cs/#L693">View Source</a>
   </span>
   <a id="PacManBot_Games_Concrete_PacManGame_PostDeserialize_" data-uid="PacManBot.Games.Concrete.PacManGame.PostDeserialize*"></a>
-  <h4 id="PacManBot_Games_Concrete_PacManGame_PostDeserialize_IServiceProvider_" data-uid="PacManBot.Games.Concrete.PacManGame.PostDeserialize(IServiceProvider)">PostDeserialize(IServiceProvider)</h4>
+  <h4 id="PacManBot_Games_Concrete_PacManGame_PostDeserialize_System_IServiceProvider_" data-uid="PacManBot.Games.Concrete.PacManGame.PostDeserialize(System.IServiceProvider)">PostDeserialize(IServiceProvider)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -859,7 +890,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IServiceProvider</span></td>
+        <td><span class="xref">System.IServiceProvider</span></td>
         <td><span class="parametername">services</span></td>
         <td></td>
       </tr>
@@ -877,6 +908,13 @@
   </div>
   <div>
       <a class="xref" href="PacManBot.Games.IBaseGame.html">IBaseGame</a>
+  </div>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="PacManBot.Extensions.GameExtensions.html#PacManBot_Extensions_GameExtensions_IdentifierId_PacManBot_Games_IBaseGame_">GameExtensions.IdentifierId(IBaseGame)</a>
+  </div>
+  <div>
+      <a class="xref" href="PacManBot.Extensions.GameExtensions.html#PacManBot_Extensions_GameExtensions_GameFile_PacManBot_Games_IStoreableGame_">GameExtensions.GameFile(IStoreableGame)</a>
   </div>
 </article>
           </div>
