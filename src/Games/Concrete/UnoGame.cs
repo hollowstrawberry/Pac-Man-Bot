@@ -525,8 +525,8 @@ namespace PacManBot.Games.Concrete
             if (State == State.Active)
             {
                 description.Append(
-                    "ᅠ\nSay the name of a card to discard it or \"draw\" to draw another.\n" +
-                    "Your cards are shown in a DM, say \"cards\" to resend.\n".If(Channel is IGuildChannel) +
+                    $"{Empty}\nSay the name of a card to discard it or \"draw\" to draw another.\n" +
+                    $"Your cards are shown in a DM, say \"cards\" to resend.\n".If(Channel is IGuildChannel) +
                     $"Use **{prefix}uno join** to join the game.\n".If(Channel is IGuildChannel) +
                     $"Use **{prefix}uno help** for rules and more commands.");
             }
@@ -682,8 +682,8 @@ namespace PacManBot.Games.Concrete
             {
                 Title = $"{GameName}",
                 Description = $"Send the name of a card in {Channel.Mention()} to discard that card." +
-                              "\nIf you can't or don't want to choose any card, say \"draw\" instead." +
-                              "\nYou can also use \"auto\" instead of a color/number/both.\nᅠ",
+                              $"\nIf you can't or don't want to choose any card, say \"draw\" instead." +
+                              $"\nYou can also use \"auto\" instead of a color/number/both.\n{Empty}",
                 Color = RgbCardColor[(int)TopCard.Color],
             };
 

@@ -79,18 +79,55 @@
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><span class="xref">PmBaseModule</span></div>
-      <div class="level2"><a class="xref" href="PacManBot.Commands.Modules.DevModule.html">DevModule</a></div>
-      <div class="level2"><a class="xref" href="PacManBot.Commands.Modules.GeneralModule.html">GeneralModule</a></div>
-      <div class="level2"><a class="xref" href="PacManBot.Commands.Modules.ModModule.html">ModModule</a></div>
-      <div class="level2"><a class="xref" href="PacManBot.Commands.Modules.MoreGamesModule.html">MoreGamesModule</a></div>
-      <div class="level2"><a class="xref" href="PacManBot.Commands.Modules.PacManModule.html">PacManModule</a></div>
+    <div class="level1"><span class="xref">Discord.Commands.ModuleBase</span>&lt;<a class="xref" href="PacManBot.Commands.PmCommandContext.html">PmCommandContext</a>&gt;</div>
+    <div class="level2"><span class="xref">PmBaseModule</span></div>
+      <div class="level3"><a class="xref" href="PacManBot.Commands.Modules.DevModule.html">DevModule</a></div>
+      <div class="level3"><a class="xref" href="PacManBot.Commands.Modules.GeneralModule.html">GeneralModule</a></div>
+      <div class="level3"><a class="xref" href="PacManBot.Commands.Modules.ModModule.html">ModModule</a></div>
+      <div class="level3"><a class="xref" href="PacManBot.Commands.Modules.MoreGamesModule.html">MoreGamesModule</a></div>
+      <div class="level3"><a class="xref" href="PacManBot.Commands.Modules.PacManModule.html">PacManModule</a></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <span class="xref">Discord.Commands.ModuleBase&lt;PacManBot.Commands.PmCommandContext&gt;.BeforeExecute(Discord.Commands.CommandInfo)</span>
+    </div>
+    <div>
+      <span class="xref">Discord.Commands.ModuleBase&lt;PacManBot.Commands.PmCommandContext&gt;.AfterExecute(Discord.Commands.CommandInfo)</span>
+    </div>
+    <div>
+      <span class="xref">Discord.Commands.ModuleBase&lt;PacManBot.Commands.PmCommandContext&gt;.OnModuleBuilding(Discord.Commands.CommandService, Discord.Commands.Builders.ModuleBuilder)</span>
+    </div>
+    <div>
+      <span class="xref">Discord.Commands.ModuleBase&lt;PacManBot.Commands.PmCommandContext&gt;.Context</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="PacManBot.Commands.html">PacManBot.Commands</a></h6>
   <h6><strong>Assembly</strong>: Pacman.dll</h6>
   <h5 id="PacManBot_Commands_PmBaseModule_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public abstract class PmBaseModule : ModuleBase&lt;PmCommandContext&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public abstract class PmBaseModule : ModuleBase&lt;PmCommandContext&gt;, IModuleBase</code></pre>
   </div>
   <h5 id="PacManBot_Commands_PmBaseModule_remarks"><strong>Remarks</strong></h5>
   <div class="markdown level0 remarks"><p>Service properties are loaded lazily.</p>
@@ -105,7 +142,7 @@
     <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/PmBaseModule.cs/#L18">View Source</a>
   </span>
   <h4 id="PacManBot_Commands_PmBaseModule_DefaultOptions" data-uid="PacManBot.Commands.PmBaseModule.DefaultOptions">DefaultOptions</h4>
-  <div class="markdown level1 summary"><p>Useful <see cref="!:RequestOptions"></see> to be used in most Discord requests.</p>
+  <div class="markdown level1 summary"><p>Useful <span class="xref">Discord.RequestOptions</span> to be used in most Discord requests.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -122,7 +159,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">RequestOptions</span></td>
+        <td><span class="xref">Discord.RequestOptions</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -360,20 +397,20 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Task</span></td>
+        <td><span class="xref">System.Threading.Tasks.Task</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_PmBaseModule_GetResponse_Func_SocketUserMessage_System_Boolean__System_Int32_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.PmBaseModule.GetResponse(Func%7BSocketUserMessage%2CSystem.Boolean%7D%2CSystem.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_PmBaseModule_GetResponse_System_Func_Discord_WebSocket_SocketUserMessage_System_Boolean__System_Int32_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.PmBaseModule.GetResponse(System.Func%7BDiscord.WebSocket.SocketUserMessage%2CSystem.Boolean%7D%2CSystem.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/PmBaseModule.cs/#L79">View Source</a>
   </span>
   <a id="PacManBot_Commands_PmBaseModule_GetResponse_" data-uid="PacManBot.Commands.PmBaseModule.GetResponse*"></a>
-  <h4 id="PacManBot_Commands_PmBaseModule_GetResponse_Func_SocketUserMessage_System_Boolean__System_Int32_" data-uid="PacManBot.Commands.PmBaseModule.GetResponse(Func{SocketUserMessage,System.Boolean},System.Int32)">GetResponse(Func&lt;SocketUserMessage, Boolean&gt;, Int32)</h4>
+  <h4 id="PacManBot_Commands_PmBaseModule_GetResponse_System_Func_Discord_WebSocket_SocketUserMessage_System_Boolean__System_Int32_" data-uid="PacManBot.Commands.PmBaseModule.GetResponse(System.Func{Discord.WebSocket.SocketUserMessage,System.Boolean},System.Int32)">GetResponse(Func&lt;SocketUserMessage, Boolean&gt;, Int32)</h4>
   <div class="markdown level1 summary"><p>Returns the first new message from the user in this context that satisfies additional conditions.
 The value will be null if no valid response is received within the timeout in seconds.</p>
 </div>
@@ -393,7 +430,7 @@ The value will be null if no valid response is received within the timeout in se
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Func</span>&lt;<span class="xref">SocketUserMessage</span>, <span class="xref">System.Boolean</span>&gt;</td>
+        <td><span class="xref">System.Func</span>&lt;<span class="xref">Discord.WebSocket.SocketUserMessage</span>, <span class="xref">System.Boolean</span>&gt;</td>
         <td><span class="parametername">extraConditions</span></td>
         <td></td>
       </tr>
@@ -414,7 +451,7 @@ The value will be null if no valid response is received within the timeout in se
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Task</span>&lt;<span class="xref">SocketUserMessage</span>&gt;</td>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">Discord.WebSocket.SocketUserMessage</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -463,7 +500,7 @@ or null if no message is received within the timeout in seconds.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Task</span>&lt;<span class="xref">SocketUserMessage</span>&gt;</td>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">Discord.WebSocket.SocketUserMessage</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -511,20 +548,20 @@ or null if no message is received within the timeout in seconds.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Task</span>&lt;<span class="xref">System.Boolean</span>&gt;</td>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.Boolean</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_PmBaseModule_ReplyAsync_Embed_RequestOptions_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.PmBaseModule.ReplyAsync(Embed%2CRequestOptions)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_PmBaseModule_ReplyAsync_Discord_Embed_Discord_RequestOptions_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.PmBaseModule.ReplyAsync(Discord.Embed%2CDiscord.RequestOptions)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/PmBaseModule.cs/#L51">View Source</a>
   </span>
   <a id="PacManBot_Commands_PmBaseModule_ReplyAsync_" data-uid="PacManBot.Commands.PmBaseModule.ReplyAsync*"></a>
-  <h4 id="PacManBot_Commands_PmBaseModule_ReplyAsync_Embed_RequestOptions_" data-uid="PacManBot.Commands.PmBaseModule.ReplyAsync(Embed,RequestOptions)">ReplyAsync(Embed, RequestOptions)</h4>
+  <h4 id="PacManBot_Commands_PmBaseModule_ReplyAsync_Discord_Embed_Discord_RequestOptions_" data-uid="PacManBot.Commands.PmBaseModule.ReplyAsync(Discord.Embed,Discord.RequestOptions)">ReplyAsync(Embed, RequestOptions)</h4>
   <div class="markdown level1 summary"><p>Sends a message in the current context containing only an embed, and using the default options if not specified.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -543,12 +580,12 @@ or null if no message is received within the timeout in seconds.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Embed</span></td>
+        <td><span class="xref">Discord.Embed</span></td>
         <td><span class="parametername">embed</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">RequestOptions</span></td>
+        <td><span class="xref">Discord.RequestOptions</span></td>
         <td><span class="parametername">options</span></td>
         <td></td>
       </tr>
@@ -564,20 +601,20 @@ or null if no message is received within the timeout in seconds.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Task</span>&lt;<span class="xref">IUserMessage</span>&gt;</td>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">Discord.IUserMessage</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_PmBaseModule_ReplyAsync_EmbedBuilder_RequestOptions_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.PmBaseModule.ReplyAsync(EmbedBuilder%2CRequestOptions)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_PmBaseModule_ReplyAsync_Discord_EmbedBuilder_Discord_RequestOptions_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.PmBaseModule.ReplyAsync(Discord.EmbedBuilder%2CDiscord.RequestOptions)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/PmBaseModule.cs/#L47">View Source</a>
   </span>
   <a id="PacManBot_Commands_PmBaseModule_ReplyAsync_" data-uid="PacManBot.Commands.PmBaseModule.ReplyAsync*"></a>
-  <h4 id="PacManBot_Commands_PmBaseModule_ReplyAsync_EmbedBuilder_RequestOptions_" data-uid="PacManBot.Commands.PmBaseModule.ReplyAsync(EmbedBuilder,RequestOptions)">ReplyAsync(EmbedBuilder, RequestOptions)</h4>
+  <h4 id="PacManBot_Commands_PmBaseModule_ReplyAsync_Discord_EmbedBuilder_Discord_RequestOptions_" data-uid="PacManBot.Commands.PmBaseModule.ReplyAsync(Discord.EmbedBuilder,Discord.RequestOptions)">ReplyAsync(EmbedBuilder, RequestOptions)</h4>
   <div class="markdown level1 summary"><p>Sends a message in the current context containing only an embed, and using the default options if not specified.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -596,12 +633,12 @@ or null if no message is received within the timeout in seconds.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">EmbedBuilder</span></td>
+        <td><span class="xref">Discord.EmbedBuilder</span></td>
         <td><span class="parametername">embed</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">RequestOptions</span></td>
+        <td><span class="xref">Discord.RequestOptions</span></td>
         <td><span class="parametername">options</span></td>
         <td></td>
       </tr>
@@ -617,20 +654,20 @@ or null if no message is received within the timeout in seconds.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Task</span>&lt;<span class="xref">IUserMessage</span>&gt;</td>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">Discord.IUserMessage</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_PmBaseModule_ReplyAsync_System_Object_EmbedBuilder_RequestOptions_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.PmBaseModule.ReplyAsync(System.Object%2CEmbedBuilder%2CRequestOptions)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_PmBaseModule_ReplyAsync_System_Object_Discord_EmbedBuilder_Discord_RequestOptions_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.PmBaseModule.ReplyAsync(System.Object%2CDiscord.EmbedBuilder%2CDiscord.RequestOptions)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/PmBaseModule.cs/#L39">View Source</a>
   </span>
   <a id="PacManBot_Commands_PmBaseModule_ReplyAsync_" data-uid="PacManBot.Commands.PmBaseModule.ReplyAsync*"></a>
-  <h4 id="PacManBot_Commands_PmBaseModule_ReplyAsync_System_Object_EmbedBuilder_RequestOptions_" data-uid="PacManBot.Commands.PmBaseModule.ReplyAsync(System.Object,EmbedBuilder,RequestOptions)">ReplyAsync(Object, EmbedBuilder, RequestOptions)</h4>
+  <h4 id="PacManBot_Commands_PmBaseModule_ReplyAsync_System_Object_Discord_EmbedBuilder_Discord_RequestOptions_" data-uid="PacManBot.Commands.PmBaseModule.ReplyAsync(System.Object,Discord.EmbedBuilder,Discord.RequestOptions)">ReplyAsync(Object, EmbedBuilder, RequestOptions)</h4>
   <div class="markdown level1 summary"><p>Sends a message in the current context, containing text and an embed, and using the default options if not specified.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -654,12 +691,12 @@ or null if no message is received within the timeout in seconds.</p>
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">EmbedBuilder</span></td>
+        <td><span class="xref">Discord.EmbedBuilder</span></td>
         <td><span class="parametername">embed</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">RequestOptions</span></td>
+        <td><span class="xref">Discord.RequestOptions</span></td>
         <td><span class="parametername">options</span></td>
         <td></td>
       </tr>
@@ -675,20 +712,20 @@ or null if no message is received within the timeout in seconds.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Task</span>&lt;<span class="xref">IUserMessage</span>&gt;</td>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">Discord.IUserMessage</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_PmBaseModule_ReplyAsync_System_Object_RequestOptions_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.PmBaseModule.ReplyAsync(System.Object%2CRequestOptions)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_PmBaseModule_ReplyAsync_System_Object_Discord_RequestOptions_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.PmBaseModule.ReplyAsync(System.Object%2CDiscord.RequestOptions)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/PmBaseModule.cs/#L43">View Source</a>
   </span>
   <a id="PacManBot_Commands_PmBaseModule_ReplyAsync_" data-uid="PacManBot.Commands.PmBaseModule.ReplyAsync*"></a>
-  <h4 id="PacManBot_Commands_PmBaseModule_ReplyAsync_System_Object_RequestOptions_" data-uid="PacManBot.Commands.PmBaseModule.ReplyAsync(System.Object,RequestOptions)">ReplyAsync(Object, RequestOptions)</h4>
+  <h4 id="PacManBot_Commands_PmBaseModule_ReplyAsync_System_Object_Discord_RequestOptions_" data-uid="PacManBot.Commands.PmBaseModule.ReplyAsync(System.Object,Discord.RequestOptions)">ReplyAsync(Object, RequestOptions)</h4>
   <div class="markdown level1 summary"><p>Sends a message in the current context containing only text, and using the default options if not specified.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -712,7 +749,7 @@ or null if no message is received within the timeout in seconds.</p>
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">RequestOptions</span></td>
+        <td><span class="xref">Discord.RequestOptions</span></td>
         <td><span class="parametername">options</span></td>
         <td></td>
       </tr>
@@ -728,20 +765,20 @@ or null if no message is received within the timeout in seconds.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Task</span>&lt;<span class="xref">IUserMessage</span>&gt;</td>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">Discord.IUserMessage</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_PmBaseModule_ReplyAsync_System_String_System_Boolean_Embed_RequestOptions_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.PmBaseModule.ReplyAsync(System.String%2CSystem.Boolean%2CEmbed%2CRequestOptions)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_PmBaseModule_ReplyAsync_System_String_System_Boolean_Discord_Embed_Discord_RequestOptions_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.PmBaseModule.ReplyAsync(System.String%2CSystem.Boolean%2CDiscord.Embed%2CDiscord.RequestOptions)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/PmBaseModule.cs/#L35">View Source</a>
   </span>
   <a id="PacManBot_Commands_PmBaseModule_ReplyAsync_" data-uid="PacManBot.Commands.PmBaseModule.ReplyAsync*"></a>
-  <h4 id="PacManBot_Commands_PmBaseModule_ReplyAsync_System_String_System_Boolean_Embed_RequestOptions_" data-uid="PacManBot.Commands.PmBaseModule.ReplyAsync(System.String,System.Boolean,Embed,RequestOptions)">ReplyAsync(String, Boolean, Embed, RequestOptions)</h4>
+  <h4 id="PacManBot_Commands_PmBaseModule_ReplyAsync_System_String_System_Boolean_Discord_Embed_Discord_RequestOptions_" data-uid="PacManBot.Commands.PmBaseModule.ReplyAsync(System.String,System.Boolean,Discord.Embed,Discord.RequestOptions)">ReplyAsync(String, Boolean, Embed, RequestOptions)</h4>
   <div class="markdown level1 summary"><p>Sends a message in the current context, using the default options if not specified.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -770,12 +807,12 @@ or null if no message is received within the timeout in seconds.</p>
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">Embed</span></td>
+        <td><span class="xref">Discord.Embed</span></td>
         <td><span class="parametername">embed</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">RequestOptions</span></td>
+        <td><span class="xref">Discord.RequestOptions</span></td>
         <td><span class="parametername">options</span></td>
         <td></td>
       </tr>
@@ -791,11 +828,13 @@ or null if no message is received within the timeout in seconds.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Task</span>&lt;<span class="xref">IUserMessage</span>&gt;</td>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">Discord.IUserMessage</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
   </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">Discord.Commands.ModuleBase&lt;PacManBot.Commands.PmCommandContext&gt;.ReplyAsync(System.String, System.Boolean, Discord.Embed, Discord.RequestOptions)</span></div>
 </article>
           </div>
           

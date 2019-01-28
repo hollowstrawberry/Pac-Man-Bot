@@ -123,7 +123,7 @@
       <a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_Owner">BaseGame.Owner</a>
     </div>
     <div>
-      <a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_SetServices_IServiceProvider_">BaseGame.SetServices(IServiceProvider)</a>
+      <a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_SetServices_System_IServiceProvider_">BaseGame.SetServices(IServiceProvider)</a>
     </div>
     <div>
       <a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_GetContent_System_Boolean_">BaseGame.GetContent(Boolean)</a>
@@ -140,24 +140,46 @@
     <div>
       <a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_CancelledEmbed">BaseGame.CancelledEmbed()</a>
     </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="PacManBot.Games.Concrete.html">PacManBot.Games.Concrete</a></h6>
   <h6><strong>Assembly</strong>: Pacman.dll</h6>
   <h5 id="PacManBot_Games_Concrete_PetGame_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class PetGame : BaseGame, IUserGame, IStoreableGame, IBaseGame</code></pre>
+    <pre><code class="lang-csharp hljs">[DataContract]
+public class PetGame : BaseGame, IUserGame, IStoreableGame, IBaseGame</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PetGame__ctor_System_String_System_UInt64_IServiceProvider_.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PetGame.%23ctor(System.String%2CSystem.UInt64%2CIServiceProvider)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PetGame__ctor_System_String_System_UInt64_System_IServiceProvider_.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PetGame.%23ctor(System.String%2CSystem.UInt64%2CSystem.IServiceProvider)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L209">View Source</a>
   </span>
   <a id="PacManBot_Games_Concrete_PetGame__ctor_" data-uid="PacManBot.Games.Concrete.PetGame.#ctor*"></a>
-  <h4 id="PacManBot_Games_Concrete_PetGame__ctor_System_String_System_UInt64_IServiceProvider_" data-uid="PacManBot.Games.Concrete.PetGame.#ctor(System.String,System.UInt64,IServiceProvider)">PetGame(String, UInt64, IServiceProvider)</h4>
+  <h4 id="PacManBot_Games_Concrete_PetGame__ctor_System_String_System_UInt64_System_IServiceProvider_" data-uid="PacManBot.Games.Concrete.PetGame.#ctor(System.String,System.UInt64,System.IServiceProvider)">PetGame(String, UInt64, IServiceProvider)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -185,7 +207,7 @@
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">IServiceProvider</span></td>
+        <td><span class="xref">System.IServiceProvider</span></td>
         <td><span class="parametername">services</span></td>
         <td></td>
       </tr>
@@ -205,7 +227,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public PetGame.Achievements achievements</code></pre>
+    <pre><code class="lang-csharp hljs">[DataMember]
+public PetGame.Achievements achievements</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -234,7 +257,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool asleep</code></pre>
+    <pre><code class="lang-csharp hljs">[DataMember]
+public bool asleep</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -292,7 +316,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public DateTime bornDate</code></pre>
+    <pre><code class="lang-csharp hljs">[DataMember]
+public DateTime bornDate</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -304,7 +329,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">DateTime</span></td>
+        <td><span class="xref">System.DateTime</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -321,7 +346,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double energy</code></pre>
+    <pre><code class="lang-csharp hljs">[DataMember]
+public double energy</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -350,7 +376,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double happiness</code></pre>
+    <pre><code class="lang-csharp hljs">[DataMember]
+public double happiness</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -379,7 +406,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double hygiene</code></pre>
+    <pre><code class="lang-csharp hljs">[DataMember]
+public double hygiene</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -408,7 +436,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public DateTime lastUpdated</code></pre>
+    <pre><code class="lang-csharp hljs">[DataMember]
+public DateTime lastUpdated</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -420,7 +449,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">DateTime</span></td>
+        <td><span class="xref">System.DateTime</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -437,7 +466,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public const int MaxStat = null</code></pre>
+    <pre><code class="lang-csharp hljs">public const int MaxStat = 20</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -478,7 +507,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">DateTime</span></td>
+        <td><span class="xref">System.DateTime</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -495,7 +524,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double satiation</code></pre>
+    <pre><code class="lang-csharp hljs">[DataMember]
+public double satiation</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -568,7 +598,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">TimeSpan</span></td>
+        <td><span class="xref">System.TimeSpan</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -694,7 +724,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">DateTime</span></td>
+        <td><span class="xref">System.DateTime</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -714,7 +744,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override ulong OwnerId { get; protected set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[DataMember]
+public override ulong OwnerId { get; protected set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -746,7 +777,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string petImageUrl { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[DataMember]
+public string petImageUrl { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -776,7 +808,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string petName { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[DataMember]
+public string petName { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -888,13 +921,13 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PetGame_GetEmbed_IGuildUser_System_Boolean_.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PetGame.GetEmbed(IGuildUser%2CSystem.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PetGame_GetEmbed_Discord_IGuildUser_System_Boolean_.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PetGame.GetEmbed(Discord.IGuildUser%2CSystem.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L222">View Source</a>
   </span>
   <a id="PacManBot_Games_Concrete_PetGame_GetEmbed_" data-uid="PacManBot.Games.Concrete.PetGame.GetEmbed*"></a>
-  <h4 id="PacManBot_Games_Concrete_PetGame_GetEmbed_IGuildUser_System_Boolean_" data-uid="PacManBot.Games.Concrete.PetGame.GetEmbed(IGuildUser,System.Boolean)">GetEmbed(IGuildUser, Boolean)</h4>
+  <h4 id="PacManBot_Games_Concrete_PetGame_GetEmbed_Discord_IGuildUser_System_Boolean_" data-uid="PacManBot.Games.Concrete.PetGame.GetEmbed(Discord.IGuildUser,System.Boolean)">GetEmbed(IGuildUser, Boolean)</h4>
   <div class="markdown level1 summary"><p>Returns an embed showing the profile of a pet.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -913,7 +946,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IGuildUser</span></td>
+        <td><span class="xref">Discord.IGuildUser</span></td>
         <td><span class="parametername">ownerGuildUser</span></td>
         <td></td>
       </tr>
@@ -934,7 +967,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">EmbedBuilder</span></td>
+        <td><span class="xref">Discord.EmbedBuilder</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -981,7 +1014,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">EmbedBuilder</span></td>
+        <td><span class="xref">Discord.EmbedBuilder</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -990,13 +1023,13 @@
   <div><a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_GetEmbed_System_Boolean_">BaseGame.GetEmbed(Boolean)</a></div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PetGame_GetEmbedAchievements_IGuildUser_.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PetGame.GetEmbedAchievements(IGuildUser)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PetGame_GetEmbedAchievements_Discord_IGuildUser_.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PetGame.GetEmbedAchievements(Discord.IGuildUser)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L290">View Source</a>
   </span>
   <a id="PacManBot_Games_Concrete_PetGame_GetEmbedAchievements_" data-uid="PacManBot.Games.Concrete.PetGame.GetEmbedAchievements*"></a>
-  <h4 id="PacManBot_Games_Concrete_PetGame_GetEmbedAchievements_IGuildUser_" data-uid="PacManBot.Games.Concrete.PetGame.GetEmbedAchievements(IGuildUser)">GetEmbedAchievements(IGuildUser)</h4>
+  <h4 id="PacManBot_Games_Concrete_PetGame_GetEmbedAchievements_Discord_IGuildUser_" data-uid="PacManBot.Games.Concrete.PetGame.GetEmbedAchievements(Discord.IGuildUser)">GetEmbedAchievements(IGuildUser)</h4>
   <div class="markdown level1 summary"><p>Returns an embed showing the stats and unlocks of a pet.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -1015,7 +1048,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IGuildUser</span></td>
+        <td><span class="xref">Discord.IGuildUser</span></td>
         <td><span class="parametername">ownerGuildUser</span></td>
         <td></td>
       </tr>
@@ -1031,20 +1064,20 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">EmbedBuilder</span></td>
+        <td><span class="xref">Discord.EmbedBuilder</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PetGame_PostDeserialize_IServiceProvider_.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PetGame.PostDeserialize(IServiceProvider)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PetGame_PostDeserialize_System_IServiceProvider_.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PetGame.PostDeserialize(System.IServiceProvider)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L554">View Source</a>
   </span>
   <a id="PacManBot_Games_Concrete_PetGame_PostDeserialize_" data-uid="PacManBot.Games.Concrete.PetGame.PostDeserialize*"></a>
-  <h4 id="PacManBot_Games_Concrete_PetGame_PostDeserialize_IServiceProvider_" data-uid="PacManBot.Games.Concrete.PetGame.PostDeserialize(IServiceProvider)">PostDeserialize(IServiceProvider)</h4>
+  <h4 id="PacManBot_Games_Concrete_PetGame_PostDeserialize_System_IServiceProvider_" data-uid="PacManBot.Games.Concrete.PetGame.PostDeserialize(System.IServiceProvider)">PostDeserialize(IServiceProvider)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -1062,7 +1095,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IServiceProvider</span></td>
+        <td><span class="xref">System.IServiceProvider</span></td>
         <td><span class="parametername">services</span></td>
         <td></td>
       </tr>
@@ -1302,6 +1335,13 @@ If it's already happy, it consumes 1 energy.</p>
   </div>
   <div>
       <a class="xref" href="PacManBot.Games.IBaseGame.html">IBaseGame</a>
+  </div>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="PacManBot.Extensions.GameExtensions.html#PacManBot_Extensions_GameExtensions_IdentifierId_PacManBot_Games_IBaseGame_">GameExtensions.IdentifierId(IBaseGame)</a>
+  </div>
+  <div>
+      <a class="xref" href="PacManBot.Extensions.GameExtensions.html#PacManBot_Extensions_GameExtensions_GameFile_PacManBot_Games_IStoreableGame_">GameExtensions.GameFile(IStoreableGame)</a>
   </div>
 </article>
           </div>

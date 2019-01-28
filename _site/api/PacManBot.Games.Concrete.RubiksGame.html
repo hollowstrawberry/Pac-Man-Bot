@@ -134,7 +134,7 @@
       <a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_Owner">BaseGame.Owner</a>
     </div>
     <div>
-      <a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_SetServices_IServiceProvider_">BaseGame.SetServices(IServiceProvider)</a>
+      <a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_SetServices_System_IServiceProvider_">BaseGame.SetServices(IServiceProvider)</a>
     </div>
     <div>
       <a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_GetContent_System_Boolean_">BaseGame.GetContent(Boolean)</a>
@@ -151,24 +151,46 @@
     <div>
       <a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_CancelledEmbed">BaseGame.CancelledEmbed()</a>
     </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="PacManBot.Games.Concrete.html">PacManBot.Games.Concrete</a></h6>
   <h6><strong>Assembly</strong>: Pacman.dll</h6>
   <h5 id="PacManBot_Games_Concrete_RubiksGame_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class RubiksGame : ChannelGame, IChannelGame, IUserGame, IStoreableGame, IBaseGame</code></pre>
+    <pre><code class="lang-csharp hljs">[DataContract]
+public class RubiksGame : ChannelGame, IChannelGame, IUserGame, IStoreableGame, IBaseGame</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_RubiksGame__ctor_System_UInt64_System_UInt64_IServiceProvider_.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.RubiksGame.%23ctor(System.UInt64%2CSystem.UInt64%2CIServiceProvider)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_RubiksGame__ctor_System_UInt64_System_UInt64_System_IServiceProvider_.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.RubiksGame.%23ctor(System.UInt64%2CSystem.UInt64%2CSystem.IServiceProvider)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/RubiksGame.cs/#L189">View Source</a>
   </span>
   <a id="PacManBot_Games_Concrete_RubiksGame__ctor_" data-uid="PacManBot.Games.Concrete.RubiksGame.#ctor*"></a>
-  <h4 id="PacManBot_Games_Concrete_RubiksGame__ctor_System_UInt64_System_UInt64_IServiceProvider_" data-uid="PacManBot.Games.Concrete.RubiksGame.#ctor(System.UInt64,System.UInt64,IServiceProvider)">RubiksGame(UInt64, UInt64, IServiceProvider)</h4>
+  <h4 id="PacManBot_Games_Concrete_RubiksGame__ctor_System_UInt64_System_UInt64_System_IServiceProvider_" data-uid="PacManBot.Games.Concrete.RubiksGame.#ctor(System.UInt64,System.UInt64,System.IServiceProvider)">RubiksGame(UInt64, UInt64, IServiceProvider)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -196,7 +218,7 @@
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">IServiceProvider</span></td>
+        <td><span class="xref">System.IServiceProvider</span></td>
         <td><span class="parametername">services</span></td>
         <td></td>
       </tr>
@@ -247,7 +269,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public const string SolvedCube = null</code></pre>
+    <pre><code class="lang-csharp hljs">public const string SolvedCube = &quot;000000000111111111222222222333333333444444444555555555&quot;</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -279,7 +301,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override ulong ChannelId { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[DataMember]
+public override ulong ChannelId { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -323,7 +346,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">TimeSpan</span></td>
+        <td><span class="xref">System.TimeSpan</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -437,7 +460,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override DateTime LastPlayed { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[DataMember]
+public override DateTime LastPlayed { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -449,7 +473,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">DateTime</span></td>
+        <td><span class="xref">System.DateTime</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -469,7 +493,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override ulong MessageId { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[DataMember]
+public override ulong MessageId { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -514,7 +539,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IEnumerable</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -532,7 +557,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override ulong OwnerId { get; protected set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[DataMember]
+public override ulong OwnerId { get; protected set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -565,7 +591,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string RawCube { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[DataMember]
+public string RawCube { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -595,7 +622,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool ShowHelp { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[DataMember]
+public bool ShowHelp { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -625,7 +653,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override int Time { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[DataMember]
+public override int Time { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -648,13 +677,13 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_RubiksGame_DoMoves_IEnumerable_PacManBot_Games_Concrete_RubiksGame_Move__.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.RubiksGame.DoMoves(IEnumerable%7BPacManBot.Games.Concrete.RubiksGame.Move%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_RubiksGame_DoMoves_System_Collections_Generic_IEnumerable_PacManBot_Games_Concrete_RubiksGame_Move__.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.RubiksGame.DoMoves(System.Collections.Generic.IEnumerable%7BPacManBot.Games.Concrete.RubiksGame.Move%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/RubiksGame.cs/#L214">View Source</a>
   </span>
   <a id="PacManBot_Games_Concrete_RubiksGame_DoMoves_" data-uid="PacManBot.Games.Concrete.RubiksGame.DoMoves*"></a>
-  <h4 id="PacManBot_Games_Concrete_RubiksGame_DoMoves_IEnumerable_PacManBot_Games_Concrete_RubiksGame_Move__" data-uid="PacManBot.Games.Concrete.RubiksGame.DoMoves(IEnumerable{PacManBot.Games.Concrete.RubiksGame.Move})">DoMoves(IEnumerable&lt;RubiksGame.Move&gt;)</h4>
+  <h4 id="PacManBot_Games_Concrete_RubiksGame_DoMoves_System_Collections_Generic_IEnumerable_PacManBot_Games_Concrete_RubiksGame_Move__" data-uid="PacManBot.Games.Concrete.RubiksGame.DoMoves(System.Collections.Generic.IEnumerable{PacManBot.Games.Concrete.RubiksGame.Move})">DoMoves(IEnumerable&lt;RubiksGame.Move&gt;)</h4>
   <div class="markdown level1 summary"><p>Executes a sequence of moves on this Rubik's cube.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -673,7 +702,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IEnumerable</span>&lt;<a class="xref" href="PacManBot.Games.Concrete.RubiksGame.Move.html">RubiksGame.Move</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="PacManBot.Games.Concrete.RubiksGame.Move.html">RubiksGame.Move</a>&gt;</td>
         <td><span class="parametername">moves</span></td>
         <td></td>
       </tr>
@@ -681,13 +710,13 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_RubiksGame_GetEmbed_IGuild_.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.RubiksGame.GetEmbed(IGuild)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_RubiksGame_GetEmbed_Discord_IGuild_.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.RubiksGame.GetEmbed(Discord.IGuild)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/RubiksGame.cs/#L237">View Source</a>
   </span>
   <a id="PacManBot_Games_Concrete_RubiksGame_GetEmbed_" data-uid="PacManBot.Games.Concrete.RubiksGame.GetEmbed*"></a>
-  <h4 id="PacManBot_Games_Concrete_RubiksGame_GetEmbed_IGuild_" data-uid="PacManBot.Games.Concrete.RubiksGame.GetEmbed(IGuild)">GetEmbed(IGuild)</h4>
+  <h4 id="PacManBot_Games_Concrete_RubiksGame_GetEmbed_Discord_IGuild_" data-uid="PacManBot.Games.Concrete.RubiksGame.GetEmbed(Discord.IGuild)">GetEmbed(IGuild)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -705,7 +734,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IGuild</span></td>
+        <td><span class="xref">Discord.IGuild</span></td>
         <td><span class="parametername">guild</span></td>
         <td></td>
       </tr>
@@ -721,7 +750,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">EmbedBuilder</span></td>
+        <td><span class="xref">Discord.EmbedBuilder</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -768,7 +797,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">EmbedBuilder</span></td>
+        <td><span class="xref">Discord.EmbedBuilder</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -777,13 +806,13 @@
   <div><a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_GetEmbed_System_Boolean_">BaseGame.GetEmbed(Boolean)</a></div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_RubiksGame_PostDeserialize_IServiceProvider_.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.RubiksGame.PostDeserialize(IServiceProvider)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_RubiksGame_PostDeserialize_System_IServiceProvider_.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.RubiksGame.PostDeserialize(System.IServiceProvider)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/RubiksGame.cs/#L292">View Source</a>
   </span>
   <a id="PacManBot_Games_Concrete_RubiksGame_PostDeserialize_" data-uid="PacManBot.Games.Concrete.RubiksGame.PostDeserialize*"></a>
-  <h4 id="PacManBot_Games_Concrete_RubiksGame_PostDeserialize_IServiceProvider_" data-uid="PacManBot.Games.Concrete.RubiksGame.PostDeserialize(IServiceProvider)">PostDeserialize(IServiceProvider)</h4>
+  <h4 id="PacManBot_Games_Concrete_RubiksGame_PostDeserialize_System_IServiceProvider_" data-uid="PacManBot.Games.Concrete.RubiksGame.PostDeserialize(System.IServiceProvider)">PostDeserialize(IServiceProvider)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -801,7 +830,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IServiceProvider</span></td>
+        <td><span class="xref">System.IServiceProvider</span></td>
         <td><span class="parametername">services</span></td>
         <td></td>
       </tr>
@@ -900,6 +929,13 @@
   </div>
   <div>
       <a class="xref" href="PacManBot.Games.IBaseGame.html">IBaseGame</a>
+  </div>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="PacManBot.Extensions.GameExtensions.html#PacManBot_Extensions_GameExtensions_IdentifierId_PacManBot_Games_IBaseGame_">GameExtensions.IdentifierId(IBaseGame)</a>
+  </div>
+  <div>
+      <a class="xref" href="PacManBot.Extensions.GameExtensions.html#PacManBot_Extensions_GameExtensions_GameFile_PacManBot_Games_IStoreableGame_">GameExtensions.GameFile(IStoreableGame)</a>
   </div>
 </article>
           </div>

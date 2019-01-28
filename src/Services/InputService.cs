@@ -74,8 +74,8 @@ namespace PacManBot.Services
 
             try { await Task.Delay(timeout * 1000, pending.Token); }
             catch (OperationCanceledException) { }
+            finally { pendingResponses.TryRemove(pending); }
 
-            pendingResponses.TryRemove(pending);
             return pending.Response;
         }
 

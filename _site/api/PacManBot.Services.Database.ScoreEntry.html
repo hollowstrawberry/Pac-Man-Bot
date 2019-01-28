@@ -81,23 +81,49 @@
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><span class="xref">ScoreEntry</span></div>
   </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><span class="xref">System.IComparable</span>&lt;<a class="xref" href="PacManBot.Services.Database.ScoreEntry.html">ScoreEntry</a>&gt;</div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+  </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="PacManBot.Services.Database.html">PacManBot.Services.Database</a></h6>
   <h6><strong>Assembly</strong>: Pacman.dll</h6>
   <h5 id="PacManBot_Services_Database_ScoreEntry_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class ScoreEntry : IComparable&lt;ScoreEntry&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">[Table(&quot;PacManScores&quot;)]
+public class ScoreEntry : IComparable&lt;ScoreEntry&gt;</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Services_Database_ScoreEntry__ctor_System_Int32_System_UInt64_PacManBot_Games_State_System_Int32_System_String_System_String_DateTime_.md&amp;value=---%0Auid%3A%20PacManBot.Services.Database.ScoreEntry.%23ctor(System.Int32%2CSystem.UInt64%2CPacManBot.Games.State%2CSystem.Int32%2CSystem.String%2CSystem.String%2CDateTime)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Services_Database_ScoreEntry__ctor_System_Int32_System_UInt64_PacManBot_Games_State_System_Int32_System_String_System_String_System_DateTime_.md&amp;value=---%0Auid%3A%20PacManBot.Services.Database.ScoreEntry.%23ctor(System.Int32%2CSystem.UInt64%2CPacManBot.Games.State%2CSystem.Int32%2CSystem.String%2CSystem.String%2CSystem.DateTime)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Services/Database/ScoreEntry.cs/#L24">View Source</a>
   </span>
   <a id="PacManBot_Services_Database_ScoreEntry__ctor_" data-uid="PacManBot.Services.Database.ScoreEntry.#ctor*"></a>
-  <h4 id="PacManBot_Services_Database_ScoreEntry__ctor_System_Int32_System_UInt64_PacManBot_Games_State_System_Int32_System_String_System_String_DateTime_" data-uid="PacManBot.Services.Database.ScoreEntry.#ctor(System.Int32,System.UInt64,PacManBot.Games.State,System.Int32,System.String,System.String,DateTime)">ScoreEntry(Int32, UInt64, State, Int32, String, String, DateTime)</h4>
+  <h4 id="PacManBot_Services_Database_ScoreEntry__ctor_System_Int32_System_UInt64_PacManBot_Games_State_System_Int32_System_String_System_String_System_DateTime_" data-uid="PacManBot.Services.Database.ScoreEntry.#ctor(System.Int32,System.UInt64,PacManBot.Games.State,System.Int32,System.String,System.String,System.DateTime)">ScoreEntry(Int32, UInt64, State, Int32, String, String, DateTime)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -145,7 +171,7 @@
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">DateTime</span></td>
+        <td><span class="xref">System.DateTime</span></td>
         <td><span class="parametername">date</span></td>
         <td></td>
       </tr>
@@ -196,7 +222,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public DateTime Date { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[Key]
+public DateTime Date { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -208,7 +235,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">DateTime</span></td>
+        <td><span class="xref">System.DateTime</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -414,13 +441,13 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Services_Database_ScoreEntry_GetUsername_BaseSocketClient_.md&amp;value=---%0Auid%3A%20PacManBot.Services.Database.ScoreEntry.GetUsername(BaseSocketClient)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Services_Database_ScoreEntry_GetUsername_Discord_WebSocket_BaseSocketClient_.md&amp;value=---%0Auid%3A%20PacManBot.Services.Database.ScoreEntry.GetUsername(Discord.WebSocket.BaseSocketClient)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Services/Database/ScoreEntry.cs/#L36">View Source</a>
   </span>
   <a id="PacManBot_Services_Database_ScoreEntry_GetUsername_" data-uid="PacManBot.Services.Database.ScoreEntry.GetUsername*"></a>
-  <h4 id="PacManBot_Services_Database_ScoreEntry_GetUsername_BaseSocketClient_" data-uid="PacManBot.Services.Database.ScoreEntry.GetUsername(BaseSocketClient)">GetUsername(BaseSocketClient)</h4>
+  <h4 id="PacManBot_Services_Database_ScoreEntry_GetUsername_Discord_WebSocket_BaseSocketClient_" data-uid="PacManBot.Services.Database.ScoreEntry.GetUsername(Discord.WebSocket.BaseSocketClient)">GetUsername(BaseSocketClient)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -438,7 +465,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">BaseSocketClient</span></td>
+        <td><span class="xref">Discord.WebSocket.BaseSocketClient</span></td>
         <td><span class="parametername">client</span></td>
         <td></td>
       </tr>
@@ -489,15 +516,17 @@
       </tr>
     </tbody>
   </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">System.Object.ToString()</span></div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Services_Database_ScoreEntry_ToString_BaseSocketClient_.md&amp;value=---%0Auid%3A%20PacManBot.Services.Database.ScoreEntry.ToString(BaseSocketClient)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Services_Database_ScoreEntry_ToString_Discord_WebSocket_BaseSocketClient_.md&amp;value=---%0Auid%3A%20PacManBot.Services.Database.ScoreEntry.ToString(Discord.WebSocket.BaseSocketClient)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Services/Database/ScoreEntry.cs/#L44">View Source</a>
   </span>
   <a id="PacManBot_Services_Database_ScoreEntry_ToString_" data-uid="PacManBot.Services.Database.ScoreEntry.ToString*"></a>
-  <h4 id="PacManBot_Services_Database_ScoreEntry_ToString_BaseSocketClient_" data-uid="PacManBot.Services.Database.ScoreEntry.ToString(BaseSocketClient)">ToString(BaseSocketClient)</h4>
+  <h4 id="PacManBot_Services_Database_ScoreEntry_ToString_Discord_WebSocket_BaseSocketClient_" data-uid="PacManBot.Services.Database.ScoreEntry.ToString(Discord.WebSocket.BaseSocketClient)">ToString(BaseSocketClient)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -515,7 +544,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">BaseSocketClient</span></td>
+        <td><span class="xref">Discord.WebSocket.BaseSocketClient</span></td>
         <td><span class="parametername">client</span></td>
         <td></td>
       </tr>
@@ -536,6 +565,10 @@
       </tr>
     </tbody>
   </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <span class="xref">System.IComparable&lt;T&gt;</span>
+  </div>
 </article>
           </div>
           

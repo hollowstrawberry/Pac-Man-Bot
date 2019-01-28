@@ -84,7 +84,7 @@ namespace PacManBot.Games.Concrete
                 description.Append($"{((Player)i).Circle()} - {User(i).NameandDisc().SanitizeMarkdown()}\n");
             }
 
-            description.Append("ᅠ\n");
+            description.Append($"{Empty}\n");
 
             if (State == State.Active)
             {
@@ -102,7 +102,7 @@ namespace PacManBot.Games.Concrete
                 description.Append('\n');
             }
 
-            if (State == State.Active) description.Append("ᅠ\n*Say the number of a column (1 to 7) to drop a piece*");
+            if (State == State.Active) description.Append($"{Empty}\n*Say the number of a column (1 to 7) to drop a piece*");
 
 
             return new EmbedBuilder()

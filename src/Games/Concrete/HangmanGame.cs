@@ -24,13 +24,7 @@ namespace PacManBot.Games.Concrete
         private ulong winnerId;
 
 
-        /// <summary>Sets the word in a new game.</summary>
-        public void SetWord(string word)
-        {
-            this.word = word.ToUpperInvariant();
-            progress = word.Select(x => x == ' ' ? ' ' : '_').ToArray();
-        }
-
+        private HangmanGame() : base() { }
 
         /// <summary>Starts a hangman game with a random word.</summary>
         public HangmanGame(ulong channelId, IServiceProvider services)
@@ -45,6 +39,15 @@ namespace PacManBot.Games.Concrete
         public HangmanGame(ulong channelId, ulong ownerId, IServiceProvider services)
             : base(channelId, new[] { ownerId }, services)
         { }
+
+
+
+        /// <summary>Sets the word in a new game.</summary>
+        public void SetWord(string word)
+        {
+            this.word = word.ToUpperInvariant();
+            progress = word.Select(x => x == ' ' ? ' ' : '_').ToArray();
+        }
 
 
 
@@ -164,20 +167,19 @@ namespace PacManBot.Games.Concrete
                 {
                     new EmbedFieldBuilder
                     {
-                        Name = missed.Count == 0 ? "ᅠ" : "_Missed_",
-                        IsInline = true,
-                        Value = missed.Count == 0 ? "ᅠ"
-                            : missed.Split(5).Select(x => x.JoinString(' ')).JoinString('\n'),
-                    },
-                    new EmbedFieldBuilder
-                    {
-                        Name = "ᅠ",
+                        Name = Empty,
                         IsInline = true,
                         Value = displayWord,
                     },
                     new EmbedFieldBuilder
                     {
-                        Name = "ᅠ",
+                        Name = missed.Count == 0 ? Empty : "_Missed_",
+                        IsInline = true,
+                        Value = missed.Count == 0 ? Empty : missed.Split(5).Select(x => x.JoinString(' ')).JoinString('\n'),
+                    },
+                    new EmbedFieldBuilder
+                    {
+                        Name = Empty,
                         IsInline = false,
                         Value = $"_Guess a letter or the full {(word.Contains(' ') ? "phrase" : "word")}!_",
                     },
@@ -200,7 +202,7 @@ namespace PacManBot.Games.Concrete
 
         private bool ValidFullGuess(string value)
         {
-            if (value.Length != word.Length) return false;
+            if (value.Length != word.Length || value.ContainsAny(wrongChars)) return false;
 
             for (int i = 0; i < word.Length; ++i)
             {

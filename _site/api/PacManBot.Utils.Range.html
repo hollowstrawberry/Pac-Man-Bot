@@ -81,11 +81,31 @@
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><span class="xref">Range</span></div>
   </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.Int32</span>&gt;</div>
+    <div><span class="xref">System.Collections.IEnumerable</span></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+  </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="PacManBot.Utils.html">PacManBot.Utils</a></h6>
   <h6><strong>Assembly</strong>: Pacman.dll</h6>
   <h5 id="PacManBot_Utils_Range_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Range : IEnumerable&lt;int&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public class Range : IEnumerable&lt;int&gt;, IEnumerable</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -341,6 +361,8 @@ and with the given step between each element.</p>
       </tr>
     </tbody>
   </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">System.Object.Equals(System.Object)</span></div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Utils_Range_GetEnumerator.md&amp;value=---%0Auid%3A%20PacManBot.Utils.Range.GetEnumerator%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
@@ -366,7 +388,7 @@ and with the given step between each element.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IEnumerator</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IEnumerator</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -401,6 +423,8 @@ and with the given step between each element.</p>
       </tr>
     </tbody>
   </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">System.Object.GetHashCode()</span></div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Utils_Range_ToString.md&amp;value=---%0Auid%3A%20PacManBot.Utils.Range.ToString%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
@@ -432,6 +456,8 @@ and with the given step between each element.</p>
       </tr>
     </tbody>
   </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">System.Object.ToString()</span></div>
   <h3 id="operators">Operators
   </h3>
   <span class="small pull-right mobile-hide">
@@ -538,6 +564,58 @@ and with the given step between each element.</p>
       </tr>
     </tbody>
   </table>
+  <h3 id="eii">Explicit Interface Implementations
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Utils_Range_System_Collections_IEnumerable_GetEnumerator.md&amp;value=---%0Auid%3A%20PacManBot.Utils.Range.System%23Collections%23IEnumerable%23GetEnumerator%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Utils/Range.cs/#L45">View Source</a>
+  </span>
+  <a id="PacManBot_Utils_Range_System_Collections_IEnumerable_GetEnumerator_" data-uid="PacManBot.Utils.Range.System#Collections#IEnumerable#GetEnumerator*"></a>
+  <h4 id="PacManBot_Utils_Range_System_Collections_IEnumerable_GetEnumerator" data-uid="PacManBot.Utils.Range.System#Collections#IEnumerable#GetEnumerator">IEnumerable.GetEnumerator()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">IEnumerator IEnumerable.GetEnumerator()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.IEnumerator</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <span class="xref">System.Collections.Generic.IEnumerable&lt;T&gt;</span>
+  </div>
+  <div>
+      <span class="xref">System.Collections.IEnumerable</span>
+  </div>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="PacManBot.Extensions.CollectionExtensions.html#PacManBot_Extensions_CollectionExtensions_JoinString__1_System_Collections_Generic_IEnumerable___0__System_String_">CollectionExtensions.JoinString&lt;T&gt;(IEnumerable&lt;T&gt;, String)</a>
+  </div>
+  <div>
+      <a class="xref" href="PacManBot.Extensions.CollectionExtensions.html#PacManBot_Extensions_CollectionExtensions_JoinString__1_System_Collections_Generic_IEnumerable___0__System_Char_">CollectionExtensions.JoinString&lt;T&gt;(IEnumerable&lt;T&gt;, Char)</a>
+  </div>
+  <div>
+      <a class="xref" href="PacManBot.Extensions.CollectionExtensions.html#PacManBot_Extensions_CollectionExtensions_FirstOrNull__1_System_Collections_Generic_IEnumerable___0__System_Func___0_System_Boolean__">CollectionExtensions.FirstOrNull&lt;T&gt;(IEnumerable&lt;T&gt;, Func&lt;T, Boolean&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="PacManBot.Extensions.CollectionExtensions.html#PacManBot_Extensions_CollectionExtensions_Slice__1_System_Collections_Generic_IEnumerable___0__System_Nullable_System_Int32__System_Nullable_System_Int32__System_Int32_">CollectionExtensions.Slice&lt;T&gt;(IEnumerable&lt;T&gt;, Nullable&lt;Int32&gt;, Nullable&lt;Int32&gt;, Int32)</a>
+  </div>
 </article>
           </div>
           

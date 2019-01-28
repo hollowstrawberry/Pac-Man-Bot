@@ -18,6 +18,9 @@ namespace PacManBot.Extensions
         /// <summary>Discord permissions in a DM channel. The value is currently wrong in Discord.Net.</summary>
         public const ChannelPermission DmPermissions = (ChannelPermission)37080128;
 
+        /// <summary>Invisible character that Discord will accept where pure whitespace is otherwise not allowed.</summary>
+        public const string Empty = "ᅠ";
+
 
 
         // Discord objects

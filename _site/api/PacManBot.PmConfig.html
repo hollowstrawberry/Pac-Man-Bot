@@ -81,11 +81,36 @@
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><span class="xref">PmConfig</span></div>
   </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+  </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="PacManBot.html">PacManBot</a></h6>
   <h6><strong>Assembly</strong>: Pacman.dll</h6>
   <h5 id="PacManBot_PmConfig_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class PmConfig : object</code></pre>
+    <pre><code class="lang-csharp hljs">[DataContract]
+public class PmConfig</code></pre>
   </div>
   <h3 id="fields">Fields
   </h3>
@@ -102,7 +127,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public readonly ulong[] bannedChannels</code></pre>
+    <pre><code class="lang-csharp hljs">[DataMember]
+public readonly ulong[] bannedChannels</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -127,12 +153,13 @@
     <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/PmConfig.cs/#L55">View Source</a>
   </span>
   <h4 id="PacManBot_PmConfig_clientLogLevel" data-uid="PacManBot.PmConfig.clientLogLevel">clientLogLevel</h4>
-  <div class="markdown level1 summary"><p>How many messages to log coming from the Discord client. See <see cref="!:LogSeverity"></see> for possible values.</p>
+  <div class="markdown level1 summary"><p>How many messages to log coming from the Discord client. See <span class="xref">Discord.LogSeverity</span> for possible values.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public readonly LogSeverity clientLogLevel</code></pre>
+    <pre><code class="lang-csharp hljs">[DataMember]
+public readonly LogSeverity clientLogLevel</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -144,7 +171,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">LogSeverity</span></td>
+        <td><span class="xref">Discord.LogSeverity</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -162,7 +189,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public readonly int connectionTimeout</code></pre>
+    <pre><code class="lang-csharp hljs">[DataMember]
+public readonly int connectionTimeout</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -192,7 +220,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public readonly string dbConnectionString</code></pre>
+    <pre><code class="lang-csharp hljs">[DataMember]
+public readonly string dbConnectionString</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -222,7 +251,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public readonly string defaultPrefix</code></pre>
+    <pre><code class="lang-csharp hljs">[DataMember]
+public readonly string defaultPrefix</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -252,7 +282,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public readonly ulong[] developers</code></pre>
+    <pre><code class="lang-csharp hljs">[DataMember]
+public readonly ulong[] developers</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -282,7 +313,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public readonly string discordToken</code></pre>
+    <pre><code class="lang-csharp hljs">[DataMember]
+public readonly string discordToken</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -312,7 +344,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public readonly string[] httpDomain</code></pre>
+    <pre><code class="lang-csharp hljs">[DataMember]
+public readonly string[] httpDomain</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -342,7 +375,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public readonly string[] httpToken</code></pre>
+    <pre><code class="lang-csharp hljs">[DataMember]
+public readonly string[] httpToken</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -372,7 +406,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public readonly string[] logExclude</code></pre>
+    <pre><code class="lang-csharp hljs">[DataMember]
+public readonly string[] logExclude</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -397,12 +432,13 @@
     <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/PmConfig.cs/#L52">View Source</a>
   </span>
   <h4 id="PacManBot_PmConfig_logLevel" data-uid="PacManBot.PmConfig.logLevel">logLevel</h4>
-  <div class="markdown level1 summary"><p>How many messages this program should log. See <see cref="!:LogSeverity"></see> for possible values.</p>
+  <div class="markdown level1 summary"><p>How many messages this program should log. See <span class="xref">Discord.LogSeverity</span> for possible values.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public readonly LogSeverity logLevel</code></pre>
+    <pre><code class="lang-csharp hljs">[DataMember]
+public readonly LogSeverity logLevel</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -414,7 +450,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">LogSeverity</span></td>
+        <td><span class="xref">Discord.LogSeverity</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -432,7 +468,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public readonly int messageCacheSize</code></pre>
+    <pre><code class="lang-csharp hljs">[DataMember]
+public readonly int messageCacheSize</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -462,7 +499,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public readonly bool scheduledRestart</code></pre>
+    <pre><code class="lang-csharp hljs">[DataMember]
+public readonly bool scheduledRestart</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -492,7 +530,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public readonly int shardCount</code></pre>
+    <pre><code class="lang-csharp hljs">[DataMember]
+public readonly int shardCount</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -522,7 +561,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public readonly ulong[] testers</code></pre>
+    <pre><code class="lang-csharp hljs">[DataMember]
+public readonly ulong[] testers</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -550,7 +590,7 @@
   </span>
   <a id="PacManBot_PmConfig_ClientConfig_" data-uid="PacManBot.PmConfig.ClientConfig*"></a>
   <h4 id="PacManBot_PmConfig_ClientConfig" data-uid="PacManBot.PmConfig.ClientConfig">ClientConfig</h4>
-  <div class="markdown level1 summary"><p>Gets a configuration object for a <see cref="!:DiscordSocketClient"></see>.</p>
+  <div class="markdown level1 summary"><p>Gets a configuration object for a <span class="xref">Discord.WebSocket.DiscordSocketClient</span>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -567,7 +607,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">DiscordSocketConfig</span></td>
+        <td><span class="xref">Discord.WebSocket.DiscordSocketConfig</span></td>
         <td></td>
       </tr>
     </tbody>

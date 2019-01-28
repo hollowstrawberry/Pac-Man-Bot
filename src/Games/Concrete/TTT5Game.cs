@@ -81,7 +81,7 @@ namespace PacManBot.Games.Concrete
                                    $"{User(i).NameandDisc().SanitizeMarkdown()}\n");
             }
 
-            description.Append("ᅠ\n");
+            description.Append($"{Empty}\n");
 
             for (int y = Winner == Player.None ? -1 : 0; y < board.Height; y++)
             {
@@ -97,7 +97,7 @@ namespace PacManBot.Games.Concrete
 
             if (State == State.Active)
             {
-                description.Append($"ᅠ\nSay a column and row to place an {(Turn == Player.Red ? "X" : "O")} in that cell (Example: B4)");
+                description.Append($"{Empty}\nSay a column and row to place an {(Turn == Player.Red ? "X" : "O")} in that cell (Example: B4)");
                 description.Append("\nTo win you must make **more lines of three** than your opponent,\n" +
                                    "but if someone makes a line of **four**, they **win instantly**!");
             }

@@ -81,7 +81,7 @@ namespace PacManBot.Games.Concrete
                 description.Append($"{"►".If(i == Turn)}{((Player)i).Symbol()} - {User(i).NameandDisc().SanitizeMarkdown()}\n");
             }
 
-            description.Append("ᅠ\n");
+            description.Append($"{Empty}\n");
 
             for (int y = 0; y < board.Height; y++)
             {
@@ -93,7 +93,7 @@ namespace PacManBot.Games.Concrete
                 description.Append('\n');
             }
 
-            if (State == State.Active) description.Append($"ᅠ\n*Say the number of a cell (1 to 9) to place an {(Turn == Player.Red ? "X" : "O")}*");
+            if (State == State.Active) description.Append($"{Empty}\n*Say the number of a cell (1 to 9) to place an {(Turn == Player.Red ? "X" : "O")}*");
 
             return new EmbedBuilder
             {
