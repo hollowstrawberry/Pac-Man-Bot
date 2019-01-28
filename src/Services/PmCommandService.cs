@@ -65,7 +65,7 @@ namespace PacManBot.Services
                 var help = new CommandHelp(com);
                 foreach (var alias in com.Aliases)
                 {
-                    tempCommandHelp[alias.ToLower()] = help;
+                    tempCommandHelp[alias.ToLowerInvariant()] = help;
                 }
             }
             commandHelp = tempCommandHelp;
@@ -75,7 +75,7 @@ namespace PacManBot.Services
                 .OrderBy(g => g.Key.Remarks)
                 .ToDictionary(
                     g => g.Key.Name,
-                    g => g.Select(c => commandHelp[c.Name.ToLower()])
+                    g => g.Select(c => commandHelp[c.Name.ToLowerInvariant()])
                         .ToArray().AsEnumerable());
 
             log.Info($"Added {allCommands.Length} commands", LogSource.Command);
@@ -129,7 +129,7 @@ namespace PacManBot.Services
         /// <summary>Gets a message embed of the user manual for a command.</summary>
         public EmbedBuilder GetCommandHelp(string commandName, string prefix = "")
         {
-            if (!commandHelp.TryGetValue(commandName.ToLower(), out var help)) return null;
+            if (!commandHelp.TryGetValue(commandName.ToLowerInvariant(), out var help)) return null;
             return help.GetEmbed(prefix);
         }
 

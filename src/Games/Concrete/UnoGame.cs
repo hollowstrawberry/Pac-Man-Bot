@@ -210,10 +210,10 @@ namespace PacManBot.Games.Concrete
                 value = value.ReplaceMany((" ", ""), ("auto", ""), ("uno", ""), ("draw2", "drawtwo"), ("draw4", "drawfour"));
 
                 CardColor? color = EnumTraits<CardColor>.Values
-                    .FirstOrNull(x => value.StartsOrEndsWith(x.ToString().ToLower()));
+                    .FirstOrNull(x => value.StartsOrEndsWith(x.ToString().ToLowerInvariant()));
 
                 CardType? type = EnumTraits<CardType>.Values.ToList().Reversed()
-                    .FirstOrNull(x => value.StartsOrEndsWith(x.ToString().ToLower())
+                    .FirstOrNull(x => value.StartsOrEndsWith(x.ToString().ToLowerInvariant())
                                  || x <= CardType.Nine && value.StartsOrEndsWith(((int)x).ToString()));
 
                 if (auto)
@@ -293,7 +293,7 @@ namespace PacManBot.Games.Concrete
         {
             if (players.Count < 2) return false;
 
-            value = StripPrefix(value.ToLower());
+            value = StripPrefix(value.ToLowerInvariant());
 
             if (UserId.Contains(userId))
             {
@@ -313,7 +313,7 @@ namespace PacManBot.Games.Concrete
         public async void Input(string input, ulong userId = 1)
         {
             LastPlayed = DateTime.Now;
-            input = StripPrefix(input.ToLower());
+            input = StripPrefix(input.ToLowerInvariant());
             bool calledByAi = CurrentPlayer.User.IsBot;
 
 

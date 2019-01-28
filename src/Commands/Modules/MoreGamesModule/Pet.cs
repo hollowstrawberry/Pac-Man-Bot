@@ -70,7 +70,7 @@ namespace PacManBot.Commands.Modules
                  "**{prefix}pet release** - Gives your pet to a loving family that will take care of it (Deletes pet forever)")]
         public async Task PetMaster(string commandName = "", [Remainder]string args = "")
         {
-            commandName = commandName.ToLower();
+            commandName = commandName.ToLowerInvariant();
 
             var command = PetMethods
                 .FirstOrDefault(x => x.GetCustomAttribute<PetCommandAttribute>().Names.Contains(commandName));

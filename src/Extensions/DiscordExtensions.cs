@@ -216,7 +216,7 @@ namespace PacManBot.Extensions
         {
             try
             {
-                text = text.ToLower().Trim().Replace(" ", "");
+                text = text.ToLowerInvariant().Trim().Replace(" ", "");
                 if (Regex.IsMatch(text, @"^[0123456789abcdef]{6}$")) text = $"#{text}";
 
                 var color = (SystemColor)new ColorConverter().ConvertFromString(text);

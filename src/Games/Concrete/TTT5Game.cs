@@ -40,13 +40,13 @@ namespace PacManBot.Games.Concrete
 
         public bool IsInput(string value, ulong userId)
         {
-            return userId == User(Turn)?.Id && Regex.IsMatch(StripPrefix(value).ToUpper(), @"^[ABCDE][12345]$");
+            return userId == User(Turn)?.Id && Regex.IsMatch(StripPrefix(value).ToUpperInvariant(), @"^[ABCDE][12345]$");
         }
 
 
         public void Input(string input, ulong userId = 1)
         {
-            input = StripPrefix(input).ToUpper();
+            input = StripPrefix(input).ToUpperInvariant();
             int x = input[0] - 'A';
             int y = input[1] - '1';
 

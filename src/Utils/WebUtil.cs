@@ -17,7 +17,7 @@ namespace PacManBot.Utils
                 req.Method = "HEAD";
                 using (var resp = req.GetResponse())
                 {
-                    return resp.ContentType.ToLower().StartsWith("image/");
+                    return resp.ContentType.ToLowerInvariant().StartsWith("image/");
                 }
             }
             catch (WebException)

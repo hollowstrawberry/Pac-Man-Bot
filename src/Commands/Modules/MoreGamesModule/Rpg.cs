@@ -71,7 +71,7 @@ namespace PacManBot.Commands.Modules
             "\n**{prefix}rpg delete** - Delete your hero.")]
         public async Task RpgMaster(string commandName = "", [Remainder]string args = "")
         {
-            commandName = commandName.ToLower();
+            commandName = commandName.ToLowerInvariant();
             args = args.Trim();
 
             var game = Games.GetForUser<RpgGame>(Context.User.Id);
@@ -340,7 +340,7 @@ namespace PacManBot.Commands.Modules
         {
             if (args == "") return "Please specify a skill and amount to spend.";
 
-            args = args.ToLower();
+            args = args.ToLowerInvariant();
             string[] splice = args.Split(' ', 2);
             string skill = splice[0];
             int amount = 0;

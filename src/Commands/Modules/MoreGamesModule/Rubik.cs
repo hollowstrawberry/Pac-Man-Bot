@@ -27,7 +27,7 @@ namespace PacManBot.Commands.Modules
             }
 
             bool removeOld = false;
-            switch (input.ToLower())
+            switch (input.ToLowerInvariant())
             {
                 case "moves":
                 case "notation":
