@@ -78,6 +78,10 @@ namespace PacManBot
         [DataMember] public readonly string[] superPettingMessages;
 
 
+
+        /// <summary>Image URLs for <see cref="HangmanGame"/> mistake stages.</summary>
+        [DataMember] public readonly string[] hangmanStageImages;
+
         /// <summary>Words used in <see cref="HangmanGame"/>.</summary>
         [DataMember] public readonly string[] hangmanWords;
     }

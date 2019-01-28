@@ -50,5 +50,13 @@ namespace PacManBot.Games
         {
             ChannelId = channelId;
         }
+
+
+        /// <summary>Used to remove the guild prefix from game input, as it is to be ignored.</summary>
+        protected string StripPrefix(string value)
+        {
+            string prefix = storage.GetPrefix(Channel);
+            return value.StartsWith(prefix) ? value.Substring(prefix.Length) : value;
+        }
     }
 }

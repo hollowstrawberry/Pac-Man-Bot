@@ -142,14 +142,6 @@ namespace PacManBot.Games
         }
 
 
-        /// <summary>Used to remove the guild prefix from game input, as it is to be ignored.</summary>
-        protected string StripPrefix(string value)
-        {
-            string prefix = storage.GetPrefix(Channel);
-            return value.StartsWith(prefix) ? value.Substring(prefix.Length) : value;
-        }
-
-
         /// <summary>Default title of a multiplayer game embed, displaying the current turn/winner.</summary>
         protected string ColorEmbedTitle()
         {
