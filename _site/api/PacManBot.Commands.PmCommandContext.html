@@ -91,18 +91,18 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_PmCommandContext__ctor_SocketUserMessage_IServiceProvider_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.PmCommandContext.%23ctor(SocketUserMessage%2CIServiceProvider)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_PmCommandContext__ctor_SocketUserMessage_System_Int32_IServiceProvider_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.PmCommandContext.%23ctor(SocketUserMessage%2CSystem.Int32%2CIServiceProvider)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/PmCommandContext.cs/#L14">View Source</a>
   </span>
   <a id="PacManBot_Commands_PmCommandContext__ctor_" data-uid="PacManBot.Commands.PmCommandContext.#ctor*"></a>
-  <h4 id="PacManBot_Commands_PmCommandContext__ctor_SocketUserMessage_IServiceProvider_" data-uid="PacManBot.Commands.PmCommandContext.#ctor(SocketUserMessage,IServiceProvider)">PmCommandContext(SocketUserMessage, IServiceProvider)</h4>
+  <h4 id="PacManBot_Commands_PmCommandContext__ctor_SocketUserMessage_System_Int32_IServiceProvider_" data-uid="PacManBot.Commands.PmCommandContext.#ctor(SocketUserMessage,System.Int32,IServiceProvider)">PmCommandContext(SocketUserMessage, Int32, IServiceProvider)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public PmCommandContext(SocketUserMessage msg, IServiceProvider services)</code></pre>
+    <pre><code class="lang-csharp hljs">public PmCommandContext(SocketUserMessage msg, int commandPosition, IServiceProvider services)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -120,6 +120,11 @@
         <td></td>
       </tr>
       <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">commandPosition</span></td>
+        <td></td>
+      </tr>
+      <tr>
         <td><span class="xref">IServiceProvider</span></td>
         <td><span class="parametername">services</span></td>
         <td></td>
@@ -133,7 +138,7 @@
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_PmCommandContext_Client.md&amp;value=---%0Auid%3A%20PacManBot.Commands.PmCommandContext.Client%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/PmCommandContext.cs/#L23">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/PmCommandContext.cs/#L24">View Source</a>
   </span>
   <a id="PacManBot_Commands_PmCommandContext_Client_" data-uid="PacManBot.Commands.PmCommandContext.Client*"></a>
   <h4 id="PacManBot_Commands_PmCommandContext_Client" data-uid="PacManBot.Commands.PmCommandContext.Client">Client</h4>
@@ -164,7 +169,7 @@
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_PmCommandContext_FixedPrefix.md&amp;value=---%0Auid%3A%20PacManBot.Commands.PmCommandContext.FixedPrefix%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/PmCommandContext.cs/#L26">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/PmCommandContext.cs/#L27">View Source</a>
   </span>
   <a id="PacManBot_Commands_PmCommandContext_FixedPrefix_" data-uid="PacManBot.Commands.PmCommandContext.FixedPrefix*"></a>
   <h4 id="PacManBot_Commands_PmCommandContext_FixedPrefix" data-uid="PacManBot.Commands.PmCommandContext.FixedPrefix">FixedPrefix</h4>
@@ -192,10 +197,41 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_PmCommandContext_Position.md&amp;value=---%0Auid%3A%20PacManBot.Commands.PmCommandContext.Position%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/PmCommandContext.cs/#L31">View Source</a>
+  </span>
+  <a id="PacManBot_Commands_PmCommandContext_Position_" data-uid="PacManBot.Commands.PmCommandContext.Position*"></a>
+  <h4 id="PacManBot_Commands_PmCommandContext_Position" data-uid="PacManBot.Commands.PmCommandContext.Position">Position</h4>
+  <div class="markdown level1 summary"><p>The position where the command starts in the message.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int Position { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_PmCommandContext_Prefix.md&amp;value=---%0Auid%3A%20PacManBot.Commands.PmCommandContext.Prefix%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/PmCommandContext.cs/#L28">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/PmCommandContext.cs/#L29">View Source</a>
   </span>
   <a id="PacManBot_Commands_PmCommandContext_Prefix_" data-uid="PacManBot.Commands.PmCommandContext.Prefix*"></a>
   <h4 id="PacManBot_Commands_PmCommandContext_Prefix" data-uid="PacManBot.Commands.PmCommandContext.Prefix">Prefix</h4>
