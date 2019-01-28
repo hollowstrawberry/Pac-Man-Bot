@@ -5,10 +5,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Class TTTGame
+    <title>Class HangmanGame
    </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Class TTTGame
+    <meta name="title" content="Class HangmanGame
    ">
     <meta name="generator" content="docfx 2.40.7.0">
     
@@ -68,10 +68,10 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="PacManBot.Games.Concrete.TTTGame">
+            <article class="content wrap" id="_content" data-uid="PacManBot.Games.Concrete.HangmanGame">
   
   
-  <h1 id="PacManBot_Games_Concrete_TTTGame" data-uid="PacManBot.Games.Concrete.TTTGame" class="text-break">Class TTTGame
+  <h1 id="PacManBot_Games_Concrete_HangmanGame" data-uid="PacManBot.Games.Concrete.HangmanGame" class="text-break">Class HangmanGame
   </h1>
   <div class="markdown level0 summary"></div>
   <div class="markdown level0 conceptual"></div>
@@ -80,51 +80,16 @@
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><a class="xref" href="PacManBot.Games.BaseGame.html">BaseGame</a></div>
     <div class="level2"><a class="xref" href="PacManBot.Games.ChannelGame.html">ChannelGame</a></div>
-    <div class="level3"><a class="xref" href="PacManBot.Games.MultiplayerGame.html">MultiplayerGame</a></div>
-    <div class="level4"><span class="xref">TTTGame</span></div>
+    <div class="level3"><span class="xref">HangmanGame</span></div>
   </div>
   <div classs="implements">
     <h5>Implements</h5>
-    <div><a class="xref" href="PacManBot.Games.IMultiplayerGame.html">IMultiplayerGame</a></div>
     <div><a class="xref" href="PacManBot.Games.IMessagesGame.html">IMessagesGame</a></div>
     <div><a class="xref" href="PacManBot.Games.IChannelGame.html">IChannelGame</a></div>
     <div><a class="xref" href="PacManBot.Games.IBaseGame.html">IBaseGame</a></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
-    <div>
-      <a class="xref" href="PacManBot.Games.MultiplayerGame.html#PacManBot_Games_MultiplayerGame_Turn">MultiplayerGame.Turn</a>
-    </div>
-    <div>
-      <a class="xref" href="PacManBot.Games.MultiplayerGame.html#PacManBot_Games_MultiplayerGame_Winner">MultiplayerGame.Winner</a>
-    </div>
-    <div>
-      <a class="xref" href="PacManBot.Games.MultiplayerGame.html#PacManBot_Games_MultiplayerGame_Message">MultiplayerGame.Message</a>
-    </div>
-    <div>
-      <a class="xref" href="PacManBot.Games.MultiplayerGame.html#PacManBot_Games_MultiplayerGame_BotTurn">MultiplayerGame.BotTurn</a>
-    </div>
-    <div>
-      <a class="xref" href="PacManBot.Games.MultiplayerGame.html#PacManBot_Games_MultiplayerGame_AllBots">MultiplayerGame.AllBots</a>
-    </div>
-    <div>
-      <a class="xref" href="PacManBot.Games.MultiplayerGame.html#PacManBot_Games_MultiplayerGame_User_System_Int32_">MultiplayerGame.User(Int32)</a>
-    </div>
-    <div>
-      <a class="xref" href="PacManBot.Games.MultiplayerGame.html#PacManBot_Games_MultiplayerGame_CreateNew__1_System_UInt64_SocketUser___IServiceProvider_">MultiplayerGame.CreateNew&lt;TGame&gt;(UInt64, SocketUser[], IServiceProvider)</a>
-    </div>
-    <div>
-      <a class="xref" href="PacManBot.Games.MultiplayerGame.html#PacManBot_Games_MultiplayerGame_GetContent_System_Boolean_">MultiplayerGame.GetContent(Boolean)</a>
-    </div>
-    <div>
-      <a class="xref" href="PacManBot.Games.MultiplayerGame.html#PacManBot_Games_MultiplayerGame_NextPlayer">MultiplayerGame.NextPlayer()</a>
-    </div>
-    <div>
-      <a class="xref" href="PacManBot.Games.MultiplayerGame.html#PacManBot_Games_MultiplayerGame_PreviousPlayer">MultiplayerGame.PreviousPlayer()</a>
-    </div>
-    <div>
-      <a class="xref" href="PacManBot.Games.MultiplayerGame.html#PacManBot_Games_MultiplayerGame_ColorEmbedTitle">MultiplayerGame.ColorEmbedTitle()</a>
-    </div>
     <div>
       <a class="xref" href="PacManBot.Games.ChannelGame.html#PacManBot_Games_ChannelGame_ChannelId">ChannelGame.ChannelId</a>
     </div>
@@ -186,6 +151,9 @@
       <a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_SetServices_IServiceProvider_">BaseGame.SetServices(IServiceProvider)</a>
     </div>
     <div>
+      <a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_GetContent_System_Boolean_">BaseGame.GetContent(Boolean)</a>
+    </div>
+    <div>
       <a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_GetRequestOptions">BaseGame.GetRequestOptions()</a>
     </div>
     <div>
@@ -200,21 +168,136 @@
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="PacManBot.Games.Concrete.html">PacManBot.Games.Concrete</a></h6>
   <h6><strong>Assembly</strong>: Pacman.dll</h6>
-  <h5 id="PacManBot_Games_Concrete_TTTGame_syntax">Syntax</h5>
+  <h5 id="PacManBot_Games_Concrete_HangmanGame_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class TTTGame : MultiplayerGame, IMultiplayerGame, IMessagesGame, IChannelGame, IBaseGame</code></pre>
+    <pre><code class="lang-csharp hljs">public class HangmanGame : ChannelGame, IMessagesGame, IChannelGame, IBaseGame</code></pre>
   </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_HangmanGame__ctor_System_UInt64_IServiceProvider_.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.HangmanGame.%23ctor(System.UInt64%2CIServiceProvider)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/HangmanGame.cs/#L36">View Source</a>
+  </span>
+  <a id="PacManBot_Games_Concrete_HangmanGame__ctor_" data-uid="PacManBot.Games.Concrete.HangmanGame.#ctor*"></a>
+  <h4 id="PacManBot_Games_Concrete_HangmanGame__ctor_System_UInt64_IServiceProvider_" data-uid="PacManBot.Games.Concrete.HangmanGame.#ctor(System.UInt64,IServiceProvider)">HangmanGame(UInt64, IServiceProvider)</h4>
+  <div class="markdown level1 summary"><p>Starts a hangman game with a random word.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public HangmanGame(ulong channelId, IServiceProvider services)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt64</span></td>
+        <td><span class="parametername">channelId</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">IServiceProvider</span></td>
+        <td><span class="parametername">services</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_HangmanGame__ctor_System_UInt64_System_UInt64_IServiceProvider_.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.HangmanGame.%23ctor(System.UInt64%2CSystem.UInt64%2CIServiceProvider)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/HangmanGame.cs/#L45">View Source</a>
+  </span>
+  <a id="PacManBot_Games_Concrete_HangmanGame__ctor_" data-uid="PacManBot.Games.Concrete.HangmanGame.#ctor*"></a>
+  <h4 id="PacManBot_Games_Concrete_HangmanGame__ctor_System_UInt64_System_UInt64_IServiceProvider_" data-uid="PacManBot.Games.Concrete.HangmanGame.#ctor(System.UInt64,System.UInt64,IServiceProvider)">HangmanGame(UInt64, UInt64, IServiceProvider)</h4>
+  <div class="markdown level1 summary"><p>Creates a custom hangman game belonging to a user.
+The game will only start once the word is provided.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public HangmanGame(ulong channelId, ulong ownerId, IServiceProvider services)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt64</span></td>
+        <td><span class="parametername">channelId</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.UInt64</span></td>
+        <td><span class="parametername">ownerId</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">IServiceProvider</span></td>
+        <td><span class="parametername">services</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="fields">Fields
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_HangmanGame_Alphabet.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.HangmanGame.Alphabet%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/HangmanGame.cs/#L13">View Source</a>
+  </span>
+  <h4 id="PacManBot_Games_Concrete_HangmanGame_Alphabet" data-uid="PacManBot.Games.Concrete.HangmanGame.Alphabet">Alphabet</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static readonly Regex Alphabet</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Regex</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <h3 id="properties">Properties
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_TTTGame_Expiry.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.TTTGame.Expiry%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_HangmanGame_Expiry.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.HangmanGame.Expiry%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/TTTGame.cs/#L17">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/HangmanGame.cs/#L18">View Source</a>
   </span>
-  <a id="PacManBot_Games_Concrete_TTTGame_Expiry_" data-uid="PacManBot.Games.Concrete.TTTGame.Expiry*"></a>
-  <h4 id="PacManBot_Games_Concrete_TTTGame_Expiry" data-uid="PacManBot.Games.Concrete.TTTGame.Expiry">Expiry</h4>
+  <a id="PacManBot_Games_Concrete_HangmanGame_Expiry_" data-uid="PacManBot.Games.Concrete.HangmanGame.Expiry*"></a>
+  <h4 id="PacManBot_Games_Concrete_HangmanGame_Expiry" data-uid="PacManBot.Games.Concrete.HangmanGame.Expiry">Expiry</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -240,13 +323,13 @@
   <div><a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_Expiry">BaseGame.Expiry</a></div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_TTTGame_GameIndex.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.TTTGame.GameIndex%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_HangmanGame_GameIndex.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.HangmanGame.GameIndex%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/TTTGame.cs/#L15">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/HangmanGame.cs/#L17">View Source</a>
   </span>
-  <a id="PacManBot_Games_Concrete_TTTGame_GameIndex_" data-uid="PacManBot.Games.Concrete.TTTGame.GameIndex*"></a>
-  <h4 id="PacManBot_Games_Concrete_TTTGame_GameIndex" data-uid="PacManBot.Games.Concrete.TTTGame.GameIndex">GameIndex</h4>
+  <a id="PacManBot_Games_Concrete_HangmanGame_GameIndex_" data-uid="PacManBot.Games.Concrete.HangmanGame.GameIndex*"></a>
+  <h4 id="PacManBot_Games_Concrete_HangmanGame_GameIndex" data-uid="PacManBot.Games.Concrete.HangmanGame.GameIndex">GameIndex</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -272,13 +355,13 @@
   <div><a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_GameIndex">BaseGame.GameIndex</a></div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_TTTGame_GameName.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.TTTGame.GameName%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_HangmanGame_GameName.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.HangmanGame.GameName%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/TTTGame.cs/#L16">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/HangmanGame.cs/#L16">View Source</a>
   </span>
-  <a id="PacManBot_Games_Concrete_TTTGame_GameName_" data-uid="PacManBot.Games.Concrete.TTTGame.GameName*"></a>
-  <h4 id="PacManBot_Games_Concrete_TTTGame_GameName" data-uid="PacManBot.Games.Concrete.TTTGame.GameName">GameName</h4>
+  <a id="PacManBot_Games_Concrete_HangmanGame_GameName_" data-uid="PacManBot.Games.Concrete.HangmanGame.GameName*"></a>
+  <h4 id="PacManBot_Games_Concrete_HangmanGame_GameName" data-uid="PacManBot.Games.Concrete.HangmanGame.GameName">GameName</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -306,30 +389,13 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_TTTGame_BotInput.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.TTTGame.BotInput%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_HangmanGame_GetEmbed_System_Boolean_.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.HangmanGame.GetEmbed(System.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/TTTGame.cs/#L134">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/HangmanGame.cs/#L117">View Source</a>
   </span>
-  <a id="PacManBot_Games_Concrete_TTTGame_BotInput_" data-uid="PacManBot.Games.Concrete.TTTGame.BotInput*"></a>
-  <h4 id="PacManBot_Games_Concrete_TTTGame_BotInput" data-uid="PacManBot.Games.Concrete.TTTGame.BotInput">BotInput()</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override void BotInput()</code></pre>
-  </div>
-  <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="PacManBot.Games.MultiplayerGame.html#PacManBot_Games_MultiplayerGame_BotInput">MultiplayerGame.BotInput()</a></div>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_TTTGame_GetEmbed_System_Boolean_.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.TTTGame.GetEmbed(System.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/TTTGame.cs/#L73">View Source</a>
-  </span>
-  <a id="PacManBot_Games_Concrete_TTTGame_GetEmbed_" data-uid="PacManBot.Games.Concrete.TTTGame.GetEmbed*"></a>
-  <h4 id="PacManBot_Games_Concrete_TTTGame_GetEmbed_System_Boolean_" data-uid="PacManBot.Games.Concrete.TTTGame.GetEmbed(System.Boolean)">GetEmbed(Boolean)</h4>
+  <a id="PacManBot_Games_Concrete_HangmanGame_GetEmbed_" data-uid="PacManBot.Games.Concrete.HangmanGame.GetEmbed*"></a>
+  <h4 id="PacManBot_Games_Concrete_HangmanGame_GetEmbed_System_Boolean_" data-uid="PacManBot.Games.Concrete.HangmanGame.GetEmbed(System.Boolean)">GetEmbed(Boolean)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -372,72 +438,13 @@
   <div><a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_GetEmbed_System_Boolean_">BaseGame.GetEmbed(Boolean)</a></div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_TTTGame_Initialize_System_UInt64_SocketUser___IServiceProvider_.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.TTTGame.Initialize(System.UInt64%2CSocketUser%5B%5D%2CIServiceProvider)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_HangmanGame_Input_System_String_System_UInt64_.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.HangmanGame.Input(System.String%2CSystem.UInt64)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/TTTGame.cs/#L27">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/HangmanGame.cs/#L64">View Source</a>
   </span>
-  <a id="PacManBot_Games_Concrete_TTTGame_Initialize_" data-uid="PacManBot.Games.Concrete.TTTGame.Initialize*"></a>
-  <h4 id="PacManBot_Games_Concrete_TTTGame_Initialize_System_UInt64_SocketUser___IServiceProvider_" data-uid="PacManBot.Games.Concrete.TTTGame.Initialize(System.UInt64,SocketUser[],IServiceProvider)">Initialize(UInt64, SocketUser[], IServiceProvider)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected override Task Initialize(ulong channelId, SocketUser[] players, IServiceProvider services)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.UInt64</span></td>
-        <td><span class="parametername">channelId</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">SocketUser</span>[]</td>
-        <td><span class="parametername">players</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">IServiceProvider</span></td>
-        <td><span class="parametername">services</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">Task</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="PacManBot.Games.MultiplayerGame.html#PacManBot_Games_MultiplayerGame_Initialize_System_UInt64_SocketUser___IServiceProvider_">MultiplayerGame.Initialize(UInt64, SocketUser[], IServiceProvider)</a></div>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_TTTGame_Input_System_String_System_UInt64_.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.TTTGame.Input(System.String%2CSystem.UInt64)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/TTTGame.cs/#L46">View Source</a>
-  </span>
-  <a id="PacManBot_Games_Concrete_TTTGame_Input_" data-uid="PacManBot.Games.Concrete.TTTGame.Input*"></a>
-  <h4 id="PacManBot_Games_Concrete_TTTGame_Input_System_String_System_UInt64_" data-uid="PacManBot.Games.Concrete.TTTGame.Input(System.String,System.UInt64)">Input(String, UInt64)</h4>
+  <a id="PacManBot_Games_Concrete_HangmanGame_Input_" data-uid="PacManBot.Games.Concrete.HangmanGame.Input*"></a>
+  <h4 id="PacManBot_Games_Concrete_HangmanGame_Input_System_String_System_UInt64_" data-uid="PacManBot.Games.Concrete.HangmanGame.Input(System.String,System.UInt64)">Input(String, UInt64)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -468,13 +475,13 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_TTTGame_IsInput_System_String_System_UInt64_.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.TTTGame.IsInput(System.String%2CSystem.UInt64)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_HangmanGame_IsInput_System_String_System_UInt64_.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.HangmanGame.IsInput(System.String%2CSystem.UInt64)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/TTTGame.cs/#L40">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/HangmanGame.cs/#L51">View Source</a>
   </span>
-  <a id="PacManBot_Games_Concrete_TTTGame_IsInput_" data-uid="PacManBot.Games.Concrete.TTTGame.IsInput*"></a>
-  <h4 id="PacManBot_Games_Concrete_TTTGame_IsInput_System_String_System_UInt64_" data-uid="PacManBot.Games.Concrete.TTTGame.IsInput(System.String,System.UInt64)">IsInput(String, UInt64)</h4>
+  <a id="PacManBot_Games_Concrete_HangmanGame_IsInput_" data-uid="PacManBot.Games.Concrete.HangmanGame.IsInput*"></a>
+  <h4 id="PacManBot_Games_Concrete_HangmanGame_IsInput_System_String_System_UInt64_" data-uid="PacManBot.Games.Concrete.HangmanGame.IsInput(System.String,System.UInt64)">IsInput(String, UInt64)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -518,10 +525,40 @@
       </tr>
     </tbody>
   </table>
-  <h3 id="implements">Implements</h3>
-  <div>
-      <a class="xref" href="PacManBot.Games.IMultiplayerGame.html">IMultiplayerGame</a>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_HangmanGame_SetWord_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.HangmanGame.SetWord(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/HangmanGame.cs/#L28">View Source</a>
+  </span>
+  <a id="PacManBot_Games_Concrete_HangmanGame_SetWord_" data-uid="PacManBot.Games.Concrete.HangmanGame.SetWord*"></a>
+  <h4 id="PacManBot_Games_Concrete_HangmanGame_SetWord_System_String_" data-uid="PacManBot.Games.Concrete.HangmanGame.SetWord(System.String)">SetWord(String)</h4>
+  <div class="markdown level1 summary"><p>Sets the word in a new game.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void SetWord(string word)</code></pre>
   </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">word</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
   <div>
       <a class="xref" href="PacManBot.Games.IMessagesGame.html">IMessagesGame</a>
   </div>
@@ -539,10 +576,10 @@
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_TTTGame.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.TTTGame%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_HangmanGame.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.HangmanGame%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/TTTGame.cs/#L13" class="contribution-link">View Source</a>
+                    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/HangmanGame.cs/#L11" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

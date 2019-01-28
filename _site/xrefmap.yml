@@ -487,6 +487,19 @@ references:
   isSpec: "True"
   fullName: PacManBot.Commands.Modules.GeneralModule.Ping
   nameWithType: GeneralModule.Ping
+- uid: PacManBot.Commands.Modules.GeneralModule.Say(System.String)
+  name: Say(String)
+  href: api/PacManBot.Commands.Modules.GeneralModule.html#PacManBot_Commands_Modules_GeneralModule_Say_System_String_
+  commentId: M:PacManBot.Commands.Modules.GeneralModule.Say(System.String)
+  fullName: PacManBot.Commands.Modules.GeneralModule.Say(System.String)
+  nameWithType: GeneralModule.Say(String)
+- uid: PacManBot.Commands.Modules.GeneralModule.Say*
+  name: Say
+  href: api/PacManBot.Commands.Modules.GeneralModule.html#PacManBot_Commands_Modules_GeneralModule_Say_
+  commentId: Overload:PacManBot.Commands.Modules.GeneralModule.Say
+  isSpec: "True"
+  fullName: PacManBot.Commands.Modules.GeneralModule.Say
+  nameWithType: GeneralModule.Say
 - uid: PacManBot.Commands.Modules.GeneralModule.SendAllHelpExpanded
   name: SendAllHelpExpanded()
   href: api/PacManBot.Commands.Modules.GeneralModule.html#PacManBot_Commands_Modules_GeneralModule_SendAllHelpExpanded
@@ -649,12 +662,12 @@ references:
   isSpec: "True"
   fullName: PacManBot.Commands.Modules.ModModule.SetServerPrefix
   nameWithType: ModModule.SetServerPrefix
-- uid: PacManBot.Commands.Modules.ModModule.ToggleNoPrefix(System.String)
-  name: ToggleNoPrefix(String)
-  href: api/PacManBot.Commands.Modules.ModModule.html#PacManBot_Commands_Modules_ModModule_ToggleNoPrefix_System_String_
-  commentId: M:PacManBot.Commands.Modules.ModModule.ToggleNoPrefix(System.String)
-  fullName: PacManBot.Commands.Modules.ModModule.ToggleNoPrefix(System.String)
-  nameWithType: ModModule.ToggleNoPrefix(String)
+- uid: PacManBot.Commands.Modules.ModModule.ToggleNoPrefix(SocketGuildChannel)
+  name: ToggleNoPrefix(SocketGuildChannel)
+  href: api/PacManBot.Commands.Modules.ModModule.html#PacManBot_Commands_Modules_ModModule_ToggleNoPrefix_SocketGuildChannel_
+  commentId: M:PacManBot.Commands.Modules.ModModule.ToggleNoPrefix(SocketGuildChannel)
+  fullName: PacManBot.Commands.Modules.ModModule.ToggleNoPrefix(SocketGuildChannel)
+  nameWithType: ModModule.ToggleNoPrefix(SocketGuildChannel)
 - uid: PacManBot.Commands.Modules.ModModule.ToggleNoPrefix*
   name: ToggleNoPrefix
   href: api/PacManBot.Commands.Modules.ModModule.html#PacManBot_Commands_Modules_ModModule_ToggleNoPrefix_
@@ -1240,6 +1253,32 @@ references:
   isSpec: "True"
   fullName: PacManBot.Commands.Modules.MoreGamesModule.StartConnectFoureVs
   nameWithType: MoreGamesModule.StartConnectFoureVs
+- uid: PacManBot.Commands.Modules.MoreGamesModule.StartHangman(System.String)
+  name: StartHangman(String)
+  href: api/PacManBot.Commands.Modules.MoreGamesModule.html#PacManBot_Commands_Modules_MoreGamesModule_StartHangman_System_String_
+  commentId: M:PacManBot.Commands.Modules.MoreGamesModule.StartHangman(System.String)
+  fullName: PacManBot.Commands.Modules.MoreGamesModule.StartHangman(System.String)
+  nameWithType: MoreGamesModule.StartHangman(String)
+- uid: PacManBot.Commands.Modules.MoreGamesModule.StartHangman*
+  name: StartHangman
+  href: api/PacManBot.Commands.Modules.MoreGamesModule.html#PacManBot_Commands_Modules_MoreGamesModule_StartHangman_
+  commentId: Overload:PacManBot.Commands.Modules.MoreGamesModule.StartHangman
+  isSpec: "True"
+  fullName: PacManBot.Commands.Modules.MoreGamesModule.StartHangman
+  nameWithType: MoreGamesModule.StartHangman
+- uid: PacManBot.Commands.Modules.MoreGamesModule.StartHangmanCustom
+  name: StartHangmanCustom()
+  href: api/PacManBot.Commands.Modules.MoreGamesModule.html#PacManBot_Commands_Modules_MoreGamesModule_StartHangmanCustom
+  commentId: M:PacManBot.Commands.Modules.MoreGamesModule.StartHangmanCustom
+  fullName: PacManBot.Commands.Modules.MoreGamesModule.StartHangmanCustom()
+  nameWithType: MoreGamesModule.StartHangmanCustom()
+- uid: PacManBot.Commands.Modules.MoreGamesModule.StartHangmanCustom*
+  name: StartHangmanCustom
+  href: api/PacManBot.Commands.Modules.MoreGamesModule.html#PacManBot_Commands_Modules_MoreGamesModule_StartHangmanCustom_
+  commentId: Overload:PacManBot.Commands.Modules.MoreGamesModule.StartHangmanCustom
+  isSpec: "True"
+  fullName: PacManBot.Commands.Modules.MoreGamesModule.StartHangmanCustom
+  nameWithType: MoreGamesModule.StartHangmanCustom
 - uid: PacManBot.Commands.Modules.MoreGamesModule.StartTicTacToe(SocketGuildUser)
   name: StartTicTacToe(SocketGuildUser)
   href: api/PacManBot.Commands.Modules.MoreGamesModule.html#PacManBot_Commands_Modules_MoreGamesModule_StartTicTacToe_SocketGuildUser_
@@ -1560,6 +1599,54 @@ references:
   isSpec: "True"
   fullName: PacManBot.Commands.PmBaseModule.Games
   nameWithType: PmBaseModule.Games
+- uid: PacManBot.Commands.PmBaseModule.GetResponse(Func{SocketUserMessage,System.Boolean},System.Int32)
+  name: GetResponse(Func<SocketUserMessage, Boolean>, Int32)
+  href: api/PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_GetResponse_Func_SocketUserMessage_System_Boolean__System_Int32_
+  commentId: M:PacManBot.Commands.PmBaseModule.GetResponse(Func{SocketUserMessage,System.Boolean},System.Int32)
+  name.vb: GetResponse(Func(Of SocketUserMessage, Boolean), Int32)
+  fullName: PacManBot.Commands.PmBaseModule.GetResponse(Func<SocketUserMessage, System.Boolean>, System.Int32)
+  fullName.vb: PacManBot.Commands.PmBaseModule.GetResponse(Func(Of SocketUserMessage, System.Boolean), System.Int32)
+  nameWithType: PmBaseModule.GetResponse(Func<SocketUserMessage, Boolean>, Int32)
+  nameWithType.vb: PmBaseModule.GetResponse(Func(Of SocketUserMessage, Boolean), Int32)
+- uid: PacManBot.Commands.PmBaseModule.GetResponse(System.Int32)
+  name: GetResponse(Int32)
+  href: api/PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_GetResponse_System_Int32_
+  commentId: M:PacManBot.Commands.PmBaseModule.GetResponse(System.Int32)
+  fullName: PacManBot.Commands.PmBaseModule.GetResponse(System.Int32)
+  nameWithType: PmBaseModule.GetResponse(Int32)
+- uid: PacManBot.Commands.PmBaseModule.GetResponse*
+  name: GetResponse
+  href: api/PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_GetResponse_
+  commentId: Overload:PacManBot.Commands.PmBaseModule.GetResponse
+  isSpec: "True"
+  fullName: PacManBot.Commands.PmBaseModule.GetResponse
+  nameWithType: PmBaseModule.GetResponse
+- uid: PacManBot.Commands.PmBaseModule.GetYesResponse(System.Int32)
+  name: GetYesResponse(Int32)
+  href: api/PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_GetYesResponse_System_Int32_
+  commentId: M:PacManBot.Commands.PmBaseModule.GetYesResponse(System.Int32)
+  fullName: PacManBot.Commands.PmBaseModule.GetYesResponse(System.Int32)
+  nameWithType: PmBaseModule.GetYesResponse(Int32)
+- uid: PacManBot.Commands.PmBaseModule.GetYesResponse*
+  name: GetYesResponse
+  href: api/PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_GetYesResponse_
+  commentId: Overload:PacManBot.Commands.PmBaseModule.GetYesResponse
+  isSpec: "True"
+  fullName: PacManBot.Commands.PmBaseModule.GetYesResponse
+  nameWithType: PmBaseModule.GetYesResponse
+- uid: PacManBot.Commands.PmBaseModule.Input
+  name: Input
+  href: api/PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_Input
+  commentId: P:PacManBot.Commands.PmBaseModule.Input
+  fullName: PacManBot.Commands.PmBaseModule.Input
+  nameWithType: PmBaseModule.Input
+- uid: PacManBot.Commands.PmBaseModule.Input*
+  name: Input
+  href: api/PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_Input_
+  commentId: Overload:PacManBot.Commands.PmBaseModule.Input
+  isSpec: "True"
+  fullName: PacManBot.Commands.PmBaseModule.Input
+  nameWithType: PmBaseModule.Input
 - uid: PacManBot.Commands.PmBaseModule.Log
   name: Log
   href: api/PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_Log
@@ -1573,6 +1660,12 @@ references:
   isSpec: "True"
   fullName: PacManBot.Commands.PmBaseModule.Log
   nameWithType: PmBaseModule.Log
+- uid: PacManBot.Commands.PmBaseModule.ReplyAsync(Embed,RequestOptions)
+  name: ReplyAsync(Embed, RequestOptions)
+  href: api/PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_ReplyAsync_Embed_RequestOptions_
+  commentId: M:PacManBot.Commands.PmBaseModule.ReplyAsync(Embed,RequestOptions)
+  fullName: PacManBot.Commands.PmBaseModule.ReplyAsync(Embed, RequestOptions)
+  nameWithType: PmBaseModule.ReplyAsync(Embed, RequestOptions)
 - uid: PacManBot.Commands.PmBaseModule.ReplyAsync(EmbedBuilder,RequestOptions)
   name: ReplyAsync(EmbedBuilder, RequestOptions)
   href: api/PacManBot.Commands.PmBaseModule.html#PacManBot_Commands_PmBaseModule_ReplyAsync_EmbedBuilder_RequestOptions_
@@ -1648,37 +1741,49 @@ references:
   commentId: F:PacManBot.Commands.PmBasePermissionAttribute.channelPerms
   fullName: PacManBot.Commands.PmBasePermissionAttribute.channelPerms
   nameWithType: PmBasePermissionAttribute.channelPerms
-- uid: PacManBot.Commands.PmBasePermissionAttribute.CheckPermissions(ICommandContext,CommandInfo,IGuildUser,System.String)
-  name: CheckPermissions(ICommandContext, CommandInfo, IGuildUser, String)
-  href: api/PacManBot.Commands.PmBasePermissionAttribute.html#PacManBot_Commands_PmBasePermissionAttribute_CheckPermissions_ICommandContext_CommandInfo_IGuildUser_System_String_
-  commentId: M:PacManBot.Commands.PmBasePermissionAttribute.CheckPermissions(ICommandContext,CommandInfo,IGuildUser,System.String)
-  fullName: PacManBot.Commands.PmBasePermissionAttribute.CheckPermissions(ICommandContext, CommandInfo, IGuildUser, System.String)
-  nameWithType: PmBasePermissionAttribute.CheckPermissions(ICommandContext, CommandInfo, IGuildUser, String)
-- uid: PacManBot.Commands.PmBasePermissionAttribute.CheckPermissions*
-  name: CheckPermissions
-  href: api/PacManBot.Commands.PmBasePermissionAttribute.html#PacManBot_Commands_PmBasePermissionAttribute_CheckPermissions_
-  commentId: Overload:PacManBot.Commands.PmBasePermissionAttribute.CheckPermissions
+- uid: PacManBot.Commands.PmBasePermissionAttribute.CheckPermissionsAsync(ICommandContext,CommandInfo,IServiceProvider)
+  name: CheckPermissionsAsync(ICommandContext, CommandInfo, IServiceProvider)
+  href: api/PacManBot.Commands.PmBasePermissionAttribute.html#PacManBot_Commands_PmBasePermissionAttribute_CheckPermissionsAsync_ICommandContext_CommandInfo_IServiceProvider_
+  commentId: M:PacManBot.Commands.PmBasePermissionAttribute.CheckPermissionsAsync(ICommandContext,CommandInfo,IServiceProvider)
+  fullName: PacManBot.Commands.PmBasePermissionAttribute.CheckPermissionsAsync(ICommandContext, CommandInfo, IServiceProvider)
+  nameWithType: PmBasePermissionAttribute.CheckPermissionsAsync(ICommandContext, CommandInfo, IServiceProvider)
+- uid: PacManBot.Commands.PmBasePermissionAttribute.CheckPermissionsAsync*
+  name: CheckPermissionsAsync
+  href: api/PacManBot.Commands.PmBasePermissionAttribute.html#PacManBot_Commands_PmBasePermissionAttribute_CheckPermissionsAsync_
+  commentId: Overload:PacManBot.Commands.PmBasePermissionAttribute.CheckPermissionsAsync
   isSpec: "True"
-  fullName: PacManBot.Commands.PmBasePermissionAttribute.CheckPermissions
-  nameWithType: PmBasePermissionAttribute.CheckPermissions
+  fullName: PacManBot.Commands.PmBasePermissionAttribute.CheckPermissionsAsync
+  nameWithType: PmBasePermissionAttribute.CheckPermissionsAsync
 - uid: PacManBot.Commands.PmBasePermissionAttribute.guildPerms
   name: guildPerms
   href: api/PacManBot.Commands.PmBasePermissionAttribute.html#PacManBot_Commands_PmBasePermissionAttribute_guildPerms
   commentId: F:PacManBot.Commands.PmBasePermissionAttribute.guildPerms
   fullName: PacManBot.Commands.PmBasePermissionAttribute.guildPerms
   nameWithType: PmBasePermissionAttribute.guildPerms
+- uid: PacManBot.Commands.PmBasePermissionAttribute.name
+  name: name
+  href: api/PacManBot.Commands.PmBasePermissionAttribute.html#PacManBot_Commands_PmBasePermissionAttribute_name
+  commentId: F:PacManBot.Commands.PmBasePermissionAttribute.name
+  fullName: PacManBot.Commands.PmBasePermissionAttribute.name
+  nameWithType: PmBasePermissionAttribute.name
+- uid: PacManBot.Commands.PmBasePermissionAttribute.user
+  name: user
+  href: api/PacManBot.Commands.PmBasePermissionAttribute.html#PacManBot_Commands_PmBasePermissionAttribute_user
+  commentId: F:PacManBot.Commands.PmBasePermissionAttribute.user
+  fullName: PacManBot.Commands.PmBasePermissionAttribute.user
+  nameWithType: PmBasePermissionAttribute.user
 - uid: PacManBot.Commands.PmCommandContext
   name: PmCommandContext
   href: api/PacManBot.Commands.PmCommandContext.html
   commentId: T:PacManBot.Commands.PmCommandContext
   fullName: PacManBot.Commands.PmCommandContext
   nameWithType: PmCommandContext
-- uid: PacManBot.Commands.PmCommandContext.#ctor(SocketUserMessage,IServiceProvider)
-  name: PmCommandContext(SocketUserMessage, IServiceProvider)
-  href: api/PacManBot.Commands.PmCommandContext.html#PacManBot_Commands_PmCommandContext__ctor_SocketUserMessage_IServiceProvider_
-  commentId: M:PacManBot.Commands.PmCommandContext.#ctor(SocketUserMessage,IServiceProvider)
-  fullName: PacManBot.Commands.PmCommandContext.PmCommandContext(SocketUserMessage, IServiceProvider)
-  nameWithType: PmCommandContext.PmCommandContext(SocketUserMessage, IServiceProvider)
+- uid: PacManBot.Commands.PmCommandContext.#ctor(SocketUserMessage,System.Int32,IServiceProvider)
+  name: PmCommandContext(SocketUserMessage, Int32, IServiceProvider)
+  href: api/PacManBot.Commands.PmCommandContext.html#PacManBot_Commands_PmCommandContext__ctor_SocketUserMessage_System_Int32_IServiceProvider_
+  commentId: M:PacManBot.Commands.PmCommandContext.#ctor(SocketUserMessage,System.Int32,IServiceProvider)
+  fullName: PacManBot.Commands.PmCommandContext.PmCommandContext(SocketUserMessage, System.Int32, IServiceProvider)
+  nameWithType: PmCommandContext.PmCommandContext(SocketUserMessage, Int32, IServiceProvider)
 - uid: PacManBot.Commands.PmCommandContext.#ctor*
   name: PmCommandContext
   href: api/PacManBot.Commands.PmCommandContext.html#PacManBot_Commands_PmCommandContext__ctor_
@@ -1712,6 +1817,19 @@ references:
   isSpec: "True"
   fullName: PacManBot.Commands.PmCommandContext.FixedPrefix
   nameWithType: PmCommandContext.FixedPrefix
+- uid: PacManBot.Commands.PmCommandContext.Position
+  name: Position
+  href: api/PacManBot.Commands.PmCommandContext.html#PacManBot_Commands_PmCommandContext_Position
+  commentId: P:PacManBot.Commands.PmCommandContext.Position
+  fullName: PacManBot.Commands.PmCommandContext.Position
+  nameWithType: PmCommandContext.Position
+- uid: PacManBot.Commands.PmCommandContext.Position*
+  name: Position
+  href: api/PacManBot.Commands.PmCommandContext.html#PacManBot_Commands_PmCommandContext_Position_
+  commentId: Overload:PacManBot.Commands.PmCommandContext.Position
+  isSpec: "True"
+  fullName: PacManBot.Commands.PmCommandContext.Position
+  nameWithType: PmCommandContext.Position
 - uid: PacManBot.Commands.PmCommandContext.Prefix
   name: Prefix
   href: api/PacManBot.Commands.PmCommandContext.html#PacManBot_Commands_PmCommandContext_Prefix
@@ -2671,6 +2789,12 @@ references:
   commentId: M:PacManBot.Extensions.DiscordExtensions.FullName(IChannel)
   fullName: PacManBot.Extensions.DiscordExtensions.FullName(IChannel)
   nameWithType: DiscordExtensions.FullName(IChannel)
+- uid: PacManBot.Extensions.DiscordExtensions.FullName(IGuild)
+  name: FullName(IGuild)
+  href: api/PacManBot.Extensions.DiscordExtensions.html#PacManBot_Extensions_DiscordExtensions_FullName_IGuild_
+  commentId: M:PacManBot.Extensions.DiscordExtensions.FullName(IGuild)
+  fullName: PacManBot.Extensions.DiscordExtensions.FullName(IGuild)
+  nameWithType: DiscordExtensions.FullName(IGuild)
 - uid: PacManBot.Extensions.DiscordExtensions.FullName(IUser)
   name: FullName(IUser)
   href: api/PacManBot.Extensions.DiscordExtensions.html#PacManBot_Extensions_DiscordExtensions_FullName_IUser_
@@ -2768,6 +2892,19 @@ references:
   isSpec: "True"
   fullName: PacManBot.Extensions.DiscordExtensions.ParseUserAsync
   nameWithType: DiscordExtensions.ParseUserAsync
+- uid: PacManBot.Extensions.DiscordExtensions.ReadableName(IEmote)
+  name: ReadableName(IEmote)
+  href: api/PacManBot.Extensions.DiscordExtensions.html#PacManBot_Extensions_DiscordExtensions_ReadableName_IEmote_
+  commentId: M:PacManBot.Extensions.DiscordExtensions.ReadableName(IEmote)
+  fullName: PacManBot.Extensions.DiscordExtensions.ReadableName(IEmote)
+  nameWithType: DiscordExtensions.ReadableName(IEmote)
+- uid: PacManBot.Extensions.DiscordExtensions.ReadableName*
+  name: ReadableName
+  href: api/PacManBot.Extensions.DiscordExtensions.html#PacManBot_Extensions_DiscordExtensions_ReadableName_
+  commentId: Overload:PacManBot.Extensions.DiscordExtensions.ReadableName
+  isSpec: "True"
+  fullName: PacManBot.Extensions.DiscordExtensions.ReadableName
+  nameWithType: DiscordExtensions.ReadableName
 - uid: PacManBot.Extensions.DiscordExtensions.SanitizeMarkdown(System.String)
   name: SanitizeMarkdown(String)
   href: api/PacManBot.Extensions.DiscordExtensions.html#PacManBot_Extensions_DiscordExtensions_SanitizeMarkdown_System_String_
@@ -4139,6 +4276,19 @@ references:
   isSpec: "True"
   fullName: PacManBot.Games.ChannelGame.MessageId
   nameWithType: ChannelGame.MessageId
+- uid: PacManBot.Games.ChannelGame.StripPrefix(System.String)
+  name: StripPrefix(String)
+  href: api/PacManBot.Games.ChannelGame.html#PacManBot_Games_ChannelGame_StripPrefix_System_String_
+  commentId: M:PacManBot.Games.ChannelGame.StripPrefix(System.String)
+  fullName: PacManBot.Games.ChannelGame.StripPrefix(System.String)
+  nameWithType: ChannelGame.StripPrefix(String)
+- uid: PacManBot.Games.ChannelGame.StripPrefix*
+  name: StripPrefix
+  href: api/PacManBot.Games.ChannelGame.html#PacManBot_Games_ChannelGame_StripPrefix_
+  commentId: Overload:PacManBot.Games.ChannelGame.StripPrefix
+  isSpec: "True"
+  fullName: PacManBot.Games.ChannelGame.StripPrefix
+  nameWithType: ChannelGame.StripPrefix
 - uid: PacManBot.Games.Concrete
   name: PacManBot.Games.Concrete
   href: api/PacManBot.Games.Concrete.html
@@ -4258,6 +4408,128 @@ references:
   isSpec: "True"
   fullName: PacManBot.Games.Concrete.C4Game.IsInput
   nameWithType: C4Game.IsInput
+- uid: PacManBot.Games.Concrete.HangmanGame
+  name: HangmanGame
+  href: api/PacManBot.Games.Concrete.HangmanGame.html
+  commentId: T:PacManBot.Games.Concrete.HangmanGame
+  fullName: PacManBot.Games.Concrete.HangmanGame
+  nameWithType: HangmanGame
+- uid: PacManBot.Games.Concrete.HangmanGame.#ctor(System.UInt64,IServiceProvider)
+  name: HangmanGame(UInt64, IServiceProvider)
+  href: api/PacManBot.Games.Concrete.HangmanGame.html#PacManBot_Games_Concrete_HangmanGame__ctor_System_UInt64_IServiceProvider_
+  commentId: M:PacManBot.Games.Concrete.HangmanGame.#ctor(System.UInt64,IServiceProvider)
+  fullName: PacManBot.Games.Concrete.HangmanGame.HangmanGame(System.UInt64, IServiceProvider)
+  nameWithType: HangmanGame.HangmanGame(UInt64, IServiceProvider)
+- uid: PacManBot.Games.Concrete.HangmanGame.#ctor(System.UInt64,System.UInt64,IServiceProvider)
+  name: HangmanGame(UInt64, UInt64, IServiceProvider)
+  href: api/PacManBot.Games.Concrete.HangmanGame.html#PacManBot_Games_Concrete_HangmanGame__ctor_System_UInt64_System_UInt64_IServiceProvider_
+  commentId: M:PacManBot.Games.Concrete.HangmanGame.#ctor(System.UInt64,System.UInt64,IServiceProvider)
+  fullName: PacManBot.Games.Concrete.HangmanGame.HangmanGame(System.UInt64, System.UInt64, IServiceProvider)
+  nameWithType: HangmanGame.HangmanGame(UInt64, UInt64, IServiceProvider)
+- uid: PacManBot.Games.Concrete.HangmanGame.#ctor*
+  name: HangmanGame
+  href: api/PacManBot.Games.Concrete.HangmanGame.html#PacManBot_Games_Concrete_HangmanGame__ctor_
+  commentId: Overload:PacManBot.Games.Concrete.HangmanGame.#ctor
+  isSpec: "True"
+  fullName: PacManBot.Games.Concrete.HangmanGame.HangmanGame
+  nameWithType: HangmanGame.HangmanGame
+- uid: PacManBot.Games.Concrete.HangmanGame.Alphabet
+  name: Alphabet
+  href: api/PacManBot.Games.Concrete.HangmanGame.html#PacManBot_Games_Concrete_HangmanGame_Alphabet
+  commentId: F:PacManBot.Games.Concrete.HangmanGame.Alphabet
+  fullName: PacManBot.Games.Concrete.HangmanGame.Alphabet
+  nameWithType: HangmanGame.Alphabet
+- uid: PacManBot.Games.Concrete.HangmanGame.Expiry
+  name: Expiry
+  href: api/PacManBot.Games.Concrete.HangmanGame.html#PacManBot_Games_Concrete_HangmanGame_Expiry
+  commentId: P:PacManBot.Games.Concrete.HangmanGame.Expiry
+  fullName: PacManBot.Games.Concrete.HangmanGame.Expiry
+  nameWithType: HangmanGame.Expiry
+- uid: PacManBot.Games.Concrete.HangmanGame.Expiry*
+  name: Expiry
+  href: api/PacManBot.Games.Concrete.HangmanGame.html#PacManBot_Games_Concrete_HangmanGame_Expiry_
+  commentId: Overload:PacManBot.Games.Concrete.HangmanGame.Expiry
+  isSpec: "True"
+  fullName: PacManBot.Games.Concrete.HangmanGame.Expiry
+  nameWithType: HangmanGame.Expiry
+- uid: PacManBot.Games.Concrete.HangmanGame.GameIndex
+  name: GameIndex
+  href: api/PacManBot.Games.Concrete.HangmanGame.html#PacManBot_Games_Concrete_HangmanGame_GameIndex
+  commentId: P:PacManBot.Games.Concrete.HangmanGame.GameIndex
+  fullName: PacManBot.Games.Concrete.HangmanGame.GameIndex
+  nameWithType: HangmanGame.GameIndex
+- uid: PacManBot.Games.Concrete.HangmanGame.GameIndex*
+  name: GameIndex
+  href: api/PacManBot.Games.Concrete.HangmanGame.html#PacManBot_Games_Concrete_HangmanGame_GameIndex_
+  commentId: Overload:PacManBot.Games.Concrete.HangmanGame.GameIndex
+  isSpec: "True"
+  fullName: PacManBot.Games.Concrete.HangmanGame.GameIndex
+  nameWithType: HangmanGame.GameIndex
+- uid: PacManBot.Games.Concrete.HangmanGame.GameName
+  name: GameName
+  href: api/PacManBot.Games.Concrete.HangmanGame.html#PacManBot_Games_Concrete_HangmanGame_GameName
+  commentId: P:PacManBot.Games.Concrete.HangmanGame.GameName
+  fullName: PacManBot.Games.Concrete.HangmanGame.GameName
+  nameWithType: HangmanGame.GameName
+- uid: PacManBot.Games.Concrete.HangmanGame.GameName*
+  name: GameName
+  href: api/PacManBot.Games.Concrete.HangmanGame.html#PacManBot_Games_Concrete_HangmanGame_GameName_
+  commentId: Overload:PacManBot.Games.Concrete.HangmanGame.GameName
+  isSpec: "True"
+  fullName: PacManBot.Games.Concrete.HangmanGame.GameName
+  nameWithType: HangmanGame.GameName
+- uid: PacManBot.Games.Concrete.HangmanGame.GetEmbed(System.Boolean)
+  name: GetEmbed(Boolean)
+  href: api/PacManBot.Games.Concrete.HangmanGame.html#PacManBot_Games_Concrete_HangmanGame_GetEmbed_System_Boolean_
+  commentId: M:PacManBot.Games.Concrete.HangmanGame.GetEmbed(System.Boolean)
+  fullName: PacManBot.Games.Concrete.HangmanGame.GetEmbed(System.Boolean)
+  nameWithType: HangmanGame.GetEmbed(Boolean)
+- uid: PacManBot.Games.Concrete.HangmanGame.GetEmbed*
+  name: GetEmbed
+  href: api/PacManBot.Games.Concrete.HangmanGame.html#PacManBot_Games_Concrete_HangmanGame_GetEmbed_
+  commentId: Overload:PacManBot.Games.Concrete.HangmanGame.GetEmbed
+  isSpec: "True"
+  fullName: PacManBot.Games.Concrete.HangmanGame.GetEmbed
+  nameWithType: HangmanGame.GetEmbed
+- uid: PacManBot.Games.Concrete.HangmanGame.Input(System.String,System.UInt64)
+  name: Input(String, UInt64)
+  href: api/PacManBot.Games.Concrete.HangmanGame.html#PacManBot_Games_Concrete_HangmanGame_Input_System_String_System_UInt64_
+  commentId: M:PacManBot.Games.Concrete.HangmanGame.Input(System.String,System.UInt64)
+  fullName: PacManBot.Games.Concrete.HangmanGame.Input(System.String, System.UInt64)
+  nameWithType: HangmanGame.Input(String, UInt64)
+- uid: PacManBot.Games.Concrete.HangmanGame.Input*
+  name: Input
+  href: api/PacManBot.Games.Concrete.HangmanGame.html#PacManBot_Games_Concrete_HangmanGame_Input_
+  commentId: Overload:PacManBot.Games.Concrete.HangmanGame.Input
+  isSpec: "True"
+  fullName: PacManBot.Games.Concrete.HangmanGame.Input
+  nameWithType: HangmanGame.Input
+- uid: PacManBot.Games.Concrete.HangmanGame.IsInput(System.String,System.UInt64)
+  name: IsInput(String, UInt64)
+  href: api/PacManBot.Games.Concrete.HangmanGame.html#PacManBot_Games_Concrete_HangmanGame_IsInput_System_String_System_UInt64_
+  commentId: M:PacManBot.Games.Concrete.HangmanGame.IsInput(System.String,System.UInt64)
+  fullName: PacManBot.Games.Concrete.HangmanGame.IsInput(System.String, System.UInt64)
+  nameWithType: HangmanGame.IsInput(String, UInt64)
+- uid: PacManBot.Games.Concrete.HangmanGame.IsInput*
+  name: IsInput
+  href: api/PacManBot.Games.Concrete.HangmanGame.html#PacManBot_Games_Concrete_HangmanGame_IsInput_
+  commentId: Overload:PacManBot.Games.Concrete.HangmanGame.IsInput
+  isSpec: "True"
+  fullName: PacManBot.Games.Concrete.HangmanGame.IsInput
+  nameWithType: HangmanGame.IsInput
+- uid: PacManBot.Games.Concrete.HangmanGame.SetWord(System.String)
+  name: SetWord(String)
+  href: api/PacManBot.Games.Concrete.HangmanGame.html#PacManBot_Games_Concrete_HangmanGame_SetWord_System_String_
+  commentId: M:PacManBot.Games.Concrete.HangmanGame.SetWord(System.String)
+  fullName: PacManBot.Games.Concrete.HangmanGame.SetWord(System.String)
+  nameWithType: HangmanGame.SetWord(String)
+- uid: PacManBot.Games.Concrete.HangmanGame.SetWord*
+  name: SetWord
+  href: api/PacManBot.Games.Concrete.HangmanGame.html#PacManBot_Games_Concrete_HangmanGame_SetWord_
+  commentId: Overload:PacManBot.Games.Concrete.HangmanGame.SetWord
+  isSpec: "True"
+  fullName: PacManBot.Games.Concrete.HangmanGame.SetWord
+  nameWithType: HangmanGame.SetWord
 - uid: PacManBot.Games.Concrete.InvalidMapException
   name: InvalidMapException
   href: api/PacManBot.Games.Concrete.InvalidMapException.html
@@ -15473,19 +15745,6 @@ references:
   isSpec: "True"
   fullName: PacManBot.Games.MultiplayerGame.PreviousPlayer
   nameWithType: MultiplayerGame.PreviousPlayer
-- uid: PacManBot.Games.MultiplayerGame.StripPrefix(System.String)
-  name: StripPrefix(String)
-  href: api/PacManBot.Games.MultiplayerGame.html#PacManBot_Games_MultiplayerGame_StripPrefix_System_String_
-  commentId: M:PacManBot.Games.MultiplayerGame.StripPrefix(System.String)
-  fullName: PacManBot.Games.MultiplayerGame.StripPrefix(System.String)
-  nameWithType: MultiplayerGame.StripPrefix(String)
-- uid: PacManBot.Games.MultiplayerGame.StripPrefix*
-  name: StripPrefix
-  href: api/PacManBot.Games.MultiplayerGame.html#PacManBot_Games_MultiplayerGame_StripPrefix_
-  commentId: Overload:PacManBot.Games.MultiplayerGame.StripPrefix
-  isSpec: "True"
-  fullName: PacManBot.Games.MultiplayerGame.StripPrefix
-  nameWithType: MultiplayerGame.StripPrefix
 - uid: PacManBot.Games.MultiplayerGame.Turn
   name: Turn
   href: api/PacManBot.Games.MultiplayerGame.html#PacManBot_Games_MultiplayerGame_Turn
@@ -16215,6 +16474,18 @@ references:
   commentId: F:PacManBot.PmContent.githubLink
   fullName: PacManBot.PmContent.githubLink
   nameWithType: PmContent.githubLink
+- uid: PacManBot.PmContent.hangmanStageImages
+  name: hangmanStageImages
+  href: api/PacManBot.PmContent.html#PacManBot_PmContent_hangmanStageImages
+  commentId: F:PacManBot.PmContent.hangmanStageImages
+  fullName: PacManBot.PmContent.hangmanStageImages
+  nameWithType: PmContent.hangmanStageImages
+- uid: PacManBot.PmContent.hangmanWords
+  name: hangmanWords
+  href: api/PacManBot.PmContent.html#PacManBot_PmContent_hangmanWords
+  commentId: F:PacManBot.PmContent.hangmanWords
+  fullName: PacManBot.PmContent.hangmanWords
+  nameWithType: PmContent.hangmanWords
 - uid: PacManBot.PmContent.inviteLink
   name: inviteLink
   href: api/PacManBot.PmContent.html#PacManBot_PmContent_inviteLink
@@ -16954,12 +17225,12 @@ references:
   commentId: T:PacManBot.Services.InputService
   fullName: PacManBot.Services.InputService
   nameWithType: InputService
-- uid: PacManBot.Services.InputService.#ctor(IServiceProvider,PacManBot.Services.PmDiscordClient,PacManBot.Services.PmCommandService,PacManBot.Services.StorageService,PacManBot.Services.LoggingService,PacManBot.Services.GameService,PacManBot.PmConfig)
-  name: InputService(IServiceProvider, PmDiscordClient, PmCommandService, StorageService, LoggingService, GameService, PmConfig)
-  href: api/PacManBot.Services.InputService.html#PacManBot_Services_InputService__ctor_IServiceProvider_PacManBot_Services_PmDiscordClient_PacManBot_Services_PmCommandService_PacManBot_Services_StorageService_PacManBot_Services_LoggingService_PacManBot_Services_GameService_PacManBot_PmConfig_
-  commentId: M:PacManBot.Services.InputService.#ctor(IServiceProvider,PacManBot.Services.PmDiscordClient,PacManBot.Services.PmCommandService,PacManBot.Services.StorageService,PacManBot.Services.LoggingService,PacManBot.Services.GameService,PacManBot.PmConfig)
-  fullName: PacManBot.Services.InputService.InputService(IServiceProvider, PacManBot.Services.PmDiscordClient, PacManBot.Services.PmCommandService, PacManBot.Services.StorageService, PacManBot.Services.LoggingService, PacManBot.Services.GameService, PacManBot.PmConfig)
-  nameWithType: InputService.InputService(IServiceProvider, PmDiscordClient, PmCommandService, StorageService, LoggingService, GameService, PmConfig)
+- uid: PacManBot.Services.InputService.#ctor(PacManBot.PmConfig,PacManBot.Services.PmDiscordClient,PacManBot.Services.LoggingService,PacManBot.Services.StorageService,PacManBot.Services.PmCommandService,PacManBot.Services.GameService)
+  name: InputService(PmConfig, PmDiscordClient, LoggingService, StorageService, PmCommandService, GameService)
+  href: api/PacManBot.Services.InputService.html#PacManBot_Services_InputService__ctor_PacManBot_PmConfig_PacManBot_Services_PmDiscordClient_PacManBot_Services_LoggingService_PacManBot_Services_StorageService_PacManBot_Services_PmCommandService_PacManBot_Services_GameService_
+  commentId: M:PacManBot.Services.InputService.#ctor(PacManBot.PmConfig,PacManBot.Services.PmDiscordClient,PacManBot.Services.LoggingService,PacManBot.Services.StorageService,PacManBot.Services.PmCommandService,PacManBot.Services.GameService)
+  fullName: PacManBot.Services.InputService.InputService(PacManBot.PmConfig, PacManBot.Services.PmDiscordClient, PacManBot.Services.LoggingService, PacManBot.Services.StorageService, PacManBot.Services.PmCommandService, PacManBot.Services.GameService)
+  nameWithType: InputService.InputService(PmConfig, PmDiscordClient, LoggingService, StorageService, PmCommandService, GameService)
 - uid: PacManBot.Services.InputService.#ctor*
   name: InputService
   href: api/PacManBot.Services.InputService.html#PacManBot_Services_InputService__ctor_
@@ -16967,6 +17238,22 @@ references:
   isSpec: "True"
   fullName: PacManBot.Services.InputService.InputService
   nameWithType: InputService.InputService
+- uid: PacManBot.Services.InputService.GetResponse(Func{SocketUserMessage,System.Boolean},System.Int32)
+  name: GetResponse(Func<SocketUserMessage, Boolean>, Int32)
+  href: api/PacManBot.Services.InputService.html#PacManBot_Services_InputService_GetResponse_Func_SocketUserMessage_System_Boolean__System_Int32_
+  commentId: M:PacManBot.Services.InputService.GetResponse(Func{SocketUserMessage,System.Boolean},System.Int32)
+  name.vb: GetResponse(Func(Of SocketUserMessage, Boolean), Int32)
+  fullName: PacManBot.Services.InputService.GetResponse(Func<SocketUserMessage, System.Boolean>, System.Int32)
+  fullName.vb: PacManBot.Services.InputService.GetResponse(Func(Of SocketUserMessage, System.Boolean), System.Int32)
+  nameWithType: InputService.GetResponse(Func<SocketUserMessage, Boolean>, Int32)
+  nameWithType.vb: InputService.GetResponse(Func(Of SocketUserMessage, Boolean), Int32)
+- uid: PacManBot.Services.InputService.GetResponse*
+  name: GetResponse
+  href: api/PacManBot.Services.InputService.html#PacManBot_Services_InputService_GetResponse_
+  commentId: Overload:PacManBot.Services.InputService.GetResponse
+  isSpec: "True"
+  fullName: PacManBot.Services.InputService.GetResponse
+  nameWithType: InputService.GetResponse
 - uid: PacManBot.Services.InputService.StartListening
   name: StartListening()
   href: api/PacManBot.Services.InputService.html#PacManBot_Services_InputService_StartListening
@@ -17174,6 +17461,19 @@ references:
   isSpec: "True"
   fullName: PacManBot.Services.PmCommandService.AddAllModulesAsync
   nameWithType: PmCommandService.AddAllModulesAsync
+- uid: PacManBot.Services.PmCommandService.ExecuteAsync(SocketUserMessage,System.Int32)
+  name: ExecuteAsync(SocketUserMessage, Int32)
+  href: api/PacManBot.Services.PmCommandService.html#PacManBot_Services_PmCommandService_ExecuteAsync_SocketUserMessage_System_Int32_
+  commentId: M:PacManBot.Services.PmCommandService.ExecuteAsync(SocketUserMessage,System.Int32)
+  fullName: PacManBot.Services.PmCommandService.ExecuteAsync(SocketUserMessage, System.Int32)
+  nameWithType: PmCommandService.ExecuteAsync(SocketUserMessage, Int32)
+- uid: PacManBot.Services.PmCommandService.ExecuteAsync*
+  name: ExecuteAsync
+  href: api/PacManBot.Services.PmCommandService.html#PacManBot_Services_PmCommandService_ExecuteAsync_
+  commentId: Overload:PacManBot.Services.PmCommandService.ExecuteAsync
+  isSpec: "True"
+  fullName: PacManBot.Services.PmCommandService.ExecuteAsync
+  nameWithType: PmCommandService.ExecuteAsync
 - uid: PacManBot.Services.PmCommandService.GetAllHelp(ICommandContext,System.Boolean)
   name: GetAllHelp(ICommandContext, Boolean)
   href: api/PacManBot.Services.PmCommandService.html#PacManBot_Services_PmCommandService_GetAllHelp_ICommandContext_System_Boolean_
@@ -17200,19 +17500,6 @@ references:
   isSpec: "True"
   fullName: PacManBot.Services.PmCommandService.GetCommandHelp
   nameWithType: PmCommandService.GetCommandHelp
-- uid: PacManBot.Services.PmCommandService.TryExecuteAsync(SocketUserMessage)
-  name: TryExecuteAsync(SocketUserMessage)
-  href: api/PacManBot.Services.PmCommandService.html#PacManBot_Services_PmCommandService_TryExecuteAsync_SocketUserMessage_
-  commentId: M:PacManBot.Services.PmCommandService.TryExecuteAsync(SocketUserMessage)
-  fullName: PacManBot.Services.PmCommandService.TryExecuteAsync(SocketUserMessage)
-  nameWithType: PmCommandService.TryExecuteAsync(SocketUserMessage)
-- uid: PacManBot.Services.PmCommandService.TryExecuteAsync*
-  name: TryExecuteAsync
-  href: api/PacManBot.Services.PmCommandService.html#PacManBot_Services_PmCommandService_TryExecuteAsync_
-  commentId: Overload:PacManBot.Services.PmCommandService.TryExecuteAsync
-  isSpec: "True"
-  fullName: PacManBot.Services.PmCommandService.TryExecuteAsync
-  nameWithType: PmCommandService.TryExecuteAsync
 - uid: PacManBot.Services.PmDiscordClient
   name: PmDiscordClient
   href: api/PacManBot.Services.PmDiscordClient.html
@@ -18491,6 +18778,67 @@ references:
   fullName.vb: PacManBot.Utils.LoopedList(Of T).Wrapped
   nameWithType: LoopedList<T>.Wrapped
   nameWithType.vb: LoopedList(Of T).Wrapped
+- uid: PacManBot.Utils.PendingResponse
+  name: PendingResponse
+  href: api/PacManBot.Utils.PendingResponse.html
+  commentId: T:PacManBot.Utils.PendingResponse
+  fullName: PacManBot.Utils.PendingResponse
+  nameWithType: PendingResponse
+- uid: PacManBot.Utils.PendingResponse.#ctor(Func{SocketUserMessage,System.Boolean})
+  name: PendingResponse(Func<SocketUserMessage, Boolean>)
+  href: api/PacManBot.Utils.PendingResponse.html#PacManBot_Utils_PendingResponse__ctor_Func_SocketUserMessage_System_Boolean__
+  commentId: M:PacManBot.Utils.PendingResponse.#ctor(Func{SocketUserMessage,System.Boolean})
+  name.vb: PendingResponse(Func(Of SocketUserMessage, Boolean))
+  fullName: PacManBot.Utils.PendingResponse.PendingResponse(Func<SocketUserMessage, System.Boolean>)
+  fullName.vb: PacManBot.Utils.PendingResponse.PendingResponse(Func(Of SocketUserMessage, System.Boolean))
+  nameWithType: PendingResponse.PendingResponse(Func<SocketUserMessage, Boolean>)
+  nameWithType.vb: PendingResponse.PendingResponse(Func(Of SocketUserMessage, Boolean))
+- uid: PacManBot.Utils.PendingResponse.#ctor*
+  name: PendingResponse
+  href: api/PacManBot.Utils.PendingResponse.html#PacManBot_Utils_PendingResponse__ctor_
+  commentId: Overload:PacManBot.Utils.PendingResponse.#ctor
+  isSpec: "True"
+  fullName: PacManBot.Utils.PendingResponse.PendingResponse
+  nameWithType: PendingResponse.PendingResponse
+- uid: PacManBot.Utils.PendingResponse.Condition
+  name: Condition
+  href: api/PacManBot.Utils.PendingResponse.html#PacManBot_Utils_PendingResponse_Condition
+  commentId: P:PacManBot.Utils.PendingResponse.Condition
+  fullName: PacManBot.Utils.PendingResponse.Condition
+  nameWithType: PendingResponse.Condition
+- uid: PacManBot.Utils.PendingResponse.Condition*
+  name: Condition
+  href: api/PacManBot.Utils.PendingResponse.html#PacManBot_Utils_PendingResponse_Condition_
+  commentId: Overload:PacManBot.Utils.PendingResponse.Condition
+  isSpec: "True"
+  fullName: PacManBot.Utils.PendingResponse.Condition
+  nameWithType: PendingResponse.Condition
+- uid: PacManBot.Utils.PendingResponse.Response
+  name: Response
+  href: api/PacManBot.Utils.PendingResponse.html#PacManBot_Utils_PendingResponse_Response
+  commentId: P:PacManBot.Utils.PendingResponse.Response
+  fullName: PacManBot.Utils.PendingResponse.Response
+  nameWithType: PendingResponse.Response
+- uid: PacManBot.Utils.PendingResponse.Response*
+  name: Response
+  href: api/PacManBot.Utils.PendingResponse.html#PacManBot_Utils_PendingResponse_Response_
+  commentId: Overload:PacManBot.Utils.PendingResponse.Response
+  isSpec: "True"
+  fullName: PacManBot.Utils.PendingResponse.Response
+  nameWithType: PendingResponse.Response
+- uid: PacManBot.Utils.PendingResponse.Token
+  name: Token
+  href: api/PacManBot.Utils.PendingResponse.html#PacManBot_Utils_PendingResponse_Token
+  commentId: P:PacManBot.Utils.PendingResponse.Token
+  fullName: PacManBot.Utils.PendingResponse.Token
+  nameWithType: PendingResponse.Token
+- uid: PacManBot.Utils.PendingResponse.Token*
+  name: Token
+  href: api/PacManBot.Utils.PendingResponse.html#PacManBot_Utils_PendingResponse_Token_
+  commentId: Overload:PacManBot.Utils.PendingResponse.Token
+  isSpec: "True"
+  fullName: PacManBot.Utils.PendingResponse.Token
+  nameWithType: PendingResponse.Token
 - uid: PacManBot.Utils.Range
   name: Range
   href: api/PacManBot.Utils.Range.html

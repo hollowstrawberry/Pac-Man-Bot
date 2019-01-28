@@ -19,7 +19,6 @@ namespace PacManBot.Services
     /// </summary>
     public class InputService
     {
-        private readonly IServiceProvider services;
         private readonly PmDiscordClient client;
         private readonly PmCommandService commands;
         private readonly StorageService storage;

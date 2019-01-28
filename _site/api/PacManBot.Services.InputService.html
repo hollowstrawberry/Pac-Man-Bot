@@ -91,18 +91,18 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Services_InputService__ctor_IServiceProvider_PacManBot_Services_PmDiscordClient_PacManBot_Services_PmCommandService_PacManBot_Services_StorageService_PacManBot_Services_LoggingService_PacManBot_Services_GameService_PacManBot_PmConfig_.md&amp;value=---%0Auid%3A%20PacManBot.Services.InputService.%23ctor(IServiceProvider%2CPacManBot.Services.PmDiscordClient%2CPacManBot.Services.PmCommandService%2CPacManBot.Services.StorageService%2CPacManBot.Services.LoggingService%2CPacManBot.Services.GameService%2CPacManBot.PmConfig)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Services_InputService__ctor_PacManBot_PmConfig_PacManBot_Services_PmDiscordClient_PacManBot_Services_LoggingService_PacManBot_Services_StorageService_PacManBot_Services_PmCommandService_PacManBot_Services_GameService_.md&amp;value=---%0Auid%3A%20PacManBot.Services.InputService.%23ctor(PacManBot.PmConfig%2CPacManBot.Services.PmDiscordClient%2CPacManBot.Services.LoggingService%2CPacManBot.Services.StorageService%2CPacManBot.Services.PmCommandService%2CPacManBot.Services.GameService)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Services/InputService.cs/#L32">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Services/InputService.cs/#L35">View Source</a>
   </span>
   <a id="PacManBot_Services_InputService__ctor_" data-uid="PacManBot.Services.InputService.#ctor*"></a>
-  <h4 id="PacManBot_Services_InputService__ctor_IServiceProvider_PacManBot_Services_PmDiscordClient_PacManBot_Services_PmCommandService_PacManBot_Services_StorageService_PacManBot_Services_LoggingService_PacManBot_Services_GameService_PacManBot_PmConfig_" data-uid="PacManBot.Services.InputService.#ctor(IServiceProvider,PacManBot.Services.PmDiscordClient,PacManBot.Services.PmCommandService,PacManBot.Services.StorageService,PacManBot.Services.LoggingService,PacManBot.Services.GameService,PacManBot.PmConfig)">InputService(IServiceProvider, PmDiscordClient, PmCommandService, StorageService, LoggingService, GameService, PmConfig)</h4>
+  <h4 id="PacManBot_Services_InputService__ctor_PacManBot_PmConfig_PacManBot_Services_PmDiscordClient_PacManBot_Services_LoggingService_PacManBot_Services_StorageService_PacManBot_Services_PmCommandService_PacManBot_Services_GameService_" data-uid="PacManBot.Services.InputService.#ctor(PacManBot.PmConfig,PacManBot.Services.PmDiscordClient,PacManBot.Services.LoggingService,PacManBot.Services.StorageService,PacManBot.Services.PmCommandService,PacManBot.Services.GameService)">InputService(PmConfig, PmDiscordClient, LoggingService, StorageService, PmCommandService, GameService)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public InputService(IServiceProvider services, PmDiscordClient client, PmCommandService commands, StorageService storage, LoggingService log, GameService games, PmConfig config)</code></pre>
+    <pre><code class="lang-csharp hljs">public InputService(PmConfig config, PmDiscordClient client, LoggingService log, StorageService storage, PmCommandService commands, GameService games)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -115,8 +115,8 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IServiceProvider</span></td>
-        <td><span class="parametername">services</span></td>
+        <td><a class="xref" href="PacManBot.PmConfig.html">PmConfig</a></td>
+        <td><span class="parametername">config</span></td>
         <td></td>
       </tr>
       <tr>
@@ -125,8 +125,8 @@
         <td></td>
       </tr>
       <tr>
-        <td><a class="xref" href="PacManBot.Services.PmCommandService.html">PmCommandService</a></td>
-        <td><span class="parametername">commands</span></td>
+        <td><a class="xref" href="PacManBot.Services.LoggingService.html">LoggingService</a></td>
+        <td><span class="parametername">log</span></td>
         <td></td>
       </tr>
       <tr>
@@ -135,18 +135,13 @@
         <td></td>
       </tr>
       <tr>
-        <td><a class="xref" href="PacManBot.Services.LoggingService.html">LoggingService</a></td>
-        <td><span class="parametername">log</span></td>
+        <td><a class="xref" href="PacManBot.Services.PmCommandService.html">PmCommandService</a></td>
+        <td><span class="parametername">commands</span></td>
         <td></td>
       </tr>
       <tr>
         <td><a class="xref" href="PacManBot.Services.GameService.html">GameService</a></td>
         <td><span class="parametername">games</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="PacManBot.PmConfig.html">PmConfig</a></td>
-        <td><span class="parametername">config</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -155,10 +150,64 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Services_InputService_GetResponse_Func_SocketUserMessage_System_Boolean__System_Int32_.md&amp;value=---%0Auid%3A%20PacManBot.Services.InputService.GetResponse(Func%7BSocketUserMessage%2CSystem.Boolean%7D%2CSystem.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Services/InputService.cs/#L70">View Source</a>
+  </span>
+  <a id="PacManBot_Services_InputService_GetResponse_" data-uid="PacManBot.Services.InputService.GetResponse*"></a>
+  <h4 id="PacManBot_Services_InputService_GetResponse_Func_SocketUserMessage_System_Boolean__System_Int32_" data-uid="PacManBot.Services.InputService.GetResponse(Func{SocketUserMessage,System.Boolean},System.Int32)">GetResponse(Func&lt;SocketUserMessage, Boolean&gt;, Int32)</h4>
+  <div class="markdown level1 summary"><p>Returns the first new message that satisfies the given condition within
+a timeout period in seconds, or null if no match is received.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;SocketUserMessage&gt; GetResponse(Func&lt;SocketUserMessage, bool&gt; condition, int timeout = 30)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Func</span>&lt;<span class="xref">SocketUserMessage</span>, <span class="xref">System.Boolean</span>&gt;</td>
+        <td><span class="parametername">condition</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">timeout</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<span class="xref">SocketUserMessage</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Services_InputService_StartListening.md&amp;value=---%0Auid%3A%20PacManBot.Services.InputService.StartListening%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Services/InputService.cs/#L47">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Services/InputService.cs/#L51">View Source</a>
   </span>
   <a id="PacManBot_Services_InputService_StartListening_" data-uid="PacManBot.Services.InputService.StartListening*"></a>
   <h4 id="PacManBot_Services_InputService_StartListening" data-uid="PacManBot.Services.InputService.StartListening">StartListening()</h4>
@@ -174,7 +223,7 @@
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Services_InputService_StopListening.md&amp;value=---%0Auid%3A%20PacManBot.Services.InputService.StopListening%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Services/InputService.cs/#L56">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Services/InputService.cs/#L60">View Source</a>
   </span>
   <a id="PacManBot_Services_InputService_StopListening_" data-uid="PacManBot.Services.InputService.StopListening*"></a>
   <h4 id="PacManBot_Services_InputService_StopListening" data-uid="PacManBot.Services.InputService.StopListening">StopListening()</h4>
@@ -196,7 +245,7 @@
                     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Services_InputService.md&amp;value=---%0Auid%3A%20PacManBot.Services.InputService%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Services/InputService.cs/#L18" class="contribution-link">View Source</a>
+                    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Services/InputService.cs/#L20" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>
