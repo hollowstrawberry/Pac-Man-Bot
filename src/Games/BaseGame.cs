@@ -11,6 +11,9 @@ namespace PacManBot.Games
     /// </summary>
     public abstract class BaseGame : IBaseGame
     {
+        /// <summary>Invisible character to be used in embeds.</summary>
+        protected const string Empty = DiscordExtensions.Empty;
+
         protected PmDiscordClient client;
         protected PmConfig config;
         protected LoggingService log;
@@ -22,7 +25,6 @@ namespace PacManBot.Games
         /// <summary>Used to manage previous game tasks such as 
         /// ongoing Discord message editions to prevent them from piling up when new ones come in.</summary>
         protected CancellationTokenSource discordRequestCTS = new CancellationTokenSource();
-
 
 
         /// <summary>The display name of this game's type.</summary>

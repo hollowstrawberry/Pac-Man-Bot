@@ -17,6 +17,10 @@ namespace PacManBot.Commands
         /// <summary>Useful <see cref="RequestOptions"/> to be used in most Discord requests.</summary>
         public static readonly RequestOptions DefaultOptions = PmBot.DefaultOptions;
 
+        /// <summary>Invisible character to be used in embeds.</summary>
+        protected const string Empty = DiscordExtensions.Empty;
+
+
         /// <summary>Runtime settings of the bot.</summary>
         public PmConfig Config { get; set; }
         /// <summary>Content used throughout the bot.</summary>

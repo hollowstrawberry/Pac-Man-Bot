@@ -235,10 +235,10 @@ namespace PacManBot.Games.Concrete
 
             description.Append($"**Name:** {(string.IsNullOrWhiteSpace(petName) ? "*Unnamed*" : petName)}\n");
 
-            description.Append($"**Age:** {(DateTime.Now - bornDate).Humanized(3, "Newborn")}\nᅠ\n");
+            description.Append($"**Age:** {(DateTime.Now - bornDate).Humanized(3, "Newborn")}\n{Empty}\n");
 
-            if (TotalStats == 0) description.Append("❌ Oh no! Your pet is **Neglected**.\nHurry and make it feel better!\nᅠ");
-            else if (TotalStats <= 5) description.Append("😱 Hurry! Your pet doesn't look very well!\nᅠ");
+            if (TotalStats == 0) description.Append($"❌ Oh no! Your pet is **Neglected**.\nHurry and make it feel better!\n{Empty}");
+            else if (TotalStats <= 5) description.Append($"😱 Hurry! Your pet doesn't look very well!\n{Empty}");
 
 
             var status = new StringBuilder();
@@ -302,7 +302,7 @@ namespace PacManBot.Games.Concrete
             stats.Append($"**Total actions:** {achievements.TotalActions}\n");
             stats.Append($"**Pettings given:** {achievements.timesPet}\n");
             stats.Append($"**Time without neglect:** {noNeglect}\n");
-            stats.Append("*(Neglect occurs when all meters reach 0)*\nᅠ");
+            stats.Append($"*(Neglect occurs when all meters reach 0)*\n{Empty}");
 
             var achievOff = new StringBuilder();
             var achievOn = new StringBuilder();

@@ -149,7 +149,7 @@ namespace PacManBot.Commands.Modules
             }
 
             var content = new StringBuilder();
-            content.Append($"Displaying best scores {period.Humanized()}\nᅠ\n");
+            content.Append($"Displaying best scores {period.Humanized()}\n{Empty}\n");
 
             int maxPosDigits = max.ToString().Length;
             int maxScoreDigits = scores[0].Score.ToString().Length;

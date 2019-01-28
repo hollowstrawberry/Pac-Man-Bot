@@ -96,7 +96,7 @@ namespace PacManBot.Utils
             
             foreach (var field in embed.Fields.Take(embed.Fields.Count - 1))
             {
-                field.Value = field.Value.ToString() + "\nᅠ"; // Padding
+                field.Value = field.Value.ToString() + $"\n{DiscordExtensions.Empty}"; // Padding
             }
 
             embedFields = embed.Fields.ToArray();
