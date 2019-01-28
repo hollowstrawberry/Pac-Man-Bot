@@ -5,7 +5,7 @@ using PacManBot.Games.Concrete;
 namespace PacManBot
 {
     /// <summary>
-    /// Contains content used throughout the bot, loaded from a file.
+    /// Contains data used throughout the bot, loaded from a file.
     /// </summary>
     [DataContract]
     public class PmContent
@@ -76,5 +76,9 @@ namespace PacManBot
 
         /// <summary>Messages used in <see cref="PetGame"/> petting.</summary>
         [DataMember] public readonly string[] superPettingMessages;
+
+
+        /// <summary>Words used in <see cref="HangmanGame"/>.</summary>
+        [DataMember] public readonly string[] hangmanWords;
     }
 }
