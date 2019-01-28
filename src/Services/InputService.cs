@@ -156,22 +156,22 @@ namespace PacManBot.Services
 
 
         /// <summary>Tries to find and complete a pending response. Returns whether it is successful.</summary>
-        private Task<bool> PendingResponseAsync(SocketUserMessage message)
+        private ValueTask<bool> PendingResponseAsync(SocketUserMessage message)
         {
             var pending = pendingResponses.Select(x => x.Key).FirstOrDefault(x => x.Condition(message));
 
             if (pending != null)
             {
                 pending.Response = message;
-                return Task.FromResult(true);
+                return new ValueTask<bool>(true);
             }
 
-            return Task.FromResult(false);
+            return new ValueTask<bool>(false);
         }
 
 
         /// <summary>Tries to find and execute a command. Returns whether it is successful.</summary>
-        private async Task<bool> CommandAsync(SocketUserMessage message)
+        private async ValueTask<bool> CommandAsync(SocketUserMessage message)
         {
             string prefix = await storage.GetGuildPrefixAsync((message.Channel as SocketGuildChannel)?.Guild);
             int commandPosition = 0;
@@ -189,7 +189,7 @@ namespace PacManBot.Services
 
 
         /// <summary>Tries to find special messages to respond to. Returns whether it is successful.</summary>
-        private async Task<bool> AutoresponseAsync(SocketUserMessage message)
+        private async ValueTask<bool> AutoresponseAsync(SocketUserMessage message)
         {
             if (!(message.Channel is SocketGuildChannel gChannel) || await storage.AllowsAutoresponseAsync(gChannel.Guild))
             {
@@ -211,7 +211,7 @@ namespace PacManBot.Services
 
 
         /// <summary>Tries to find a game and execute message input. Returns whether it is successful.</summary>
-        private async Task<bool> MessageGameInputAsync(SocketUserMessage message)
+        private async ValueTask<bool> MessageGameInputAsync(SocketUserMessage message)
         {
             var game = games.GetForChannel<IMessagesGame>(message.Channel.Id);
             if (game == null || !game.IsInput(message.Content, message.Author.Id)) return false;
@@ -230,7 +230,7 @@ namespace PacManBot.Services
 
 
         /// <summary>Tries to find a game and execute reaction input. Returns whether it is successful.</summary>
-        private async Task<bool> ReactionGameInputAsync(IUserMessage message, ISocketMessageChannel channel, SocketReaction reaction)
+        private async ValueTask<bool> ReactionGameInputAsync(IUserMessage message, ISocketMessageChannel channel, SocketReaction reaction)
         {
             var game = games.AllGames
                 .OfType<IReactionsGame>()
