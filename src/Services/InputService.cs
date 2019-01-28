@@ -1,15 +1,16 @@
 using System;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
-using PacManBot.Commands;
 using PacManBot.Extensions;
 using PacManBot.Games;
 using PacManBot.Games.Concrete;
 using PacManBot.Services.Database;
+using PacManBot.Utils;
 
 namespace PacManBot.Services
 {
@@ -29,11 +30,12 @@ namespace PacManBot.Services
 
         private static readonly Regex WakaRegex = new Regex(@"^(w+a+k+a+\W*)+$", RegexOptions.IgnoreCase);
 
+        private readonly ConcurrentDictionary<PendingResponse, byte> pendingResponses;
 
-        public InputService(IServiceProvider services, PmDiscordClient client, PmCommandService commands,
-            StorageService storage, LoggingService log, GameService games, PmConfig config)
+
+        public InputService(PmConfig config, PmDiscordClient client, LoggingService log,
+            StorageService storage, PmCommandService commands, GameService games)
         {
-            this.services = services;
             this.client = client;
             this.commands = commands;
             this.storage = storage;
@@ -41,6 +43,8 @@ namespace PacManBot.Services
             this.games = games;
 
             bannedChannels = config.bannedChannels;
+
+            pendingResponses = new ConcurrentDictionary<PendingResponse, byte>();
         }
 
 
@@ -60,6 +64,22 @@ namespace PacManBot.Services
             client.ReactionAdded -= OnReactionAdded;
             client.ReactionRemoved -= OnReactionRemoved;
         }
+
+
+        /// <summary>Returns the first new message that satisfies the given condition within 
+        /// a timeout period in seconds, or null if no match is received.</summary>
+        public async Task<SocketUserMessage> GetResponse(Func<SocketUserMessage, bool> condition, int timeout = 30)
+        {
+            var pending = new PendingResponse(condition);
+            pendingResponses.TryAdd(pending, 0);
+
+            try { await Task.Delay(timeout * 1000, pending.Token); }
+            catch (OperationCanceledException) { }
+
+            pendingResponses.TryRemove(pending);
+            return pending.Response;
+        }
+
 
 
 
@@ -99,8 +119,12 @@ namespace PacManBot.Services
                 if (genericMessage is SocketUserMessage message && !message.Author.IsBot
                     && await message.Channel.BotCan(ChannelPermission.SendMessages))
                 {
-                    // Only runs one
-                    if (await MessageGameInputAsync(message) || await CommandAsync(message) || await AutoresponseAsync(message)) { }
+                    // Short-circuits on the first accepted case
+                    if (   await PendingResponseAsync(message)
+                        || await MessageGameInputAsync(message)
+                        || await CommandAsync(message)
+                        || await AutoresponseAsync(message)
+                    ) { }
                 }
             }
             catch (Exception e)
@@ -130,6 +154,21 @@ namespace PacManBot.Services
         }
 
 
+
+
+        /// <summary>Tries to find and complete a pending response. Returns whether it is successful.</summary>
+        private Task<bool> PendingResponseAsync(SocketUserMessage message)
+        {
+            var pending = pendingResponses.Select(x => x.Key).FirstOrDefault(x => x.Condition(message));
+
+            if (pending != null)
+            {
+                pending.Response = message;
+                return Task.FromResult(true);
+            }
+
+            return Task.FromResult(false);
+        }
 
 
         /// <summary>Tries to find and execute a command. Returns whether it is successful.</summary>

@@ -116,40 +116,47 @@ namespace PacManBot.Commands.Modules
                  "**Warning!** This can result in a lot of unnecessary spam. Only use this if you're sure. " +
                  "It's a good idea only in dedicated channels, for example named \"#pacman\" or \"#botspam\"")]
         [PmRequireUserPermission(GuildPermission.ManageChannels)]
-        public async Task ToggleNoPrefix([Remainder]string arg = "")
+        public async Task ToggleNoPrefix(SocketGuildChannel otherChannel = null)
         {
-            bool specified = ulong.TryParse(arg, out ulong channelId) && Context.Guild.TextChannels.Any(x => x.Id == channelId);
-            if (!specified) channelId = Context.Channel.Id;
-
-            var channel = specified ? Context.Guild.GetTextChannel(channelId) : (SocketTextChannel)Context.Channel;
+            var channel = Context.Channel;
+            if (otherChannel != null)
+            {
+                if (otherChannel is ISocketMessageChannel ch) channel = ch;
+                else
+                {
+                    await ReplyAsync($"{otherChannel.Name} is not a text channel!");
+                    return;
+                }
+            }
 
             try
             {
                 if (!Storage.RequiresPrefix(channel))
                 {
-                    Storage.ToggleChannelGuildPrefix(channelId);
+                    Storage.ToggleChannelGuildPrefix(channel.Id);
                     await ReplyAsync(
-                        $"{CustomEmoji.Check} The {channel.Mention} channel is back to **Normal mode** " +
+                        $"{CustomEmoji.Check} The {channel.Mention()} channel is back to **Normal mode** " +
                         $"(Prefix: `{Context.FixedPrefix}`)");
+                    return;
+                }
+
+                await ReplyAsync(
+                    $"❗__**Warning**__\nYou're about to set the channel {channel.Mention()} to **No Prefix mode**.\n" +
+                    $"All commands will work without the need of a prefix such as `{Context.Prefix}`\n" +
+                    $"This can lead to a lot of **unnecessary spam**. It's a good idea only in " +
+                    $"dedicated bot or game channels.\n\n" +
+                    $"Set {channel.Mention()} to *no prefix mode*? (Yes/No)");
+
+                if (await GetYesResponse())
+                {
+                    Storage.ToggleChannelGuildPrefix(channel.Id);
+                    await ReplyAsync(
+                        $"{CustomEmoji.Check} The {channel.Mention()} channel is now in **No Prefix mode**. " +
+                        $"All commands will work without any prefix.\nTo revert to normal, use `toggleprefix` again.");
                 }
                 else
                 {
-                    if (specified)
-                    {
-                        Storage.ToggleChannelGuildPrefix(channelId);
-                        await ReplyAsync(
-                            $"{CustomEmoji.Check} The {channel.Mention} channel is now in **No Prefix mode**. " +
-                            $"All commands will work without any prefix.\nTo revert to normal, use `toggleprefix` again.");
-                    }
-                    else
-                    {
-                        await ReplyAsync(
-                            $"❗__**Warning**__\nYou're about to set this channel to **No Prefix mode**.\n" +
-                            $"All commands will work without the need of a prefix such as `{Context.Prefix}`\n" +
-                            $"This can lead to a lot of *unnecessary spam*. It's a good idea only in " +
-                            $"dedicated channels, for example named \"#pacman\" or \"#botspam\".\n\n" +
-                            $"To set this channel to No Prefix mode, please do `{Context.Prefix}toggleprefix {channelId}`");
-                    }
+                    await ReplyAsync("Cancelled.");
                 }
             }
             catch (Exception e)

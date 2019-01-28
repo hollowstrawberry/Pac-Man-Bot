@@ -340,16 +340,23 @@ namespace PacManBot.Commands.Modules
         [PetCommand("release"), RequiresPet]
         public async Task<string> PetRelease(PetGame pet, string args)
         {
-            if (string.IsNullOrWhiteSpace(pet.petName) || args.SanitizeMarkdown() == pet.petName)
+            if (string.IsNullOrWhiteSpace(pet.petName))
             {
                 Games.Remove(pet);
-                await ReplyAsync($"Goodbye {(string.IsNullOrWhiteSpace(pet.petName) ? pet.GameName : pet.petName)}!");
-                return null;
+                return $"Goodbye {pet.GameName}!";
             }
 
-            return $"❗ Are you sure you want to delete {pet.petName}? It will be gone forever, " +
-                   $"along with your stats and achievements, and you can't get it back. " +
-                   $"Do **{Context.Prefix}pet release {pet.petName}** to release.";
+            await ReplyAsync(
+                $"❗ Are you sure you want to release **{pet.petName}**?\n" +
+                $"It will be gone forever, along with your stats and achievements, and you can't get it back.\n" +
+                $"Release your pet? (Yes/No)");
+
+            if (await GetYesResponse())
+            {
+                Games.Remove(pet);
+                return $"Goodbye {pet.petName}!";
+            }
+            return "Pet not released ❤";
         }
     }
 }

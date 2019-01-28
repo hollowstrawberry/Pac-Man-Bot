@@ -68,7 +68,7 @@ namespace PacManBot.Commands.Modules
             "\n**{prefix}rpg spend <skill> <amount>** - Spend skill points on a skill line." +
             "\n**{prefix}rpg name <name>** - Change your hero's name." +
             "\n**{prefix}rpg color <color>** - Change the color of your hero's profile." +
-            "\n**{prefix}rpg reset** - Delete your hero.")]
+            "\n**{prefix}rpg delete** - Delete your hero.")]
         public async Task RpgMaster(string commandName = "", [Remainder]string args = "")
         {
             commandName = commandName.ToLower();
@@ -547,18 +547,19 @@ namespace PacManBot.Commands.Modules
         }
 
 
-        [RpgCommand("reset")]
+        [RpgCommand("delete")]
         public async Task<string> RpgDelete(RpgGame game, string args)
         {
-            if (args?.SanitizeMarkdown() == game.player.Name)
+            await ReplyAsync(
+                $"❗ You're about to completely delete your progress in ReactionRPG.\n" +
+                $"Are you sure you want to delete your level {game.player.Level} hero? (Yes/No)");
+
+            if (await GetYesResponse())
             {
                 Games.Remove(game);
-                await ReplyAsync($"{game.player.Name}'s adventure has ended.");
-                return null;
+                return "Hero deleted 💀";
             }
-
-            return $"❗ You're about to completely delete your progress in ReactionRPG. This is not reversible." +
-                   $"\nDo **{Context.Prefix}rpg reset {game.player.Name}** if you're sure you want to end your adventure.";
+            return "Hero not deleted ⚔";
         }
 
 
