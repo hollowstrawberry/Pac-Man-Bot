@@ -12,6 +12,7 @@ Features the following games:
 * Wakagotchi: Enjoy caring for a pet in a Discord-based tamagotchi clone.  
 * ReactionRPG: Battle monsters and become stronger, or challenge your friends to battle - Enjoy the first release of this simple chat RPG!  
 * Uno: Play with up to 10 friends and bots in the classic Uno card game.  
+* Hangman: Everyone has to guess the random word, or a word chosen by you!
 * Tic-Tac-Toe, Connect Four: Challenge your friends or the bot itself.  
 * Rubik's Cube: Attempt to solve a real cube in chat form. Seriously.
 
