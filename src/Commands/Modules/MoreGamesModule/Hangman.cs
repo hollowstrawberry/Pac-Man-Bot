@@ -13,7 +13,8 @@ using PacManBot.Games.Concrete;
 
 namespace PacManBot.Commands.Modules
 {
-    partial class MoreGamesModule
+    [Name("👾More Games"), Remarks("3")]
+    public class HangmanGameModule : BaseGameModule<HangmanGame>
     {
         [Command("hangman"), Alias("hang")]
         [Remarks("Start a game of Hangman in a channel")]
@@ -23,10 +24,9 @@ namespace PacManBot.Commands.Modules
                  "Don't send it in the chat! The bot will ask in private.")]
         public async Task StartHangman([Remainder]string args = null)
         {
-            var existingGame = Games.GetForChannel(Context.Channel.Id);
-            if (existingGame != null)
+            if (ExistingGame != null)
             {
-                await ReplyAsync(existingGame.UserId.Contains(Context.User.Id)
+                await ReplyAsync(ExistingGame.UserId.Contains(Context.User.Id)
                     ? $"You're already playing a game in this channel!\nUse `{Context.Prefix}cancel` if you want to cancel it."
                     : $"There is already a different game in this channel!\nWait until it's finished or try doing `{Context.Prefix}cancel`");
                 return;
@@ -40,10 +40,9 @@ namespace PacManBot.Commands.Modules
                 return;
             }
 
-            var game = new HangmanGame(Context.Channel.Id, Services);
-            var message = await ReplyAsync(game.GetEmbed());
-            game.MessageId = message.Id;
-            Games.Add(game);
+            CreateGame(new HangmanGame(Context.Channel.Id, Services));
+            var message = await ReplyAsync(Game.GetEmbed());
+            Game.MessageId = message.Id;
         }
 
 
@@ -60,34 +59,32 @@ namespace PacManBot.Commands.Modules
                 return;
             }
 
-            var existingGame = Games.GetForChannel(Context.Channel.Id);
-            if (existingGame != null)
+            if (ExistingGame != null)
             {
-                await ReplyAsync(existingGame.UserId.Contains(Context.User.Id)
+                await ReplyAsync(ExistingGame.UserId.Contains(Context.User.Id)
                     ? $"You're already playing a game in this channel!\nUse `{Context.Prefix}cancel` if you want to cancel it."
                     : $"There is already a different game in this channel!\nWait until it's finished or try doing `{Context.Prefix}cancel`");
                 return;
             }
 
 
-            var game = new HangmanGame(Context.Channel.Id, Context.User.Id, Services);
-            Games.Add(game);
+            CreateGame(new HangmanGame(Context.Channel.Id, Context.User.Id, Services));
 
             var userChannel = await Context.User.GetOrCreateDMChannelAsync();
             try
             {
                 await userChannel.SendMessageAsync(
-                    $"Send the secret word or phrase for the {game.GameName} game in {Context.Channel.Mention()}:");
+                    $"Send the secret word or phrase for the {Game.GameName} game in {Context.Channel.Mention()}:");
             }
             catch (HttpException e) when (e.DiscordCode == 50007) // Can't send DMs
             {
                 await ReplyAsync($"{Context.User.Mention} You must enable DMs!");
-                Games.Remove(game);
+                RemoveGame();
                 return;
             }
 
-            var message = await ReplyAsync($"{Context.User.Mention} check your DMs!", game.GetEmbed());
-            game.MessageId = message.Id;
+            var message = await ReplyAsync($"{Context.User.Mention} check your DMs!", Game.GetEmbed());
+            Game.MessageId = message.Id;
 
             while (true)
             {
@@ -96,11 +93,11 @@ namespace PacManBot.Commands.Modules
 
                 if (response == null)
                 {
-                    Games.Remove(game);
-                    game.State = State.Cancelled;
+                    RemoveGame();
+                    Game.State = State.Cancelled;
                     await userChannel.SendMessageAsync("Timed out 💨");
-                    message = await game.GetMessage();
-                    if (message != null) await message.ModifyAsync(game.GetMessageUpdate());
+                    message = await Game.GetMessage();
+                    if (message != null) await message.ModifyAsync(Game.GetMessageUpdate());
                 }
 
                 string word = response.Content.ToUpperInvariant().Replace('\n', ' ');
@@ -123,12 +120,12 @@ namespace PacManBot.Commands.Modules
                 }
                 else
                 {
-                    game.SetWord(word);
+                    Game.SetWord(word);
                     await response.AutoReactAsync();
 
-                    message = await game.GetMessage();
-                    if (message == null) await ReplyAsync(game.GetEmbed());
-                    else await message.ModifyAsync(game.GetMessageUpdate());
+                    message = await Game.GetMessage();
+                    if (message == null) await ReplyAsync(Game.GetEmbed());
+                    else await message.ModifyAsync(Game.GetMessageUpdate());
 
                     return;
                 }

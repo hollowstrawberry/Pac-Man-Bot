@@ -6,7 +6,8 @@ using PacManBot.Games.Concrete;
 
 namespace PacManBot.Commands.Modules
 {
-    public partial class MoreGamesModule
+    [Name("👾More Games"), Remarks("3")]
+    public class RubiksGameModule : BaseGameModule<RubiksGame>
     {
         [Command("rubik"), Alias("rubiks", "rubix", "rb", "rbx")]
         [Remarks("Your personal rubik's cube")]
@@ -18,12 +19,9 @@ namespace PacManBot.Commands.Modules
          "\n**{prefix}rubik showguide** - Toggle the help displayed below the cube. For pros.")]
         public async Task RubiksCube([Remainder]string input = "")
         {
-            var cube = Games.GetForUser<RubiksGame>(Context.User.Id);
-
-            if (cube == null)
+            if (Game == null)
             {
-                cube = new RubiksGame(Context.Channel.Id, Context.User.Id, Services);
-                Games.Add(cube);
+                CreateGame(new RubiksGame(Context.Channel.Id, Context.User.Id, Services));
             }
 
             bool removeOld = false;
@@ -58,21 +56,21 @@ namespace PacManBot.Commands.Modules
 
                 case "reset":
                 case "solve":
-                    Games.Remove(cube);
+                    RemoveGame();
                     await AutoReactAsync();
                     return;
 
 
                 case "scramble":
                 case "shuffle":
-                    cube.Scramble();
+                    Game.Scramble();
                     removeOld = true;
                     break;
 
 
                 case "showguide":
-                    cube.ShowHelp = !cube.ShowHelp;
-                    if (cube.ShowHelp) await AutoReactAsync();
+                    Game.ShowHelp = !Game.ShowHelp;
+                    if (Game.ShowHelp) await AutoReactAsync();
                     else await ReplyAsync("❗ You just disabled the help displayed below the cube.\n" +
                                           "Consider re-enabling it if you're not used to the game.");
                     break;
@@ -81,7 +79,7 @@ namespace PacManBot.Commands.Modules
                 default:
                     if (!string.IsNullOrEmpty(input))
                     {
-                        if (!cube.TryDoMoves(input))
+                        if (!Game.TryDoMoves(input))
                         {
                             await ReplyAsync($"{CustomEmoji.Cross} Invalid sequence of moves. " +
                                              $"Do **{Context.Prefix}rubik help** for commands.");
@@ -92,10 +90,10 @@ namespace PacManBot.Commands.Modules
                     break;
             }
 
-            var oldMessage = await cube.GetMessage();
-            var newMessage = await ReplyAsync(cube.GetContent(), cube.GetEmbed(Context.Guild));
-            cube.MessageId = newMessage.Id;
-            cube.ChannelId = Context.Channel.Id;
+            var oldMessage = await Game.GetMessage();
+            var newMessage = await ReplyAsync(Game.GetContent(), Game.GetEmbed(Context.Guild));
+            Game.MessageId = newMessage.Id;
+            Game.ChannelId = Context.Channel.Id;
 
             if (removeOld && oldMessage != null && oldMessage.Channel.Id == Context.Channel.Id)
             {

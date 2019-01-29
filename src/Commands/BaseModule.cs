@@ -12,7 +12,7 @@ namespace PacManBot.Commands
     /// The base for Pac-Man Bot modules, including their main services and some utilities.
     /// </summary>
     /// <remarks>Service properties are loaded lazily.</remarks>
-    public abstract class PmBaseModule : ModuleBase<PmCommandContext>
+    public abstract class BaseModule : ModuleBase<PmCommandContext>
     {
         /// <summary>Useful <see cref="RequestOptions"/> to be used in most Discord requests.</summary>
         public static readonly RequestOptions DefaultOptions = PmBot.DefaultOptions;
@@ -31,8 +31,7 @@ namespace PacManBot.Commands
         public StorageService Storage { get; set; }
         /// <summary>Gives access to input manipulation.</summary>
         public InputService Input { get; set; }
-        /// <summary>Gives access to active games.</summary>
-        public GameService Games { get; set; }
+
 
 
         /// <summary>Sends a message in the current context, using the default options if not specified.</summary>

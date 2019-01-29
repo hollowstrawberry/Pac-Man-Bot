@@ -17,11 +17,8 @@ namespace PacManBot.Commands.Modules
     [Name("🎮Pac-Man"), Remarks("2")]
     [PmRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.EmbedLinks |
                             ChannelPermission.UseExternalEmojis | ChannelPermission.AddReactions)]
-    public class PacManModule : PmBaseModule
+    public class PacManGameModule : BaseGameModule<PacManGame>
     {
-        public IServiceProvider Services { get; set; }
-
-
         private const int MaxDisplayedScores = 20;
 
 
@@ -35,10 +32,9 @@ namespace PacManBot.Commands.Modules
         {
             if (!Context.BotCan(ChannelPermission.SendMessages)) return;
 
-            var existingGame = Games.GetForChannel(Context.Channel.Id);
-            if (existingGame != null)
+            if (ExistingGame != null)
             {
-                await ReplyAsync(existingGame.UserId.Contains(Context.User.Id) ?
+                await ReplyAsync(ExistingGame.UserId.Contains(Context.User.Id) ?
                     $"You're already playing a game in this channel!\nUse `{Context.Prefix}cancel` if you want to cancel it or `{Context.Prefix}bump` to bring it to the bottom." :
                     $"There is already a different game in this channel!\nWait until it's finished or try doing `{Context.Prefix}cancel`");
                 return;
@@ -73,7 +69,7 @@ namespace PacManBot.Commands.Modules
                 return;
             }
 
-            Games.Add(newGame);
+            CreateGame(newGame);
 
             var gameMessage = await ReplyAsync(preMessage + newGame.GetContent(showHelp: false) + "```diff\n+Starting game```");
             newGame.MessageId = gameMessage.Id;
@@ -88,20 +84,19 @@ namespace PacManBot.Commands.Modules
                  "for the current game in this channel")]
         public async Task ChangeGameDisplay()
         {
-            var game = Games.GetForChannel<PacManGame>(Context.Channel.Id);
-            if (game == null)
+            if (Game == null)
             {
                 await ReplyAsync("There is no active Pac-Man game in this channel!");
                 return;
             }
 
-            game.mobileDisplay = !game.mobileDisplay;
+            Game.mobileDisplay = !Game.mobileDisplay;
 
-            game.CancelRequests();
-            var gameMessage = await game.GetMessage();
+            Game.CancelRequests();
+            var gameMessage = await Game.GetMessage();
             if (gameMessage != null)
             {
-                try { await gameMessage.ModifyAsync(game.GetMessageUpdate(), game.GetRequestOptions()); }
+                try { await gameMessage.ModifyAsync(Game.GetMessageUpdate(), Game.GetRequestOptions()); }
                 catch (OperationCanceledException) { }
             }
 

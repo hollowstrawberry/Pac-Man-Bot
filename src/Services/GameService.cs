@@ -78,6 +78,13 @@ namespace PacManBot.Services
         }
 
 
+        /// <summary>Retrieves the specified user's game of the desired type. Null if not found.</summary>
+        public IUserGame GetForUser(ulong userId, Type type)
+        {
+            return userGames.TryGetValue((userId, type), out var game) ? game : null;
+        }
+
+
         /// <summary>Adds a new game to the collection of channel games or user games.</summary>
         public void Add(IBaseGame game)
         {

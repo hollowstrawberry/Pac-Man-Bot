@@ -52,7 +52,7 @@ namespace PacManBot.Services
         /// <summary>Adds all command modules in this assembly.</summary>
         public async Task AddAllModulesAsync()
         {
-            await AddModulesAsync(typeof(PmBaseModule).Assembly, services);
+            await AddModulesAsync(typeof(BaseModule).Assembly, services);
 
             var allCommands = Commands
                 .OrderByDescending(c => c.Priority)

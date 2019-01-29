@@ -7,27 +7,19 @@ using Discord.Net;
 using PacManBot.Extensions;
 using PacManBot.Games;
 using PacManBot.Games.Concrete;
-using PacManBot.Services;
 
 namespace PacManBot.Commands.Modules
 {
     [Name("👾More Games"), Remarks("3")]
-    [PmRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.EmbedLinks |
-                            ChannelPermission.UseExternalEmojis | ChannelPermission.AddReactions)]
-    public partial class MoreGamesModule : PmBaseModule
+    public class CommonGameModule : BaseGameModule<IChannelGame>
     {
-        public IServiceProvider Services { get; set; }
-        public PmCommandService Commands { get; set; }
-
-
         [Command("bump"), Alias("b", "refresh", "r", "move"), Priority(-4)]
         [Remarks("Move any game to the bottom of the chat")]
         [Summary("Moves the current game's message in this channel to the bottom of the chat, deleting the old one." +
                  "This is useful if the game got lost in a sea of other messages, or if the game stopped responding")]
         private async Task MoveGame()
         {
-            var game = Games.GetForChannel(Context.Channel.Id);
-            if (game == null)
+            if (Game == null)
             {
                 await ReplyAsync("There is no active game in this channel!");
                 return;
@@ -35,15 +27,15 @@ namespace PacManBot.Commands.Modules
 
             try
             {
-                var gameMessage = await game.GetMessage();
+                var gameMessage = await Game.GetMessage();
                 if (gameMessage != null) await gameMessage.DeleteAsync(DefaultOptions);
             }
             catch (HttpException) { } // Something happened to the message, can ignore it
 
-            var message = await ReplyAsync(game.GetContent(), game.GetEmbed());
-            game.MessageId = message.Id;
+            var message = await ReplyAsync(Game.GetContent(), Game.GetEmbed());
+            Game.MessageId = message.Id;
 
-            if (game is PacManGame pacmanGame) await PacManModule.AddControls(pacmanGame, message);
+            if (Game is PacManGame pacmanGame) await PacManGameModule.AddControls(pacmanGame, message);
         }
 
 
@@ -53,27 +45,26 @@ namespace PacManBot.Commands.Modules
                  "Always usable by users with the Manage Messages permission.")]
         public async Task CancelGame()
         {
-            var game = Games.GetForChannel(Context.Channel.Id);
-            if (game == null)
+            if (Game == null)
             {
                 await ReplyAsync("There is no active game in this channel!");
                 return;
             }
 
-            if (game.UserId.Contains(Context.User.Id) || Context.UserCan(ChannelPermission.ManageMessages)
-                || DateTime.Now - game.LastPlayed > TimeSpan.FromSeconds(60) || game is MultiplayerGame mpGame && mpGame.AllBots)
+            if (Game.UserId.Contains(Context.User.Id) || Context.UserCan(ChannelPermission.ManageMessages)
+                || DateTime.Now - Game.LastPlayed > TimeSpan.FromSeconds(60) || Game is MultiplayerGame mpGame && mpGame.AllBots)
             {
-                game.State = State.Cancelled;
-                Games.Remove(game);
+                Game.State = State.Cancelled;
+                RemoveGame();
 
                 try
                 {
-                    var gameMessage = await game.GetMessage();
+                    var gameMessage = await Game.GetMessage();
                     if (gameMessage != null)
                     {
-                        await gameMessage.ModifyAsync(game.GetMessageUpdate(), DefaultOptions);
+                        await gameMessage.ModifyAsync(Game.GetMessageUpdate(), DefaultOptions);
 
-                        if (game is PacManGame && Context.BotCan(ChannelPermission.ManageMessages))
+                        if (Game is PacManGame && Context.BotCan(ChannelPermission.ManageMessages))
                         {
                             await gameMessage.RemoveAllReactionsAsync(DefaultOptions);
                         }
@@ -81,7 +72,7 @@ namespace PacManBot.Commands.Modules
                 }
                 catch (HttpException) { } // Something happened to the message, we can ignore it
 
-                if (game is PacManGame pacManGame && Context.Guild != null)
+                if (Game is PacManGame pacManGame && Context.Guild != null)
                 {
                     await ReplyAsync($"Game ended. Score won't be registered.\n**Result:** {pacManGame.score} points in {pacManGame.Time} turns");
                 }

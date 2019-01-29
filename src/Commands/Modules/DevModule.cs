@@ -22,7 +22,7 @@ namespace PacManBot.Commands.Modules
     [Name(CustomEmoji.Discord + "Developer"), Remarks("0")]
     [RequireDeveloper]
     [PmRequireBotPermission(ChannelPermission.AddReactions)]
-    public class DevModule : PmBaseModule
+    public class DevModule : BaseModule
     {
         public PmBot Bot { get; set; }
         public ScriptingService Scripting { get; set; }

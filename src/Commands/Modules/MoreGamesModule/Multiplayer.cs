@@ -11,7 +11,8 @@ using PacManBot.Games.Concrete;
 
 namespace PacManBot.Commands.Modules
 {
-    public partial class MoreGamesModule
+    [Name("👾More Games"), Remarks("3")]
+    public class MoreGamesModule : BaseGameModule<MultiplayerGame>
     {
         private async Task RunMultiplayerGame<TGame>(params SocketUser[] players) where TGame : MultiplayerGame
         {
