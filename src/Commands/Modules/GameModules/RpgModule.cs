@@ -15,7 +15,7 @@ using PacManBot.Games.Concrete.Rpg;
 namespace PacManBot.Commands.Modules
 {
     [Name("👾More Games"), Remarks("3")]
-    public class RpgGameModule : BaseGameModule<RpgGame>
+    public class RpgModule : BaseGameModule<RpgGame>
     {
         private static readonly IEnumerable<MethodInfo> RpgMethods = typeof(RpgGame).GetMethods()
             .Where(x => x.Get<RpgCommandAttribute>()?.VerifyMethod(x) != null)

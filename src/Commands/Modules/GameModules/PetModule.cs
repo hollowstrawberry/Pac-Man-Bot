@@ -13,7 +13,7 @@ using PacManBot.Games.Concrete;
 namespace PacManBot.Commands.Modules
 {
     [Name("👾More Games"), Remarks("3")]
-    public class PetGameModule : BaseGameModule<PetGame>
+    public class PetModule : BaseGameModule<PetGame>
     {
         private static readonly IEnumerable<MethodInfo> PetMethods = typeof(PetGame).GetMethods()
             .Where(x => x.Get<PetCommandAttribute>()?.VerifyMethod(x) != null)

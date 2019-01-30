@@ -7,7 +7,7 @@ using PacManBot.Games.Concrete;
 namespace PacManBot.Commands.Modules
 {
     [Name("👾More Games"), Remarks("3")]
-    public class RubiksGameModule : BaseGameModule<RubiksGame>
+    public class RubiksModule : BaseGameModule<RubiksGame>
     {
         [Command("rubik"), Alias("rubiks", "rubix", "rb", "rbx")]
         [Remarks("Your personal rubik's cube")]

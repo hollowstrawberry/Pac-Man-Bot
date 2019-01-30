@@ -17,7 +17,7 @@ namespace PacManBot.Commands.Modules
     [Name("🎮Pac-Man"), Remarks("2")]
     [PmRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.EmbedLinks |
                             ChannelPermission.UseExternalEmojis | ChannelPermission.AddReactions)]
-    public class PacManGameModule : BaseGameModule<PacManGame>
+    public class PacManModule : BaseGameModule<PacManGame>
     {
         private const int MaxDisplayedScores = 20;
 

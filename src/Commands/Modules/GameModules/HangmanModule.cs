@@ -14,7 +14,7 @@ using PacManBot.Games.Concrete;
 namespace PacManBot.Commands.Modules
 {
     [Name("👾More Games"), Remarks("3")]
-    public class HangmanGameModule : BaseGameModule<HangmanGame>
+    public class HangmanModule : BaseGameModule<HangmanGame>
     {
         [Command("hangman"), Alias("hang")]
         [Remarks("Start a game of Hangman in a channel")]
@@ -24,13 +24,7 @@ namespace PacManBot.Commands.Modules
                  "Don't send it in the chat! The bot will ask in private.")]
         public async Task StartHangman([Remainder]string args = null)
         {
-            if (ExistingGame != null)
-            {
-                await ReplyAsync(ExistingGame.UserId.Contains(Context.User.Id)
-                    ? $"You're already playing a game in this channel!\nUse `{Context.Prefix}cancel` if you want to cancel it."
-                    : $"There is already a different game in this channel!\nWait until it's finished or try doing `{Context.Prefix}cancel`");
-                return;
-            }
+            if (await CheckGameAlreadyExistsAsync()) return;
 
             if (args != null)
             {
@@ -59,13 +53,7 @@ namespace PacManBot.Commands.Modules
                 return;
             }
 
-            if (ExistingGame != null)
-            {
-                await ReplyAsync(ExistingGame.UserId.Contains(Context.User.Id)
-                    ? $"You're already playing a game in this channel!\nUse `{Context.Prefix}cancel` if you want to cancel it."
-                    : $"There is already a different game in this channel!\nWait until it's finished or try doing `{Context.Prefix}cancel`");
-                return;
-            }
+            if (await CheckGameAlreadyExistsAsync()) return;
 
 
             StartNewGame(new HangmanGame(Context.Channel.Id, Context.User.Id, Services));

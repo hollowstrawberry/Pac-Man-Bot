@@ -26,9 +26,9 @@ namespace PacManBot.Commands.Modules
             }
 
             await DeleteGameMessageAsync();
-            await ReplyGameAsync();
+            var msg = await ReplyGameAsync();
 
-            if (Game is PacManGame pacmanGame) await PacManGameModule.AddControls(pacmanGame, message);
+            if (Game is PacManGame pacmanGame) await PacManModule.AddControls(pacmanGame, msg);
         }
 
 
