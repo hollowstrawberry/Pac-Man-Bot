@@ -70,7 +70,7 @@ namespace PacManBot.Commands.Modules.GameModules
 
             while (true)
             {
-                var response = await Input.GetResponse(x =>
+                var response = await Input.GetResponseAsync(x =>
                     x.Channel.Id == userChannel.Id && x.Author.Id == Context.User.Id, 90);
 
                 if (response == null)

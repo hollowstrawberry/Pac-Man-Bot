@@ -67,7 +67,7 @@ namespace PacManBot.Services
 
         /// <summary>Returns the first new message that satisfies the given condition within 
         /// a timeout period in seconds, or null if no match is received.</summary>
-        public async Task<SocketUserMessage> GetResponse(Func<SocketUserMessage, bool> condition, int timeout = 30)
+        public async Task<SocketUserMessage> GetResponseAsync(Func<SocketUserMessage, bool> condition, int timeout = 30)
         {
             var pending = new PendingResponse(condition);
             pendingResponses.TryAdd(pending, 0);

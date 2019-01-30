@@ -62,27 +62,27 @@ namespace PacManBot.Commands
 
 
         /// <summary>Returns whether the next message by the user in this context is equivalent to "yes".</summary>
-        public async Task<bool> GetYesResponse(int timeout = 30)
+        public async Task<bool> GetYesResponseAsync(int timeout = 30)
         {
-            var response = (await GetResponse())?.Content.TrimStart(Context.Prefix).ToLowerInvariant();
+            var response = (await GetResponseAsync())?.Content.TrimStart(Context.Prefix).ToLowerInvariant();
             return response != null && (response == "y" || response == "yes");
         }
 
 
         /// <summary>Returns the first new message from the user in this context,
         /// or null if no message is received within the timeout in seconds.</summary>
-        public async Task<SocketUserMessage> GetResponse(int timeout = 30)
+        public async Task<SocketUserMessage> GetResponseAsync(int timeout = 30)
         {
-            return await Input.GetResponse(x =>
+            return await Input.GetResponseAsync(x =>
                 x.Channel.Id == Context.Channel.Id && x.Author.Id == Context.User.Id,
                 timeout);
         }
 
         /// <summary>Returns the first new message from the user in this context that satisfies additional conditions.
         /// The value will be null if no valid response is received within the timeout in seconds.</summary>
-        public async Task<SocketUserMessage> GetResponse(Func<SocketUserMessage, bool> extraConditions, int timeout = 30)
+        public async Task<SocketUserMessage> GetResponseAsync(Func<SocketUserMessage, bool> extraConditions, int timeout = 30)
         {
-            return await Input.GetResponse(x =>
+            return await Input.GetResponseAsync(x =>
                 x.Channel.Id == Context.Channel.Id && x.Author.Id == Context.User.Id && extraConditions(x),
                 timeout);
         }
