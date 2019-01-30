@@ -4,12 +4,11 @@ using System.Threading.Tasks;
 using Discord.Commands;
 using Discord.Net;
 using PacManBot.Extensions;
-using PacManBot.Games;
 using PacManBot.Games.Concrete;
 
 namespace PacManBot.Commands.Modules.GameModules
 {
-    [Name("👾More Games"), Remarks("3")]
+    [Name(ModuleNames.Games), Remarks("3")]
     public class HangmanModule : BaseGameModule<HangmanGame>
     {
         [Command("hangman"), Alias("hang")]
@@ -35,7 +34,8 @@ namespace PacManBot.Commands.Modules.GameModules
         }
 
 
-        [Command("hangman choose"), Alias("hang choose", "hangman word", "hang word"), Priority(1), HideHelp]
+        [Command("hangman choose"), Alias("hang choose", "hangman custom", "hang custom", "hangman word", "hang word")]
+        [Priority(1), HideHelp]
         [Summary("When this command is used, you will be sent a DM asking for a word or phrase in private. " +
                  "Once you give it, the game will start in the original channel where you used this command.\n" +
                  "Anyone will be able to guess either a letter or the full phrase. Up to 10 wrong guesses!\n\n" +

@@ -9,7 +9,7 @@ using PacManBot.Extensions;
 
 namespace PacManBot.Commands.Modules
 {
-    [Name(CustomEmoji.Staff + "Mod"), Remarks("5")]
+    [Name(ModuleNames.Mod), Remarks("5")]
     [PmRequireUserPermission(GuildPermission.ManageMessages)]
     public class ModModule : BaseModule
     {

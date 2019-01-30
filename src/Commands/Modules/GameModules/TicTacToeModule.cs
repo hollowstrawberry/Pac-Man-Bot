@@ -5,7 +5,7 @@ using PacManBot.Games.Concrete;
 
 namespace PacManBot.Commands.Modules.GameModules
 {
-    [Name("👾More Games"), Remarks("3")]
+    [Name(ModuleNames.Games), Remarks("3")]
     public class TicTacToeModule : MultiplayerGameModule<TicTacToeGame>
     {
         [Command("tictactoe"), Alias("ttt", "tic"), Priority(1)]

@@ -80,24 +80,22 @@ To win, you must collect all the pellets, while avoiding the ghosts. Try to get 
 
 "customHelp":
 "You can play Pac-Man using your own custom maps!
-To start a custom game, send **{prefix}play \\`\\`\\`map\\`\\`\\`** or **{prefix}play mobile \\`\\`\\`map\\`\\`\\`**
+Send **{prefix}custompacman [map]** to start a custom game (where \"[map]\" is your custom map)
+If you want, you can put your map between triple backticks (\\`\\`\\`) to keep it organized in a code block.
 
-**__Guidelines__**
-**1.** Maps must have constant width on all lines.
-**2.** Maps must have some space to move through.
-**3.** Special characters:
+**__Creating a map__**
+Anything but a space or a special character will become a solid wall. Maps must contain *some* space to move through, and can't be longer than 1500 characters.
+List of special characters:
  `O`: Pac-Man
  `G`: Ghosts, up to 4
  `-`: Ghost box door
  `.` and `o`: Pellet and Super Pellet
  `$`: Fruit (left tile)
  `~`: A pellet, but ghosts can't move here from below
- `_`: Empty, but ghosts can't move here from below
- **4.** Any character except a space or a special character is a wall.",
+ `_`: Empty, but ghosts can't move here from below",
 
 "customLinks": [
-    {"Item1":"Original game map", "Item2":"https://github.com/Samrux/Pac-Man-Bot/blob/master/bin/contents.json"},
-    {"Item1":"Custom map examples", "Item2":"https://github.com/Samrux/Pac-Man-Bot/blob/master/Example%20custom%20maps.txt"}
+    {"Item1":"Custom map examples", "Item2":"https://raw.githubusercontent.com/Samrux/Pac-Man-Bot/master/Example%20custom%20maps.txt"}
 ],
 
 

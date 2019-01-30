@@ -13,8 +13,6 @@ namespace PacManBot.Commands
     /// The base for a module that controls a game.
     /// </summary>
     /// <typeparam name="TGame">The game type that this module controls.</typeparam>
-    [PmRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.EmbedLinks |
-                        ChannelPermission.UseExternalEmojis | ChannelPermission.AddReactions)]
     public abstract class BaseGameModule<TGame> : BaseModule
         where TGame :  IBaseGame
     {

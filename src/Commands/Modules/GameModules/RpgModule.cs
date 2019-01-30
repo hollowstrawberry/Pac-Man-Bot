@@ -14,10 +14,10 @@ using PacManBot.Games.Concrete.Rpg;
 
 namespace PacManBot.Commands.Modules.GameModules
 {
-    [Name("👾More Games"), Remarks("3")]
+    [Name(ModuleNames.Games), Remarks("3")]
     public class RpgModule : BaseGameModule<RpgGame>
     {
-        private static readonly IEnumerable<MethodInfo> RpgMethods = typeof(RpgGame).GetMethods()
+        private static readonly IEnumerable<MethodInfo> RpgMethods = typeof(RpgModule).GetMethods()
             .Where(x => x.Get<RpgCommandAttribute>()?.VerifyMethod(x) != null)
             .ToArray();
 
@@ -45,7 +45,7 @@ namespace PacManBot.Commands.Modules.GameModules
         }
 
 
-        public string ExtraArg { get; set; }
+        public string ExtraArg { get; private set; }
 
 
         [Command("rpg"), Remarks("Play an RPG game"), Parameters("[command]"), Priority(4)]

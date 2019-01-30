@@ -6,7 +6,6 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
-using Discord.Net;
 using Discord.WebSocket;
 using PacManBot.Commands;
 using PacManBot.Constants;
@@ -71,12 +70,10 @@ namespace PacManBot.Services
             commandHelp = tempCommandHelp;
 
             moduleHelp = allCommands
-                .GroupBy(c => c.Module)
-                .OrderBy(g => g.Key.Remarks)
-                .ToDictionary(
-                    g => g.Key.Name,
-                    g => g.Select(c => commandHelp[c.Name.ToLowerInvariant()])
-                        .ToArray().AsEnumerable());
+                .OrderBy(c => c.Module.Remarks)
+                .GroupBy(c => c.Module.Name)
+                .ToDictionary(g => g.Key, g => g.Select(c => commandHelp[c.Name.ToLowerInvariant()]).ToArray().AsEnumerable())
+                .AsReadOnly();
 
             log.Info($"Added {allCommands.Length} commands", LogSource.Command);
         }
@@ -129,8 +126,9 @@ namespace PacManBot.Services
         /// <summary>Gets a message embed of the user manual for a command.</summary>
         public EmbedBuilder GetCommandHelp(string commandName, PmCommandContext context = null)
         {
-            if (!commandHelp.TryGetValue(commandName.ToLowerInvariant(), out var help)) return null;
-            return help.GetEmbed(context?.Prefix ?? "");
+            var help = commandHelp.Select(x => x.Value)
+                .FirstOrDefault(x => x.Command.Aliases.Contains(commandName.ToLowerInvariant()));
+            return help?.GetEmbed(context?.Prefix ?? "");
         }
 
 
@@ -172,11 +170,6 @@ namespace PacManBot.Services
                             moduleText.Append($"**{command.Command.Name}**, ");
                         }
                     }
-                }
-
-                if (!expanded && module.Key.Contains("Pac-Man"))
-                {
-                    moduleText.Append("**bump**, **cancel**"); // This is hardcoded for completeness
                 }
 
                 if (moduleText.Length > 0)

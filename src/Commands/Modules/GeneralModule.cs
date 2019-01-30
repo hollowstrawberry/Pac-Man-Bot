@@ -15,8 +15,7 @@ using PacManBot.Services;
 
 namespace PacManBot.Commands.Modules
 {
-    [Name("📁General"), Remarks("1")]
-    [PmRequireBotPermission(ChannelPermission.EmbedLinks | ChannelPermission.UseExternalEmojis)]
+    [Name(ModuleNames.General), Remarks("1")]
     public class GeneralModule : BaseModule
     {
         private static readonly IEnumerable<string> GameNames = ReflectionExtensions.AllTypes

@@ -102,12 +102,14 @@ namespace PacManBot.Games.Concrete
                 }
 
                 string[] lines = value.NormalizeLineEndings().Split('\n').ToArray();
-                int width = lines[0].Length, height = lines.Length;
+                int height = lines.Length;
+                int width = lines.Select(x => x.Length).Max();
                 map = new char[width, height];
 
                 for (int y = 0; y < height; y++)
                 {
-                    if (lines[y].Length != width) throw new InvalidMapException("Map width not constant");
+                    if (lines[y].Length != width) lines[y] = lines[y].PadRight(width);
+
                     for (int x = 0; x < width; x++)
                     {
                         map[x, y] = lines[y][x];
@@ -445,24 +447,24 @@ namespace PacManBot.Games.Concrete
 
 
                 // Add text to the side
-                string[] info = {
+                var info = new List<string>(new[] {
                     $"┌{"───< Mobile Mode >───┐".If(mobileDisplay)}",
                     $"│ {"#".If(!mobileDisplay)}Time: {Time}",
                     $"│ {"#".If(!mobileDisplay)}Score: {score}{$" +{score - oldScore}".If(score - oldScore != 0)}",
                     $"│ {$"{"#".If(!mobileDisplay)}Power: {pacMan.power}".If(pacMan.power > 0)}",
                     $"│ ",
                     $"│ {CharPlayer} - Pac-Man{$": {pacMan.dir.ToString().ToLower()}".If(pacMan.dir != Dir.None)}",
-                    $"│ ",
-                    $"│ ", " │ ", " │ ", " │ ", // 7-10: ghosts
+                    $"│ ", // 7-10: ghosts
                     $"│ ",
                     $"│ {($"{FruitChar}{FruitChar} - Fruit: {fruitTimer}").If(fruitTimer > 0)}",
                     $"└"
-                };
+                });
 
                 for (int i = 0; i < ghosts.Count; i++)
                 {
-                    info[i + 7] = $"│ {ghosts[i].Appearance} - {(GhostType)i}"
-                                + $": {ghosts[i].dir.ToString().ToLower()}".If(ghosts[i].dir != Dir.None);
+                    info.Insert(i+7,
+                        $"│ {ghosts[i].Appearance} - {(GhostType)i}" +
+                        $": {ghosts[i].dir.ToString().ToLower()}".If(ghosts[i].dir != Dir.None));
                 }
 
                 if (mobileDisplay)
@@ -471,7 +473,7 @@ namespace PacManBot.Games.Concrete
                 }
                 else
                 {
-                    for (int i = 0; i < info.Length && i < map.Height; i++) // Insert info
+                    for (int i = 0; i < info.Count && i < map.Height; i++) // Insert info
                     {
                         int insertIndex = (i + 1) * mapCopy.Width; // Skips ahead a certain amount of lines
                         for (int j = i - 1; j >= 0; j--) insertIndex += info[j].Length + 2; // Takes into account the added line length of previous info

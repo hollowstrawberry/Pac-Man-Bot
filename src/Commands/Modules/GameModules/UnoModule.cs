@@ -9,7 +9,7 @@ using PacManBot.Games.Concrete;
 
 namespace PacManBot.Commands.Modules.GameModules
 {
-    [Name("👾More Games"), Remarks("3")]
+    [Name(ModuleNames.Games), Remarks("3")]
     public class UnoModule : MultiplayerGameModule<UnoGame>
     {
         [Command("uno"), Parameters("[players]"), Priority(3)]

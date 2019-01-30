@@ -19,12 +19,12 @@ using PacManBot.Utils;
 
 namespace PacManBot.Commands.Modules
 {
-    [Name(CustomEmoji.Discord + "Developer"), Remarks("0")]
+    [Name(ModuleNames.Dev), Remarks("0")]
     [RequireDeveloper]
-    [PmRequireBotPermission(ChannelPermission.AddReactions)]
     public class DevModule : BaseModule
     {
         public PmBot Bot { get; set; }
+        public GameService Games { get; set; }
         public ScriptingService Scripting { get; set; }
         public IServiceProvider Services { get; set; }
 

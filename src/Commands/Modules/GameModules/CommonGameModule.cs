@@ -10,7 +10,7 @@ using PacManBot.Games.Concrete;
 
 namespace PacManBot.Commands.Modules.GameModules
 {
-    [Name("👾More Games"), Remarks("3")]
+    [Name(ModuleNames.Games), Remarks("3")]
     public class CommonGameModule : BaseGameModule<IChannelGame>
     {
         [Command("bump"), Alias("b", "refresh", "r", "move"), Priority(-4)]

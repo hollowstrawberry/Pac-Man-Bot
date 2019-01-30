@@ -1,12 +1,11 @@
 ﻿using System.Threading.Tasks;
 using Discord.Commands;
-using Discord.Net;
 using PacManBot.Constants;
 using PacManBot.Games.Concrete;
 
 namespace PacManBot.Commands.Modules.GameModules
 {
-    [Name("👾More Games"), Remarks("3")]
+    [Name(ModuleNames.Games), Remarks("3")]
     public class RubiksModule : BaseGameModule<RubiksGame>
     {
         [Command("rubik"), Alias("rubiks", "rubix", "rb", "rbx")]

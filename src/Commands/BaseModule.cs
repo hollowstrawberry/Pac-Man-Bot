@@ -11,7 +11,8 @@ namespace PacManBot.Commands
     /// <summary>
     /// The base for Pac-Man Bot modules, including their main services and some utilities.
     /// </summary>
-    /// <remarks>Service properties are loaded lazily.</remarks>
+    [PmRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.EmbedLinks |
+                            ChannelPermission.UseExternalEmojis | ChannelPermission.AddReactions)]
     public abstract class BaseModule : ModuleBase<PmCommandContext>
     {
         /// <summary>Useful <see cref="RequestOptions"/> to be used in most Discord requests.</summary>

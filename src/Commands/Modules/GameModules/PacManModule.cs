@@ -1,217 +1,81 @@
-using System;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.Net;
-using Discord.WebSocket;
 using PacManBot.Constants;
 using PacManBot.Extensions;
 using PacManBot.Games;
 using PacManBot.Games.Concrete;
-using PacManBot.Utils;
 
 namespace PacManBot.Commands.Modules.GameModules
 {
-    [Name("🎮Pac-Man"), Remarks("2")]
-    [PmRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.EmbedLinks |
-                            ChannelPermission.UseExternalEmojis | ChannelPermission.AddReactions)]
+    [Name(ModuleNames.Games), Remarks("3")]
     public class PacManModule : BaseGameModule<PacManGame>
     {
         private const int MaxDisplayedScores = 20;
 
 
-        [Command("pacman"), Alias("p", "start"), Remarks("Start a new game in this channel"), Parameters("[mobile] [map]")]
-        [Summary("Starts a new Pac-Man game, unless there is already a game in this channel.\nAdding \"mobile\" or \"m\" " +
-                 "after the command will begin the game in *Mobile Mode*, which uses simple characters that will work in phones. " +
-                 "Use **{prefix}display** to change mode later.\n\nIf you add a valid customized map between \\`\\`\\`triple backticks\\`\\`\\`, " +
-                 "it will start a custom game using that map instead. For more information about custom games, use the **{prefix}custom** command.\n\n" +
+        [Command("pacman"), Alias("p", "start"), Parameters("[mobile]"), Priority(10)]
+        [Remarks("Start a new game in this channel")]
+        [Summary("Starts a new Pac-Man game in this channel.\nYou can add \"mobile\" or \"m\" " +
+                 "after the command to use *Mobile Mode*, which has simple characters that will work in phones. " +
+                 "Use **{prefix}display** to change mode later.\n" +
+                 "You can also play a custom Pac-Man map with the command **{prefix}custompacman**\n\n" +
                  "Use **{prefix}bump** to move the game message to the bottom of the chat. Use **{prefix}cancel** to end the game. ")]
-        public async Task StartGame([Remainder]string args = "")
+        public async Task StartGame(string arg = "")
         {
             if (await CheckGameAlreadyExistsAsync()) return;
 
-            string[] argSplice = args.Split("```");
-            string preMessage = "";
+            bool mobile = arg.ToLowerInvariant().StartsWith("m");
 
-            bool mobile = false;
-            if (argSplice[0].StartsWith("m")) mobile = true;
-            else if (!string.IsNullOrWhiteSpace(argSplice[0])) preMessage = $"Unknown game argument \"{argSplice[0]}\".";
-
-            string customMap = null;
-            if (args.Contains("```")) customMap = argSplice[1].Trim('\n', '`').ReplaceMany((".", "·"), ("o", "●"));
-
-            PacManGame newGame;
-            try
-            {
-                newGame = new PacManGame(Context.Channel.Id, Context.User.Id, customMap, mobile, Services);
-            }
-            catch (InvalidMapException e) when (customMap != null)
-            {
-                Log.Debug($"Failed to create custom game: {e.Message}", "Pac-Man");
-                await ReplyAsync($"The provided map is invalid: {e.Message}.\nUse the `{Context.Prefix}custom` command for more info.");
-                return;
-            }
-            catch (Exception e)
-            {
-                Log.Exception($"Starting game in {Context.Channel.FullName()}", e, "Pac-Man");
-                await ReplyAsync("There was an error starting the game. " +
-                                 $"Please try again or contact the author of the bot using `{Context.Prefix}feedback`");
-                return;
-            }
-
-            StartNewGame(newGame);
-            var msg = await ReplyGameAsync(preMessage + Game.GetContent(showHelp: false) + "```diff\n+Starting game```");
-
+            StartNewGame(new PacManGame(Context.Channel.Id, Context.User.Id, null, mobile, Services));
+            var msg = await ReplyGameAsync(Game.GetContent(showHelp: false) + "```diff\n+Starting game```");
             await AddControls(Game, msg);
         }
 
 
-
-        [Command("changedisplay"), Alias("display"), Remarks("Switch between normal and mobile display")]
-        [Summary("A Pac-Man game can either be in normal or mobile mode. Using this command will switch modes " +
-                 "for the current game in this channel")]
-        public async Task ChangeGameDisplay()
+        [Command("custompacman"), Alias("pacmancustom"), Priority(9)]
+        [Summary("Starts a new Pac-Man game in this channel using the provided custom map.\n" +
+                 "Use **{prefix}custompacman** by itself to see a guide for custom maps.\n\n" +
+                 "Use **{prefix}display** to switch between normal mode and mobile mode. " +
+                 "Use **{prefix}bump** to move the game message to the bottom of the chat. Use **{prefix}cancel** to end the game.")]
+        public async Task StartCustomGame([Remainder]string map = null)
         {
-            if (Game == null)
+            if (map == null)
             {
-                await ReplyAsync("There is no active Pac-Man game in this channel!");
-                return;
-            }
+                string message = Content.customHelp.Replace("{prefix}", Context.Prefix);
 
-            Game.mobileDisplay = !Game.mobileDisplay;
-            await UpdateGameMessageAsync();
-
-            await AutoReactAsync();
-        }
-
-
-
-        [Command("top"), Alias("leaderboard", "lb"), Parameters("[period] [range]")]
-        [Remarks("Global Leaderboard scores"), ExampleUsage("top 5\ntop month 11 30")]
-        [Summary("By default, displays the top 10 Pac-Man scores of all time from the Global Leaderboard of all servers.\n"
-               + "You can specify the [period] to display scores from: all/month/week/day (a/m/w/d are also valid). "
-               + "You can also specify a [range] of scores with two positive whole numbers (start and end).\n"
-               + "Only 20 scores may be displayed at once.")]
-        public async Task SendTopScores(int min = 10, int? max = null)
-            => await SendTopScores(TimePeriod.All, min, max);
-
-
-        [Command("top"), Alias("leaderboard", "lb"), HideHelp]
-        public async Task SendTopScores(TimePeriod period, int min = 10, int? max = null)
-        {
-            if (max == null) 
-            {
-                if (min <= MaxDisplayedScores) // Takes a single number as the max if less than the limit
+                var embed = new EmbedBuilder { Color = Colors.PacManYellow };
+                foreach (var (name, url) in Content.customLinks)
                 {
-                    max = min;
-                    min = 1;
+                    embed.AddField(name, $"[Click here]({url} \"{url}\")", true);
                 }
-                else max = min + 9;
-            }
-            if (min < 1 || max < 1 || max < min)
-            {
-                await ReplyAsync($"Invalid range of scores. Try `{Context.Prefix}help lb` for more info");
+
+                await ReplyAsync(message, embed);
                 return;
             }
 
-            int amount = Math.Min(MaxDisplayedScores, (int)max - min + 1);
+            if (await CheckGameAlreadyExistsAsync()) return;
 
-            var scores = Storage.GetScores(period, min - 1, amount);
+            map = map.ExtractCode();
 
-            if (scores.Count == 0)
+            PacManGame newGame;
+            try
             {
-                await ReplyAsync($"No scores found in this range{" and period".If(period != TimePeriod.All)}.");
+                newGame = new PacManGame(Context.Channel.Id, Context.User.Id, map, false, Services);
+            }
+            catch (InvalidMapException e)
+            {
+                await ReplyAsync(
+                    $"The provided map is invalid: {e.Message}.\n" +
+                    $"Use `{Context.Prefix}custompacman` by itself for a guide on custom maps.");
                 return;
             }
 
-            var content = new StringBuilder();
-            content.Append($"Displaying best scores {period.Humanized()}\n{Empty}\n");
+            StartNewGame(newGame);
 
-            int maxPosDigits = max.ToString().Length;
-            int maxScoreDigits = scores[0].Score.ToString().Length;
-            for (int i = 0; i < scores.Count; i++)
-            {
-                var entry = scores[i];
-
-                string result = $"`{$"{min + i}.".PadRight(maxPosDigits+1)} {$"({entry.State})".PadRight(6)} " +
-                                $"{$"{entry.Score}".PadLeft(maxScoreDigits)} points in {entry.Turns} turns";
-                content.AppendLine(result.PadRight(38) + $"- {entry.GetUsername(Context.Client).Replace("`", "")}`");
-            }
-
-            if (max - min + 1 > MaxDisplayedScores)
-            {
-                content.AppendLine($"*Only {MaxDisplayedScores} scores may be displayed at once*");
-            }
-            if (scores.Count < amount)
-            {
-                content.AppendLine("*No more scores could be found*");
-            }
-
-
-            var embed = new EmbedBuilder()
-            {
-                Title = "🏆 __**Pac-Man Global Leaderboard**__ 🏆",
-                Description = content.ToString().Truncate(2047),
-                Color = Colors.PacManYellow
-            };
-
-            await ReplyAsync(embed);
-        }
-
-
-        [Command("score"), Alias("sc", "s"), Parameters("[period] [user]")]
-        [ExampleUsage("score d\nsc week @Samrux#3980"), Remarks("See your or a person's top score")]
-        [Summary("See your highest Pac-Man score of all time in the *Global Leaderboard* of all servers. " +
-                 "You can specify a user in your guild using their name, mention or ID, to see their score instead." +
-                 "\nYou can also specify a time period to display scores from: all/month/week/day (a/m/w/d are also valid)")]
-        public async Task SendPersonalBest(SocketGuildUser guildUser = null)
-            => await SendPersonalBest(TimePeriod.All, (guildUser ?? Context.User).Id);
-
-        [Command("score"), Alias("sc", "s"), HideHelp]
-        public async Task SendPersonalBest(TimePeriod time, SocketGuildUser guildUser = null)
-            => await SendPersonalBest(time, (guildUser ?? Context.User).Id);
-
-        [Command("score"), Alias("sc", "s"), HideHelp]
-        public async Task SendPersonalBest(ulong userId)
-            => await SendPersonalBest(TimePeriod.All, userId);
-
-        [Command("score"), Alias("sc", "s"), HideHelp]
-        public async Task SendPersonalBest(TimePeriod time, ulong userId)
-        {
-            var scores = Storage.GetScores(time, 0, 1, userId);
-
-            if (scores.Count > 0)
-            {
-                var embed = new EmbedBuilder
-                {
-                    Title = "🏆 __**Pac-Man Global Leaderboard**__ 🏆",
-                    Description = $"Highest score {time.Humanized()}:\n" + scores.First().ToString(Context.Client),
-                    Color = Colors.PacManYellow
-                };
-
-                await ReplyAsync(embed);
-                return;
-            }
-
-            await ReplyAsync(time == TimePeriod.All ? "No scores registered for this user!" : "No scores registered during that time!");
-        }
-
-
-        [Command("custom"), Remarks("Learn how custom maps work")]
-        [Summary("Using this command will display detailed help about the custom Pac-Man maps that you can design and play yourself!")]
-        public async Task SayCustomMapHelp()
-        {
-            string message = Content.customHelp.Replace("{prefix}", Context.Prefix);
-
-            var embed = new EmbedBuilder { Color = Colors.PacManYellow };
-            foreach (var (name, url) in Content.customLinks)
-            {
-                embed.AddField(name, $"[Click here]({url} \"{url}\")", true);
-            }
-
-            await ReplyAsync(message, embed);
+            var msg = await ReplyGameAsync(Game.GetContent(showHelp: false) + "```diff\n+Starting game```");
+            await AddControls(Game, msg);
         }
 
 

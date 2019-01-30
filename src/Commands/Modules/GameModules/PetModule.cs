@@ -12,10 +12,10 @@ using PacManBot.Games.Concrete;
 
 namespace PacManBot.Commands.Modules.GameModules
 {
-    [Name("👾More Games"), Remarks("3")]
+    [Name(ModuleNames.Games), Remarks("3")]
     public class PetModule : BaseGameModule<PetGame>
     {
-        private static readonly IEnumerable<MethodInfo> PetMethods = typeof(PetGame).GetMethods()
+        private static readonly IEnumerable<MethodInfo> PetMethods = typeof(PetModule).GetMethods()
             .Where(x => x.Get<PetCommandAttribute>()?.VerifyMethod(x) != null)
             .ToArray();
 
@@ -47,7 +47,7 @@ namespace PacManBot.Commands.Modules.GameModules
 
         public string AdoptPetMessage => $"You don't have a pet yet! Do `{Context.Prefix}pet adopt` to adopt one.";
 
-        public string ExtraArg { get; set; }
+        public string ExtraArg { get; private set; }
 
 
         [Command("pet"), Alias("gotchi", "wakagotchi", "clockagotchi"), Parameters("[command]"), Priority(5)]
