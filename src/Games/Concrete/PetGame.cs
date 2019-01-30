@@ -14,7 +14,7 @@ namespace PacManBot.Games.Concrete
     [DataContract]
     public class PetGame : BaseGame, IUserGame, IStoreableGame
     {
-        // Constants
+        public const int NameCharLimit = 32;
 
         public override int GameIndex => 1;
         public override string GameName => "Wakagotchi";
@@ -453,7 +453,7 @@ namespace PacManBot.Games.Concrete
         /// <summary>Sets the pet's name.</summary>
         public void SetPetName(string text)
         {
-            petName = text?.Trim().SanitizeMarkdown();
+            petName = text?.Trim().Replace("@", "").SanitizeMarkdown().Truncate(NameCharLimit);
             UpdateStats();
         }
 

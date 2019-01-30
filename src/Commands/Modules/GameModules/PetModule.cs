@@ -220,7 +220,7 @@ namespace PacManBot.Commands.Modules.GameModules
             if (Game.energy.Ceiling() == PetGame.MaxStat && !Game.asleep)
             {
                 Game.happiness = Math.Max(0, Game.happiness - 1);
-                Games.Save(Game);
+                SaveGame();
                 return Task.FromResult($"{CustomEmoji.Cross} Your pet is not tired! (-1 happiness)");
             }
 
@@ -243,13 +243,29 @@ namespace PacManBot.Commands.Modules.GameModules
         [PetCommand("name"), RequiresPet]
         public async Task<string> SetName()
         {
-            if (ExtraArg == "") return $"{CustomEmoji.Cross} Please specify a name!";
-            if (ExtraArg.Length > 32) return $"{CustomEmoji.Cross} Pet name can't go above 32 characters!";
-            if (ExtraArg.Contains("@")) return $"{CustomEmoji.Cross} Pet name can't contain \"@\"!";
+            var msg = Context.Message;
+            string name = ExtraArg;
 
-            Game.SetPetName(ExtraArg);
-            Games.Save(Game);
-            await AutoReactAsync();
+            if (name == "")
+            {
+                await ReplyAsync("Say your pet's new name:");
+
+                msg = await GetResponseAsync();
+                if (msg == null) return "Timed out 💨";
+
+                name = msg.Content;
+                if (string.IsNullOrWhiteSpace(name)) return null;
+            }
+
+            if (name.Length > PetGame.NameCharLimit)
+                return $"{CustomEmoji.Cross} Pet name can't go above 32 characters!";
+            if (name.Contains("@"))
+                return $"{CustomEmoji.Cross} Pet name can't contain \"@\"!";
+
+
+            Game.SetPetName(name);
+            SaveGame();
+            await msg.AutoReactAsync();
             return null;
         }
 
@@ -257,18 +273,31 @@ namespace PacManBot.Commands.Modules.GameModules
         [PetCommand("image", "url"), RequiresPet]
         public async Task<string> SetImage()
         {
-            string url = ExtraArg != "" ? ExtraArg : Context.Message.Attachments.FirstOrDefault()?.Url;
+            var msg = Context.Message;
+            string url = msg.Attachments.FirstOrDefault()?.Url ?? ExtraArg;
 
-            if (url == null && Game.petImageUrl == null)
-                return $"{CustomEmoji.Cross} Please specify an image! You can use a link or upload your own.";
+            if (string.IsNullOrWhiteSpace(url))
+            {
+                await ReplyAsync("Send your pet's new image or image URL, or \"reset\" to reset it.");
 
-            if (!Game.TrySetImageUrl(url))
-                return $"{CustomEmoji.Cross} Invalid image link!\nYou could also upload the image yourself.";
+                msg = await GetResponseAsync(120);
+                if (msg == null) return "Timed out 💨";
 
-            Games.Save(Game);
+                url = msg.Attachments.FirstOrDefault()?.Url ?? msg.Content;
+                if (string.IsNullOrWhiteSpace(url)) return null;
+            }
 
-            if (url == null) return $"{CustomEmoji.Check} Pet image reset!";
-            await AutoReactAsync();
+            if (url.ToLowerInvariant() == "reset")
+            {
+                Game.TrySetImageUrl(null);
+                return $"{CustomEmoji.Check} Pet image reset!";
+            }
+
+            if (!Game.TrySetImageUrl(url)) return $"{CustomEmoji.Cross} Invalid image!";
+
+            SaveGame();
+
+            await msg.AutoReactAsync();
             return null;
         }
 
@@ -337,7 +366,7 @@ namespace PacManBot.Commands.Modules.GameModules
         {
             if (Game != null) return $"You already have a pet!";
 
-            StartNewGame(new PetGame(ExtraArg.Replace("@", "").Truncate(32), Context.User.Id, Services));
+            StartNewGame(new PetGame(ExtraArg, Context.User.Id, Services));
             await SendProfile();
             return null;
         }
@@ -357,7 +386,7 @@ namespace PacManBot.Commands.Modules.GameModules
                 $"It will be gone forever, along with your stats and achievements, and you can't get it back.\n" +
                 $"Release your pet? (Yes/No)");
 
-            if (await GetYesResponse())
+            if (await GetYesResponseAsync())
             {
                 Games.Remove(Game);
                 return $"Goodbye {Game.petName}!";

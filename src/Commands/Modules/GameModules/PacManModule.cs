@@ -67,7 +67,7 @@ namespace PacManBot.Commands.Modules.GameModules
             catch (InvalidMapException e)
             {
                 await ReplyAsync(
-                    $"The provided map is invalid: {e.Message}.\n" +
+                    $"That's not a valid map!: {e.Message}.\n" +
                     $"Use `{Context.Prefix}custompacman` by itself for a guide on custom maps.");
                 return;
             }
