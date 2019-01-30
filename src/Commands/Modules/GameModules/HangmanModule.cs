@@ -1,17 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
-using Discord;
 using Discord.Commands;
 using Discord.Net;
-using PacManBot.Constants;
 using PacManBot.Extensions;
 using PacManBot.Games;
 using PacManBot.Games.Concrete;
 
-namespace PacManBot.Commands.Modules
+namespace PacManBot.Commands.Modules.GameModules
 {
     [Name("👾More Games"), Remarks("3")]
     public class HangmanModule : BaseGameModule<HangmanGame>
@@ -35,8 +31,7 @@ namespace PacManBot.Commands.Modules
             }
 
             StartNewGame(new HangmanGame(Context.Channel.Id, Services));
-            var message = await ReplyAsync(Game.GetEmbed());
-            Game.MessageId = message.Id;
+            await ReplyGameAsync();
         }
 
 
@@ -67,12 +62,11 @@ namespace PacManBot.Commands.Modules
             catch (HttpException e) when (e.DiscordCode == 50007) // Can't send DMs
             {
                 await ReplyAsync($"{Context.User.Mention} You must enable DMs!");
-                RemoveGame();
+                EndGame();
                 return;
             }
 
-            var message = await ReplyAsync($"{Context.User.Mention} check your DMs!", Game.GetEmbed());
-            Game.MessageId = message.Id;
+            var msg = await ReplyGameAsync($"{Context.User.Mention} check your DMs!");
 
             while (true)
             {
@@ -81,11 +75,9 @@ namespace PacManBot.Commands.Modules
 
                 if (response == null)
                 {
-                    RemoveGame();
-                    Game.State = State.Cancelled;
+                    EndGame();
                     await userChannel.SendMessageAsync("Timed out 💨");
-                    message = await Game.GetMessage();
-                    if (message != null) await message.ModifyAsync(Game.GetMessageUpdate());
+                    await UpdateGameMessageAsync();
                 }
 
                 string word = response.Content.ToUpperInvariant().Replace('\n', ' ');
@@ -110,10 +102,7 @@ namespace PacManBot.Commands.Modules
                 {
                     Game.SetWord(word);
                     await response.AutoReactAsync();
-
-                    message = await Game.GetMessage();
-                    if (message == null) await ReplyAsync(Game.GetEmbed());
-                    else await message.ModifyAsync(Game.GetMessageUpdate());
+                    await SendOrUpdateGameMessageAsync();
 
                     return;
                 }

@@ -4,7 +4,7 @@ using Discord.Net;
 using PacManBot.Constants;
 using PacManBot.Games.Concrete;
 
-namespace PacManBot.Commands.Modules
+namespace PacManBot.Commands.Modules.GameModules
 {
     [Name("👾More Games"), Remarks("3")]
     public class RubiksModule : BaseGameModule<RubiksGame>
@@ -50,13 +50,13 @@ namespace PacManBot.Commands.Modules
 
                 case "h":
                 case "help":
-                    await ReplyAsync(Commands.GetCommandHelp("rubik", Context.Prefix));
+                    await ReplyAsync(Commands.GetCommandHelp("rubik", Context));
                     return;
 
 
                 case "reset":
                 case "solve":
-                    RemoveGame();
+                    EndGame();
                     await AutoReactAsync();
                     return;
 
@@ -90,16 +90,8 @@ namespace PacManBot.Commands.Modules
                     break;
             }
 
-            var oldMessage = await Game.GetMessage();
-            var newMessage = await ReplyAsync(Game.GetContent(), Game.GetEmbed(Context.Guild));
-            Game.MessageId = newMessage.Id;
-            Game.ChannelId = Context.Channel.Id;
-
-            if (removeOld && oldMessage != null && oldMessage.Channel.Id == Context.Channel.Id)
-            {
-                try { await oldMessage.DeleteAsync(DefaultOptions); }
-                catch (HttpException) { }
-            }
+            if (removeOld && Game.ChannelId == Context.Channel.Id) await DeleteGameMessageAsync();
+            await ReplyGameAsync();
         }
     }
 }

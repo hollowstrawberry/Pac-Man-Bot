@@ -12,7 +12,7 @@ using PacManBot.Games;
 using PacManBot.Games.Concrete;
 using PacManBot.Utils;
 
-namespace PacManBot.Commands.Modules
+namespace PacManBot.Commands.Modules.GameModules
 {
     [Name("🎮Pac-Man"), Remarks("2")]
     [PmRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.EmbedLinks |
@@ -30,7 +30,6 @@ namespace PacManBot.Commands.Modules
                  "Use **{prefix}bump** to move the game message to the bottom of the chat. Use **{prefix}cancel** to end the game. ")]
         public async Task StartGame([Remainder]string args = "")
         {
-            if (!Context.BotCan(ChannelPermission.SendMessages)) return;
             if (await CheckGameAlreadyExistsAsync()) return;
 
             string[] argSplice = args.Split("```");
@@ -82,14 +81,7 @@ namespace PacManBot.Commands.Modules
             }
 
             Game.mobileDisplay = !Game.mobileDisplay;
-
-            Game.CancelRequests();
-            var gameMessage = await Game.GetMessage();
-            if (gameMessage != null)
-            {
-                try { await gameMessage.ModifyAsync(Game.GetMessageUpdate(), Game.GetRequestOptions()); }
-                catch (OperationCanceledException) { }
-            }
+            await UpdateGameMessageAsync();
 
             await AutoReactAsync();
         }

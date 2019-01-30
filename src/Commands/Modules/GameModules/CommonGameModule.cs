@@ -8,7 +8,7 @@ using PacManBot.Extensions;
 using PacManBot.Games;
 using PacManBot.Games.Concrete;
 
-namespace PacManBot.Commands.Modules
+namespace PacManBot.Commands.Modules.GameModules
 {
     [Name("👾More Games"), Remarks("3")]
     public class CommonGameModule : BaseGameModule<IChannelGame>
@@ -47,8 +47,7 @@ namespace PacManBot.Commands.Modules
             if (Game.UserId.Contains(Context.User.Id) || Context.UserCan(ChannelPermission.ManageMessages)
                 || DateTime.Now - Game.LastPlayed > TimeSpan.FromSeconds(60) || Game is MultiplayerGame mpGame && mpGame.AllBots)
             {
-                RemoveGame();
-                Game.State = State.Cancelled;
+                EndGame();
                 var msg = await UpdateGameMessageAsync();
 
                 if (Game is PacManGame pacManGame)

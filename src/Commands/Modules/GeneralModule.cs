@@ -64,7 +64,7 @@ namespace PacManBot.Commands.Modules
             }
             else
             {
-                var embed = Commands.GetCommandHelp(command, Context.Prefix);
+                var embed = Commands.GetCommandHelp(command, Context);
                 string message = embed == null ? $"Can't find a command with that name. Use `{Context.Prefix}help` for a list of commands." : "";
                 await ReplyAsync(message, embed);
             }

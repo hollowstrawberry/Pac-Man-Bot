@@ -3,78 +3,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
-using Discord.Net;
 using Discord.WebSocket;
 using PacManBot.Extensions;
-using PacManBot.Games;
 using PacManBot.Games.Concrete;
 
-namespace PacManBot.Commands.Modules
+namespace PacManBot.Commands.Modules.GameModules
 {
     [Name("👾More Games"), Remarks("3")]
-    public class
+    public class UnoModule : MultiplayerGameModule<UnoGame>
     {
-        [Command("tictactoe"), Alias("ttt", "tic"), Priority(1)]
-        [Remarks("Play Tic-Tac-Toe with another user or the bot")]
-        [Summary("You can choose a guild member to invite as an opponent using a mention, username, nickname or user ID. Otherwise, " +
-                 "you'll play against the bot.\n\nYou play by sending the number of a free cell (1 to 9) in chat while it is your turn, " +
-                 "and to win you must make a line of 3 symbols in any direction\n\n" +
-                 "Do `{prefix}cancel` to end the game or `{prefix}bump` to move it to the bottom of the chat. " +
-                 "The game times out in case of extended inactivity.\n\n" +
-                 "You can also make the bot challenge another user or bot with `{prefix}ttt vs <opponent>`")]
-        public async Task StartTicTacToe(SocketGuildUser opponent = null)
-            => await RunMultiplayerGame<TTTGame>(opponent ?? (SocketUser)Context.Client.CurrentUser, Context.User);
-
-
-        [Command("tictactoe vs"), Alias("ttt vs", "tic vs"), Priority(-1), HideHelp]
-        [Summary("Make the bot challenge a user... or another bot")]
-        public async Task StartTicTacToeVs(SocketGuildUser opponent)
-            => await RunMultiplayerGame<TTTGame>(opponent, Context.Client.CurrentUser);
-
-
-
-
-        [Command("5ttt"), Alias("ttt5", "5tictactoe", "5tic"), Priority(1)]
-        [Remarks("Play a harder 5-Tic-Tac-Toe with another user or the bot")]
-        [Summary("You can choose a guild member to invite as an opponent using a mention, username, nickname or user ID. Otherwise, " +
-                 "you'll play against the bot.\n\nYou play by sending the column and row of the cell you want to play, for example, \"C4\". " +
-                 "The player who makes the **most lines of 3 symbols** wins. However, if a player makes a lines of **4**, they win instantly.\n\n" +
-                 "Do `{prefix}cancel` to end the game or `{prefix}bump` to move it to the bottom of the chat. " +
-                 "The game times out in case of extended inactivity.\n\n" +
-                 "You can also make the bot challenge another user or bot with `{prefix}5ttt vs <opponent>`")]
-        public async Task StartTicTacToe5(SocketGuildUser opponent = null)
-            => await RunMultiplayerGame<TTT5Game>((SocketUser)opponent ?? Context.Client.CurrentUser, Context.User);
-
-
-        [Command("5ttt vs"), Alias("ttt5 vs", "5tictactoe vs", "5tic vs"), Priority(-1), HideHelp]
-        [Summary("Make the bot challenge a user... or another bot")]
-        public async Task Start5TicTacToeVs(SocketGuildUser opponent)
-            => await RunMultiplayerGame<TTT5Game>(opponent, Context.Client.CurrentUser);
-
-
-
-
-        [Command("connect4"), Alias("c4", "four"), Priority(1)]
-        [Remarks("Play Connect Four with another user or the bot")]
-        [Summary("You can choose a guild member to invite as an opponent using a mention, username, nickname or user ID. Otherwise, " +
-                 "you'll play against the bot.\n\n You play by sending the number of a free cell (1 to 7) in chat while it is your turn, " +
-                 "and to win you must make a line of 3 symbols in any direction\n\n" +
-                 "Do `{prefix}cancel` to end the game or `{prefix}bump` to move it to the bottom of the chat. " +
-                 "The game times out in case of extended inactivity.\n\n" +
-                 "You can also make the bot challenge another user or bot with `{prefix}c4 vs <opponent>`")]
-        public async Task StartConnectFour(SocketGuildUser opponent = null)
-            => await RunMultiplayerGame<C4Game>(opponent ?? (SocketUser)Context.Client.CurrentUser, Context.User);
-
-
-        [Command("connect4 vs"), Alias("c4 vs", "four vs"), Priority(-1), HideHelp]
-        [Summary("Make the bot challenge a user... or another bot")]
-        public async Task StartConnectFourVs(SocketGuildUser opponent)
-            => await RunMultiplayerGame<C4Game>(opponent, Context.Client.CurrentUser);
-
-
-
-
-
         [Command("uno"), Parameters("[players]"), Priority(3)]
         [Remarks("Play Uno with up to 10 friends and bots")]
         [ExampleUsage("uno\nuno @Pac-Man#3944")]
@@ -103,13 +40,18 @@ namespace PacManBot.Commands.Modules
                  "and will match with any card.")]
         [RequireContext(ContextType.Guild)]
         public async Task StartUno(params SocketGuildUser[] startingPlayers)
-            => await RunMultiplayerGame<UnoGame>(new[] { Context.User as SocketGuildUser }.Concatenate(startingPlayers));
+        {
+            await RunGameAsync(new[] { Context.User as SocketGuildUser }.Concatenate(startingPlayers));
+        }
 
 
         [Command("uno"), Priority(3)]
         [Remarks("Play Uno in a 1v1 match with the bot")]
         [RequireContext(ContextType.DM)]
-        public async Task StartUnoDm() => await RunMultiplayerGame<UnoGame>(Context.User, Context.Client.CurrentUser);
+        public async Task StartUnoDm()
+        {
+            await RunGameAsync(Context.User, Context.Client.CurrentUser);
+        }
 
 
         [Command("uno bots"), Alias("uno bot", "unobot", "unobots"), Parameters("[bots]"), HideHelp]
@@ -119,13 +61,13 @@ namespace PacManBot.Commands.Modules
         {
             startingPlayers = startingPlayers.Where(x => x.IsBot).ToArray();
             if (startingPlayers.Length < 2) await ReplyAsync("You need to specify at least 2 bots for a bot game.");
-            else await RunMultiplayerGame<UnoGame>(startingPlayers);
+            else await RunGameAsync(startingPlayers);
         }
 
 
         [Command("uno help"), Alias("uno h", "uno rules", "uno commands"), Priority(-1), HideHelp]
         [Summary("Gives rules and commands for the Uno game.")]
-        public async Task UnoHelp() => await ReplyAsync(Commands.GetCommandHelp("uno", Context.Prefix));
+        public async Task UnoHelp() => await ReplyAsync(Commands.GetCommandHelp("uno", Context));
 
 
         [Command("uno join"), Alias("uno add", "uno invite"), Priority(-1), HideHelp]
@@ -141,24 +83,23 @@ namespace PacManBot.Commands.Modules
                 user = Context.User as SocketGuildUser;
             }
 
-            var game = Games.GetForChannel<UnoGame>(Context.Channel.Id);
-            if (game == null)
+            if (Game == null)
             {
                 await ReplyAsync($"There's no Uno game in this channel! Use `{Context.Prefix}uno` to start.");
                 return;
             }
-            if (game.UserId.Contains(user.Id))
+            if (Game.UserId.Contains(user.Id))
             {
                 await ReplyAsync($"{(self ? "You're" : "They're")} already playing!");
                 return;
             }
             if (!self && !user.IsBot)
             {
-                await ReplyAsync($"{user.Mention} You're being invited to play {game.GameName}. Do `{Context.Prefix}uno join` to join.");
+                await ReplyAsync($"{user.Mention} You're being invited to play {Game.GameName}.\nDo `{Context.Prefix}uno join` to join.");
                 return;
             }
 
-            string failReason = await game.TryAddPlayer(user);
+            string failReason = await Game.TryAddPlayerAsync(user);
 
             if (failReason == null)
             {
@@ -187,27 +128,27 @@ namespace PacManBot.Commands.Modules
                 user = Context.User as SocketGuildUser;
             }
 
-            var game = Games.GetForChannel<UnoGame>(Context.Channel.Id);
-            if (game == null)
+            if (Game == null)
             {
                 await ReplyAsync($"There's no Uno game in this channel! Use `{Context.Prefix}uno` to start.");
                 return;
             }
-            if (!game.UserId.Contains(user.Id))
+            if (!Game.UserId.Contains(user.Id))
             {
                 await ReplyAsync($"{(self ? "You're" : "They're")} not playing!");
                 return;
             }
-            if (!self && !user.IsBot && (game.UserId[game.Turn] != user.Id || (DateTime.Now - game.LastPlayed) < TimeSpan.FromMinutes(1)))
+            if (!self && !user.IsBot && (Game.UserId[Game.Turn] != user.Id || (DateTime.Now - Game.LastPlayed) < TimeSpan.FromMinutes(1)))
             {
                 await ReplyAsync("To remove another user they must be inactive for at least 1 minute during their turn.");
             }
 
-            game.RemovePlayer(user);
+            Game.RemovePlayer(user);
 
-            if (game.AllBots || game.UserId.Length < 2)
+            if (Game.AllBots || Game.UserId.Length < 2)
             {
-                Game.State
+                EndGame();
+                await UpdateGameMessageAsync();
             }
             else
             {

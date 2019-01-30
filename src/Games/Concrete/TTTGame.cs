@@ -10,7 +10,7 @@ using PacManBot.Extensions;
 
 namespace PacManBot.Games.Concrete
 {
-    public class TTTGame : MultiplayerGame, IMessagesGame
+    public class TicTacToeGame : MultiplayerGame, IMessagesGame
     {
         public override int GameIndex => 12;
         public override string GameName => "Tic-Tac-Toe";
@@ -22,7 +22,7 @@ namespace PacManBot.Games.Concrete
         private List<Pos> highlighted;
 
 
-        private TTTGame() { }
+        private TicTacToeGame() { }
 
         protected override Task InitializeAsync(ulong channelId, SocketUser[] players, IServiceProvider services)
         {

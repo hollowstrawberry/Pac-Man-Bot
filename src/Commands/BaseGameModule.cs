@@ -34,16 +34,24 @@ namespace PacManBot.Commands
         protected override void BeforeExecute(CommandInfo command)
         {
             base.BeforeExecute(command);
+            Game = GetCurrentGame();
+        }
 
-            Game = typeof(TGame).IsAssignableFrom(typeof(IUserGame))
+        /// <summary>Obtains the game for the current context from the game service. Used to set <see cref="Game"/>.</summary>
+        protected virtual TGame GetCurrentGame()
+        {
+            return typeof(TGame).IsAssignableFrom(typeof(IUserGame))
                 ? (TGame)Games.GetForUser(Context.User.Id, typeof(TGame))
                 : (TGame)Games.GetForChannel(Context.Channel.Id);
         }
 
 
+
+
         /// <summary>Deletes the game for this context from the bot.</summary>
-        public void RemoveGame()
+        public void EndGame(State state = State.Cancelled)
         {
+            Game.State = state;
             if (Game != null) Games.Remove(Game);
         }
 
@@ -66,7 +74,11 @@ namespace PacManBot.Commands
         public async Task<IUserMessage> ReplyGameAsync(string overrideContent = null)
         {
             var msg = await ReplyAsync(overrideContent ?? Game.GetContent(), Game.GetEmbed());
-            if (Game is IChannelGame cgame) cgame.MessageId = msg.Id;
+            if (Game is IChannelGame cgame)
+            {
+                cgame.MessageId = msg.Id;
+                cgame.ChannelId = Context.Channel.Id;
+            }
             return msg;
         }
 

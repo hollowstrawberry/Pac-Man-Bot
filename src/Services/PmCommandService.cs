@@ -127,10 +127,10 @@ namespace PacManBot.Services
 
 
         /// <summary>Gets a message embed of the user manual for a command.</summary>
-        public EmbedBuilder GetCommandHelp(string commandName, string prefix = "")
+        public EmbedBuilder GetCommandHelp(string commandName, PmCommandContext context = null)
         {
             if (!commandHelp.TryGetValue(commandName.ToLowerInvariant(), out var help)) return null;
-            return help.GetEmbed(prefix);
+            return help.GetEmbed(context?.Prefix ?? "");
         }
 
 

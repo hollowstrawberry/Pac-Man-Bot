@@ -1,15 +1,23 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Discord.Commands;
 using Discord.Net;
 using Discord.WebSocket;
 using PacManBot.Games;
 
-namespace PacManBot.Commands.Modules
+namespace PacManBot.Commands
 {
     /// <summary>A module equipped to run multiplayer games.</summary>
     public abstract class MultiplayerGameModule<TGame> : BaseGameModule<TGame>
         where TGame : MultiplayerGame
     {
+        protected override TGame GetCurrentGame()
+        {
+            return Games.GetForChannel<TGame>(Context.Channel.Id);
+        }
+
+
+
         /// <summary>Attempts to create a <see cref="TGame"/> for this context.</summary>
         public async Task RunGameAsync(params SocketUser[] players)
         {
@@ -21,7 +29,7 @@ namespace PacManBot.Commands.Modules
 
             var msg = await ReplyGameAsync();
 
-            if (Game.AllBots)
+            if (Game.AllBots) // Bot loop
             {
                 while (Game.State == State.Active)
                 {
@@ -29,7 +37,7 @@ namespace PacManBot.Commands.Modules
                     {
                         Game.BotInput();
                         msg = await UpdateGameMessageAsync();
-                        if (msg == null) Game.State = State.Cancelled;
+                        if (msg == null) break;
                     }
                     catch (OperationCanceledException) { }
                     catch (TimeoutException) { }
@@ -38,7 +46,7 @@ namespace PacManBot.Commands.Modules
                     await Task.Delay(Program.Random.Next(2500, 4001));
                 }
 
-                RemoveGame();
+                EndGame();
             }
         }
     }
