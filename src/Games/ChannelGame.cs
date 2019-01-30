@@ -32,12 +32,12 @@ namespace PacManBot.Games
         }
 
         /// <summary>Retrieves this game's latest message. Null if not retrievable.</summary>
-        public async Task<IUserMessage> GetMessage()
+        public async ValueTask<IUserMessage> GetMessage()
         {
             if (MessageId == 0 || Channel == null) return (internalMessage = null);
 
-            return internalMessage != null && internalMessage.Id == MessageId
-                ? internalMessage : (internalMessage = await Channel.GetUserMessageAsync(MessageId)); // Lazy load
+            return internalMessage != null && internalMessage.Id == MessageId ? internalMessage
+                : (internalMessage = await Channel.GetUserMessageAsync(MessageId)); // Lazy load
         }
 
 

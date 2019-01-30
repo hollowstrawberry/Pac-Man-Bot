@@ -12,55 +12,8 @@ using PacManBot.Games.Concrete;
 namespace PacManBot.Commands.Modules
 {
     [Name("👾More Games"), Remarks("3")]
-    public class MoreGamesModule : BaseGameModule<MultiplayerGame>
+    public class
     {
-        private async Task RunMultiplayerGame<TGame>(params SocketUser[] players) where TGame : MultiplayerGame
-        {
-            var existingGame = Games.GetForChannel(Context.Channel.Id);
-            if (existingGame != null)
-            {
-                await ReplyAsync(existingGame.UserId.Contains(Context.User.Id)
-                    ? $"You're already playing a game in this channel!\nUse `{Context.Prefix}cancel` if you want to cancel it."
-                    : $"There is already a different game in this channel!\nWait until it's finished or try doing `{Context.Prefix}cancel`");
-                return;
-            }
-
-            var game = await MultiplayerGame.CreateNew<TGame>(Context.Channel.Id, players, Services);
-            Games.Add(game);
-            while (!game.AllBots && game.BotTurn) game.BotInput(); // When a bot starts
-            var gameMessage = await ReplyAsync(game.GetContent(), game.GetEmbed());
-            game.MessageId = gameMessage.Id;
-
-            if (game.AllBots)
-            {
-                while (game.State == State.Active)
-                {
-                    try
-                    {
-                        game.BotInput();
-                        if (game.MessageId != gameMessage.Id) gameMessage = await game.GetMessage();
-                        if (gameMessage != null)
-                        {
-                            game.CancelRequests();
-                            await gameMessage.ModifyAsync(game.GetMessageUpdate(), game.GetRequestOptions());
-                        }
-                    }
-                    catch (OperationCanceledException) { } 
-                    catch (TimeoutException) { }
-                    catch (HttpException) { }  // All of these are connection-related and ignorable in this situation
-
-                    await Task.Delay(Program.Random.Next(2500, 4001));
-                }
-
-                Games.Remove(game);
-            }
-        }
-
-
-
-
-
-
         [Command("tictactoe"), Alias("ttt", "tic"), Priority(1)]
         [Remarks("Play Tic-Tac-Toe with another user or the bot")]
         [Summary("You can choose a guild member to invite as an opponent using a mention, username, nickname or user ID. Otherwise, " +
@@ -115,7 +68,7 @@ namespace PacManBot.Commands.Modules
 
         [Command("connect4 vs"), Alias("c4 vs", "four vs"), Priority(-1), HideHelp]
         [Summary("Make the bot challenge a user... or another bot")]
-        public async Task StartConnectFoureVs(SocketGuildUser opponent)
+        public async Task StartConnectFourVs(SocketGuildUser opponent)
             => await RunMultiplayerGame<C4Game>(opponent, Context.Client.CurrentUser);
 
 
@@ -205,10 +158,17 @@ namespace PacManBot.Commands.Modules
                 return;
             }
 
-            string failReason = await game.AddPlayer(user);
+            string failReason = await game.TryAddPlayer(user);
 
-            if (failReason != null) await ReplyAsync($"{user.Mention} {"You ".If(self)}can't join this game: {failReason}");
-            else await MoveGame();
+            if (failReason == null)
+            {
+                await DeleteGameMessageAsync();
+                await ReplyGameAsync();
+            }
+            else
+            {
+                await ReplyAsync($"{user.Mention} {"You ".If(self)}can't join this game: {failReason}");
+            }
 
             if (Context.BotCan(ChannelPermission.ManageMessages)) await Context.Message.DeleteAsync(DefaultOptions);
             else await AutoReactAsync(failReason == null);
@@ -245,8 +205,15 @@ namespace PacManBot.Commands.Modules
 
             game.RemovePlayer(user);
 
-            if (game.AllBots || game.UserId.Length < 2) await CancelGame();
-            else await MoveGame();
+            if (game.AllBots || game.UserId.Length < 2)
+            {
+                Game.State
+            }
+            else
+            {
+                await DeleteGameMessageAsync();
+                await ReplyGameAsync();
+            }
 
             await AutoReactAsync();
         }

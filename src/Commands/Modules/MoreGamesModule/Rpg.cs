@@ -17,7 +17,7 @@ namespace PacManBot.Commands.Modules
     [Name("👾More Games"), Remarks("3")]
     public class RpgGameModule : BaseGameModule<RpgGame>
     {
-        private static readonly IEnumerable<MethodInfo> RpgMethods = typeof(MoreGamesModule).GetMethods()
+        private static readonly IEnumerable<MethodInfo> RpgMethods = typeof(RpgGame).GetMethods()
             .Where(x => x.Get<RpgCommandAttribute>()?.VerifyMethod(x) != null)
             .ToArray();
 
@@ -532,7 +532,7 @@ namespace PacManBot.Commands.Modules
         {
             if (Game != null) return "You already have a hero!";
 
-            CreateGame(new RpgGame(Context.User.Username, Context.User.Id, Services));
+            StartNewGame(new RpgGame(Context.User.Username, Context.User.Id, Services));
 
             await RpgSendManual();
             return null;

@@ -25,15 +25,8 @@ namespace PacManBot.Commands.Modules
                 return;
             }
 
-            try
-            {
-                var gameMessage = await Game.GetMessage();
-                if (gameMessage != null) await gameMessage.DeleteAsync(DefaultOptions);
-            }
-            catch (HttpException) { } // Something happened to the message, can ignore it
-
-            var message = await ReplyAsync(Game.GetContent(), Game.GetEmbed());
-            Game.MessageId = message.Id;
+            await DeleteGameMessageAsync();
+            await ReplyGameAsync();
 
             if (Game is PacManGame pacmanGame) await PacManGameModule.AddControls(pacmanGame, message);
         }
@@ -54,27 +47,21 @@ namespace PacManBot.Commands.Modules
             if (Game.UserId.Contains(Context.User.Id) || Context.UserCan(ChannelPermission.ManageMessages)
                 || DateTime.Now - Game.LastPlayed > TimeSpan.FromSeconds(60) || Game is MultiplayerGame mpGame && mpGame.AllBots)
             {
-                Game.State = State.Cancelled;
                 RemoveGame();
+                Game.State = State.Cancelled;
+                var msg = await UpdateGameMessageAsync();
 
-                try
+                if (Game is PacManGame pacManGame)
                 {
-                    var gameMessage = await Game.GetMessage();
-                    if (gameMessage != null)
+                    if (Context.Guild != null)
                     {
-                        await gameMessage.ModifyAsync(Game.GetMessageUpdate(), DefaultOptions);
-
-                        if (Game is PacManGame && Context.BotCan(ChannelPermission.ManageMessages))
-                        {
-                            await gameMessage.RemoveAllReactionsAsync(DefaultOptions);
-                        }
+                        await ReplyAsync($"Game ended. Score won't be registered.\n**Result:** {pacManGame.score} points in {pacManGame.Time} turns");
                     }
-                }
-                catch (HttpException) { } // Something happened to the message, we can ignore it
-
-                if (Game is PacManGame pacManGame && Context.Guild != null)
-                {
-                    await ReplyAsync($"Game ended. Score won't be registered.\n**Result:** {pacManGame.score} points in {pacManGame.Time} turns");
+                    if (msg != null && Context.BotCan(ChannelPermission.ManageMessages))
+                    {
+                        try { await msg.RemoveAllReactionsAsync(DefaultOptions); }
+                        catch (HttpException) { }
+                    }
                 }
                 else
                 {

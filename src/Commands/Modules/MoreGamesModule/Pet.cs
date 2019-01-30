@@ -15,7 +15,7 @@ namespace PacManBot.Commands.Modules
     [Name("👾More Games"), Remarks("3")]
     public class PetGameModule : BaseGameModule<PetGame>
     {
-        private static readonly IEnumerable<MethodInfo> PetMethods = typeof(MoreGamesModule).GetMethods()
+        private static readonly IEnumerable<MethodInfo> PetMethods = typeof(PetGame).GetMethods()
             .Where(x => x.Get<PetCommandAttribute>()?.VerifyMethod(x) != null)
             .ToArray();
 
@@ -331,7 +331,7 @@ namespace PacManBot.Commands.Modules
         {
             if (Game != null) return $"You already have a pet!";
 
-            CreateGame(new PetGame(Args.Replace("@", "").Truncate(32), Context.User.Id, Services));
+            StartNewGame(new PetGame(Args.Replace("@", "").Truncate(32), Context.User.Id, Services));
             await PetSendProfile();
             return null;
         }

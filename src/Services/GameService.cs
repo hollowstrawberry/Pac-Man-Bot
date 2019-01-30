@@ -100,10 +100,6 @@ namespace PacManBot.Services
             try
             {
                 game.CancelRequests();
-                if (game is IStoreableGame sGame && File.Exists(sGame.GameFile()))
-                {
-                    File.Delete(sGame.GameFile());
-                }
 
                 bool success = false;
                 if (game is IUserGame uGame)
@@ -113,6 +109,11 @@ namespace PacManBot.Services
                 else if (game is IChannelGame cGame)
                 {
                     success = games.TryRemove(cGame.ChannelId);
+                }
+
+                if (game is IStoreableGame sGame && File.Exists(sGame.GameFile()))
+                {
+                    File.Delete(sGame.GameFile());
                 }
 
                 if (success && doLog)

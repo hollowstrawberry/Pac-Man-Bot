@@ -26,9 +26,9 @@ namespace PacManBot.Games.Concrete
 
         private TTT5Game() { }
 
-        protected override Task Initialize(ulong channelId, SocketUser[] players, IServiceProvider services)
+        protected override Task InitializeAsync(ulong channelId, SocketUser[] players, IServiceProvider services)
         {
-            base.Initialize(channelId, players, services);
+            base.InitializeAsync(channelId, players, services);
 
             board = new Player[5, 5];
             board.Fill(Player.None);

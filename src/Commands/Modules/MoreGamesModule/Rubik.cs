@@ -21,7 +21,7 @@ namespace PacManBot.Commands.Modules
         {
             if (Game == null)
             {
-                CreateGame(new RubiksGame(Context.Channel.Id, Context.User.Id, Services));
+                StartNewGame(new RubiksGame(Context.Channel.Id, Context.User.Id, Services));
             }
 
             bool removeOld = false;

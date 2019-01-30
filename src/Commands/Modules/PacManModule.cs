@@ -28,17 +28,10 @@ namespace PacManBot.Commands.Modules
                  "Use **{prefix}display** to change mode later.\n\nIf you add a valid customized map between \\`\\`\\`triple backticks\\`\\`\\`, " +
                  "it will start a custom game using that map instead. For more information about custom games, use the **{prefix}custom** command.\n\n" +
                  "Use **{prefix}bump** to move the game message to the bottom of the chat. Use **{prefix}cancel** to end the game. ")]
-        public async Task StartGameInstance([Remainder]string args = "")
+        public async Task StartGame([Remainder]string args = "")
         {
             if (!Context.BotCan(ChannelPermission.SendMessages)) return;
-
-            if (ExistingGame != null)
-            {
-                await ReplyAsync(ExistingGame.UserId.Contains(Context.User.Id) ?
-                    $"You're already playing a game in this channel!\nUse `{Context.Prefix}cancel` if you want to cancel it or `{Context.Prefix}bump` to bring it to the bottom." :
-                    $"There is already a different game in this channel!\nWait until it's finished or try doing `{Context.Prefix}cancel`");
-                return;
-            }
+            if (await CheckGameAlreadyExistsAsync()) return;
 
             string[] argSplice = args.Split("```");
             string preMessage = "";
@@ -69,12 +62,10 @@ namespace PacManBot.Commands.Modules
                 return;
             }
 
-            CreateGame(newGame);
+            StartNewGame(newGame);
+            var msg = await ReplyGameAsync(preMessage + Game.GetContent(showHelp: false) + "```diff\n+Starting game```");
 
-            var gameMessage = await ReplyAsync(preMessage + newGame.GetContent(showHelp: false) + "```diff\n+Starting game```");
-            newGame.MessageId = gameMessage.Id;
-
-            await AddControls(newGame, gameMessage);
+            await AddControls(Game, msg);
         }
 
 

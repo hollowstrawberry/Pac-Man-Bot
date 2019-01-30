@@ -70,7 +70,7 @@ namespace PacManBot.Games.Concrete
         public override ulong[] UserId
         {
             get => players?.Select(x => x.id).ToArray();
-            set => throw new InvalidOperationException($"Use {nameof(AddPlayer)} and {nameof(RemovePlayer)} instead");
+            set => throw new InvalidOperationException($"Use {nameof(TryAddPlayer)} and {nameof(RemovePlayer)} instead");
         }
 
 
@@ -239,9 +239,9 @@ namespace PacManBot.Games.Concrete
 
         private UnoGame() { }
 
-        protected override async Task Initialize(ulong channelId, SocketUser[] players, IServiceProvider services)
+        protected override async Task InitializeAsync(ulong channelId, SocketUser[] players, IServiceProvider services)
         {
-            await base.Initialize(channelId, null, services);
+            await base.InitializeAsync(channelId, null, services);
 
             // Make deck
             foreach (var color in EnumTraits<CardColor>.Values.Take(4))
@@ -278,7 +278,7 @@ namespace PacManBot.Games.Concrete
                 Message = inviteMsg;
             }
 
-            foreach (var player in toAdd) await AddPlayer(player);
+            foreach (var player in toAdd) await TryAddPlayer(player);
 
             ApplyCardEffect();
 
@@ -714,7 +714,8 @@ namespace PacManBot.Games.Concrete
 
 
 
-        public async Task<string> AddPlayer(IUser user)
+        /// <summary>Adds a new player to the game. Returns the fail reason if it can't be added.</summary>
+        public async Task<string> TryAddPlayer(IUser user)
         {
             if (players.Count == 10) return "The game is full!";
             if (players.Any(x => x.id == user.Id)) return "You're already playing!";
@@ -729,7 +730,9 @@ namespace PacManBot.Games.Concrete
         }
 
 
+        /// <summary>Removes a user from the game.</summary>
         public void RemovePlayer(IUser user) => RemovePlayer(players.First(x => x.id == user.Id));
+
         private void RemovePlayer(UnoPlayer player)
         {
             drawPile.AddRange(player.cards);

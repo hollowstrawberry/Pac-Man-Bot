@@ -11,7 +11,7 @@ namespace PacManBot.Games
     /// <summary>
     /// A specialized type of game that is channel-based and allows for inter-player mechanics as well as AI.
     /// Implements <see cref="IMultiplayerGame"/>.<para/>
-    /// Instances of its subclasses must be created using <see cref="CreateNew{TGame}(ulong, SocketUser[], IServiceProvider)"/>.
+    /// Instances of its subclasses must be created using <see cref="CreateNewAsync{TGame}(ulong, SocketUser[], IServiceProvider)"/>.
     /// </summary>
     public abstract class MultiplayerGame : ChannelGame, IMultiplayerGame
     {
@@ -46,20 +46,20 @@ namespace PacManBot.Games
 
 
         /// <summary>Creates a new instance of <typeparamref name="TGame"/> with the specified channel and players.</summary>
-        public static async Task<TGame> CreateNew<TGame>(ulong channelId, SocketUser[] players, IServiceProvider services)
+        public static async Task<TGame> CreateNewAsync<TGame>(ulong channelId, SocketUser[] players, IServiceProvider services)
             where TGame : MultiplayerGame
         {
             if (typeof(TGame).IsAbstract) throw new ArgumentException("Cannot instatiate abstract class");
 
             var game = typeof(TGame).CreateInstance<TGame>();
-            await game.Initialize(channelId, players, services);
+            await game.InitializeAsync(channelId, players, services);
             return game;
         }
 
 
         /// <summary>Does the job of a constructor during
-        /// <see cref="CreateNew{TGame}(ulong, SocketUser[], IServiceProvider)"/>.</summary>
-        protected virtual Task Initialize(ulong channelId, SocketUser[] players, IServiceProvider services)
+        /// <see cref="CreateNewAsync{TGame}(ulong, SocketUser[], IServiceProvider)"/>.</summary>
+        protected virtual Task InitializeAsync(ulong channelId, SocketUser[] players, IServiceProvider services)
         {
             SetServices(services);
 

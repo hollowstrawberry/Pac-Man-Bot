@@ -39,25 +39,25 @@ namespace PacManBot.Commands
             => await base.ReplyAsync(message, isTTS, embed, options ?? DefaultOptions);
 
         /// <summary>Sends a message in the current context, containing text and an embed, and using the default options if not specified.</summary>
-        public async Task<IUserMessage> ReplyAsync(object text, EmbedBuilder embed, RequestOptions options = null)
-            => await ReplyAsync(text?.ToString(), false, embed?.Build(), options);
+        public Task<IUserMessage> ReplyAsync(object text, EmbedBuilder embed, RequestOptions options = null)
+            => ReplyAsync(text?.ToString(), false, embed?.Build(), options);
 
         /// <summary>Sends a message in the current context containing only text, and using the default options if not specified.</summary>
-        public async Task<IUserMessage> ReplyAsync(object text, RequestOptions options = null)
-            => await ReplyAsync(text.ToString(), false, null, options);
+        public Task<IUserMessage> ReplyAsync(object text, RequestOptions options = null)
+            => ReplyAsync(text.ToString(), false, null, options);
 
         /// <summary>Sends a message in the current context containing only an embed, and using the default options if not specified.</summary>
-        public async Task<IUserMessage> ReplyAsync(EmbedBuilder embed, RequestOptions options = null)
-            => await ReplyAsync(null, false, embed.Build(), options);
+        public Task<IUserMessage> ReplyAsync(EmbedBuilder embed, RequestOptions options = null)
+            => ReplyAsync(null, false, embed.Build(), options);
 
         /// <summary>Sends a message in the current context containing only an embed, and using the default options if not specified.</summary>
-        public async Task<IUserMessage> ReplyAsync(Embed embed, RequestOptions options = null)
-            => await ReplyAsync(null, false, embed, options);
+        public Task<IUserMessage> ReplyAsync(Embed embed, RequestOptions options = null)
+            => ReplyAsync(null, false, embed, options);
 
 
         /// <summary>Reacts to the command's calling message with a check or cross.</summary>
-        public async Task AutoReactAsync(bool success = true)
-            => await Context.Message.AutoReactAsync(success);
+        public Task AutoReactAsync(bool success = true)
+            => Context.Message.AutoReactAsync(success);
 
 
         /// <summary>Returns whether the next message by the user in this context is equivalent to "yes".</summary>

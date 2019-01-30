@@ -40,7 +40,7 @@ namespace PacManBot.Commands.Modules
                 return;
             }
 
-            CreateGame(new HangmanGame(Context.Channel.Id, Services));
+            StartNewGame(new HangmanGame(Context.Channel.Id, Services));
             var message = await ReplyAsync(Game.GetEmbed());
             Game.MessageId = message.Id;
         }
@@ -68,7 +68,7 @@ namespace PacManBot.Commands.Modules
             }
 
 
-            CreateGame(new HangmanGame(Context.Channel.Id, Context.User.Id, Services));
+            StartNewGame(new HangmanGame(Context.Channel.Id, Context.User.Id, Services));
 
             var userChannel = await Context.User.GetOrCreateDMChannelAsync();
             try
