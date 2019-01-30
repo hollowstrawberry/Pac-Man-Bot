@@ -38,7 +38,7 @@ namespace PacManBot.Commands
         /// <summary>Obtains the game for the current context from the game service. Used to set <see cref="Game"/>.</summary>
         protected virtual TGame GetCurrentGame()
         {
-            return typeof(TGame).IsAssignableFrom(typeof(IUserGame))
+            return typeof(IUserGame).IsAssignableFrom(typeof(TGame))
                 ? (TGame)Games.GetForUser(Context.User.Id, typeof(TGame))
                 : (TGame)Games.GetForChannel(Context.Channel.Id);
         }
