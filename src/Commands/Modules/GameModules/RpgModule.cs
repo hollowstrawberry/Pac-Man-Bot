@@ -54,7 +54,7 @@ namespace PacManBot.Commands.Modules.GameModules
             "\n\n**__Commands:__**" +
             "\n**{prefix}rpg manual** - See detailed instructions for the game." +
             "\n\n**{prefix}rpg** - Start a new battle or resend the current battle." +
-            "\n**{prefix}rpg pvp <player>** - Challenge a user to a battle, or accept a user's challenge." +
+            "\n**{prefix}rpg pvp <player>** - Challenge a user to a battle!" +
             "\n**{prefix}rpg equip <item>** - Equip an item in your inventory." +
             "\n**{prefix}rpg heal** - Refill your HP, only once per battle." +
             "\n**{prefix}rpg cancel** - Cancel a battle, dying instantly against monsters." +
@@ -105,7 +105,7 @@ namespace PacManBot.Commands.Modules.GameModules
 
 
 
-        [RpgCommand("", "battle", "fight", "b", "rpg")]
+        [RpgCommand("", "battle", "fight", "b", "rpg", "bump")]
         public async Task<string> Battle()
         {
             if (Game.State == State.Active)
@@ -177,16 +177,24 @@ namespace PacManBot.Commands.Modules.GameModules
                 Game.fightEmbed = Game.Fight(-1, skill);
             }
 
-            if (Game.State == State.Active && (msg == null || msg.Channel.Id != Context.Channel.Id))
+            if (Game.State == State.Active)
             {
-                msg = await ReplyGameAsync();
-                SaveGame();
-                await AddBattleEmotes(msg, Game);
+                if (msg == null || msg.Channel.Id != Context.Channel.Id)
+                {
+                    msg = await ReplyGameAsync();
+                    SaveGame();
+                    await AddBattleEmotes(msg, Game);
+                }
+                else
+                {
+                    SaveGame();
+                    await UpdateGameMessageAsync();
+                }
             }
             else
             {
-                SaveGame();
-                await UpdateGameMessageAsync();
+                try { await msg.ModifyAsync(x => x.Embed = Game.fightEmbed.Build(), Game.GetRequestOptions()); }
+                catch (HttpException) { }
             }
 
             if (Context.BotCan(ChannelPermission.ManageMessages)) await Context.Message.DeleteAsync(DefaultOptions);
@@ -382,13 +390,26 @@ namespace PacManBot.Commands.Modules.GameModules
         [RpgCommand("name", "setname")]
         public async Task<string> SetPlayerName()
         {
-            if (ExtraArg == "") return "Please specify a new name.";
-            if (ExtraArg.Length > 32) return "Your name can't be longer than 32 characters.";
-            if (ExtraArg.Contains("@")) return $"Your name can't contain \"@\"";
+            var msg = Context.Message;
+            string name = ExtraArg;
 
-            Game.player.SetName(ExtraArg);
+            if (name == "")
+            {
+                await ReplyAsync("Say your hero's new name:");
+
+                msg = await GetResponseAsync();
+                if (msg == null) return "Timed out 💨";
+
+                name = msg.Content;
+                if (string.IsNullOrWhiteSpace(name)) return null;
+            }
+
+            if (name.Length > RpgGame.NameCharLimit) return "Your name can't be longer than 32 characters.";
+            if (name.Contains("@")) return $"Your name can't contain \"@\"";
+
+            Game.player.SetName(name);
             SaveGame();
-            await AutoReactAsync();
+            await msg.AutoReactAsync();
             return null;
         }
 
@@ -396,11 +417,21 @@ namespace PacManBot.Commands.Modules.GameModules
         [RpgCommand("color", "setcolor")]
         public async Task<string> SetPlayerColor()
         {
-            if (ExtraArg == "") return "Please specify a color name.";
+            if (ExtraArg == "")
+            {
+                await ReplyAsync("Say the name or hex code of your new color:");
+
+                var response = await GetResponseAsync(60);
+                if (response == null) return "Timed out 💨";
+
+                ExtraArg = response.Content;
+                if (string.IsNullOrWhiteSpace(ExtraArg)) return null;
+            }
 
             var color = ExtraArg.ToColor();
 
-            if (color == null) return "That is neither a valid color name or hex code. Example: `red` or `#FF0000`";
+            if (color == null) return $"{CustomEmoji.Cross} That is neither a valid color name or hex code. " +
+                                      $"Example: `red` or `#FF0000`";
 
             Game.player.Color = color.Value;
             SaveGame();
@@ -427,6 +458,7 @@ namespace PacManBot.Commands.Modules.GameModules
             if (Game.IsPvp)
             {
                 reply = "PVP match cancelled.";
+
                 if (Game.PvpBattleConfirmed) Game.PvpGame.ResetBattle(State.Completed);
             }
             else
@@ -444,46 +476,75 @@ namespace PacManBot.Commands.Modules.GameModules
         public async Task<string> StartPvpBattle()
         {
             if (Game.State == State.Active) return "You're already busy fighting.";
-            if (ExtraArg == "") return "You must specify a person to challenge in a PVP battle.";
 
-            RpgGame otherGame = null;
+            if (ExtraArg == "")
+            {
+                await ReplyAsync("Specify the user you want to challenge:");
+                var rsp = await GetResponseAsync();
+                if (rsp == null) return "Timed out 💨";
+                ExtraArg = rsp.Content;
+            }
+
             var otherUser = await Context.ParseUserAsync(ExtraArg);
-
             if (otherUser == null) return "Can't find that user to challenge!";
             if (otherUser.Id == Context.User.Id) return "You can't battle yourself, smart guy.";
-            if ((otherGame = Games.GetForUser<RpgGame>(otherUser.Id)) == null) return "This person doesn't have a hero.";
 
-            if (otherGame.pvpUserId == Context.User.Id) // Accept fight
+            var otherGame = Games.GetForUser<RpgGame>(otherUser.Id);
+            if (otherGame == null) return "This person doesn't have a hero.";
+            if (otherGame.State == State.Active) return "This person is already busy fighting.";
+
+            Game.StartFight(otherUser.Id);
+            Game.isPvpTurn = false;
+
+            string content = $"{otherUser.Mention} You are being challenged to a PVP battle.\n" +
+                             $"Send \"accept\" to accept the challenge, or \"cancel\" to deny.\n" +
+                             $"You should heal first!";
+
+            Game.fightEmbed = Game.FightPvP();
+            var msg = await ReplyGameAsync(content);
+
+            var response = await Input.GetResponseAsync(x =>
+                x.Channel.Id == Context.Channel.Id && x.Author.Id == otherUser.Id
+                && new[] { "accept", "cancel" }.Contains(x.Content.ToLowerInvariant()), 120);
+
+            if (Game.pvpUserId != otherUser.Id) return null; // Cancelled by challenger before getting a response
+
+            if (response == null)
             {
-                Game.StartFight(otherUser.Id);
-                Game.isPvpTurn = true;
-                Game.ChannelId = otherGame.ChannelId;
-                Game.MessageId = otherGame.MessageId;
-                SaveGame();
-                await AutoReactAsync();
+                Game.ResetBattle(State.Cancelled);
 
-                var msg = await otherGame.GetMessage();
+                try { await msg.ModifyAsync(x => { x.Content = "Timed out 💨"; x.Embed = null; }); }
+                catch (HttpException) { return "Timed out 💨"; }
+                return null;
+            }
+            else if (response.Content.Equals("cancel", StringComparison.OrdinalIgnoreCase))
+            {
+                Game.ResetBattle(State.Cancelled);
+
+                try { await msg.ModifyAsync(x => { x.Content = "Battle cancelled ⚔"; x.Embed = null; }); }
+                catch (HttpException) { return "Battle cancelled ⚔"; }
+
+                await response.AutoReactAsync();
+                return null;
+            }
+            else
+            {
+                otherGame.StartFight(Context.User.Id);
+                otherGame.isPvpTurn = true;
+                otherGame.ChannelId = Game.ChannelId;
+                otherGame.MessageId = Game.MessageId;
+                Games.Save(Game);
+                Games.Save(otherGame);
+
+                await response.AutoReactAsync();
+
                 Game.fightEmbed = Game.FightPvP();
-                Game.CancelRequests();
-                Game.PvpGame.CancelRequests();
+                otherGame.fightEmbed = Game.fightEmbed;
+                otherGame.CancelRequests();
+                otherGame.PvpGame.CancelRequests();
 
-                await UpdateGameMessageAsync();
+                msg = await SendOrUpdateGameMessageAsync();
                 await AddBattleEmotes(msg, Game);
-            }
-            else if (otherGame.State == State.Active)
-            {
-                return "This person is already busy fighting.";
-            }
-            else // Propose fight
-            {
-                Game.StartFight(otherUser.Id);
-                Game.isPvpTurn = false;
-                string content = $"{otherUser.Mention} do **{Context.Prefix}rpg pvp {Context.User.Mention}** " +
-                                 $"to accept the challenge. You should heal first.";
-
-                Game.fightEmbed = Game.FightPvP();
-                await ReplyGameAsync();
-                SaveGame();
             }
 
             return null;
@@ -509,7 +570,7 @@ namespace PacManBot.Commands.Modules.GameModules
                 $"❗ You're about to completely delete your progress in ReactionRPG.\n" +
                 $"Are you sure you want to delete your level {Game.player.Level} hero? (Yes/No)");
 
-            if (await GetYesResponse())
+            if (await GetYesResponseAsync())
             {
                 EndGame();
                 return "Hero deleted 💀";

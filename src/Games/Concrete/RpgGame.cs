@@ -19,6 +19,7 @@ namespace PacManBot.Games.Concrete
         public override TimeSpan Expiry => TimeSpan.FromDays(100);
 
 
+        public const int NameCharLimit = 32;
         public const string MenuEmote = "🛂";
         public const string ProfileEmote = "🚹";
         public const string SkillsEmote = "🅿";
@@ -328,8 +329,7 @@ namespace PacManBot.Games.Concrete
                 else
                 {
                     string prefix = storage.GetPrefix(Channel);
-                    desc.AppendLine($"{PvpGame.player} must challenge you back to start." +
-                                    $"\nThe challenger can cancel with {prefix}rpg cancel");
+                    desc.AppendLine($"Waiting for {PvpGame.Owner.Mention} to accept the challenge.");
                 }
             }
 
