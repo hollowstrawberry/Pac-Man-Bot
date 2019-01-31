@@ -89,7 +89,7 @@ List of special characters:
  `O`: Pac-Man
  `G`: Ghosts, up to 4
  `-`: Ghost box door
- `.` and `o`: Pellet and Super Pellet
+ `·` and `●`: Pellet and Super Pellet
  `$`: Fruit (left tile)
  `~`: A pellet, but ghosts can't move here from below
  `_`: Empty, but ghosts can't move here from below",
