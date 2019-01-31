@@ -89,7 +89,7 @@ namespace PacManBot.Commands.Modules.GameModules
 
                 foreach (var input in PacManGame.GameInputs.Keys)
                 {
-                    if (game.State != State.Active) break;
+                    if (game.State != GameState.Active) break;
                     await message.AddReactionAsync(input, DefaultOptions);
                 }
 

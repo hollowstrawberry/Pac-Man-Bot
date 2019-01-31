@@ -52,7 +52,7 @@ namespace PacManBot.Games.Concrete
 
         // Properties
 
-        [DataMember] public override State State { get; set; }
+        [DataMember] public override GameState State { get; set; }
         [DataMember] public override DateTime LastPlayed { get; set; }
         [DataMember] public override int Time { get; set; }
         [DataMember] public override ulong ChannelId { get; set; }
@@ -65,7 +65,7 @@ namespace PacManBot.Games.Concrete
         private Player FollowingTurn => reversed ? PreviousPlayer() : NextPlayer();
         private Player PrecedingTurn => reversed ? NextPlayer() : PreviousPlayer();
 
-        public override bool BotTurn => players.Count > 1 && State == State.Active && CurrentPlayer.User.IsBot;
+        public override bool BotTurn => players.Count > 1 && State == GameState.Active && CurrentPlayer.User.IsBot;
         public override bool AllBots => players.All(x => x.User?.IsBot ?? false);
         public override ulong[] UserId
         {
@@ -424,7 +424,7 @@ namespace PacManBot.Games.Concrete
                 }
                 else if (CurrentPlayer.cards.Count == 0)
                 {
-                    State = State.Completed;
+                    State = GameState.Completed;
                     Winner = Turn;
                     if (CurrentPlayer.id == client.CurrentUser.Id) gameLog.Add($"\n {Program.Random.Choose(Content.gameWinTexts)}");
                     return;
@@ -505,7 +505,7 @@ namespace PacManBot.Games.Concrete
 
         public override EmbedBuilder GetEmbed(bool showHelp = true)
         {
-            if (State == State.Cancelled) return CancelledEmbed();
+            if (State == GameState.Cancelled) return CancelledEmbed();
 
             var description = new StringBuilder();
             string prefix = storage.GetPrefix(Channel);
@@ -522,7 +522,7 @@ namespace PacManBot.Games.Concrete
             }
             description.Append($"\n```\n{TopCard.ToStringBig()}\n");
 
-            if (State == State.Active)
+            if (State == GameState.Active)
             {
                 description.Append(
                     $"{Empty}\nSay the name of a card to discard it or \"draw\" to draw another.\n" +
@@ -551,7 +551,7 @@ namespace PacManBot.Games.Concrete
 
         public override string GetContent(bool showHelp = true)
         {
-            if (State == State.Cancelled) return "";
+            if (State == GameState.Cancelled) return "";
 
             return $"{gameLog.JoinString("\n")}\n{Message}".TruncateStart(2000);
         }

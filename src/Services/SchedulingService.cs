@@ -119,7 +119,7 @@ namespace PacManBot.Services
             foreach (var game in expiredGames)
             {
                 count++;
-                game.State = State.Cancelled;
+                game.State = GameState.Cancelled;
                 games.Remove(game, false);
 
                 if (game is IChannelGame cGame) removedChannelGames.Add(cGame);

@@ -29,7 +29,7 @@ namespace PacManBot.Games
 
 
         /// <summary>Whether the current turn belongs to a bot.</summary>
-        public virtual bool BotTurn => State == State.Active && (User(Turn)?.IsBot ?? false);
+        public virtual bool BotTurn => State == GameState.Active && (User(Turn)?.IsBot ?? false);
 
         /// <summary>Whether this game's players are all bots.</summary>
         public virtual bool AllBots => new Range(UserId.Length).All(x => User(x)?.IsBot ?? false);
@@ -85,7 +85,7 @@ namespace PacManBot.Games
         /// <summary>Default string content of a multiplayer game message. Displays flavor text in AI matches.</summary>
         public override string GetContent(bool showHelp = true)
         {
-            if (State != State.Cancelled && UserId.Count(id => id == client.CurrentUser.Id) == 1)
+            if (State != GameState.Cancelled && UserId.Count(id => id == client.CurrentUser.Id) == 1)
             {
                 var texts = new[] { Message };
 
@@ -107,7 +107,7 @@ namespace PacManBot.Games
                 return Message = Program.Random.Choose(texts);
             }
 
-            if (State == State.Active)
+            if (State == GameState.Active)
             {
                 if (UserId[0] == UserId[1] && !UserId.Contains(client.CurrentUser.Id))
                 {

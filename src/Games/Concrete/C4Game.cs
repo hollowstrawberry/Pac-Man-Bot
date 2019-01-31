@@ -47,7 +47,7 @@ namespace PacManBot.Games.Concrete
 
         public void Input(string input, ulong userId = 1)
         {
-            if (State != State.Active) return;
+            if (State != GameState.Active) return;
             LastPlayed = DateTime.Now;
 
             int column = int.Parse(StripPrefix(input)) - 1;
@@ -66,7 +66,7 @@ namespace PacManBot.Games.Concrete
             }
             else
             {
-                State = State.Completed;
+                State = GameState.Completed;
                 Turn = Winner;
             }
         }
@@ -74,7 +74,7 @@ namespace PacManBot.Games.Concrete
 
         public override EmbedBuilder GetEmbed(bool showHelp = true)
         {
-            if (State == State.Cancelled) return CancelledEmbed();
+            if (State == GameState.Cancelled) return CancelledEmbed();
 
             var description = new StringBuilder();
 
@@ -86,7 +86,7 @@ namespace PacManBot.Games.Concrete
 
             description.Append($"{Empty}\n");
 
-            if (State == State.Active)
+            if (State == GameState.Active)
             {
                 var columns = AvailableColumns(board);
                 for (int x = 0; x < Columns; x++) description.Append(columns.Contains(x) ? CustomEmoji.NumberCircle[x + 1] : CustomEmoji.Empty);
@@ -102,7 +102,7 @@ namespace PacManBot.Games.Concrete
                 description.Append('\n');
             }
 
-            if (State == State.Active) description.Append($"{Empty}\n*Say the number of a column (1 to 7) to drop a piece*");
+            if (State == GameState.Active) description.Append($"{Empty}\n*Say the number of a column (1 to 7) to drop a piece*");
 
 
             return new EmbedBuilder()

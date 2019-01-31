@@ -30,7 +30,7 @@ namespace PacManBot.Commands
 
             if (Game.AllBots) // Bot loop
             {
-                while (Game.State == State.Active)
+                while (Game.State == GameState.Active)
                 {
                     try
                     {

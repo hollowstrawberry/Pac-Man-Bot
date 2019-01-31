@@ -50,7 +50,7 @@ namespace PacManBot.Games.Concrete
             int x = input[0] - 'A';
             int y = input[1] - '1';
 
-            if (State != State.Active || board[x, y] != Player.None) return; // Cell is already occupied
+            if (State != GameState.Active || board[x, y] != Player.None) return; // Cell is already occupied
 
             board[x, y] = Turn;
             Time++;
@@ -62,7 +62,7 @@ namespace PacManBot.Games.Concrete
             }
             else
             {
-                State = State.Completed;
+                State = GameState.Completed;
                 Turn = Winner;
             }
         }
@@ -70,7 +70,7 @@ namespace PacManBot.Games.Concrete
 
         public override EmbedBuilder GetEmbed(bool showHelp = true)
         {
-            if (State == State.Cancelled) return CancelledEmbed();
+            if (State == GameState.Cancelled) return CancelledEmbed();
 
             var description = new StringBuilder();
 
@@ -95,7 +95,7 @@ namespace PacManBot.Games.Concrete
                 description.Append('\n');
             }
 
-            if (State == State.Active)
+            if (State == GameState.Active)
             {
                 description.Append($"{Empty}\nSay a column and row to place an {(Turn == Player.Red ? "X" : "O")} in that cell (Example: B4)");
                 description.Append("\nTo win you must make **more lines of three** than your opponent,\n" +

@@ -108,7 +108,7 @@ namespace PacManBot.Commands.Modules.GameModules
         [RpgCommand("", "battle", "fight", "b", "rpg", "bump")]
         public async Task<string> Battle()
         {
-            if (Game.State == State.Active)
+            if (Game.State == GameState.Active)
             {
                 await DeleteGameMessageAsync();
             }
@@ -142,7 +142,7 @@ namespace PacManBot.Commands.Modules.GameModules
 
         public async Task<string> UseActiveSkill(Skill skill)
         {
-            if (Game.State != State.Active)
+            if (Game.State != GameState.Active)
                 return "You can only use an active skill during battle!";
             if (Game.IsPvp && !Game.isPvpTurn)
                 return "It's not your turn.";
@@ -177,7 +177,7 @@ namespace PacManBot.Commands.Modules.GameModules
                 Game.fightEmbed = Game.Fight(-1, skill);
             }
 
-            if (Game.State == State.Active)
+            if (Game.State == GameState.Active)
             {
                 if (msg == null || msg.Channel.Id != Context.Channel.Id)
                 {
@@ -236,7 +236,7 @@ namespace PacManBot.Commands.Modules.GameModules
         [RpgCommand("heal", "h", "potion")]
         public async Task<string> HealPlayer()
         {
-            if (Game.lastHeal > Game.lastBattle && Game.State == State.Active)
+            if (Game.lastHeal > Game.lastBattle && Game.State == GameState.Active)
                 return $"{CustomEmoji.Cross} You already healed during this battle.";
             else if (Game.IsPvp && Game.PvpBattleConfirmed)
                 return $"{CustomEmoji.Cross} You can't heal in a PVP battle.";
@@ -253,7 +253,7 @@ namespace PacManBot.Commands.Modules.GameModules
 
             await ReplyAsync($"💟 Fully restored!");
 
-            if (Game.State == State.Active)
+            if (Game.State == GameState.Active)
             {
                 var message = await Game.GetMessage();
                 if (message != null)
@@ -294,14 +294,14 @@ namespace PacManBot.Commands.Modules.GameModules
             if (bestPercent < 0.69)
                 return $"Can't find a weapon with that name in your inventory." +
                        $" Did you mean `{bestMatch}`?".If(bestPercent > 0.39);
-            if (bestMatch is Armor && Game.State == State.Active)
+            if (bestMatch is Armor && Game.State == GameState.Active)
                 return "You can't switch armors mid-battle (but you can switch weapons).";
 
             Game.player.EquipItem(bestMatch.Key);
             SaveGame();
             await ReplyAsync($"⚔ Equipped `{bestMatch}`.");
 
-            if (Game.State == State.Active && !Game.IsPvp)
+            if (Game.State == GameState.Active && !Game.IsPvp)
             {
                 Game.lastEmote = RpgGame.ProfileEmote;
                 Game.fightEmbed = Game.player.Profile(Context.Prefix, reaction: true);
@@ -376,7 +376,7 @@ namespace PacManBot.Commands.Modules.GameModules
                     $"\nUse with the command: `{Context.Prefix}rpg {sk.Shortcut}`");
             }
 
-            if (Game.State == State.Active && !Game.IsPvp)
+            if (Game.State == GameState.Active && !Game.IsPvp)
             {
                 Game.lastEmote = RpgGame.SkillsEmote;
                 Game.fightEmbed = Game.player.Skills(Context.Prefix, true);
@@ -449,7 +449,7 @@ namespace PacManBot.Commands.Modules.GameModules
         [RpgCommand("cancel", "die", "end", "killme")]
         public async Task<string> CancelBattle()
         {
-            if (Game.State != State.Active) return "You're not fighting anything.";
+            if (Game.State != GameState.Active) return "You're not fighting anything.";
 
             string reply = "";
 
@@ -459,14 +459,14 @@ namespace PacManBot.Commands.Modules.GameModules
             {
                 reply = "PVP match cancelled.";
 
-                if (Game.PvpBattleConfirmed) Game.PvpGame.ResetBattle(State.Completed);
+                if (Game.PvpBattleConfirmed) Game.PvpGame.ResetBattle(GameState.Completed);
             }
             else
             {
                 reply = Game.player.Die();
             }
 
-            Game.ResetBattle(State.Completed);
+            Game.ResetBattle(GameState.Completed);
 
             return reply;
         }
@@ -475,7 +475,7 @@ namespace PacManBot.Commands.Modules.GameModules
         [RpgCommand("pvp", "vs", "challenge")]
         public async Task<string> StartPvpBattle()
         {
-            if (Game.State == State.Active) return "You're already busy fighting.";
+            if (Game.State == GameState.Active) return "You're already busy fighting.";
 
             if (ExtraArg == "")
             {
@@ -491,7 +491,7 @@ namespace PacManBot.Commands.Modules.GameModules
 
             var otherGame = Games.GetForUser<RpgGame>(otherUser.Id);
             if (otherGame == null) return "This person doesn't have a hero.";
-            if (otherGame.State == State.Active) return "This person is already busy fighting.";
+            if (otherGame.State == GameState.Active) return "This person is already busy fighting.";
 
             Game.StartFight(otherUser.Id);
             Game.isPvpTurn = false;
@@ -511,7 +511,7 @@ namespace PacManBot.Commands.Modules.GameModules
 
             if (response == null)
             {
-                Game.ResetBattle(State.Cancelled);
+                Game.ResetBattle(GameState.Cancelled);
 
                 try { await msg.ModifyAsync(x => { x.Content = "Timed out 💨"; x.Embed = null; }); }
                 catch (HttpException) { return "Timed out 💨"; }
@@ -519,7 +519,7 @@ namespace PacManBot.Commands.Modules.GameModules
             }
             else if (response.Content.Equals("cancel", StringComparison.OrdinalIgnoreCase))
             {
-                Game.ResetBattle(State.Cancelled);
+                Game.ResetBattle(GameState.Cancelled);
 
                 try { await msg.ModifyAsync(x => { x.Content = "Battle cancelled ⚔"; x.Embed = null; }); }
                 catch (HttpException) { return "Battle cancelled ⚔"; }

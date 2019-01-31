@@ -266,7 +266,7 @@ namespace PacManBot.Services
             {
                 while(mGame.BotTurn) mGame.BotInput();
             }
-            if (game.State != State.Active) games.Remove(game);
+            if (game.State != GameState.Active) games.Remove(game);
 
             if (gameMessage != null && await message.Channel.BotCan(ChannelPermission.ManageMessages))
             {
@@ -303,11 +303,11 @@ namespace PacManBot.Services
 
             game.Input(reaction.Emote, user.Id);
 
-            if (game.State != State.Active)
+            if (game.State != GameState.Active)
             {
                 if (!(game is IUserGame)) games.Remove(game);
 
-                if (game is PacManGame pmGame && pmGame.State != State.Cancelled && !pmGame.custom)
+                if (game is PacManGame pmGame && pmGame.State != GameState.Cancelled && !pmGame.custom)
                 {
                     storage.AddScore(new ScoreEntry(pmGame.score, user.Id, pmGame.State, pmGame.Time,
                         user.NameandDisc(), $"{guild?.Name}/{channel.Name}", DateTime.Now));

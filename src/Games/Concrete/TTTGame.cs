@@ -49,7 +49,7 @@ namespace PacManBot.Games.Concrete
             int y = cell / board.Width;
             int x = cell % board.Width;
 
-            if (State != State.Active || board[x, y] != Player.None) return;
+            if (State != GameState.Active || board[x, y] != Player.None) return;
 
             board[x, y] = Turn;
             Time++;
@@ -64,7 +64,7 @@ namespace PacManBot.Games.Concrete
             }
             else
             {
-                State = State.Completed;
+                State = GameState.Completed;
                 Turn = Winner;
             }
         }
@@ -72,7 +72,7 @@ namespace PacManBot.Games.Concrete
 
         public override EmbedBuilder GetEmbed(bool showHelp = true)
         {
-            if (State == State.Cancelled) return CancelledEmbed();
+            if (State == GameState.Cancelled) return CancelledEmbed();
 
             var description = new StringBuilder();
 
@@ -88,12 +88,12 @@ namespace PacManBot.Games.Concrete
                 for (int x = 0; x < board.Width; x++)
                 {
                     description.Append(board[x, y].Symbol(highlighted.Contains((x, y))) ??
-                        (State == State.Active ? $"{CustomEmoji.NumberCircle[1 + board.Width*y + x]}" : Player.None.Circle()));
+                        (State == GameState.Active ? $"{CustomEmoji.NumberCircle[1 + board.Width*y + x]}" : Player.None.Circle()));
                 }
                 description.Append('\n');
             }
 
-            if (State == State.Active) description.Append($"{Empty}\n*Say the number of a cell (1 to 9) to place an {(Turn == Player.Red ? "X" : "O")}*");
+            if (State == GameState.Active) description.Append($"{Empty}\n*Say the number of a cell (1 to 9) to place an {(Turn == Player.Red ? "X" : "O")}*");
 
             return new EmbedBuilder
             {

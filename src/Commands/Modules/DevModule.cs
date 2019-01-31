@@ -429,7 +429,7 @@ namespace PacManBot.Commands.Modules
             {
                 try
                 {
-                    if (game.State == State.Active) game.Input(move);
+                    if (game.State == GameState.Active) game.Input(move);
                     else break;
                 }
                 catch (Exception e)
@@ -450,7 +450,7 @@ namespace PacManBot.Commands.Modules
                 await msg.ModifyAsync(game.GetMessageUpdate(), DefaultOptions);
             }
 
-            if (game.State != State.Active) Games.Remove(game);
+            if (game.State != GameState.Active) Games.Remove(game);
 
             await AutoReactAsync(success);
         }
