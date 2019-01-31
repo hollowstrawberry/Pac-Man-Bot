@@ -104,6 +104,9 @@
       <a class="xref" href="PacManBot.Games.ChannelGame.html#PacManBot_Games_ChannelGame_StripPrefix_System_String_">ChannelGame.StripPrefix(String)</a>
     </div>
     <div>
+      <a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_Empty">BaseGame.Empty</a>
+    </div>
+    <div>
       <a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_client">BaseGame.client</a>
     </div>
     <div>
@@ -181,7 +184,7 @@ public class PacManGame : ChannelGame, IReactionsGame, IChannelGame, IStoreableG
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PacManGame__ctor_System_UInt64_System_UInt64_System_String_System_Boolean_System_IServiceProvider_.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PacManGame.%23ctor(System.UInt64%2CSystem.UInt64%2CSystem.String%2CSystem.Boolean%2CSystem.IServiceProvider)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PacManGame.cs/#L210">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PacManGame.cs/#L212">View Source</a>
   </span>
   <a id="PacManBot_Games_Concrete_PacManGame__ctor_" data-uid="PacManBot.Games.Concrete.PacManGame.#ctor*"></a>
   <h4 id="PacManBot_Games_Concrete_PacManGame__ctor_System_UInt64_System_UInt64_System_String_System_Boolean_System_IServiceProvider_" data-uid="PacManBot.Games.Concrete.PacManGame.#ctor(System.UInt64,System.UInt64,System.String,System.Boolean,System.IServiceProvider)">PacManGame(UInt64, UInt64, String, Boolean, IServiceProvider)</h4>
@@ -623,7 +626,7 @@ public override ulong OwnerId { get; protected set; }</code></pre>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[DataMember]
-public override State State { get; set; }</code></pre>
+public override GameState State { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -635,7 +638,7 @@ public override State State { get; set; }</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="PacManBot.Games.State.html">State</a></td>
+        <td><a class="xref" href="PacManBot.Games.GameState.html">GameState</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -682,7 +685,7 @@ public override int Time { get; set; }</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PacManGame_GetContent_System_Boolean_.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PacManGame.GetContent(System.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PacManGame.cs/#L398">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PacManGame.cs/#L400">View Source</a>
   </span>
   <a id="PacManBot_Games_Concrete_PacManGame_GetContent_" data-uid="PacManBot.Games.Concrete.PacManGame.GetContent*"></a>
   <h4 id="PacManBot_Games_Concrete_PacManGame_GetContent_System_Boolean_" data-uid="PacManBot.Games.Concrete.PacManGame.GetContent(System.Boolean)">GetContent(Boolean)</h4>
@@ -731,7 +734,7 @@ public override int Time { get; set; }</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PacManGame_GetEmbed_System_Boolean_.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PacManGame.GetEmbed(System.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PacManGame.cs/#L538">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PacManGame.cs/#L540">View Source</a>
   </span>
   <a id="PacManBot_Games_Concrete_PacManGame_GetEmbed_" data-uid="PacManBot.Games.Concrete.PacManGame.GetEmbed*"></a>
   <h4 id="PacManBot_Games_Concrete_PacManGame_GetEmbed_System_Boolean_" data-uid="PacManBot.Games.Concrete.PacManGame.GetEmbed(System.Boolean)">GetEmbed(Boolean)</h4>
@@ -780,7 +783,7 @@ public override int Time { get; set; }</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PacManGame_Input_Discord_IEmote_System_UInt64_.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PacManGame.Input(Discord.IEmote%2CSystem.UInt64)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PacManGame.cs/#L260">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PacManGame.cs/#L262">View Source</a>
   </span>
   <a id="PacManBot_Games_Concrete_PacManGame_Input_" data-uid="PacManBot.Games.Concrete.PacManGame.Input*"></a>
   <h4 id="PacManBot_Games_Concrete_PacManGame_Input_Discord_IEmote_System_UInt64_" data-uid="PacManBot.Games.Concrete.PacManGame.Input(Discord.IEmote,System.UInt64)">Input(IEmote, UInt64)</h4>
@@ -817,7 +820,7 @@ public override int Time { get; set; }</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PacManGame_IsInput_Discord_IEmote_System_UInt64_.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PacManGame.IsInput(Discord.IEmote%2CSystem.UInt64)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PacManGame.cs/#L254">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PacManGame.cs/#L256">View Source</a>
   </span>
   <a id="PacManBot_Games_Concrete_PacManGame_IsInput_" data-uid="PacManBot.Games.Concrete.PacManGame.IsInput*"></a>
   <h4 id="PacManBot_Games_Concrete_PacManGame_IsInput_Discord_IEmote_System_UInt64_" data-uid="PacManBot.Games.Concrete.PacManGame.IsInput(Discord.IEmote,System.UInt64)">IsInput(IEmote, UInt64)</h4>
@@ -869,7 +872,7 @@ public override int Time { get; set; }</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PacManGame_PostDeserialize_System_IServiceProvider_.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PacManGame.PostDeserialize(System.IServiceProvider)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PacManGame.cs/#L693">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PacManGame.cs/#L695">View Source</a>
   </span>
   <a id="PacManBot_Games_Concrete_PacManGame_PostDeserialize_" data-uid="PacManBot.Games.Concrete.PacManGame.PostDeserialize*"></a>
   <h4 id="PacManBot_Games_Concrete_PacManGame_PostDeserialize_System_IServiceProvider_" data-uid="PacManBot.Games.Concrete.PacManGame.PostDeserialize(System.IServiceProvider)">PostDeserialize(IServiceProvider)</h4>

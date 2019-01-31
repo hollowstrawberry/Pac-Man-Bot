@@ -5,10 +5,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Class ModModule
+    <title>Class PacManModule
    </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Class ModModule
+    <meta name="title" content="Class PacManModule
    ">
     <meta name="generator" content="docfx 2.40.7.0">
     
@@ -68,10 +68,10 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="PacManBot.Commands.Modules.ModModule">
+            <article class="content wrap" id="_content" data-uid="PacManBot.Commands.Modules.GameModules.PacManModule">
   
   
-  <h1 id="PacManBot_Commands_Modules_ModModule" data-uid="PacManBot.Commands.Modules.ModModule" class="text-break">Class ModModule
+  <h1 id="PacManBot_Commands_Modules_GameModules_PacManModule" data-uid="PacManBot.Commands.Modules.GameModules.PacManModule" class="text-break">Class PacManModule
   </h1>
   <div class="markdown level0 summary"></div>
   <div class="markdown level0 conceptual"></div>
@@ -80,10 +80,53 @@
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><span class="xref">Discord.Commands.ModuleBase</span>&lt;<a class="xref" href="PacManBot.Commands.PmCommandContext.html">PmCommandContext</a>&gt;</div>
     <div class="level2"><a class="xref" href="PacManBot.Commands.BaseModule.html">BaseModule</a></div>
-    <div class="level3"><span class="xref">ModModule</span></div>
+    <div class="level3"><a class="xref" href="PacManBot.Commands.BaseGameModule-1.html">BaseGameModule</a>&lt;<a class="xref" href="PacManBot.Games.Concrete.PacManGame.html">PacManGame</a>&gt;</div>
+    <div class="level4"><span class="xref">PacManModule</span></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="PacManBot.Commands.BaseGameModule-1.html#PacManBot_Commands_BaseGameModule_1_Services">BaseGameModule&lt;PacManGame&gt;.Services</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Commands.BaseGameModule-1.html#PacManBot_Commands_BaseGameModule_1_Commands">BaseGameModule&lt;PacManGame&gt;.Commands</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Commands.BaseGameModule-1.html#PacManBot_Commands_BaseGameModule_1_Games">BaseGameModule&lt;PacManGame&gt;.Games</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Commands.BaseGameModule-1.html#PacManBot_Commands_BaseGameModule_1_Game">BaseGameModule&lt;PacManGame&gt;.Game</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Commands.BaseGameModule-1.html#PacManBot_Commands_BaseGameModule_1_BeforeExecute_Discord_Commands_CommandInfo_">BaseGameModule&lt;PacManGame&gt;.BeforeExecute(CommandInfo)</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Commands.BaseGameModule-1.html#PacManBot_Commands_BaseGameModule_1_GetCurrentGame">BaseGameModule&lt;PacManGame&gt;.GetCurrentGame()</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Commands.BaseGameModule-1.html#PacManBot_Commands_BaseGameModule_1_EndGame_PacManBot_Games_GameState_">BaseGameModule&lt;PacManGame&gt;.EndGame(GameState)</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Commands.BaseGameModule-1.html#PacManBot_Commands_BaseGameModule_1_StartNewGame__0_">BaseGameModule&lt;PacManGame&gt;.StartNewGame(PacManGame)</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Commands.BaseGameModule-1.html#PacManBot_Commands_BaseGameModule_1_SaveGame">BaseGameModule&lt;PacManGame&gt;.SaveGame()</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Commands.BaseGameModule-1.html#PacManBot_Commands_BaseGameModule_1_ReplyGameAsync_System_String_">BaseGameModule&lt;PacManGame&gt;.ReplyGameAsync(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Commands.BaseGameModule-1.html#PacManBot_Commands_BaseGameModule_1_DeleteGameMessageAsync">BaseGameModule&lt;PacManGame&gt;.DeleteGameMessageAsync()</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Commands.BaseGameModule-1.html#PacManBot_Commands_BaseGameModule_1_UpdateGameMessageAsync">BaseGameModule&lt;PacManGame&gt;.UpdateGameMessageAsync()</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Commands.BaseGameModule-1.html#PacManBot_Commands_BaseGameModule_1_SendOrUpdateGameMessageAsync">BaseGameModule&lt;PacManGame&gt;.SendOrUpdateGameMessageAsync()</a>
+    </div>
+    <div>
+      <a class="xref" href="PacManBot.Commands.BaseGameModule-1.html#PacManBot_Commands_BaseGameModule_1_CheckGameAlreadyExistsAsync">BaseGameModule&lt;PacManGame&gt;.CheckGameAlreadyExistsAsync()</a>
+    </div>
     <div>
       <a class="xref" href="PacManBot.Commands.BaseModule.html#PacManBot_Commands_BaseModule_DefaultOptions">BaseModule.DefaultOptions</a>
     </div>
@@ -133,9 +176,6 @@
       <a class="xref" href="PacManBot.Commands.BaseModule.html#PacManBot_Commands_BaseModule_GetResponseAsync_System_Func_Discord_WebSocket_SocketUserMessage_System_Boolean__System_Int32_">BaseModule.GetResponseAsync(Func&lt;SocketUserMessage, Boolean&gt;, Int32)</a>
     </div>
     <div>
-      <span class="xref">Discord.Commands.ModuleBase&lt;PacManBot.Commands.PmCommandContext&gt;.BeforeExecute(Discord.Commands.CommandInfo)</span>
-    </div>
-    <div>
       <span class="xref">Discord.Commands.ModuleBase&lt;PacManBot.Commands.PmCommandContext&gt;.AfterExecute(Discord.Commands.CommandInfo)</span>
     </div>
     <div>
@@ -166,36 +206,30 @@
       <span class="xref">System.Object.ToString()</span>
     </div>
   </div>
-  <h6><strong>Namespace</strong>: <a class="xref" href="PacManBot.Commands.Modules.html">PacManBot.Commands.Modules</a></h6>
+  <h6><strong>Namespace</strong>: <a class="xref" href="PacManBot.Commands.Modules.GameModules.html">PacManBot.Commands.Modules.GameModules</a></h6>
   <h6><strong>Assembly</strong>: Pacman.dll</h6>
-  <h5 id="PacManBot_Commands_Modules_ModModule_syntax">Syntax</h5>
+  <h5 id="PacManBot_Commands_Modules_GameModules_PacManModule_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[Name(&quot;&lt;:staff:412019879772815361&gt;Mod&quot;)]
-[Remarks(&quot;5&quot;)]
-[PmRequireUserPermission(GuildPermission.ManageMessages)]
-public class ModModule : BaseModule, IModuleBase</code></pre>
+    <pre><code class="lang-csharp hljs">[Name(&quot;&#127918;Games&quot;)]
+[Remarks(&quot;3&quot;)]
+public class PacManModule : BaseGameModule&lt;PacManGame&gt;, IModuleBase</code></pre>
   </div>
   <h3 id="methods">Methods
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_ModModule_ClearCommandMessages_System_Int32_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.ModModule.ClearCommandMessages(System.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_GameModules_PacManModule_AddControls_PacManBot_Games_Concrete_PacManGame_Discord_IUserMessage_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.GameModules.PacManModule.AddControls(PacManBot.Games.Concrete.PacManGame%2CDiscord.IUserMessage)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/ModModule.cs/#L24">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/GameModules/PacManModule.cs/#L84">View Source</a>
   </span>
-  <a id="PacManBot_Commands_Modules_ModModule_ClearCommandMessages_" data-uid="PacManBot.Commands.Modules.ModModule.ClearCommandMessages*"></a>
-  <h4 id="PacManBot_Commands_Modules_ModModule_ClearCommandMessages_System_Int32_" data-uid="PacManBot.Commands.Modules.ModModule.ClearCommandMessages(System.Int32)">ClearCommandMessages(Int32)</h4>
+  <a id="PacManBot_Commands_Modules_GameModules_PacManModule_AddControls_" data-uid="PacManBot.Commands.Modules.GameModules.PacManModule.AddControls*"></a>
+  <h4 id="PacManBot_Commands_Modules_GameModules_PacManModule_AddControls_PacManBot_Games_Concrete_PacManGame_Discord_IUserMessage_" data-uid="PacManBot.Commands.Modules.GameModules.PacManModule.AddControls(PacManBot.Games.Concrete.PacManGame,Discord.IUserMessage)">AddControls(PacManGame, IUserMessage)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[Command(&quot;clear&quot;)]
-[Alias(new string[]{&quot;clean&quot;, &quot;cl&quot;})]
-[Remarks(&quot;Clear this bot's messages and commands&quot;)]
-[Summary(&quot;Clears all commands and messages for *this bot only*, from the last [amount] messages up to 30, or the last 10 messages by default.\nOnly users with the Manage Messages permission can use this command.&quot;)]
-[PmRequireBotPermission(ChannelPermission.ReadMessageHistory)]
-public Task ClearCommandMessages(int amount = 10)</code></pre>
+    <pre><code class="lang-csharp hljs">public static Task AddControls(PacManGame game, IUserMessage message)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -208,57 +242,12 @@ public Task ClearCommandMessages(int amount = 10)</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Int32</span></td>
-        <td><span class="parametername">amount</span></td>
+        <td><a class="xref" href="PacManBot.Games.Concrete.PacManGame.html">PacManGame</a></td>
+        <td><span class="parametername">game</span></td>
         <td></td>
       </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
       <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_ModModule_Say_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.ModModule.Say(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/ModModule.cs/#L19">View Source</a>
-  </span>
-  <a id="PacManBot_Commands_Modules_ModModule_Say_" data-uid="PacManBot.Commands.Modules.ModModule.Say*"></a>
-  <h4 id="PacManBot_Commands_Modules_ModModule_Say_System_String_" data-uid="PacManBot.Commands.Modules.ModModule.Say(System.String)">Say(String)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[Command(&quot;say&quot;)]
-[Remarks(&quot;Make the bot say anything&quot;)]
-[Summary(&quot;Repeats back the message provided. Only users with the Manage Messages permission can use this command.&quot;)]
-public Task Say([Remainder] string message)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
+        <td><span class="xref">Discord.IUserMessage</span></td>
         <td><span class="parametername">message</span></td>
         <td></td>
       </tr>
@@ -281,22 +270,22 @@ public Task Say([Remainder] string message)</code></pre>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_ModModule_SetServerPrefix_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.ModModule.SetServerPrefix(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_GameModules_PacManModule_StartCustomGame_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.GameModules.PacManModule.StartCustomGame(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/ModModule.cs/#L55">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/GameModules/PacManModule.cs/#L37">View Source</a>
   </span>
-  <a id="PacManBot_Commands_Modules_ModModule_SetServerPrefix_" data-uid="PacManBot.Commands.Modules.ModModule.SetServerPrefix*"></a>
-  <h4 id="PacManBot_Commands_Modules_ModModule_SetServerPrefix_System_String_" data-uid="PacManBot.Commands.Modules.ModModule.SetServerPrefix(System.String)">SetServerPrefix(String)</h4>
+  <a id="PacManBot_Commands_Modules_GameModules_PacManModule_StartCustomGame_" data-uid="PacManBot.Commands.Modules.GameModules.PacManModule.StartCustomGame*"></a>
+  <h4 id="PacManBot_Commands_Modules_GameModules_PacManModule_StartCustomGame_System_String_" data-uid="PacManBot.Commands.Modules.GameModules.PacManModule.StartCustomGame(System.String)">StartCustomGame(String)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[Command(&quot;setprefix&quot;)]
-[Remarks(&quot;Set a custom prefix for this server&quot;)]
-[Summary(&quot;Change the custom prefix for this server. Requires the user to have the Manage Guild permission.\nPrefixes can't contain these characters: \\* \\_ \\~ \\` \\\\&quot;)]
-[PmRequireUserPermission(GuildPermission.ManageGuild)]
-public Task SetServerPrefix(string prefix)</code></pre>
+    <pre><code class="lang-csharp hljs">[Command(&quot;custompacman&quot;)]
+[Alias(new string[]{&quot;pacmancustom&quot;})]
+[Priority(9)]
+[Summary(&quot;Starts a new Pac-Man game in this channel using the provided custom map.\nUse **{prefix}custompacman** by itself to see a guide for custom maps.\n\nUse **{prefix}display** to switch between normal mode and mobile mode. Use **{prefix}bump** to move the game message to the bottom of the chat. Use **{prefix}cancel** to end the game.&quot;)]
+public Task StartCustomGame([Remainder] string map = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -310,7 +299,7 @@ public Task SetServerPrefix(string prefix)</code></pre>
     <tbody>
       <tr>
         <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">prefix</span></td>
+        <td><span class="parametername">map</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -332,24 +321,24 @@ public Task SetServerPrefix(string prefix)</code></pre>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_ModModule_ToggleNoPrefix_Discord_WebSocket_SocketGuildChannel_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.ModModule.ToggleNoPrefix(Discord.WebSocket.SocketGuildChannel)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_GameModules_PacManModule_StartGame_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.GameModules.PacManModule.StartGame(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/ModModule.cs/#L110">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/GameModules/PacManModule.cs/#L18">View Source</a>
   </span>
-  <a id="PacManBot_Commands_Modules_ModModule_ToggleNoPrefix_" data-uid="PacManBot.Commands.Modules.ModModule.ToggleNoPrefix*"></a>
-  <h4 id="PacManBot_Commands_Modules_ModModule_ToggleNoPrefix_Discord_WebSocket_SocketGuildChannel_" data-uid="PacManBot.Commands.Modules.ModModule.ToggleNoPrefix(Discord.WebSocket.SocketGuildChannel)">ToggleNoPrefix(SocketGuildChannel)</h4>
+  <a id="PacManBot_Commands_Modules_GameModules_PacManModule_StartGame_" data-uid="PacManBot.Commands.Modules.GameModules.PacManModule.StartGame*"></a>
+  <h4 id="PacManBot_Commands_Modules_GameModules_PacManModule_StartGame_System_String_" data-uid="PacManBot.Commands.Modules.GameModules.PacManModule.StartGame(System.String)">StartGame(String)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[Command(&quot;toggleprefix&quot;)]
-[Alias(new string[]{&quot;togglenoprefix&quot;})]
-[Parameters(&quot;[channel id]&quot;)]
-[Remarks(&quot;Put a channel in \&quot;No Prefix mode\&quot;&quot;)]
-[Summary(&quot;When used by a user with the Manage Channels permission, toggles a channel between **Normal** mode and **No Prefix** mode.\nIn No Prefix mode, all commands will work without the need to use a prefix such as \&quot;&lt;\&quot;.\nIf the channel id is not specified, you will beasked to confirm the change for the current channel.\n\n**Warning!** This can result in a lot of unnecessary spam. Only use this if you're sure. It's a good idea only in dedicated channels, for example named \&quot;#pacman\&quot; or \&quot;#botspam\&quot;&quot;)]
-[PmRequireUserPermission(GuildPermission.ManageChannels)]
-public Task ToggleNoPrefix(SocketGuildChannel otherChannel = null)</code></pre>
+    <pre><code class="lang-csharp hljs">[Command(&quot;pacman&quot;)]
+[Alias(new string[]{&quot;p&quot;, &quot;start&quot;})]
+[Parameters(&quot;[mobile]&quot;)]
+[Priority(10)]
+[Remarks(&quot;Start a new game in this channel&quot;)]
+[Summary(&quot;Starts a new Pac-Man game in this channel.\nYou can add \&quot;mobile\&quot; or \&quot;m\&quot; after the command to use *Mobile Mode*, which has simple characters that will work in phones. Use **{prefix}display** to change mode later.\nYou can also play a custom Pac-Man map with the command **{prefix}custompacman**\n\nUse **{prefix}bump** to move the game message to the bottom of the chat. Use **{prefix}cancel** to end the game. &quot;)]
+public Task StartGame(string arg = &quot;&quot;)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -362,46 +351,12 @@ public Task ToggleNoPrefix(SocketGuildChannel otherChannel = null)</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Discord.WebSocket.SocketGuildChannel</span></td>
-        <td><span class="parametername">otherChannel</span></td>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">arg</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_ModModule_ToggleWakaResponse.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.ModModule.ToggleWakaResponse%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/ModModule.cs/#L90">View Source</a>
-  </span>
-  <a id="PacManBot_Commands_Modules_ModModule_ToggleWakaResponse_" data-uid="PacManBot.Commands.Modules.ModModule.ToggleWakaResponse*"></a>
-  <h4 id="PacManBot_Commands_Modules_ModModule_ToggleWakaResponse" data-uid="PacManBot.Commands.Modules.ModModule.ToggleWakaResponse">ToggleWakaResponse()</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[Command(&quot;togglewaka&quot;)]
-[Remarks(&quot;Turn off bot autoresponses in the server&quot;)]
-[Summary(&quot;The bot normally responds every time a message contains purely multiples of \&quot;waka\&quot;, unless it's turned off server-wide using this command. Requires the user to have the Manage Guild permission.&quot;)]
-[PmRequireUserPermission(GuildPermission.ManageGuild)]
-public Task ToggleWakaResponse()</code></pre>
-  </div>
   <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
@@ -425,10 +380,10 @@ public Task ToggleWakaResponse()</code></pre>
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_ModModule.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.ModModule%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_GameModules_PacManModule.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.GameModules.PacManModule%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/ModModule.cs/#L12" class="contribution-link">View Source</a>
+                    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/GameModules/PacManModule.cs/#L12" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

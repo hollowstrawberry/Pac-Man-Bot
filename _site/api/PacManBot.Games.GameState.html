@@ -5,10 +5,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Namespace PacManBot.Commands
+    <title>Enum GameState
    </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Namespace PacManBot.Commands
+    <meta name="title" content="Enum GameState
    ">
     <meta name="generator" content="docfx 2.40.7.0">
     
@@ -68,49 +68,52 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="PacManBot.Commands">
+            <article class="content wrap" id="_content" data-uid="PacManBot.Games.GameState">
   
-  <h1 id="PacManBot_Commands" data-uid="PacManBot.Commands" class="text-break">Namespace PacManBot.Commands
+  
+  <h1 id="PacManBot_Games_GameState" data-uid="PacManBot.Games.GameState" class="text-break">Enum GameState
   </h1>
-  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 summary"><p>Indicates whether a game is ongoing, or why it ended.</p>
+</div>
   <div class="markdown level0 conceptual"></div>
-  <div class="markdown level0 remarks"></div>
-    <h3 id="classes">Classes
+  <h6><strong>Namespace</strong>: <a class="xref" href="PacManBot.Games.html">PacManBot.Games</a></h6>
+  <h6><strong>Assembly</strong>: Pacman.dll</h6>
+  <h5 id="PacManBot_Games_GameState_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public enum GameState</code></pre>
+  </div>
+  <h3 id="fields">Fields
   </h3>
-      <h4><a class="xref" href="PacManBot.Commands.BaseGameModule-1.html">BaseGameModule&lt;TGame&gt;</a></h4>
-      <section><p>The base for a module that controls a game.</p>
-</section>
-      <h4><a class="xref" href="PacManBot.Commands.BaseModule.html">BaseModule</a></h4>
-      <section><p>The base for Pac-Man Bot modules, including their main services and some utilities.</p>
-</section>
-      <h4><a class="xref" href="PacManBot.Commands.ExampleUsageAttribute.html">ExampleUsageAttribute</a></h4>
-      <section><p>Provides example usage of a command. The string &quot;{prefix}&quot; refers to the guild prefix.</p>
-</section>
-      <h4><a class="xref" href="PacManBot.Commands.HideHelpAttribute.html">HideHelpAttribute</a></h4>
-      <section><p>When present, indicates that this command should not be visible when listing commands to the user.</p>
-</section>
-      <h4><a class="xref" href="PacManBot.Commands.MultiplayerGameModule-1.html">MultiplayerGameModule&lt;TGame&gt;</a></h4>
-      <section><p>A module equipped to run multiplayer games.</p>
-</section>
-      <h4><a class="xref" href="PacManBot.Commands.ParametersAttribute.html">ParametersAttribute</a></h4>
-      <section><p>Overrides the automatic parameters displayed for this command.</p>
-</section>
-      <h4><a class="xref" href="PacManBot.Commands.PmBasePermissionAttribute.html">PmBasePermissionAttribute</a></h4>
-      <section><p>The original permission preconditions from Discord.Net had a wrong value for DM permissions,
-and didn't list all missing permissions in the error message. I hope to delete this one day.</p>
-</section>
-      <h4><a class="xref" href="PacManBot.Commands.PmCommandContext.html">PmCommandContext</a></h4>
-      <section><p>The context of a Pac-Man Bot command, including the client, user, guild, channel, message, prefix, etc.</p>
-</section>
-      <h4><a class="xref" href="PacManBot.Commands.PmRequireBotPermissionAttribute.html">PmRequireBotPermissionAttribute</a></h4>
-      <section><p>Indicates this command can't run unless the bot has the specified permissions.</p>
-</section>
-      <h4><a class="xref" href="PacManBot.Commands.PmRequireUserPermissionAttribute.html">PmRequireUserPermissionAttribute</a></h4>
-      <section><p>Indicates this command can't run unless the user calling it has the specified permissions.</p>
-</section>
-      <h4><a class="xref" href="PacManBot.Commands.RequireDeveloperAttribute.html">RequireDeveloperAttribute</a></h4>
-      <section><p>Allows either the application owner or any specified developers in the configuration file to run a command.</p>
-</section>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    <thead>
+    <tbody>
+      <tr>
+        <td id="PacManBot_Games_GameState_Active">Active</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td id="PacManBot_Games_GameState_Cancelled">Cancelled</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td id="PacManBot_Games_GameState_Completed">Completed</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td id="PacManBot_Games_GameState_Lose">Lose</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td id="PacManBot_Games_GameState_Win">Win</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </thead></thead></table>
 </article>
           </div>
           
@@ -118,6 +121,12 @@ and didn't list all missing permissions in the error message. I hope to delete t
             <div class="sideaffix">
               <div class="contribution">
                 <ul class="nav">
+                  <li>
+                    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_GameState.md&amp;value=---%0Auid%3A%20PacManBot.Games.GameState%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/GameState.cs/#L7" class="contribution-link">View Source</a>
+                  </li>
                 </ul>
               </div>
               <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">

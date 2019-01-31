@@ -17,6 +17,30 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Commands.BaseGameModule-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Commands.BaseGameModule-1.html",
+          "hash": "uslnppODVojYLtZ1j5l9Cw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Commands.BaseModule.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Commands.BaseModule.html",
+          "hash": "J/0xIDQFdX0jj28kp5Fwtw=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/PacManBot.Commands.ExampleUsageAttribute.yml",
       "output": {
         ".html": {
@@ -24,7 +48,7 @@
           "hash": "Lc+VurL+ndZW80IW2Jd+7Q=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -36,7 +60,7 @@
           "hash": "1NVvVv2lONyuRQVwCpbOcA=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -45,10 +69,142 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Commands.Modules.DevModule.html",
-          "hash": "tAYIBjH4zqByYmjXn7ewug=="
+          "hash": "eqe9MxS+Yl3cw2THum+XiA=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Commands.Modules.GameModules.CommonGameModule.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Commands.Modules.GameModules.CommonGameModule.html",
+          "hash": "6WuzqaV0p1wEl1tJZM4hIw=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Commands.Modules.GameModules.ConnectFourModule.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Commands.Modules.GameModules.ConnectFourModule.html",
+          "hash": "bwBJyHVvSiQ5e5UOKj+cYQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Commands.Modules.GameModules.HangmanModule.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Commands.Modules.GameModules.HangmanModule.html",
+          "hash": "fgj9eBBeEIYkdsoGmaJ3Ag=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Commands.Modules.GameModules.PacManModule.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Commands.Modules.GameModules.PacManModule.html",
+          "hash": "XcCbXWdQxSURzu4+l7miVw=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Commands.Modules.GameModules.PetModule.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Commands.Modules.GameModules.PetModule.html",
+          "hash": "aZqfiQ9M2C/1yPls6lv3YQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Commands.Modules.GameModules.RpgModule.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Commands.Modules.GameModules.RpgModule.html",
+          "hash": "78kzA/OeFTMaYWWkwUPjHw=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Commands.Modules.GameModules.RubiksModule.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Commands.Modules.GameModules.RubiksModule.html",
+          "hash": "qThR2HRlKt6hlYMlZV9xbw=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Commands.Modules.GameModules.TTT5Module.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Commands.Modules.GameModules.TTT5Module.html",
+          "hash": "YkNdrdq+obm0kYj+xWPszg=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Commands.Modules.GameModules.TicTacToeModule.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Commands.Modules.GameModules.TicTacToeModule.html",
+          "hash": "7ZYH5rhfc14PrdbLk9NGtA=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Commands.Modules.GameModules.UnoModule.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Commands.Modules.GameModules.UnoModule.html",
+          "hash": "+aTEdeN4ZgvmXbtDe+a1dA=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Commands.Modules.GameModules.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Commands.Modules.GameModules.html",
+          "hash": "/W8BzUiMBjqVYHpxTV+88A=="
+        }
+      },
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -57,10 +213,10 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Commands.Modules.GeneralModule.html",
-          "hash": "gfFPVy81ty9Erlx/MEGrQw=="
+          "hash": "tO5hKbzfn7tM12foxuCF3g=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -69,34 +225,22 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Commands.Modules.ModModule.html",
-          "hash": "zhoijBi5fICxvTLGZ4lX1w=="
+          "hash": "9AoC1WErb3B5uQRMSkvGHQ=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/PacManBot.Commands.Modules.MoreGamesModule.yml",
+      "source_relative_path": "api/PacManBot.Commands.Modules.PacManExtrasModule.yml",
       "output": {
         ".html": {
-          "relative_path": "api/PacManBot.Commands.Modules.MoreGamesModule.html",
-          "hash": "uZWGa5P35E65dId9r4HXrw=="
+          "relative_path": "api/PacManBot.Commands.Modules.PacManExtrasModule.html",
+          "hash": "AXoc+QQ4yI6sjSqlhJjY0A=="
         }
       },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/PacManBot.Commands.Modules.PacManModule.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/PacManBot.Commands.Modules.PacManModule.html",
-          "hash": "cjFCDQMR4tfLiuTl6cORog=="
-        }
-      },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -105,7 +249,19 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Commands.Modules.html",
-          "hash": "9Qjt3lXP+OLSx6nvrfb6gA=="
+          "hash": "n7OrclhXc2e3Ogj7Kkb+WA=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Commands.MultiplayerGameModule-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Commands.MultiplayerGameModule-1.html",
+          "hash": "K1bGZ1VPYNs2G/EZfEPUnA=="
         }
       },
       "is_incremental": false,
@@ -120,19 +276,7 @@
           "hash": "cxXwPQ0F7/vdusc5DRlNDQ=="
         }
       },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/PacManBot.Commands.PmBaseModule.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/PacManBot.Commands.PmBaseModule.html",
-          "hash": "gb8CPUMrweMYa2KvX53kaA=="
-        }
-      },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -144,7 +288,7 @@
           "hash": "4CNsgVUV230uiWep8itJEw=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -156,7 +300,7 @@
           "hash": "tEdnZh0E4sCxXUd1bubLyg=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -168,7 +312,7 @@
           "hash": "ljOWcJs4ums3SPdvAyOemQ=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -180,7 +324,7 @@
           "hash": "wcD7K1c11dUPTK6ch8E6cg=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -192,7 +336,7 @@
           "hash": "O4j2JSi9eTTmnngu7wKmJw=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -201,7 +345,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Commands.html",
-          "hash": "Z179OXkcKnlywjro3hjWTg=="
+          "hash": "aefSIhWCll8rS2nBviBR6Q=="
         }
       },
       "is_incremental": false,
@@ -216,7 +360,7 @@
           "hash": "GYCWLs0UpjxI5H8aCNUaBQ=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -228,7 +372,7 @@
           "hash": "eTpodx7ilk7f2BicYocK3g=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -240,7 +384,7 @@
           "hash": "R5+wmv3BjWHvQjq6111hbw=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -252,7 +396,7 @@
           "hash": "cORa5bYVkMtWvN353Ls4ig=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -264,7 +408,7 @@
           "hash": "5g12mxXX3H3qWbYLqj9DJQ=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -276,7 +420,7 @@
           "hash": "vI1GdWBH8LeTSNGVtEm4yA=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -288,7 +432,7 @@
           "hash": "m6fpKKfH+RJg4RleQx8ZXA=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -297,10 +441,10 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Extensions.DiscordExtensions.html",
-          "hash": "yV6hJUCtqfa4qC1ZWvasmw=="
+          "hash": "8MEmhBq8qHIYEEbQTkpIjQ=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -312,7 +456,7 @@
           "hash": "S2RF8r5fewzRmACdqGJ6sQ=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -324,7 +468,7 @@
           "hash": "yfd4jCHA7+5SA1VK9CE5Vg=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -336,7 +480,7 @@
           "hash": "L7TO9qhkV6wvku+DwwnK9Q=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -348,7 +492,7 @@
           "hash": "slfopfTncUJ8ZQa69qVTnw=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -360,7 +504,7 @@
           "hash": "SBGvzDMpURPHeJ/3nrkqng=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -372,7 +516,7 @@
           "hash": "WvJsukJSHpJL1LdniW0kPw=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -384,7 +528,7 @@
           "hash": "4UGeZGSNah6AtM65lBaI5A=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -393,10 +537,10 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.BaseGame.html",
-          "hash": "e5qy2ZAAy/OWXI1cXsOkSA=="
+          "hash": "aRaSvmS2UY0d+oAXlONLPA=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -408,7 +552,7 @@
           "hash": "Bn2np7OihPL4uZ3bu0O8yw=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -417,10 +561,10 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.ChannelGame.html",
-          "hash": "8y4ebUip7aWCbB13UHq9MQ=="
+          "hash": "4gDYf+L9j+WDu7LRrLJG/g=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -429,10 +573,10 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.C4Game.html",
-          "hash": "KYOWL/SlrantWP9xbGkxkg=="
+          "hash": "/CjWwkL07tsqPnboFA8vfg=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -441,10 +585,10 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.HangmanGame.html",
-          "hash": "KtELrge6MRSPG8rdXSW4Ag=="
+          "hash": "K2SRpN5Xc74oZbKH89prvg=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -456,7 +600,7 @@
           "hash": "m4gNyfjXylaAob3djJXl3Q=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -465,10 +609,10 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.PacManGame.PacManInput.html",
-          "hash": "v5XRBZJmd+HKphxlDc4ehg=="
+          "hash": "XKI2j8TdaHyT7Y/sQLnOlA=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -477,10 +621,10 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.PacManGame.html",
-          "hash": "TA4U0GLzjyDWoiWcEgwrdg=="
+          "hash": "Pb1iUVAKX6RtESaxmC4uyQ=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -492,7 +636,7 @@
           "hash": "nZ54Glj0/q/3/JgCZkzSkg=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -504,7 +648,7 @@
           "hash": "OMPWs3bj9biKNf18NQPe/w=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -513,10 +657,10 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.PetGame.html",
-          "hash": "lbatq68LIj/z4biAlelX4Q=="
+          "hash": "7J3Ag4AUdPDbPc3SkZj6EQ=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -528,7 +672,7 @@
           "hash": "wpDJF5HssswjcAWmBpxIHA=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -540,7 +684,7 @@
           "hash": "5TAUvs+Rr42pyzX9rZojUw=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -552,7 +696,7 @@
           "hash": "H960EeoDNr525/gmzhghKA=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -564,7 +708,7 @@
           "hash": "fV/g1E83iPDLtI5JBq4g1A=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -576,7 +720,7 @@
           "hash": "c7EPmrBTSnj8exLvIVG0cA=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -588,7 +732,7 @@
           "hash": "alk3e37lkvPelNI0HahRpw=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -600,7 +744,7 @@
           "hash": "TxtwfVgL+9u8vauObTf3oQ=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -612,7 +756,7 @@
           "hash": "jihoOJYJqPhyM3zkpPJOYQ=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -624,7 +768,7 @@
           "hash": "1qi/Qp+qG8oUyENvXaMzJA=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -636,7 +780,7 @@
           "hash": "MjJc8CO+Tom3MnxZqgYaDg=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -648,7 +792,7 @@
           "hash": "Bcic9Ddgo+croW2BZu+O+g=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -660,7 +804,7 @@
           "hash": "f8wC5OA3jpkfWc290wL8aQ=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -672,7 +816,7 @@
           "hash": "XGVqAvaqgE+v0iHD/9PV6A=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -684,7 +828,7 @@
           "hash": "Kl1KtprJiZivqA8Dw/o/SA=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -696,7 +840,7 @@
           "hash": "fsE+Kzv0s74EEQGRPvP+oA=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -708,7 +852,7 @@
           "hash": "XnJIWZThvKMR2/9aMK1Kmw=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -720,7 +864,7 @@
           "hash": "6ufJf1qP24bCOp7RzB7t3Q=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -732,7 +876,7 @@
           "hash": "euctJK/bIbXdAjAz77737Q=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -744,7 +888,7 @@
           "hash": "XGHulGl2Cf2zHzYId+WTJg=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -756,7 +900,7 @@
           "hash": "A/HhKTbhnB3qDk0r4QX1Aw=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -768,7 +912,7 @@
           "hash": "70vxFO04QitNLcu5b2TB1A=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -780,7 +924,7 @@
           "hash": "X7Q/vwWSFP0Pwa4n2zU6gw=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -792,7 +936,7 @@
           "hash": "QFwlwyg+4UU512qUB1dsuA=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -804,7 +948,7 @@
           "hash": "+QnSo7c691/7HGh9oDTDbg=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -816,7 +960,7 @@
           "hash": "QLySPKdKpRXxWGg0sH+3Vg=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -828,7 +972,7 @@
           "hash": "SKwTvRjnXZvXHP5mwtyypg=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -840,7 +984,7 @@
           "hash": "loBHt+IkdooBxC8wPWNFqA=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -852,7 +996,7 @@
           "hash": "b7qV1db16etAEdDeUI/wDA=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -864,7 +1008,7 @@
           "hash": "dz+JJifj8xlBHCG8gz2ucw=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -876,7 +1020,7 @@
           "hash": "JtGuc6REDCRkwN8eSCXh3g=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -888,7 +1032,7 @@
           "hash": "5spi+PrT0IWLG68lMP88cQ=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -900,7 +1044,7 @@
           "hash": "kXPIdbk+8dj9mDDXLqe1qg=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -912,7 +1056,7 @@
           "hash": "dMMbpb/YTdPUjgagc0J1KA=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -924,7 +1068,7 @@
           "hash": "1A3E45M6Pk8FQX19PSeO6Q=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -936,7 +1080,7 @@
           "hash": "HPZLV2Qde1ZD+Opdlb7a2w=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -948,7 +1092,7 @@
           "hash": "3cvKDZiOwXdDemAT6E/oYA=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -960,7 +1104,7 @@
           "hash": "bq9LP8Uv4NFJMGWHOS0uuA=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -972,7 +1116,7 @@
           "hash": "O0+FKNU/S3Y2lUui853/RQ=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -984,7 +1128,7 @@
           "hash": "VnHp+bH4d0wVzrq9CPHSwA=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -996,7 +1140,7 @@
           "hash": "rP4sqU4Cx+gcN2asuir49g=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1008,7 +1152,7 @@
           "hash": "NmiYVKVYoqZyVyMdqZ6PVg=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1020,7 +1164,7 @@
           "hash": "tnwqTHbWpj9HKBSvJaxTTQ=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1032,7 +1176,7 @@
           "hash": "wCCfB9oYpDZGsJa5X7TsBw=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1044,7 +1188,7 @@
           "hash": "6kAfx/F7XCXiQYyufLyHag=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1056,7 +1200,7 @@
           "hash": "U+THeoULDKmrguGvVQbmyg=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1068,7 +1212,7 @@
           "hash": "sGwkEDJvJuj6CpVplU2ubQ=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1080,7 +1224,7 @@
           "hash": "VHub4TfrIvoatK6UqNjWKw=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1092,7 +1236,7 @@
           "hash": "+mBFrwnnX8udg1sinxjynA=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1104,7 +1248,7 @@
           "hash": "/oqDEkfFiMMVGfp1x5BGlQ=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1116,7 +1260,7 @@
           "hash": "si8foRxPMIq0uEmxjnOdFg=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1128,7 +1272,7 @@
           "hash": "yAkOTP4YkQLeO7yoB8t7Ig=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1140,7 +1284,7 @@
           "hash": "gye9Fk01aZA7q9fK+dtzbg=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1152,7 +1296,7 @@
           "hash": "3FSIIz1TC3jSQszHMd52dA=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1164,7 +1308,7 @@
           "hash": "K88hi1JaezAUTBc05GoaUw=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1176,7 +1320,7 @@
           "hash": "dFy69uI1Lu/Fcd6mkSrp3w=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1188,7 +1332,7 @@
           "hash": "ZbTPGooXV+nVu/dvjxjZkQ=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1200,7 +1344,7 @@
           "hash": "WantXBcB7zALe5CcESLiyg=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1212,7 +1356,7 @@
           "hash": "1sB88w2F7Agt52uFndJbLQ=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1224,7 +1368,7 @@
           "hash": "IEfmItGB58xv4Xvhzc+rsg=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1236,7 +1380,7 @@
           "hash": "TqVU9gSvZULuUXtLoocxvQ=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1248,7 +1392,7 @@
           "hash": "WsmWsBTZH+x7b6jELGXfwQ=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1260,7 +1404,7 @@
           "hash": "6xcI4RbOD8sGfu0i7JKhNQ=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1272,7 +1416,7 @@
           "hash": "RT9yXmoXXALeWZObCoX8+w=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1284,7 +1428,7 @@
           "hash": "FNvnkBsdGqpZzeY+P4B6aA=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1296,7 +1440,7 @@
           "hash": "3aHhWe6o3feXQ0Pp/pz2oQ=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1308,7 +1452,7 @@
           "hash": "o+mFqD8B+EcaLE2XQ/KGhA=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1320,7 +1464,7 @@
           "hash": "iTAUnCKWmTeZsQYV0jRbMQ=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1332,7 +1476,7 @@
           "hash": "POFsBm1zT7nbpcTF6MWSZg=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1344,7 +1488,7 @@
           "hash": "HRSOEPIjonuZv9fKIYdCoA=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1356,7 +1500,7 @@
           "hash": "jjBHCgATg+9MJwgBGEbTkA=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1368,7 +1512,7 @@
           "hash": "cw8czQML3ODi3YOzMoWsuA=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1380,7 +1524,7 @@
           "hash": "nd6FiMi2k0iDDPK2xenRaA=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1392,7 +1536,7 @@
           "hash": "8kWfWLn6ZT6bNkzmUQeocA=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1404,7 +1548,7 @@
           "hash": "BH6v3m/Z1pFtHVCRmWS8cw=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1416,7 +1560,7 @@
           "hash": "wb/9VvmG1hJrCQ87iCEYkA=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1428,7 +1572,7 @@
           "hash": "uGnGtYQvqVDNkY4jhE9agg=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1440,7 +1584,7 @@
           "hash": "1aUJAiYgF34tg2ljaPSNZA=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1452,7 +1596,7 @@
           "hash": "TIEYYPKyibFC0YgA8hMkDg=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1464,7 +1608,7 @@
           "hash": "IdmsLwI6Ol3S7IhqI3QAlw=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1476,7 +1620,7 @@
           "hash": "JWfBGAaH5LHD0rYzkcc7Dw=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1488,7 +1632,7 @@
           "hash": "URMqNoXUItfghpwi8jFnPA=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1500,7 +1644,7 @@
           "hash": "sSyVbuBhYu7E0Cdc77SKxA=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1512,7 +1656,7 @@
           "hash": "8xwpAqKGMMBtgabk1sxH3A=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1524,7 +1668,7 @@
           "hash": "wRLu+ZzoTS7kOENsYKrpfw=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1536,7 +1680,7 @@
           "hash": "KeKq8eAXVB/3Myx91CNszg=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1548,7 +1692,7 @@
           "hash": "A/YzQO0ckNYjNvaiLggl2g=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1560,7 +1704,7 @@
           "hash": "ViEdhNp2xtNWJZeXLKP2Kg=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1572,7 +1716,7 @@
           "hash": "8gEfnhlw41EKkDLjSn5ZCg=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1581,10 +1725,10 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.RpgGame.html",
-          "hash": "lVBITXkcmwjYzxwmV/FZ8A=="
+          "hash": "cfTdih8BekSaxJKkf6Mjxw=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1596,7 +1740,7 @@
           "hash": "YpHiL8otUX4wSOEztPuRNg=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1608,7 +1752,7 @@
           "hash": "WCteTBhCJcVPZzDqAMzn5Q=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1617,10 +1761,10 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.RubiksGame.html",
-          "hash": "NEJIPFrrwl2GVR1jNHtqBg=="
+          "hash": "/PhItF1PTBPKM5O44yVVkg=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1629,22 +1773,22 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.TTT5Game.html",
-          "hash": "A/JjL1ySrDJj6E/egnKzOQ=="
+          "hash": "N6MQgkx+zOfbgmz+2XKdKQ=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/PacManBot.Games.Concrete.TTTGame.yml",
+      "source_relative_path": "api/PacManBot.Games.Concrete.TicTacToeGame.yml",
       "output": {
         ".html": {
-          "relative_path": "api/PacManBot.Games.Concrete.TTTGame.html",
-          "hash": "4Z4VDgPaTfY6plzomDb88w=="
+          "relative_path": "api/PacManBot.Games.Concrete.TicTacToeGame.html",
+          "hash": "GT0WLiH1/a56noNO1FWr7w=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1653,10 +1797,10 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.UnoGame.html",
-          "hash": "yrKWc45GXumAoOG4d0ivEg=="
+          "hash": "jpS/xQgUfNssMyVdDnW6kQ=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1665,10 +1809,10 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.Concrete.html",
-          "hash": "3305E5XnfugkM6b/AUqX1g=="
+          "hash": "gGwEt1qIdFUPXpdVCaHWuw=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1680,7 +1824,19 @@
           "hash": "Of2MFkeZsyDNpwmywbH59g=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/PacManBot.Games.GameState.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/PacManBot.Games.GameState.html",
+          "hash": "2JBS9qvcT3XLcxr6riRm2g=="
+        }
+      },
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1689,10 +1845,10 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.IBaseGame.html",
-          "hash": "XwJ9Hht0D4pATRmIJpN5ig=="
+          "hash": "9cjscPfQ9NxWKs8JZMwwQg=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1701,10 +1857,10 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.IChannelGame.html",
-          "hash": "2IA8QflKY+ocEHel3tErEw=="
+          "hash": "PjlgmvmQ5PdmDD9/KmDbBA=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1716,7 +1872,7 @@
           "hash": "Ya/JfrmyfzrH0EfpePB/Mg=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1728,7 +1884,7 @@
           "hash": "2JYzB3qZZhP8t+hQqBNw5w=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1740,7 +1896,7 @@
           "hash": "9i7VndroQJcQO2S7UChT2w=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1752,7 +1908,7 @@
           "hash": "sI4XBYknrb3a9H5ynrLtCw=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1764,7 +1920,7 @@
           "hash": "S3CCjbjuz3qtuimrTkSNVQ=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1773,10 +1929,10 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.MultiplayerGame.html",
-          "hash": "m77EBwoCnuvZ0wVhViHcLw=="
+          "hash": "DXbzav5duxxldubDUa0hWQ=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1788,7 +1944,7 @@
           "hash": "1AGdzftgo2oCtpMtVs/o4g=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1800,19 +1956,7 @@
           "hash": "UdesoWj86EpiIqOUN5JLaQ=="
         }
       },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/PacManBot.Games.State.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/PacManBot.Games.State.html",
-          "hash": "UCpIsLYFPO4OYiGY/k87lQ=="
-        }
-      },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1821,10 +1965,10 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Games.html",
-          "hash": "nmhAXIDFdwhL3yUq2blDXw=="
+          "hash": "Drn1dfzYX7xW5epS3dQ4DA=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1833,10 +1977,10 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.PmBot.html",
-          "hash": "J5dSPbct8wc7rF6I7I10rQ=="
+          "hash": "WfJdYXNTet+ETcaFaWXPUw=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1848,7 +1992,7 @@
           "hash": "0T9igDQS7HIDjP64o9ZTMA=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1860,7 +2004,7 @@
           "hash": "9uKKTYX7HtblA0ZE2NtZLg=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1872,7 +2016,7 @@
           "hash": "o2MI2tKukg0LhGqUaDnZ0A=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1884,7 +2028,7 @@
           "hash": "75I24vGlxSxzaXnd1Kq/pg=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1896,7 +2040,7 @@
           "hash": "y2gugW9JbeIMwc3Mflqk0w=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1908,7 +2052,7 @@
           "hash": "7UmZ9hSbnadlLIgHZkuOtg=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1920,7 +2064,7 @@
           "hash": "mZiXyNLqHFrQzz/rpkY9vg=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1929,10 +2073,10 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Services.Database.ScoreEntry.html",
-          "hash": "VfqfxSPL/OkRgJ9t380sBw=="
+          "hash": "Esri6O8k6qyuFvbsQDHmVw=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1944,7 +2088,7 @@
           "hash": "9p454H+JqueH5EGOPkaPlA=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1953,10 +2097,10 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Services.GameService.html",
-          "hash": "qkjdya9ZYJ0U6ikiQ90VKQ=="
+          "hash": "bxsrV9BZ9wCQYD3BEX9y6w=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1965,10 +2109,10 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Services.InputService.html",
-          "hash": "YPo4jP9Qtxi0iwdByAlfUg=="
+          "hash": "9eCmpha0BRGtFX955rlNug=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1977,10 +2121,10 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Services.LoggingService.html",
-          "hash": "kik9M70c+Putu1gmAyXBYg=="
+          "hash": "0Q0E1U0GK5goAxejXuDhJQ=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1989,10 +2133,10 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Services.PmCommandService.html",
-          "hash": "R/IcKUrTBKYIVdWs2ZPKag=="
+          "hash": "I0cS9D/1yOeqdq5eTi8pfA=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -2004,7 +2148,7 @@
           "hash": "1aGBKnd+QuyimZA0EUso5Q=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -2016,7 +2160,7 @@
           "hash": "J++OdAo71g5gdBNgXMoR+w=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -2028,7 +2172,7 @@
           "hash": "KwK2Vmq3KqhjD8AE+s7YoA=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -2037,10 +2181,10 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Services.StorageService.html",
-          "hash": "oodVOakBckoHzBSCyUhr9w=="
+          "hash": "fvd/iqjLjFBvn2enYhMUVA=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -2052,7 +2196,7 @@
           "hash": "6gOwc9c3NiuC256G/jwFhQ=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -2064,7 +2208,7 @@
           "hash": "HvKNzQxN9cc2lRpzf8FVpA=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -2076,7 +2220,7 @@
           "hash": "a+/KoNnmlmHJBZ3xvCmgNw=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -2088,7 +2232,7 @@
           "hash": "eFjNaFqckB48b4ISDjBMWQ=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -2100,7 +2244,7 @@
           "hash": "vFHSdj+TGnqXKVkNoiMMSA=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -2112,7 +2256,7 @@
           "hash": "v+AnBzbUsjmBYTWZ+Q//xQ=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -2124,7 +2268,7 @@
           "hash": "z6chRYdFeo/mHlutv66rxA=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -2136,7 +2280,7 @@
           "hash": "+TY/BYln2mBRrlrn0NmGvg=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -2148,7 +2292,7 @@
           "hash": "HnXkYZ+kvJ1vhARDwEGJOw=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -2160,7 +2304,7 @@
           "hash": "WxgBiuRkDMB7M5flMk+lng=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -2172,7 +2316,7 @@
           "hash": "scXShmvSJZOd7ynZZl3U8g=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -2184,7 +2328,7 @@
           "hash": "UE+UjKW07gqVHO6Jl9ZdFA=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -2196,7 +2340,7 @@
           "hash": "UiJFUsfnBcyT9Ao5hRaeSA=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -2205,7 +2349,7 @@
       "output": {
         ".html": {
           "relative_path": "api/toc.html",
-          "hash": "kLOHPkpjRLLd6uYSlS1VWg=="
+          "hash": "YDly5CfGHIxruUjR23AgIA=="
         }
       },
       "is_incremental": false,
@@ -2219,17 +2363,17 @@
         "incrementalPhase": "build"
       },
       "processors": {
+        "TocDocumentProcessor": {
+          "can_incremental": false,
+          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+          "incrementalPhase": "build"
+        },
         "ConceptualDocumentProcessor": {
           "can_incremental": true,
           "incrementalPhase": "build"
         },
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": true,
-          "incrementalPhase": "build"
-        },
-        "TocDocumentProcessor": {
-          "can_incremental": false,
-          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build"
         }
       }
