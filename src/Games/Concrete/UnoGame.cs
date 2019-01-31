@@ -52,7 +52,7 @@ namespace PacManBot.Games.Concrete
 
         // Properties
 
-        [DataMember] public override State State { get; set; }
+        [DataMember] public override GameState State { get; set; }
         [DataMember] public override DateTime LastPlayed { get; set; }
         [DataMember] public override int Time { get; set; }
         [DataMember] public override ulong ChannelId { get; set; }
@@ -65,12 +65,12 @@ namespace PacManBot.Games.Concrete
         private Player FollowingTurn => reversed ? PreviousPlayer() : NextPlayer();
         private Player PrecedingTurn => reversed ? NextPlayer() : PreviousPlayer();
 
-        public override bool BotTurn => players.Count > 1 && State == State.Active && CurrentPlayer.User.IsBot;
+        public override bool BotTurn => players.Count > 1 && State == GameState.Active && CurrentPlayer.User.IsBot;
         public override bool AllBots => players.All(x => x.User?.IsBot ?? false);
         public override ulong[] UserId
         {
             get => players?.Select(x => x.id).ToArray();
-            set => throw new InvalidOperationException($"Use {nameof(AddPlayer)} and {nameof(RemovePlayer)} instead");
+            set => throw new InvalidOperationException($"Use {nameof(TryAddPlayerAsync)} and {nameof(RemovePlayer)} instead");
         }
 
 
@@ -210,10 +210,10 @@ namespace PacManBot.Games.Concrete
                 value = value.ReplaceMany((" ", ""), ("auto", ""), ("uno", ""), ("draw2", "drawtwo"), ("draw4", "drawfour"));
 
                 CardColor? color = EnumTraits<CardColor>.Values
-                    .FirstOrNull(x => value.StartsOrEndsWith(x.ToString().ToLower()));
+                    .FirstOrNull(x => value.StartsOrEndsWith(x.ToString().ToLowerInvariant()));
 
                 CardType? type = EnumTraits<CardType>.Values.ToList().Reversed()
-                    .FirstOrNull(x => value.StartsOrEndsWith(x.ToString().ToLower())
+                    .FirstOrNull(x => value.StartsOrEndsWith(x.ToString().ToLowerInvariant())
                                  || x <= CardType.Nine && value.StartsOrEndsWith(((int)x).ToString()));
 
                 if (auto)
@@ -239,9 +239,9 @@ namespace PacManBot.Games.Concrete
 
         private UnoGame() { }
 
-        protected override async Task Initialize(ulong channelId, SocketUser[] players, IServiceProvider services)
+        protected override async Task InitializeAsync(ulong channelId, SocketUser[] players, IServiceProvider services)
         {
-            await base.Initialize(channelId, null, services);
+            await base.InitializeAsync(channelId, null, services);
 
             // Make deck
             foreach (var color in EnumTraits<CardColor>.Values.Take(4))
@@ -278,7 +278,7 @@ namespace PacManBot.Games.Concrete
                 Message = inviteMsg;
             }
 
-            foreach (var player in toAdd) await AddPlayer(player);
+            foreach (var player in toAdd) await TryAddPlayerAsync(player);
 
             ApplyCardEffect();
 
@@ -293,7 +293,7 @@ namespace PacManBot.Games.Concrete
         {
             if (players.Count < 2) return false;
 
-            value = StripPrefix(value.ToLower());
+            value = StripPrefix(value.ToLowerInvariant());
 
             if (UserId.Contains(userId))
             {
@@ -313,7 +313,7 @@ namespace PacManBot.Games.Concrete
         public async void Input(string input, ulong userId = 1)
         {
             LastPlayed = DateTime.Now;
-            input = StripPrefix(input.ToLower());
+            input = StripPrefix(input.ToLowerInvariant());
             bool calledByAi = CurrentPlayer.User.IsBot;
 
 
@@ -424,7 +424,7 @@ namespace PacManBot.Games.Concrete
                 }
                 else if (CurrentPlayer.cards.Count == 0)
                 {
-                    State = State.Completed;
+                    State = GameState.Completed;
                     Winner = Turn;
                     if (CurrentPlayer.id == client.CurrentUser.Id) gameLog.Add($"\n {Program.Random.Choose(Content.gameWinTexts)}");
                     return;
@@ -505,7 +505,7 @@ namespace PacManBot.Games.Concrete
 
         public override EmbedBuilder GetEmbed(bool showHelp = true)
         {
-            if (State == State.Cancelled) return CancelledEmbed();
+            if (State == GameState.Cancelled) return CancelledEmbed();
 
             var description = new StringBuilder();
             string prefix = storage.GetPrefix(Channel);
@@ -522,7 +522,7 @@ namespace PacManBot.Games.Concrete
             }
             description.Append($"\n```\n{TopCard.ToStringBig()}\n");
 
-            if (State == State.Active)
+            if (State == GameState.Active)
             {
                 description.Append(
                     $"{Empty}\nSay the name of a card to discard it or \"draw\" to draw another.\n" +
@@ -551,7 +551,7 @@ namespace PacManBot.Games.Concrete
 
         public override string GetContent(bool showHelp = true)
         {
-            if (State == State.Cancelled) return "";
+            if (State == GameState.Cancelled) return "";
 
             return $"{gameLog.JoinString("\n")}\n{Message}".TruncateStart(2000);
         }
@@ -714,7 +714,8 @@ namespace PacManBot.Games.Concrete
 
 
 
-        public async Task<string> AddPlayer(IUser user)
+        /// <summary>Adds a new player to the game. Returns the fail reason if it can't be added.</summary>
+        public async Task<string> TryAddPlayerAsync(IUser user)
         {
             if (players.Count == 10) return "The game is full!";
             if (players.Any(x => x.id == user.Id)) return "You're already playing!";
@@ -729,7 +730,9 @@ namespace PacManBot.Games.Concrete
         }
 
 
+        /// <summary>Removes a user from the game.</summary>
         public void RemovePlayer(IUser user) => RemovePlayer(players.First(x => x.id == user.Id));
+
         private void RemovePlayer(UnoPlayer player)
         {
             drawPile.AddRange(player.cards);

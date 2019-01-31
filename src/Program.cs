@@ -74,13 +74,21 @@ namespace PacManBot
                 .AddSingleton<ScriptingService>();
 
             var services = serviceCollection.BuildServiceProvider();
-            services.Get<LoggingService>().Info($"Pac-Man Bot v{Version}");
+            var log = services.Get<LoggingService>();
+            log.Info($"Pac-Man Bot v{Version}");
 
 
             // Let's go
-            await services.Get<PmBot>().StartAsync();
-
-            await Task.Delay(-1);
+            try
+            {
+                await services.Get<PmBot>().StartAsync();
+                await Task.Delay(-1);
+            }
+            catch (Exception e)
+            {
+                log.Fatal($"While starting the bot: {e.GetType()}: {e.Message}");
+                await Task.Delay(5000);
+            }
         }
     }
 }

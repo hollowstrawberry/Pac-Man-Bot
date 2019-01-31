@@ -6,6 +6,7 @@ using Discord;
 using Discord.Net;
 using PacManBot.Constants;
 using PacManBot.Extensions;
+using System.Net.WebSockets;
 
 namespace PacManBot.Services
 {
@@ -43,16 +44,22 @@ namespace PacManBot.Services
 
 
         /// <summary>Logs an exception. Connection-related exceptions will be treated as warnings,
-        /// while any other exception will be treated as an error.</summary>
+        /// while more important exceptions will be treated as an error.</summary>
         public void Exception(string message, Exception e, string source = LogSource.Bot)
         {
+            if (message != null) message += ": ";
+
             if (e is HttpException || e is TimeoutException)
             {
-                Warning($"{message}: {e.GetType()}: {e.Message}", source);
+                Warning($"{message}{e.GetType()}: {e.Message}", source);
+            }
+            else if (e is WebSocketException || e is WebSocketClosedException) // No stacktrace needed
+            {
+                Error($"{message}{e.GetType()}: {e.Message}", source);
             }
             else
             {
-                Error($"{message}: {e}", source);
+                Error($"{message}{e}", source); // Full stacktrace
             }
         }
 
@@ -76,11 +83,13 @@ namespace PacManBot.Services
                 {
                     // Unknown object events that are irrelevant.
                     // These include user voice events and leaving guilds.
-                    if (log.Message.StartsWith("Unknown")) return Task.CompletedTask; // Unknown objects 
+                    if (log.Message.StartsWith("Unknown")) return Task.CompletedTask; 
                 }
             }
 
-            Log($"{log.Message}{log.Exception}", log.Severity, source);
+            if (log.Exception == null) Log(log.Message, log.Severity, source);
+            else Exception(log.Message, log.Exception, source);
+
             return Task.CompletedTask;
         }
 

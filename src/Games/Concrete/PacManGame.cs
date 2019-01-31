@@ -71,7 +71,7 @@ namespace PacManBot.Games.Concrete
 
         // Properties
 
-        [DataMember] public override State State { get; set; }
+        [DataMember] public override GameState State { get; set; }
         [DataMember] public override DateTime LastPlayed { get; set; }
         [DataMember] public override int Time { get; set; }
         [DataMember] public override ulong MessageId { get; set; }
@@ -102,12 +102,14 @@ namespace PacManBot.Games.Concrete
                 }
 
                 string[] lines = value.NormalizeLineEndings().Split('\n').ToArray();
-                int width = lines[0].Length, height = lines.Length;
+                int height = lines.Length;
+                int width = lines.Select(x => x.Length).Max();
                 map = new char[width, height];
 
                 for (int y = 0; y < height; y++)
                 {
-                    if (lines[y].Length != width) throw new InvalidMapException("Map width not constant");
+                    if (lines[y].Length != width) lines[y] = lines[y].PadRight(width);
+
                     for (int x = 0; x < width; x++)
                     {
                         map[x, y] = lines[y][x];
@@ -259,7 +261,7 @@ namespace PacManBot.Games.Concrete
 
         public void Input(IEmote emote, ulong userId = 1)
         {
-            if (State != State.Active) return;
+            if (State != GameState.Active) return;
             LastPlayed = DateTime.Now;
 
             PacManInput input = GameInputs[emote];
@@ -349,7 +351,7 @@ namespace PacManBot.Games.Concrete
 
                     if (pellets == 0)
                     {
-                        State = State.Win;
+                        State = GameState.Win;
                     }
                 }
 
@@ -357,7 +359,7 @@ namespace PacManBot.Games.Concrete
                 foreach (Ghost ghost in ghosts)
                 {
                     if (pacMan.pos == ghost.pos) OnGhostCollision(ghost, ref continueInput);
-                    if (State != State.Active) return;
+                    if (State != GameState.Active) return;
 
                     GhostAi(ghost);
                     if (pacMan.pos == ghost.pos) OnGhostCollision(ghost, ref continueInput);
@@ -369,7 +371,7 @@ namespace PacManBot.Games.Concrete
             } while (fastForward && continueInput && consecutive <= 20);
 
 
-            if (State == State.Active)
+            if (State == GameState.Active)
             {
                 games.Save(this);
             }
@@ -388,7 +390,7 @@ namespace PacManBot.Games.Concrete
             }
             else
             {
-                State = State.Lose;
+                State = GameState.Lose;
             }
 
             continueInput = false;
@@ -397,7 +399,7 @@ namespace PacManBot.Games.Concrete
 
         public override string GetContent(bool showHelp = true)
         {
-            if (State == State.Cancelled && Channel is IGuildChannel) // So as to not spam
+            if (State == GameState.Cancelled && Channel is IGuildChannel) // So as to not spam
             {
                 return "";
             }
@@ -438,31 +440,31 @@ namespace PacManBot.Games.Concrete
                 {
                     mapCopy[ghost.pos] = ghost.Appearance;
                 }
-                mapCopy[pacMan.pos] = State == State.Lose ? CharPlayerDead : CharPlayer;
+                mapCopy[pacMan.pos] = State == GameState.Lose ? CharPlayerDead : CharPlayer;
 
 
                 var display = new StringBuilder(mapCopy.ToString()); // The final display in string form
 
 
                 // Add text to the side
-                string[] info = {
+                var info = new List<string>(new[] {
                     $"┌{"───< Mobile Mode >───┐".If(mobileDisplay)}",
                     $"│ {"#".If(!mobileDisplay)}Time: {Time}",
                     $"│ {"#".If(!mobileDisplay)}Score: {score}{$" +{score - oldScore}".If(score - oldScore != 0)}",
                     $"│ {$"{"#".If(!mobileDisplay)}Power: {pacMan.power}".If(pacMan.power > 0)}",
                     $"│ ",
                     $"│ {CharPlayer} - Pac-Man{$": {pacMan.dir.ToString().ToLower()}".If(pacMan.dir != Dir.None)}",
-                    $"│ ",
-                    $"│ ", " │ ", " │ ", " │ ", // 7-10: ghosts
+                    $"│ ", // 7-10: ghosts
                     $"│ ",
                     $"│ {($"{FruitChar}{FruitChar} - Fruit: {fruitTimer}").If(fruitTimer > 0)}",
                     $"└"
-                };
+                });
 
                 for (int i = 0; i < ghosts.Count; i++)
                 {
-                    info[i + 7] = $"│ {ghosts[i].Appearance} - {(GhostType)i}"
-                                + $": {ghosts[i].dir.ToString().ToLower()}".If(ghosts[i].dir != Dir.None);
+                    info.Insert(i+7,
+                        $"│ {ghosts[i].Appearance} - {(GhostType)i}" +
+                        $": {ghosts[i].dir.ToString().ToLower()}".If(ghosts[i].dir != Dir.None));
                 }
 
                 if (mobileDisplay)
@@ -471,7 +473,7 @@ namespace PacManBot.Games.Concrete
                 }
                 else
                 {
-                    for (int i = 0; i < info.Length && i < map.Height; i++) // Insert info
+                    for (int i = 0; i < info.Count && i < map.Height; i++) // Insert info
                     {
                         int insertIndex = (i + 1) * mapCopy.Width; // Skips ahead a certain amount of lines
                         for (int j = i - 1; j >= 0; j--) insertIndex += info[j].Length + 2; // Takes into account the added line length of previous info
@@ -482,17 +484,17 @@ namespace PacManBot.Games.Concrete
                 // Code tags
                 switch (State)
                 {
-                    case State.Lose:
+                    case GameState.Lose:
                         display.Insert(0, "```diff\n");
                         display.Replace("\n", "\n-", 0, display.Length - 1); // All red
                         break;
 
-                    case State.Win:
+                    case GameState.Win:
                         display.Insert(0, "```diff\n");
                         display.Replace("\n", "\n+", 0, display.Length - 1); // All green
                         break;
 
-                    case State.Cancelled:
+                    case GameState.Cancelled:
                         display.Insert(0, "```diff\n");
                         display.Replace("\n", "\n*** ", 0, display.Length - 1); // All gray
                         break;
@@ -504,20 +506,20 @@ namespace PacManBot.Games.Concrete
                 }
                 display.Append("```");
 
-                if (State != State.Active || custom) // Secondary box
+                if (State != GameState.Active || custom) // Secondary box
                 {
                     display.Append("```diff");
                     switch (State)
                     {
-                        case State.Win: display.Append("\n+You won!"); break;
-                        case State.Lose: display.Append("\n-You lost!"); break;
-                        case State.Cancelled: display.Append($"\n-Game has been ended.{" Score not saved".If(!custom)}"); break;
+                        case GameState.Win: display.Append("\n+You won!"); break;
+                        case GameState.Lose: display.Append("\n-You lost!"); break;
+                        case GameState.Cancelled: display.Append($"\n-Game has been ended.{" Score not saved".If(!custom)}"); break;
                     }
                     if (custom) display.Append("\n*** Custom game: Score won't be registered. ***");
                     display.Append("```");
                 }
 
-                if (showHelp && State == State.Active && Time < 5)
+                if (showHelp && State == GameState.Active && Time < 5)
                 {
                     display.Append($"\n(Confused? React with {CustomEmoji.Help} for help)");
                 }
@@ -537,7 +539,7 @@ namespace PacManBot.Games.Concrete
 
         public override EmbedBuilder GetEmbed(bool showHelp = true)
         {
-            return State == State.Cancelled && Channel is IGuildChannel ? CancelledEmbed() : null;
+            return State == GameState.Cancelled && Channel is IGuildChannel ? CancelledEmbed() : null;
         }
 
 

@@ -17,7 +17,7 @@ namespace PacManBot.Games
 
 
         /// <summary>The state indicating whether a game is ongoing, or its ending reason.</summary>
-        State State { get; set; }
+        GameState State { get; set; }
 
         /// <summary>Date when this game was last accessed by a player.</summary>
         DateTime LastPlayed { get; set; }

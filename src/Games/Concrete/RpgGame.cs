@@ -19,6 +19,7 @@ namespace PacManBot.Games.Concrete
         public override TimeSpan Expiry => TimeSpan.FromDays(100);
 
 
+        public const int NameCharLimit = 32;
         public const string MenuEmote = "🛂";
         public const string ProfileEmote = "🚹";
         public const string SkillsEmote = "🅿";
@@ -44,7 +45,7 @@ namespace PacManBot.Games.Concrete
         [DataMember] public DateTime lastHeal = default;
 
         /// <summary>The state of the current or last battle.</summary>
-        [DataMember] public override State State { get => base.State; set => base.State = value; }
+        [DataMember] public override GameState State { get => base.State; set => base.State = value; }
         [DataMember] public override ulong OwnerId { get => base.OwnerId; protected set => base.OwnerId = value; }
         [DataMember] public override DateTime LastPlayed { get => base.LastPlayed; set => base.LastPlayed = value; }
         [DataMember] public override ulong ChannelId { get => base.ChannelId; set => base.ChannelId = value; }
@@ -75,7 +76,7 @@ namespace PacManBot.Games.Concrete
                     // Reset fight if invalid opponent
                     if (internalPvpGame == null)
                     {
-                        ResetBattle(State.Completed);
+                        ResetBattle(GameState.Completed);
                         return null;
                     }
                 }
@@ -93,14 +94,14 @@ namespace PacManBot.Games.Concrete
             : base(0, new[] { userId }, services)
         {
             player = new RpgPlayer(name);
-            State = State.Cancelled;
+            State = GameState.Cancelled;
         }
 
 
         /// <summary>Prepares a new fight.</summary>
         public void StartFight(ulong? pvpUserId = null)
         {
-            State = State.Active;
+            State = GameState.Active;
             lastBattle = DateTime.Now;
             LastPlayed = lastBattle;
             enemies.Clear();
@@ -229,14 +230,14 @@ namespace PacManBot.Games.Concrete
             {
                 embed.Color = Colors.Green;
                 desc.AppendLine($"\n🎺 You win!");
-                ResetBattle(State.Win);
+                ResetBattle(GameState.Win);
                 player.Mana += player.ManaRegen;
             }
             else if (player.Life == 0)
             {
                 embed.Color = Colors.Red;
                 desc.AppendLine(player.Die());
-                ResetBattle(State.Lose);
+                ResetBattle(GameState.Lose);
             }
 
 
@@ -296,9 +297,9 @@ namespace PacManBot.Games.Concrete
 
                 PvpGame.player.Life = 1;
                 PvpGame.player.Buffs.Clear();
-                PvpGame.ResetBattle(State.Lose);
+                PvpGame.ResetBattle(GameState.Lose);
                 games.Save(PvpGame);
-                ResetBattle(State.Win);
+                ResetBattle(GameState.Win);
 
             }
             else if (player.Life == 0)
@@ -310,9 +311,9 @@ namespace PacManBot.Games.Concrete
 
                 player.Life = 1;
                 player.Buffs.Clear();
-                PvpGame.ResetBattle(State.Win);
+                PvpGame.ResetBattle(GameState.Win);
                 games.Save(PvpGame);
-                ResetBattle(State.Lose);
+                ResetBattle(GameState.Lose);
             }
             else
             {
@@ -328,8 +329,7 @@ namespace PacManBot.Games.Concrete
                 else
                 {
                     string prefix = storage.GetPrefix(Channel);
-                    desc.AppendLine($"{PvpGame.player} must challenge you back to start." +
-                                    $"\nThe challenger can cancel with {prefix}rpg cancel");
+                    desc.AppendLine($"Waiting for {PvpGame.Owner.Mention} to accept the challenge.");
                 }
             }
 
@@ -341,7 +341,7 @@ namespace PacManBot.Games.Concrete
 
 
         /// <summary>Safely ends a battle, and sets the game state to a non-active state.</summary>
-        public void ResetBattle(State endState)
+        public void ResetBattle(GameState endState)
         {
             State = endState;
             fightEmbed = null;

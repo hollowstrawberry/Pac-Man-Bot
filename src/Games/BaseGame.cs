@@ -39,7 +39,7 @@ namespace PacManBot.Games
 
 
         /// <summary>The state indicating whether a game is ongoing, or why it ended.</summary>
-        public virtual State State { get; set; }
+        public virtual GameState State { get; set; }
 
         /// <summary>Date when this game was last accessed by a player.</summary>
         public virtual DateTime LastPlayed { get; set; }
@@ -70,7 +70,7 @@ namespace PacManBot.Games
             SetServices(services);
             UserId = userIds;
 
-            State = State.Active;
+            State = GameState.Active;
             Time = 0;
             LastPlayed = DateTime.Now;
         }

@@ -59,6 +59,7 @@ namespace PacManBot
 
             client.Log += log.ClientLog;
             client.ShardReady += OnShardReady;
+
             await client.LoginAsync(TokenType.Bot, Config.discordToken);
             await client.StartAsync();
         }

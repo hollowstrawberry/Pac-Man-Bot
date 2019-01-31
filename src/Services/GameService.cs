@@ -78,6 +78,13 @@ namespace PacManBot.Services
         }
 
 
+        /// <summary>Retrieves the specified user's game of the desired type. Null if not found.</summary>
+        public IUserGame GetForUser(ulong userId, Type type)
+        {
+            return userGames.TryGetValue((userId, type), out var game) ? game : null;
+        }
+
+
         /// <summary>Adds a new game to the collection of channel games or user games.</summary>
         public void Add(IBaseGame game)
         {
@@ -93,10 +100,6 @@ namespace PacManBot.Services
             try
             {
                 game.CancelRequests();
-                if (game is IStoreableGame sGame && File.Exists(sGame.GameFile()))
-                {
-                    File.Delete(sGame.GameFile());
-                }
 
                 bool success = false;
                 if (game is IUserGame uGame)
@@ -106,6 +109,11 @@ namespace PacManBot.Services
                 else if (game is IChannelGame cGame)
                 {
                     success = games.TryRemove(cGame.ChannelId);
+                }
+
+                if (game is IStoreableGame sGame && File.Exists(sGame.GameFile()))
+                {
+                    File.Delete(sGame.GameFile());
                 }
 
                 if (success && doLog)

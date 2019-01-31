@@ -9,9 +9,9 @@ using PacManBot.Extensions;
 
 namespace PacManBot.Commands.Modules
 {
-    [Name(CustomEmoji.Staff + "Mod"), Remarks("5")]
+    [Name(ModuleNames.Mod), Remarks("5")]
     [PmRequireUserPermission(GuildPermission.ManageMessages)]
-    public class ModModule : PmBaseModule
+    public class ModModule : BaseModule
     {
         string ContactMessage => $"Please try again or, if the problem persists, contact the bot owner using `{Context.Prefix}feedback`.";
 
@@ -147,7 +147,7 @@ namespace PacManBot.Commands.Modules
                     $"dedicated bot or game channels.\n\n" +
                     $"Set {channel.Mention()} to *no prefix mode*? (Yes/No)");
 
-                if (await GetYesResponse())
+                if (await GetYesResponseAsync())
                 {
                     Storage.ToggleChannelGuildPrefix(channel.Id);
                     await ReplyAsync(

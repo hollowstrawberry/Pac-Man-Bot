@@ -26,9 +26,9 @@ namespace PacManBot.Games.Concrete
 
         private TTT5Game() { }
 
-        protected override Task Initialize(ulong channelId, SocketUser[] players, IServiceProvider services)
+        protected override Task InitializeAsync(ulong channelId, SocketUser[] players, IServiceProvider services)
         {
-            base.Initialize(channelId, players, services);
+            base.InitializeAsync(channelId, players, services);
 
             board = new Player[5, 5];
             board.Fill(Player.None);
@@ -40,17 +40,17 @@ namespace PacManBot.Games.Concrete
 
         public bool IsInput(string value, ulong userId)
         {
-            return userId == User(Turn)?.Id && Regex.IsMatch(StripPrefix(value).ToUpper(), @"^[ABCDE][12345]$");
+            return userId == User(Turn)?.Id && Regex.IsMatch(StripPrefix(value).ToUpperInvariant(), @"^[ABCDE][12345]$");
         }
 
 
         public void Input(string input, ulong userId = 1)
         {
-            input = StripPrefix(input).ToUpper();
+            input = StripPrefix(input).ToUpperInvariant();
             int x = input[0] - 'A';
             int y = input[1] - '1';
 
-            if (State != State.Active || board[x, y] != Player.None) return; // Cell is already occupied
+            if (State != GameState.Active || board[x, y] != Player.None) return; // Cell is already occupied
 
             board[x, y] = Turn;
             Time++;
@@ -62,7 +62,7 @@ namespace PacManBot.Games.Concrete
             }
             else
             {
-                State = State.Completed;
+                State = GameState.Completed;
                 Turn = Winner;
             }
         }
@@ -70,7 +70,7 @@ namespace PacManBot.Games.Concrete
 
         public override EmbedBuilder GetEmbed(bool showHelp = true)
         {
-            if (State == State.Cancelled) return CancelledEmbed();
+            if (State == GameState.Cancelled) return CancelledEmbed();
 
             var description = new StringBuilder();
 
@@ -78,7 +78,7 @@ namespace PacManBot.Games.Concrete
             {
                 if (i == Turn) description.Append("►");
                 description.Append($"{((Player)i).Symbol()} {$"{threes[i]} lines".If(threes[i] >= 0)} - " +
-                                   $"{User(i).NameandDisc().SanitizeMarkdown()}\n");
+                                   $"{User(i).Mention}\n");
             }
 
             description.Append($"{Empty}\n");
@@ -95,7 +95,7 @@ namespace PacManBot.Games.Concrete
                 description.Append('\n');
             }
 
-            if (State == State.Active)
+            if (State == GameState.Active)
             {
                 description.Append($"{Empty}\nSay a column and row to place an {(Turn == Player.Red ? "X" : "O")} in that cell (Example: B4)");
                 description.Append("\nTo win you must make **more lines of three** than your opponent,\n" +

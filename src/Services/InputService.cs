@@ -67,7 +67,7 @@ namespace PacManBot.Services
 
         /// <summary>Returns the first new message that satisfies the given condition within 
         /// a timeout period in seconds, or null if no match is received.</summary>
-        public async Task<SocketUserMessage> GetResponse(Func<SocketUserMessage, bool> condition, int timeout = 30)
+        public async Task<SocketUserMessage> GetResponseAsync(Func<SocketUserMessage, bool> condition, int timeout = 30)
         {
             var pending = new PendingResponse(condition);
             pendingResponses.TryAdd(pending, 0);
@@ -156,22 +156,22 @@ namespace PacManBot.Services
 
 
         /// <summary>Tries to find and complete a pending response. Returns whether it is successful.</summary>
-        private Task<bool> PendingResponseAsync(SocketUserMessage message)
+        private ValueTask<bool> PendingResponseAsync(SocketUserMessage message)
         {
             var pending = pendingResponses.Select(x => x.Key).FirstOrDefault(x => x.Condition(message));
 
             if (pending != null)
             {
                 pending.Response = message;
-                return Task.FromResult(true);
+                return new ValueTask<bool>(true);
             }
 
-            return Task.FromResult(false);
+            return new ValueTask<bool>(false);
         }
 
 
         /// <summary>Tries to find and execute a command. Returns whether it is successful.</summary>
-        private async Task<bool> CommandAsync(SocketUserMessage message)
+        private async ValueTask<bool> CommandAsync(SocketUserMessage message)
         {
             string prefix = await storage.GetGuildPrefixAsync((message.Channel as SocketGuildChannel)?.Guild);
             int commandPosition = 0;
@@ -189,7 +189,7 @@ namespace PacManBot.Services
 
 
         /// <summary>Tries to find special messages to respond to. Returns whether it is successful.</summary>
-        private async Task<bool> AutoresponseAsync(SocketUserMessage message)
+        private async ValueTask<bool> AutoresponseAsync(SocketUserMessage message)
         {
             if (!(message.Channel is SocketGuildChannel gChannel) || await storage.AllowsAutoresponseAsync(gChannel.Guild))
             {
@@ -211,7 +211,7 @@ namespace PacManBot.Services
 
 
         /// <summary>Tries to find a game and execute message input. Returns whether it is successful.</summary>
-        private async Task<bool> MessageGameInputAsync(SocketUserMessage message)
+        private async ValueTask<bool> MessageGameInputAsync(SocketUserMessage message)
         {
             var game = games.GetForChannel<IMessagesGame>(message.Channel.Id);
             if (game == null || !game.IsInput(message.Content, message.Author.Id)) return false;
@@ -230,7 +230,7 @@ namespace PacManBot.Services
 
 
         /// <summary>Tries to find a game and execute reaction input. Returns whether it is successful.</summary>
-        private async Task<bool> ReactionGameInputAsync(IUserMessage message, ISocketMessageChannel channel, SocketReaction reaction)
+        private async ValueTask<bool> ReactionGameInputAsync(IUserMessage message, ISocketMessageChannel channel, SocketReaction reaction)
         {
             var game = games.AllGames
                 .OfType<IReactionsGame>()
@@ -266,7 +266,7 @@ namespace PacManBot.Services
             {
                 while(mGame.BotTurn) mGame.BotInput();
             }
-            if (game.State != State.Active) games.Remove(game);
+            if (game.State != GameState.Active) games.Remove(game);
 
             if (gameMessage != null && await message.Channel.BotCan(ChannelPermission.ManageMessages))
             {
@@ -303,11 +303,11 @@ namespace PacManBot.Services
 
             game.Input(reaction.Emote, user.Id);
 
-            if (game.State != State.Active)
+            if (game.State != GameState.Active)
             {
                 if (!(game is IUserGame)) games.Remove(game);
 
-                if (game is PacManGame pmGame && pmGame.State != State.Cancelled && !pmGame.custom)
+                if (game is PacManGame pmGame && pmGame.State != GameState.Cancelled && !pmGame.custom)
                 {
                     storage.AddScore(new ScoreEntry(pmGame.score, user.Id, pmGame.State, pmGame.Time,
                         user.NameandDisc(), $"{guild?.Name}/{channel.Name}", DateTime.Now));

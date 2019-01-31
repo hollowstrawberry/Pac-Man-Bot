@@ -1,12 +1,12 @@
 ﻿using System.Threading.Tasks;
 using Discord.Commands;
-using Discord.Net;
 using PacManBot.Constants;
 using PacManBot.Games.Concrete;
 
-namespace PacManBot.Commands.Modules
+namespace PacManBot.Commands.Modules.GameModules
 {
-    public partial class MoreGamesModule
+    [Name(ModuleNames.Games), Remarks("3")]
+    public class RubiksModule : BaseGameModule<RubiksGame>
     {
         [Command("rubik"), Alias("rubiks", "rubix", "rb", "rbx")]
         [Remarks("Your personal rubik's cube")]
@@ -18,16 +18,13 @@ namespace PacManBot.Commands.Modules
          "\n**{prefix}rubik showguide** - Toggle the help displayed below the cube. For pros.")]
         public async Task RubiksCube([Remainder]string input = "")
         {
-            var cube = Games.GetForUser<RubiksGame>(Context.User.Id);
-
-            if (cube == null)
+            if (Game == null)
             {
-                cube = new RubiksGame(Context.Channel.Id, Context.User.Id, Services);
-                Games.Add(cube);
+                StartNewGame(new RubiksGame(Context.Channel.Id, Context.User.Id, Services));
             }
 
             bool removeOld = false;
-            switch (input.ToLower())
+            switch (input.ToLowerInvariant())
             {
                 case "moves":
                 case "notation":
@@ -52,27 +49,27 @@ namespace PacManBot.Commands.Modules
 
                 case "h":
                 case "help":
-                    await ReplyAsync(Commands.GetCommandHelp("rubik", Context.Prefix));
+                    await ReplyAsync(Commands.GetCommandHelp("rubik", Context));
                     return;
 
 
                 case "reset":
                 case "solve":
-                    Games.Remove(cube);
+                    EndGame();
                     await AutoReactAsync();
                     return;
 
 
                 case "scramble":
                 case "shuffle":
-                    cube.Scramble();
+                    Game.Scramble();
                     removeOld = true;
                     break;
 
 
                 case "showguide":
-                    cube.ShowHelp = !cube.ShowHelp;
-                    if (cube.ShowHelp) await AutoReactAsync();
+                    Game.ShowHelp = !Game.ShowHelp;
+                    if (Game.ShowHelp) await AutoReactAsync();
                     else await ReplyAsync("❗ You just disabled the help displayed below the cube.\n" +
                                           "Consider re-enabling it if you're not used to the game.");
                     break;
@@ -81,7 +78,7 @@ namespace PacManBot.Commands.Modules
                 default:
                     if (!string.IsNullOrEmpty(input))
                     {
-                        if (!cube.TryDoMoves(input))
+                        if (!Game.TryDoMoves(input))
                         {
                             await ReplyAsync($"{CustomEmoji.Cross} Invalid sequence of moves. " +
                                              $"Do **{Context.Prefix}rubik help** for commands.");
@@ -92,16 +89,8 @@ namespace PacManBot.Commands.Modules
                     break;
             }
 
-            var oldMessage = await cube.GetMessage();
-            var newMessage = await ReplyAsync(cube.GetContent(), cube.GetEmbed(Context.Guild));
-            cube.MessageId = newMessage.Id;
-            cube.ChannelId = Context.Channel.Id;
-
-            if (removeOld && oldMessage != null && oldMessage.Channel.Id == Context.Channel.Id)
-            {
-                try { await oldMessage.DeleteAsync(DefaultOptions); }
-                catch (HttpException) { }
-            }
+            if (removeOld && Game.ChannelId == Context.Channel.Id) await DeleteGameMessageAsync();
+            await ReplyGameAsync();
         }
     }
 }

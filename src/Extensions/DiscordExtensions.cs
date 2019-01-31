@@ -214,11 +214,11 @@ namespace PacManBot.Extensions
         /// <summary>Tries to convert a hexadecimal code or X11 color name into a <see cref="DiscordColor"/>.</summary>
         public static DiscordColor? ToColor(this string text)
         {
+            text = text.ToLowerInvariant().Trim().Replace(" ", "");
+            if (Regex.IsMatch(text, @"^[0123456789abcdef]{6}$")) text = $"#{text}";
+
             try
             {
-                text = text.ToLower().Trim().Replace(" ", "");
-                if (Regex.IsMatch(text, @"^[0123456789abcdef]{6}$")) text = $"#{text}";
-
                 var color = (SystemColor)new ColorConverter().ConvertFromString(text);
                 return new DiscordColor(color.R, color.G, color.B);
             }

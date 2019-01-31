@@ -6,7 +6,6 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
-using Discord.Net;
 using Discord.WebSocket;
 using PacManBot.Commands;
 using PacManBot.Constants;
@@ -52,7 +51,7 @@ namespace PacManBot.Services
         /// <summary>Adds all command modules in this assembly.</summary>
         public async Task AddAllModulesAsync()
         {
-            await AddModulesAsync(typeof(PmBaseModule).Assembly, services);
+            await AddModulesAsync(typeof(BaseModule).Assembly, services);
 
             var allCommands = Commands
                 .OrderByDescending(c => c.Priority)
@@ -65,18 +64,16 @@ namespace PacManBot.Services
                 var help = new CommandHelp(com);
                 foreach (var alias in com.Aliases)
                 {
-                    tempCommandHelp[alias.ToLower()] = help;
+                    tempCommandHelp[alias.ToLowerInvariant()] = help;
                 }
             }
             commandHelp = tempCommandHelp;
 
             moduleHelp = allCommands
-                .GroupBy(c => c.Module)
-                .OrderBy(g => g.Key.Remarks)
-                .ToDictionary(
-                    g => g.Key.Name,
-                    g => g.Select(c => commandHelp[c.Name.ToLower()])
-                        .ToArray().AsEnumerable());
+                .OrderBy(c => c.Module.Remarks)
+                .GroupBy(c => c.Module.Name)
+                .ToDictionary(g => g.Key, g => g.Select(c => commandHelp[c.Name.ToLowerInvariant()]).ToArray().AsEnumerable())
+                .AsReadOnly();
 
             log.Info($"Added {allCommands.Length} commands", LogSource.Command);
         }
@@ -127,10 +124,11 @@ namespace PacManBot.Services
 
 
         /// <summary>Gets a message embed of the user manual for a command.</summary>
-        public EmbedBuilder GetCommandHelp(string commandName, string prefix = "")
+        public EmbedBuilder GetCommandHelp(string commandName, PmCommandContext context = null)
         {
-            if (!commandHelp.TryGetValue(commandName.ToLower(), out var help)) return null;
-            return help.GetEmbed(prefix);
+            var help = commandHelp.Select(x => x.Value)
+                .FirstOrDefault(x => x.Command.Aliases.Contains(commandName.ToLowerInvariant()));
+            return help?.GetEmbed(context?.Prefix ?? "");
         }
 
 
@@ -172,11 +170,6 @@ namespace PacManBot.Services
                             moduleText.Append($"**{command.Command.Name}**, ");
                         }
                     }
-                }
-
-                if (!expanded && module.Key.Contains("Pac-Man"))
-                {
-                    moduleText.Append("**bump**, **cancel**"); // This is hardcoded for completeness
                 }
 
                 if (moduleText.Length > 0)

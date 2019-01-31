@@ -15,13 +15,13 @@ namespace PacManBot.Services.Database
     {
         public int Score { get; private set; }
         public ulong UserId { get; private set; }
-        public State State { get; private set; }
+        public GameState State { get; private set; }
         public int Turns { get; private set; }
         public string Username { get; private set; }
         public string Channel { get; private set; }
         [Key] public DateTime Date { get; private set; } // EF *requires* a key, because it hates me.
 
-        public ScoreEntry(int score, ulong userId, State state, int turns, string username, string channel, DateTime date)
+        public ScoreEntry(int score, ulong userId, GameState state, int turns, string username, string channel, DateTime date)
         {
             Score = score;
             UserId = userId;

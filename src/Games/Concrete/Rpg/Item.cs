@@ -19,7 +19,7 @@ namespace PacManBot.Games.Concrete.Rpg
         public override bool Equals(object obj) => obj is Item other && Key == other.Key;
         public override int GetHashCode() => Key.GetHashCode();
 
-        public bool Equals(Item other) => Key == other?.Key || Name.ToLower() == other?.Name.ToLower();
-        public bool Equals(string str) => Key == str || Name.ToLower() == str.ToLower();
+        public bool Equals(Item other) => Key == other?.Key || Name.Equals(other?.Name, StringComparison.OrdinalIgnoreCase);
+        public bool Equals(string str) => Key == str || Name.Equals(str, StringComparison.OrdinalIgnoreCase);
     }
 }

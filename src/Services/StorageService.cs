@@ -85,7 +85,7 @@ namespace PacManBot.Services
 
         /// <summary>Retrieves the specified guild's custom prefix, or the default prefix if no record is found.
         /// Provides the benefit of an asynchronous database access if one is necessary.</summary>
-        public async Task<string> GetGuildPrefixAsync(IGuild guild)
+        public async ValueTask<string> GetGuildPrefixAsync(IGuild guild)
         {
             if (guild == null) return DefaultPrefix;
             if (cachedPrefixes.TryGetValue(guild.Id, out string prefix)) return prefix;
@@ -146,7 +146,7 @@ namespace PacManBot.Services
 
         /// <summary>Whether the specified channel requires a prefix for commands.
         /// Provides the benefit of an asynchronous database access if it is necessary.</summary>
-        public async Task<bool> RequiresPrefixAsync(IChannel channel)
+        public async ValueTask<bool> RequiresPrefixAsync(IChannel channel)
         {
             if (channel == null) return false;
             if (cachedNeedsPrefix.TryGetValue(channel.Id, out bool needs)) return needs;

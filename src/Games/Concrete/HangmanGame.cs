@@ -89,13 +89,13 @@ namespace PacManBot.Games.Concrete
                     wrongChars.Add(ch);
                     if (++mistakes == DeadAmount)
                     {
-                        State = State.Lose;
+                        State = GameState.Lose;
                         progress = word.ToArray();
                     }
                 }
                 else if (!progress.Contains('_'))
                 {
-                    State = State.Win;
+                    State = GameState.Win;
                     winnerId = userId;
                 }
             }
@@ -104,12 +104,12 @@ namespace PacManBot.Games.Concrete
                 if (word == input)
                 {
                     progress = word.ToArray();
-                    State = State.Win;
+                    State = GameState.Win;
                     winnerId = userId;
                 }
                 else if (++mistakes == DeadAmount)
                 {
-                    State = State.Lose;
+                    State = GameState.Lose;
                     progress = word.ToArray();
                 }
             }
@@ -119,19 +119,19 @@ namespace PacManBot.Games.Concrete
 
         public override EmbedBuilder GetEmbed(bool showHelp = true)
         {
-            if (State == State.Cancelled) return CancelledEmbed();
+            if (State == GameState.Cancelled) return CancelledEmbed();
 
             var embed = new EmbedBuilder();
 
             if (OwnerId != 1) embed.Title = $"{Owner.Username}'s {GameName}";
             else embed.Title = GameName;
 
-            if (State == State.Lose)
+            if (State == GameState.Lose)
             {
                 embed.Title = $"💀 {embed.Title} 💀";
                 embed.Color = Colors.Red;
             }
-            else if (State == State.Win)
+            else if (State == GameState.Win)
             {
                 embed.Title = $"🎉 {embed.Title} 🎉";
                 embed.Color = Colors.Green;
@@ -154,7 +154,7 @@ namespace PacManBot.Games.Concrete
 
             string displayWord = progress.Select(x => x == ' ' ? "\n" : $"`{x}`").JoinString(' ');
             
-            if (State == State.Active)
+            if (State == GameState.Active)
             {
                 var missed = wrongChars // vowels in order then consonants in order
                     .GroupBy(c => "AEIOU".Contains(c))
@@ -188,7 +188,7 @@ namespace PacManBot.Games.Concrete
             else
             {
                 embed.Description = displayWord;
-                if (State == State.Win)
+                if (State == GameState.Win)
                 {
                     embed.Description += $"\n\n{client.GetUser(winnerId)?.Mention ?? "Someone"} guessed it!";
                 }

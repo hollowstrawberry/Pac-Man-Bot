@@ -19,12 +19,12 @@ using PacManBot.Utils;
 
 namespace PacManBot.Commands.Modules
 {
-    [Name(CustomEmoji.Discord + "Developer"), Remarks("0")]
+    [Name(ModuleNames.Dev), Remarks("0")]
     [RequireDeveloper]
-    [PmRequireBotPermission(ChannelPermission.AddReactions)]
-    public class DevModule : PmBaseModule
+    public class DevModule : BaseModule
     {
         public PmBot Bot { get; set; }
+        public GameService Games { get; set; }
         public ScriptingService Scripting { get; set; }
         public IServiceProvider Services { get; set; }
 
@@ -429,7 +429,7 @@ namespace PacManBot.Commands.Modules
             {
                 try
                 {
-                    if (game.State == State.Active) game.Input(move);
+                    if (game.State == GameState.Active) game.Input(move);
                     else break;
                 }
                 catch (Exception e)
@@ -450,7 +450,7 @@ namespace PacManBot.Commands.Modules
                 await msg.ModifyAsync(game.GetMessageUpdate(), DefaultOptions);
             }
 
-            if (game.State != State.Active) Games.Remove(game);
+            if (game.State != GameState.Active) Games.Remove(game);
 
             await AutoReactAsync(success);
         }
