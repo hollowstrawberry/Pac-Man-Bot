@@ -78,6 +78,7 @@ namespace PacManBot.Commands.Modules.GameModules
                     EndGame();
                     await userChannel.SendMessageAsync("Timed out 💨");
                     await UpdateGameMessageAsync();
+                    return;
                 }
 
                 string word = response.Content.ToUpperInvariant().Replace('\n', ' ');
@@ -103,7 +104,6 @@ namespace PacManBot.Commands.Modules.GameModules
                     Game.SetWord(word);
                     await response.AutoReactAsync();
                     await SendOrUpdateGameMessageAsync();
-
                     return;
                 }
             }

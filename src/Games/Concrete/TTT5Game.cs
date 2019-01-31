@@ -78,7 +78,7 @@ namespace PacManBot.Games.Concrete
             {
                 if (i == Turn) description.Append("►");
                 description.Append($"{((Player)i).Symbol()} {$"{threes[i]} lines".If(threes[i] >= 0)} - " +
-                                   $"{User(i).NameandDisc().SanitizeMarkdown()}\n");
+                                   $"{User(i).Mention}\n");
             }
 
             description.Append($"{Empty}\n");

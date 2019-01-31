@@ -113,18 +113,12 @@ namespace PacManBot.Commands
 
 
         /// <summary>Tries to update an existing game message, otherwise sends a new one.</summary>
-        public async Task SendOrUpdateGameMessageAsync()
+        public async Task<IUserMessage> SendOrUpdateGameMessageAsync()
         {
             var msg = await ((IChannelGame)Game).GetMessage();
-            if (msg != null)
-            {
-                msg = await UpdateGameMessageAsync();
-            }
-
-            if (msg == null) // Message didn't exist or failed to update
-            {
-                await ReplyGameAsync();
-            }
+            if (msg != null) msg = await UpdateGameMessageAsync();
+            if (msg == null) msg = await ReplyGameAsync(); // Didn't exist or failed to update
+            return msg;
         }
 
 

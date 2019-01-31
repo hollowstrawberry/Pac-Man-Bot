@@ -81,7 +81,7 @@ namespace PacManBot.Games.Concrete
             for (int i = 0; i < 2; i++)
             {
                 if (i == Turn) description.Append("►");
-                description.Append($"{((Player)i).Circle()} - {User(i).NameandDisc().SanitizeMarkdown()}\n");
+                description.Append($"{((Player)i).Circle()} - {User(i).Mention}\n");
             }
 
             description.Append($"{Empty}\n");
