@@ -26,7 +26,7 @@ namespace PacManBot.Games.Concrete
         public override int GameIndex => 0;
         public override string GameName => "Pac-Man";
         
-        public override TimeSpan Expiry => TimeSpan.FromDays(7);
+        public override TimeSpan Expiry => TimeSpan.FromDays(2);
         public string FilenameKey => "";
 
 

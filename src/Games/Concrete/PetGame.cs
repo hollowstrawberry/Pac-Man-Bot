@@ -18,7 +18,7 @@ namespace PacManBot.Games.Concrete
 
         public override int GameIndex => 1;
         public override string GameName => "Wakagotchi";
-        public override TimeSpan Expiry => TimeSpan.FromDays(100);
+        public override TimeSpan Expiry => TimeSpan.FromDays(60);
         public string FilenameKey => "pet";
 
 
