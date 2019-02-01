@@ -21,7 +21,7 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Commands.BaseGameModule-1.html",
-          "hash": "uslnppODVojYLtZ1j5l9Cw=="
+          "hash": "HaCNTm9ob6xE2ykZvNQ0ZQ=="
         }
       },
       "is_incremental": false,
@@ -36,7 +36,7 @@
           "hash": "J/0xIDQFdX0jj28kp5Fwtw=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -72,7 +72,7 @@
           "hash": "eqe9MxS+Yl3cw2THum+XiA=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -84,7 +84,7 @@
           "hash": "6WuzqaV0p1wEl1tJZM4hIw=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -96,7 +96,7 @@
           "hash": "bwBJyHVvSiQ5e5UOKj+cYQ=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -108,7 +108,7 @@
           "hash": "fgj9eBBeEIYkdsoGmaJ3Ag=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -120,7 +120,7 @@
           "hash": "XcCbXWdQxSURzu4+l7miVw=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -129,10 +129,10 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Commands.Modules.GameModules.PetModule.html",
-          "hash": "aZqfiQ9M2C/1yPls6lv3YQ=="
+          "hash": "bwrbIhTizCjwV0bgvByoxw=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -144,7 +144,7 @@
           "hash": "78kzA/OeFTMaYWWkwUPjHw=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -156,7 +156,7 @@
           "hash": "qThR2HRlKt6hlYMlZV9xbw=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -168,7 +168,7 @@
           "hash": "YkNdrdq+obm0kYj+xWPszg=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -180,7 +180,7 @@
           "hash": "7ZYH5rhfc14PrdbLk9NGtA=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -192,7 +192,7 @@
           "hash": "+aTEdeN4ZgvmXbtDe+a1dA=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -204,7 +204,7 @@
           "hash": "/W8BzUiMBjqVYHpxTV+88A=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -216,7 +216,7 @@
           "hash": "tO5hKbzfn7tM12foxuCF3g=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -225,10 +225,10 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Commands.Modules.ModModule.html",
-          "hash": "9AoC1WErb3B5uQRMSkvGHQ=="
+          "hash": "8B6XsYdrPTBfxb/t8SqAJQ=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -240,7 +240,7 @@
           "hash": "AXoc+QQ4yI6sjSqlhJjY0A=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -252,7 +252,7 @@
           "hash": "n7OrclhXc2e3Ogj7Kkb+WA=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -300,7 +300,7 @@
           "hash": "tEdnZh0E4sCxXUd1bubLyg=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -441,10 +441,10 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Extensions.DiscordExtensions.html",
-          "hash": "8MEmhBq8qHIYEEbQTkpIjQ=="
+          "hash": "jJbvJucy1l7obkd/3WIB0g=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -528,7 +528,7 @@
           "hash": "4UGeZGSNah6AtM65lBaI5A=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -540,7 +540,7 @@
           "hash": "aRaSvmS2UY0d+oAXlONLPA=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -564,7 +564,7 @@
           "hash": "4gDYf+L9j+WDu7LRrLJG/g=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -576,7 +576,7 @@
           "hash": "/CjWwkL07tsqPnboFA8vfg=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -588,7 +588,7 @@
           "hash": "K2SRpN5Xc74oZbKH89prvg=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -624,7 +624,7 @@
           "hash": "Pb1iUVAKX6RtESaxmC4uyQ=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -660,7 +660,7 @@
           "hash": "7J3Ag4AUdPDbPc3SkZj6EQ=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1728,7 +1728,7 @@
           "hash": "cfTdih8BekSaxJKkf6Mjxw=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1764,7 +1764,7 @@
           "hash": "/PhItF1PTBPKM5O44yVVkg=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1776,7 +1776,7 @@
           "hash": "N6MQgkx+zOfbgmz+2XKdKQ=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1788,7 +1788,7 @@
           "hash": "GT0WLiH1/a56noNO1FWr7w=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1800,7 +1800,7 @@
           "hash": "jpS/xQgUfNssMyVdDnW6kQ=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1812,7 +1812,7 @@
           "hash": "gGwEt1qIdFUPXpdVCaHWuw=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1932,7 +1932,7 @@
           "hash": "DXbzav5duxxldubDUa0hWQ=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1968,7 +1968,7 @@
           "hash": "Drn1dfzYX7xW5epS3dQ4DA=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1980,7 +1980,7 @@
           "hash": "WfJdYXNTet+ETcaFaWXPUw=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -2112,7 +2112,7 @@
           "hash": "9eCmpha0BRGtFX955rlNug=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -2136,7 +2136,7 @@
           "hash": "I0cS9D/1yOeqdq5eTi8pfA=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -2145,10 +2145,10 @@
       "output": {
         ".html": {
           "relative_path": "api/PacManBot.Services.PmDiscordClient.html",
-          "hash": "1aGBKnd+QuyimZA0EUso5Q=="
+          "hash": "oFCFPLC+G3DqPTLMZchsTg=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -2160,7 +2160,7 @@
           "hash": "J++OdAo71g5gdBNgXMoR+w=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -2184,7 +2184,7 @@
           "hash": "fvd/iqjLjFBvn2enYhMUVA=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -2196,7 +2196,7 @@
           "hash": "6gOwc9c3NiuC256G/jwFhQ=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -2340,7 +2340,7 @@
           "hash": "UiJFUsfnBcyT9Ao5hRaeSA=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -2363,17 +2363,17 @@
         "incrementalPhase": "build"
       },
       "processors": {
-        "TocDocumentProcessor": {
-          "can_incremental": false,
-          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
-          "incrementalPhase": "build"
-        },
         "ConceptualDocumentProcessor": {
           "can_incremental": true,
           "incrementalPhase": "build"
         },
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": true,
+          "incrementalPhase": "build"
+        },
+        "TocDocumentProcessor": {
+          "can_incremental": false,
+          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build"
         }
       }

@@ -1023,6 +1023,19 @@ references:
   isSpec: "True"
   fullName: PacManBot.Commands.Modules.GameModules.PetModule.Feed
   nameWithType: PetModule.Feed
+- uid: PacManBot.Commands.Modules.GameModules.PetModule.Meme
+  name: Meme()
+  href: api/PacManBot.Commands.Modules.GameModules.PetModule.html#PacManBot_Commands_Modules_GameModules_PetModule_Meme
+  commentId: M:PacManBot.Commands.Modules.GameModules.PetModule.Meme
+  fullName: PacManBot.Commands.Modules.GameModules.PetModule.Meme()
+  nameWithType: PetModule.Meme()
+- uid: PacManBot.Commands.Modules.GameModules.PetModule.Meme*
+  name: Meme
+  href: api/PacManBot.Commands.Modules.GameModules.PetModule.html#PacManBot_Commands_Modules_GameModules_PetModule_Meme_
+  commentId: Overload:PacManBot.Commands.Modules.GameModules.PetModule.Meme
+  isSpec: "True"
+  fullName: PacManBot.Commands.Modules.GameModules.PetModule.Meme
+  nameWithType: PetModule.Meme
 - uid: PacManBot.Commands.Modules.GameModules.PetModule.PetMaster(System.String,System.String)
   name: PetMaster(String, String)
   href: api/PacManBot.Commands.Modules.GameModules.PetModule.html#PacManBot_Commands_Modules_GameModules_PetModule_PetMaster_System_String_System_String_
@@ -3171,6 +3184,32 @@ references:
   isSpec: "True"
   fullName: PacManBot.Extensions.DiscordExtensions.FullName
   nameWithType: DiscordExtensions.FullName
+- uid: PacManBot.Extensions.DiscordExtensions.GetCommandPos(Discord.IUserMessage,System.String,System.StringComparison)
+  name: GetCommandPos(IUserMessage, String, StringComparison)
+  href: api/PacManBot.Extensions.DiscordExtensions.html#PacManBot_Extensions_DiscordExtensions_GetCommandPos_Discord_IUserMessage_System_String_System_StringComparison_
+  commentId: M:PacManBot.Extensions.DiscordExtensions.GetCommandPos(Discord.IUserMessage,System.String,System.StringComparison)
+  fullName: PacManBot.Extensions.DiscordExtensions.GetCommandPos(Discord.IUserMessage, System.String, System.StringComparison)
+  nameWithType: DiscordExtensions.GetCommandPos(IUserMessage, String, StringComparison)
+- uid: PacManBot.Extensions.DiscordExtensions.GetCommandPos*
+  name: GetCommandPos
+  href: api/PacManBot.Extensions.DiscordExtensions.html#PacManBot_Extensions_DiscordExtensions_GetCommandPos_
+  commentId: Overload:PacManBot.Extensions.DiscordExtensions.GetCommandPos
+  isSpec: "True"
+  fullName: PacManBot.Extensions.DiscordExtensions.GetCommandPos
+  nameWithType: DiscordExtensions.GetCommandPos
+- uid: PacManBot.Extensions.DiscordExtensions.GetMentionCommandPos(Discord.IUserMessage,PacManBot.Services.PmDiscordClient,System.StringComparison)
+  name: GetMentionCommandPos(IUserMessage, PmDiscordClient, StringComparison)
+  href: api/PacManBot.Extensions.DiscordExtensions.html#PacManBot_Extensions_DiscordExtensions_GetMentionCommandPos_Discord_IUserMessage_PacManBot_Services_PmDiscordClient_System_StringComparison_
+  commentId: M:PacManBot.Extensions.DiscordExtensions.GetMentionCommandPos(Discord.IUserMessage,PacManBot.Services.PmDiscordClient,System.StringComparison)
+  fullName: PacManBot.Extensions.DiscordExtensions.GetMentionCommandPos(Discord.IUserMessage, PacManBot.Services.PmDiscordClient, System.StringComparison)
+  nameWithType: DiscordExtensions.GetMentionCommandPos(IUserMessage, PmDiscordClient, StringComparison)
+- uid: PacManBot.Extensions.DiscordExtensions.GetMentionCommandPos*
+  name: GetMentionCommandPos
+  href: api/PacManBot.Extensions.DiscordExtensions.html#PacManBot_Extensions_DiscordExtensions_GetMentionCommandPos_
+  commentId: Overload:PacManBot.Extensions.DiscordExtensions.GetMentionCommandPos
+  isSpec: "True"
+  fullName: PacManBot.Extensions.DiscordExtensions.GetMentionCommandPos
+  nameWithType: DiscordExtensions.GetMentionCommandPos
 - uid: PacManBot.Extensions.DiscordExtensions.GetMessageChannel(Discord.WebSocket.BaseSocketClient,System.UInt64)
   name: GetMessageChannel(BaseSocketClient, UInt64)
   href: api/PacManBot.Extensions.DiscordExtensions.html#PacManBot_Extensions_DiscordExtensions_GetMessageChannel_Discord_WebSocket_BaseSocketClient_System_UInt64_
@@ -17906,6 +17945,19 @@ references:
   isSpec: "True"
   fullName: PacManBot.Services.PmDiscordClient.PmDiscordClient
   nameWithType: PmDiscordClient.PmDiscordClient
+- uid: PacManBot.Services.PmDiscordClient.MentionPrefix
+  name: MentionPrefix
+  href: api/PacManBot.Services.PmDiscordClient.html#PacManBot_Services_PmDiscordClient_MentionPrefix
+  commentId: P:PacManBot.Services.PmDiscordClient.MentionPrefix
+  fullName: PacManBot.Services.PmDiscordClient.MentionPrefix
+  nameWithType: PmDiscordClient.MentionPrefix
+- uid: PacManBot.Services.PmDiscordClient.MentionPrefix*
+  name: MentionPrefix
+  href: api/PacManBot.Services.PmDiscordClient.html#PacManBot_Services_PmDiscordClient_MentionPrefix_
+  commentId: Overload:PacManBot.Services.PmDiscordClient.MentionPrefix
+  isSpec: "True"
+  fullName: PacManBot.Services.PmDiscordClient.MentionPrefix
+  nameWithType: PmDiscordClient.MentionPrefix
 - uid: PacManBot.Services.SchedulingService
   name: SchedulingService
   href: api/PacManBot.Services.SchedulingService.html
