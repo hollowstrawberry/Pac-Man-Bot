@@ -16,7 +16,7 @@ namespace PacManBot.Games.Concrete
         public override string GameName => "ReactionRPG";
         public override int GameIndex => 2;
         public string FilenameKey => "rpg";
-        public override TimeSpan Expiry => TimeSpan.FromDays(100);
+        public override TimeSpan Expiry => TimeSpan.FromDays(60);
 
 
         public const int NameCharLimit = 32;

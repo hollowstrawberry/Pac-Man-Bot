@@ -21,6 +21,7 @@ namespace PacManBot.Commands.Modules
         public async Task Say([Remainder]string message)
             => await ReplyAsync(message.SanitizeMentions());
 
+
         [Command("clear"), Alias("clean", "cl"), Remarks("Clear this bot's messages and commands")]
         [Summary("Clears all commands and messages for *this bot only*, from the last [amount] messages up to 30, " +
                  "or the last 10 messages by default.\nOnly users with the Manage Messages permission can use this command.")]
@@ -33,9 +34,9 @@ namespace PacManBot.Commands.Modules
 
             if (Context.BotCan(ChannelPermission.ManageMessages))
             {
-                int _ = 0;
-                toDelete.Concat(messages.Where(x => x.Content.StartsWith(Context.FixedPrefix) && !x.Content.StartsWith("<@")
-                                               || x.HasMentionPrefix(Context.Client.CurrentUser, ref _)));
+                toDelete = toDelete.Concat(
+                    messages.Where(x => x.Content.StartsWith(Context.Prefix)
+                                   || Context.Client.MentionPrefix.IsMatch(x.Content)));
             }
 
             foreach (var message in toDelete)

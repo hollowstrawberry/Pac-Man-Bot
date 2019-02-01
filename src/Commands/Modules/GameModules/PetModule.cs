@@ -345,6 +345,15 @@ namespace PacManBot.Commands.Modules.GameModules
         }
 
 
+        [PetCommand("abuse"), RequiresPet]
+        public Task<string> Meme()
+        {
+            if (Game.timesPetSinceTimerStart > 0) return null;
+            Game.timesPetSinceTimerStart = 10;
+            return Task.FromResult("no");
+        }
+
+
         [PetCommand("user", "u")]
         public async Task<string> SendUser()
         {

@@ -84,28 +84,28 @@ namespace PacManBot.Services
 
         private Task OnMessageReceived(SocketMessage m)
         {
-            OnMessageReceivedAsync(m); // Fire and forget
+            HandleMessage(m); // Fire and forget
             return Task.CompletedTask;
         }
 
 
         private Task OnReactionAdded(Cacheable<IUserMessage, ulong> m, ISocketMessageChannel c, SocketReaction r)
         {
-            OnReactionChangedAsync(m, c, r);
+            HandleReaction(m, c, r);
             return Task.CompletedTask;
         }
 
 
         private Task OnReactionRemoved(Cacheable<IUserMessage, ulong> m, ISocketMessageChannel c, SocketReaction r)
         {
-            OnReactionChangedAsync(m, c, r);
+            HandleReaction(m, c, r);
             return Task.CompletedTask;
         }
 
 
 
 
-        private async void OnMessageReceivedAsync(SocketMessage genericMessage)
+        private async void HandleMessage(SocketMessage genericMessage)
         {
             try
             {
@@ -133,7 +133,7 @@ namespace PacManBot.Services
         }
 
 
-        private async void OnReactionChangedAsync(Cacheable<IUserMessage, ulong> messageData, ISocketMessageChannel channel, SocketReaction reaction)
+        private async void HandleReaction(Cacheable<IUserMessage, ulong> messageData, ISocketMessageChannel channel, SocketReaction reaction)
         {
             try
             {
@@ -174,15 +174,13 @@ namespace PacManBot.Services
         private async ValueTask<bool> CommandAsync(SocketUserMessage message)
         {
             string prefix = await storage.GetGuildPrefixAsync((message.Channel as SocketGuildChannel)?.Guild);
-            int commandPosition = 0;
+            bool requiresPrefix = await storage.RequiresPrefixAsync(message.Channel);
 
-            if (message.HasMentionPrefix(client.CurrentUser, ref commandPosition)
-                || message.HasStringPrefix($"{prefix} ", ref commandPosition)
-                || message.HasStringPrefix(prefix, ref commandPosition)
-                || !await storage.RequiresPrefixAsync(message.Channel))
-            {
-                await commands.ExecuteAsync(message, commandPosition);
-            }
+            int pos = message.GetMentionCommandPos(client)
+                ?? message.GetCommandPos(prefix)
+                ?? (requiresPrefix ? -1 : 0);
+
+            if (pos >= 0) await commands.ExecuteAsync(message, pos);
 
             return false;
         }

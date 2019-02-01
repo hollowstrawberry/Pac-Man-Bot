@@ -1,4 +1,5 @@
 ﻿using Serilog.Events;
+using System;
 using System.Drawing;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -8,6 +9,7 @@ using Discord.Addons.EmojiTools;
 using Discord.Commands;
 using Discord.WebSocket;
 using PacManBot.Constants;
+using PacManBot.Services;
 using DiscordColor = Discord.Color;
 using SystemColor = System.Drawing.Color;
 
@@ -172,6 +174,29 @@ namespace PacManBot.Extensions
 
 
         // String utilities
+
+
+        /// <summary>Returns the starting position of a command in a message, given a prefix.
+        /// A space after the prefix is permitted. null is returned if the prefix isn't present.</summary>
+        public static int? GetCommandPos(this IUserMessage message, string prefix, StringComparison comparisonType = StringComparison.Ordinal)
+        {
+            var text = message.Content;
+            if (string.IsNullOrEmpty(text) || !text.StartsWith(prefix, comparisonType)) return null;
+
+            return text[prefix.Length] == ' ' ? prefix.Length + 1 : prefix.Length;
+        }
+
+
+        /// <summary>Returns the starting position of a command in a message, given the bot's mention as a prefix.
+        /// A space after the prefix is permitted. null is returned if the mention isn't present.</summary>
+        public static int? GetMentionCommandPos(this IUserMessage message, PmDiscordClient client, StringComparison comparisonType = StringComparison.Ordinal)
+        {
+            var text = message.Content;
+            if (string.IsNullOrEmpty(text) || !client.MentionPrefix.IsMatch(text)) return null;
+
+            int pos = text.IndexOf('>') + 1;
+            return text[pos] == ' ' ? pos + 1 : pos;
+        }
 
 
         /// <summary>Adds a zero-width space after every "@" sign to prevent Discord mentions from firing.</summary>

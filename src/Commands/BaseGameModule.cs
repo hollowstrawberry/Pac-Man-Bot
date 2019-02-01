@@ -14,7 +14,7 @@ namespace PacManBot.Commands
     /// </summary>
     /// <typeparam name="TGame">The game type that this module controls.</typeparam>
     public abstract class BaseGameModule<TGame> : BaseModule
-        where TGame :  IBaseGame
+        where TGame : class, IBaseGame
     {
         /// <summary>All services used to create new games.</summary>
         public IServiceProvider Services { get; set; }
@@ -39,8 +39,8 @@ namespace PacManBot.Commands
         protected virtual TGame GetCurrentGame()
         {
             return typeof(IUserGame).IsAssignableFrom(typeof(TGame))
-                ? (TGame)Games.GetForUser(Context.User.Id, typeof(TGame))
-                : (TGame)Games.GetForChannel(Context.Channel.Id);
+                ? Games.GetForUser(Context.User.Id, typeof(TGame)) as TGame
+                : Games.GetForChannel(Context.Channel.Id) as TGame;
         }
 
 

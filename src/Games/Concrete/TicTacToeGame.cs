@@ -14,7 +14,7 @@ namespace PacManBot.Games.Concrete
     {
         public override int GameIndex => 12;
         public override string GameName => "Tic-Tac-Toe";
-        public override TimeSpan Expiry => TimeSpan.FromMinutes(60);
+        public override TimeSpan Expiry => TimeSpan.FromMinutes(30);
 
         private const int Size = 3;
 

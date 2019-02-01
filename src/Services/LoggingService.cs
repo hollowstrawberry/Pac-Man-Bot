@@ -1,12 +1,12 @@
 using Serilog;
 using Serilog.Core;
 using System;
+using System.Net.WebSockets;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Net;
 using PacManBot.Constants;
 using PacManBot.Extensions;
-using System.Net.WebSockets;
 
 namespace PacManBot.Services
 {

@@ -152,7 +152,7 @@ namespace PacManBot.Games.Concrete
             embed.ThumbnailUrl = config.Content.hangmanStageImages[stage];
 
 
-            string displayWord = progress.Select(x => x == ' ' ? "\n" : $"`{x}`").JoinString(' ');
+            string displayWord = progress.Select(x => x == ' ' ? " " : $"`{x}`").JoinString(' ').Replace("   ", "\n");
             
             if (State == GameState.Active)
             {

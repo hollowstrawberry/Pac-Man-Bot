@@ -172,7 +172,7 @@ namespace PacManBot
         private async Task UpdateGuildCountAsync()
         {
             var now = DateTime.Now;
-            if ((now - lastGuildCountUpdate).TotalMinutes < 20.0) return;
+            if ((now - lastGuildCountUpdate).TotalMinutes < 60.0) return;
 
             lastGuildCountUpdate = now;
             int guilds = client.Guilds.Count;
