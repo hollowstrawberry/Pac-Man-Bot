@@ -130,12 +130,26 @@ namespace PacManBot.Extensions
 
 
         /// <summary>Whether the bot has the permission to perform an action in the given chanel.</summary>
-        public static async Task<bool> BotCan(this IChannel channel, ChannelPermission permission)
+        public static async Task<bool> BotCanAsync(this IChannel channel, ChannelPermission permission)
         {
             var perms = DmPermissions;
             if (channel is IGuildChannel gchannel)
             {
                 var user = await gchannel.Guild.GetCurrentUserAsync();
+                perms = (ChannelPermission)user.GetPermissions(gchannel).RawValue;
+            }
+
+            return perms.HasFlag(permission);
+        }
+
+
+        /// <summary>Whether the bot has the permission to perform an action in the given chanel.</summary>
+        public static bool BotCan(this ISocketMessageChannel channel, ChannelPermission permission)
+        {
+            var perms = DmPermissions;
+            if (channel is SocketGuildChannel gchannel)
+            {
+                var user = gchannel.Guild.CurrentUser;
                 perms = (ChannelPermission)user.GetPermissions(gchannel).RawValue;
             }
 
@@ -181,8 +195,8 @@ namespace PacManBot.Extensions
         public static int? GetCommandPos(this IUserMessage message, string prefix, StringComparison comparisonType = StringComparison.Ordinal)
         {
             var text = message.Content;
-            if (string.IsNullOrEmpty(text) || !text.StartsWith(prefix, comparisonType)) return null;
-
+            if (string.IsNullOrEmpty(text) || text.Length < prefix.Length + 1) return null;
+            if (!text.StartsWith(prefix, comparisonType)) return null;
             return text[prefix.Length] == ' ' ? prefix.Length + 1 : prefix.Length;
         }
 
@@ -195,6 +209,7 @@ namespace PacManBot.Extensions
             if (string.IsNullOrEmpty(text) || !client.MentionPrefix.IsMatch(text)) return null;
 
             int pos = text.IndexOf('>') + 1;
+            if (text.Length <= pos) return null;
             return text[pos] == ' ' ? pos + 1 : pos;
         }
 

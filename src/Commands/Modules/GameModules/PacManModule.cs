@@ -17,16 +17,18 @@ namespace PacManBot.Commands.Modules.GameModules
 
         [Command("pacman"), Alias("p", "start"), Parameters("[mobile]"), Priority(10)]
         [Remarks("Start a new game in this channel")]
-        [Summary("Starts a new Pac-Man game in this channel.\nYou can add \"mobile\" or \"m\" " +
-                 "after the command to use *Mobile Mode*, which has simple characters that will work in phones. " +
-                 "Use **{prefix}display** to change mode later.\n" +
+        [Summary("Starts a new Pac-Man game in this channel.\nYou can add \"slim\" or \"s\" " +
+                 "after the command to use **Slim Mode**, which fits better on phones. If slim mode is still too wide, " +
+                 "you could reduce the font size in your phone's settings, if you want to." +
+                 "Use **{prefix}display** to change display modes later.\n" +
                  "You can also play a custom Pac-Man map with the command **{prefix}custompacman**\n\n" +
                  "Use **{prefix}bump** to move the game message to the bottom of the chat. Use **{prefix}cancel** to end the game. ")]
         public async Task StartGame(string arg = "")
         {
             if (await CheckGameAlreadyExistsAsync()) return;
 
-            bool mobile = arg.ToLowerInvariant().StartsWith("m");
+            arg = arg.ToLowerInvariant();
+            bool mobile = arg.StartsWith("s") || arg.StartsWith("m");
 
             StartNewGame(new PacManGame(Context.Channel.Id, Context.User.Id, null, mobile, Services));
             var msg = await ReplyGameAsync(Game.GetContent(showHelp: false) + "```diff\n+Starting game```");
@@ -37,7 +39,7 @@ namespace PacManBot.Commands.Modules.GameModules
         [Command("custompacman"), Alias("pacmancustom"), Priority(9)]
         [Summary("Starts a new Pac-Man game in this channel using the provided custom map.\n" +
                  "Use **{prefix}custompacman** by itself to see a guide for custom maps.\n\n" +
-                 "Use **{prefix}display** to switch between normal mode and mobile mode. " +
+                 "Use **{prefix}display** to switch between normal mode and slim mode. " +
                  "Use **{prefix}bump** to move the game message to the bottom of the chat. Use **{prefix}cancel** to end the game.")]
         public async Task StartCustomGame([Remainder]string map = null)
         {

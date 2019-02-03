@@ -49,13 +49,9 @@ namespace PacManBot.Services
         {
             if (message != null) message += ": ";
 
-            if (e is HttpException || e is TimeoutException)
+            if (e is HttpException || e is TimeoutException || e is WebSocketException || e is WebSocketClosedException)
             {
                 Warning($"{message}{e.GetType()}: {e.Message}", source);
-            }
-            else if (e is WebSocketException || e is WebSocketClosedException) // No stacktrace needed
-            {
-                Error($"{message}{e.GetType()}: {e.Message}", source);
             }
             else
             {
@@ -87,8 +83,16 @@ namespace PacManBot.Services
                 }
             }
 
-            if (log.Exception == null) Log(log.Message, log.Severity, source);
-            else Exception(log.Message, log.Exception, source);
+            var e = log.Exception;
+            if (e == null)
+            {
+                Log(log.Message, log.Severity, source);
+            }
+            else
+            {
+                while (e.InnerException != null) e = e.InnerException;
+                Exception(log.Message, e, source);
+            }
 
             return Task.CompletedTask;
         }

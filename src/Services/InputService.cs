@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Discord;
-using Discord.Commands;
 using Discord.WebSocket;
 using PacManBot.Extensions;
 using PacManBot.Games;
@@ -116,7 +115,7 @@ namespace PacManBot.Services
                 }
 
                 if (genericMessage is SocketUserMessage message && !message.Author.IsBot
-                    && await message.Channel.BotCan(ChannelPermission.SendMessages))
+                    && message.Channel.BotCan(ChannelPermission.SendMessages | ChannelPermission.ReadMessageHistory))
                 {
                     // Short-circuits on the first accepted case
                     if (   await PendingResponseAsync(message)
@@ -137,7 +136,7 @@ namespace PacManBot.Services
         {
             try
             {
-                if (!await channel.BotCan(ChannelPermission.ReadMessageHistory)) return;
+                if (!channel.BotCan(ChannelPermission.ReadMessageHistory)) return;
 
                 var message = reaction.Message.Value ?? await messageData.GetOrDownloadAsync();
 
@@ -266,7 +265,7 @@ namespace PacManBot.Services
             }
             if (game.State != GameState.Active) games.Remove(game);
 
-            if (gameMessage != null && await message.Channel.BotCan(ChannelPermission.ManageMessages))
+            if (gameMessage != null && await message.Channel.BotCanAsync(ChannelPermission.ManageMessages))
             {
                 game.CancelRequests();
                 try { await gameMessage.ModifyAsync(game.GetMessageUpdate(), game.GetRequestOptions()); }
@@ -291,7 +290,7 @@ namespace PacManBot.Services
 
         private async Task ExecuteGameInputAsync(IReactionsGame game, SocketReaction reaction, IUserMessage gameMessage)
         {
-            var user = reaction.User.IsSpecified ? reaction.User.Value : client.GetUser(reaction.UserId);
+            var user = gameMessage.Author;
             var channel = gameMessage.Channel;
             var guild = (channel as IGuildChannel)?.Guild;
 
@@ -311,7 +310,7 @@ namespace PacManBot.Services
                         user.NameandDisc(), $"{guild?.Name}/{channel.Name}", DateTime.Now));
                 }
 
-                if (await channel.BotCan(ChannelPermission.ManageMessages))
+                if (await channel.BotCanAsync(ChannelPermission.ManageMessages))
                 {
                     await gameMessage.RemoveAllReactionsAsync(PmBot.DefaultOptions);
                 }

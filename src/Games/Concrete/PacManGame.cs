@@ -45,7 +45,7 @@ namespace PacManBot.Games.Concrete
 
         private const int PowerTime = 20, ScatterCycle = 100, ScatterTime1 = 30, ScatterTime2 = 20;
         private const char CharPlayer = 'O', CharFruit = '$', CharGhost = 'G', CharSoftWall = '_', CharSoftWallPellet = '~'; // Read from map
-        private const char CharDoor = '-', CharPellet = '·', CharPowerPellet = '●', CharPlayerDead = 'X', CharGhostFrightened = 'E'; // Displayed
+        private const char CharDoor = '-', CharPellet = '•', CharPowerPellet = 'o', CharPlayerDead = 'X', CharGhostFrightened = 'E'; // Displayed
         private static readonly char[] GhostAppearance = { 'B', 'P', 'I', 'C' };
         private static readonly int[] GhostSpawnPauseTime = { 0, 3, 15, 35 };
         private static readonly Dir[] AllDirs = { Dir.Up, Dir.Left, Dir.Down, Dir.Right }; // Order of preference when deciding direction
@@ -54,7 +54,7 @@ namespace PacManBot.Games.Concrete
         // Fields
 
         [DataMember] public bool custom;
-        [DataMember] public bool mobileDisplay;
+        [DataMember] public bool slimDisplay;
         [DataMember] public int score;
 
         private Board<char> map;
@@ -209,10 +209,10 @@ namespace PacManBot.Games.Concrete
 
         private PacManGame() { } // Used by JSON deserializing
 
-        public PacManGame(ulong channelId, ulong ownerId, string newMap, bool mobileDisplay, IServiceProvider services)
+        public PacManGame(ulong channelId, ulong ownerId, string newMap, bool slimDisplay, IServiceProvider services)
             : base(channelId, new[] { ownerId }, services)
         {
-            this.mobileDisplay = mobileDisplay;
+            this.slimDisplay = slimDisplay;
 
             // Map
             if (newMap == null) newMap = Content.gameMap;
@@ -420,13 +420,6 @@ namespace PacManBot.Games.Concrete
                     {
                         if (mapCopy[x, y] == CharSoftWall) mapCopy[x, y] = ' ';
                         else if (mapCopy[x, y] == CharSoftWallPellet) mapCopy[x, y] = CharPellet;
-
-                        if (mobileDisplay) // Mode with simplified characters
-                        {
-                            if (!NonSolid((x, y)) && mapCopy[x, y] != CharDoor) mapCopy[x, y] = '#'; // Walls
-                            else if (mapCopy[x, y] == CharPellet) mapCopy[x, y] = '.'; // Pellets
-                            else if (mapCopy[x, y] == CharPowerPellet) mapCopy[x, y] = 'o'; // Power pellets
-                        }
                     }
                 }
 
@@ -448,10 +441,10 @@ namespace PacManBot.Games.Concrete
 
                 // Add text to the side
                 var info = new List<string>(new[] {
-                    $"┌{"───< Mobile Mode >───┐".If(mobileDisplay)}",
-                    $"│ {"#".If(!mobileDisplay)}Time: {Time}",
-                    $"│ {"#".If(!mobileDisplay)}Score: {score}{$" +{score - oldScore}".If(score - oldScore != 0)}",
-                    $"│ {$"{"#".If(!mobileDisplay)}Power: {pacMan.power}".If(pacMan.power > 0)}",
+                    $"┌{"───< Slim Mode >───┐".If(slimDisplay)}",
+                    $"│ #Time: {Time}",
+                    $"│ #Score: {score}{$" +{score - oldScore}".If(score - oldScore != 0)}",
+                    $"│ {$"#Power: {pacMan.power}".If(pacMan.power > 0)}",
                     $"│ ",
                     $"│ {CharPlayer} - Pac-Man{$": {pacMan.dir.ToString().ToLower()}".If(pacMan.dir != Dir.None)}",
                     $"│ ", // 7-10: ghosts
@@ -467,9 +460,10 @@ namespace PacManBot.Games.Concrete
                         $": {ghosts[i].dir.ToString().ToLower()}".If(ghosts[i].dir != Dir.None));
                 }
 
-                if (mobileDisplay)
+                if (slimDisplay)
                 {
-                    display.Insert(0, string.Join('\n', info) + "\n\n");
+                    display.Insert(0, '\n');
+                    display.Insert(0, info.Where(x => x.Length > 3).JoinString('\n'));
                 }
                 else
                 {
@@ -500,7 +494,7 @@ namespace PacManBot.Games.Concrete
                         break;
 
                     default:
-                        display.Insert(0, mobileDisplay ? "```\n" : "```css\n");
+                        display.Insert(0, "```css\n");
                         display.Append($"\n#Fastforward: {(fastForward ? "Active" : "Disabled")}");
                         break;
                 }

@@ -129,9 +129,9 @@ namespace PacManBot.Commands.Modules
         }
 
 
-        [Command("changedisplay"), Alias("display"), Remarks("Switch between normal and mobile display")]
-        [Summary("A Pac-Man game can either be in normal or mobile mode. Using this command will switch modes " +
-         "for the current game in this channel")]
+        [Command("changedisplay"), Alias("display"), Remarks("Switch between normal and slim display")]
+        [Summary("A Pac-Man game can either be in normal or slim mode. Slim mode fits better on phones." +
+                 "Using this command will switch modes for the current game in this channel.")]
         public async Task ChangeGameDisplay()
         {
             if (Game == null)
@@ -140,7 +140,7 @@ namespace PacManBot.Commands.Modules
                 return;
             }
 
-            Game.mobileDisplay = !Game.mobileDisplay;
+            Game.slimDisplay = !Game.slimDisplay;
             await UpdateGameMessageAsync();
 
             await AutoReactAsync();
