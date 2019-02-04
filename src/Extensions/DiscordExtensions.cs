@@ -128,21 +128,6 @@ namespace PacManBot.Extensions
 
         // Permissions
 
-
-        /// <summary>Whether the bot has the permission to perform an action in the given chanel.</summary>
-        public static async Task<bool> BotCanAsync(this IChannel channel, ChannelPermission permission)
-        {
-            var perms = DmPermissions;
-            if (channel is IGuildChannel gchannel)
-            {
-                var user = await gchannel.Guild.GetCurrentUserAsync();
-                perms = (ChannelPermission)user.GetPermissions(gchannel).RawValue;
-            }
-
-            return perms.HasFlag(permission);
-        }
-
-
         /// <summary>Whether the bot has the permission to perform an action in the given chanel.</summary>
         public static bool BotCan(this ISocketMessageChannel channel, ChannelPermission permission)
         {

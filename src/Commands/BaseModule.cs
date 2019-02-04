@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
@@ -20,6 +21,8 @@ namespace PacManBot.Commands
 
         /// <summary>Invisible character to be used in embeds.</summary>
         protected const string Empty = DiscordExtensions.Empty;
+
+        private static readonly Regex YesNoRegex = new Regex(@"^(ye?s?|no?)$", RegexOptions.IgnoreCase);
 
 
         /// <summary>Runtime settings of the bot.</summary>
@@ -62,10 +65,10 @@ namespace PacManBot.Commands
 
 
         /// <summary>Returns whether the next message by the user in this context is equivalent to "yes".</summary>
-        public async Task<bool> GetYesResponseAsync(int timeout = 30)
+        public async Task<bool?> GetYesResponseAsync(int timeout = 30)
         {
-            var response = (await GetResponseAsync())?.Content.TrimStart(Context.Prefix).ToLowerInvariant();
-            return response != null && (response == "y" || response == "yes");
+            var response = await GetResponseAsync(x => YesNoRegex.IsMatch(x.Content));
+            return response?.Content.StartsWith("y", StringComparison.OrdinalIgnoreCase);
         }
 
 

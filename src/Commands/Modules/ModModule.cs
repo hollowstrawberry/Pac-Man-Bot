@@ -150,7 +150,7 @@ namespace PacManBot.Commands.Modules
                     $"dedicated bot or game channels.\n\n" +
                     $"Set {channel.Mention()} to *no prefix mode*? (Yes/No)");
 
-                if (await GetYesResponseAsync())
+                if (await GetYesResponseAsync(90) ?? false)
                 {
                     Storage.ToggleChannelGuildPrefix(channel.Id);
                     await ReplyAsync(

@@ -393,7 +393,7 @@ namespace PacManBot.Commands.Modules.GameModules
                 $"It will be gone forever, along with your stats and achievements, and you can't get it back.\n" +
                 $"Release your pet? (Yes/No)");
 
-            if (await GetYesResponseAsync())
+            if (await GetYesResponseAsync() ?? false)
             {
                 Games.Remove(Game);
                 return $"Goodbye {Game.petName}!";

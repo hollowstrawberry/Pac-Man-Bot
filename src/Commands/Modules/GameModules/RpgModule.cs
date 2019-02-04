@@ -569,7 +569,7 @@ namespace PacManBot.Commands.Modules.GameModules
                 $"❗ You're about to completely delete your progress in ReactionRPG.\n" +
                 $"Are you sure you want to delete your level {Game.player.Level} hero? (Yes/No)");
 
-            if (await GetYesResponseAsync())
+            if (await GetYesResponseAsync() ?? false)
             {
                 EndGame();
                 return "Hero deleted 💀";
