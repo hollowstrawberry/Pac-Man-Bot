@@ -224,7 +224,7 @@ namespace PacManBot.Extensions
         /// <summary>Escapes markdown special characters for the purposes of Discord messages.</summary>
         public static string SanitizeMarkdown(this string text)
         {
-            return Regex.Replace(text, @"([\\*_`~])", "\\$1");
+            return Regex.Replace(text, @"([\\*_`~|])", "\\$1");
         }
 
 

@@ -62,8 +62,10 @@ namespace PacManBot.Commands.Modules
             string error = null;
             if (string.IsNullOrWhiteSpace(prefix))
                 error = $"The guild prefix can't be empty. If you don't want a prefix in a channel, check out `{Context.Prefix}toggleprefix`";
-            else if (prefix.ContainsAny("*", "_", "~", "`", "\\"))
+            else if (prefix.ContainsAny('*', '_', '~', '`', '\''))
                 error = "The prefix can't contain markdown special characters: *_~\\`\\\\";
+            else if (prefix.Contains("||"))
+                error = "The prefix can't contain \"||\"";
             else if (prefix.Length > 32)
                 error = "Prefix can't be bigger than 32 characters";
 

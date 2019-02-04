@@ -166,11 +166,19 @@ List of special characters:
 
 
 
-"petImageUrl": "https://cdn.discordapp.com/attachments/353729197824278541/447979173554946051/clockagotchi.png",
+"petImageUrl": "https://cdn.discordapp.com/attachments/541768631445618689/541768731773239316/DefaultPet.png",
 "petFoodEmotes": [ "🍌", "🍎", "🍊", "🍕", "🌮", "🍩", "🍪", "🍐", "🍉", "🍇", "🍑", "🍧", "🍫", "🥕", "🍼" ],
 "petPlayEmotes": [ "⚽", "🏀", "🏈", "🎾", "🏓", "🎨", "🎤", "🎭", "🏐", "🎣" ],
 "petCleanEmotes": [ "💧", "🚿", "🛁", "🚽", "🚰", "💦", "👣", "💩", "✨" ],
 "petSleepEmotes": [ "💤", "🛏", "🌃", "🌠", "🌙", "🌜" ],
+
+"petBannerUrl": [
+    null,
+    "https://cdn.discordapp.com/attachments/541768631445618689/541768766355275808/copperbanner.png",
+    "https://cdn.discordapp.com/attachments/541768631445618689/541768765755621377/silverbanner.png",
+    "https://cdn.discordapp.com/attachments/541768631445618689/541768758717579264/goldbanner.png",
+    "https://cdn.discordapp.com/attachments/541768631445618689/541768765415751680/platinumbanner.png"
+],
 
 
 "pettingMessages": [
@@ -370,18 +378,18 @@ List of special characters:
 
 
 "hangmanStageImages": [
-    "https://i.imgur.com/MkpPDhG.png",
-    "https://i.imgur.com/C9GRdQV.png",
-    "https://i.imgur.com/O6Ibhth.png",
-    "https://i.imgur.com/u13a26r.png",
-    "https://i.imgur.com/zeoGoKB.png",
-    "https://i.imgur.com/XT4cTFf.png",
-    "https://i.imgur.com/WRwbtiM.png",
-    "https://i.imgur.com/LuldKD0.png",
-    "https://i.imgur.com/gu9Z2ZA.png",
-    "https://i.imgur.com/X4i2fvp.png",
-    "https://i.imgur.com/6bAo85U.png",
-    "https://i.imgur.com/KyptojS.png"
+    "https://cdn.discordapp.com/attachments/541768631445618689/541768919539515392/0.png",
+    "https://cdn.discordapp.com/attachments/541768631445618689/541768921393528853/1.png",
+    "https://cdn.discordapp.com/attachments/541768631445618689/541768922723254273/2.png",
+    "https://cdn.discordapp.com/attachments/541768631445618689/541768924795240478/3.png",
+    "https://cdn.discordapp.com/attachments/541768631445618689/541768926401527808/4.png",
+    "https://cdn.discordapp.com/attachments/541768631445618689/541768928364331052/5.png",
+    "https://cdn.discordapp.com/attachments/541768631445618689/541768929488404481/6.png",
+    "https://cdn.discordapp.com/attachments/541768631445618689/541768931489087498/7.png",
+    "https://cdn.discordapp.com/attachments/541768631445618689/541768932873207813/8.png",
+    "https://cdn.discordapp.com/attachments/541768631445618689/541768934815170561/9.png",
+    "https://cdn.discordapp.com/attachments/541768631445618689/541768937172369426/10.png",
+    "https://cdn.discordapp.com/attachments/541768631445618689/541768939525373957/11.png"
 ],
 
 "hangmanWords": [ 

@@ -405,7 +405,6 @@ namespace PacManBot.Commands.Modules.GameModules
             }
 
             if (name.Length > RpgGame.NameCharLimit) return "Your name can't be longer than 32 characters.";
-            if (name.Contains("@")) return $"Your name can't contain \"@\"";
 
             Game.player.SetName(name);
             SaveGame();

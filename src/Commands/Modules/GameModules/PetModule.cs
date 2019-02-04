@@ -259,8 +259,6 @@ namespace PacManBot.Commands.Modules.GameModules
 
             if (name.Length > PetGame.NameCharLimit)
                 return $"{CustomEmoji.Cross} Pet name can't go above 32 characters!";
-            if (name.Contains("@"))
-                return $"{CustomEmoji.Cross} Pet name can't contain \"@\"!";
 
 
             Game.SetPetName(name);

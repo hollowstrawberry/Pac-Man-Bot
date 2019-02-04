@@ -15,21 +15,12 @@ namespace PacManBot.Games.Concrete
     public class PetGame : BaseGame, IUserGame, IStoreableGame
     {
         public const int NameCharLimit = 32;
+        public const int MaxStat = 20;
 
         public override int GameIndex => 1;
         public override string GameName => "Wakagotchi";
         public override TimeSpan Expiry => TimeSpan.FromDays(60);
         public string FilenameKey => "pet";
-
-
-        public static readonly string[] BannerUrl = {
-            null,
-            "https://cdn.discordapp.com/attachments/412314001414815751/448939830433415189/copperbanner.png",
-            "https://cdn.discordapp.com/attachments/412314001414815751/448939834354958370/silverbanner.png",
-            "https://cdn.discordapp.com/attachments/412314001414815751/448939832102617090/goldbanner.png"
-        };
-
-        public const int MaxStat = 20;
 
 
         // Fields
@@ -133,14 +124,17 @@ namespace PacManBot.Games.Concrete
             [Achievement("🥇", "Good Care III", "300 Total actions", 7, group: 1)]
             public bool GoodCare3 => TotalActions >= 300;
 
-            [Achievement(CustomEmoji.BronzeIcon, "Bronze Owner", "3 days without neglect", 10, hideIcon: true, group: 2)]
+            [Achievement(CustomEmoji.BronzeIcon, "Bronze Owner", "7 days without neglect", 10, hideIcon: true, group: 2)]
             public bool BronzeOwner => Attention >= 1;
 
-            [Achievement(CustomEmoji.SilverIcon, "Silver Owner", "7 days without neglect", 11, hideIcon: true, group: 2)]
+            [Achievement(CustomEmoji.SilverIcon, "Silver Owner", "14 days without neglect", 11, hideIcon: true, group: 2)]
             public bool SilverOwner => Attention >= 2;
 
-            [Achievement(CustomEmoji.GoldIcon, "Gold Owner", "14 days without neglect", 12, hideIcon: true, group: 2)]
+            [Achievement(CustomEmoji.GoldIcon, "Gold Owner", "30 days without neglect", 12, hideIcon: true, group: 2)]
             public bool GoldOwner => Attention >= 3;
+
+            [Achievement(CustomEmoji.PetRight, "Platinum Owner", "180 days without neglect", 13, hidden: true, hideIcon: true, group: 2)]
+            public bool PlatinumOwner => Attention >= 4;
 
             [Achievement("👑", "Pet King", "Be crowned king of pets", 100), DataMember]
             public bool PetKing { get; set; }
@@ -163,9 +157,10 @@ namespace PacManBot.Games.Concrete
 
                 if (!string.IsNullOrWhiteSpace(pet.petName) && !string.IsNullOrWhiteSpace(pet.petImageUrl)) Custom = true;
 
-                if (days >= 14 && Attention < 3) Attention = 3;
-                else if (days >= 7 && Attention < 2) Attention = 2;
-                else if (days >= 3 && Attention < 1) Attention = 1;
+                if (days >= 180 && Attention < 4) Attention = 4;
+                else if (days >= 30 && Attention < 3) Attention = 3;
+                else if (days >= 14 && Attention < 2) Attention = 2;
+                else if (days >= 7 && Attention < 1) Attention = 1;
             }
 
 
@@ -266,7 +261,7 @@ namespace PacManBot.Games.Concrete
                 Description = description.ToString(),
                 Color = TotalStats.Ceiling() >= 60 ? new Color(0, 200, 0) : TotalStats.Ceiling() >= 25 ? new Color(255, 200, 0) : new Color(255, 0, 0),
                 ThumbnailUrl = petImageUrl ?? Content.petImageUrl,
-                ImageUrl = BannerUrl[achievements.Attention],
+                ImageUrl = Content.petBannerUrl[achievements.Attention],
                 Fields = new List<EmbedFieldBuilder>
                 {
                     new EmbedFieldBuilder
@@ -291,9 +286,8 @@ namespace PacManBot.Games.Concrete
         {
             UpdateStats();
 
-            string noNeglect = achievements.lastNeglected == bornDate
-                ? "Never neglected"
-                : (DateTime.Now - achievements.lastNeglected).Humanized(2, "Less than an hour");
+            string noNeglect = (DateTime.Now - achievements.lastNeglected).Humanized(2, "Less than an hour")
+                + "(Never neglected)".If(achievements.lastNeglected == bornDate);
 
             var stats = new StringBuilder();
             stats.Append($"**Times fed:** {achievements.timesFed}\n");
@@ -453,7 +447,7 @@ namespace PacManBot.Games.Concrete
         /// <summary>Sets the pet's name.</summary>
         public void SetPetName(string text)
         {
-            petName = text?.Trim().Replace("@", "").SanitizeMarkdown().Truncate(NameCharLimit);
+            petName = text?.Trim().Truncate(NameCharLimit).SanitizeMarkdown().SanitizeMentions();
             UpdateStats();
         }
 

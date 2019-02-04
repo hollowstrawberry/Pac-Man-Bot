@@ -71,6 +71,9 @@ namespace PacManBot
         /// <summary>Sleeping emoji used as reactions for <see cref="PetGame"/>.</summary>
         [DataMember] public readonly string[] petSleepEmotes;
 
+        /// <summary>Banners as rewards in <see cref="PetGame"/>.</summary>
+        [DataMember] public readonly string[] petBannerUrl;
+
         /// <summary>Messages used in <see cref="PetGame"/> petting.</summary>
         [DataMember] public readonly string[] pettingMessages;
 

@@ -205,7 +205,7 @@ namespace PacManBot.Commands.Modules
                 Url = Content.githubLink,
                 Description = $"{CustomEmoji.GitHub} Contributions welcome!",
                 Color = Colors.PacManYellow,
-                ThumbnailUrl = "https://cdn.discordapp.com/attachments/412090039686660097/455914771179503633/GitHub.png",
+                ThumbnailUrl = "https://cdn.discordapp.com/attachments/541768631445618689/541768699929952257/GitHub.png",
             };
 
             await ReplyAsync(embed);
