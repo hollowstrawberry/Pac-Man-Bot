@@ -43,10 +43,13 @@ namespace PacManBot
         [DataMember] public readonly bool scheduledRestart = false;
 
         /// <summary>How many messages to keep on memory per channel. Keep it to a reasonable amount.</summary>
-        [DataMember] public readonly int messageCacheSize = 100;
+        [DataMember] public readonly int messageCacheSize = 50;
 
         /// <summary>How long in milliseconds until the gateway connection to Discord times out.</summary>
         [DataMember] public readonly int connectionTimeout = 30000;
+
+        /// <summary>Whether all users should be downloaded and cached as guilds come available.</summary>
+        [DataMember] public readonly bool downloadAllUsers = true;
 
         /// <summary>How many messages this program should log. See <see cref="LogSeverity"/> for possible values.</summary>
         [DataMember] public readonly LogSeverity logLevel = LogSeverity.Debug;
@@ -98,7 +101,8 @@ namespace PacManBot
             LogLevel = clientLogLevel,
             MessageCacheSize = messageCacheSize,
             ConnectionTimeout = connectionTimeout,
-            DefaultRetryMode = RetryMode.RetryRatelimit,
+            AlwaysDownloadUsers = downloadAllUsers,
+            DefaultRetryMode = RetryMode.AlwaysRetry,
         };
     }
 }
