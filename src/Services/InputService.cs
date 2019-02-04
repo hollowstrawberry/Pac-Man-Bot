@@ -290,23 +290,24 @@ namespace PacManBot.Services
 
         private async Task ExecuteGameInputAsync(IReactionsGame game, SocketReaction reaction, IUserMessage gameMessage)
         {
-            var user = gameMessage.Author;
+            var userId = reaction.UserId;
+            var user = client.GetUser(userId);
             var channel = gameMessage.Channel;
             var guild = (channel as IGuildChannel)?.Guild;
 
             log.Verbose(
-                $"Input {reaction.Emote.ReadableName()} by {user.FullName()} in {channel.FullName()}",
+                $"Input {reaction.Emote.ReadableName()} by {user?.FullName()} in {channel.FullName()}",
                 game.GameName);
 
-            game.Input(reaction.Emote, user.Id);
+            game.Input(reaction.Emote, userId);
 
             if (game.State != GameState.Active)
             {
                 if (!(game is IUserGame)) games.Remove(game);
 
-                if (game is PacManGame pmGame && pmGame.State != GameState.Cancelled && !pmGame.custom)
+                if (game is PacManGame pmGame && user != null && pmGame.State != GameState.Cancelled && !pmGame.custom)
                 {
-                    storage.AddScore(new ScoreEntry(pmGame.score, user.Id, pmGame.State, pmGame.Time,
+                    storage.AddScore(new ScoreEntry(pmGame.score, userId, pmGame.State, pmGame.Time,
                         user.NameandDisc(), $"{guild?.Name}/{channel.Name}", DateTime.Now));
                 }
 
