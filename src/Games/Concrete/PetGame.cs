@@ -133,7 +133,7 @@ namespace PacManBot.Games.Concrete
             [Achievement(CustomEmoji.GoldIcon, "Gold Owner", "30 days without neglect", 12, hideIcon: true, group: 2)]
             public bool GoldOwner => Attention >= 3;
 
-            [Achievement(CustomEmoji.PetRight, "Platinum Owner", "180 days without neglect", 13, hidden: true, hideIcon: true, group: 2)]
+            [Achievement(CustomEmoji.PetRight, "Platinum Owner", "90 days without neglect", 13, hidden: true, hideIcon: true, group: 2)]
             public bool PlatinumOwner => Attention >= 4;
 
             [Achievement("👑", "Pet King", "Be crowned king of pets", 100), DataMember]
@@ -157,7 +157,7 @@ namespace PacManBot.Games.Concrete
 
                 if (!string.IsNullOrWhiteSpace(pet.petName) && !string.IsNullOrWhiteSpace(pet.petImageUrl)) Custom = true;
 
-                if (days >= 180 && Attention < 4) Attention = 4;
+                if (days >= 90 && Attention < 4) Attention = 4;
                 else if (days >= 30 && Attention < 3) Attention = 3;
                 else if (days >= 14 && Attention < 2) Attention = 2;
                 else if (days >= 7 && Attention < 1) Attention = 1;
