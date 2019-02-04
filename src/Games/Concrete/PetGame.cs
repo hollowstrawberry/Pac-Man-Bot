@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Discord;
 using PacManBot.Constants;
 using PacManBot.Extensions;
@@ -43,7 +44,7 @@ namespace PacManBot.Games.Concrete
         // Properties
 
         [DataMember] public override ulong OwnerId { get => base.OwnerId; protected set => base.OwnerId = value; }
-        public override DateTime LastPlayed { get => lastUpdated; set => lastUpdated = value; }
+        public override DateTime LastPlayed { get => lastUpdated; set { } }
 
         public double TotalStats => satiation + happiness + hygiene + energy;
         public int TimesPet => achievements.timesPet;
@@ -201,13 +202,11 @@ namespace PacManBot.Games.Concrete
 
         private PetGame() { } // Used in serialization
 
-        public PetGame(string name, ulong ownerId, IServiceProvider services)
+        public PetGame(ulong ownerId, IServiceProvider services)
             : base(new[] { ownerId }, services)
         {
             bornDate = DateTime.Now;
             lastUpdated = DateTime.Now;
-
-            SetPetName(name);
         }
 
 
@@ -335,7 +334,7 @@ namespace PacManBot.Games.Concrete
 
 
         /// <summary>Calculates and updates a pet's current status.</summary>
-        public void UpdateStats(bool store = true)
+        public void UpdateStats()
         {
             var now = DateTime.Now;
             double hours = (now - lastUpdated).TotalHours;
@@ -356,7 +355,13 @@ namespace PacManBot.Games.Concrete
 
             achievements.DoChecks(this);
             lastUpdated = now;
-            if (store) games.Save(this);
+        }
+
+        /// <summary>Calculates and updates a pet's current status, and saves it to disk.</summary>
+        public async Task UpdateAndSaveAsync()
+        {
+            UpdateStats();
+            await games.SaveAsync(this);
         }
 
 
@@ -364,9 +369,9 @@ namespace PacManBot.Games.Concrete
 
         /// <summary>Attempts to feed a pet. It restores some energy based on hungriness.
         /// If it's already full, it consumes 1 energy.</summary>
-        public bool TryFeed()
+        public async Task<bool> TryFeedAsync()
         {
-            UpdateStats(store: false);
+            UpdateStats();
 
             bool canEat = satiation.Ceiling() != MaxStat;
             if (canEat)
@@ -382,15 +387,15 @@ namespace PacManBot.Games.Concrete
                 energy = Math.Max(0, energy - 1);
             }
 
-            games.Save(this);
+            await games.SaveAsync(this);
             return canEat;
         }
 
 
         /// <summary>Attempts to clean a pet. If it's already clean, it consumes 1 energy.</summary>
-        public bool TryClean()
+        public async Task<bool> TryCleanAsync()
         {
-            UpdateStats(store: false);
+            UpdateStats();
 
             bool canClean = hygiene.Ceiling() != MaxStat;
             if (canClean)
@@ -403,16 +408,16 @@ namespace PacManBot.Games.Concrete
                 energy = Math.Max(0, energy - 1);
             }
 
-            games.Save(this);
+            await games.SaveAsync(this);
             return canClean;
         }
 
 
         /// <summary>Attempts to play with a pet. It requires 5 energy and consumes 5 of every stat.
         /// If it's already happy, it consumes 1 energy.</summary>
-        public bool TryPlay()
+        public async Task<bool> TryPlayAsync()
         {
-            UpdateStats(store: false);
+            UpdateStats();
 
             bool isMax = happiness.Ceiling() == MaxStat;
             bool canPlay = !isMax && energy.Ceiling() >= 5;
@@ -431,35 +436,35 @@ namespace PacManBot.Games.Concrete
                 energy = Math.Max(0, energy - 1);
             }
 
-            games.Save(this);
+            await games.SaveAsync(this);
             return canPlay;
         }
 
 
         /// <summary>Toggles a pet between sleep and awake.</summary>
-        public void ToggleSleep()
+        public async Task ToggleSleepAsync()
         {
             asleep = !asleep;
-            games.Save(this);
+            await games.SaveAsync(this);
         }
 
 
         /// <summary>Sets the pet's name.</summary>
-        public void SetPetName(string text)
+        public async Task SetPetNameAsync(string text)
         {
             petName = text?.Trim().Truncate(NameCharLimit).SanitizeMarkdown().SanitizeMentions();
-            UpdateStats();
+            await UpdateAndSaveAsync();
         }
 
 
         /// <summary>Returns whether the given text is a valid image URL, and sets the pet's image URL if it is.</summary>
-        public bool TrySetImageUrl(string text)
+        public async Task<bool> TrySetImageUrlAsync(string text)
         {
             string url = text?.Trim('<', '>');
             if (url == null || WebUtil.IsImageUrl(url))
             {
                 petImageUrl = url;
-                UpdateStats();
+                await UpdateAndSaveAsync();
                 return true;
             }
             return false;
@@ -467,7 +472,7 @@ namespace PacManBot.Games.Concrete
 
 
         /// <summary>Does a random petting: A mini incremental game for pets.</summary>
-        public string DoPet()
+        public async Task<string> DoPetAsync()
         {
             string pet;
             int amount;
@@ -533,7 +538,7 @@ namespace PacManBot.Games.Concrete
                 king = true;
             }
 
-            games.Save(this);
+            await games.SaveAsync(this);
 
             pet = Regex.Replace(pet, @"{.*}", "");
             if ((amount == 0) == hide || godEffect) pet = pet.Trim(' ') + $" ({"👼 ".If(godEffect)}{amount:+0;-#} pets)";

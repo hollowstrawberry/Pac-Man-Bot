@@ -1,4 +1,5 @@
 using Discord;
+using System.Threading.Tasks;
 
 namespace PacManBot.Games
 {
@@ -28,6 +29,6 @@ namespace PacManBot.Games
         IUser User(int i = 0);
 
         /// <summary>Executes automatic AI input, assuming it is a bot's turn.</summary>
-        void BotInput();
+        Task BotInputAsync();
     }
 }

@@ -88,8 +88,6 @@ namespace PacManBot.Commands.Modules.GameModules
             }
             else
             {
-                if (Game != null) Game.LastPlayed = DateTime.Now;
-
                 if (Game == null && command.Get<NotRequiresRpgAttribute>() == null)
                 {
                     await ReplyAsync($"You can use `{Context.Prefix}rpg start` to start your adventure.");
@@ -133,7 +131,7 @@ namespace PacManBot.Commands.Modules.GameModules
                 Game.PvpGame.MessageId = msg.Id;
             }
 
-            SaveGame();
+            await SaveGameAsync();
 
             await AddBattleEmotes(msg, Game);
             return null;
@@ -160,17 +158,19 @@ namespace PacManBot.Commands.Modules.GameModules
             Game.player.UpdateStats();
             foreach (var op in Game.Opponents) op.UpdateStats();
 
-            var msg = await Game.GetMessage();
+            var msg = await Game.GetMessageAsync();
             Game.player.Mana -= skill.ManaCost;
             if (Game.IsPvp)
             {
+                var otherGame = Game.PvpGame;
                 Game.fightEmbed = Game.FightPvP(true, skill);
                 if (Game.IsPvp) // Match didn't end
                 {
                     Game.isPvpTurn = false;
-                    Game.PvpGame.isPvpTurn = true;
-                    Game.PvpGame.fightEmbed = Game.fightEmbed;
+                    otherGame.isPvpTurn = true;
+                    otherGame.fightEmbed = Game.fightEmbed;
                 }
+                await Games.SaveAsync(otherGame);
             }
             else
             {
@@ -182,17 +182,18 @@ namespace PacManBot.Commands.Modules.GameModules
                 if (msg == null || msg.Channel.Id != Context.Channel.Id)
                 {
                     msg = await ReplyGameAsync();
-                    SaveGame();
+                    await SaveGameAsync();
                     await AddBattleEmotes(msg, Game);
                 }
                 else
                 {
-                    SaveGame();
+                    await SaveGameAsync();
                     await UpdateGameMessageAsync();
                 }
             }
             else
             {
+                await SaveGameAsync();
                 try { await msg.ModifyAsync(x => x.Embed = Game.fightEmbed.Build(), Game.GetRequestOptions()); }
                 catch (HttpException) { }
             }
@@ -249,13 +250,13 @@ namespace PacManBot.Commands.Modules.GameModules
             Game.lastHeal = DateTime.Now;
             Game.player.Life = Game.player.MaxLife;
             Game.player.Mana = Game.player.MaxMana;
-            SaveGame();
+            await SaveGameAsync();
 
             await ReplyAsync($"💟 Fully restored!");
 
             if (Game.State == GameState.Active)
             {
-                var message = await Game.GetMessage();
+                var message = await Game.GetMessageAsync();
                 if (message != null)
                 {
                     Game.lastEmote = "";
@@ -298,7 +299,7 @@ namespace PacManBot.Commands.Modules.GameModules
                 return "You can't switch armors mid-battle (but you can switch weapons).";
 
             Game.player.EquipItem(bestMatch.Key);
-            SaveGame();
+            await SaveGameAsync();
             await ReplyAsync($"⚔ Equipped `{bestMatch}`.");
 
             if (Game.State == GameState.Active && !Game.IsPvp)
@@ -361,7 +362,7 @@ namespace PacManBot.Commands.Modules.GameModules
             int oldValue = Game.player.spentSkill[type];
             Game.player.spentSkill[type] += amount;
             Game.player.skillPoints -= amount;
-            SaveGame();
+            await SaveGameAsync();
             await AutoReactAsync();
 
             var newSkills = RpgExtensions.SkillTypes.Values
@@ -407,7 +408,7 @@ namespace PacManBot.Commands.Modules.GameModules
             if (name.Length > RpgGame.NameCharLimit) return "Your name can't be longer than 32 characters.";
 
             Game.player.SetName(name);
-            SaveGame();
+            await SaveGameAsync();
             await msg.AutoReactAsync();
             return null;
         }
@@ -433,7 +434,7 @@ namespace PacManBot.Commands.Modules.GameModules
                                       $"Example: `red` or `#FF0000`";
 
             Game.player.Color = color.Value;
-            SaveGame();
+            await SaveGameAsync();
 
             await ReplyAsync(new EmbedBuilder
             {
@@ -532,8 +533,8 @@ namespace PacManBot.Commands.Modules.GameModules
                 otherGame.isPvpTurn = true;
                 otherGame.ChannelId = Game.ChannelId;
                 otherGame.MessageId = Game.MessageId;
-                Games.Save(Game);
-                Games.Save(otherGame);
+                await Games.SaveAsync(Game);
+                await Games.SaveAsync(otherGame);
 
                 await response.AutoReactAsync();
 

@@ -429,7 +429,7 @@ namespace PacManBot.Commands.Modules
             {
                 try
                 {
-                    if (game.State == GameState.Active) game.Input(move);
+                    if (game.State == GameState.Active) await game.InputAsync(move);
                     else break;
                 }
                 catch (Exception e)
@@ -439,13 +439,13 @@ namespace PacManBot.Commands.Modules
                 }
             }
 
-            var msg = await game.GetMessage();
+            var msg = await game.GetMessageAsync();
             if (msg != null) await msg.ModifyAsync(game.GetMessageUpdate(), DefaultOptions);
             else msg = await ReplyAsync(game.GetContent(), game.GetEmbed());
 
             if (game is MultiplayerGame tpGame && tpGame.BotTurn)
             {
-                tpGame.BotInput();
+                await tpGame.BotInputAsync();
                 await Task.Delay(1000);
                 await msg.ModifyAsync(game.GetMessageUpdate(), DefaultOptions);
             }

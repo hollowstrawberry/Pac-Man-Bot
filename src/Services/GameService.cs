@@ -128,10 +128,11 @@ namespace PacManBot.Services
         }
 
 
-        /// <summary>Stores a backup of the game on disk, to be loaded the next time the bot starts.</summary>
-        public void Save(IStoreableGame game)
+        /// <summary>Stores a backup of the game on disk asynchronously, to be loaded the next time the bot starts.</summary>
+        public async Task SaveAsync(IStoreableGame game)
         {
-            File.WriteAllText(game.GameFile(), JsonConvert.SerializeObject(game, GameJsonSettings), Encoding.UTF8);
+            game.LastPlayed = DateTime.Now;
+            await File.WriteAllTextAsync(game.GameFile(), JsonConvert.SerializeObject(game, GameJsonSettings), Encoding.UTF8);
         }
 
 

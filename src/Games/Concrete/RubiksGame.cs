@@ -190,7 +190,6 @@ namespace PacManBot.Games.Concrete
             : base(channelId, new[] { ownerId }, services)
         {
             RawCube = SolvedCube;
-            games.Save(this);
         }
 
         
@@ -216,8 +215,6 @@ namespace PacManBot.Games.Concrete
             var copy = cube.ToArray();
             foreach (var move in moves) move.Apply(copy);
             cube = copy; // Replaces the cube all at once for thread-safety
-
-            games.Save(this);
         }
 
 

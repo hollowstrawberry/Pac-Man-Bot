@@ -138,7 +138,7 @@ namespace PacManBot.Services
                 {
                     try
                     {
-                        var gameMessage = await game.GetMessage();
+                        var gameMessage = await game.GetMessageAsync();
                         if (gameMessage != null) await gameMessage.ModifyAsync(game.GetMessageUpdate(), PmBot.DefaultOptions);
                     }
                     catch (HttpException) { } // Something happened to the message, we can ignore it

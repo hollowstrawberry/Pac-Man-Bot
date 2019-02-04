@@ -43,13 +43,13 @@ namespace PacManBot.Games.Concrete
         }
 
 
-        public void Input(string input, ulong userId = 1)
+        public Task InputAsync(string input, ulong userId = 1)
         {
             int cell = int.Parse(StripPrefix(input)) - 1;
             int y = cell / board.Width;
             int x = cell % board.Width;
 
-            if (State != GameState.Active || board[x, y] != Player.None) return;
+            if (State != GameState.Active || board[x, y] != Player.None) return Task.CompletedTask;
 
             board[x, y] = Turn;
             Time++;
@@ -67,6 +67,8 @@ namespace PacManBot.Games.Concrete
                 State = GameState.Completed;
                 Turn = Winner;
             }
+
+            return Task.CompletedTask;
         }
 
 
@@ -131,11 +133,11 @@ namespace PacManBot.Games.Concrete
 
 
 
-        public override void BotInput()
+        public override Task BotInputAsync()
         {
             // Win or block or random
             Pos target = TryCompleteLine(Turn) ?? TryCompleteLine(Turn.Opponent) ?? Program.Random.Choose(EmptyCells(board));
-            Input($"{1 + target.y * board.Width + target.x}");
+            return InputAsync($"{1 + target.y * board.Width + target.x}");
         }
 
 

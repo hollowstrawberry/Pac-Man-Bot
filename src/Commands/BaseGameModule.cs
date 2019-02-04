@@ -60,9 +60,9 @@ namespace PacManBot.Commands
         }
 
         /// <summary>Saves the game to disk if the game for this context is storeable.</summary>
-        public void SaveGame()
+        public async Task SaveGameAsync()
         {
-            if (Game != null && Game is IStoreableGame sgame) Games.Save(sgame);
+            if (Game != null && Game is IStoreableGame sgame) await Games.SaveAsync(sgame);
         }
 
 
@@ -88,7 +88,7 @@ namespace PacManBot.Commands
             try
             {
                 cgame.CancelRequests();
-                var msg = await cgame.GetMessage();
+                var msg = await cgame.GetMessageAsync();
                 if (msg != null) await msg.DeleteAsync(DefaultOptions);
             }
             catch (HttpException) { } // Something happened to the message, not important
@@ -101,7 +101,7 @@ namespace PacManBot.Commands
             if (!(Game is IChannelGame cgame)) return null;
 
             cgame.CancelRequests();
-            var msg = await cgame.GetMessage();
+            var msg = await cgame.GetMessageAsync();
             try
             {
                 if (msg != null) await msg.ModifyAsync(cgame.GetMessageUpdate(), cgame.GetRequestOptions());
@@ -115,7 +115,7 @@ namespace PacManBot.Commands
         /// <summary>Tries to update an existing game message, otherwise sends a new one.</summary>
         public async Task<IUserMessage> SendOrUpdateGameMessageAsync()
         {
-            var msg = await ((IChannelGame)Game).GetMessage();
+            var msg = Game is IChannelGame cgame ? await cgame.GetMessageAsync() : null;
             if (msg != null) msg = await UpdateGameMessageAsync();
             if (msg == null) msg = await ReplyGameAsync(); // Didn't exist or failed to update
             return msg;

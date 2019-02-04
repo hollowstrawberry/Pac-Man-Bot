@@ -284,7 +284,7 @@ namespace PacManBot.Games.Concrete
 
             if (Turn < 0 || Turn >= players.Length) Turn = 0; // There's an error I don't know how is caused or how to fix
 
-            games.Save(this);
+            await games.SaveAsync(this);
         }
 
 
@@ -310,7 +310,7 @@ namespace PacManBot.Games.Concrete
         }
 
 
-        public async void Input(string input, ulong userId = 1)
+        public async Task InputAsync(string input, ulong userId = 1)
         {
             LastPlayed = DateTime.Now;
             input = StripPrefix(input.ToLowerInvariant());
@@ -338,7 +338,7 @@ namespace PacManBot.Games.Concrete
                     ClearGameLog();
                     Callout(forgot);
                 }
-                games.Save(this);
+                await games.SaveAsync(this);
                 return;
             }
 
@@ -447,7 +447,7 @@ namespace PacManBot.Games.Concrete
 
             if (!calledByAi || !CurrentPlayer.User.IsBot)
             {
-                games.Save(this);
+                await games.SaveAsync(this);
                 foreach (var player in updatedPlayers.Distinct().Where(x => !x.User.IsBot).ToArray())
                 {
                     await SendCards(player);
@@ -457,7 +457,7 @@ namespace PacManBot.Games.Concrete
         }
 
 
-        public override void BotInput()
+        public override async Task BotInputAsync()
         {
             string input = "draw";
             var playable = CurrentPlayer.cards.Where(CanDiscard).ToList();
@@ -489,7 +489,7 @@ namespace PacManBot.Games.Concrete
                 Callout(forgot);
             }
 
-            Input(input);
+            await InputAsync(input);
         }
 
         private static CardColor HighestColor(List<Card> cards)

@@ -23,6 +23,6 @@ namespace PacManBot.Games
         IGuild Guild { get; }
 
         /// <summary>Retrieves this game's latest message.</summary>
-        ValueTask<IUserMessage> GetMessage();
+        ValueTask<IUserMessage> GetMessageAsync();
     }
 }

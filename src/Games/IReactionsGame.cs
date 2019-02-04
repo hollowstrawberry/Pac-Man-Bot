@@ -1,4 +1,5 @@
 using Discord;
+using System.Threading.Tasks;
 
 namespace PacManBot.Games
 {
@@ -10,7 +11,7 @@ namespace PacManBot.Games
         /// <summary>Whether the given value is a valid input given the player sending it.</summary>
         bool IsInput(IEmote value, ulong userId);
 
-        /// <summary>Executes an input expected to be valid, specifying the player sending it if necessary.</summary>
-        void Input(IEmote input, ulong userId = 1);
+        /// <summary>Executes an input expected to be valid.</summary>
+        Task InputAsync(IEmote input, ulong userId = 1);
     }
 }

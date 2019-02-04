@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Threading.Tasks;
 using Discord;
 using PacManBot.Constants;
 using PacManBot.Extensions;
@@ -246,7 +247,6 @@ namespace PacManBot.Games.Concrete
                 map[ghostPos.Value] = ' ';
             }
 
-            games.Save(this);
             if (custom) File.AppendAllText(Files.CustomMapLog, newMap);
         }
 
@@ -259,10 +259,9 @@ namespace PacManBot.Games.Concrete
         }
 
 
-        public void Input(IEmote emote, ulong userId = 1)
+        public async Task InputAsync(IEmote emote, ulong userId = 1)
         {
             if (State != GameState.Active) return;
-            LastPlayed = DateTime.Now;
 
             PacManInput input = GameInputs[emote];
 
@@ -373,7 +372,7 @@ namespace PacManBot.Games.Concrete
 
             if (State == GameState.Active)
             {
-                games.Save(this);
+                await games.SaveAsync(this);
             }
         }
 
