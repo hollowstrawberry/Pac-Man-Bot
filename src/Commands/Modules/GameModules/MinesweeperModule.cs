@@ -1,8 +1,10 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Discord.Commands;
 using PacManBot.Extensions;
 using PacManBot.Games;
+using PacManBot.Utils;
 
 namespace PacManBot.Commands.Modules.GameModules
 {
@@ -31,56 +33,51 @@ namespace PacManBot.Commands.Modules.GameModules
             }
 
             var board = GenerateBoard(size, difficulty);
-            await ReplyAsync(board.ToString(x => $"||{x}|| "));
+            var content = board.ToString(x => $"||{(x == Bomb ? BombChar : NumberChars[x])}|| ");
+            await ReplyAsync(content);
         }
 
 
-
-        private const string Bomb = "💥";
-
-        private static readonly string[] Numbers = new[] // Two-character emoji
+        private static Board<int> GenerateBoard(int size, int difficulty)
         {
-            "\U00000030","\U00000031","\U00000032","\U00000033","\U00000034",
-            "\U00000035","\U00000036","\U00000037","\U00000038","\U00000039",
-        }.Select(x => x + "\U000020e3").ToArray();
+            var board = new Board<int>(size, size);
 
-        private static readonly Pos[] AdjacentPos =
-        {
-            (0, 1), (0, -1), (1, 0), (-1, 0), (1, 1), (1, -1), (-1, 1), (-1, -1),
-        };
-
-
-        public static Board<string> GenerateBoard(int size, int difficulty)
-        {
-            var board = new Board<string>(size, size, "");
-
-            var totalBombs = size*size*(0.05 + 0.05*difficulty);
-            int bombs = 0;
-            while (bombs < totalBombs)
+            int totalBombs = (size*size*(0.05 + 0.05*difficulty)).Floor();
+            var bombs = new List<Pos>(totalBombs);
+            while (bombs.Count < totalBombs) // Add bombs
             {
                 Pos p = (Program.Random.Next(size), Program.Random.Next(size));
                 if (p != (0, 0) && board[p] != Bomb)
                 {
                     board[p] = Bomb;
-                    bombs++;
+                    bombs.Add(p);
                 }
             }
 
-            foreach (var pos in board.Positions)
+            foreach (var bomb in bombs) // Add numbers around bombs
             {
-                if (board[pos] == Bomb) continue;
-
-                bombs = 0;
-                foreach (var p in AdjacentPos)
+                foreach (var adj in AdjacentPos.Select(p => bomb + p))
                 {
-                    var adj = pos + p;
                     if (adj.x < 0 || adj.x >= board.Width || adj.y < 0 || adj.y >= board.Height) continue;
-                    if (board[adj] == Bomb) bombs++;
+                    board[adj]++;
                 }
-                board[pos] = Numbers[bombs];
             }
 
             return board;
         }
+
+
+
+        private const string BombChar = "💥";
+
+        private static readonly string[] NumberChars = new Range(9)
+            .Select(x => (char)('\U00000030' + x) + "\U000020e3").ToArray(); // Two-character emoji
+
+
+        private const int Bomb = -1;
+
+        private static readonly Pos[] AdjacentPos = {
+            (0, 1), (0, -1), (1, 0), (-1, 0), (1, 1), (1, -1), (-1, 1), (-1, -1),
+        };
     }
 }
