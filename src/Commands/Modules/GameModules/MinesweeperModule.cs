@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Discord.Commands;
 using PacManBot.Extensions;
 using PacManBot.Games;
@@ -15,7 +16,7 @@ namespace PacManBot.Commands.Modules.GameModules
                  "The game is completely controlled by the user, with no interaction with the bot. " +
                  "To play, simply click a tile to reveal its contents. If it's a bomb, you lose. " +
                  "If it's a number, that number will indicate the number of bombs around that tile.\n" +
-                 "You win once all decidedly non-bomb tiles have been uncovered.")]
+                 "The top-left tile is never a bomb. You win once all non-bomb tiles have been uncovered!")]
         public async Task Minesweeper(int size = 8, int difficulty = 3)
         {
             if (size < 5 || size > 14)
@@ -30,17 +31,18 @@ namespace PacManBot.Commands.Modules.GameModules
             }
 
             var board = GenerateBoard(size, difficulty);
-            await ReplyAsync(board.ToString(x => $"||{x}|| ").Truncate(2000));
+            await ReplyAsync(board.ToString(x => $"||{x}|| "));
         }
 
 
 
         private const string Bomb = "💥";
 
-        private static readonly string[] Numbers =
+        private static readonly string[] Numbers = new[] // Two-character emoji
         {
-            ":zero:", ":one:", ":two:", ":three:", ":four:", ":five:", ":six:", ":seven:", ":eight:",
-        };
+            "\U00000030","\U00000031","\U00000032","\U00000033","\U00000034",
+            "\U00000035","\U00000036","\U00000037","\U00000038","\U00000039",
+        }.Select(x => x + "\U000020e3").ToArray();
 
         private static readonly Pos[] AdjacentPos =
         {
@@ -57,7 +59,7 @@ namespace PacManBot.Commands.Modules.GameModules
             while (bombs < totalBombs)
             {
                 Pos p = (Program.Random.Next(size), Program.Random.Next(size));
-                if (board[p] != Bomb)
+                if (p != (0, 0) && board[p] != Bomb)
                 {
                     board[p] = Bomb;
                     bombs++;
@@ -71,7 +73,9 @@ namespace PacManBot.Commands.Modules.GameModules
                 bombs = 0;
                 foreach (var p in AdjacentPos)
                 {
-                    if (board[pos + p] == Bomb) bombs++;
+                    var adj = pos + p;
+                    if (adj.x < 0 || adj.x >= board.Width || adj.y < 0 || adj.y >= board.Height) continue;
+                    if (board[adj] == Bomb) bombs++;
                 }
                 board[pos] = Numbers[bombs];
             }

@@ -44,7 +44,7 @@ namespace PacManBot.Games.Concrete
             ' ', CharPellet, CharPowerPellet, CharSoftWall, CharSoftWallPellet
         };
 
-        private const int PowerTime = 20, ScatterCycle = 100, ScatterTime1 = 30, ScatterTime2 = 20;
+        private const int PowerTime = 26, ScatterCycle = 100, ScatterTime1 = 30, ScatterTime2 = 20;
         private const char CharPlayer = 'O', CharFruit = '$', CharGhost = 'G', CharSoftWall = '_', CharSoftWallPellet = '~'; // Read from map
         private const char CharDoor = '-', CharPellet = '•', CharPowerPellet = 'o', CharPlayerDead = 'X', CharGhostFrightened = 'E'; // Displayed
         private static readonly char[] GhostAppearance = { 'B', 'P', 'I', 'C' };
