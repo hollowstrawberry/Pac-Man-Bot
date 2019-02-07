@@ -91,7 +91,7 @@
       <a class="xref" href="PacManBot.Games.IChannelGame.html#PacManBot_Games_IChannelGame_Guild">IChannelGame.Guild</a>
     </div>
     <div>
-      <a class="xref" href="PacManBot.Games.IChannelGame.html#PacManBot_Games_IChannelGame_GetMessage">IChannelGame.GetMessage()</a>
+      <a class="xref" href="PacManBot.Games.IChannelGame.html#PacManBot_Games_IChannelGame_GetMessageAsync">IChannelGame.GetMessageAsync()</a>
     </div>
     <div>
       <a class="xref" href="PacManBot.Games.IBaseGame.html#PacManBot_Games_IBaseGame_GameName">IBaseGame.GameName</a>
@@ -137,19 +137,19 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_IReactionsGame_Input_Discord_IEmote_System_UInt64_.md&amp;value=---%0Auid%3A%20PacManBot.Games.IReactionsGame.Input(Discord.IEmote%2CSystem.UInt64)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_IReactionsGame_InputAsync_Discord_IEmote_System_UInt64_.md&amp;value=---%0Auid%3A%20PacManBot.Games.IReactionsGame.InputAsync(Discord.IEmote%2CSystem.UInt64)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/IReactionsGame.cs/#L14">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/IReactionsGame.cs/#L15">View Source</a>
   </span>
-  <a id="PacManBot_Games_IReactionsGame_Input_" data-uid="PacManBot.Games.IReactionsGame.Input*"></a>
-  <h4 id="PacManBot_Games_IReactionsGame_Input_Discord_IEmote_System_UInt64_" data-uid="PacManBot.Games.IReactionsGame.Input(Discord.IEmote,System.UInt64)">Input(IEmote, UInt64)</h4>
-  <div class="markdown level1 summary"><p>Executes an input expected to be valid, specifying the player sending it if necessary.</p>
+  <a id="PacManBot_Games_IReactionsGame_InputAsync_" data-uid="PacManBot.Games.IReactionsGame.InputAsync*"></a>
+  <h4 id="PacManBot_Games_IReactionsGame_InputAsync_Discord_IEmote_System_UInt64_" data-uid="PacManBot.Games.IReactionsGame.InputAsync(Discord.IEmote,System.UInt64)">InputAsync(IEmote, UInt64)</h4>
+  <div class="markdown level1 summary"><p>Executes an input expected to be valid.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">void Input(IEmote input, ulong userId = 1UL)</code></pre>
+    <pre><code class="lang-csharp hljs">Task InputAsync(IEmote input, ulong userId = 1UL)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -173,12 +173,27 @@
       </tr>
     </tbody>
   </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_IReactionsGame_IsInput_Discord_IEmote_System_UInt64_.md&amp;value=---%0Auid%3A%20PacManBot.Games.IReactionsGame.IsInput(Discord.IEmote%2CSystem.UInt64)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/IReactionsGame.cs/#L11">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/IReactionsGame.cs/#L12">View Source</a>
   </span>
   <a id="PacManBot_Games_IReactionsGame_IsInput_" data-uid="PacManBot.Games.IReactionsGame.IsInput*"></a>
   <h4 id="PacManBot_Games_IReactionsGame_IsInput_Discord_IEmote_System_UInt64_" data-uid="PacManBot.Games.IReactionsGame.IsInput(Discord.IEmote,System.UInt64)">IsInput(IEmote, UInt64)</h4>
@@ -241,7 +256,7 @@
                     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_IReactionsGame.md&amp;value=---%0Auid%3A%20PacManBot.Games.IReactionsGame%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/IReactionsGame.cs/#L8" class="contribution-link">View Source</a>
+                    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/IReactionsGame.cs/#L9" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

@@ -110,7 +110,7 @@
       <a class="xref" href="PacManBot.Commands.BaseGameModule-1.html#PacManBot_Commands_BaseGameModule_1_StartNewGame__0_">BaseGameModule&lt;PacManGame&gt;.StartNewGame(PacManGame)</a>
     </div>
     <div>
-      <a class="xref" href="PacManBot.Commands.BaseGameModule-1.html#PacManBot_Commands_BaseGameModule_1_SaveGame">BaseGameModule&lt;PacManGame&gt;.SaveGame()</a>
+      <a class="xref" href="PacManBot.Commands.BaseGameModule-1.html#PacManBot_Commands_BaseGameModule_1_SaveGameAsync">BaseGameModule&lt;PacManGame&gt;.SaveGameAsync()</a>
     </div>
     <div>
       <a class="xref" href="PacManBot.Commands.BaseGameModule-1.html#PacManBot_Commands_BaseGameModule_1_ReplyGameAsync_System_String_">BaseGameModule&lt;PacManGame&gt;.ReplyGameAsync(String)</a>
@@ -221,7 +221,7 @@ public class PacManExtrasModule : BaseGameModule&lt;PacManGame&gt;, IModuleBase<
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_PacManExtrasModule_ChangeGameDisplay.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.PacManExtrasModule.ChangeGameDisplay%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/PacManExtrasModule.cs/#L132">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/PacManExtrasModule.cs/#L142">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_PacManExtrasModule_ChangeGameDisplay_" data-uid="PacManBot.Commands.Modules.PacManExtrasModule.ChangeGameDisplay*"></a>
   <h4 id="PacManBot_Commands_Modules_PacManExtrasModule_ChangeGameDisplay" data-uid="PacManBot.Commands.Modules.PacManExtrasModule.ChangeGameDisplay">ChangeGameDisplay()</h4>
@@ -231,8 +231,8 @@ public class PacManExtrasModule : BaseGameModule&lt;PacManGame&gt;, IModuleBase<
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[Command(&quot;changedisplay&quot;)]
 [Alias(new string[]{&quot;display&quot;})]
-[Remarks(&quot;Switch between normal and mobile display&quot;)]
-[Summary(&quot;A Pac-Man game can either be in normal or mobile mode. Using this command will switch modes for the current game in this channel&quot;)]
+[Remarks(&quot;Switch between normal and slim display&quot;)]
+[Summary(&quot;A Pac-Man game can either be in normal or slim mode. Slim mode fits better on phones.Using this command will switch modes for the current game in this channel.&quot;)]
 public Task ChangeGameDisplay()</code></pre>
   </div>
   <h5 class="returns">Returns</h5>
@@ -255,7 +255,7 @@ public Task ChangeGameDisplay()</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_PacManExtrasModule_SendPersonalBest_Discord_WebSocket_SocketGuildUser_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.PacManExtrasModule.SendPersonalBest(Discord.WebSocket.SocketGuildUser)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/PacManExtrasModule.cs/#L94">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/PacManExtrasModule.cs/#L95">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_PacManExtrasModule_SendPersonalBest_" data-uid="PacManBot.Commands.Modules.PacManExtrasModule.SendPersonalBest*"></a>
   <h4 id="PacManBot_Commands_Modules_PacManExtrasModule_SendPersonalBest_Discord_WebSocket_SocketGuildUser_" data-uid="PacManBot.Commands.Modules.PacManExtrasModule.SendPersonalBest(Discord.WebSocket.SocketGuildUser)">SendPersonalBest(SocketGuildUser)</h4>
@@ -308,7 +308,7 @@ public Task SendPersonalBest(SocketGuildUser guildUser = null)</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_PacManExtrasModule_SendPersonalBest_PacManBot_Utils_TimePeriod_Discord_WebSocket_SocketGuildUser_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.PacManExtrasModule.SendPersonalBest(PacManBot.Utils.TimePeriod%2CDiscord.WebSocket.SocketGuildUser)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/PacManExtrasModule.cs/#L102">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/PacManExtrasModule.cs/#L103">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_PacManExtrasModule_SendPersonalBest_" data-uid="PacManBot.Commands.Modules.PacManExtrasModule.SendPersonalBest*"></a>
   <h4 id="PacManBot_Commands_Modules_PacManExtrasModule_SendPersonalBest_PacManBot_Utils_TimePeriod_Discord_WebSocket_SocketGuildUser_" data-uid="PacManBot.Commands.Modules.PacManExtrasModule.SendPersonalBest(PacManBot.Utils.TimePeriod,Discord.WebSocket.SocketGuildUser)">SendPersonalBest(TimePeriod, SocketGuildUser)</h4>
@@ -362,7 +362,7 @@ public Task SendPersonalBest(TimePeriod time, SocketGuildUser guildUser = null)<
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_PacManExtrasModule_SendPersonalBest_PacManBot_Utils_TimePeriod_System_UInt64_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.PacManExtrasModule.SendPersonalBest(PacManBot.Utils.TimePeriod%2CSystem.UInt64)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/PacManExtrasModule.cs/#L110">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/PacManExtrasModule.cs/#L111">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_PacManExtrasModule_SendPersonalBest_" data-uid="PacManBot.Commands.Modules.PacManExtrasModule.SendPersonalBest*"></a>
   <h4 id="PacManBot_Commands_Modules_PacManExtrasModule_SendPersonalBest_PacManBot_Utils_TimePeriod_System_UInt64_" data-uid="PacManBot.Commands.Modules.PacManExtrasModule.SendPersonalBest(PacManBot.Utils.TimePeriod,System.UInt64)">SendPersonalBest(TimePeriod, UInt64)</h4>
@@ -416,7 +416,7 @@ public Task SendPersonalBest(TimePeriod time, ulong userId)</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_PacManExtrasModule_SendPersonalBest_System_UInt64_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.PacManExtrasModule.SendPersonalBest(System.UInt64)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/PacManExtrasModule.cs/#L106">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/PacManExtrasModule.cs/#L107">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_PacManExtrasModule_SendPersonalBest_" data-uid="PacManBot.Commands.Modules.PacManExtrasModule.SendPersonalBest*"></a>
   <h4 id="PacManBot_Commands_Modules_PacManExtrasModule_SendPersonalBest_System_UInt64_" data-uid="PacManBot.Commands.Modules.PacManExtrasModule.SendPersonalBest(System.UInt64)">SendPersonalBest(UInt64)</h4>

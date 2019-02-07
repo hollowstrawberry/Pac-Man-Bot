@@ -175,23 +175,23 @@ references:
   fullName.vb: PacManBot.Commands.BaseGameModule(Of TGame).ReplyGameAsync
   nameWithType: BaseGameModule<TGame>.ReplyGameAsync
   nameWithType.vb: BaseGameModule(Of TGame).ReplyGameAsync
-- uid: PacManBot.Commands.BaseGameModule`1.SaveGame
-  name: SaveGame()
-  href: api/PacManBot.Commands.BaseGameModule-1.html#PacManBot_Commands_BaseGameModule_1_SaveGame
-  commentId: M:PacManBot.Commands.BaseGameModule`1.SaveGame
-  fullName: PacManBot.Commands.BaseGameModule<TGame>.SaveGame()
-  fullName.vb: PacManBot.Commands.BaseGameModule(Of TGame).SaveGame()
-  nameWithType: BaseGameModule<TGame>.SaveGame()
-  nameWithType.vb: BaseGameModule(Of TGame).SaveGame()
-- uid: PacManBot.Commands.BaseGameModule`1.SaveGame*
-  name: SaveGame
-  href: api/PacManBot.Commands.BaseGameModule-1.html#PacManBot_Commands_BaseGameModule_1_SaveGame_
-  commentId: Overload:PacManBot.Commands.BaseGameModule`1.SaveGame
+- uid: PacManBot.Commands.BaseGameModule`1.SaveGameAsync
+  name: SaveGameAsync()
+  href: api/PacManBot.Commands.BaseGameModule-1.html#PacManBot_Commands_BaseGameModule_1_SaveGameAsync
+  commentId: M:PacManBot.Commands.BaseGameModule`1.SaveGameAsync
+  fullName: PacManBot.Commands.BaseGameModule<TGame>.SaveGameAsync()
+  fullName.vb: PacManBot.Commands.BaseGameModule(Of TGame).SaveGameAsync()
+  nameWithType: BaseGameModule<TGame>.SaveGameAsync()
+  nameWithType.vb: BaseGameModule(Of TGame).SaveGameAsync()
+- uid: PacManBot.Commands.BaseGameModule`1.SaveGameAsync*
+  name: SaveGameAsync
+  href: api/PacManBot.Commands.BaseGameModule-1.html#PacManBot_Commands_BaseGameModule_1_SaveGameAsync_
+  commentId: Overload:PacManBot.Commands.BaseGameModule`1.SaveGameAsync
   isSpec: "True"
-  fullName: PacManBot.Commands.BaseGameModule<TGame>.SaveGame
-  fullName.vb: PacManBot.Commands.BaseGameModule(Of TGame).SaveGame
-  nameWithType: BaseGameModule<TGame>.SaveGame
-  nameWithType.vb: BaseGameModule(Of TGame).SaveGame
+  fullName: PacManBot.Commands.BaseGameModule<TGame>.SaveGameAsync
+  fullName.vb: PacManBot.Commands.BaseGameModule(Of TGame).SaveGameAsync
+  nameWithType: BaseGameModule<TGame>.SaveGameAsync
+  nameWithType.vb: BaseGameModule(Of TGame).SaveGameAsync
 - uid: PacManBot.Commands.BaseGameModule`1.SendOrUpdateGameMessageAsync
   name: SendOrUpdateGameMessageAsync()
   href: api/PacManBot.Commands.BaseGameModule-1.html#PacManBot_Commands_BaseGameModule_1_SendOrUpdateGameMessageAsync
@@ -907,6 +907,38 @@ references:
   isSpec: "True"
   fullName: PacManBot.Commands.Modules.GameModules.HangmanModule.StartHangmanCustom
   nameWithType: HangmanModule.StartHangmanCustom
+- uid: PacManBot.Commands.Modules.GameModules.MinesweeperModule
+  name: MinesweeperModule
+  href: api/PacManBot.Commands.Modules.GameModules.MinesweeperModule.html
+  commentId: T:PacManBot.Commands.Modules.GameModules.MinesweeperModule
+  fullName: PacManBot.Commands.Modules.GameModules.MinesweeperModule
+  nameWithType: MinesweeperModule
+- uid: PacManBot.Commands.Modules.GameModules.MinesweeperModule.GenerateBoard(System.Int32,System.Int32)
+  name: GenerateBoard(Int32, Int32)
+  href: api/PacManBot.Commands.Modules.GameModules.MinesweeperModule.html#PacManBot_Commands_Modules_GameModules_MinesweeperModule_GenerateBoard_System_Int32_System_Int32_
+  commentId: M:PacManBot.Commands.Modules.GameModules.MinesweeperModule.GenerateBoard(System.Int32,System.Int32)
+  fullName: PacManBot.Commands.Modules.GameModules.MinesweeperModule.GenerateBoard(System.Int32, System.Int32)
+  nameWithType: MinesweeperModule.GenerateBoard(Int32, Int32)
+- uid: PacManBot.Commands.Modules.GameModules.MinesweeperModule.GenerateBoard*
+  name: GenerateBoard
+  href: api/PacManBot.Commands.Modules.GameModules.MinesweeperModule.html#PacManBot_Commands_Modules_GameModules_MinesweeperModule_GenerateBoard_
+  commentId: Overload:PacManBot.Commands.Modules.GameModules.MinesweeperModule.GenerateBoard
+  isSpec: "True"
+  fullName: PacManBot.Commands.Modules.GameModules.MinesweeperModule.GenerateBoard
+  nameWithType: MinesweeperModule.GenerateBoard
+- uid: PacManBot.Commands.Modules.GameModules.MinesweeperModule.Minesweeper(System.Int32,System.Int32)
+  name: Minesweeper(Int32, Int32)
+  href: api/PacManBot.Commands.Modules.GameModules.MinesweeperModule.html#PacManBot_Commands_Modules_GameModules_MinesweeperModule_Minesweeper_System_Int32_System_Int32_
+  commentId: M:PacManBot.Commands.Modules.GameModules.MinesweeperModule.Minesweeper(System.Int32,System.Int32)
+  fullName: PacManBot.Commands.Modules.GameModules.MinesweeperModule.Minesweeper(System.Int32, System.Int32)
+  nameWithType: MinesweeperModule.Minesweeper(Int32, Int32)
+- uid: PacManBot.Commands.Modules.GameModules.MinesweeperModule.Minesweeper*
+  name: Minesweeper
+  href: api/PacManBot.Commands.Modules.GameModules.MinesweeperModule.html#PacManBot_Commands_Modules_GameModules_MinesweeperModule_Minesweeper_
+  commentId: Overload:PacManBot.Commands.Modules.GameModules.MinesweeperModule.Minesweeper
+  isSpec: "True"
+  fullName: PacManBot.Commands.Modules.GameModules.MinesweeperModule.Minesweeper
+  nameWithType: MinesweeperModule.Minesweeper
 - uid: PacManBot.Commands.Modules.GameModules.PacManModule
   name: PacManModule
   href: api/PacManBot.Commands.Modules.GameModules.PacManModule.html
@@ -3121,12 +3153,12 @@ references:
   commentId: M:PacManBot.Extensions.DiscordExtensions.BotCan(Discord.Commands.SocketCommandContext,Discord.ChannelPermission)
   fullName: PacManBot.Extensions.DiscordExtensions.BotCan(Discord.Commands.SocketCommandContext, Discord.ChannelPermission)
   nameWithType: DiscordExtensions.BotCan(SocketCommandContext, ChannelPermission)
-- uid: PacManBot.Extensions.DiscordExtensions.BotCan(Discord.IChannel,Discord.ChannelPermission)
-  name: BotCan(IChannel, ChannelPermission)
-  href: api/PacManBot.Extensions.DiscordExtensions.html#PacManBot_Extensions_DiscordExtensions_BotCan_Discord_IChannel_Discord_ChannelPermission_
-  commentId: M:PacManBot.Extensions.DiscordExtensions.BotCan(Discord.IChannel,Discord.ChannelPermission)
-  fullName: PacManBot.Extensions.DiscordExtensions.BotCan(Discord.IChannel, Discord.ChannelPermission)
-  nameWithType: DiscordExtensions.BotCan(IChannel, ChannelPermission)
+- uid: PacManBot.Extensions.DiscordExtensions.BotCan(Discord.WebSocket.ISocketMessageChannel,Discord.ChannelPermission)
+  name: BotCan(ISocketMessageChannel, ChannelPermission)
+  href: api/PacManBot.Extensions.DiscordExtensions.html#PacManBot_Extensions_DiscordExtensions_BotCan_Discord_WebSocket_ISocketMessageChannel_Discord_ChannelPermission_
+  commentId: M:PacManBot.Extensions.DiscordExtensions.BotCan(Discord.WebSocket.ISocketMessageChannel,Discord.ChannelPermission)
+  fullName: PacManBot.Extensions.DiscordExtensions.BotCan(Discord.WebSocket.ISocketMessageChannel, Discord.ChannelPermission)
+  nameWithType: DiscordExtensions.BotCan(ISocketMessageChannel, ChannelPermission)
 - uid: PacManBot.Extensions.DiscordExtensions.BotCan*
   name: BotCan
   href: api/PacManBot.Extensions.DiscordExtensions.html#PacManBot_Extensions_DiscordExtensions_BotCan_
@@ -4276,14 +4308,14 @@ references:
   fullName.vb: PacManBot.Games.Board(Of T).Board(T(,))
   nameWithType: Board<T>.Board(T[,])
   nameWithType.vb: Board(Of T).Board(T(,))
-- uid: PacManBot.Games.Board`1.#ctor(System.UInt32,System.UInt32,`0)
-  name: Board(UInt32, UInt32, T)
-  href: api/PacManBot.Games.Board-1.html#PacManBot_Games_Board_1__ctor_System_UInt32_System_UInt32__0_
-  commentId: M:PacManBot.Games.Board`1.#ctor(System.UInt32,System.UInt32,`0)
-  fullName: PacManBot.Games.Board<T>.Board(System.UInt32, System.UInt32, T)
-  fullName.vb: PacManBot.Games.Board(Of T).Board(System.UInt32, System.UInt32, T)
-  nameWithType: Board<T>.Board(UInt32, UInt32, T)
-  nameWithType.vb: Board(Of T).Board(UInt32, UInt32, T)
+- uid: PacManBot.Games.Board`1.#ctor(System.Int32,System.Int32,`0)
+  name: Board(Int32, Int32, T)
+  href: api/PacManBot.Games.Board-1.html#PacManBot_Games_Board_1__ctor_System_Int32_System_Int32__0_
+  commentId: M:PacManBot.Games.Board`1.#ctor(System.Int32,System.Int32,`0)
+  fullName: PacManBot.Games.Board<T>.Board(System.Int32, System.Int32, T)
+  fullName.vb: PacManBot.Games.Board(Of T).Board(System.Int32, System.Int32, T)
+  nameWithType: Board<T>.Board(Int32, Int32, T)
+  nameWithType.vb: Board(Of T).Board(Int32, Int32, T)
 - uid: PacManBot.Games.Board`1.#ctor*
   name: Board
   href: api/PacManBot.Games.Board-1.html#PacManBot_Games_Board_1__ctor_
@@ -4645,19 +4677,19 @@ references:
   isSpec: "True"
   fullName: PacManBot.Games.ChannelGame.ChannelId
   nameWithType: ChannelGame.ChannelId
-- uid: PacManBot.Games.ChannelGame.GetMessage
-  name: GetMessage()
-  href: api/PacManBot.Games.ChannelGame.html#PacManBot_Games_ChannelGame_GetMessage
-  commentId: M:PacManBot.Games.ChannelGame.GetMessage
-  fullName: PacManBot.Games.ChannelGame.GetMessage()
-  nameWithType: ChannelGame.GetMessage()
-- uid: PacManBot.Games.ChannelGame.GetMessage*
-  name: GetMessage
-  href: api/PacManBot.Games.ChannelGame.html#PacManBot_Games_ChannelGame_GetMessage_
-  commentId: Overload:PacManBot.Games.ChannelGame.GetMessage
+- uid: PacManBot.Games.ChannelGame.GetMessageAsync
+  name: GetMessageAsync()
+  href: api/PacManBot.Games.ChannelGame.html#PacManBot_Games_ChannelGame_GetMessageAsync
+  commentId: M:PacManBot.Games.ChannelGame.GetMessageAsync
+  fullName: PacManBot.Games.ChannelGame.GetMessageAsync()
+  nameWithType: ChannelGame.GetMessageAsync()
+- uid: PacManBot.Games.ChannelGame.GetMessageAsync*
+  name: GetMessageAsync
+  href: api/PacManBot.Games.ChannelGame.html#PacManBot_Games_ChannelGame_GetMessageAsync_
+  commentId: Overload:PacManBot.Games.ChannelGame.GetMessageAsync
   isSpec: "True"
-  fullName: PacManBot.Games.ChannelGame.GetMessage
-  nameWithType: ChannelGame.GetMessage
+  fullName: PacManBot.Games.ChannelGame.GetMessageAsync
+  nameWithType: ChannelGame.GetMessageAsync
 - uid: PacManBot.Games.ChannelGame.Guild
   name: Guild
   href: api/PacManBot.Games.ChannelGame.html#PacManBot_Games_ChannelGame_Guild
@@ -4709,19 +4741,19 @@ references:
   commentId: T:PacManBot.Games.Concrete.C4Game
   fullName: PacManBot.Games.Concrete.C4Game
   nameWithType: C4Game
-- uid: PacManBot.Games.Concrete.C4Game.BotInput
-  name: BotInput()
-  href: api/PacManBot.Games.Concrete.C4Game.html#PacManBot_Games_Concrete_C4Game_BotInput
-  commentId: M:PacManBot.Games.Concrete.C4Game.BotInput
-  fullName: PacManBot.Games.Concrete.C4Game.BotInput()
-  nameWithType: C4Game.BotInput()
-- uid: PacManBot.Games.Concrete.C4Game.BotInput*
-  name: BotInput
-  href: api/PacManBot.Games.Concrete.C4Game.html#PacManBot_Games_Concrete_C4Game_BotInput_
-  commentId: Overload:PacManBot.Games.Concrete.C4Game.BotInput
+- uid: PacManBot.Games.Concrete.C4Game.BotInputAsync
+  name: BotInputAsync()
+  href: api/PacManBot.Games.Concrete.C4Game.html#PacManBot_Games_Concrete_C4Game_BotInputAsync
+  commentId: M:PacManBot.Games.Concrete.C4Game.BotInputAsync
+  fullName: PacManBot.Games.Concrete.C4Game.BotInputAsync()
+  nameWithType: C4Game.BotInputAsync()
+- uid: PacManBot.Games.Concrete.C4Game.BotInputAsync*
+  name: BotInputAsync
+  href: api/PacManBot.Games.Concrete.C4Game.html#PacManBot_Games_Concrete_C4Game_BotInputAsync_
+  commentId: Overload:PacManBot.Games.Concrete.C4Game.BotInputAsync
   isSpec: "True"
-  fullName: PacManBot.Games.Concrete.C4Game.BotInput
-  nameWithType: C4Game.BotInput
+  fullName: PacManBot.Games.Concrete.C4Game.BotInputAsync
+  nameWithType: C4Game.BotInputAsync
 - uid: PacManBot.Games.Concrete.C4Game.Expiry
   name: Expiry
   href: api/PacManBot.Games.Concrete.C4Game.html#PacManBot_Games_Concrete_C4Game_Expiry
@@ -4790,19 +4822,19 @@ references:
   isSpec: "True"
   fullName: PacManBot.Games.Concrete.C4Game.InitializeAsync
   nameWithType: C4Game.InitializeAsync
-- uid: PacManBot.Games.Concrete.C4Game.Input(System.String,System.UInt64)
-  name: Input(String, UInt64)
-  href: api/PacManBot.Games.Concrete.C4Game.html#PacManBot_Games_Concrete_C4Game_Input_System_String_System_UInt64_
-  commentId: M:PacManBot.Games.Concrete.C4Game.Input(System.String,System.UInt64)
-  fullName: PacManBot.Games.Concrete.C4Game.Input(System.String, System.UInt64)
-  nameWithType: C4Game.Input(String, UInt64)
-- uid: PacManBot.Games.Concrete.C4Game.Input*
-  name: Input
-  href: api/PacManBot.Games.Concrete.C4Game.html#PacManBot_Games_Concrete_C4Game_Input_
-  commentId: Overload:PacManBot.Games.Concrete.C4Game.Input
+- uid: PacManBot.Games.Concrete.C4Game.InputAsync(System.String,System.UInt64)
+  name: InputAsync(String, UInt64)
+  href: api/PacManBot.Games.Concrete.C4Game.html#PacManBot_Games_Concrete_C4Game_InputAsync_System_String_System_UInt64_
+  commentId: M:PacManBot.Games.Concrete.C4Game.InputAsync(System.String,System.UInt64)
+  fullName: PacManBot.Games.Concrete.C4Game.InputAsync(System.String, System.UInt64)
+  nameWithType: C4Game.InputAsync(String, UInt64)
+- uid: PacManBot.Games.Concrete.C4Game.InputAsync*
+  name: InputAsync
+  href: api/PacManBot.Games.Concrete.C4Game.html#PacManBot_Games_Concrete_C4Game_InputAsync_
+  commentId: Overload:PacManBot.Games.Concrete.C4Game.InputAsync
   isSpec: "True"
-  fullName: PacManBot.Games.Concrete.C4Game.Input
-  nameWithType: C4Game.Input
+  fullName: PacManBot.Games.Concrete.C4Game.InputAsync
+  nameWithType: C4Game.InputAsync
 - uid: PacManBot.Games.Concrete.C4Game.IsInput(System.String,System.UInt64)
   name: IsInput(String, UInt64)
   href: api/PacManBot.Games.Concrete.C4Game.html#PacManBot_Games_Concrete_C4Game_IsInput_System_String_System_UInt64_
@@ -4899,19 +4931,19 @@ references:
   isSpec: "True"
   fullName: PacManBot.Games.Concrete.HangmanGame.GetEmbed
   nameWithType: HangmanGame.GetEmbed
-- uid: PacManBot.Games.Concrete.HangmanGame.Input(System.String,System.UInt64)
-  name: Input(String, UInt64)
-  href: api/PacManBot.Games.Concrete.HangmanGame.html#PacManBot_Games_Concrete_HangmanGame_Input_System_String_System_UInt64_
-  commentId: M:PacManBot.Games.Concrete.HangmanGame.Input(System.String,System.UInt64)
-  fullName: PacManBot.Games.Concrete.HangmanGame.Input(System.String, System.UInt64)
-  nameWithType: HangmanGame.Input(String, UInt64)
-- uid: PacManBot.Games.Concrete.HangmanGame.Input*
-  name: Input
-  href: api/PacManBot.Games.Concrete.HangmanGame.html#PacManBot_Games_Concrete_HangmanGame_Input_
-  commentId: Overload:PacManBot.Games.Concrete.HangmanGame.Input
+- uid: PacManBot.Games.Concrete.HangmanGame.InputAsync(System.String,System.UInt64)
+  name: InputAsync(String, UInt64)
+  href: api/PacManBot.Games.Concrete.HangmanGame.html#PacManBot_Games_Concrete_HangmanGame_InputAsync_System_String_System_UInt64_
+  commentId: M:PacManBot.Games.Concrete.HangmanGame.InputAsync(System.String,System.UInt64)
+  fullName: PacManBot.Games.Concrete.HangmanGame.InputAsync(System.String, System.UInt64)
+  nameWithType: HangmanGame.InputAsync(String, UInt64)
+- uid: PacManBot.Games.Concrete.HangmanGame.InputAsync*
+  name: InputAsync
+  href: api/PacManBot.Games.Concrete.HangmanGame.html#PacManBot_Games_Concrete_HangmanGame_InputAsync_
+  commentId: Overload:PacManBot.Games.Concrete.HangmanGame.InputAsync
   isSpec: "True"
-  fullName: PacManBot.Games.Concrete.HangmanGame.Input
-  nameWithType: HangmanGame.Input
+  fullName: PacManBot.Games.Concrete.HangmanGame.InputAsync
+  nameWithType: HangmanGame.InputAsync
 - uid: PacManBot.Games.Concrete.HangmanGame.IsInput(System.String,System.UInt64)
   name: IsInput(String, UInt64)
   href: api/PacManBot.Games.Concrete.HangmanGame.html#PacManBot_Games_Concrete_HangmanGame_IsInput_System_String_System_UInt64_
@@ -5091,19 +5123,19 @@ references:
   isSpec: "True"
   fullName: PacManBot.Games.Concrete.PacManGame.GetEmbed
   nameWithType: PacManGame.GetEmbed
-- uid: PacManBot.Games.Concrete.PacManGame.Input(Discord.IEmote,System.UInt64)
-  name: Input(IEmote, UInt64)
-  href: api/PacManBot.Games.Concrete.PacManGame.html#PacManBot_Games_Concrete_PacManGame_Input_Discord_IEmote_System_UInt64_
-  commentId: M:PacManBot.Games.Concrete.PacManGame.Input(Discord.IEmote,System.UInt64)
-  fullName: PacManBot.Games.Concrete.PacManGame.Input(Discord.IEmote, System.UInt64)
-  nameWithType: PacManGame.Input(IEmote, UInt64)
-- uid: PacManBot.Games.Concrete.PacManGame.Input*
-  name: Input
-  href: api/PacManBot.Games.Concrete.PacManGame.html#PacManBot_Games_Concrete_PacManGame_Input_
-  commentId: Overload:PacManBot.Games.Concrete.PacManGame.Input
+- uid: PacManBot.Games.Concrete.PacManGame.InputAsync(Discord.IEmote,System.UInt64)
+  name: InputAsync(IEmote, UInt64)
+  href: api/PacManBot.Games.Concrete.PacManGame.html#PacManBot_Games_Concrete_PacManGame_InputAsync_Discord_IEmote_System_UInt64_
+  commentId: M:PacManBot.Games.Concrete.PacManGame.InputAsync(Discord.IEmote,System.UInt64)
+  fullName: PacManBot.Games.Concrete.PacManGame.InputAsync(Discord.IEmote, System.UInt64)
+  nameWithType: PacManGame.InputAsync(IEmote, UInt64)
+- uid: PacManBot.Games.Concrete.PacManGame.InputAsync*
+  name: InputAsync
+  href: api/PacManBot.Games.Concrete.PacManGame.html#PacManBot_Games_Concrete_PacManGame_InputAsync_
+  commentId: Overload:PacManBot.Games.Concrete.PacManGame.InputAsync
   isSpec: "True"
-  fullName: PacManBot.Games.Concrete.PacManGame.Input
-  nameWithType: PacManGame.Input
+  fullName: PacManBot.Games.Concrete.PacManGame.InputAsync
+  nameWithType: PacManGame.InputAsync
 - uid: PacManBot.Games.Concrete.PacManGame.IsInput(Discord.IEmote,System.UInt64)
   name: IsInput(IEmote, UInt64)
   href: api/PacManBot.Games.Concrete.PacManGame.html#PacManBot_Games_Concrete_PacManGame_IsInput_Discord_IEmote_System_UInt64_
@@ -5143,12 +5175,6 @@ references:
   isSpec: "True"
   fullName: PacManBot.Games.Concrete.PacManGame.MessageId
   nameWithType: PacManGame.MessageId
-- uid: PacManBot.Games.Concrete.PacManGame.mobileDisplay
-  name: mobileDisplay
-  href: api/PacManBot.Games.Concrete.PacManGame.html#PacManBot_Games_Concrete_PacManGame_mobileDisplay
-  commentId: F:PacManBot.Games.Concrete.PacManGame.mobileDisplay
-  fullName: PacManBot.Games.Concrete.PacManGame.mobileDisplay
-  nameWithType: PacManGame.mobileDisplay
 - uid: PacManBot.Games.Concrete.PacManGame.OwnerId
   name: OwnerId
   href: api/PacManBot.Games.Concrete.PacManGame.html#PacManBot_Games_Concrete_PacManGame_OwnerId
@@ -5235,6 +5261,12 @@ references:
   commentId: F:PacManBot.Games.Concrete.PacManGame.score
   fullName: PacManBot.Games.Concrete.PacManGame.score
   nameWithType: PacManGame.score
+- uid: PacManBot.Games.Concrete.PacManGame.slimDisplay
+  name: slimDisplay
+  href: api/PacManBot.Games.Concrete.PacManGame.html#PacManBot_Games_Concrete_PacManGame_slimDisplay
+  commentId: F:PacManBot.Games.Concrete.PacManGame.slimDisplay
+  fullName: PacManBot.Games.Concrete.PacManGame.slimDisplay
+  nameWithType: PacManGame.slimDisplay
 - uid: PacManBot.Games.Concrete.PacManGame.State
   name: State
   href: api/PacManBot.Games.Concrete.PacManGame.html#PacManBot_Games_Concrete_PacManGame_State
@@ -5267,12 +5299,12 @@ references:
   commentId: T:PacManBot.Games.Concrete.PetGame
   fullName: PacManBot.Games.Concrete.PetGame
   nameWithType: PetGame
-- uid: PacManBot.Games.Concrete.PetGame.#ctor(System.String,System.UInt64,System.IServiceProvider)
-  name: PetGame(String, UInt64, IServiceProvider)
-  href: api/PacManBot.Games.Concrete.PetGame.html#PacManBot_Games_Concrete_PetGame__ctor_System_String_System_UInt64_System_IServiceProvider_
-  commentId: M:PacManBot.Games.Concrete.PetGame.#ctor(System.String,System.UInt64,System.IServiceProvider)
-  fullName: PacManBot.Games.Concrete.PetGame.PetGame(System.String, System.UInt64, System.IServiceProvider)
-  nameWithType: PetGame.PetGame(String, UInt64, IServiceProvider)
+- uid: PacManBot.Games.Concrete.PetGame.#ctor(System.UInt64,System.IServiceProvider)
+  name: PetGame(UInt64, IServiceProvider)
+  href: api/PacManBot.Games.Concrete.PetGame.html#PacManBot_Games_Concrete_PetGame__ctor_System_UInt64_System_IServiceProvider_
+  commentId: M:PacManBot.Games.Concrete.PetGame.#ctor(System.UInt64,System.IServiceProvider)
+  fullName: PacManBot.Games.Concrete.PetGame.PetGame(System.UInt64, System.IServiceProvider)
+  nameWithType: PetGame.PetGame(UInt64, IServiceProvider)
 - uid: PacManBot.Games.Concrete.PetGame.#ctor*
   name: PetGame
   href: api/PacManBot.Games.Concrete.PetGame.html#PacManBot_Games_Concrete_PetGame__ctor_
@@ -5616,6 +5648,19 @@ references:
   isSpec: "True"
   fullName: PacManBot.Games.Concrete.PetGame.Achievements.PetKing
   nameWithType: PetGame.Achievements.PetKing
+- uid: PacManBot.Games.Concrete.PetGame.Achievements.PlatinumOwner
+  name: PlatinumOwner
+  href: api/PacManBot.Games.Concrete.PetGame.Achievements.html#PacManBot_Games_Concrete_PetGame_Achievements_PlatinumOwner
+  commentId: P:PacManBot.Games.Concrete.PetGame.Achievements.PlatinumOwner
+  fullName: PacManBot.Games.Concrete.PetGame.Achievements.PlatinumOwner
+  nameWithType: PetGame.Achievements.PlatinumOwner
+- uid: PacManBot.Games.Concrete.PetGame.Achievements.PlatinumOwner*
+  name: PlatinumOwner
+  href: api/PacManBot.Games.Concrete.PetGame.Achievements.html#PacManBot_Games_Concrete_PetGame_Achievements_PlatinumOwner_
+  commentId: Overload:PacManBot.Games.Concrete.PetGame.Achievements.PlatinumOwner
+  isSpec: "True"
+  fullName: PacManBot.Games.Concrete.PetGame.Achievements.PlatinumOwner
+  nameWithType: PetGame.Achievements.PlatinumOwner
 - uid: PacManBot.Games.Concrete.PetGame.Achievements.SilverOwner
   name: SilverOwner
   href: api/PacManBot.Games.Concrete.PetGame.Achievements.html#PacManBot_Games_Concrete_PetGame_Achievements_SilverOwner
@@ -5685,31 +5730,25 @@ references:
   commentId: F:PacManBot.Games.Concrete.PetGame.asleep
   fullName: PacManBot.Games.Concrete.PetGame.asleep
   nameWithType: PetGame.asleep
-- uid: PacManBot.Games.Concrete.PetGame.BannerUrl
-  name: BannerUrl
-  href: api/PacManBot.Games.Concrete.PetGame.html#PacManBot_Games_Concrete_PetGame_BannerUrl
-  commentId: F:PacManBot.Games.Concrete.PetGame.BannerUrl
-  fullName: PacManBot.Games.Concrete.PetGame.BannerUrl
-  nameWithType: PetGame.BannerUrl
 - uid: PacManBot.Games.Concrete.PetGame.bornDate
   name: bornDate
   href: api/PacManBot.Games.Concrete.PetGame.html#PacManBot_Games_Concrete_PetGame_bornDate
   commentId: F:PacManBot.Games.Concrete.PetGame.bornDate
   fullName: PacManBot.Games.Concrete.PetGame.bornDate
   nameWithType: PetGame.bornDate
-- uid: PacManBot.Games.Concrete.PetGame.DoPet
-  name: DoPet()
-  href: api/PacManBot.Games.Concrete.PetGame.html#PacManBot_Games_Concrete_PetGame_DoPet
-  commentId: M:PacManBot.Games.Concrete.PetGame.DoPet
-  fullName: PacManBot.Games.Concrete.PetGame.DoPet()
-  nameWithType: PetGame.DoPet()
-- uid: PacManBot.Games.Concrete.PetGame.DoPet*
-  name: DoPet
-  href: api/PacManBot.Games.Concrete.PetGame.html#PacManBot_Games_Concrete_PetGame_DoPet_
-  commentId: Overload:PacManBot.Games.Concrete.PetGame.DoPet
+- uid: PacManBot.Games.Concrete.PetGame.DoPetAsync
+  name: DoPetAsync()
+  href: api/PacManBot.Games.Concrete.PetGame.html#PacManBot_Games_Concrete_PetGame_DoPetAsync
+  commentId: M:PacManBot.Games.Concrete.PetGame.DoPetAsync
+  fullName: PacManBot.Games.Concrete.PetGame.DoPetAsync()
+  nameWithType: PetGame.DoPetAsync()
+- uid: PacManBot.Games.Concrete.PetGame.DoPetAsync*
+  name: DoPetAsync
+  href: api/PacManBot.Games.Concrete.PetGame.html#PacManBot_Games_Concrete_PetGame_DoPetAsync_
+  commentId: Overload:PacManBot.Games.Concrete.PetGame.DoPetAsync
   isSpec: "True"
-  fullName: PacManBot.Games.Concrete.PetGame.DoPet
-  nameWithType: PetGame.DoPet
+  fullName: PacManBot.Games.Concrete.PetGame.DoPetAsync
+  nameWithType: PetGame.DoPetAsync
 - uid: PacManBot.Games.Concrete.PetGame.energy
   name: energy
   href: api/PacManBot.Games.Concrete.PetGame.html#PacManBot_Games_Concrete_PetGame_energy
@@ -5907,19 +5946,19 @@ references:
   commentId: F:PacManBot.Games.Concrete.PetGame.satiation
   fullName: PacManBot.Games.Concrete.PetGame.satiation
   nameWithType: PetGame.satiation
-- uid: PacManBot.Games.Concrete.PetGame.SetPetName(System.String)
-  name: SetPetName(String)
-  href: api/PacManBot.Games.Concrete.PetGame.html#PacManBot_Games_Concrete_PetGame_SetPetName_System_String_
-  commentId: M:PacManBot.Games.Concrete.PetGame.SetPetName(System.String)
-  fullName: PacManBot.Games.Concrete.PetGame.SetPetName(System.String)
-  nameWithType: PetGame.SetPetName(String)
-- uid: PacManBot.Games.Concrete.PetGame.SetPetName*
-  name: SetPetName
-  href: api/PacManBot.Games.Concrete.PetGame.html#PacManBot_Games_Concrete_PetGame_SetPetName_
-  commentId: Overload:PacManBot.Games.Concrete.PetGame.SetPetName
+- uid: PacManBot.Games.Concrete.PetGame.SetPetNameAsync(System.String)
+  name: SetPetNameAsync(String)
+  href: api/PacManBot.Games.Concrete.PetGame.html#PacManBot_Games_Concrete_PetGame_SetPetNameAsync_System_String_
+  commentId: M:PacManBot.Games.Concrete.PetGame.SetPetNameAsync(System.String)
+  fullName: PacManBot.Games.Concrete.PetGame.SetPetNameAsync(System.String)
+  nameWithType: PetGame.SetPetNameAsync(String)
+- uid: PacManBot.Games.Concrete.PetGame.SetPetNameAsync*
+  name: SetPetNameAsync
+  href: api/PacManBot.Games.Concrete.PetGame.html#PacManBot_Games_Concrete_PetGame_SetPetNameAsync_
+  commentId: Overload:PacManBot.Games.Concrete.PetGame.SetPetNameAsync
   isSpec: "True"
-  fullName: PacManBot.Games.Concrete.PetGame.SetPetName
-  nameWithType: PetGame.SetPetName
+  fullName: PacManBot.Games.Concrete.PetGame.SetPetNameAsync
+  nameWithType: PetGame.SetPetNameAsync
 - uid: PacManBot.Games.Concrete.PetGame.TimesPet
   name: TimesPet
   href: api/PacManBot.Games.Concrete.PetGame.html#PacManBot_Games_Concrete_PetGame_TimesPet
@@ -5939,19 +5978,19 @@ references:
   commentId: F:PacManBot.Games.Concrete.PetGame.timesPetSinceTimerStart
   fullName: PacManBot.Games.Concrete.PetGame.timesPetSinceTimerStart
   nameWithType: PetGame.timesPetSinceTimerStart
-- uid: PacManBot.Games.Concrete.PetGame.ToggleSleep
-  name: ToggleSleep()
-  href: api/PacManBot.Games.Concrete.PetGame.html#PacManBot_Games_Concrete_PetGame_ToggleSleep
-  commentId: M:PacManBot.Games.Concrete.PetGame.ToggleSleep
-  fullName: PacManBot.Games.Concrete.PetGame.ToggleSleep()
-  nameWithType: PetGame.ToggleSleep()
-- uid: PacManBot.Games.Concrete.PetGame.ToggleSleep*
-  name: ToggleSleep
-  href: api/PacManBot.Games.Concrete.PetGame.html#PacManBot_Games_Concrete_PetGame_ToggleSleep_
-  commentId: Overload:PacManBot.Games.Concrete.PetGame.ToggleSleep
+- uid: PacManBot.Games.Concrete.PetGame.ToggleSleepAsync
+  name: ToggleSleepAsync()
+  href: api/PacManBot.Games.Concrete.PetGame.html#PacManBot_Games_Concrete_PetGame_ToggleSleepAsync
+  commentId: M:PacManBot.Games.Concrete.PetGame.ToggleSleepAsync
+  fullName: PacManBot.Games.Concrete.PetGame.ToggleSleepAsync()
+  nameWithType: PetGame.ToggleSleepAsync()
+- uid: PacManBot.Games.Concrete.PetGame.ToggleSleepAsync*
+  name: ToggleSleepAsync
+  href: api/PacManBot.Games.Concrete.PetGame.html#PacManBot_Games_Concrete_PetGame_ToggleSleepAsync_
+  commentId: Overload:PacManBot.Games.Concrete.PetGame.ToggleSleepAsync
   isSpec: "True"
-  fullName: PacManBot.Games.Concrete.PetGame.ToggleSleep
-  nameWithType: PetGame.ToggleSleep
+  fullName: PacManBot.Games.Concrete.PetGame.ToggleSleepAsync
+  nameWithType: PetGame.ToggleSleepAsync
 - uid: PacManBot.Games.Concrete.PetGame.TotalStats
   name: TotalStats
   href: api/PacManBot.Games.Concrete.PetGame.html#PacManBot_Games_Concrete_PetGame_TotalStats
@@ -5965,64 +6004,77 @@ references:
   isSpec: "True"
   fullName: PacManBot.Games.Concrete.PetGame.TotalStats
   nameWithType: PetGame.TotalStats
-- uid: PacManBot.Games.Concrete.PetGame.TryClean
-  name: TryClean()
-  href: api/PacManBot.Games.Concrete.PetGame.html#PacManBot_Games_Concrete_PetGame_TryClean
-  commentId: M:PacManBot.Games.Concrete.PetGame.TryClean
-  fullName: PacManBot.Games.Concrete.PetGame.TryClean()
-  nameWithType: PetGame.TryClean()
-- uid: PacManBot.Games.Concrete.PetGame.TryClean*
-  name: TryClean
-  href: api/PacManBot.Games.Concrete.PetGame.html#PacManBot_Games_Concrete_PetGame_TryClean_
-  commentId: Overload:PacManBot.Games.Concrete.PetGame.TryClean
+- uid: PacManBot.Games.Concrete.PetGame.TryCleanAsync
+  name: TryCleanAsync()
+  href: api/PacManBot.Games.Concrete.PetGame.html#PacManBot_Games_Concrete_PetGame_TryCleanAsync
+  commentId: M:PacManBot.Games.Concrete.PetGame.TryCleanAsync
+  fullName: PacManBot.Games.Concrete.PetGame.TryCleanAsync()
+  nameWithType: PetGame.TryCleanAsync()
+- uid: PacManBot.Games.Concrete.PetGame.TryCleanAsync*
+  name: TryCleanAsync
+  href: api/PacManBot.Games.Concrete.PetGame.html#PacManBot_Games_Concrete_PetGame_TryCleanAsync_
+  commentId: Overload:PacManBot.Games.Concrete.PetGame.TryCleanAsync
   isSpec: "True"
-  fullName: PacManBot.Games.Concrete.PetGame.TryClean
-  nameWithType: PetGame.TryClean
-- uid: PacManBot.Games.Concrete.PetGame.TryFeed
-  name: TryFeed()
-  href: api/PacManBot.Games.Concrete.PetGame.html#PacManBot_Games_Concrete_PetGame_TryFeed
-  commentId: M:PacManBot.Games.Concrete.PetGame.TryFeed
-  fullName: PacManBot.Games.Concrete.PetGame.TryFeed()
-  nameWithType: PetGame.TryFeed()
-- uid: PacManBot.Games.Concrete.PetGame.TryFeed*
-  name: TryFeed
-  href: api/PacManBot.Games.Concrete.PetGame.html#PacManBot_Games_Concrete_PetGame_TryFeed_
-  commentId: Overload:PacManBot.Games.Concrete.PetGame.TryFeed
+  fullName: PacManBot.Games.Concrete.PetGame.TryCleanAsync
+  nameWithType: PetGame.TryCleanAsync
+- uid: PacManBot.Games.Concrete.PetGame.TryFeedAsync
+  name: TryFeedAsync()
+  href: api/PacManBot.Games.Concrete.PetGame.html#PacManBot_Games_Concrete_PetGame_TryFeedAsync
+  commentId: M:PacManBot.Games.Concrete.PetGame.TryFeedAsync
+  fullName: PacManBot.Games.Concrete.PetGame.TryFeedAsync()
+  nameWithType: PetGame.TryFeedAsync()
+- uid: PacManBot.Games.Concrete.PetGame.TryFeedAsync*
+  name: TryFeedAsync
+  href: api/PacManBot.Games.Concrete.PetGame.html#PacManBot_Games_Concrete_PetGame_TryFeedAsync_
+  commentId: Overload:PacManBot.Games.Concrete.PetGame.TryFeedAsync
   isSpec: "True"
-  fullName: PacManBot.Games.Concrete.PetGame.TryFeed
-  nameWithType: PetGame.TryFeed
-- uid: PacManBot.Games.Concrete.PetGame.TryPlay
-  name: TryPlay()
-  href: api/PacManBot.Games.Concrete.PetGame.html#PacManBot_Games_Concrete_PetGame_TryPlay
-  commentId: M:PacManBot.Games.Concrete.PetGame.TryPlay
-  fullName: PacManBot.Games.Concrete.PetGame.TryPlay()
-  nameWithType: PetGame.TryPlay()
-- uid: PacManBot.Games.Concrete.PetGame.TryPlay*
-  name: TryPlay
-  href: api/PacManBot.Games.Concrete.PetGame.html#PacManBot_Games_Concrete_PetGame_TryPlay_
-  commentId: Overload:PacManBot.Games.Concrete.PetGame.TryPlay
+  fullName: PacManBot.Games.Concrete.PetGame.TryFeedAsync
+  nameWithType: PetGame.TryFeedAsync
+- uid: PacManBot.Games.Concrete.PetGame.TryPlayAsync
+  name: TryPlayAsync()
+  href: api/PacManBot.Games.Concrete.PetGame.html#PacManBot_Games_Concrete_PetGame_TryPlayAsync
+  commentId: M:PacManBot.Games.Concrete.PetGame.TryPlayAsync
+  fullName: PacManBot.Games.Concrete.PetGame.TryPlayAsync()
+  nameWithType: PetGame.TryPlayAsync()
+- uid: PacManBot.Games.Concrete.PetGame.TryPlayAsync*
+  name: TryPlayAsync
+  href: api/PacManBot.Games.Concrete.PetGame.html#PacManBot_Games_Concrete_PetGame_TryPlayAsync_
+  commentId: Overload:PacManBot.Games.Concrete.PetGame.TryPlayAsync
   isSpec: "True"
-  fullName: PacManBot.Games.Concrete.PetGame.TryPlay
-  nameWithType: PetGame.TryPlay
-- uid: PacManBot.Games.Concrete.PetGame.TrySetImageUrl(System.String)
-  name: TrySetImageUrl(String)
-  href: api/PacManBot.Games.Concrete.PetGame.html#PacManBot_Games_Concrete_PetGame_TrySetImageUrl_System_String_
-  commentId: M:PacManBot.Games.Concrete.PetGame.TrySetImageUrl(System.String)
-  fullName: PacManBot.Games.Concrete.PetGame.TrySetImageUrl(System.String)
-  nameWithType: PetGame.TrySetImageUrl(String)
-- uid: PacManBot.Games.Concrete.PetGame.TrySetImageUrl*
-  name: TrySetImageUrl
-  href: api/PacManBot.Games.Concrete.PetGame.html#PacManBot_Games_Concrete_PetGame_TrySetImageUrl_
-  commentId: Overload:PacManBot.Games.Concrete.PetGame.TrySetImageUrl
+  fullName: PacManBot.Games.Concrete.PetGame.TryPlayAsync
+  nameWithType: PetGame.TryPlayAsync
+- uid: PacManBot.Games.Concrete.PetGame.TrySetImageUrlAsync(System.String)
+  name: TrySetImageUrlAsync(String)
+  href: api/PacManBot.Games.Concrete.PetGame.html#PacManBot_Games_Concrete_PetGame_TrySetImageUrlAsync_System_String_
+  commentId: M:PacManBot.Games.Concrete.PetGame.TrySetImageUrlAsync(System.String)
+  fullName: PacManBot.Games.Concrete.PetGame.TrySetImageUrlAsync(System.String)
+  nameWithType: PetGame.TrySetImageUrlAsync(String)
+- uid: PacManBot.Games.Concrete.PetGame.TrySetImageUrlAsync*
+  name: TrySetImageUrlAsync
+  href: api/PacManBot.Games.Concrete.PetGame.html#PacManBot_Games_Concrete_PetGame_TrySetImageUrlAsync_
+  commentId: Overload:PacManBot.Games.Concrete.PetGame.TrySetImageUrlAsync
   isSpec: "True"
-  fullName: PacManBot.Games.Concrete.PetGame.TrySetImageUrl
-  nameWithType: PetGame.TrySetImageUrl
-- uid: PacManBot.Games.Concrete.PetGame.UpdateStats(System.Boolean)
-  name: UpdateStats(Boolean)
-  href: api/PacManBot.Games.Concrete.PetGame.html#PacManBot_Games_Concrete_PetGame_UpdateStats_System_Boolean_
-  commentId: M:PacManBot.Games.Concrete.PetGame.UpdateStats(System.Boolean)
-  fullName: PacManBot.Games.Concrete.PetGame.UpdateStats(System.Boolean)
-  nameWithType: PetGame.UpdateStats(Boolean)
+  fullName: PacManBot.Games.Concrete.PetGame.TrySetImageUrlAsync
+  nameWithType: PetGame.TrySetImageUrlAsync
+- uid: PacManBot.Games.Concrete.PetGame.UpdateAndSaveAsync
+  name: UpdateAndSaveAsync()
+  href: api/PacManBot.Games.Concrete.PetGame.html#PacManBot_Games_Concrete_PetGame_UpdateAndSaveAsync
+  commentId: M:PacManBot.Games.Concrete.PetGame.UpdateAndSaveAsync
+  fullName: PacManBot.Games.Concrete.PetGame.UpdateAndSaveAsync()
+  nameWithType: PetGame.UpdateAndSaveAsync()
+- uid: PacManBot.Games.Concrete.PetGame.UpdateAndSaveAsync*
+  name: UpdateAndSaveAsync
+  href: api/PacManBot.Games.Concrete.PetGame.html#PacManBot_Games_Concrete_PetGame_UpdateAndSaveAsync_
+  commentId: Overload:PacManBot.Games.Concrete.PetGame.UpdateAndSaveAsync
+  isSpec: "True"
+  fullName: PacManBot.Games.Concrete.PetGame.UpdateAndSaveAsync
+  nameWithType: PetGame.UpdateAndSaveAsync
+- uid: PacManBot.Games.Concrete.PetGame.UpdateStats
+  name: UpdateStats()
+  href: api/PacManBot.Games.Concrete.PetGame.html#PacManBot_Games_Concrete_PetGame_UpdateStats
+  commentId: M:PacManBot.Games.Concrete.PetGame.UpdateStats
+  fullName: PacManBot.Games.Concrete.PetGame.UpdateStats()
+  nameWithType: PetGame.UpdateStats()
 - uid: PacManBot.Games.Concrete.PetGame.UpdateStats*
   name: UpdateStats
   href: api/PacManBot.Games.Concrete.PetGame.html#PacManBot_Games_Concrete_PetGame_UpdateStats_
@@ -14416,19 +14468,19 @@ references:
   isSpec: "True"
   fullName: PacManBot.Games.Concrete.RpgGame.GetEmbed
   nameWithType: RpgGame.GetEmbed
-- uid: PacManBot.Games.Concrete.RpgGame.Input(Discord.IEmote,System.UInt64)
-  name: Input(IEmote, UInt64)
-  href: api/PacManBot.Games.Concrete.RpgGame.html#PacManBot_Games_Concrete_RpgGame_Input_Discord_IEmote_System_UInt64_
-  commentId: M:PacManBot.Games.Concrete.RpgGame.Input(Discord.IEmote,System.UInt64)
-  fullName: PacManBot.Games.Concrete.RpgGame.Input(Discord.IEmote, System.UInt64)
-  nameWithType: RpgGame.Input(IEmote, UInt64)
-- uid: PacManBot.Games.Concrete.RpgGame.Input*
-  name: Input
-  href: api/PacManBot.Games.Concrete.RpgGame.html#PacManBot_Games_Concrete_RpgGame_Input_
-  commentId: Overload:PacManBot.Games.Concrete.RpgGame.Input
+- uid: PacManBot.Games.Concrete.RpgGame.InputAsync(Discord.IEmote,System.UInt64)
+  name: InputAsync(IEmote, UInt64)
+  href: api/PacManBot.Games.Concrete.RpgGame.html#PacManBot_Games_Concrete_RpgGame_InputAsync_Discord_IEmote_System_UInt64_
+  commentId: M:PacManBot.Games.Concrete.RpgGame.InputAsync(Discord.IEmote,System.UInt64)
+  fullName: PacManBot.Games.Concrete.RpgGame.InputAsync(Discord.IEmote, System.UInt64)
+  nameWithType: RpgGame.InputAsync(IEmote, UInt64)
+- uid: PacManBot.Games.Concrete.RpgGame.InputAsync*
+  name: InputAsync
+  href: api/PacManBot.Games.Concrete.RpgGame.html#PacManBot_Games_Concrete_RpgGame_InputAsync_
+  commentId: Overload:PacManBot.Games.Concrete.RpgGame.InputAsync
   isSpec: "True"
-  fullName: PacManBot.Games.Concrete.RpgGame.Input
-  nameWithType: RpgGame.Input
+  fullName: PacManBot.Games.Concrete.RpgGame.InputAsync
+  nameWithType: RpgGame.InputAsync
 - uid: PacManBot.Games.Concrete.RpgGame.IsInput(Discord.IEmote,System.UInt64)
   name: IsInput(IEmote, UInt64)
   href: api/PacManBot.Games.Concrete.RpgGame.html#PacManBot_Games_Concrete_RpgGame_IsInput_Discord_IEmote_System_UInt64_
@@ -15014,19 +15066,19 @@ references:
   commentId: T:PacManBot.Games.Concrete.TicTacToeGame
   fullName: PacManBot.Games.Concrete.TicTacToeGame
   nameWithType: TicTacToeGame
-- uid: PacManBot.Games.Concrete.TicTacToeGame.BotInput
-  name: BotInput()
-  href: api/PacManBot.Games.Concrete.TicTacToeGame.html#PacManBot_Games_Concrete_TicTacToeGame_BotInput
-  commentId: M:PacManBot.Games.Concrete.TicTacToeGame.BotInput
-  fullName: PacManBot.Games.Concrete.TicTacToeGame.BotInput()
-  nameWithType: TicTacToeGame.BotInput()
-- uid: PacManBot.Games.Concrete.TicTacToeGame.BotInput*
-  name: BotInput
-  href: api/PacManBot.Games.Concrete.TicTacToeGame.html#PacManBot_Games_Concrete_TicTacToeGame_BotInput_
-  commentId: Overload:PacManBot.Games.Concrete.TicTacToeGame.BotInput
+- uid: PacManBot.Games.Concrete.TicTacToeGame.BotInputAsync
+  name: BotInputAsync()
+  href: api/PacManBot.Games.Concrete.TicTacToeGame.html#PacManBot_Games_Concrete_TicTacToeGame_BotInputAsync
+  commentId: M:PacManBot.Games.Concrete.TicTacToeGame.BotInputAsync
+  fullName: PacManBot.Games.Concrete.TicTacToeGame.BotInputAsync()
+  nameWithType: TicTacToeGame.BotInputAsync()
+- uid: PacManBot.Games.Concrete.TicTacToeGame.BotInputAsync*
+  name: BotInputAsync
+  href: api/PacManBot.Games.Concrete.TicTacToeGame.html#PacManBot_Games_Concrete_TicTacToeGame_BotInputAsync_
+  commentId: Overload:PacManBot.Games.Concrete.TicTacToeGame.BotInputAsync
   isSpec: "True"
-  fullName: PacManBot.Games.Concrete.TicTacToeGame.BotInput
-  nameWithType: TicTacToeGame.BotInput
+  fullName: PacManBot.Games.Concrete.TicTacToeGame.BotInputAsync
+  nameWithType: TicTacToeGame.BotInputAsync
 - uid: PacManBot.Games.Concrete.TicTacToeGame.Expiry
   name: Expiry
   href: api/PacManBot.Games.Concrete.TicTacToeGame.html#PacManBot_Games_Concrete_TicTacToeGame_Expiry
@@ -15095,19 +15147,19 @@ references:
   isSpec: "True"
   fullName: PacManBot.Games.Concrete.TicTacToeGame.InitializeAsync
   nameWithType: TicTacToeGame.InitializeAsync
-- uid: PacManBot.Games.Concrete.TicTacToeGame.Input(System.String,System.UInt64)
-  name: Input(String, UInt64)
-  href: api/PacManBot.Games.Concrete.TicTacToeGame.html#PacManBot_Games_Concrete_TicTacToeGame_Input_System_String_System_UInt64_
-  commentId: M:PacManBot.Games.Concrete.TicTacToeGame.Input(System.String,System.UInt64)
-  fullName: PacManBot.Games.Concrete.TicTacToeGame.Input(System.String, System.UInt64)
-  nameWithType: TicTacToeGame.Input(String, UInt64)
-- uid: PacManBot.Games.Concrete.TicTacToeGame.Input*
-  name: Input
-  href: api/PacManBot.Games.Concrete.TicTacToeGame.html#PacManBot_Games_Concrete_TicTacToeGame_Input_
-  commentId: Overload:PacManBot.Games.Concrete.TicTacToeGame.Input
+- uid: PacManBot.Games.Concrete.TicTacToeGame.InputAsync(System.String,System.UInt64)
+  name: InputAsync(String, UInt64)
+  href: api/PacManBot.Games.Concrete.TicTacToeGame.html#PacManBot_Games_Concrete_TicTacToeGame_InputAsync_System_String_System_UInt64_
+  commentId: M:PacManBot.Games.Concrete.TicTacToeGame.InputAsync(System.String,System.UInt64)
+  fullName: PacManBot.Games.Concrete.TicTacToeGame.InputAsync(System.String, System.UInt64)
+  nameWithType: TicTacToeGame.InputAsync(String, UInt64)
+- uid: PacManBot.Games.Concrete.TicTacToeGame.InputAsync*
+  name: InputAsync
+  href: api/PacManBot.Games.Concrete.TicTacToeGame.html#PacManBot_Games_Concrete_TicTacToeGame_InputAsync_
+  commentId: Overload:PacManBot.Games.Concrete.TicTacToeGame.InputAsync
   isSpec: "True"
-  fullName: PacManBot.Games.Concrete.TicTacToeGame.Input
-  nameWithType: TicTacToeGame.Input
+  fullName: PacManBot.Games.Concrete.TicTacToeGame.InputAsync
+  nameWithType: TicTacToeGame.InputAsync
 - uid: PacManBot.Games.Concrete.TicTacToeGame.IsInput(System.String,System.UInt64)
   name: IsInput(String, UInt64)
   href: api/PacManBot.Games.Concrete.TicTacToeGame.html#PacManBot_Games_Concrete_TicTacToeGame_IsInput_System_String_System_UInt64_
@@ -15127,19 +15179,19 @@ references:
   commentId: T:PacManBot.Games.Concrete.TTT5Game
   fullName: PacManBot.Games.Concrete.TTT5Game
   nameWithType: TTT5Game
-- uid: PacManBot.Games.Concrete.TTT5Game.BotInput
-  name: BotInput()
-  href: api/PacManBot.Games.Concrete.TTT5Game.html#PacManBot_Games_Concrete_TTT5Game_BotInput
-  commentId: M:PacManBot.Games.Concrete.TTT5Game.BotInput
-  fullName: PacManBot.Games.Concrete.TTT5Game.BotInput()
-  nameWithType: TTT5Game.BotInput()
-- uid: PacManBot.Games.Concrete.TTT5Game.BotInput*
-  name: BotInput
-  href: api/PacManBot.Games.Concrete.TTT5Game.html#PacManBot_Games_Concrete_TTT5Game_BotInput_
-  commentId: Overload:PacManBot.Games.Concrete.TTT5Game.BotInput
+- uid: PacManBot.Games.Concrete.TTT5Game.BotInputAsync
+  name: BotInputAsync()
+  href: api/PacManBot.Games.Concrete.TTT5Game.html#PacManBot_Games_Concrete_TTT5Game_BotInputAsync
+  commentId: M:PacManBot.Games.Concrete.TTT5Game.BotInputAsync
+  fullName: PacManBot.Games.Concrete.TTT5Game.BotInputAsync()
+  nameWithType: TTT5Game.BotInputAsync()
+- uid: PacManBot.Games.Concrete.TTT5Game.BotInputAsync*
+  name: BotInputAsync
+  href: api/PacManBot.Games.Concrete.TTT5Game.html#PacManBot_Games_Concrete_TTT5Game_BotInputAsync_
+  commentId: Overload:PacManBot.Games.Concrete.TTT5Game.BotInputAsync
   isSpec: "True"
-  fullName: PacManBot.Games.Concrete.TTT5Game.BotInput
-  nameWithType: TTT5Game.BotInput
+  fullName: PacManBot.Games.Concrete.TTT5Game.BotInputAsync
+  nameWithType: TTT5Game.BotInputAsync
 - uid: PacManBot.Games.Concrete.TTT5Game.Expiry
   name: Expiry
   href: api/PacManBot.Games.Concrete.TTT5Game.html#PacManBot_Games_Concrete_TTT5Game_Expiry
@@ -15208,19 +15260,19 @@ references:
   isSpec: "True"
   fullName: PacManBot.Games.Concrete.TTT5Game.InitializeAsync
   nameWithType: TTT5Game.InitializeAsync
-- uid: PacManBot.Games.Concrete.TTT5Game.Input(System.String,System.UInt64)
-  name: Input(String, UInt64)
-  href: api/PacManBot.Games.Concrete.TTT5Game.html#PacManBot_Games_Concrete_TTT5Game_Input_System_String_System_UInt64_
-  commentId: M:PacManBot.Games.Concrete.TTT5Game.Input(System.String,System.UInt64)
-  fullName: PacManBot.Games.Concrete.TTT5Game.Input(System.String, System.UInt64)
-  nameWithType: TTT5Game.Input(String, UInt64)
-- uid: PacManBot.Games.Concrete.TTT5Game.Input*
-  name: Input
-  href: api/PacManBot.Games.Concrete.TTT5Game.html#PacManBot_Games_Concrete_TTT5Game_Input_
-  commentId: Overload:PacManBot.Games.Concrete.TTT5Game.Input
+- uid: PacManBot.Games.Concrete.TTT5Game.InputAsync(System.String,System.UInt64)
+  name: InputAsync(String, UInt64)
+  href: api/PacManBot.Games.Concrete.TTT5Game.html#PacManBot_Games_Concrete_TTT5Game_InputAsync_System_String_System_UInt64_
+  commentId: M:PacManBot.Games.Concrete.TTT5Game.InputAsync(System.String,System.UInt64)
+  fullName: PacManBot.Games.Concrete.TTT5Game.InputAsync(System.String, System.UInt64)
+  nameWithType: TTT5Game.InputAsync(String, UInt64)
+- uid: PacManBot.Games.Concrete.TTT5Game.InputAsync*
+  name: InputAsync
+  href: api/PacManBot.Games.Concrete.TTT5Game.html#PacManBot_Games_Concrete_TTT5Game_InputAsync_
+  commentId: Overload:PacManBot.Games.Concrete.TTT5Game.InputAsync
   isSpec: "True"
-  fullName: PacManBot.Games.Concrete.TTT5Game.Input
-  nameWithType: TTT5Game.Input
+  fullName: PacManBot.Games.Concrete.TTT5Game.InputAsync
+  nameWithType: TTT5Game.InputAsync
 - uid: PacManBot.Games.Concrete.TTT5Game.IsInput(System.String,System.UInt64)
   name: IsInput(String, UInt64)
   href: api/PacManBot.Games.Concrete.TTT5Game.html#PacManBot_Games_Concrete_TTT5Game_IsInput_System_String_System_UInt64_
@@ -15253,19 +15305,19 @@ references:
   isSpec: "True"
   fullName: PacManBot.Games.Concrete.UnoGame.AllBots
   nameWithType: UnoGame.AllBots
-- uid: PacManBot.Games.Concrete.UnoGame.BotInput
-  name: BotInput()
-  href: api/PacManBot.Games.Concrete.UnoGame.html#PacManBot_Games_Concrete_UnoGame_BotInput
-  commentId: M:PacManBot.Games.Concrete.UnoGame.BotInput
-  fullName: PacManBot.Games.Concrete.UnoGame.BotInput()
-  nameWithType: UnoGame.BotInput()
-- uid: PacManBot.Games.Concrete.UnoGame.BotInput*
-  name: BotInput
-  href: api/PacManBot.Games.Concrete.UnoGame.html#PacManBot_Games_Concrete_UnoGame_BotInput_
-  commentId: Overload:PacManBot.Games.Concrete.UnoGame.BotInput
+- uid: PacManBot.Games.Concrete.UnoGame.BotInputAsync
+  name: BotInputAsync()
+  href: api/PacManBot.Games.Concrete.UnoGame.html#PacManBot_Games_Concrete_UnoGame_BotInputAsync
+  commentId: M:PacManBot.Games.Concrete.UnoGame.BotInputAsync
+  fullName: PacManBot.Games.Concrete.UnoGame.BotInputAsync()
+  nameWithType: UnoGame.BotInputAsync()
+- uid: PacManBot.Games.Concrete.UnoGame.BotInputAsync*
+  name: BotInputAsync
+  href: api/PacManBot.Games.Concrete.UnoGame.html#PacManBot_Games_Concrete_UnoGame_BotInputAsync_
+  commentId: Overload:PacManBot.Games.Concrete.UnoGame.BotInputAsync
   isSpec: "True"
-  fullName: PacManBot.Games.Concrete.UnoGame.BotInput
-  nameWithType: UnoGame.BotInput
+  fullName: PacManBot.Games.Concrete.UnoGame.BotInputAsync
+  nameWithType: UnoGame.BotInputAsync
 - uid: PacManBot.Games.Concrete.UnoGame.BotTurn
   name: BotTurn
   href: api/PacManBot.Games.Concrete.UnoGame.html#PacManBot_Games_Concrete_UnoGame_BotTurn
@@ -15386,19 +15438,19 @@ references:
   isSpec: "True"
   fullName: PacManBot.Games.Concrete.UnoGame.InitializeAsync
   nameWithType: UnoGame.InitializeAsync
-- uid: PacManBot.Games.Concrete.UnoGame.Input(System.String,System.UInt64)
-  name: Input(String, UInt64)
-  href: api/PacManBot.Games.Concrete.UnoGame.html#PacManBot_Games_Concrete_UnoGame_Input_System_String_System_UInt64_
-  commentId: M:PacManBot.Games.Concrete.UnoGame.Input(System.String,System.UInt64)
-  fullName: PacManBot.Games.Concrete.UnoGame.Input(System.String, System.UInt64)
-  nameWithType: UnoGame.Input(String, UInt64)
-- uid: PacManBot.Games.Concrete.UnoGame.Input*
-  name: Input
-  href: api/PacManBot.Games.Concrete.UnoGame.html#PacManBot_Games_Concrete_UnoGame_Input_
-  commentId: Overload:PacManBot.Games.Concrete.UnoGame.Input
+- uid: PacManBot.Games.Concrete.UnoGame.InputAsync(System.String,System.UInt64)
+  name: InputAsync(String, UInt64)
+  href: api/PacManBot.Games.Concrete.UnoGame.html#PacManBot_Games_Concrete_UnoGame_InputAsync_System_String_System_UInt64_
+  commentId: M:PacManBot.Games.Concrete.UnoGame.InputAsync(System.String,System.UInt64)
+  fullName: PacManBot.Games.Concrete.UnoGame.InputAsync(System.String, System.UInt64)
+  nameWithType: UnoGame.InputAsync(String, UInt64)
+- uid: PacManBot.Games.Concrete.UnoGame.InputAsync*
+  name: InputAsync
+  href: api/PacManBot.Games.Concrete.UnoGame.html#PacManBot_Games_Concrete_UnoGame_InputAsync_
+  commentId: Overload:PacManBot.Games.Concrete.UnoGame.InputAsync
   isSpec: "True"
-  fullName: PacManBot.Games.Concrete.UnoGame.Input
-  nameWithType: UnoGame.Input
+  fullName: PacManBot.Games.Concrete.UnoGame.InputAsync
+  nameWithType: UnoGame.InputAsync
 - uid: PacManBot.Games.Concrete.UnoGame.IsInput(System.String,System.UInt64)
   name: IsInput(String, UInt64)
   href: api/PacManBot.Games.Concrete.UnoGame.html#PacManBot_Games_Concrete_UnoGame_IsInput_System_String_System_UInt64_
@@ -15795,19 +15847,19 @@ references:
   isSpec: "True"
   fullName: PacManBot.Games.IChannelGame.ChannelId
   nameWithType: IChannelGame.ChannelId
-- uid: PacManBot.Games.IChannelGame.GetMessage
-  name: GetMessage()
-  href: api/PacManBot.Games.IChannelGame.html#PacManBot_Games_IChannelGame_GetMessage
-  commentId: M:PacManBot.Games.IChannelGame.GetMessage
-  fullName: PacManBot.Games.IChannelGame.GetMessage()
-  nameWithType: IChannelGame.GetMessage()
-- uid: PacManBot.Games.IChannelGame.GetMessage*
-  name: GetMessage
-  href: api/PacManBot.Games.IChannelGame.html#PacManBot_Games_IChannelGame_GetMessage_
-  commentId: Overload:PacManBot.Games.IChannelGame.GetMessage
+- uid: PacManBot.Games.IChannelGame.GetMessageAsync
+  name: GetMessageAsync()
+  href: api/PacManBot.Games.IChannelGame.html#PacManBot_Games_IChannelGame_GetMessageAsync
+  commentId: M:PacManBot.Games.IChannelGame.GetMessageAsync
+  fullName: PacManBot.Games.IChannelGame.GetMessageAsync()
+  nameWithType: IChannelGame.GetMessageAsync()
+- uid: PacManBot.Games.IChannelGame.GetMessageAsync*
+  name: GetMessageAsync
+  href: api/PacManBot.Games.IChannelGame.html#PacManBot_Games_IChannelGame_GetMessageAsync_
+  commentId: Overload:PacManBot.Games.IChannelGame.GetMessageAsync
   isSpec: "True"
-  fullName: PacManBot.Games.IChannelGame.GetMessage
-  nameWithType: IChannelGame.GetMessage
+  fullName: PacManBot.Games.IChannelGame.GetMessageAsync
+  nameWithType: IChannelGame.GetMessageAsync
 - uid: PacManBot.Games.IChannelGame.Guild
   name: Guild
   href: api/PacManBot.Games.IChannelGame.html#PacManBot_Games_IChannelGame_Guild
@@ -15840,19 +15892,19 @@ references:
   commentId: T:PacManBot.Games.IMessagesGame
   fullName: PacManBot.Games.IMessagesGame
   nameWithType: IMessagesGame
-- uid: PacManBot.Games.IMessagesGame.Input(System.String,System.UInt64)
-  name: Input(String, UInt64)
-  href: api/PacManBot.Games.IMessagesGame.html#PacManBot_Games_IMessagesGame_Input_System_String_System_UInt64_
-  commentId: M:PacManBot.Games.IMessagesGame.Input(System.String,System.UInt64)
-  fullName: PacManBot.Games.IMessagesGame.Input(System.String, System.UInt64)
-  nameWithType: IMessagesGame.Input(String, UInt64)
-- uid: PacManBot.Games.IMessagesGame.Input*
-  name: Input
-  href: api/PacManBot.Games.IMessagesGame.html#PacManBot_Games_IMessagesGame_Input_
-  commentId: Overload:PacManBot.Games.IMessagesGame.Input
+- uid: PacManBot.Games.IMessagesGame.InputAsync(System.String,System.UInt64)
+  name: InputAsync(String, UInt64)
+  href: api/PacManBot.Games.IMessagesGame.html#PacManBot_Games_IMessagesGame_InputAsync_System_String_System_UInt64_
+  commentId: M:PacManBot.Games.IMessagesGame.InputAsync(System.String,System.UInt64)
+  fullName: PacManBot.Games.IMessagesGame.InputAsync(System.String, System.UInt64)
+  nameWithType: IMessagesGame.InputAsync(String, UInt64)
+- uid: PacManBot.Games.IMessagesGame.InputAsync*
+  name: InputAsync
+  href: api/PacManBot.Games.IMessagesGame.html#PacManBot_Games_IMessagesGame_InputAsync_
+  commentId: Overload:PacManBot.Games.IMessagesGame.InputAsync
   isSpec: "True"
-  fullName: PacManBot.Games.IMessagesGame.Input
-  nameWithType: IMessagesGame.Input
+  fullName: PacManBot.Games.IMessagesGame.InputAsync
+  nameWithType: IMessagesGame.InputAsync
 - uid: PacManBot.Games.IMessagesGame.IsInput(System.String,System.UInt64)
   name: IsInput(String, UInt64)
   href: api/PacManBot.Games.IMessagesGame.html#PacManBot_Games_IMessagesGame_IsInput_System_String_System_UInt64_
@@ -15885,19 +15937,19 @@ references:
   isSpec: "True"
   fullName: PacManBot.Games.IMultiplayerGame.AllBots
   nameWithType: IMultiplayerGame.AllBots
-- uid: PacManBot.Games.IMultiplayerGame.BotInput
-  name: BotInput()
-  href: api/PacManBot.Games.IMultiplayerGame.html#PacManBot_Games_IMultiplayerGame_BotInput
-  commentId: M:PacManBot.Games.IMultiplayerGame.BotInput
-  fullName: PacManBot.Games.IMultiplayerGame.BotInput()
-  nameWithType: IMultiplayerGame.BotInput()
-- uid: PacManBot.Games.IMultiplayerGame.BotInput*
-  name: BotInput
-  href: api/PacManBot.Games.IMultiplayerGame.html#PacManBot_Games_IMultiplayerGame_BotInput_
-  commentId: Overload:PacManBot.Games.IMultiplayerGame.BotInput
+- uid: PacManBot.Games.IMultiplayerGame.BotInputAsync
+  name: BotInputAsync()
+  href: api/PacManBot.Games.IMultiplayerGame.html#PacManBot_Games_IMultiplayerGame_BotInputAsync
+  commentId: M:PacManBot.Games.IMultiplayerGame.BotInputAsync
+  fullName: PacManBot.Games.IMultiplayerGame.BotInputAsync()
+  nameWithType: IMultiplayerGame.BotInputAsync()
+- uid: PacManBot.Games.IMultiplayerGame.BotInputAsync*
+  name: BotInputAsync
+  href: api/PacManBot.Games.IMultiplayerGame.html#PacManBot_Games_IMultiplayerGame_BotInputAsync_
+  commentId: Overload:PacManBot.Games.IMultiplayerGame.BotInputAsync
   isSpec: "True"
-  fullName: PacManBot.Games.IMultiplayerGame.BotInput
-  nameWithType: IMultiplayerGame.BotInput
+  fullName: PacManBot.Games.IMultiplayerGame.BotInputAsync
+  nameWithType: IMultiplayerGame.BotInputAsync
 - uid: PacManBot.Games.IMultiplayerGame.BotTurn
   name: BotTurn
   href: api/PacManBot.Games.IMultiplayerGame.html#PacManBot_Games_IMultiplayerGame_BotTurn
@@ -15969,19 +16021,19 @@ references:
   commentId: T:PacManBot.Games.IReactionsGame
   fullName: PacManBot.Games.IReactionsGame
   nameWithType: IReactionsGame
-- uid: PacManBot.Games.IReactionsGame.Input(Discord.IEmote,System.UInt64)
-  name: Input(IEmote, UInt64)
-  href: api/PacManBot.Games.IReactionsGame.html#PacManBot_Games_IReactionsGame_Input_Discord_IEmote_System_UInt64_
-  commentId: M:PacManBot.Games.IReactionsGame.Input(Discord.IEmote,System.UInt64)
-  fullName: PacManBot.Games.IReactionsGame.Input(Discord.IEmote, System.UInt64)
-  nameWithType: IReactionsGame.Input(IEmote, UInt64)
-- uid: PacManBot.Games.IReactionsGame.Input*
-  name: Input
-  href: api/PacManBot.Games.IReactionsGame.html#PacManBot_Games_IReactionsGame_Input_
-  commentId: Overload:PacManBot.Games.IReactionsGame.Input
+- uid: PacManBot.Games.IReactionsGame.InputAsync(Discord.IEmote,System.UInt64)
+  name: InputAsync(IEmote, UInt64)
+  href: api/PacManBot.Games.IReactionsGame.html#PacManBot_Games_IReactionsGame_InputAsync_Discord_IEmote_System_UInt64_
+  commentId: M:PacManBot.Games.IReactionsGame.InputAsync(Discord.IEmote,System.UInt64)
+  fullName: PacManBot.Games.IReactionsGame.InputAsync(Discord.IEmote, System.UInt64)
+  nameWithType: IReactionsGame.InputAsync(IEmote, UInt64)
+- uid: PacManBot.Games.IReactionsGame.InputAsync*
+  name: InputAsync
+  href: api/PacManBot.Games.IReactionsGame.html#PacManBot_Games_IReactionsGame_InputAsync_
+  commentId: Overload:PacManBot.Games.IReactionsGame.InputAsync
   isSpec: "True"
-  fullName: PacManBot.Games.IReactionsGame.Input
-  nameWithType: IReactionsGame.Input
+  fullName: PacManBot.Games.IReactionsGame.InputAsync
+  nameWithType: IReactionsGame.InputAsync
 - uid: PacManBot.Games.IReactionsGame.IsInput(Discord.IEmote,System.UInt64)
   name: IsInput(IEmote, UInt64)
   href: api/PacManBot.Games.IReactionsGame.html#PacManBot_Games_IReactionsGame_IsInput_Discord_IEmote_System_UInt64_
@@ -16078,19 +16130,19 @@ references:
   isSpec: "True"
   fullName: PacManBot.Games.MultiplayerGame.AllBots
   nameWithType: MultiplayerGame.AllBots
-- uid: PacManBot.Games.MultiplayerGame.BotInput
-  name: BotInput()
-  href: api/PacManBot.Games.MultiplayerGame.html#PacManBot_Games_MultiplayerGame_BotInput
-  commentId: M:PacManBot.Games.MultiplayerGame.BotInput
-  fullName: PacManBot.Games.MultiplayerGame.BotInput()
-  nameWithType: MultiplayerGame.BotInput()
-- uid: PacManBot.Games.MultiplayerGame.BotInput*
-  name: BotInput
-  href: api/PacManBot.Games.MultiplayerGame.html#PacManBot_Games_MultiplayerGame_BotInput_
-  commentId: Overload:PacManBot.Games.MultiplayerGame.BotInput
+- uid: PacManBot.Games.MultiplayerGame.BotInputAsync
+  name: BotInputAsync()
+  href: api/PacManBot.Games.MultiplayerGame.html#PacManBot_Games_MultiplayerGame_BotInputAsync
+  commentId: M:PacManBot.Games.MultiplayerGame.BotInputAsync
+  fullName: PacManBot.Games.MultiplayerGame.BotInputAsync()
+  nameWithType: MultiplayerGame.BotInputAsync()
+- uid: PacManBot.Games.MultiplayerGame.BotInputAsync*
+  name: BotInputAsync
+  href: api/PacManBot.Games.MultiplayerGame.html#PacManBot_Games_MultiplayerGame_BotInputAsync_
+  commentId: Overload:PacManBot.Games.MultiplayerGame.BotInputAsync
   isSpec: "True"
-  fullName: PacManBot.Games.MultiplayerGame.BotInput
-  nameWithType: MultiplayerGame.BotInput
+  fullName: PacManBot.Games.MultiplayerGame.BotInputAsync
+  nameWithType: MultiplayerGame.BotInputAsync
 - uid: PacManBot.Games.MultiplayerGame.BotTurn
   name: BotTurn
   href: api/PacManBot.Games.MultiplayerGame.html#PacManBot_Games_MultiplayerGame_BotTurn
@@ -16761,6 +16813,12 @@ references:
   commentId: F:PacManBot.PmConfig.discordToken
   fullName: PacManBot.PmConfig.discordToken
   nameWithType: PmConfig.discordToken
+- uid: PacManBot.PmConfig.downloadAllUsers
+  name: downloadAllUsers
+  href: api/PacManBot.PmConfig.html#PacManBot_PmConfig_downloadAllUsers
+  commentId: F:PacManBot.PmConfig.downloadAllUsers
+  fullName: PacManBot.PmConfig.downloadAllUsers
+  nameWithType: PmConfig.downloadAllUsers
 - uid: PacManBot.PmConfig.httpDomain
   name: httpDomain
   href: api/PacManBot.PmConfig.html#PacManBot_PmConfig_httpDomain
@@ -16912,6 +16970,12 @@ references:
   commentId: F:PacManBot.PmContent.inviteLink
   fullName: PacManBot.PmContent.inviteLink
   nameWithType: PmContent.inviteLink
+- uid: PacManBot.PmContent.petBannerUrl
+  name: petBannerUrl
+  href: api/PacManBot.PmContent.html#PacManBot_PmContent_petBannerUrl
+  commentId: F:PacManBot.PmContent.petBannerUrl
+  fullName: PacManBot.PmContent.petBannerUrl
+  nameWithType: PmContent.petBannerUrl
 - uid: PacManBot.PmContent.petCleanEmotes
   name: petCleanEmotes
   href: api/PacManBot.PmContent.html#PacManBot_PmContent_petCleanEmotes
@@ -16960,6 +17024,18 @@ references:
   commentId: F:PacManBot.PmContent.superPettingMessages
   fullName: PacManBot.PmContent.superPettingMessages
   nameWithType: PmContent.superPettingMessages
+- uid: PacManBot.PmContent.welcome
+  name: welcome
+  href: api/PacManBot.PmContent.html#PacManBot_PmContent_welcome
+  commentId: F:PacManBot.PmContent.welcome
+  fullName: PacManBot.PmContent.welcome
+  nameWithType: PmContent.welcome
+- uid: PacManBot.PmContent.welcomeFields
+  name: welcomeFields
+  href: api/PacManBot.PmContent.html#PacManBot_PmContent_welcomeFields
+  commentId: F:PacManBot.PmContent.welcomeFields
+  fullName: PacManBot.PmContent.welcomeFields
+  nameWithType: PmContent.welcomeFields
 - uid: PacManBot.Program
   name: Program
   href: api/PacManBot.Program.html
@@ -17632,19 +17708,19 @@ references:
   isSpec: "True"
   fullName: PacManBot.Services.GameService.Remove
   nameWithType: GameService.Remove
-- uid: PacManBot.Services.GameService.Save(PacManBot.Games.IStoreableGame)
-  name: Save(IStoreableGame)
-  href: api/PacManBot.Services.GameService.html#PacManBot_Services_GameService_Save_PacManBot_Games_IStoreableGame_
-  commentId: M:PacManBot.Services.GameService.Save(PacManBot.Games.IStoreableGame)
-  fullName: PacManBot.Services.GameService.Save(PacManBot.Games.IStoreableGame)
-  nameWithType: GameService.Save(IStoreableGame)
-- uid: PacManBot.Services.GameService.Save*
-  name: Save
-  href: api/PacManBot.Services.GameService.html#PacManBot_Services_GameService_Save_
-  commentId: Overload:PacManBot.Services.GameService.Save
+- uid: PacManBot.Services.GameService.SaveAsync(PacManBot.Games.IStoreableGame)
+  name: SaveAsync(IStoreableGame)
+  href: api/PacManBot.Services.GameService.html#PacManBot_Services_GameService_SaveAsync_PacManBot_Games_IStoreableGame_
+  commentId: M:PacManBot.Services.GameService.SaveAsync(PacManBot.Games.IStoreableGame)
+  fullName: PacManBot.Services.GameService.SaveAsync(PacManBot.Games.IStoreableGame)
+  nameWithType: GameService.SaveAsync(IStoreableGame)
+- uid: PacManBot.Services.GameService.SaveAsync*
+  name: SaveAsync
+  href: api/PacManBot.Services.GameService.html#PacManBot_Services_GameService_SaveAsync_
+  commentId: Overload:PacManBot.Services.GameService.SaveAsync
   isSpec: "True"
-  fullName: PacManBot.Services.GameService.Save
-  nameWithType: GameService.Save
+  fullName: PacManBot.Services.GameService.SaveAsync
+  nameWithType: GameService.SaveAsync
 - uid: PacManBot.Services.InputService
   name: InputService
   href: api/PacManBot.Services.InputService.html
@@ -17945,6 +18021,12 @@ references:
   isSpec: "True"
   fullName: PacManBot.Services.PmDiscordClient.PmDiscordClient
   nameWithType: PmDiscordClient.PmDiscordClient
+- uid: PacManBot.Services.PmDiscordClient.AllShardsReady
+  name: AllShardsReady
+  href: api/PacManBot.Services.PmDiscordClient.html#PacManBot_Services_PmDiscordClient_AllShardsReady
+  commentId: E:PacManBot.Services.PmDiscordClient.AllShardsReady
+  fullName: PacManBot.Services.PmDiscordClient.AllShardsReady
+  nameWithType: PmDiscordClient.AllShardsReady
 - uid: PacManBot.Services.PmDiscordClient.MentionPrefix
   name: MentionPrefix
   href: api/PacManBot.Services.PmDiscordClient.html#PacManBot_Services_PmDiscordClient_MentionPrefix

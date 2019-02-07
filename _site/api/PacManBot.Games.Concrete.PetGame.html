@@ -176,18 +176,18 @@ public class PetGame : BaseGame, IUserGame, IStoreableGame, IBaseGame</code></pr
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PetGame__ctor_System_String_System_UInt64_System_IServiceProvider_.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PetGame.%23ctor(System.String%2CSystem.UInt64%2CSystem.IServiceProvider)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PetGame__ctor_System_UInt64_System_IServiceProvider_.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PetGame.%23ctor(System.UInt64%2CSystem.IServiceProvider)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L209">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L205">View Source</a>
   </span>
   <a id="PacManBot_Games_Concrete_PetGame__ctor_" data-uid="PacManBot.Games.Concrete.PetGame.#ctor*"></a>
-  <h4 id="PacManBot_Games_Concrete_PetGame__ctor_System_String_System_UInt64_System_IServiceProvider_" data-uid="PacManBot.Games.Concrete.PetGame.#ctor(System.String,System.UInt64,System.IServiceProvider)">PetGame(String, UInt64, IServiceProvider)</h4>
+  <h4 id="PacManBot_Games_Concrete_PetGame__ctor_System_UInt64_System_IServiceProvider_" data-uid="PacManBot.Games.Concrete.PetGame.#ctor(System.UInt64,System.IServiceProvider)">PetGame(UInt64, IServiceProvider)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public PetGame(string name, ulong ownerId, IServiceProvider services)</code></pre>
+    <pre><code class="lang-csharp hljs">public PetGame(ulong ownerId, IServiceProvider services)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -199,11 +199,6 @@ public class PetGame : BaseGame, IUserGame, IStoreableGame, IBaseGame</code></pr
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">name</span></td>
-        <td></td>
-      </tr>
       <tr>
         <td><span class="xref">System.UInt64</span></td>
         <td><span class="parametername">ownerId</span></td>
@@ -223,7 +218,7 @@ public class PetGame : BaseGame, IUserGame, IStoreableGame, IBaseGame</code></pr
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PetGame_achievements.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PetGame.achievements%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L46">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L38">View Source</a>
   </span>
   <h4 id="PacManBot_Games_Concrete_PetGame_achievements" data-uid="PacManBot.Games.Concrete.PetGame.achievements">achievements</h4>
   <div class="markdown level1 summary"></div>
@@ -253,7 +248,7 @@ public PetGame.Achievements achievements</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PetGame_asleep.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PetGame.asleep%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L43">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L35">View Source</a>
   </span>
   <h4 id="PacManBot_Games_Concrete_PetGame_asleep" data-uid="PacManBot.Games.Concrete.PetGame.asleep">asleep</h4>
   <div class="markdown level1 summary"></div>
@@ -280,39 +275,10 @@ public bool asleep</code></pre>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PetGame_BannerUrl.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PetGame.BannerUrl%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L25">View Source</a>
-  </span>
-  <h4 id="PacManBot_Games_Concrete_PetGame_BannerUrl" data-uid="PacManBot.Games.Concrete.PetGame.BannerUrl">BannerUrl</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static readonly string[] BannerUrl</code></pre>
-  </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span>[]</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PetGame_bornDate.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PetGame.bornDate%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L44">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L36">View Source</a>
   </span>
   <h4 id="PacManBot_Games_Concrete_PetGame_bornDate" data-uid="PacManBot.Games.Concrete.PetGame.bornDate">bornDate</h4>
   <div class="markdown level1 summary"></div>
@@ -342,7 +308,7 @@ public DateTime bornDate</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PetGame_energy.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PetGame.energy%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L42">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L34">View Source</a>
   </span>
   <h4 id="PacManBot_Games_Concrete_PetGame_energy" data-uid="PacManBot.Games.Concrete.PetGame.energy">energy</h4>
   <div class="markdown level1 summary"></div>
@@ -372,7 +338,7 @@ public double energy</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PetGame_happiness.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PetGame.happiness%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L41">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L33">View Source</a>
   </span>
   <h4 id="PacManBot_Games_Concrete_PetGame_happiness" data-uid="PacManBot.Games.Concrete.PetGame.happiness">happiness</h4>
   <div class="markdown level1 summary"></div>
@@ -402,7 +368,7 @@ public double happiness</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PetGame_hygiene.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PetGame.hygiene%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L40">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L32">View Source</a>
   </span>
   <h4 id="PacManBot_Games_Concrete_PetGame_hygiene" data-uid="PacManBot.Games.Concrete.PetGame.hygiene">hygiene</h4>
   <div class="markdown level1 summary"></div>
@@ -432,7 +398,7 @@ public double hygiene</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PetGame_lastUpdated.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PetGame.lastUpdated%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L45">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L37">View Source</a>
   </span>
   <h4 id="PacManBot_Games_Concrete_PetGame_lastUpdated" data-uid="PacManBot.Games.Concrete.PetGame.lastUpdated">lastUpdated</h4>
   <div class="markdown level1 summary"></div>
@@ -462,7 +428,7 @@ public DateTime lastUpdated</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PetGame_MaxStat.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PetGame.MaxStat%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L32">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L19">View Source</a>
   </span>
   <h4 id="PacManBot_Games_Concrete_PetGame_MaxStat" data-uid="PacManBot.Games.Concrete.PetGame.MaxStat">MaxStat</h4>
   <div class="markdown level1 summary"></div>
@@ -491,7 +457,7 @@ public DateTime lastUpdated</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PetGame_NameCharLimit.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PetGame.NameCharLimit%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L17">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L18">View Source</a>
   </span>
   <h4 id="PacManBot_Games_Concrete_PetGame_NameCharLimit" data-uid="PacManBot.Games.Concrete.PetGame.NameCharLimit">NameCharLimit</h4>
   <div class="markdown level1 summary"></div>
@@ -520,7 +486,7 @@ public DateTime lastUpdated</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PetGame_petTimerStart.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PetGame.petTimerStart%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L48">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L40">View Source</a>
   </span>
   <h4 id="PacManBot_Games_Concrete_PetGame_petTimerStart" data-uid="PacManBot.Games.Concrete.PetGame.petTimerStart">petTimerStart</h4>
   <div class="markdown level1 summary"></div>
@@ -549,7 +515,7 @@ public DateTime lastUpdated</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PetGame_satiation.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PetGame.satiation%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L39">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L31">View Source</a>
   </span>
   <h4 id="PacManBot_Games_Concrete_PetGame_satiation" data-uid="PacManBot.Games.Concrete.PetGame.satiation">satiation</h4>
   <div class="markdown level1 summary"></div>
@@ -579,7 +545,7 @@ public double satiation</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PetGame_timesPetSinceTimerStart.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PetGame.timesPetSinceTimerStart%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L49">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L41">View Source</a>
   </span>
   <h4 id="PacManBot_Games_Concrete_PetGame_timesPetSinceTimerStart" data-uid="PacManBot.Games.Concrete.PetGame.timesPetSinceTimerStart">timesPetSinceTimerStart</h4>
   <div class="markdown level1 summary"></div>
@@ -610,7 +576,7 @@ public double satiation</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PetGame_Expiry.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PetGame.Expiry%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L21">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L23">View Source</a>
   </span>
   <a id="PacManBot_Games_Concrete_PetGame_Expiry_" data-uid="PacManBot.Games.Concrete.PetGame.Expiry*"></a>
   <h4 id="PacManBot_Games_Concrete_PetGame_Expiry" data-uid="PacManBot.Games.Concrete.PetGame.Expiry">Expiry</h4>
@@ -642,7 +608,7 @@ public double satiation</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PetGame_FilenameKey.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PetGame.FilenameKey%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L22">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L24">View Source</a>
   </span>
   <a id="PacManBot_Games_Concrete_PetGame_FilenameKey_" data-uid="PacManBot.Games.Concrete.PetGame.FilenameKey*"></a>
   <h4 id="PacManBot_Games_Concrete_PetGame_FilenameKey" data-uid="PacManBot.Games.Concrete.PetGame.FilenameKey">FilenameKey</h4>
@@ -672,7 +638,7 @@ public double satiation</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PetGame_GameIndex.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PetGame.GameIndex%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L19">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L21">View Source</a>
   </span>
   <a id="PacManBot_Games_Concrete_PetGame_GameIndex_" data-uid="PacManBot.Games.Concrete.PetGame.GameIndex*"></a>
   <h4 id="PacManBot_Games_Concrete_PetGame_GameIndex" data-uid="PacManBot.Games.Concrete.PetGame.GameIndex">GameIndex</h4>
@@ -704,7 +670,7 @@ public double satiation</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PetGame_GameName.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PetGame.GameName%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L20">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L22">View Source</a>
   </span>
   <a id="PacManBot_Games_Concrete_PetGame_GameName_" data-uid="PacManBot.Games.Concrete.PetGame.GameName*"></a>
   <h4 id="PacManBot_Games_Concrete_PetGame_GameName" data-uid="PacManBot.Games.Concrete.PetGame.GameName">GameName</h4>
@@ -736,7 +702,7 @@ public double satiation</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PetGame_LastPlayed.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PetGame.LastPlayed%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L55">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L47">View Source</a>
   </span>
   <a id="PacManBot_Games_Concrete_PetGame_LastPlayed_" data-uid="PacManBot.Games.Concrete.PetGame.LastPlayed*"></a>
   <h4 id="PacManBot_Games_Concrete_PetGame_LastPlayed" data-uid="PacManBot.Games.Concrete.PetGame.LastPlayed">LastPlayed</h4>
@@ -768,7 +734,7 @@ public double satiation</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PetGame_OwnerId.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PetGame.OwnerId%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L54">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L46">View Source</a>
   </span>
   <a id="PacManBot_Games_Concrete_PetGame_OwnerId_" data-uid="PacManBot.Games.Concrete.PetGame.OwnerId*"></a>
   <h4 id="PacManBot_Games_Concrete_PetGame_OwnerId" data-uid="PacManBot.Games.Concrete.PetGame.OwnerId">OwnerId</h4>
@@ -801,7 +767,7 @@ public override ulong OwnerId { get; protected set; }</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PetGame_petImageUrl.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PetGame.petImageUrl%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L38">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L30">View Source</a>
   </span>
   <a id="PacManBot_Games_Concrete_PetGame_petImageUrl_" data-uid="PacManBot.Games.Concrete.PetGame.petImageUrl*"></a>
   <h4 id="PacManBot_Games_Concrete_PetGame_petImageUrl" data-uid="PacManBot.Games.Concrete.PetGame.petImageUrl">petImageUrl</h4>
@@ -832,7 +798,7 @@ public string petImageUrl { get; }</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PetGame_petName.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PetGame.petName%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L37">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L29">View Source</a>
   </span>
   <a id="PacManBot_Games_Concrete_PetGame_petName_" data-uid="PacManBot.Games.Concrete.PetGame.petName*"></a>
   <h4 id="PacManBot_Games_Concrete_PetGame_petName" data-uid="PacManBot.Games.Concrete.PetGame.petName">petName</h4>
@@ -863,7 +829,7 @@ public string petName { get; }</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PetGame_TimesPet.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PetGame.TimesPet%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L58">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L50">View Source</a>
   </span>
   <a id="PacManBot_Games_Concrete_PetGame_TimesPet_" data-uid="PacManBot.Games.Concrete.PetGame.TimesPet*"></a>
   <h4 id="PacManBot_Games_Concrete_PetGame_TimesPet" data-uid="PacManBot.Games.Concrete.PetGame.TimesPet">TimesPet</h4>
@@ -893,7 +859,7 @@ public string petName { get; }</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PetGame_TotalStats.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PetGame.TotalStats%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L57">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L49">View Source</a>
   </span>
   <a id="PacManBot_Games_Concrete_PetGame_TotalStats_" data-uid="PacManBot.Games.Concrete.PetGame.TotalStats*"></a>
   <h4 id="PacManBot_Games_Concrete_PetGame_TotalStats" data-uid="PacManBot.Games.Concrete.PetGame.TotalStats">TotalStats</h4>
@@ -922,19 +888,19 @@ public string petName { get; }</code></pre>
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PetGame_DoPet.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PetGame.DoPet%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PetGame_DoPetAsync.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PetGame.DoPetAsync%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L476">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L475">View Source</a>
   </span>
-  <a id="PacManBot_Games_Concrete_PetGame_DoPet_" data-uid="PacManBot.Games.Concrete.PetGame.DoPet*"></a>
-  <h4 id="PacManBot_Games_Concrete_PetGame_DoPet" data-uid="PacManBot.Games.Concrete.PetGame.DoPet">DoPet()</h4>
+  <a id="PacManBot_Games_Concrete_PetGame_DoPetAsync_" data-uid="PacManBot.Games.Concrete.PetGame.DoPetAsync*"></a>
+  <h4 id="PacManBot_Games_Concrete_PetGame_DoPetAsync" data-uid="PacManBot.Games.Concrete.PetGame.DoPetAsync">DoPetAsync()</h4>
   <div class="markdown level1 summary"><p>Does a random petting: A mini incremental game for pets.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string DoPet()</code></pre>
+    <pre><code class="lang-csharp hljs">public Task&lt;string&gt; DoPetAsync()</code></pre>
   </div>
   <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -946,7 +912,7 @@ public string petName { get; }</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.String</span></td>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -956,7 +922,7 @@ public string petName { get; }</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PetGame_GetEmbed_Discord_IGuildUser_System_Boolean_.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PetGame.GetEmbed(Discord.IGuildUser%2CSystem.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L222">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L216">View Source</a>
   </span>
   <a id="PacManBot_Games_Concrete_PetGame_GetEmbed_" data-uid="PacManBot.Games.Concrete.PetGame.GetEmbed*"></a>
   <h4 id="PacManBot_Games_Concrete_PetGame_GetEmbed_Discord_IGuildUser_System_Boolean_" data-uid="PacManBot.Games.Concrete.PetGame.GetEmbed(Discord.IGuildUser,System.Boolean)">GetEmbed(IGuildUser, Boolean)</h4>
@@ -1009,7 +975,7 @@ public string petName { get; }</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PetGame_GetEmbed_System_Boolean_.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PetGame.GetEmbed(System.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L219">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L213">View Source</a>
   </span>
   <a id="PacManBot_Games_Concrete_PetGame_GetEmbed_" data-uid="PacManBot.Games.Concrete.PetGame.GetEmbed*"></a>
   <h4 id="PacManBot_Games_Concrete_PetGame_GetEmbed_System_Boolean_" data-uid="PacManBot.Games.Concrete.PetGame.GetEmbed(System.Boolean)">GetEmbed(Boolean)</h4>
@@ -1058,7 +1024,7 @@ public string petName { get; }</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PetGame_GetEmbedAchievements_Discord_IGuildUser_.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PetGame.GetEmbedAchievements(Discord.IGuildUser)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L290">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L284">View Source</a>
   </span>
   <a id="PacManBot_Games_Concrete_PetGame_GetEmbedAchievements_" data-uid="PacManBot.Games.Concrete.PetGame.GetEmbedAchievements*"></a>
   <h4 id="PacManBot_Games_Concrete_PetGame_GetEmbedAchievements_Discord_IGuildUser_" data-uid="PacManBot.Games.Concrete.PetGame.GetEmbedAchievements(Discord.IGuildUser)">GetEmbedAchievements(IGuildUser)</h4>
@@ -1106,7 +1072,7 @@ public string petName { get; }</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PetGame_PostDeserialize_System_IServiceProvider_.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PetGame.PostDeserialize(System.IServiceProvider)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L554">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L553">View Source</a>
   </span>
   <a id="PacManBot_Games_Concrete_PetGame_PostDeserialize_" data-uid="PacManBot.Games.Concrete.PetGame.PostDeserialize*"></a>
   <h4 id="PacManBot_Games_Concrete_PetGame_PostDeserialize_System_IServiceProvider_" data-uid="PacManBot.Games.Concrete.PetGame.PostDeserialize(System.IServiceProvider)">PostDeserialize(IServiceProvider)</h4>
@@ -1135,19 +1101,19 @@ public string petName { get; }</code></pre>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PetGame_SetPetName_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PetGame.SetPetName(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PetGame_SetPetNameAsync_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PetGame.SetPetNameAsync(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L454">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L453">View Source</a>
   </span>
-  <a id="PacManBot_Games_Concrete_PetGame_SetPetName_" data-uid="PacManBot.Games.Concrete.PetGame.SetPetName*"></a>
-  <h4 id="PacManBot_Games_Concrete_PetGame_SetPetName_System_String_" data-uid="PacManBot.Games.Concrete.PetGame.SetPetName(System.String)">SetPetName(String)</h4>
+  <a id="PacManBot_Games_Concrete_PetGame_SetPetNameAsync_" data-uid="PacManBot.Games.Concrete.PetGame.SetPetNameAsync*"></a>
+  <h4 id="PacManBot_Games_Concrete_PetGame_SetPetNameAsync_System_String_" data-uid="PacManBot.Games.Concrete.PetGame.SetPetNameAsync(System.String)">SetPetNameAsync(String)</h4>
   <div class="markdown level1 summary"><p>Sets the pet's name.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void SetPetName(string text)</code></pre>
+    <pre><code class="lang-csharp hljs">public Task SetPetNameAsync(string text)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -1166,37 +1132,36 @@ public string petName { get; }</code></pre>
       </tr>
     </tbody>
   </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PetGame_ToggleSleep.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PetGame.ToggleSleep%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PetGame_ToggleSleepAsync.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PetGame.ToggleSleepAsync%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L446">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L445">View Source</a>
   </span>
-  <a id="PacManBot_Games_Concrete_PetGame_ToggleSleep_" data-uid="PacManBot.Games.Concrete.PetGame.ToggleSleep*"></a>
-  <h4 id="PacManBot_Games_Concrete_PetGame_ToggleSleep" data-uid="PacManBot.Games.Concrete.PetGame.ToggleSleep">ToggleSleep()</h4>
+  <a id="PacManBot_Games_Concrete_PetGame_ToggleSleepAsync_" data-uid="PacManBot.Games.Concrete.PetGame.ToggleSleepAsync*"></a>
+  <h4 id="PacManBot_Games_Concrete_PetGame_ToggleSleepAsync" data-uid="PacManBot.Games.Concrete.PetGame.ToggleSleepAsync">ToggleSleepAsync()</h4>
   <div class="markdown level1 summary"><p>Toggles a pet between sleep and awake.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void ToggleSleep()</code></pre>
-  </div>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PetGame_TryClean.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PetGame.TryClean%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L397">View Source</a>
-  </span>
-  <a id="PacManBot_Games_Concrete_PetGame_TryClean_" data-uid="PacManBot.Games.Concrete.PetGame.TryClean*"></a>
-  <h4 id="PacManBot_Games_Concrete_PetGame_TryClean" data-uid="PacManBot.Games.Concrete.PetGame.TryClean">TryClean()</h4>
-  <div class="markdown level1 summary"><p>Attempts to clean a pet. If it's already clean, it consumes 1 energy.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool TryClean()</code></pre>
+    <pre><code class="lang-csharp hljs">public Task ToggleSleepAsync()</code></pre>
   </div>
   <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -1208,27 +1173,58 @@ public string petName { get; }</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="xref">System.Threading.Tasks.Task</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PetGame_TryFeed.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PetGame.TryFeed%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PetGame_TryCleanAsync.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PetGame.TryCleanAsync%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L373">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L396">View Source</a>
   </span>
-  <a id="PacManBot_Games_Concrete_PetGame_TryFeed_" data-uid="PacManBot.Games.Concrete.PetGame.TryFeed*"></a>
-  <h4 id="PacManBot_Games_Concrete_PetGame_TryFeed" data-uid="PacManBot.Games.Concrete.PetGame.TryFeed">TryFeed()</h4>
+  <a id="PacManBot_Games_Concrete_PetGame_TryCleanAsync_" data-uid="PacManBot.Games.Concrete.PetGame.TryCleanAsync*"></a>
+  <h4 id="PacManBot_Games_Concrete_PetGame_TryCleanAsync" data-uid="PacManBot.Games.Concrete.PetGame.TryCleanAsync">TryCleanAsync()</h4>
+  <div class="markdown level1 summary"><p>Attempts to clean a pet. If it's already clean, it consumes 1 energy.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;bool&gt; TryCleanAsync()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.Boolean</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PetGame_TryFeedAsync.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PetGame.TryFeedAsync%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L372">View Source</a>
+  </span>
+  <a id="PacManBot_Games_Concrete_PetGame_TryFeedAsync_" data-uid="PacManBot.Games.Concrete.PetGame.TryFeedAsync*"></a>
+  <h4 id="PacManBot_Games_Concrete_PetGame_TryFeedAsync" data-uid="PacManBot.Games.Concrete.PetGame.TryFeedAsync">TryFeedAsync()</h4>
   <div class="markdown level1 summary"><p>Attempts to feed a pet. It restores some energy based on hungriness.
 If it's already full, it consumes 1 energy.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool TryFeed()</code></pre>
+    <pre><code class="lang-csharp hljs">public Task&lt;bool&gt; TryFeedAsync()</code></pre>
   </div>
   <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -1240,27 +1236,27 @@ If it's already full, it consumes 1 energy.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.Boolean</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PetGame_TryPlay.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PetGame.TryPlay%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PetGame_TryPlayAsync.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PetGame.TryPlayAsync%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L419">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L418">View Source</a>
   </span>
-  <a id="PacManBot_Games_Concrete_PetGame_TryPlay_" data-uid="PacManBot.Games.Concrete.PetGame.TryPlay*"></a>
-  <h4 id="PacManBot_Games_Concrete_PetGame_TryPlay" data-uid="PacManBot.Games.Concrete.PetGame.TryPlay">TryPlay()</h4>
+  <a id="PacManBot_Games_Concrete_PetGame_TryPlayAsync_" data-uid="PacManBot.Games.Concrete.PetGame.TryPlayAsync*"></a>
+  <h4 id="PacManBot_Games_Concrete_PetGame_TryPlayAsync" data-uid="PacManBot.Games.Concrete.PetGame.TryPlayAsync">TryPlayAsync()</h4>
   <div class="markdown level1 summary"><p>Attempts to play with a pet. It requires 5 energy and consumes 5 of every stat.
 If it's already happy, it consumes 1 energy.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool TryPlay()</code></pre>
+    <pre><code class="lang-csharp hljs">public Task&lt;bool&gt; TryPlayAsync()</code></pre>
   </div>
   <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -1272,26 +1268,26 @@ If it's already happy, it consumes 1 energy.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.Boolean</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PetGame_TrySetImageUrl_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PetGame.TrySetImageUrl(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PetGame_TrySetImageUrlAsync_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PetGame.TrySetImageUrlAsync(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L462">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L461">View Source</a>
   </span>
-  <a id="PacManBot_Games_Concrete_PetGame_TrySetImageUrl_" data-uid="PacManBot.Games.Concrete.PetGame.TrySetImageUrl*"></a>
-  <h4 id="PacManBot_Games_Concrete_PetGame_TrySetImageUrl_System_String_" data-uid="PacManBot.Games.Concrete.PetGame.TrySetImageUrl(System.String)">TrySetImageUrl(String)</h4>
+  <a id="PacManBot_Games_Concrete_PetGame_TrySetImageUrlAsync_" data-uid="PacManBot.Games.Concrete.PetGame.TrySetImageUrlAsync*"></a>
+  <h4 id="PacManBot_Games_Concrete_PetGame_TrySetImageUrlAsync_System_String_" data-uid="PacManBot.Games.Concrete.PetGame.TrySetImageUrlAsync(System.String)">TrySetImageUrlAsync(String)</h4>
   <div class="markdown level1 summary"><p>Returns whether the given text is a valid image URL, and sets the pet's image URL if it is.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool TrySetImageUrl(string text)</code></pre>
+    <pre><code class="lang-csharp hljs">public Task&lt;bool&gt; TrySetImageUrlAsync(string text)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -1320,44 +1316,58 @@ If it's already happy, it consumes 1 energy.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.Boolean</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PetGame_UpdateStats_System_Boolean_.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PetGame.UpdateStats(System.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PetGame_UpdateAndSaveAsync.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PetGame.UpdateAndSaveAsync%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L344">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L361">View Source</a>
   </span>
-  <a id="PacManBot_Games_Concrete_PetGame_UpdateStats_" data-uid="PacManBot.Games.Concrete.PetGame.UpdateStats*"></a>
-  <h4 id="PacManBot_Games_Concrete_PetGame_UpdateStats_System_Boolean_" data-uid="PacManBot.Games.Concrete.PetGame.UpdateStats(System.Boolean)">UpdateStats(Boolean)</h4>
-  <div class="markdown level1 summary"><p>Calculates and updates a pet's current status.</p>
+  <a id="PacManBot_Games_Concrete_PetGame_UpdateAndSaveAsync_" data-uid="PacManBot.Games.Concrete.PetGame.UpdateAndSaveAsync*"></a>
+  <h4 id="PacManBot_Games_Concrete_PetGame_UpdateAndSaveAsync" data-uid="PacManBot.Games.Concrete.PetGame.UpdateAndSaveAsync">UpdateAndSaveAsync()</h4>
+  <div class="markdown level1 summary"><p>Calculates and updates a pet's current status, and saves it to disk.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void UpdateStats(bool store = true)</code></pre>
+    <pre><code class="lang-csharp hljs">public Task UpdateAndSaveAsync()</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
+  <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
       <tr>
         <th>Type</th>
-        <th>Name</th>
         <th>Description</th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Boolean</span></td>
-        <td><span class="parametername">store</span></td>
+        <td><span class="xref">System.Threading.Tasks.Task</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PetGame_UpdateStats.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PetGame.UpdateStats%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L337">View Source</a>
+  </span>
+  <a id="PacManBot_Games_Concrete_PetGame_UpdateStats_" data-uid="PacManBot.Games.Concrete.PetGame.UpdateStats*"></a>
+  <h4 id="PacManBot_Games_Concrete_PetGame_UpdateStats" data-uid="PacManBot.Games.Concrete.PetGame.UpdateStats">UpdateStats()</h4>
+  <div class="markdown level1 summary"><p>Calculates and updates a pet's current status.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void UpdateStats()</code></pre>
+  </div>
   <h3 id="implements">Implements</h3>
   <div>
       <a class="xref" href="PacManBot.Games.IUserGame.html">IUserGame</a>
@@ -1386,7 +1396,7 @@ If it's already happy, it consumes 1 energy.</p>
                     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PetGame.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PetGame%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L14" class="contribution-link">View Source</a>
+                    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PetGame.cs/#L15" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

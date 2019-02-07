@@ -119,7 +119,7 @@ public class PmConfig</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_PmConfig_bannedChannels.md&amp;value=---%0Auid%3A%20PacManBot.PmConfig.bannedChannels%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/PmConfig.cs/#L61">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/PmConfig.cs/#L64">View Source</a>
   </span>
   <h4 id="PacManBot_PmConfig_bannedChannels" data-uid="PacManBot.PmConfig.bannedChannels">bannedChannels</h4>
   <div class="markdown level1 summary"><p>Until a long-term solution to command spam attacks is found, I can just ban channels from using the bot.</p>
@@ -150,7 +150,7 @@ public readonly ulong[] bannedChannels</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_PmConfig_clientLogLevel.md&amp;value=---%0Auid%3A%20PacManBot.PmConfig.clientLogLevel%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/PmConfig.cs/#L55">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/PmConfig.cs/#L58">View Source</a>
   </span>
   <h4 id="PacManBot_PmConfig_clientLogLevel" data-uid="PacManBot.PmConfig.clientLogLevel">clientLogLevel</h4>
   <div class="markdown level1 summary"><p>How many messages to log coming from the Discord client. See <span class="xref">Discord.LogSeverity</span> for possible values.</p>
@@ -333,6 +333,37 @@ public readonly string discordToken</code></pre>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_PmConfig_downloadAllUsers.md&amp;value=---%0Auid%3A%20PacManBot.PmConfig.downloadAllUsers%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/PmConfig.cs/#L52">View Source</a>
+  </span>
+  <h4 id="PacManBot_PmConfig_downloadAllUsers" data-uid="PacManBot.PmConfig.downloadAllUsers">downloadAllUsers</h4>
+  <div class="markdown level1 summary"><p>Whether all users should be downloaded and cached as guilds come available.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[DataMember]
+public readonly bool downloadAllUsers</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_PmConfig_httpDomain.md&amp;value=---%0Auid%3A%20PacManBot.PmConfig.httpDomain%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
@@ -398,7 +429,7 @@ public readonly string[] httpToken</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_PmConfig_logExclude.md&amp;value=---%0Auid%3A%20PacManBot.PmConfig.logExclude%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/PmConfig.cs/#L58">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/PmConfig.cs/#L61">View Source</a>
   </span>
   <h4 id="PacManBot_PmConfig_logExclude" data-uid="PacManBot.PmConfig.logExclude">logExclude</h4>
   <div class="markdown level1 summary"><p>Strings that when found cause a log event to be ignored. Use with caution.</p>
@@ -429,7 +460,7 @@ public readonly string[] logExclude</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_PmConfig_logLevel.md&amp;value=---%0Auid%3A%20PacManBot.PmConfig.logLevel%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/PmConfig.cs/#L52">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/PmConfig.cs/#L55">View Source</a>
   </span>
   <h4 id="PacManBot_PmConfig_logLevel" data-uid="PacManBot.PmConfig.logLevel">logLevel</h4>
   <div class="markdown level1 summary"><p>How many messages this program should log. See <span class="xref">Discord.LogSeverity</span> for possible values.</p>
@@ -586,7 +617,7 @@ public readonly ulong[] testers</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_PmConfig_ClientConfig.md&amp;value=---%0Auid%3A%20PacManBot.PmConfig.ClientConfig%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/PmConfig.cs/#L95">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/PmConfig.cs/#L98">View Source</a>
   </span>
   <a id="PacManBot_PmConfig_ClientConfig_" data-uid="PacManBot.PmConfig.ClientConfig*"></a>
   <h4 id="PacManBot_PmConfig_ClientConfig" data-uid="PacManBot.PmConfig.ClientConfig">ClientConfig</h4>
@@ -617,7 +648,7 @@ public readonly ulong[] testers</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_PmConfig_Content.md&amp;value=---%0Auid%3A%20PacManBot.PmConfig.Content%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/PmConfig.cs/#L91">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/PmConfig.cs/#L94">View Source</a>
   </span>
   <a id="PacManBot_PmConfig_Content_" data-uid="PacManBot.PmConfig.Content*"></a>
   <h4 id="PacManBot_PmConfig_Content" data-uid="PacManBot.PmConfig.Content">Content</h4>
@@ -650,7 +681,7 @@ public readonly ulong[] testers</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_PmConfig_LoadContent_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.PmConfig.LoadContent(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/PmConfig.cs/#L69">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/PmConfig.cs/#L72">View Source</a>
   </span>
   <a id="PacManBot_PmConfig_LoadContent_" data-uid="PacManBot.PmConfig.LoadContent*"></a>
   <h4 id="PacManBot_PmConfig_LoadContent_System_String_" data-uid="PacManBot.PmConfig.LoadContent(System.String)">LoadContent(String)</h4>

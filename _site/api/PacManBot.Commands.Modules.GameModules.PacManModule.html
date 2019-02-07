@@ -110,7 +110,7 @@
       <a class="xref" href="PacManBot.Commands.BaseGameModule-1.html#PacManBot_Commands_BaseGameModule_1_StartNewGame__0_">BaseGameModule&lt;PacManGame&gt;.StartNewGame(PacManGame)</a>
     </div>
     <div>
-      <a class="xref" href="PacManBot.Commands.BaseGameModule-1.html#PacManBot_Commands_BaseGameModule_1_SaveGame">BaseGameModule&lt;PacManGame&gt;.SaveGame()</a>
+      <a class="xref" href="PacManBot.Commands.BaseGameModule-1.html#PacManBot_Commands_BaseGameModule_1_SaveGameAsync">BaseGameModule&lt;PacManGame&gt;.SaveGameAsync()</a>
     </div>
     <div>
       <a class="xref" href="PacManBot.Commands.BaseGameModule-1.html#PacManBot_Commands_BaseGameModule_1_ReplyGameAsync_System_String_">BaseGameModule&lt;PacManGame&gt;.ReplyGameAsync(String)</a>
@@ -221,7 +221,7 @@ public class PacManModule : BaseGameModule&lt;PacManGame&gt;, IModuleBase</code>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_GameModules_PacManModule_AddControls_PacManBot_Games_Concrete_PacManGame_Discord_IUserMessage_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.GameModules.PacManModule.AddControls(PacManBot.Games.Concrete.PacManGame%2CDiscord.IUserMessage)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/GameModules/PacManModule.cs/#L84">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/GameModules/PacManModule.cs/#L86">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_GameModules_PacManModule_AddControls_" data-uid="PacManBot.Commands.Modules.GameModules.PacManModule.AddControls*"></a>
   <h4 id="PacManBot_Commands_Modules_GameModules_PacManModule_AddControls_PacManBot_Games_Concrete_PacManGame_Discord_IUserMessage_" data-uid="PacManBot.Commands.Modules.GameModules.PacManModule.AddControls(PacManBot.Games.Concrete.PacManGame,Discord.IUserMessage)">AddControls(PacManGame, IUserMessage)</h4>
@@ -273,7 +273,7 @@ public class PacManModule : BaseGameModule&lt;PacManGame&gt;, IModuleBase</code>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Commands_Modules_GameModules_PacManModule_StartCustomGame_System_String_.md&amp;value=---%0Auid%3A%20PacManBot.Commands.Modules.GameModules.PacManModule.StartCustomGame(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/GameModules/PacManModule.cs/#L37">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Commands/Modules/GameModules/PacManModule.cs/#L39">View Source</a>
   </span>
   <a id="PacManBot_Commands_Modules_GameModules_PacManModule_StartCustomGame_" data-uid="PacManBot.Commands.Modules.GameModules.PacManModule.StartCustomGame*"></a>
   <h4 id="PacManBot_Commands_Modules_GameModules_PacManModule_StartCustomGame_System_String_" data-uid="PacManBot.Commands.Modules.GameModules.PacManModule.StartCustomGame(System.String)">StartCustomGame(String)</h4>
@@ -284,7 +284,7 @@ public class PacManModule : BaseGameModule&lt;PacManGame&gt;, IModuleBase</code>
     <pre><code class="lang-csharp hljs">[Command(&quot;custompacman&quot;)]
 [Alias(new string[]{&quot;pacmancustom&quot;})]
 [Priority(9)]
-[Summary(&quot;Starts a new Pac-Man game in this channel using the provided custom map.\nUse **{prefix}custompacman** by itself to see a guide for custom maps.\n\nUse **{prefix}display** to switch between normal mode and mobile mode. Use **{prefix}bump** to move the game message to the bottom of the chat. Use **{prefix}cancel** to end the game.&quot;)]
+[Summary(&quot;Starts a new Pac-Man game in this channel using the provided custom map.\nUse **{prefix}custompacman** by itself to see a guide for custom maps.\n\nUse **{prefix}display** to switch between normal mode and slim mode. Use **{prefix}bump** to move the game message to the bottom of the chat. Use **{prefix}cancel** to end the game.&quot;)]
 public Task StartCustomGame([Remainder] string map = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
@@ -337,7 +337,7 @@ public Task StartCustomGame([Remainder] string map = null)</code></pre>
 [Parameters(&quot;[mobile]&quot;)]
 [Priority(10)]
 [Remarks(&quot;Start a new game in this channel&quot;)]
-[Summary(&quot;Starts a new Pac-Man game in this channel.\nYou can add \&quot;mobile\&quot; or \&quot;m\&quot; after the command to use *Mobile Mode*, which has simple characters that will work in phones. Use **{prefix}display** to change mode later.\nYou can also play a custom Pac-Man map with the command **{prefix}custompacman**\n\nUse **{prefix}bump** to move the game message to the bottom of the chat. Use **{prefix}cancel** to end the game. &quot;)]
+[Summary(&quot;Starts a new Pac-Man game in this channel.\nYou can add \&quot;slim\&quot; or \&quot;s\&quot; after the command to use **Slim Mode**, which fits better on phones. If slim mode is still too wide, you could reduce the font size in your phone's settings, if you want to.Use **{prefix}display** to change display modes later.\nYou can also play a custom Pac-Man map with the command **{prefix}custompacman**\n\nUse **{prefix}bump** to move the game message to the bottom of the chat. Use **{prefix}cancel** to end the game. &quot;)]
 public Task StartGame(string arg = &quot;&quot;)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>

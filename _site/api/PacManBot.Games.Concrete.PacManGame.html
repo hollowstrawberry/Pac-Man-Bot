@@ -98,7 +98,7 @@
       <a class="xref" href="PacManBot.Games.ChannelGame.html#PacManBot_Games_ChannelGame_Channel">ChannelGame.Channel</a>
     </div>
     <div>
-      <a class="xref" href="PacManBot.Games.ChannelGame.html#PacManBot_Games_ChannelGame_GetMessage">ChannelGame.GetMessage()</a>
+      <a class="xref" href="PacManBot.Games.ChannelGame.html#PacManBot_Games_ChannelGame_GetMessageAsync">ChannelGame.GetMessageAsync()</a>
     </div>
     <div>
       <a class="xref" href="PacManBot.Games.ChannelGame.html#PacManBot_Games_ChannelGame_StripPrefix_System_String_">ChannelGame.StripPrefix(String)</a>
@@ -184,7 +184,7 @@ public class PacManGame : ChannelGame, IReactionsGame, IChannelGame, IStoreableG
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PacManGame__ctor_System_UInt64_System_UInt64_System_String_System_Boolean_System_IServiceProvider_.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PacManGame.%23ctor(System.UInt64%2CSystem.UInt64%2CSystem.String%2CSystem.Boolean%2CSystem.IServiceProvider)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PacManGame.cs/#L212">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PacManGame.cs/#L213">View Source</a>
   </span>
   <a id="PacManBot_Games_Concrete_PacManGame__ctor_" data-uid="PacManBot.Games.Concrete.PacManGame.#ctor*"></a>
   <h4 id="PacManBot_Games_Concrete_PacManGame__ctor_System_UInt64_System_UInt64_System_String_System_Boolean_System_IServiceProvider_" data-uid="PacManBot.Games.Concrete.PacManGame.#ctor(System.UInt64,System.UInt64,System.String,System.Boolean,System.IServiceProvider)">PacManGame(UInt64, UInt64, String, Boolean, IServiceProvider)</h4>
@@ -192,7 +192,7 @@ public class PacManGame : ChannelGame, IReactionsGame, IChannelGame, IStoreableG
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public PacManGame(ulong channelId, ulong ownerId, string newMap, bool mobileDisplay, IServiceProvider services)</code></pre>
+    <pre><code class="lang-csharp hljs">public PacManGame(ulong channelId, ulong ownerId, string newMap, bool slimDisplay, IServiceProvider services)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -221,7 +221,7 @@ public class PacManGame : ChannelGame, IReactionsGame, IChannelGame, IStoreableG
       </tr>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
-        <td><span class="parametername">mobileDisplay</span></td>
+        <td><span class="parametername">slimDisplay</span></td>
         <td></td>
       </tr>
       <tr>
@@ -238,7 +238,7 @@ public class PacManGame : ChannelGame, IReactionsGame, IChannelGame, IStoreableG
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PacManGame_custom.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PacManGame.custom%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PacManGame.cs/#L56">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PacManGame.cs/#L57">View Source</a>
   </span>
   <h4 id="PacManBot_Games_Concrete_PacManGame_custom" data-uid="PacManBot.Games.Concrete.PacManGame.custom">custom</h4>
   <div class="markdown level1 summary"></div>
@@ -268,7 +268,7 @@ public bool custom</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PacManGame_GameInputs.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PacManGame.GameInputs%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PacManGame.cs/#L33">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PacManGame.cs/#L34">View Source</a>
   </span>
   <h4 id="PacManBot_Games_Concrete_PacManGame_GameInputs" data-uid="PacManBot.Games.Concrete.PacManGame.GameInputs">GameInputs</h4>
   <div class="markdown level1 summary"></div>
@@ -294,40 +294,10 @@ public bool custom</code></pre>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PacManGame_mobileDisplay.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PacManGame.mobileDisplay%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PacManGame.cs/#L57">View Source</a>
-  </span>
-  <h4 id="PacManBot_Games_Concrete_PacManGame_mobileDisplay" data-uid="PacManBot.Games.Concrete.PacManGame.mobileDisplay">mobileDisplay</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[DataMember]
-public bool mobileDisplay</code></pre>
-  </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Boolean</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PacManGame_score.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PacManGame.score%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PacManGame.cs/#L58">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PacManGame.cs/#L59">View Source</a>
   </span>
   <h4 id="PacManBot_Games_Concrete_PacManGame_score" data-uid="PacManBot.Games.Concrete.PacManGame.score">score</h4>
   <div class="markdown level1 summary"></div>
@@ -352,6 +322,36 @@ public int score</code></pre>
       </tr>
     </tbody>
   </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PacManGame_slimDisplay.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PacManGame.slimDisplay%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PacManGame.cs/#L58">View Source</a>
+  </span>
+  <h4 id="PacManBot_Games_Concrete_PacManGame_slimDisplay" data-uid="PacManBot.Games.Concrete.PacManGame.slimDisplay">slimDisplay</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[DataMember]
+public bool slimDisplay</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <h3 id="properties">Properties
   </h3>
   <span class="small pull-right mobile-hide">
@@ -359,7 +359,7 @@ public int score</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PacManGame_ChannelId.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PacManGame.ChannelId%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PacManGame.cs/#L78">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PacManGame.cs/#L79">View Source</a>
   </span>
   <a id="PacManBot_Games_Concrete_PacManGame_ChannelId_" data-uid="PacManBot.Games.Concrete.PacManGame.ChannelId*"></a>
   <h4 id="PacManBot_Games_Concrete_PacManGame_ChannelId" data-uid="PacManBot.Games.Concrete.PacManGame.ChannelId">ChannelId</h4>
@@ -392,7 +392,7 @@ public override ulong ChannelId { get; set; }</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PacManGame_Expiry.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PacManGame.Expiry%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PacManGame.cs/#L29">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PacManGame.cs/#L30">View Source</a>
   </span>
   <a id="PacManBot_Games_Concrete_PacManGame_Expiry_" data-uid="PacManBot.Games.Concrete.PacManGame.Expiry*"></a>
   <h4 id="PacManBot_Games_Concrete_PacManGame_Expiry" data-uid="PacManBot.Games.Concrete.PacManGame.Expiry">Expiry</h4>
@@ -424,7 +424,7 @@ public override ulong ChannelId { get; set; }</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PacManGame_FilenameKey.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PacManGame.FilenameKey%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PacManGame.cs/#L30">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PacManGame.cs/#L31">View Source</a>
   </span>
   <a id="PacManBot_Games_Concrete_PacManGame_FilenameKey_" data-uid="PacManBot.Games.Concrete.PacManGame.FilenameKey*"></a>
   <h4 id="PacManBot_Games_Concrete_PacManGame_FilenameKey" data-uid="PacManBot.Games.Concrete.PacManGame.FilenameKey">FilenameKey</h4>
@@ -454,7 +454,7 @@ public override ulong ChannelId { get; set; }</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PacManGame_GameIndex.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PacManGame.GameIndex%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PacManGame.cs/#L26">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PacManGame.cs/#L27">View Source</a>
   </span>
   <a id="PacManBot_Games_Concrete_PacManGame_GameIndex_" data-uid="PacManBot.Games.Concrete.PacManGame.GameIndex*"></a>
   <h4 id="PacManBot_Games_Concrete_PacManGame_GameIndex" data-uid="PacManBot.Games.Concrete.PacManGame.GameIndex">GameIndex</h4>
@@ -486,7 +486,7 @@ public override ulong ChannelId { get; set; }</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PacManGame_GameName.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PacManGame.GameName%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PacManGame.cs/#L27">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PacManGame.cs/#L28">View Source</a>
   </span>
   <a id="PacManBot_Games_Concrete_PacManGame_GameName_" data-uid="PacManBot.Games.Concrete.PacManGame.GameName*"></a>
   <h4 id="PacManBot_Games_Concrete_PacManGame_GameName" data-uid="PacManBot.Games.Concrete.PacManGame.GameName">GameName</h4>
@@ -518,7 +518,7 @@ public override ulong ChannelId { get; set; }</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PacManGame_LastPlayed.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PacManGame.LastPlayed%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PacManGame.cs/#L75">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PacManGame.cs/#L76">View Source</a>
   </span>
   <a id="PacManBot_Games_Concrete_PacManGame_LastPlayed_" data-uid="PacManBot.Games.Concrete.PacManGame.LastPlayed*"></a>
   <h4 id="PacManBot_Games_Concrete_PacManGame_LastPlayed" data-uid="PacManBot.Games.Concrete.PacManGame.LastPlayed">LastPlayed</h4>
@@ -551,7 +551,7 @@ public override DateTime LastPlayed { get; set; }</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PacManGame_MessageId.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PacManGame.MessageId%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PacManGame.cs/#L77">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PacManGame.cs/#L78">View Source</a>
   </span>
   <a id="PacManBot_Games_Concrete_PacManGame_MessageId_" data-uid="PacManBot.Games.Concrete.PacManGame.MessageId*"></a>
   <h4 id="PacManBot_Games_Concrete_PacManGame_MessageId" data-uid="PacManBot.Games.Concrete.PacManGame.MessageId">MessageId</h4>
@@ -584,7 +584,7 @@ public override ulong MessageId { get; set; }</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PacManGame_OwnerId.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PacManGame.OwnerId%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PacManGame.cs/#L79">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PacManGame.cs/#L80">View Source</a>
   </span>
   <a id="PacManBot_Games_Concrete_PacManGame_OwnerId_" data-uid="PacManBot.Games.Concrete.PacManGame.OwnerId*"></a>
   <h4 id="PacManBot_Games_Concrete_PacManGame_OwnerId" data-uid="PacManBot.Games.Concrete.PacManGame.OwnerId">OwnerId</h4>
@@ -617,7 +617,7 @@ public override ulong OwnerId { get; protected set; }</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PacManGame_State.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PacManGame.State%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PacManGame.cs/#L74">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PacManGame.cs/#L75">View Source</a>
   </span>
   <a id="PacManBot_Games_Concrete_PacManGame_State_" data-uid="PacManBot.Games.Concrete.PacManGame.State*"></a>
   <h4 id="PacManBot_Games_Concrete_PacManGame_State" data-uid="PacManBot.Games.Concrete.PacManGame.State">State</h4>
@@ -650,7 +650,7 @@ public override GameState State { get; set; }</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PacManGame_Time.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PacManGame.Time%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PacManGame.cs/#L76">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PacManGame.cs/#L77">View Source</a>
   </span>
   <a id="PacManBot_Games_Concrete_PacManGame_Time_" data-uid="PacManBot.Games.Concrete.PacManGame.Time*"></a>
   <h4 id="PacManBot_Games_Concrete_PacManGame_Time" data-uid="PacManBot.Games.Concrete.PacManGame.Time">Time</h4>
@@ -685,7 +685,7 @@ public override int Time { get; set; }</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PacManGame_GetContent_System_Boolean_.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PacManGame.GetContent(System.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PacManGame.cs/#L400">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PacManGame.cs/#L399">View Source</a>
   </span>
   <a id="PacManBot_Games_Concrete_PacManGame_GetContent_" data-uid="PacManBot.Games.Concrete.PacManGame.GetContent*"></a>
   <h4 id="PacManBot_Games_Concrete_PacManGame_GetContent_System_Boolean_" data-uid="PacManBot.Games.Concrete.PacManGame.GetContent(System.Boolean)">GetContent(Boolean)</h4>
@@ -734,7 +734,7 @@ public override int Time { get; set; }</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PacManGame_GetEmbed_System_Boolean_.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PacManGame.GetEmbed(System.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PacManGame.cs/#L540">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PacManGame.cs/#L533">View Source</a>
   </span>
   <a id="PacManBot_Games_Concrete_PacManGame_GetEmbed_" data-uid="PacManBot.Games.Concrete.PacManGame.GetEmbed*"></a>
   <h4 id="PacManBot_Games_Concrete_PacManGame_GetEmbed_System_Boolean_" data-uid="PacManBot.Games.Concrete.PacManGame.GetEmbed(System.Boolean)">GetEmbed(Boolean)</h4>
@@ -780,18 +780,18 @@ public override int Time { get; set; }</code></pre>
   <div><a class="xref" href="PacManBot.Games.BaseGame.html#PacManBot_Games_BaseGame_GetEmbed_System_Boolean_">BaseGame.GetEmbed(Boolean)</a></div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PacManGame_Input_Discord_IEmote_System_UInt64_.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PacManGame.Input(Discord.IEmote%2CSystem.UInt64)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PacManGame_InputAsync_Discord_IEmote_System_UInt64_.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PacManGame.InputAsync(Discord.IEmote%2CSystem.UInt64)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PacManGame.cs/#L262">View Source</a>
   </span>
-  <a id="PacManBot_Games_Concrete_PacManGame_Input_" data-uid="PacManBot.Games.Concrete.PacManGame.Input*"></a>
-  <h4 id="PacManBot_Games_Concrete_PacManGame_Input_Discord_IEmote_System_UInt64_" data-uid="PacManBot.Games.Concrete.PacManGame.Input(Discord.IEmote,System.UInt64)">Input(IEmote, UInt64)</h4>
+  <a id="PacManBot_Games_Concrete_PacManGame_InputAsync_" data-uid="PacManBot.Games.Concrete.PacManGame.InputAsync*"></a>
+  <h4 id="PacManBot_Games_Concrete_PacManGame_InputAsync_Discord_IEmote_System_UInt64_" data-uid="PacManBot.Games.Concrete.PacManGame.InputAsync(Discord.IEmote,System.UInt64)">InputAsync(IEmote, UInt64)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void Input(IEmote emote, ulong userId = 1UL)</code></pre>
+    <pre><code class="lang-csharp hljs">public Task InputAsync(IEmote emote, ulong userId = 1UL)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -811,6 +811,21 @@ public override int Time { get; set; }</code></pre>
       <tr>
         <td><span class="xref">System.UInt64</span></td>
         <td><span class="parametername">userId</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -872,7 +887,7 @@ public override int Time { get; set; }</code></pre>
     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PacManGame_PostDeserialize_System_IServiceProvider_.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PacManGame.PostDeserialize(System.IServiceProvider)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PacManGame.cs/#L695">View Source</a>
+    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PacManGame.cs/#L688">View Source</a>
   </span>
   <a id="PacManBot_Games_Concrete_PacManGame_PostDeserialize_" data-uid="PacManBot.Games.Concrete.PacManGame.PostDeserialize*"></a>
   <h4 id="PacManBot_Games_Concrete_PacManGame_PostDeserialize_System_IServiceProvider_" data-uid="PacManBot.Games.Concrete.PacManGame.PostDeserialize(System.IServiceProvider)">PostDeserialize(IServiceProvider)</h4>
@@ -930,7 +945,7 @@ public override int Time { get; set; }</code></pre>
                     <a href="https://github.com/Samrux/Pac-Man-Bot/new/master/apiSpec/new?filename=PacManBot_Games_Concrete_PacManGame.md&amp;value=---%0Auid%3A%20PacManBot.Games.Concrete.PacManGame%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PacManGame.cs/#L21" class="contribution-link">View Source</a>
+                    <a href="https://github.com/Samrux/Pac-Man-Bot/blob/master/src/Games/Concrete/PacManGame.cs/#L22" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>
