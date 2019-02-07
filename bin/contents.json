@@ -70,17 +70,14 @@ Send **{prefix}help** to see a list of commands you can use. Send **{prefix}help
 
 "gameHelp":
 "```css
-@ 'Welcome to Pac-Man Bot!';
-
 #Controls:
 This game is played in turns by adding or removing a reaction. The arrow emotes will move Pac-Man, and the skip emote will toggle fast-forward mode. In fast-forward mode, the arrows move Pac-Man until you reach an intersection or hit something.
 To win, you must collect all the pellets, while avoiding the ghosts. Try to get a high score!
 
 #Commands: @
-\"{prefix}display\" - Switch between normal and mobile mode
+\"{prefix}display\" - Switch between normal and slim mode
 \"{prefix}bump\" - Move game message to the bottom of the chat
-\"{prefix}cancel\" - End the game unless someone is playing
-\"{prefix}help\" and \"{prefix}about\" - More information;
+\"{prefix}cancel\" - End the game unless someone is playing;
 
 #Tips:
 • Each eaten ghost during the same power mode yields twice as many points as the last!

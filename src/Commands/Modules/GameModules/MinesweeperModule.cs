@@ -1,6 +1,6 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Discord.Commands;
+using PacManBot.Extensions;
 using PacManBot.Games;
 
 namespace PacManBot.Commands.Modules.GameModules
@@ -11,16 +11,16 @@ namespace PacManBot.Commands.Modules.GameModules
         [Command("minesweeper"), Alias("mine")]
         [Remarks("Send a Minesweeper board in chat.")]
         [Summary("Sends a newly generated Minesweeper board in chat.\n" +
-                 "You can specify a size between 5 and 12 (default 8), and a difficulty between 1 and 9 (default 3).\n\n" +
+                 "You can specify a size between 5 and 14 (default 8), and a difficulty between 1 and 9 (default 3).\n\n" +
                  "The game is completely controlled by the user, with no interaction with the bot. " +
                  "To play, simply click a tile to reveal its contents. If it's a bomb, you lose. " +
                  "If it's a number, that number will indicate the number of bombs around that tile.\n" +
                  "You win once all decidedly non-bomb tiles have been uncovered.")]
         public async Task Minesweeper(int size = 8, int difficulty = 3)
         {
-            if (size < 5 || size > 12)
+            if (size < 5 || size > 14)
             {
-                await ReplyAsync("The board size must range between 5 and 12");
+                await ReplyAsync("The board size must range between 5 and 14");
                 return;
             }
             if (difficulty < 1 || difficulty > 9)
@@ -30,7 +30,7 @@ namespace PacManBot.Commands.Modules.GameModules
             }
 
             var board = GenerateBoard(size, difficulty);
-            await ReplyAsync(board.ToString(x => $"||{x}|| "));
+            await ReplyAsync(board.ToString(x => $"||{x}|| ").Truncate(2000));
         }
 
 

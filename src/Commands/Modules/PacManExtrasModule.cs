@@ -57,7 +57,8 @@ namespace PacManBot.Commands.Modules
             }
 
             var content = new StringBuilder();
-            content.Append($"Displaying best scores {period.Humanized()}\n{Empty}\n");
+            content.Append($"Displaying best scores {period.Humanized()}\n" +
+                           $"Play **{Context.Prefix}pacman** to get in the leaderboard!\n{Empty}\n");
 
             int maxPosDigits = max.ToString().Length;
             int maxScoreDigits = scores[0].Score.ToString().Length;
@@ -125,7 +126,16 @@ namespace PacManBot.Commands.Modules
                 return;
             }
 
-            await ReplyAsync(time == TimePeriod.All ? "No scores registered for this user!" : "No scores registered during that time!");
+            if (time == TimePeriod.All)
+            {
+                string msg = "No scores registered!";
+                if (userId == Context.User.Id) msg += $"\nYou can get in the leaderboard by playing **{Context.Prefix}pacman**";
+                await ReplyAsync(msg);
+            }
+            else
+            {
+                await ReplyAsync("No scores registered in that period!");
+            }
         }
 
 
