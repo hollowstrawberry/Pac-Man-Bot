@@ -59,6 +59,7 @@ namespace PacManBot.Commands.Modules.GameModules
                 foreach (var adj in AdjacentPos.Select(p => bomb + p))
                 {
                     if (adj.x < 0 || adj.x >= board.Width || adj.y < 0 || adj.y >= board.Height) continue;
+                    if (board[adj] == Bomb) continue;
                     board[adj]++;
                 }
             }
