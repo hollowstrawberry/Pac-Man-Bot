@@ -33,8 +33,11 @@ namespace PacManBot.Games
 
 
         /// <summary>Creates a new board of the specified constant width and height.</summary>
-        public Board(uint width, uint height, T fillValue = default)
+        public Board(int width, int height, T fillValue = default)
         {
+            if (width < 1) throw new ArgumentOutOfRangeException(nameof(width));
+            if (height < 1) throw new ArgumentOutOfRangeException(nameof(height));
+
             values = new T[width, height];
             if (fillValue != default) Fill(fillValue);
         }

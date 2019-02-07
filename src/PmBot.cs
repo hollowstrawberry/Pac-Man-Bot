@@ -33,7 +33,6 @@ namespace PacManBot
         private readonly PmCommandService commands;
         private readonly SchedulingService schedule;
 
-        private int shardsReady;
         private DateTime lastGuildCountUpdate = DateTime.MinValue;
 
 
