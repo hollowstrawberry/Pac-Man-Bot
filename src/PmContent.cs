@@ -25,6 +25,12 @@ namespace PacManBot
         /// <summary>Fields in the about command.</summary>
         [DataMember] public readonly (string name, string desc)[] aboutFields;
 
+        /// <summary>Message when entering a guild.</summary>
+        [DataMember] public readonly string welcome;
+
+        /// <summary>Fields in the message when entering a guild.</summary>
+        [DataMember] public readonly (string name, string desc)[] welcomeFields;
+
 
 
 

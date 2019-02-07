@@ -58,7 +58,7 @@ namespace PacManBot
             await games.LoadGamesAsync();
 
             client.Log += log.ClientLog;
-            client.ShardReady += OnShardReady;
+            client.AllShardsReady += ReadyAsync;
 
             await client.LoginAsync(TokenType.Bot, Config.discordToken);
             await client.StartAsync();
@@ -67,8 +67,11 @@ namespace PacManBot
 
         private async Task ReadyAsync()
         {
+            log.Info("All shards ready");
+
             input.StartListening();
             schedule.StartTimers();
+
             schedule.PrepareRestart += StopAsync;
             client.JoinedGuild += OnJoinedGuild;
             client.LeftGuild += OnLeftGuild;
@@ -105,7 +108,6 @@ namespace PacManBot
 
             input.StopListening();
             schedule.StopTimers();
-            client.ShardReady -= OnShardReady;
             client.JoinedGuild -= OnJoinedGuild;
             client.LeftGuild -= OnLeftGuild;
             client.ChannelDestroyed -= OnChannelDestroyed;
@@ -119,40 +121,66 @@ namespace PacManBot
         }
 
 
-
-
-        private async Task OnShardReady(DiscordSocketClient shard)
+        private async Task OnJoinedGuild(SocketGuild guild)
         {
-            if (++shardsReady == client.Shards.Count)
-            {
-                if (client.Shards.Count > 1) log.Info("All shards ready");
-                await ReadyAsync();
-            }
-        }
+            await SendWelcomeMessage(guild);
 
-
-        private Task OnJoinedGuild(SocketGuild guild)
-        {
             UpdateGuildCount();
-            return Task.CompletedTask;
         }
 
 
         private Task OnLeftGuild(SocketGuild guild)
         {
+            foreach (var channel in guild.Channels)
+            {
+                games.Remove(games.GetForChannel(channel.Id));
+            }
+
             UpdateGuildCount();
+
             return Task.CompletedTask;
         }
 
 
         private Task OnChannelDestroyed(SocketChannel channel)
         {
-            var game = games.GetForChannel(channel.Id);
-            if (game != null) games.Remove(game);
+            games.Remove(games.GetForChannel(channel.Id));
 
             return Task.CompletedTask;
         }
 
+
+
+        private async Task SendWelcomeMessage(SocketGuild guild)
+        {
+            var channel = guild.DefaultChannel;
+            var guildPerms = guild.CurrentUser.GuildPermissions;
+            var channelPerms = guild.CurrentUser.GetPermissions(channel);
+
+            string message = Config.Content.welcome.Replace("{prefix}", Config.defaultPrefix);
+            EmbedBuilder embed = null;
+
+            if (channelPerms.EmbedLinks && channelPerms.UseExternalEmojis)
+            {
+                embed = new EmbedBuilder { Color = Colors.PacManYellow };
+                foreach (var (name, desc) in Config.Content.welcomeFields)
+                {
+                    embed.AddField(name, desc, false);
+                }
+            }
+            else if (!guildPerms.EmbedLinks || !guildPerms.UseExternalEmojis)
+            {
+                message += "\n\nThis bot needs the permission to **Embed Links** and **Use External Emoji**!";
+            }
+
+            if (!guild.CurrentUser.GuildPermissions.ManageMessages)
+            {
+                message += "\n\nThis bot works better with the permission to **Manage Messages**.\n" +
+                           "If the bot can delete messages, the games will be less spammy.";
+            }
+
+            await channel.SendMessageAsync(message, false, embed?.Build(), DefaultOptions);
+        }
 
 
 

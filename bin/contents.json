@@ -35,23 +35,36 @@
 ║••••••••••••••••••••••••••║
 ╚══════════════════════════╝",
 
-"about": "Play the best chat games for Discord: Pac-Man, Uno, Pets and more! Works in a server with friends or in direct messages with the bot.
+"about":
+"Play the best chat games for Discord: Pac-Man, Uno, Hangman, Pets and more! Works in a server with friends or in direct messages with the bot.
 The objective is to bring the most entertainment to you and your group, with the least amount of hassle and spam possible.
-
 
 🎮 Use the command **{prefix}help** for a list of commands and games.
 🏆 Play Pac-Man and get a spot on its **{prefix}leaderboard**!
-<:staff:412019879772815361> You can contact the developer [here](https://discord.gg/hGHnfda) or by using **{prefix}feedback**
+<:staff:412019879772815361> You can contact the developer [here](https://discord.gg/hGHnfda) or by using **{prefix}feedback [message]**
 <:github:409803419717599234> Take a look at the [GitHub repository](https://github.com/Samrux/Pac-Man-Bot)
-` `",
+",
 
 "aboutFields": [
     {"Item1":"Author", "Item2":"Samrux#3980"},
     {"Item1":"Version", "Item2":"v{version}"},
     {"Item1":"Library", "Item2":"Discord.Net 2.0 (C#)"},
     {"Item1":"<:discord:409811304103149569> Bot invite", "Item2":"[Click here](https://discordapp.com/oauth2/authorize?client_id=398127484983443468&scope=bot&permissions=355392 \"https://discordapp.com/oauth2/authorize?client_id=398127484983443468&scope=bot&permissions=355392\")"},
-    {"Item1":"<:staff:412019879772815361> Pac-Man server", "Item2":"[Click here](https://discord.gg/hGHnfda \"https://discord.gg/hGHnfda\")"},
-    {"Item1":"<:github:409803419717599234> Source code", "Item2":"[Click here](https://github.com/Samrux/Pac-Man-Bot \"https://github.com/Samrux/Pac-Man-Bot\")"}
+    {"Item1":"<:staff:412019879772815361> Support server", "Item2":"[Click here](https://discord.gg/hGHnfda \"https://discord.gg/hGHnfda\")"},
+    {"Item1":"<:github:409803419717599234> GitHub", "Item2":"[Click here](https://github.com/Samrux/Pac-Man-Bot \"https://github.com/Samrux/Pac-Man-Bot\")"}
+],
+
+
+"welcome": 
+"Thanks for inviting Pac-Man Bot!
+Enjoy some of the best chat games for Discord: Pac-Man, Uno, Hangman, Pets and more! 
+
+The default prefix is **{prefix}**
+Send **{prefix}help** to see a list of commands you can use. Send **{prefix}help [command]** to see detailed help about a specific command.",
+
+"welcomeFields": [
+    {"Item1":"<:staff:412019879772815361> Support server", "Item2":"[Click here](https://discord.gg/hGHnfda \"https://discord.gg/hGHnfda\")"},
+    {"Item1":"<:github:409803419717599234> GitHub", "Item2":"[Click here](https://github.com/Samrux/Pac-Man-Bot \"https://github.com/Samrux/Pac-Man-Bot\")"}
 ],
 
 
