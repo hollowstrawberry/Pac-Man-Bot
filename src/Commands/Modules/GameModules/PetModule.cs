@@ -150,7 +150,7 @@ namespace PacManBot.Commands.Modules.GameModules
         [PetCommand("feed", "food", "eat", "hunger", "satiation"), RequiresPet]
         public async Task<string> Feed()
         {
-            if (!Game.TryFeed()) return $"{CustomEmoji.Cross} Your pet is already full! (-1 energy)";
+            if (!await Game.TryFeedAsync()) return $"{CustomEmoji.Cross} Your pet is already full! (-1 energy)";
             await Context.Message.AddReactionAsync(Program.Random.Choose(Content.petFoodEmotes).ToEmoji());
             return null;
         }
@@ -159,7 +159,7 @@ namespace PacManBot.Commands.Modules.GameModules
         [PetCommand("clean", "hygiene", "wash"), RequiresPet]
         public async Task<string> Clean()
         {
-            if (!Game.TryClean()) return $"{CustomEmoji.Cross} Your pet is already clean! (-1 energy)";
+            if (!await Game.TryCleanAsync()) return $"{CustomEmoji.Cross} Your pet is already clean! (-1 energy)";
             await Context.Message.AddReactionAsync(Program.Random.Choose(Content.petCleanEmotes).ToEmoji());
             return null;
         }
@@ -187,7 +187,7 @@ namespace PacManBot.Commands.Modules.GameModules
                 }
             }
 
-            if (Game.TryPlay())
+            if (await Game.TryPlayAsync())
             {
                 var playEmote = Program.Random.Choose(Content.petPlayEmotes).ToEmoji();
 
@@ -195,7 +195,7 @@ namespace PacManBot.Commands.Modules.GameModules
                 else
                 {
                     otherPet.happiness = PetGame.MaxStat;
-                    Games.Save(otherPet);
+                    await Games.SaveAsync(otherPet);
 
                     await ReplyAsync($"{CustomEmoji.PetRight}{playEmote}{CustomEmoji.PetLeft}");
                     await ReplyAsync($"{Game.petName} and {otherPet.petName} are happy to play together!");
@@ -214,29 +214,29 @@ namespace PacManBot.Commands.Modules.GameModules
 
 
         [PetCommand("sleep", "rest", "energy"), RequiresPet]
-        public Task<string> Sleep()
+        public async Task<string> Sleep()
         {
-            Game.UpdateStats(store: false);
+            Game.UpdateStats();
             if (Game.energy.Ceiling() == PetGame.MaxStat && !Game.asleep)
             {
                 Game.happiness = Math.Max(0, Game.happiness - 1);
-                SaveGame();
-                return Task.FromResult($"{CustomEmoji.Cross} Your pet is not tired! (-1 happiness)");
+                await SaveGameAsync();
+                return $"{CustomEmoji.Cross} Your pet is not tired! (-1 happiness)";
             }
 
             string message = Game.asleep ? "Your pet is already sleeping." : "Your pet is now asleep.";
-            if (!Game.asleep) Game.ToggleSleep();
-            return Task.FromResult($"{Program.Random.Choose(Content.petSleepEmotes)} {message}");
+            if (!Game.asleep) await Game.ToggleSleepAsync();
+            return $"{Program.Random.Choose(Content.petSleepEmotes)} {message}";
         }
 
 
         [PetCommand("wake", "wakeup", "awaken", "awake"), RequiresPet]
-        public Task<string> WakeUp()
+        public async Task<string> WakeUp()
         {
-            Game.UpdateStats(false);
+            Game.UpdateStats();
             var message = Game.asleep ? "🌅 You wake up your pet." : "🌅 Your pet is already awake.";
-            if (Game.asleep) Game.ToggleSleep();
-            return Task.FromResult(message);
+            if (Game.asleep) await Game.ToggleSleepAsync();
+            return message;
         }
 
 
@@ -261,8 +261,7 @@ namespace PacManBot.Commands.Modules.GameModules
                 return $"{CustomEmoji.Cross} Pet name can't go above 32 characters!";
 
 
-            Game.SetPetName(name);
-            SaveGame();
+            await Game.SetPetNameAsync(name);
             await msg.AutoReactAsync();
             return null;
         }
@@ -287,13 +286,11 @@ namespace PacManBot.Commands.Modules.GameModules
 
             if (url.ToLowerInvariant() == "reset")
             {
-                Game.TrySetImageUrl(null);
+                await Game.TrySetImageUrlAsync(null);
                 return $"{CustomEmoji.Check} Pet image reset!";
             }
 
-            if (!Game.TrySetImageUrl(url)) return $"{CustomEmoji.Cross} Invalid image!";
-
-            SaveGame();
+            if (!await Game.TrySetImageUrlAsync(url)) return $"{CustomEmoji.Cross} Invalid image!";
 
             await msg.AutoReactAsync();
             return null;
@@ -338,7 +335,7 @@ namespace PacManBot.Commands.Modules.GameModules
             else
             {
                 Game.timesPetSinceTimerStart += 1;
-                return Game.DoPet();
+                return await Game.DoPetAsync();
             }
         }
 
@@ -373,8 +370,9 @@ namespace PacManBot.Commands.Modules.GameModules
         {
             if (Game != null) return $"You already have a pet!";
 
-            StartNewGame(new PetGame(ExtraArg, Context.User.Id, Services));
+            StartNewGame(new PetGame(Context.User.Id, Services));
             await SendProfile();
+            await SaveGameAsync();
             return null;
         }
 

@@ -45,13 +45,13 @@ namespace PacManBot.Games.Concrete
         }
 
 
-        public void Input(string input, ulong userId = 1)
+        public Task InputAsync(string input, ulong userId = 1)
         {
-            if (State != GameState.Active) return;
+            if (State != GameState.Active) return Task.CompletedTask;
             LastPlayed = DateTime.Now;
 
             int column = int.Parse(StripPrefix(input)) - 1;
-            if (!AvailableColumns(board).Contains(column)) return; // Column is full
+            if (!AvailableColumns(board).Contains(column)) return Task.CompletedTask; // Column is full
 
             DropPiece(board, column, Turn);
 
@@ -69,6 +69,8 @@ namespace PacManBot.Games.Concrete
                 State = GameState.Completed;
                 Turn = Winner;
             }
+
+            return Task.CompletedTask;
         }
 
 
@@ -141,7 +143,7 @@ namespace PacManBot.Games.Concrete
 
 
 
-        public override void BotInput()
+        public override Task BotInputAsync()
         {
             var moves = new Dictionary<int, int>(); // Column and amount of possible loses by playing in that column
             var avoidMoves = new List<int>(); // Moves where it can lose right away
@@ -179,7 +181,7 @@ namespace PacManBot.Games.Concrete
             int leastLoses = moves.Min(x => x.Value);
             var finalOptions = moves.Where(x => x.Value == leastLoses).Select(x => x.Key).ToList();
 
-            Input($"{1 + Program.Random.Choose(finalOptions)}");
+            return InputAsync($"{1 + Program.Random.Choose(finalOptions)}");
         }
 
 

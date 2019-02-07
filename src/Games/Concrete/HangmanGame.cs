@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Discord;
 using PacManBot.Constants;
 using PacManBot.Extensions;
@@ -64,7 +65,7 @@ namespace PacManBot.Games.Concrete
         }
 
 
-        public void Input(string input, ulong userId = 1)
+        public Task InputAsync(string input, ulong userId = 1)
         {
             input = StripPrefix(input.ToUpperInvariant());
 
@@ -72,7 +73,7 @@ namespace PacManBot.Games.Concrete
             {
                 char ch = input[0];
 
-                if (progress.Contains(ch) || wrongChars.Contains(ch)) return;
+                if (progress.Contains(ch) || wrongChars.Contains(ch)) return Task.CompletedTask;
 
                 int neat = 0;
                 for (int i = 0; i < word.Length; ++i)
@@ -113,6 +114,8 @@ namespace PacManBot.Games.Concrete
                     progress = word.ToArray();
                 }
             }
+
+            return Task.CompletedTask;
         }
 
 

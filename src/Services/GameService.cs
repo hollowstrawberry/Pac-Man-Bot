@@ -97,41 +97,38 @@ namespace PacManBot.Services
         /// as well as its savefile if there is one.</summary>
         public void Remove(IBaseGame game, bool doLog = true)
         {
-            try
+            if (game == null) return;
+
+            game.CancelRequests();
+            bool success = false;
+
+            if (game is IUserGame uGame)
             {
-                game.CancelRequests();
-
-                bool success = false;
-                if (game is IUserGame uGame)
-                {
-                    success = userGames.TryRemove((uGame.OwnerId, uGame.GetType()));
-                }
-                else if (game is IChannelGame cGame)
-                {
-                    success = games.TryRemove(cGame.ChannelId);
-                }
-
-                if (game is IStoreableGame sGame && File.Exists(sGame.GameFile()))
-                {
-                    File.Delete(sGame.GameFile());
-                }
-
-                if (success && doLog)
-                {
-                    log.Verbose($"Removed {game.GetType().Name} at {game.IdentifierId()}", LogSource.Game);
-                }
+                success = userGames.TryRemove((uGame.OwnerId, uGame.GetType()));
             }
-            catch (Exception e)
+            else if (game is IChannelGame cGame)
             {
-                log.Exception($"Removing game at {game.IdentifierId()}", e, LogSource.Game);
+                success = games.TryRemove(cGame.ChannelId);
+            }
+
+            if (game is IStoreableGame sGame && File.Exists(sGame.GameFile()))
+            {
+                try { File.Delete(sGame.GameFile()); }
+                catch (IOException e) { log.Exception($"Couldn't delete {sGame.GameFile()}", e, LogSource.Game); }
+            }
+
+            if (success && doLog)
+            {
+                log.Verbose($"Removed {game.GetType().Name} at {game.IdentifierId()}", LogSource.Game);
             }
         }
 
 
-        /// <summary>Stores a backup of the game on disk, to be loaded the next time the bot starts.</summary>
-        public void Save(IStoreableGame game)
+        /// <summary>Stores a backup of the game on disk asynchronously, to be loaded the next time the bot starts.</summary>
+        public async Task SaveAsync(IStoreableGame game)
         {
-            File.WriteAllText(game.GameFile(), JsonConvert.SerializeObject(game, GameJsonSettings), Encoding.UTF8);
+            game.LastPlayed = DateTime.Now;
+            await File.WriteAllTextAsync(game.GameFile(), JsonConvert.SerializeObject(game, GameJsonSettings), Encoding.UTF8);
         }
 
 

@@ -252,17 +252,17 @@ namespace PacManBot.Services
 
         private async Task ExecuteGameInputAsync(IMessagesGame game, SocketUserMessage message)
         {
-            var gameMessage = await game.GetMessage();
+            var gameMessage = await game.GetMessageAsync();
 
             log.Verbose(
                 $"Input {message.Content} by {message.Author.FullName()} in {message.Channel.FullName()}",
                 game.GameName);
 
-            game.Input(message.Content, message.Author.Id);
+            await game.InputAsync(message.Content, message.Author.Id);
 
             if (game is MultiplayerGame mGame)
             {
-                while(mGame.BotTurn) mGame.BotInput();
+                while(mGame.BotTurn) await mGame.BotInputAsync();
             }
 
             if (game.State != GameState.Active) games.Remove(game);
@@ -300,7 +300,7 @@ namespace PacManBot.Services
                 $"Input {reaction.Emote.ReadableName()} by {user?.FullName()} in {channel.FullName()}",
                 game.GameName);
 
-            game.Input(reaction.Emote, userId);
+            await game.InputAsync(reaction.Emote, userId);
 
             if (game.State != GameState.Active)
             {

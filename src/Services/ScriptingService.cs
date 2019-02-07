@@ -24,7 +24,7 @@ namespace PacManBot.Services
                     "Discord", "Discord.Rest", "Discord.Commands", "Discord.WebSocket",
                     "PacManBot", "PacManBot.Constants", "PacManBot.Utils", "PacManBot.Extensions", 
                     "PacManBot.Games", "PacManBot.Games.Concrete", "PacManBot.Games.Concrete.Rpg",
-                    "PacManBot.Commands", "PacManBot.Commands.Modules",
+                    "PacManBot.Commands", "PacManBot.Commands.Modules", "PacManBot.Commands.Modules.GameModules",
                     "PacManBot.Services", "PacManBot.Services.Database"
                 )
                 .WithReferences(

@@ -79,7 +79,7 @@ namespace PacManBot.Games
 
 
         /// <summary>Executes automatic AI input, assuming it is a bot's turn.</summary>
-        public abstract void BotInput();
+        public abstract Task BotInputAsync();
 
 
         /// <summary>Default string content of a multiplayer game message. Displays flavor text in AI matches.</summary>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Threading.Tasks;
 using Discord;
 using PacManBot.Constants;
 using PacManBot.Extensions;
@@ -103,7 +104,6 @@ namespace PacManBot.Games.Concrete
         {
             State = GameState.Active;
             lastBattle = DateTime.Now;
-            LastPlayed = lastBattle;
             enemies.Clear();
 
             if (pvpUserId.HasValue)
@@ -298,7 +298,6 @@ namespace PacManBot.Games.Concrete
                 PvpGame.player.Life = 1;
                 PvpGame.player.Buffs.Clear();
                 PvpGame.ResetBattle(GameState.Lose);
-                games.Save(PvpGame);
                 ResetBattle(GameState.Win);
 
             }
@@ -312,13 +311,10 @@ namespace PacManBot.Games.Concrete
                 player.Life = 1;
                 player.Buffs.Clear();
                 PvpGame.ResetBattle(GameState.Win);
-                games.Save(PvpGame);
                 ResetBattle(GameState.Lose);
             }
             else
             {
-                games.Save(PvpGame);
-
                 embed.Color = isPvpTurn ? player.Color : PvpGame.player.Color;
                 embed.ThumbnailUrl = isPvpTurn ? Owner.GetAvatarUrl() : PvpGame.Owner.GetAvatarUrl();
 
@@ -370,15 +366,17 @@ namespace PacManBot.Games.Concrete
         }
 
 
-        public void Input(IEmote input, ulong userId = 1)
+        public async Task InputAsync(IEmote input, ulong userId = 1)
         {
             var emote = input.Mention();
 
             if (IsPvp)
             {
                 lastEmote = emote;
+                var otherGame = PvpGame;
                 fightEmbed = FightPvP(true);
-                if (IsPvp) PvpGame.fightEmbed = fightEmbed; // Match didn't end
+                otherGame.fightEmbed = fightEmbed;
+                await games.SaveAsync(otherGame);
             }
             else if (emote == MenuEmote)
             {
@@ -420,7 +418,7 @@ namespace PacManBot.Games.Concrete
                 fightEmbed = Fight(index);
             }
 
-            games.Save(this);
+            await games.SaveAsync(this);
         }
 
 

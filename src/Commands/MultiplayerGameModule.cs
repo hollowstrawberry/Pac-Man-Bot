@@ -24,7 +24,7 @@ namespace PacManBot.Commands
 
             StartNewGame(await MultiplayerGame.CreateNewAsync<TGame>(Context.Channel.Id, players, Services));
 
-            while (!Game.AllBots && Game.BotTurn) Game.BotInput(); // When a bot starts
+            while (!Game.AllBots && Game.BotTurn) await Game.BotInputAsync(); // When a bot starts
 
             var msg = await ReplyGameAsync();
 
@@ -34,7 +34,7 @@ namespace PacManBot.Commands
                 {
                     try
                     {
-                        Game.BotInput();
+                        await Game.BotInputAsync();
                         msg = await UpdateGameMessageAsync();
                         if (msg == null) break;
                     }

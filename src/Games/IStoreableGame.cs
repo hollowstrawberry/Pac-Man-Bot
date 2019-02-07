@@ -3,7 +3,7 @@ using System;
 namespace PacManBot.Games
 {
     /// <summary>
-    /// Identifies a game type as storeable, allowing calls to <see cref="Services.GameService.Save(IStoreableGame)"/>
+    /// Identifies a game type as storeable, allowing calls to <see cref="Services.GameService.SaveAsync(IStoreableGame)"/>
     /// and automatically deserializing stored instances that match the <see cref="FilenameKey"/> on start-up.
     /// </summary>
     public interface IStoreableGame : IBaseGame

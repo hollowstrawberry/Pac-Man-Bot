@@ -4,16 +4,17 @@
 ![Discord Bots](https://discordbots.org/api/widget/lib/398127484983443468.svg?noavatar=true) ![Discord Bots](https://discordbots.org/api/widget/owner/398127484983443468.svg?noavatar=true)  
 [![paypal](https://img.shields.io/badge/Donate-PayPal-green.svg)](http://paypal.me/samrux)  
 
-Play the best chat games for Discord: Pac-Man, Uno, Pets and more! Works in a server with friends or in direct messages with the bot.  
+Play the best chat games for Discord: Pac-Man, Uno, Hangman, Pets and more! Works in a server with friends or in direct messages with the bot.  
 The objective is to bring the most enterntainment to you and your group, with the least amount of hassle and spam possible.
 
 Features the following games:  
 * Pac-Man: Turn-based controls, arcade-like ghost behavior and a global leaderboard: The original PacManBot game.
 * Wakagotchi: Enjoy caring for a pet in a Discord-based tamagotchi clone.  
-* ReactionRPG: Battle monsters and become stronger, or challenge your friends to battle - Enjoy the first release of this simple chat RPG!  
+* ReactionRPG: Battle monsters and become stronger, or challenge your friends to battle - Enjoy this simple chat RPG!  
 * Uno: Play with up to 10 friends and bots in the classic Uno card game.  
 * Hangman: Everyone has to guess the random word, or a word chosen by you!
 * Tic-Tac-Toe, Connect Four: Challenge your friends or the bot itself.  
+* Minesweeper: A basic rendition of minesweeper using the new spoiler feature.
 * Rubik's Cube: Attempt to solve a real cube in chat form. Seriously.
 
 [**Bot invite link here**](http://bit.ly/pacman-bot)  
