@@ -46,11 +46,16 @@ Importantly, note that the bot uses many custom emotes throughout its commands a
 
 ## Compiling Pac-Man Bot
 
-Should you want to maintain a custom fork of Pac-Man Bot, it's very simple.  
-First, you'll need to add the NuGet source for the Discord.Net library, for the project to use. An IDE such as Visual Studio would help you with this. The source link is https://www.myget.org/F/discord-net/api/v3/index.json   
-&nbsp;  
-To compile the bot, you'll need to install the [.NET Core SDK here](https://www.microsoft.com/net/download). In Windows, Visual Studio should install it for you.  
-With .NET installed, you run a command such as this one:  
+Should you want to maintain a custom fork of Pac-Man Bot, here are the main steps.
+ 
+To be able to compile the bot, you'll need to install the [.NET Core SDK here](https://www.microsoft.com/net/download). In Windows, Visual Studio should install it for you.  
+
+Before compiling, you need to add the NuGet package of [the Discord.Net libary](https://www.nuget.org/packages/Discord.Net). If you're using an IDE like Visual Studio or Rider, you can add it through there. Otherwise, this command could work:  
+
+    dotnet add package Discord.Net --version 2.1.1  
+
+
+To compile, you use command such as this one:  
 
     dotnet publish PacManBot.csproj --runtime %RUNTIME% --configuration Release --self-contained
 
