@@ -39,6 +39,7 @@ namespace PacManBot.Services
         public void Log(string message, LogSeverity severity, string source = LogSource.Bot)
         {
             if (severity > logLevel || message.ContainsAny(hardExclusions)) return;
+            if (severity <= LogSeverity.Verbose && source == "Rest") return;
             logger.Write(severity.ToSerilog(), $"{source}> {message}");
         }
 

@@ -75,7 +75,7 @@ namespace PacManBot
 
             var services = serviceCollection.BuildServiceProvider();
             var log = services.Get<LoggingService>();
-            log.Info($"Pac-Man Bot v{Version}");
+            log.Info($"Pac-Man Bot v{Version} micro");
 
 
             // Let's go

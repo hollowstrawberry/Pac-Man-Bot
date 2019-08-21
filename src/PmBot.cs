@@ -72,12 +72,10 @@ namespace PacManBot
             schedule.StartTimers();
 
             schedule.PrepareRestart += StopAsync;
-            client.JoinedGuild += OnJoinedGuild;
-            client.LeftGuild += OnLeftGuild;
             client.ChannelDestroyed += OnChannelDestroyed;
 
             await client.SetStatusAsync(UserStatus.Online);
-            UpdateGuildCount();
+            await client.SetGameAsync($"Discord");
 
 
             if (File.Exists(Files.ManualRestart))
@@ -107,8 +105,6 @@ namespace PacManBot
 
             input.StopListening();
             schedule.StopTimers();
-            client.JoinedGuild -= OnJoinedGuild;
-            client.LeftGuild -= OnLeftGuild;
             client.ChannelDestroyed -= OnChannelDestroyed;
 
             await Task.Delay(5_000); // Buffer time to finish up doing whatever
@@ -118,28 +114,7 @@ namespace PacManBot
 
             log.Dispose();
         }
-
-
-        private async Task OnJoinedGuild(SocketGuild guild)
-        {
-            await SendWelcomeMessage(guild);
-
-            UpdateGuildCount();
-        }
-
-
-        private Task OnLeftGuild(SocketGuild guild)
-        {
-            foreach (var channel in guild.Channels)
-            {
-                games.Remove(games.GetForChannel(channel.Id));
-            }
-
-            UpdateGuildCount();
-
-            return Task.CompletedTask;
-        }
-
+        
 
         private Task OnChannelDestroyed(SocketChannel channel)
         {
@@ -179,53 +154,6 @@ namespace PacManBot
             }
 
             await channel.SendMessageAsync(message, false, embed?.Build(), DefaultOptions);
-        }
-
-
-
-        // Meant to be fire-and-forget so Discord can't complain about busy handlers
-        private async void UpdateGuildCount()
-        {
-            try
-            {
-                await UpdateGuildCountAsync();
-            }
-            catch (Exception e)
-            {
-                log.Exception($"Updating guild count", e);
-            }
-        }
-
-        private async Task UpdateGuildCountAsync()
-        {
-            var now = DateTime.Now;
-            if ((now - lastGuildCountUpdate).TotalMinutes < 60.0) return;
-
-            lastGuildCountUpdate = now;
-            int guilds = client.Guilds.Count;
-            await client.SetGameAsync($"{Config.defaultPrefix}help | {guilds} guilds");
-
-            if (Config.httpDomain.Length == 0 || Config.httpToken.Length == 0) return;
-
-            using (var httpClient = new HttpClient()) // Update bot list websites
-            {
-                for (int i = 0; i < Config.httpDomain.Length && i < Config.httpToken.Length; i++)
-                {
-                    string requesturi = Config.httpDomain[i].Replace("{id}", $"{client.CurrentUser.Id}");
-
-                    var content = new StringContent(
-                        $"{{\"server_count\": {guilds}}}", System.Text.Encoding.UTF8, "application/json");
-
-                    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(Config.httpToken[i]);
-                    var response = await httpClient.PostAsync(requesturi, content);
-
-                    log.Log(
-                        $"Sent guild count to {requesturi} - {(response.IsSuccessStatusCode ? "Success" : $"Response:\n{response}")}",
-                        response.IsSuccessStatusCode ? LogSeverity.Verbose : LogSeverity.Warning);
-                }
-            }
-
-            log.Info($"Guild count updated to {guilds}");
         }
     }
 }

@@ -152,49 +152,7 @@ namespace PacManBot.Commands.Modules
             await ReplyAsync(message);
         }
 
-
-        [Command("invite"), Alias("inv"), Remarks("Invite this bot to your server")]
-        [Summary("Shows a fancy embed block with the bot's invite link. " +
-                 "I'd show it right now too, since you're already here, but I really want you to see that fancy embed.")]
-        public async Task SendBotInvite()
-        {
-            var embed = new EmbedBuilder()
-            {
-                Title = "Bot invite link",
-                Color = Colors.PacManYellow,
-                ThumbnailUrl = Context.Client.CurrentUser.GetAvatarUrl(),
-                Url = Content.inviteLink,
-                Fields = new List<EmbedFieldBuilder>
-                {
-                    new EmbedFieldBuilder
-                    {
-                        Name = $"➡ <{Content.inviteLink}>",
-                        Value = "Thanks for inviting Pac-Man Bot!",
-                    },
-                },
-            };
-
-            await ReplyAsync(embed);
-        }
-
-
-        [Command("server"), Alias("support"), Remarks("Support server link")]
-        [Summary(CustomEmoji.Staff + " Link to the Pac-Man discord server")]
-        public async Task SendBotServer()
-        {
-            var embed = new EmbedBuilder()
-            {
-                Title = "Pac-Man Bot Support server",
-                Url = Content.serverLink,
-                Description = $"{CustomEmoji.Staff} We'll be happy to see you there!",
-                Color = Colors.PacManYellow,
-                ThumbnailUrl = Context.Client.GetGuild(409803292219277313).IconUrl,
-            };
-
-            await ReplyAsync(embed);
-        }
-
-
+        
         [Command("github"), Alias("git"), Remarks("GitHub repository link")]
         [Summary(CustomEmoji.GitHub + "Link to Pac-Man's GitHub repository. I welcome contributions!")]
         public async Task SendBotGitHub()
@@ -210,7 +168,6 @@ namespace PacManBot.Commands.Modules
 
             await ReplyAsync(embed);
         }
-
 
 
         [Command("donate"), Alias("donation", "donations", "paypal"), Remarks("Donate to the bot's the developer")]
@@ -232,30 +189,6 @@ namespace PacManBot.Commands.Modules
 
             await ReplyAsync(embed);
         }
-
-
-        [Command("feedback"), Alias("suggestion", "bug"), Remarks("Send a message to the bot's developer")]
-        [Summary("Whatever text you write after this command will be sent directly to the bot's developer. " +
-                 "You may receive an answer through the bot in a DM.")]
-        public async Task SendFeedback([Remainder]string message)
-        {
-            try
-            {
-                File.AppendAllText(Files.FeedbackLog, $"[{Context.User.FullName()}] {message}\n\n");
-                await ReplyAsync($"{CustomEmoji.Check} Message sent. Thank you!");
-                string content = $"```diff\n+Feedback received: {Context.User.FullName()}```\n{message}".Truncate(2000);
-
-                var app = await Context.Client.GetApplicationInfoAsync(PmBot.DefaultOptions);
-                await app.Owner.SendMessageAsync(content, options: DefaultOptions);
-            }
-            catch (Exception e)
-            {
-                Log.Exception($"Sending feedback from {Context.User.FullName()} at {Context.Channel.FullName()}", e);
-                await ReplyAsync("Oops, I didn't catch that, please try again. I think the developer messed up big time.");
-            }
-        }
-
-
 
 
         [Command("party"), Alias("blob", "dance"), HideHelp]
