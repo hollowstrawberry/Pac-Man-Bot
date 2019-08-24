@@ -24,7 +24,8 @@ namespace PacManBot.Services
         private readonly LoggingService log;
         private readonly GameService games;
 
-        private readonly ulong[] bannedChannels;
+        private readonly ulong[] bannedUsers;
+        private readonly ulong[] bannedGuilds;
 
         private static readonly Regex WakaRegex = new Regex(@"^(w+a+k+a+\W*)+$", RegexOptions.IgnoreCase);
 
@@ -40,7 +41,8 @@ namespace PacManBot.Services
             this.log = log;
             this.games = games;
 
-            bannedChannels = config.bannedChannels;
+            bannedUsers = config.bannedUsers;
+            bannedGuilds = config.bannedGuilds;
 
             pendingResponses = new ConcurrentDictionary<PendingResponse, byte>();
         }
@@ -108,9 +110,11 @@ namespace PacManBot.Services
         {
             try
             {
-                if (bannedChannels.Contains(genericMessage.Channel.Id))
+                if (bannedUsers.Contains(genericMessage.Author.Id)) return; // Spite in its purest form
+
+                if (genericMessage.Channel is IGuildChannel gchannel && bannedGuilds.Contains(gchannel.GuildId))
                 {
-                    if (genericMessage.Channel is IGuildChannel guildChannel) await guildChannel.Guild.LeaveAsync();
+                    await gchannel.Guild.LeaveAsync();
                     return;
                 }
 

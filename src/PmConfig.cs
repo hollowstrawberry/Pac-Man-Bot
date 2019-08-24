@@ -60,8 +60,14 @@ namespace PacManBot
         /// <summary>Strings that when found cause a log event to be ignored. Use with caution.</summary>
         [DataMember] public readonly string[] logExclude = { };
 
-        /// <summary>Until a long-term solution to command spam attacks is found, I can just ban channels from using the bot.</summary>
+        /// <summary>First solution to spam attacks I found.</summary>
         [DataMember] public readonly ulong[] bannedChannels = { };
+
+        /// <summary>First solution to spam attacks I found.</summary>
+        [DataMember] public readonly ulong[] bannedGuilds = { };
+
+        /// <summary>First solution to spam attacks I found.</summary>
+        [DataMember] public readonly ulong[] bannedUsers = { };
 
 
 
