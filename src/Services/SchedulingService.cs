@@ -41,6 +41,11 @@ namespace PacManBot.Services
         /// <summary>Starts scheduling all predefined actions.</summary>
         public void StartTimers()
         {
+            timers = new List<Timer>
+            {
+                new Timer(CheckConnection, null, TimeSpan.FromMinutes(5), TimeSpan.FromMinutes(10)),
+            };
+
             if (scheduledRestart)
             {
                 TimeSpan timeToGo = TimeSpan.FromDays(1) - DateTime.Now.TimeOfDay;
@@ -61,7 +66,7 @@ namespace PacManBot.Services
             cancelShutdown.Cancel();
             cancelShutdown = new CancellationTokenSource();
 
-            foreach(var timer in timers) timer.Dispose();
+            foreach (var timer in timers) timer.Dispose();
             timers = new List<Timer>();
         }
 
@@ -83,6 +88,25 @@ namespace PacManBot.Services
             log.Info("Restarting", LogSource.Scheduling);
             await PrepareRestart.Invoke();
             Environment.Exit(ExitCodes.ScheduledReboot);
+        }
+
+
+        private async void CheckConnection(object state)
+        {
+            if (client.AllShardsConnected()) return;
+
+            log.Info("A shard is disconnected. Waiting for reconnection...", LogSource.Scheduling);
+
+            try
+            {
+                await Task.Delay(TimeSpan.FromMinutes(2), cancelShutdown.Token);
+                log.Fatal("Reconnection timed out. Shutting down", LogSource.Scheduling);
+                Environment.Exit(ExitCodes.ReconnectionTimeout);
+            }
+            catch (OperationCanceledException)
+            {
+                log.Info("All shards reconnected. Shutdown aborted", LogSource.Scheduling);
+            }
         }
     }
 }
