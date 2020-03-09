@@ -1,8 +1,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
@@ -32,9 +30,6 @@ namespace PacManBot
         private readonly InputService input;
         private readonly PmCommandService commands;
         private readonly SchedulingService schedule;
-
-        private DateTime lastGuildCountUpdate = DateTime.MinValue;
-
 
         public PmBot(PmConfig config, PmDiscordClient client, LoggingService log, StorageService storage,
             GameService games, InputService input, PmCommandService commands, SchedulingService schedule)
@@ -75,7 +70,7 @@ namespace PacManBot
             client.ChannelDestroyed += OnChannelDestroyed;
 
             await client.SetStatusAsync(UserStatus.Online);
-            await client.SetGameAsync($"Discord");
+            await client.SetGameAsync($"with you!");
 
 
             if (File.Exists(Files.ManualRestart))
@@ -121,39 +116,6 @@ namespace PacManBot
             games.Remove(games.GetForChannel(channel.Id));
 
             return Task.CompletedTask;
-        }
-
-
-
-        private async Task SendWelcomeMessage(SocketGuild guild)
-        {
-            var channel = guild.DefaultChannel;
-            var guildPerms = guild.CurrentUser.GuildPermissions;
-            var channelPerms = guild.CurrentUser.GetPermissions(channel);
-
-            string message = Config.Content.welcome.Replace("{prefix}", Config.defaultPrefix);
-            EmbedBuilder embed = null;
-
-            if (channelPerms.EmbedLinks && channelPerms.UseExternalEmojis)
-            {
-                embed = new EmbedBuilder { Color = Colors.PacManYellow };
-                foreach (var (name, desc) in Config.Content.welcomeFields)
-                {
-                    embed.AddField(name, desc, false);
-                }
-            }
-            else if (!guildPerms.EmbedLinks || !guildPerms.UseExternalEmojis)
-            {
-                message += "\n\nThis bot needs the permission to **Embed Links** and **Use External Emoji**!";
-            }
-
-            if (!guild.CurrentUser.GuildPermissions.ManageMessages)
-            {
-                message += "\n\nThis bot works better with the permission to **Manage Messages**.\n" +
-                           "If the bot can delete messages, the games will be less spammy.";
-            }
-
-            await channel.SendMessageAsync(message, false, embed?.Build(), DefaultOptions);
         }
     }
 }
