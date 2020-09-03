@@ -88,9 +88,9 @@ namespace PacManBot.Services
             {
                 try
                 {
-                    if (await PendingResponseAsync(message)) return;
-                    if (await MessageGameInputAsync(message)) return;
-                    if (await CommandAsync(message)) return;
+                    if (PendingResponse(message)) return;
+                    if (MessageGameInput(message)) return;
+                    await CommandAsync(message);
                 }
                 catch (Exception e)
                 {
@@ -140,17 +140,17 @@ namespace PacManBot.Services
 
 
         /// <summary>Tries to find and complete a pending response. Returns whether it is successful.</summary>
-        private ValueTask<bool> PendingResponseAsync(SocketUserMessage message)
+        private bool PendingResponse(SocketUserMessage message)
         {
             var pending = pendingResponses.Select(x => x.Key).FirstOrDefault(x => x.Condition(message));
 
             if (pending != null)
             {
                 pending.Response = message;
-                return new ValueTask<bool>(true);
+                return true;
             }
 
-            return new ValueTask<bool>(false);
+            return false;
         }
 
 
@@ -164,32 +164,40 @@ namespace PacManBot.Services
                 ?? message.GetCommandPos(prefix)
                 ?? (requiresPrefix ? -1 : 0);
 
-            if (pos >= 0) await commands.ExecuteAsync(message, pos);
+            if (pos >= 0)
+            {
+                _ = commands.ExecuteAsync(message, pos);
+                return true;
+            }
 
             return false;
         }
 
 
         /// <summary>Tries to find a game and execute message input. Returns whether it is successful.</summary>
-        private async ValueTask<bool> MessageGameInputAsync(SocketUserMessage message)
+        private bool MessageGameInput(SocketUserMessage message)
         {
             var game = games.GetForChannel<IMessagesGame>(message.Channel.Id);
             if (game == null || !game.IsInput(message.Content, message.Author.Id)) return false;
 
+            _ = ExecuteGameInputAsync(game, message);
+
+            return true;
+        }
+
+        private async Task ExecuteGameInputAsync(IMessagesGame game, SocketUserMessage message)
+        {
             try
             {
-                await ExecuteGameInputAsync(game, message);
+                await InnerExecuteGameInputAsync(game, message);
             }
             catch (Exception e)
             {
                 log.Exception($"During input \"{message.Content}\" in {game.Channel.FullName()}", e, game.GameName);
             }
-
-            return true;
         }
 
-
-        private async Task ExecuteGameInputAsync(IMessagesGame game, SocketUserMessage message)
+        private async Task InnerExecuteGameInputAsync(IMessagesGame game, SocketUserMessage message)
         {
             var gameMessage = await game.GetMessageAsync();
 
@@ -251,15 +259,18 @@ namespace PacManBot.Services
                         user?.NameandDisc(), $"{guild?.Name}/{channel.Name}", DateTime.Now));
                 }
 
-                if (channel.BotCan(ChannelPermission.ManageMessages))
+                if (channel.BotCan(ChannelPermission.ManageMessages) && message != null)
                 {
                     await message.RemoveAllReactionsAsync(PmBot.DefaultOptions);
                 }
             }
 
             game.CancelRequests();
-            try { await message.ModifyAsync(game.GetMessageUpdate(), game.GetRequestOptions()); }
-            catch (OperationCanceledException) { }
+            if (message != null)
+            {
+                try { await message.ModifyAsync(game.GetMessageUpdate(), game.GetRequestOptions()); }
+                catch (OperationCanceledException) { }
+            }
         }
     }
 }
