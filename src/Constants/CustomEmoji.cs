@@ -14,7 +14,7 @@ namespace PacManBot.Constants
             ELoading = Loading.ToEmote(),
             EHelp = Help.ToEmote(),
             EGitHub = GitHub.ToEmote(),
-            ERapidBlobDance = RapidBlobDance.ToEmote();
+            EBlobDance = BlobDance.ToEmote();
 
 
         public const string
@@ -23,7 +23,7 @@ namespace PacManBot.Constants
             Loading = "<a:loading:410612084527595520>",
             PacMan = "<a:pacman:409803570544902144>",
             Help = "<:help:438481218674229248>",
-            RapidBlobDance = "<a:danceblobfast:439575722567401479>",
+            BlobDance = "<a:danceblob:751079963473477693>",
 
             Discord = "<:discord:409811304103149569>",
             GitHub = "<:github:409803419717599234>",

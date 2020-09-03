@@ -90,26 +90,6 @@ namespace PacManBot.Commands.Modules
         }
 
 
-        [Command("togglewaka"), Remarks("Turn off bot autoresponses in the server")]
-        [Summary("The bot normally responds every time a message contains purely multiples of \"waka\", " +
-                 "unless it's turned off server-wide using this command. Requires the user to have the Manage Guild permission.")]
-        [PmRequireUserPermission(GuildPermission.ManageGuild)]
-        public async Task ToggleWakaResponse()
-        {
-            try
-            {
-                bool waka = Storage.ToggleAutoresponse(Context.Guild.Id);
-                await ReplyAsync($"{CustomEmoji.Check} Autoresponses turned **{(waka ? "ON" : "OFF")}** in this server.");
-                Log.Info($"Autoresponses turned {(waka ? "on" : "off")} in {Context.Guild.Id}");
-            }
-            catch (Exception e)
-            {
-                Log.Exception($"Changing autoresponse setting for {Context.Guild} ({Context.Guild.Id})", e);
-                await ReplyAsync($"{CustomEmoji.Cross} Oops, something went wrong. {ContactMessage}");
-            }
-        }
-
-
         [Command("toggleprefix"), Alias("togglenoprefix"), Parameters("[channel id]")]
         [Remarks("Put a channel in \"No Prefix mode\"")]
         [Summary("When used by a user with the Manage Channels permission, toggles a channel between " +

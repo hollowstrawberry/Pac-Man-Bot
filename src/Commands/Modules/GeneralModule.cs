@@ -264,14 +264,14 @@ namespace PacManBot.Commands.Modules
         [PmRequireBotPermission(ChannelPermission.UseExternalEmojis | ChannelPermission.AddReactions)]
         public async Task BlobDance(ulong number = 0)
         {
-            if (number < 1) await Context.Message.AddReactionAsync(CustomEmoji.ERapidBlobDance, DefaultOptions);
-            else if (number <= 10) await ReplyAsync(CustomEmoji.RapidBlobDance.Repeat((int)number));
+            if (number < 1) await Context.Message.AddReactionAsync(CustomEmoji.EBlobDance, DefaultOptions);
+            else if (number <= 10) await ReplyAsync(CustomEmoji.BlobDance.Repeat((int)number));
             else if (number <= 1000000) await ReplyAsync("Are you insane?");
             else // Message ID
             {
                 if (await Context.Channel.GetMessageAsync(number) is IUserMessage message)
                 {
-                    await message.AddReactionAsync(CustomEmoji.ERapidBlobDance, DefaultOptions);
+                    await message.AddReactionAsync(CustomEmoji.EBlobDance, DefaultOptions);
                 }
                 else await AutoReactAsync(false);
             }
@@ -287,7 +287,7 @@ namespace PacManBot.Commands.Modules
             var messages = await Context.Channel.GetMessagesAsync(Math.Min(amount, 10)).FlattenAsync();
             foreach (var message in messages.OfType<SocketUserMessage>())
             {
-                await message.AddReactionAsync(CustomEmoji.ERapidBlobDance, DefaultOptions);
+                await message.AddReactionAsync(CustomEmoji.EBlobDance, DefaultOptions);
             }
         }
 
