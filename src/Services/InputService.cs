@@ -109,6 +109,7 @@ namespace PacManBot.Services
                     if (reaction.UserId == client.CurrentUser.Id) return;
 
                     IUserMessage message = reaction.Message.GetValueOrDefault();
+                    if (message == null && messageData.HasValue) message = messageData.Value;
 
                     if (message != null && message.Author.Id != client.CurrentUser.Id) return;
 
@@ -118,8 +119,8 @@ namespace PacManBot.Services
 
                     if (game == null || !game.IsInput(reaction.Emote, reaction.UserId)) return;
 
-                    if (message == null) message = await messageData.GetOrDownloadAsync();
-                    if (message == null) return;
+                    if (message == null) message = await game.GetMessageAsync();
+                    if (message == null) return; // oof
 
                     try
                     {
