@@ -22,7 +22,7 @@ namespace PacManBot.Commands.Modules.GameModules
                  "Players can join or leave at any time." +
                  "\n • **{prefix}uno bots** - Starts a bot-only game with the specified bots." +
                  "\n • **{prefix}uno join** - Join a game or invite a user or bot." +
-                 "\n • **{prefix}uno leave** - Leave the game or kick a bot or inactive user." +
+                 "\n • **{prefix}uno leave/kick** - Leave the game or kick a bot or inactive user." +
                  "\n • **{prefix}bump** - Move the game to the bottom of the chat." +
                  "\n • **{prefix}cancel** - End the game in the current channel." +
                  "\n\n\n__**Rules:**__\n" +
@@ -51,17 +51,6 @@ namespace PacManBot.Commands.Modules.GameModules
         public async Task StartUnoDm()
         {
             await RunGameAsync(Context.User, Context.Client.CurrentUser);
-        }
-
-
-        [Command("uno bots"), Alias("uno bot", "unobot", "unobots"), Parameters("[bots]"), HideHelp]
-        [Summary("Start a bot-only uno match.")]
-        [RequireContext(ContextType.Guild)]
-        public async Task StartUnoBots(params SocketGuildUser[] startingPlayers)
-        {
-            startingPlayers = startingPlayers.Where(x => x.IsBot).ToArray();
-            if (startingPlayers.Length < 2) await ReplyAsync("You need to specify at least 2 bots for a bot game.");
-            else await RunGameAsync(startingPlayers);
         }
 
 
@@ -116,29 +105,60 @@ namespace PacManBot.Commands.Modules.GameModules
         }
 
 
-        [Command("uno leave"), Alias("uno remove", "uno kick"), Priority(-1), HideHelp]
-        [Summary("Leaves the Uno game in this channel.\nYou can also remove a bot or inactive player.")]
+        [Command("uno leave"), Priority(-1), HideHelp]
+        [Summary("Lets you leave the Uno game in this channel.")]
         [RequireContext(ContextType.Guild)]
-        public async Task LeaveUno(SocketGuildUser user = null)
+        public async Task LeaveUno()
         {
-            bool self = false;
-            if (user == null)
-            {
-                self = true;
-                user = Context.User as SocketGuildUser;
-            }
-
             if (Game == null)
             {
                 await ReplyAsync($"There's no Uno game in this channel! Use `{Context.Prefix}uno` to start.");
                 return;
             }
-            if (!Game.UserId.Contains(user.Id))
+            if (!Game.UserId.Contains(Context.User.Id))
             {
-                await ReplyAsync($"{(self ? "You're" : "They're")} not playing!");
+                await ReplyAsync($"You're not in the game.");
                 return;
             }
-            if (!self && !user.IsBot && (Game.UserId[Game.Turn] != user.Id || (DateTime.Now - Game.LastPlayed) < TimeSpan.FromMinutes(1)))
+
+            Game.RemovePlayer(Context.User);
+
+            if (Game.AllBots || Game.UserId.Length < 2)
+            {
+                EndGame();
+                await UpdateGameMessageAsync();
+            }
+            else
+            {
+                await DeleteGameMessageAsync();
+                await ReplyGameAsync();
+            }
+
+            await AutoReactAsync();
+        }
+
+
+        [Command("uno kick"), Alias("uno remove"), Priority(-1), HideHelp]
+        [Summary("Lets you kick another player or bot in the current Uno game.")]
+        [RequireContext(ContextType.Guild)]
+        public async Task KickUno(SocketGuildUser user = null)
+        {
+            if (Game == null)
+            {
+                await ReplyAsync($"There's no Uno game in this channel! Use `{Context.Prefix}uno` to start.");
+                return;
+            }
+            if (user == null)
+            {
+                await ReplyAsync($"You must specify a user to kick from the game.");
+                return;
+            }
+            if (!Game.UserId.Contains(user.Id))
+            {
+                await ReplyAsync($"That user is not in the game.");
+                return;
+            }
+            if (!user.IsBot && (Game.UserId[Game.Turn] != user.Id || (DateTime.Now - Game.LastPlayed) < TimeSpan.FromMinutes(1)))
             {
                 await ReplyAsync("To remove another user they must be inactive for at least 1 minute during their turn.");
             }
