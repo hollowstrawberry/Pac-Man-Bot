@@ -24,10 +24,6 @@ namespace PacManBot.Services
         private readonly LoggingService log;
         private readonly GameService games;
 
-        private readonly ulong[] bannedChannels;
-
-        private static readonly Regex WakaRegex = new Regex(@"^(w+a+k+a+\W*)+$", RegexOptions.IgnoreCase);
-
         private readonly ConcurrentDictionary<PendingResponse, byte> pendingResponses;
 
 
@@ -39,8 +35,6 @@ namespace PacManBot.Services
             this.storage = storage;
             this.log = log;
             this.games = games;
-
-            bannedChannels = config.bannedChannels;
 
             pendingResponses = new ConcurrentDictionary<PendingResponse, byte>();
         }
@@ -81,61 +75,49 @@ namespace PacManBot.Services
 
 
 
-        private async Task OnMessageReceived(SocketMessage m)
+        private Task OnMessageReceived(SocketMessage m)
         {
             if (m is SocketUserMessage message && !message.Author.IsBot
                     && message.Channel.BotCan(ChannelPermission.SendMessages | ChannelPermission.ReadMessageHistory))
             {
                 try
                 {
-                    if (PendingResponse(message)) return;
-                    if (MessageGameInput(message)) return;
-                    await CommandAsync(message);
+                    if (PendingResponse(message) || MessageGameInput(message) || Command(message))
+                    {
+                        return Task.CompletedTask;
+                    }
                 }
                 catch (Exception e)
                 {
                     log.Exception($"In {message.Channel.FullName()}", e);
                 }
             }
+
+            return Task.CompletedTask;
         }
 
 
-        private async Task OnReactionAddedOrRemoved(Cacheable<IUserMessage, ulong> messageData, ISocketMessageChannel channel, SocketReaction reaction)
+        private Task OnReactionAddedOrRemoved(Cacheable<IUserMessage, ulong> messageData, ISocketMessageChannel channel, SocketReaction reaction)
         {
             if (channel.BotCan(ChannelPermission.SendMessages | ChannelPermission.ReadMessageHistory))
             {
-                try
-                {
-                    if (reaction.UserId == client.CurrentUser.Id) return;
+                if (reaction.UserId == client.CurrentUser.Id) return Task.CompletedTask;
 
-                    IUserMessage message = reaction.Message.GetValueOrDefault();
-                    if (message == null && messageData.HasValue) message = messageData.Value;
+                IUserMessage message = reaction.Message.GetValueOrDefault();
+                if (message == null && messageData.HasValue) message = messageData.Value;
 
-                    if (message != null && message.Author.Id != client.CurrentUser.Id) return;
+                if (message != null && message.Author.Id != client.CurrentUser.Id) return Task.CompletedTask;
 
-                    var game = games.AllGames
-                        .OfType<IReactionsGame>()
-                        .FirstOrDefault(g => g.MessageId == reaction.MessageId);
+                var game = games.AllGames
+                    .OfType<IReactionsGame>()
+                    .FirstOrDefault(g => g.MessageId == reaction.MessageId);
 
-                    if (game == null || !game.IsInput(reaction.Emote, reaction.UserId)) return;
+                if (game == null || !game.IsInput(reaction.Emote, reaction.UserId)) return Task.CompletedTask;
 
-                    if (message == null) message = await game.GetMessageAsync();
-                    if (message == null) return; // oof
-
-                    try
-                    {
-                        await ExecuteGameInputAsync(game, reaction, message, channel);
-                    }
-                    catch (Exception e)
-                    {
-                        log.Exception($"During input \"{reaction.Emote.ReadableName()}\" in {channel.FullName()}", e, game.GameName);
-                    }
-                }
-                catch (Exception e)
-                {
-                    log.Exception($"In {channel.FullName()}", e);
-                }
+                _ = ExecuteReactionGameInputAsync(game, reaction, message, channel);
             }
+
+            return Task.CompletedTask;
         }
 
 
@@ -155,10 +137,10 @@ namespace PacManBot.Services
 
 
         /// <summary>Tries to find and execute a command. Returns whether it is successful.</summary>
-        private async ValueTask<bool> CommandAsync(SocketUserMessage message)
+        private bool Command(SocketUserMessage message)
         {
-            string prefix = await storage.GetGuildPrefixAsync((message.Channel as SocketGuildChannel)?.Guild);
-            bool requiresPrefix = await storage.RequiresPrefixAsync(message.Channel);
+            string prefix = storage.GetGuildPrefix((message.Channel as SocketGuildChannel)?.Guild);
+            bool requiresPrefix = storage.RequiresPrefix(message.Channel);
 
             int pos = message.GetMentionCommandPos(client)
                 ?? message.GetCommandPos(prefix)
@@ -237,7 +219,22 @@ namespace PacManBot.Services
         }
 
 
-        private async Task ExecuteGameInputAsync(IReactionsGame game, SocketReaction reaction, IUserMessage message, ISocketMessageChannel channel)
+        private async Task ExecuteReactionGameInputAsync(IReactionsGame game, SocketReaction reaction, IUserMessage message, ISocketMessageChannel channel)
+        {
+            try
+            {
+                if (message == null) message = await game.GetMessageAsync();
+                if (message == null) return; // oof
+
+                await InnerExecuteReactionGameInputAsync(game, reaction, message, channel);
+            }
+            catch (Exception e)
+            {
+                log.Exception($"During input \"{reaction.Emote.ReadableName()}\" in {channel.FullName()}", e, game.GameName);
+            }
+        }
+
+        private async Task InnerExecuteReactionGameInputAsync(IReactionsGame game, SocketReaction reaction, IUserMessage message, ISocketMessageChannel channel)
         {
             var userId = reaction.UserId;
             var user = reaction.User.GetValueOrDefault() ?? client.GetUser(reaction.UserId);

@@ -303,6 +303,6 @@ namespace PacManBot.Commands.Modules
         [Command("command"), ExampleUsage("help play"), HideHelp]
         [Summary("This is not a real command. If you want to see help for a specific command, please do `{prefix}help [command name]`, " +
                  "where \"[command name]\" is the name of a command.")]
-        public void DoNothing() => Log.Info("Someone tried to do \"<command\"");
+        public void DoNothing() => Log.Debug("Someone tried to do \"<command\" lol");
     }
 }

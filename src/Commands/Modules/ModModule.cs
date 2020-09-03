@@ -80,7 +80,7 @@ namespace PacManBot.Commands.Modules
             {
                 Storage.SetGuildPrefix(Context.Guild.Id, prefix);
                 await ReplyAsync($"{CustomEmoji.Check} Prefix for this server has been successfully set to `{prefix}`");
-                Log.Info($"Prefix for server {Context.Guild.Id} set to {prefix}");
+                Log.Verbose($"Prefix for server {Context.Guild.Id} set to {prefix}");
             }
             catch (Exception e)
             {
