@@ -1,11 +1,10 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
+using DiscordBotsList.Api;
 using PacManBot.Constants;
 using PacManBot.Extensions;
 using PacManBot.Services;
@@ -33,6 +32,7 @@ namespace PacManBot
         private readonly PmCommandService commands;
         private readonly SchedulingService schedule;
 
+        private AuthDiscordBotListApi discordBotList = null;
         private DateTime lastGuildCountUpdate = DateTime.MinValue;
 
 
@@ -77,6 +77,12 @@ namespace PacManBot
             client.ChannelDestroyed += OnChannelDestroyed;
 
             await client.SetStatusAsync(UserStatus.Online);
+
+            if (!string.IsNullOrWhiteSpace(Config.discordBotListToken))
+            {
+                discordBotList = new AuthDiscordBotListApi(client.CurrentUser.Id, Config.discordBotListToken);
+            }
+
             UpdateGuildCount();
 
 
@@ -156,6 +162,8 @@ namespace PacManBot
             var guildPerms = guild.CurrentUser.GuildPermissions;
             var channelPerms = guild.CurrentUser.GetPermissions(channel);
 
+            if (!channel.BotCan(ChannelPermission.SendMessages)) return;
+
             string message = Config.Content.welcome.Replace("{prefix}", Config.defaultPrefix);
             EmbedBuilder embed = null;
 
@@ -199,30 +207,15 @@ namespace PacManBot
         private async Task UpdateGuildCountAsync()
         {
             var now = DateTime.Now;
-            if ((now - lastGuildCountUpdate).TotalMinutes < 60.0) return;
+            if ((now - lastGuildCountUpdate).TotalMinutes < 30.0) return;
 
             lastGuildCountUpdate = now;
             int guilds = client.Guilds.Count;
             await client.SetGameAsync($"{Config.defaultPrefix}help | {guilds} guilds");
 
-            if (Config.httpDomain.Length == 0 || Config.httpToken.Length == 0) return;
-
-            using (var httpClient = new HttpClient()) // Update bot list websites
+            if (discordBotList != null)
             {
-                for (int i = 0; i < Config.httpDomain.Length && i < Config.httpToken.Length; i++)
-                {
-                    string requesturi = Config.httpDomain[i].Replace("{id}", $"{client.CurrentUser.Id}");
-
-                    var content = new StringContent(
-                        $"{{\"server_count\": {guilds}}}", System.Text.Encoding.UTF8, "application/json");
-
-                    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(Config.httpToken[i]);
-                    var response = await httpClient.PostAsync(requesturi, content);
-
-                    log.Log(
-                        $"Sent guild count to {requesturi} - {(response.IsSuccessStatusCode ? "Success" : $"Response:\n{response}")}",
-                        response.IsSuccessStatusCode ? LogSeverity.Verbose : LogSeverity.Warning);
-                }
+                await discordBotList.UpdateStats(guilds, client.Shards.Count);
             }
 
             log.Info($"Guild count updated to {guilds}");
