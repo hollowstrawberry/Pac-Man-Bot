@@ -69,6 +69,9 @@ namespace PacManBot
         /// <summary>Until a long-term solution to command spam attacks is found, I can just ban channels from using the bot.</summary>
         [DataMember] public readonly ulong[] bannedChannels = { };
 
+        /// <summary>Whether to send a DM to the owner of the bot's Application on startup.</summary>
+        [DataMember] public readonly bool messageOwnerOnStartup = true;
+
 
 
 

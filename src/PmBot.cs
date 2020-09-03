@@ -68,6 +68,12 @@ namespace PacManBot
         {
             log.Info("All shards ready");
 
+            if (Config.messageOwnerOnStartup)
+            {
+                var app = await client.GetApplicationInfoAsync();
+                await app.Owner.SendMessageAsync($"{DateTime.Now} - Startup finished");
+            }
+
             input.StartListening();
             schedule.StartTimers();
 
