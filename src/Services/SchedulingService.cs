@@ -115,7 +115,10 @@ namespace PacManBot.Services
 
             var removedChannelGames = new List<IChannelGame>();
 
-            var expiredGames = games.AllGames.Where(g => now - g.LastPlayed > g.Expiry).ToArray();
+            var expiredGames = games.AllGames
+                .Where(g => now - g.LastPlayed > g.Expiry)
+                .Where(g => !(g is IUserGame)) // The bot was offline for a long time and I don't want to delete pets
+                .ToArray();
             foreach (var game in expiredGames)
             {
                 count++;

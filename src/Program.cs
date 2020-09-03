@@ -86,7 +86,7 @@ namespace PacManBot
             }
             catch (Exception e)
             {
-                log.Fatal($"While starting the bot: {e.GetType()}: {e.Message}");
+                log.Fatal($"While starting the bot: {e}");
                 await Task.Delay(5000);
             }
         }

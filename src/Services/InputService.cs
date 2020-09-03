@@ -50,8 +50,8 @@ namespace PacManBot.Services
         public void StartListening()
         {
             client.MessageReceived += OnMessageReceived;
-            client.ReactionAdded += OnReactionAdded;
-            client.ReactionRemoved += OnReactionRemoved;
+            client.ReactionAdded += OnReactionAddedOrRemoved;
+            client.ReactionRemoved += OnReactionAddedOrRemoved;
         }
 
 
@@ -59,8 +59,8 @@ namespace PacManBot.Services
         public void StopListening()
         {
             client.MessageReceived -= OnMessageReceived;
-            client.ReactionAdded -= OnReactionAdded;
-            client.ReactionRemoved -= OnReactionRemoved;
+            client.ReactionAdded -= OnReactionAddedOrRemoved;
+            client.ReactionRemoved -= OnReactionAddedOrRemoved;
         }
 
 
@@ -81,77 +81,44 @@ namespace PacManBot.Services
 
 
 
-        private Task OnMessageReceived(SocketMessage m)
+        private async Task OnMessageReceived(SocketMessage m)
         {
-            HandleMessage(m); // Fire and forget
-            return Task.CompletedTask;
-        }
-
-
-        private Task OnReactionAdded(Cacheable<IUserMessage, ulong> m, ISocketMessageChannel c, SocketReaction r)
-        {
-            HandleReaction(r, m, c);
-            return Task.CompletedTask;
-        }
-
-
-        private Task OnReactionRemoved(Cacheable<IUserMessage, ulong> m, ISocketMessageChannel c, SocketReaction r)
-        {
-            HandleReaction(r, m, c);
-            return Task.CompletedTask;
-        }
-
-
-
-
-        private async void HandleMessage(SocketMessage genericMessage)
-        {
-            try
-            {
-                if (bannedChannels.Contains(genericMessage.Channel.Id))
-                {
-                    if (genericMessage.Channel is IGuildChannel guildChannel) await guildChannel.Guild.LeaveAsync();
-                    return;
-                }
-
-                if (genericMessage is SocketUserMessage message && !message.Author.IsBot
+            if (m is SocketUserMessage message && !message.Author.IsBot
                     && message.Channel.BotCan(ChannelPermission.SendMessages | ChannelPermission.ReadMessageHistory))
-                {
-                    // Short-circuits on the first accepted case
-                    if (   await PendingResponseAsync(message)
-                        || await MessageGameInputAsync(message)
-                        || await CommandAsync(message)
-                        || await AutoresponseAsync(message)
-                    ) { }
-                }
-            }
-            catch (Exception e)
             {
-                log.Exception($"In {genericMessage.Channel.FullName()}", e);
+                try
+                {
+                    if (await PendingResponseAsync(message)) return;
+                    if (await MessageGameInputAsync(message)) return;
+                    if (await CommandAsync(message)) return;
+                }
+                catch (Exception e)
+                {
+                    log.Exception($"In {message.Channel.FullName()}", e);
+                }
             }
         }
 
 
-        private async void HandleReaction(SocketReaction reaction, Cacheable<IUserMessage, ulong> messageData, ISocketMessageChannel channel)
+        private async Task OnReactionAddedOrRemoved(Cacheable<IUserMessage, ulong> messageData, ISocketMessageChannel channel, SocketReaction reaction)
         {
-            try
+            if (channel.BotCan(ChannelPermission.SendMessages | ChannelPermission.ReadMessageHistory))
             {
-                if (!channel.BotCan(ChannelPermission.SendMessages | ChannelPermission.ReadMessageHistory)) return;
-
-                var message = reaction.Message.GetValueOrDefault() ?? await messageData.GetOrDownloadAsync();
-
-                if (reaction.UserId != client.CurrentUser.Id && message?.Author.Id == client.CurrentUser.Id)
+                try
                 {
-                    await ReactionGameInputAsync(reaction, message, channel);
+                    var message = reaction.Message.GetValueOrDefault() ?? await messageData.GetOrDownloadAsync();
+
+                    if (reaction.UserId != client.CurrentUser.Id && message?.Author.Id == client.CurrentUser.Id)
+                    {
+                        await ReactionGameInputAsync(reaction, message, channel);
+                    }
+                }
+                catch (Exception e)
+                {
+                    log.Exception($"In {channel.FullName()}", e);
                 }
             }
-            catch (Exception e)
-            {
-                log.Exception($"In {channel.FullName()}", e);
-            }
         }
-
-
 
 
         /// <summary>Tries to find and complete a pending response. Returns whether it is successful.</summary>

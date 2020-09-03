@@ -103,6 +103,8 @@ namespace PacManBot
             ConnectionTimeout = connectionTimeout,
             AlwaysDownloadUsers = downloadAllUsers,
             DefaultRetryMode = RetryMode.AlwaysRetry,
+            GuildSubscriptions = false,
+            HandlerTimeout = 5000,
         };
     }
 }

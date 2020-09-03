@@ -39,7 +39,7 @@ namespace PacManBot.Games
             if (height < 1) throw new ArgumentOutOfRangeException(nameof(height));
 
             values = new T[width, height];
-            if (fillValue != default) Fill(fillValue);
+            if (EqualityComparer<T>.Default.Equals(fillValue, default)) Fill(fillValue);
         }
 
         /// <summary>Creates a new board that is a wrapper for the specified 2D array.</summary>
