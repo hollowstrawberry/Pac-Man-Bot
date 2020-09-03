@@ -59,7 +59,9 @@ namespace PacManBot.Games.Concrete
             if (word == null
                 || userId == OwnerId
                 || value.Length > 1 && !ValidFullGuess(value)
-                || !Alphabet.IsMatch(value))
+                || !Alphabet.IsMatch(value)
+                || value.Length == 1 && wrongChars.Contains(value[0])
+                || value.Length == 1 && progress.Contains(value[0]))
                 return false;
             return true;
         }
