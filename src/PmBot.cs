@@ -111,7 +111,7 @@ namespace PacManBot
             client.LeftGuild -= OnLeftGuild;
             client.ChannelDestroyed -= OnChannelDestroyed;
 
-            await Task.Delay(5_000); // Buffer time to finish up doing whatever
+            await Task.Delay(6_000); // Buffer time to finish up doing whatever
 
             await client.LogoutAsync();
             await client.StopAsync();
