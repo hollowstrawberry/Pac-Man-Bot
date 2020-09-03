@@ -51,6 +51,15 @@ namespace PacManBot
         /// <summary>Whether all users should be downloaded and cached as guilds come available.</summary>
         [DataMember] public readonly bool downloadAllUsers = true;
 
+        /// <summary>Whether bulk deleting should raise only a bulk delete event or both a bulk event and the delete events.</summary>
+        [DataMember] public readonly bool exclusiveBulkDelete = false;
+
+        /// <summary>Whether the bot subscribes to presence and typing events among others.</summary>
+        [DataMember] public readonly bool guildSubscriptions = false;
+
+        /// <summary>How many milliseconds before an event handler throws a warning.</summary>
+        [DataMember] public readonly int handlerTimeout = 5000;
+
         /// <summary>How many messages this program should log. See <see cref="LogSeverity"/> for possible values.</summary>
         [DataMember] public readonly LogSeverity logLevel = LogSeverity.Debug;
 
@@ -102,9 +111,10 @@ namespace PacManBot
             MessageCacheSize = messageCacheSize,
             ConnectionTimeout = connectionTimeout,
             AlwaysDownloadUsers = downloadAllUsers,
+            ExclusiveBulkDelete = exclusiveBulkDelete,
+            GuildSubscriptions = guildSubscriptions,
             DefaultRetryMode = RetryMode.AlwaysRetry,
-            GuildSubscriptions = false,
-            HandlerTimeout = 5000,
+            HandlerTimeout = handlerTimeout,
         };
     }
 }
