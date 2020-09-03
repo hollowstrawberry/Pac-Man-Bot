@@ -55,7 +55,7 @@ namespace PacManBot
         [DataMember] public readonly bool exclusiveBulkDelete = false;
 
         /// <summary>Whether the bot subscribes to presence and typing events among others.</summary>
-        [DataMember] public readonly bool guildSubscriptions = false;
+        [DataMember] public readonly bool guildSubscriptions = true;
 
         /// <summary>How many milliseconds before an event handler throws a warning.</summary>
         [DataMember] public readonly int handlerTimeout = 5000;
