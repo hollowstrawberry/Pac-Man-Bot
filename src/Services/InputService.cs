@@ -106,11 +106,28 @@ namespace PacManBot.Services
             {
                 try
                 {
-                    var message = reaction.Message.GetValueOrDefault() ?? await messageData.GetOrDownloadAsync();
+                    if (reaction.UserId == client.CurrentUser.Id) return;
 
-                    if (reaction.UserId != client.CurrentUser.Id && message?.Author.Id == client.CurrentUser.Id)
+                    IUserMessage message = reaction.Message.GetValueOrDefault();
+
+                    if (message != null && message.Author.Id != client.CurrentUser.Id) return;
+
+                    var game = games.AllGames
+                        .OfType<IReactionsGame>()
+                        .FirstOrDefault(g => g.MessageId == reaction.MessageId);
+
+                    if (game == null || !game.IsInput(reaction.Emote, reaction.UserId)) return;
+
+                    if (message == null) message = await messageData.GetOrDownloadAsync();
+                    if (message == null) return;
+
+                    try
                     {
-                        await ReactionGameInputAsync(reaction, message, channel);
+                        await ExecuteGameInputAsync(game, reaction, message, channel);
+                    }
+                    catch (Exception e)
+                    {
+                        log.Exception($"During input \"{reaction.Emote.ReadableName()}\" in {channel.FullName()}", e, game.GameName);
                     }
                 }
                 catch (Exception e)
@@ -152,28 +169,6 @@ namespace PacManBot.Services
         }
 
 
-        /// <summary>Tries to find special messages to respond to. Returns whether it is successful.</summary>
-        private async ValueTask<bool> AutoresponseAsync(SocketUserMessage message)
-        {
-            if (!(message.Channel is SocketGuildChannel gChannel) || await storage.AllowsAutoresponseAsync(gChannel.Guild))
-            {
-                if (WakaRegex.IsMatch(message.Content))
-                {
-                    await message.Channel.SendMessageAsync("waka", options: PmBot.DefaultOptions);
-                    log.Verbose($"Waka at {message.Channel.FullName()}");
-                    return true;
-                }
-                else if (message.Content == "sudo neat")
-                {
-                    await message.Channel.SendMessageAsync("neat", options: PmBot.DefaultOptions);
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-
         /// <summary>Tries to find a game and execute message input. Returns whether it is successful.</summary>
         private async ValueTask<bool> MessageGameInputAsync(SocketUserMessage message)
         {
@@ -191,30 +186,6 @@ namespace PacManBot.Services
 
             return true;
         }
-
-
-        /// <summary>Tries to find a game and execute reaction input. Returns whether it is successful.</summary>
-        private async ValueTask<bool> ReactionGameInputAsync(SocketReaction reaction, IUserMessage message, ISocketMessageChannel channel)
-        {
-            var game = games.AllGames
-                .OfType<IReactionsGame>()
-                .FirstOrDefault(g => g.MessageId == message.Id && g.IsInput(reaction.Emote, reaction.UserId));
-
-            if (game == null) return false;
-
-            try
-            {
-                await ExecuteGameInputAsync(game, reaction, message, channel);
-            }
-            catch (Exception e)
-            {
-                log.Exception($"During input \"{reaction.Emote.ReadableName()}\" in {channel.FullName()}", e, game.GameName);
-            }
-
-            return true;
-        }
-
-
 
 
         private async Task ExecuteGameInputAsync(IMessagesGame game, SocketUserMessage message)
