@@ -94,8 +94,9 @@ namespace PacManBot
                         .Split("/").Select(ulong.Parse).ToArray();
                     File.Delete(Files.ManualRestart);
 
-                    var message = await client.GetMessageChannel(id[0]).GetUserMessageAsync(id[1]);
-                    await message.ModifyAsync(x => x.Content = CustomEmoji.Check);
+                    var message = await client.GetMessageChannel(id[0])?.GetUserMessageAsync(id[1]);
+                    if (message != null) await message.ModifyAsync(x => x.Content = CustomEmoji.Check);
+
                     log.Info("Resumed after manual restart");
                 }
                 catch (Exception e)
