@@ -89,12 +89,6 @@ namespace PacManBot
                     $"The contents file is missing a value for: {missingFields.Select(x => x.Name).JoinString(", ")}");
             }
 
-            for (int i = 0; i < cont.aboutFields.Length; i++)
-            {
-                (string name, string desc) = cont.aboutFields[i];
-                cont.aboutFields[i] = (name, desc.Replace("{version}", Program.Version));
-            }
-
             Content = cont;
         }
 

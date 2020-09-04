@@ -46,9 +46,6 @@ The objective is to bring the most entertainment to you and your group, with the
 ",
 
 "aboutFields": [
-    {"Item1":"Author", "Item2":"OrchidAlloy#7869"},
-    {"Item1":"Version", "Item2":"v{version}"},
-    {"Item1":"Library", "Item2":"Discord.Net 2.2 (C#)"},
     {"Item1":"<:discord:409811304103149569> Bot invite", "Item2":"[Click here](https://discordapp.com/oauth2/authorize?client_id=398127484983443468&scope=bot&permissions=355392 \"https://discordapp.com/oauth2/authorize?client_id=398127484983443468&scope=bot&permissions=355392\")"},
     {"Item1":"<:staff:412019879772815361> Support server", "Item2":"[Click here](https://discord.gg/hGHnfda \"https://discord.gg/hGHnfda\")"},
     {"Item1":"<:github:409803419717599234> GitHub", "Item2":"[Click here](https://github.com/Samrux/Pac-Man-Bot \"https://github.com/Samrux/Pac-Man-Bot\")"}

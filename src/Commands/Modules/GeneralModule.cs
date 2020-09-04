@@ -33,6 +33,9 @@ namespace PacManBot.Commands.Modules
         [Summary("Shows relevant information, data and links about Pac-Man Bot.")]
         public async Task SendBotInfo()
         {
+            var app = await Context.Client.GetApplicationInfoAsync();
+            var dnetv = typeof(IDiscordClient).Assembly.GetName().Version;
+
             var embed = new EmbedBuilder
             {
                 Title = $"{CustomEmoji.PacMan} __**Pac-Man Bot**__",
@@ -42,6 +45,9 @@ namespace PacManBot.Commands.Modules
             embed.AddField("Total guilds", $"{Context.Client.Guilds.Count}", true);
             embed.AddField("Total games", $"{Games.AllGames.Count()}", true);
             embed.AddField("Latency", $"{Context.Client.Latency}ms", true);
+            embed.AddField("Owner", app.Owner.NameandDisc(), true);
+            embed.AddField("Bot version", Program.Version, true);
+            embed.AddField("Library", $"Discord.Net {dnetv.Major}.{dnetv.Minor} (C#)", true);
 
             foreach (var (name, desc) in Content.aboutFields)
             {
@@ -225,7 +231,7 @@ namespace PacManBot.Commands.Modules
                 ThumbnailUrl = "https://upload.wikimedia.org/wikipedia/commons/a/a4/Paypal_2014_logo.png",
 
                 Description =
-                $"You can donate to Samrux, the author of this bot.\n" +
+                $"You can donate to OrchidAlloy, the creator of this bot.\n" +
                 $"Donations support development and pay the hosting costs of the bot.\n" +
                 $"[Click here to go to my PayPal](http://paypal.me/samrux)"
             };

@@ -39,8 +39,8 @@ namespace PacManBot.Commands
 
 
         /// <summary>Sends a message in the current context, using the default options if not specified.</summary>
-        protected override async Task<IUserMessage> ReplyAsync(string message = null, bool isTTS = false, Embed embed = null, RequestOptions options = null)
-            => await base.ReplyAsync(message, isTTS, embed, options ?? DefaultOptions);
+        protected override async Task<IUserMessage> ReplyAsync(string message = null, bool isTTS = false, Embed embed = null, RequestOptions options = null, AllowedMentions allowedMentions = null)
+            => await base.ReplyAsync(message, isTTS, embed, options ?? DefaultOptions, allowedMentions);
 
         /// <summary>Sends a message in the current context, containing text and an embed, and using the default options if not specified.</summary>
         public Task<IUserMessage> ReplyAsync(object text, EmbedBuilder embed, RequestOptions options = null)
