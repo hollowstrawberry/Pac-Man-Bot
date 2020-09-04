@@ -58,16 +58,12 @@ namespace PacManBot.Services
 
                 timers.Add(new Timer(RestartBot, null, timeToGo, Timeout.InfiniteTimeSpan));
             }
-
-            client.ShardConnected += OnShardConnected;
         }
 
 
         /// <summary>Cease all scheduled actions</summary>
         public void StopTimers()
         {
-            client.ShardConnected -= OnShardConnected;
-
             cancelShutdown.Cancel();
             cancelShutdown = new CancellationTokenSource();
 
@@ -75,17 +71,6 @@ namespace PacManBot.Services
             timers = new List<Timer>();
         }
 
-
-
-        private Task OnShardConnected(DiscordSocketClient shard)
-        {
-            if (client.AllShardsConnected())
-            {
-                cancelShutdown.Cancel();
-                cancelShutdown = new CancellationTokenSource();
-            }
-            return Task.CompletedTask;
-        }
 
 
 
