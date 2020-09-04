@@ -17,7 +17,7 @@ namespace PacManBot.Commands.Modules.GameModules
         [Remarks("Move any game to the bottom of the chat")]
         [Summary("Moves the current game's message in this channel to the bottom of the chat, deleting the old one." +
                  "This is useful if the game got lost in a sea of other messages, or if the game stopped responding")]
-        private async Task MoveGame()
+        public async Task MoveGame()
         {
             if (Game == null)
             {
