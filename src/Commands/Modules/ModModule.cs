@@ -22,7 +22,7 @@ namespace PacManBot.Commands.Modules
             => await ReplyAsync(message.SanitizeMentions());
 
 
-        [Command("clear"), Alias("clean", "cl"), Remarks("Clear this bot's messages and commands")]
+        [Command("clear"), Alias("clean"), Remarks("Clear this bot's messages and commands")]
         [Summary("Clears all commands and messages for *this bot only*, from the last [amount] messages up to 30, " +
                  "or the last 10 messages by default.\nOnly users with the Manage Messages permission can use this command.")]
         [PmRequireBotPermission(ChannelPermission.ReadMessageHistory)]

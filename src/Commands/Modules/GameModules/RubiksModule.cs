@@ -8,7 +8,7 @@ namespace PacManBot.Commands.Modules.GameModules
     [Name(ModuleNames.Games), Remarks("3")]
     public class RubiksModule : BaseGameModule<RubiksGame>
     {
-        [Command("rubik"), Alias("rubiks", "rubix", "rb", "rbx")]
+        [Command("rubik"), Alias("rubiks", "rubix")]
         [Remarks("Your personal rubik's cube")]
         [Summary("Gives you a personal Rubik's Cube that you can take to any server or in DMs with the bot.\n\n__**Commands:**__" +
          "\n**{prefix}rubik [sequence]** - Execute a sequence of turns to apply on the cube." +

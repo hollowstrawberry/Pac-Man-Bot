@@ -357,6 +357,7 @@ namespace PacManBot.Commands.Modules
             try
             {
                 string content = File.ReadAllText(filename).Replace("```", "`​``").Substring(start).Truncate(length);
+                content = content.Replace(Config.discordToken, ""); // Can't be too safe
                 await ReplyAsync($"```{filename.Split('.').Last()}\n{content}".Truncate(1997) + "```");
             }
             catch (Exception e)

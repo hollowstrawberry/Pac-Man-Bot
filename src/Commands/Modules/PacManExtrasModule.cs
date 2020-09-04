@@ -18,8 +18,8 @@ namespace PacManBot.Commands.Modules
         private const int MaxDisplayedScores = 20;
 
         
-        [Command("top"), Alias("leaderboard", "lb"), Parameters("[period] [range]")]
-        [Remarks("Global Leaderboard scores"), ExampleUsage("top 5\ntop month 11 30")]
+        [Command("leaderboard"), Alias("lb"), Parameters("[period] [range]")]
+        [Remarks("Global Pac-Man scores"), ExampleUsage("top 5\ntop month 11 30")]
         [Summary("By default, displays the top 10 Pac-Man scores of all time from the Global Leaderboard of all servers.\n"
                + "You can specify the [period] to display scores from: all/month/week/day (a/m/w/d are also valid). "
                + "You can also specify a [range] of scores with two positive whole numbers (start and end).\n"
@@ -28,7 +28,7 @@ namespace PacManBot.Commands.Modules
             => await SendTopScores(TimePeriod.All, min, max);
 
 
-        [Command("top"), Alias("leaderboard", "lb"), HideHelp]
+        [Command("leaderboard"), Alias("lb"), HideHelp]
         public async Task SendTopScores(TimePeriod period, int min = 10, int? max = null)
         {
             if (max == null) 
@@ -92,7 +92,7 @@ namespace PacManBot.Commands.Modules
         }
 
 
-        [Command("score"), Alias("sc", "s"), Parameters("[period] [user]")]
+        [Command("score"), Parameters("[period] [user]")]
         [ExampleUsage("score d\nsc week @Samrux#3980"), Remarks("See your or a person's top score")]
         [Summary("See your highest Pac-Man score of all time in the *Global Leaderboard* of all servers. " +
                  "You can specify a user in your guild using their name, mention or ID, to see their score instead." +
@@ -100,15 +100,15 @@ namespace PacManBot.Commands.Modules
         public async Task SendPersonalBest(SocketGuildUser guildUser = null)
             => await SendPersonalBest(TimePeriod.All, (guildUser ?? Context.User).Id);
 
-        [Command("score"), Alias("sc", "s"), HideHelp]
+        [Command("score"), HideHelp]
         public async Task SendPersonalBest(TimePeriod time, SocketGuildUser guildUser = null)
             => await SendPersonalBest(time, (guildUser ?? Context.User).Id);
 
-        [Command("score"), Alias("sc", "s"), HideHelp]
+        [Command("score"), HideHelp]
         public async Task SendPersonalBest(ulong userId)
             => await SendPersonalBest(TimePeriod.All, userId);
 
-        [Command("score"), Alias("sc", "s"), HideHelp]
+        [Command("score"), HideHelp]
         public async Task SendPersonalBest(TimePeriod time, ulong userId)
         {
             var scores = Storage.GetScores(time, 0, 1, userId);

@@ -11,7 +11,7 @@ namespace PacManBot.Commands.Modules.GameModules
     [Name(ModuleNames.Games), Remarks("3")]
     public class MinesweeperModule : BaseModule
     {
-        [Command("minesweeper"), Alias("mine")]
+        [Command("minesweeper"), Alias("ms")]
         [Remarks("Send a Minesweeper board in chat.")]
         [Summary("Sends a newly generated Minesweeper board in chat.\n" +
                  "You can specify a size between 5 and 14 (default 8), and a difficulty between 1 and 9 (default 3).\n\n" +

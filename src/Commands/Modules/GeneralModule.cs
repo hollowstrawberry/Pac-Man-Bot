@@ -58,7 +58,7 @@ namespace PacManBot.Commands.Modules
         }
 
 
-        [Command("help"), Alias("h", "commands"), Parameters("[command]")]
+        [Command("help"), Alias("commands", "games"), Parameters("[command]")]
         [Remarks("Help about commands or a specific command")]
         [Summary("Show a complete list of commands you can use. You can specify a command to see detailed help about that command.")]
         public async Task SendHelp([Remainder]string command = null)
@@ -113,7 +113,7 @@ namespace PacManBot.Commands.Modules
             => await ReplyAsync(message.SanitizeMentions());
 
 
-        [Command("games"), Alias("gamestats"), Parameters(""), Remarks("Info about the bot's current games")]
+        [Command("allgames"), Alias("gamestats"), Parameters(""), Remarks("Info about the bot's current games")]
         [Summary("Shows information about all active games managed by the bot.")]
         public async Task GameStats([Remainder]string uselessArgs = "")
         {
@@ -240,7 +240,7 @@ namespace PacManBot.Commands.Modules
         }
 
 
-        [Command("feedback"), Alias("suggestion", "bug"), Remarks("Send a message to the bot's developer")]
+        [Command("feedback"), Alias("suggestion", "bugreport"), Remarks("Send a message to the bot's developer")]
         [Summary("Whatever text you write after this command will be sent directly to the bot's developer. " +
                  "You may receive an answer through the bot in a DM.")]
         public async Task SendFeedback([Remainder]string message)

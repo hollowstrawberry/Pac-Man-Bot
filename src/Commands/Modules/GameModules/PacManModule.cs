@@ -15,7 +15,7 @@ namespace PacManBot.Commands.Modules.GameModules
         private const int MaxDisplayedScores = 20;
 
 
-        [Command("pacman"), Alias("p", "start"), Parameters("[mobile]"), Priority(10)]
+        [Command("pacman"), Parameters("[mobile]"), Priority(10)]
         [Remarks("Start a new game in this channel")]
         [Summary("Starts a new Pac-Man game in this channel.\nYou can add \"slim\" or \"s\" " +
                  "after the command to use **Slim Mode**, which fits better on phones. If slim mode is still too wide, " +
