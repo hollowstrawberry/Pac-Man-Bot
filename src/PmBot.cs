@@ -34,7 +34,6 @@ namespace PacManBot
 
         private AuthDiscordBotListApi discordBotList = null;
         private DateTime lastGuildCountUpdate = DateTime.MinValue;
-        private int shardsReady = 0;
 
 
         public PmBot(PmConfig config, PmDiscordClient client, LoggingService log, StorageService storage,
@@ -58,17 +57,15 @@ namespace PacManBot
             await games.LoadGamesAsync();
 
             client.Log += log.ClientLog;
-            client.ShardReady += ReadyAsync;
+            client.AllShardsReady += ReadyAsync;
 
             await client.LoginAsync(TokenType.Bot, Config.discordToken);
             await client.StartAsync();
         }
 
 
-        private async Task ReadyAsync(DiscordSocketClient shard)
+        private async Task ReadyAsync()
         {
-            if (++shardsReady < client.Shards.Count) return;
-
             log.Info("All shards ready");
 
             if (Config.messageOwnerOnStartup)
@@ -80,7 +77,7 @@ namespace PacManBot
             input.StartListening();
             schedule.StartTimers();
 
-            schedule.PrepareRestart += StopAsync;
+            //schedule.PrepareRestart += StopAsync;
             client.JoinedGuild += OnJoinedGuild;
             client.LeftGuild += OnLeftGuild;
             client.ChannelDestroyed += OnChannelDestroyed;
