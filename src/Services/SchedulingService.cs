@@ -45,8 +45,6 @@ namespace PacManBot.Services
         /// <summary>Starts scheduling all predefined actions.</summary>
         public void StartTimers()
         {
-            return;
-
             timers = new List<Timer>
             {
                 new Timer(CheckConnection, null, TimeSpan.FromMinutes(5), TimeSpan.FromMinutes(10)),
