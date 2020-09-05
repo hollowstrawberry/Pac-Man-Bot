@@ -106,9 +106,12 @@ namespace PacManBot
             ConnectionTimeout = connectionTimeout,
             AlwaysDownloadUsers = downloadAllUsers,
             ExclusiveBulkDelete = exclusiveBulkDelete,
-            GuildSubscriptions = guildSubscriptions,
-            DefaultRetryMode = RetryMode.AlwaysRetry,
             HandlerTimeout = handlerTimeout,
+            DefaultRetryMode = RetryMode.AlwaysRetry,
+
+            GatewayIntents =
+                GatewayIntents.Guilds | GatewayIntents.DirectMessages | GatewayIntents.DirectMessageReactions
+                | GatewayIntents.GuildMembers | GatewayIntents.GuildMessages | GatewayIntents.GuildMessageReactions,
         };
     }
 }
