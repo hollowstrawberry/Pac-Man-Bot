@@ -6,7 +6,7 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <PreserveCompilationContext>false</PreserveCompilationContext>
     <RootNamespace>PacManBot</RootNamespace>
-    <Version>4.6.5</Version>
+    <Version>4.6.6</Version>
     <Authors>OrchidAlloy</Authors>
     <Product>Pac-Man Bot</Product>
     <Company></Company>

@@ -125,21 +125,25 @@ namespace PacManBot.Games.Concrete
             [DataMember] public List<Card> cards = new List<Card>();
             [DataMember] public UnoState uno = UnoState.None;
 
-            public PmDiscordClient client;
+            public UnoGame game;
             public IUserMessage message;
             private IUser user;
         
 
-            public IUser User => user ?? (user = client.GetUser(id));
+            public IUser User => user ?? (user = game.Guild == null
+                                                 ? game.client.GetUser(id)
+                                                 : game.client.GetGuild(game.Guild.Id).GetUser(id));
+
+            public override string ToString() => User.DisplayName();
 
 
             private UnoPlayer() { } // Used in serialization
 
-            public UnoPlayer(IUser user, PmDiscordClient client)
+            public UnoPlayer(IUser user, UnoGame game)
             {
                 id = user.Id;
                 this.user = user;
-                this.client = client;
+                this.game = game;
             }
         }
 
@@ -347,7 +351,7 @@ namespace PacManBot.Games.Concrete
             {
                 var color = Enum.Parse<CardColor>(input, true);
                 TopCard = new Card(TopCard.Type, color);
-                gameLog.Add($"• {CurrentPlayer.User?.Username} picked {color}!");
+                gameLog.Add($"• {CurrentPlayer} picked {color}!");
                 ApplyCardEffect();
             }
 
@@ -369,7 +373,7 @@ namespace PacManBot.Games.Concrete
                     }
 
                     CurrentPlayer.uno = previousUno;
-                    gameLog.Add($"• {CurrentPlayer.User?.Username} drew and placed {drawn}");
+                    gameLog.Add($"• {CurrentPlayer} drew and placed {drawn}");
                     CurrentPlayer.cards.Pop();
                     Discard(drawn);
                     ApplyCardEffect();
@@ -377,7 +381,7 @@ namespace PacManBot.Games.Concrete
                 else
                 {
                     updatedPlayers.Add(CurrentPlayer);
-                    gameLog.Add($"• {CurrentPlayer.User?.Username} drew a card and skipped a turn.");
+                    gameLog.Add($"• {CurrentPlayer} drew a card and skipped a turn.");
                     Turn = FollowingTurn;
                 }
             }
@@ -409,7 +413,7 @@ namespace PacManBot.Games.Concrete
                     return;
                 }
 
-                gameLog.Add($"• {CurrentPlayer.User?.Username} plays {card}");
+                gameLog.Add($"• {CurrentPlayer} plays {card}");
 
                 if (!CurrentPlayer.User.IsBot) updatedPlayers.Add(CurrentPlayer);
 
@@ -516,7 +520,7 @@ namespace PacManBot.Games.Concrete
             for (int i = 0; i < players.Count; i++)
             {
                 string pre = i == Turn ? "+ " : Winner != Player.None ? "- " : "";
-                description.Append($"{pre}{players[i].User?.Username}");
+                description.Append($"{pre}{players[i].User?.DisplayName()}");
                 if (players[i].cards.Count > 0) description.Append($" - {players[i].cards.Count}🃏{" Uno!".If(players[i].uno == UnoState.Said)}");
                 description.Append('\n');
             }
@@ -535,8 +539,8 @@ namespace PacManBot.Games.Concrete
             var embed = new EmbedBuilder()
             {
                 Title = Winner == Player.None
-                    ? $"{(reversed ? "🔼" : "🔽")} {CurrentPlayer.User?.Username}'s turn"
-                    : $"🎉 {CurrentPlayer.User?.Username} is the winner! 🎉",
+                    ? $"{(reversed ? "🔼" : "🔽")} {CurrentPlayer}'s turn"
+                    : $"🎉 {CurrentPlayer} is the winner! 🎉",
 
                 Description = description.ToString().Truncate(2047),
                 Color = RgbCardColor[(int)TopCard.Color],
@@ -611,7 +615,7 @@ namespace PacManBot.Games.Concrete
                 case CardType.Skip:
                 case CardType.Reverse when players.Count == 2 && Time > 0:
                     Turn = FollowingTurn;
-                    gameLog.Add($"• {CurrentPlayer.User?.Username} skips a turn!");
+                    gameLog.Add($"• {CurrentPlayer} skips a turn!");
                     break;
 
                 case CardType.Reverse:
@@ -624,7 +628,7 @@ namespace PacManBot.Games.Concrete
                     Turn = FollowingTurn;
                     Draw(CurrentPlayer, card.CardsToDraw);
                     updatedPlayers.Add(CurrentPlayer);
-                    gameLog.Add($"• {CurrentPlayer.User?.Username} draws {card.CardsToDraw} cards and skips a turn!");
+                    gameLog.Add($"• {CurrentPlayer} draws {card.CardsToDraw} cards and skips a turn!");
                     break;
             }
 
@@ -647,7 +651,7 @@ namespace PacManBot.Games.Concrete
         private void Callout(UnoPlayer player)
         {
             Draw(player, 2);
-            gameLog.Add($"• {player.User.Username} was called out for not saying Uno and drew 2 cards!");
+            gameLog.Add($"• {player} was called out for not saying Uno and drew 2 cards!");
             updatedPlayers.Add(player);
         }
 
@@ -720,7 +724,7 @@ namespace PacManBot.Games.Concrete
             if (players.Count == 10) return "The game is full!";
             if (players.Any(x => x.id == user.Id)) return "You're already playing!";
 
-            var player = new UnoPlayer(user, client);
+            var player = new UnoPlayer(user, this);
             players.Add(player);
             Draw(player, CardsPerPlayer);
 
@@ -752,7 +756,7 @@ namespace PacManBot.Games.Concrete
 
             foreach (var player in players)
             {
-                player.client = client;
+                player.game = this;
             }
         }
     }

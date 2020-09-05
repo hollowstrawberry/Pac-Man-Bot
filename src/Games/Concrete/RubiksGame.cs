@@ -261,7 +261,7 @@ namespace PacManBot.Games.Concrete
 
             var embed = new EmbedBuilder
             {
-                Title = $"{Owner?.Username}'s Rubik's Cube",
+                Title = $"{Owner?.DisplayName()}'s Rubik's Cube",
                 Description = description.ToString().Truncate(2048),
                 Color = Colors.Black,
             };

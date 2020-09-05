@@ -128,7 +128,7 @@ namespace PacManBot.Games.Concrete
 
             var embed = new EmbedBuilder();
 
-            if (OwnerId != 1) embed.Title = $"{Owner.Username}'s {GameName}";
+            if (OwnerId != 1) embed.Title = $"{Owner?.DisplayName()}'s {GameName}";
             else embed.Title = GameName;
 
             if (State == GameState.Lose)

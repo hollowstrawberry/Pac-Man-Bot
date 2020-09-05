@@ -256,7 +256,7 @@ namespace PacManBot.Games.Concrete
 
             return new EmbedBuilder
             {
-                Title = $"{ownerGuildUser?.Nickname ?? Owner?.Username ?? "Unknown"}'s Wakagotchi",
+                Title = $"{ownerGuildUser?.Nickname ?? Owner?.DisplayName() ?? "Unknown"}'s Wakagotchi",
                 Description = description.ToString(),
                 Color = TotalStats.Ceiling() >= 60 ? new Color(0, 200, 0) : TotalStats.Ceiling() >= 25 ? new Color(255, 200, 0) : new Color(255, 0, 0),
                 ThumbnailUrl = petImageUrl ?? Content.petImageUrl,
@@ -311,7 +311,7 @@ namespace PacManBot.Games.Concrete
 
             return new EmbedBuilder
             {
-                Title = $"{ownerGuildUser?.Nickname ?? Owner?.Username ?? "Unknown"}'s Wakagotchi",
+                Title = $"{ownerGuildUser?.Nickname ?? Owner?.DisplayName() ?? "Unknown"}'s Wakagotchi",
                 Color = new Color(150, 0, 220),
                 ThumbnailUrl = petImageUrl ?? Content.petImageUrl,
                 Fields = new List<EmbedFieldBuilder>
@@ -520,7 +520,7 @@ namespace PacManBot.Games.Concrete
             {
                 achievements.PetGod = true;
                 pet = "👼 Having petted 10,000 times, and having lived a long and just life as Pet King, you and your pet ascend into the realm of the pet-angels.\n\n" +
-                      $"After arriving to their heavenly dominion, some angels begin chanting: *\"{Owner?.Username.SanitizeMarkdown() ?? "Owner"}, {petName}\"*. " +
+                      $"After arriving to their heavenly dominion, some angels begin chanting: *\"{Owner?.DisplayName().SanitizeMarkdown() ?? "Owner"}, {petName}\"*. " +
                       "Soon more and more join them, until ten billion voices act in unison. A blinding glare falls upon the pedestal you stand on. " +
                       "Your entire being slowly fades away, morphing into something else, something like... __pure petting energy__.\n" +
                       "The sounds of grand bells and trumpets fill the realm. You have been chosen as a new **Pet God**.\n\n" +

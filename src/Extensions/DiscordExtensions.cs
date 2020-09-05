@@ -110,6 +110,13 @@ namespace PacManBot.Extensions
         }
 
 
+        /// <summary>The nickname of this user if it has one, otherwise its username.</summary>
+        public static string DisplayName(this IUser user)
+        {
+            return (user is IGuildUser guser && guser.Nickname != null) ? guser.Nickname : user.Username;
+        }
+
+
         /// <summary>Returns the name and discriminator of a user.</summary>
         public static string NameandDisc(this IUser user)
         {

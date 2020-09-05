@@ -24,6 +24,8 @@ namespace PacManBot.Games
         /// <summary>Retrieves this game's channel's guild. Null when the channel is a DM channel.</summary>
         public IGuild Guild => (Channel as IGuildChannel)?.Guild;
 
+        public override IUser Owner => Guild == null ? client.GetUser(OwnerId) : client.GetGuild(Guild.Id).GetUser(OwnerId);
+
         /// <summary>Retrieves the channel where this game is taking place in.</summary>
         public ISocketMessageChannel Channel
         {
