@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
 using PacManBot.Extensions;
-using PacManBot.Utils;
+using Range = PacManBot.Utils.Range;
 
 namespace PacManBot.Games
 {

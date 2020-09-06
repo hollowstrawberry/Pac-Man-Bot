@@ -7,7 +7,7 @@ using Discord;
 using Discord.WebSocket;
 using PacManBot.Constants;
 using PacManBot.Extensions;
-using PacManBot.Utils;
+using Range = PacManBot.Utils.Range;
 
 namespace PacManBot.Games.Concrete
 {
