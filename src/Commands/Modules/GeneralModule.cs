@@ -44,7 +44,7 @@ namespace PacManBot.Commands.Modules
             };
             embed.AddField("Total guilds", $"{Context.Client.Guilds.Count}", true);
             embed.AddField("Total games", $"{Games.AllGames.Count()}", true);
-            embed.AddField("Latency", $"{Context.Client.Latency}ms", true);
+            embed.AddField("Host", Environment.MachineName, true);
             embed.AddField("Owner", app.Owner.NameandDisc(), true);
             embed.AddField("Bot version", Program.Version, true);
             embed.AddField("Library", $"Discord.Net {dnetv.Major}.{dnetv.Minor} (C#)", true);
@@ -58,7 +58,34 @@ namespace PacManBot.Commands.Modules
         }
 
 
-        [Command("help"), Alias("commands", "games"), Parameters("[command]")]
+        [Command("status"), Remarks("Bot status")]
+        [Summary("Current process information about the bot.")]
+        public async Task SendBotStatus()
+        {
+            var process = Process.GetCurrentProcess();
+
+            var embed = new EmbedBuilder
+            {
+                Title = $"{CustomEmoji.PacMan} __**Pac-Man Bot**__",
+                Color = Colors.PacManYellow,
+            };
+
+            embed.AddField("Latency", $"{Context.Client.Latency}ms", true);
+            embed.AddField("Total guilds", $"{Context.Client.Guilds.Count}", true);
+            embed.AddField("Total games", $"{Games.AllGames.Count()}", true);
+
+            embed.AddField("Memory", $"{process.PrivateMemorySize64 / 1024 / 1024.0:n2} MB", true);
+            embed.AddField("Threads", process.Threads.Count, true);
+            embed.AddField("Shards", $"{Context.Client.Shards.Count()}", true);
+
+            embed.AddField("Uptime", (DateTime.Now - process.StartTime).Humanized(), false);
+
+            await ReplyAsync(embed);
+        }
+
+
+
+        [Command("help"), Alias("commands", "games", "play"), Parameters("[command]")]
         [Remarks("Help about commands or a specific command")]
         [Summary("Show a complete list of commands you can use. You can specify a command to see detailed help about that command.")]
         public async Task SendHelp([Remainder]string command = null)
