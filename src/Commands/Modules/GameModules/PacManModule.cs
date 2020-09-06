@@ -81,6 +81,24 @@ namespace PacManBot.Commands.Modules.GameModules
         }
 
 
+        [Command("changedisplay"), Alias("display"), Remarks("Switch between normal and slim display"), HideHelp]
+        [Summary("A Pac-Man game can either be in normal or slim mode. Slim mode fits better on phones." +
+                 "Using this command will switch modes for the current game in this channel.")]
+        public async Task ChangeGameDisplay()
+        {
+            if (Game == null)
+            {
+                await ReplyAsync("There is no active Pac-Man game in this channel!");
+                return;
+            }
+
+            Game.slimDisplay = !Game.slimDisplay;
+            await UpdateGameMessageAsync();
+
+            await AutoReactAsync();
+        }
+
+
 
 
         public static async Task AddControls(PacManGame game, IUserMessage message)

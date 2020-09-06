@@ -54,7 +54,7 @@ namespace PacManBot.Commands.Modules.GameModules
                 {
                     if (Context.Guild != null)
                     {
-                        await ReplyAsync($"Game ended. Score won't be registered.\n**Result:** {pacManGame.score} points in {pacManGame.Time} turns");
+                        await ReplyAsync($"Game ended.\n**Result:** {pacManGame.score} points in {pacManGame.Time} turns");
                     }
                     if (msg != null && Context.BotCan(ChannelPermission.ManageMessages))
                     {
@@ -71,14 +71,6 @@ namespace PacManBot.Commands.Modules.GameModules
             {
                 await ReplyAsync("You can't cancel this game because someone else is still playing! Try again in a minute.");
             }
-        }
-
-
-        [Command("play"), Parameters(""), HideHelp]
-        [Summary("Do **{prefix}help** for games and commands.")]
-        public async Task PlayMessage([Remainder]string args = "")
-        {
-            await ReplyAsync($"To see a list of commands you can use and games you can play, do **{Context.Prefix}help**");
         }
     }
 }

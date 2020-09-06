@@ -506,9 +506,9 @@ namespace PacManBot.Games.Concrete
                     {
                         case GameState.Win: display.Append("\n+You won!"); break;
                         case GameState.Lose: display.Append("\n-You lost!"); break;
-                        case GameState.Cancelled: display.Append($"\n-Game has been ended.{" Score not saved".If(!custom)}"); break;
+                        case GameState.Cancelled: display.Append($"\n-Game has been ended."); break;
                     }
-                    if (custom) display.Append("\n*** Custom game: Score won't be registered. ***");
+                    if (custom) display.Append("\n*** Custom game ***");
                     display.Append("```");
                 }
 
