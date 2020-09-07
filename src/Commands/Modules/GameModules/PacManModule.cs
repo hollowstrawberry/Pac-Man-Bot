@@ -12,11 +12,8 @@ namespace PacManBot.Commands.Modules.GameModules
     [Name(ModuleNames.Games), Remarks("3")]
     public class PacManModule : BaseGameModule<PacManGame>
     {
-        private const int MaxDisplayedScores = 20;
-
-
-        [Command("pacman"), Parameters("[mobile]"), Priority(10)]
-        [Remarks("Start a new game in this channel")]
+        [Command("pacman"), Parameters("[mobile]"), Priority(1)]
+        [Remarks("Start a pacman game in this channel")]
         [Summary("Starts a new Pac-Man game in this channel.\nYou can add \"slim\" or \"s\" " +
                  "after the command to use **Slim Mode**, which fits better on phones. If slim mode is still too wide, " +
                  "you could reduce the font size in your phone's settings, if you want to." +
@@ -36,7 +33,8 @@ namespace PacManBot.Commands.Modules.GameModules
         }
 
 
-        [Command("custompacman"), Alias("pacmancustom"), Priority(9)]
+        [Command("custompacman"), Alias("pacmancustom"), Priority(0)]
+        [Remarks("Start a pacman game with a custom map")]
         [Summary("Starts a new Pac-Man game in this channel using the provided custom map.\n" +
                  "Use **{prefix}custompacman** by itself to see a guide for custom maps.\n\n" +
                  "Use **{prefix}display** to switch between normal mode and slim mode. " +

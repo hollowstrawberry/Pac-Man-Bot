@@ -38,19 +38,16 @@ namespace PacManBot.Commands.Modules.GameModules
                  "or act like Skip cards with only two players." +
                  " *Draw* cards force the next player to draw cards and skip a turn. *Wild* cards let you choose the color, " +
                  "and will match with any card.")]
-        [RequireContext(ContextType.Guild)]
         public async Task StartUno(params SocketGuildUser[] startingPlayers)
         {
-            await RunGameAsync(new[] { Context.User as SocketGuildUser }.Concatenate(startingPlayers));
-        }
-
-
-        [Command("uno"), Priority(3)]
-        [Remarks("Play Uno in a 1v1 match with the bot")]
-        [RequireContext(ContextType.DM)]
-        public async Task StartUnoDm()
-        {
-            await RunGameAsync(Context.User, Context.Client.CurrentUser);
+            if (Context.Guild == null)
+            {
+                await RunGameAsync(Context.User, Context.Client.CurrentUser);
+            }
+            else
+            {
+                await RunGameAsync(new[] { Context.User as SocketGuildUser }.Concatenate(startingPlayers));
+            }
         }
 
 

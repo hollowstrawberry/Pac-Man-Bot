@@ -12,6 +12,6 @@ namespace PacManBot.Commands.Modules
             Mod = CustomEmoji.Staff + "Mod",
             General = "📁General",
             Games = "🎮Games",
-            Pacman = "🏆Pac-Man";
+            Misc = "💡Misc";
     }
 }

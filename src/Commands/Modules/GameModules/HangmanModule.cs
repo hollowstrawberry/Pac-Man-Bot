@@ -11,7 +11,7 @@ namespace PacManBot.Commands.Modules.GameModules
     [Name(ModuleNames.Games), Remarks("3")]
     public class HangmanModule : BaseGameModule<HangmanGame>
     {
-        [Command("hangman"), Alias("hang")]
+        [Command("hangman"), Alias("hang"), Priority(2)]
         [Remarks("Start a game of Hangman in a channel")]
         [Summary("When this command is used, the channel becomes a public game of hangman.\n" +
                  "Anyone will be able to guess either a letter or the full word. Up to 10 wrong guesses!\n\n" +
@@ -35,7 +35,7 @@ namespace PacManBot.Commands.Modules.GameModules
 
 
         [Command("hangman choose"), Alias("hang choose", "hangman custom", "hang custom", "hangman word", "hang word")]
-        [Priority(1), HideHelp]
+        [Priority(10), HideHelp]
         [Summary("When this command is used, you will be sent a DM asking for a word or phrase in private. " +
                  "Once you give it, the game will start in the original channel where you used this command.\n" +
                  "Anyone will be able to guess either a letter or the full phrase. Up to 10 wrong guesses!\n\n" +

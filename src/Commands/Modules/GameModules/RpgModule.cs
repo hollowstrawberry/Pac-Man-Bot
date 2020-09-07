@@ -48,7 +48,7 @@ namespace PacManBot.Commands.Modules.GameModules
         public string ExtraArg { get; private set; }
 
 
-        [Command("rpg"), Remarks("Play an RPG game"), Parameters("[command]"), Priority(4)]
+        [Command("rpg"), Remarks("Play an RPG game"), Parameters("[command]"), Priority(2)]
         [Summary("Play ReactionRPG, a new game where you beat monsters and level up." +
             "\nThe game is yours. You can play in **any channel** anywhere you go, even DMs with the bot." +
             "\n\n**__Commands:__**" +

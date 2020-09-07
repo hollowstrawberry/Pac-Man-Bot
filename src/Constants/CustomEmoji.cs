@@ -1,5 +1,8 @@
+﻿using System.Collections.Generic;
+using System.Linq;
 using Discord;
 using PacManBot.Extensions;
+using Range = PacManBot.Utils.Range;
 
 namespace PacManBot.Constants
 {
@@ -15,6 +18,10 @@ namespace PacManBot.Constants
             EHelp = Help.ToEmote(),
             EGitHub = GitHub.ToEmote(),
             EBlobDance = BlobDance.ToEmote();
+
+
+        public static readonly IReadOnlyList<string> Number =
+            new Range(10).Select(x => x.ToString() + "️⃣").ToArray();
 
 
         public const string

@@ -50,7 +50,7 @@ namespace PacManBot.Commands.Modules.GameModules
         public string ExtraArg { get; private set; }
 
 
-        [Command("pet"), Alias("gotchi", "wakagotchi", "clockagotchi"), Parameters("[command]"), Priority(5)]
+        [Command("pet"), Alias("gotchi", "wakagotchi", "clockagotchi"), Parameters("[command]"), Priority(2)]
         [Remarks("Adopt your own pet!")]
         [Summary("**__Pet Commands__**\n\n" +
                  "**{prefix}pet** - Check on your pet or adopt if you don't have one\n" +
