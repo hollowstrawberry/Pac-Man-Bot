@@ -45,11 +45,13 @@ namespace PacManBot.Games.Concrete
 
         public bool IsInput(string value, ulong userId)
         {
-            return value.Length == code.Length && Numbers.IsMatch(code);
+            value = StripPrefix(value);
+            return value.Length == code.Length && Numbers.IsMatch(value);
         }
 
         public Task InputAsync(string input, ulong userId = 1)
         {
+            input = StripPrefix(input);
             if (guesses.Count > 0 && guesses.Last() == null) guesses.Pop();
             if (input == code) State = GameState.Win;
             if (input.Distinct().Count() < code.Length) input = null; // can't contain the same digit twice
@@ -127,9 +129,9 @@ namespace PacManBot.Games.Concrete
             }
             else if (State == GameState.Win)
             {
-                embed.AddField(Empty, $"\n`{guesses.Count}.` {code.Select(x => CustomEmoji.Number[x - '0']).JoinString()}" +
+                embed.AddField(Empty, $"\n`{guesses.Count, 2}.` {code.Select(x => CustomEmoji.Number[x - '0']).JoinString()}" +
                     $"{CustomEmoji.Empty}`{code.Length}M` `0N`" +
-                    $"\n**Cracked the code in {guesses.Count} guesses!**{" ***Wow!**".If(guesses.Count <= 7)}", false);            }
+                    $"\n**Cracked the code in {guesses.Count} guesses!**{" ***Wow!***".If(guesses.Count <= 7)}", false);            }
             return embed;
         }
     }
