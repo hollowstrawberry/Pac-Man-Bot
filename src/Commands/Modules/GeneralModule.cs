@@ -78,7 +78,7 @@ namespace PacManBot.Commands.Modules
             embed.AddField("Threads", process.Threads.Count, true);
             embed.AddField("Shards", $"{Context.Client.Shards.Count()}", true);
 
-            embed.AddField("Uptime", (DateTime.Now - process.StartTime).Humanized(), false);
+            embed.AddField("Uptime", (DateTime.Now - process.StartTime).Humanized(3), false);
 
             await ReplyAsync(embed);
         }

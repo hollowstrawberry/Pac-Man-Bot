@@ -7,6 +7,7 @@ using Discord;
 using Discord.Net;
 using PacManBot.Constants;
 using PacManBot.Extensions;
+using Discord.WebSocket;
 
 namespace PacManBot.Services
 {
@@ -49,7 +50,8 @@ namespace PacManBot.Services
         {
             if (message != null) message += ": ";
 
-            if (e is HttpException || e is TimeoutException || e is WebSocketException || e is WebSocketClosedException)
+            if (e is HttpException || e is TimeoutException || e is OperationCanceledException
+                || e is WebSocketException || e is WebSocketClosedException || e is GatewayReconnectException)
             {
                 Warning($"{message}{e.GetType()}: {e.Message}", source);
             }
