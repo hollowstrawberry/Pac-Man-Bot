@@ -57,6 +57,7 @@ namespace PacManBot
             await games.LoadGamesAsync();
 
             client.Log += log.ClientLog;
+            client.ShardConnected += ConnectedAsync;
             client.AllShardsReady += ReadyAsync;
 
             await client.LoginAsync(TokenType.Bot, Config.discordToken);
@@ -64,15 +65,18 @@ namespace PacManBot
         }
 
 
+        private async Task ConnectedAsync(DiscordSocketClient shard)
+        {
+            client.ShardConnected -= ConnectedAsync;
+            await client.SetStatusAsync(UserStatus.Idle);
+            await client.SetGameAsync("Booting up...");
+        }
+
+
         private async Task ReadyAsync()
         {
+            client.AllShardsReady -= ReadyAsync;
             log.Info("All shards ready");
-
-            if (Config.messageOwnerOnStartup)
-            {
-                var app = await client.GetApplicationInfoAsync();
-                await app.Owner.SendMessageAsync($"{DateTime.Now} - Startup finished");
-            }
 
             input.StartListening();
             schedule.StartTimers();
@@ -91,6 +95,11 @@ namespace PacManBot
 
             UpdateGuildCount();
 
+            if (Config.messageOwnerOnStartup)
+            {
+                var app = await client.GetApplicationInfoAsync();
+                await app.Owner.SendMessageAsync($"{DateTime.Now} - Startup finished");
+            }
 
             if (File.Exists(Files.ManualRestart))
             {

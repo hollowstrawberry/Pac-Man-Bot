@@ -47,7 +47,7 @@ namespace PacManBot.Commands.Modules
                 }
                 catch (Exception e)
                 {
-                    Log.Warning($"Couldn't delete message {message.Id} in {Context.Channel.FullName()}: {e.Message}");
+                    Log.Verbose($"Couldn't delete message {message.Id} in {Context.Channel.FullName()}: {e.Message}");
                 }
             }
         }

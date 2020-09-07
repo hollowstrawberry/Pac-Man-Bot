@@ -11,7 +11,7 @@ namespace PacManBot.Services
     public class PmDiscordClient : DiscordShardedClient
     {
         private Regex regex;
-        private int shardsReady;
+        private int shardsReady = 0;
 
         /// <summary>Is a match when the given text begins with a mention to the bot's current user.</summary>
         public Regex MentionPrefix => regex ?? (regex = new Regex($@"^<@!?{CurrentUser.Id}>"));
@@ -25,7 +25,6 @@ namespace PacManBot.Services
         {
             ShardReady += OnShardReady;
         }
-
 
         private async Task OnShardReady(DiscordSocketClient shard)
         {
