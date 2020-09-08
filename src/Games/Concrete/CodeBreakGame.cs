@@ -102,7 +102,7 @@ namespace PacManBot.Games.Concrete
                         int near = guess.Where((c, i) => code.Contains(c) && c != code[i]).Count();
                         if (State == GameState.Win)
                         {
-                            if (match == 4) break;
+                            if (match == code.Length) break;
 
                             sb.Append($"`{index + 1, 2}.` ");
                             sb.Append(guess.Select(x => CustomEmoji.Number[x - '0']).JoinString());
