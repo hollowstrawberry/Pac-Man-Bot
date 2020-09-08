@@ -99,7 +99,8 @@ namespace PacManBot.Games.Concrete
             }
             else
             {
-                foreach ((string guess, int index) in guesses.Select((x, i) => (x, i)).TakeLast(20))
+                int lines = Math.Min(20, 120 / Code.Length);
+                foreach ((string guess, int index) in guesses.Select((x, i) => (x, i)).TakeLast(lines))
                 {
                     if (guess == null)
                     {
@@ -127,13 +128,7 @@ namespace PacManBot.Games.Concrete
                 }
             }
 
-            if (sb[sb.Length-1] == '\n') sb.Remove(sb.Length - 1, 1);
-            embed.Description = sb.ToString();
-            if (embed.Description.Length > 2048)
-            {
-                embed.Description = embed.Description.TruncateStart(2048);
-                embed.Description = embed.Description.Substring(embed.Description.IndexOf('\n'));
-            }
+            embed.Description = sb.ToString().Trim();
 
             if (State == GameState.Active)
             {
