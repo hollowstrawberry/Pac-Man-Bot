@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -11,15 +12,23 @@ using Range = PacManBot.Utils.Range;
 
 namespace PacManBot.Games.Concrete
 {
-    public class CodeBreakGame : ChannelGame, IMessagesGame
+    [DataContract]
+    public class CodeBreakGame : ChannelGame, IMessagesGame, IStoreableGame
     {
         public static readonly Regex Numbers = new Regex(@"^[0-9]+$");
         public override string GameName => "Code Break";
         public override int GameIndex => 14;
-        public override TimeSpan Expiry => TimeSpan.FromMinutes(60);
+        public override TimeSpan Expiry => TimeSpan.FromDays(7);
+        public string FilenameKey => "code";
 
-        private readonly string code;
-        private readonly List<string> guesses;
+        [DataMember] public string Code { get; protected set; }
+        [DataMember] private readonly List<string> guesses;
+
+        [DataMember] public override int Time { get; set; }
+        [DataMember] public override DateTime LastPlayed { get; set; }
+        [DataMember] public override ulong OwnerId { get => base.OwnerId; protected set => base.OwnerId = value; }
+        [DataMember] public override ulong ChannelId { get => base.ChannelId; set => base.ChannelId = value; }
+        [DataMember] public override ulong MessageId { get => base.MessageId; set => base.MessageId = value; }
 
 
         private CodeBreakGame() : base() { }
@@ -39,25 +48,25 @@ namespace PacManBot.Games.Concrete
                 nums.Remove(digits[i]);
             }
 
-            code = digits.JoinString();
+            Code = digits.JoinString();
             guesses = new List<string>();
         }
 
         public bool IsInput(string value, ulong userId)
         {
             value = StripPrefix(value);
-            return value.Length == code.Length && Numbers.IsMatch(value);
+            return value.Length == Code.Length && Numbers.IsMatch(value);
         }
 
-        public Task InputAsync(string input, ulong userId = 1)
+        public async Task InputAsync(string input, ulong userId = 1)
         {
             input = StripPrefix(input);
             if (guesses.Count > 0 && guesses.Last() == null) guesses.Pop();
-            if (input == code) State = GameState.Win;
-            if (input.Distinct().Count() < code.Length) input = null; // can't contain the same digit twice
+            if (input == Code) State = GameState.Win;
+            if (input.Distinct().Count() < Code.Length) input = null; // can't contain the same digit twice
             guesses.Add(input);
-            if (guesses.Count >= 99 && input != code) State = GameState.Lose;
-            return Task.CompletedTask;
+            if (guesses.Count >= 99 && input != Code) State = GameState.Lose;
+            await games.SaveAsync(this);
         }
 
         public override EmbedBuilder GetEmbed(bool showHelp = true)
@@ -86,7 +95,7 @@ namespace PacManBot.Games.Concrete
 
             if (guesses.Count == 0)
             {
-                sb.Append($"**Send a guess to get clues. Example: {new Range(code.Length).JoinString()}**\n");
+                sb.Append($"**Send a guess to get clues. Example: {new Range(Code.Length).JoinString()}**\n");
             }
             else
             {
@@ -98,11 +107,11 @@ namespace PacManBot.Games.Concrete
                     }
                     else
                     {
-                        int match = guess.Where((c, i) => c == code[i]).Count();
-                        int near = guess.Where((c, i) => code.Contains(c) && c != code[i]).Count();
+                        int match = guess.Where((c, i) => c == Code[i]).Count();
+                        int near = guess.Where((c, i) => Code.Contains(c) && c != Code[i]).Count();
                         if (State == GameState.Win)
                         {
-                            if (match == code.Length) break;
+                            if (match == Code.Length) break;
 
                             sb.Append($"`{index + 1, 2}.` ");
                             sb.Append(guess.Select(x => CustomEmoji.Number[x - '0']).JoinString());
@@ -118,21 +127,31 @@ namespace PacManBot.Games.Concrete
                 }
             }
 
-            sb.Remove(sb.Length - 1, 1);
+            if (sb[sb.Length-1] == '\n') sb.Remove(sb.Length - 1, 1);
             embed.Description = sb.ToString();
+            if (embed.Description.Length > 2048)
+            {
+                embed.Description = embed.Description.TruncateStart(2048);
+                embed.Description = embed.Description.Substring(embed.Description.IndexOf('\n'));
+            }
 
             if (State == GameState.Active)
             {
-                embed.AddField(Empty, $"_Find the secret {code.Length}-digit code!_\n" +
+                embed.AddField(Empty, $"_Find the secret {Code.Length}-digit code!_\n" +
                     $"_After each guess you will get a clue of of how many " +
                     $"of those digits match, and how many are near (present but in the wrong position)._", false);
             }
             else if (State == GameState.Win)
             {
-                embed.AddField(Empty, $"\n`{guesses.Count, 2}.` {code.Select(x => CustomEmoji.Number[x - '0']).JoinString()}" +
-                    $"{CustomEmoji.Empty}`{code.Length}M` `0N`" +
+                embed.AddField(Empty, $"\n`{guesses.Count, 2}.` {Code.Select(x => CustomEmoji.Number[x - '0']).JoinString()}" +
+                    $"{CustomEmoji.Empty}`{Code.Length}M` `0N`" +
                     $"\n**Cracked the code in {guesses.Count} guesses!**{" ***Wow!***".If(guesses.Count <= 7)}", false);            }
             return embed;
+        }
+
+        public void PostDeserialize(IServiceProvider services)
+        {
+            SetServices(services);
         }
     }
 }

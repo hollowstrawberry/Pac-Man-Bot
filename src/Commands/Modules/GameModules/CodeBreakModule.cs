@@ -14,15 +14,15 @@ namespace PacManBot.Commands.Modules.GameModules
                  "and using the two clues you get: how many of the digits are a match and " +
                  "how many of the digits are near (in the wrong position).\n" +
                  "The code can never have 2 or more of the same digit.\n" +
-                 "You can also specify the amount of digits from 3 to 6.\n" +
+                 "You can also specify the amount of digits from 2 to 10.\n" +
                  "Fun fact: Any 4-digit code can be cracked in 7 guesses or less if played perfectly!")]
         public async Task StartHangman(int digits = 4)
         {
             if (await CheckGameAlreadyExistsAsync()) return;
 
-            if (digits < 3 || digits > 6)
+            if (digits < 2 || digits > 10)
             {
-                await ReplyAsync("The amount of digits must be between 3 and 6.");
+                await ReplyAsync("The amount of digits must be between 2 and 10.");
                 return;
             }
 
