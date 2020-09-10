@@ -26,10 +26,16 @@ namespace PacManBot.Commands.Modules.GameModules
                 return;
             }
 
-            await DeleteGameMessageAsync();
-            var msg = await ReplyGameAsync();
+            if (DateTime.Now - Game.LastBumped > TimeSpan.FromSeconds(2))
+            {
+                Game.LastBumped = DateTime.Now;
+                await DeleteGameMessageAsync();
+                Game.LastBumped = DateTime.Now;
+                var msg = await ReplyGameAsync();
+                Game.LastBumped = DateTime.Now;
 
-            if (Game is PacManGame pacmanGame) await PacManModule.AddControls(pacmanGame, msg);
+                if (Game is PacManGame pacmanGame) await PacManModule.AddControls(pacmanGame, msg);
+            }
         }
 
 
@@ -96,6 +102,40 @@ namespace PacManBot.Commands.Modules.GameModules
         public async Task CoinFlip()
         {
             await ReplyAsync(Program.Random.OneIn(2) ? "🤴 **Heads!**" : "⚖️ **Tails!**");
+        }
+
+
+        [Command("party"), Alias("blob", "dance"), HideHelp]
+        [Summary("Takes a number which can be either an amount of emotes to send or a message ID to react to. " +
+                 "Reacts to the command by default.")]
+        [PmRequireBotPermission(ChannelPermission.UseExternalEmojis | ChannelPermission.AddReactions)]
+        public async Task BlobDance(ulong number = 0)
+        {
+            if (number < 1) await Context.Message.AddReactionAsync(CustomEmoji.EBlobDance, DefaultOptions);
+            else if (number <= 5) await ReplyAsync(CustomEmoji.BlobDance.Repeat((int)number));
+            else if (number <= 1000000) await ReplyAsync("That's too many.");
+            else if (Context.UserCan(ChannelPermission.ManageMessages)) // Message ID
+            {
+                if (await Context.Channel.GetMessageAsync(number) is IUserMessage message)
+                {
+                    await message.AddReactionAsync(CustomEmoji.EBlobDance, DefaultOptions);
+                }
+                else await AutoReactAsync(false);
+            }
+        }
+
+
+        [Command("neat"), Summary("Neat"), HideHelp]
+        public async Task Neat([Remainder] string arg = "")
+        {
+            await ReplyAsync("neat");
+        }
+
+
+        [Command("nice"), Summary("Nice"), HideHelp]
+        public async Task Nice([Remainder] string arg = "")
+        {
+            await ReplyAsync("nice");
         }
     }
 }

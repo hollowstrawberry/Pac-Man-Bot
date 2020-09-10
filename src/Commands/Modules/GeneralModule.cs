@@ -289,50 +289,6 @@ namespace PacManBot.Commands.Modules
         }
 
 
-
-
-        [Command("party"), Alias("blob", "dance"), HideHelp]
-        [Summary("Takes a number which can be either an amount of emotes to send or a message ID to react to. " +
-                 "Reacts to the command by default.")]
-        [PmRequireBotPermission(ChannelPermission.UseExternalEmojis | ChannelPermission.AddReactions)]
-        public async Task BlobDance(ulong number = 0)
-        {
-            if (number < 1) await Context.Message.AddReactionAsync(CustomEmoji.EBlobDance, DefaultOptions);
-            else if (number <= 10) await ReplyAsync(CustomEmoji.BlobDance.Repeat((int)number));
-            else if (number <= 1000000) await ReplyAsync("Are you insane?");
-            else // Message ID
-            {
-                if (await Context.Channel.GetMessageAsync(number) is IUserMessage message)
-                {
-                    await message.AddReactionAsync(CustomEmoji.EBlobDance, DefaultOptions);
-                }
-                else await AutoReactAsync(false);
-            }
-        }
-
-
-        [Command("spamparty"), Alias("spamblob", "spamdance"), HideHelp]
-        [Summary("Reacts to everything with a blob dance emote. Only usable by a moderator.")]
-        [PmRequireUserPermission(ChannelPermission.ManageMessages)]
-        [PmRequireBotPermission(ChannelPermission.AddReactions)]
-        public async Task SpamDance(int amount = 5)
-        {
-            var messages = await Context.Channel.GetMessagesAsync(Math.Min(amount, 10)).FlattenAsync();
-            foreach (var message in messages.OfType<SocketUserMessage>())
-            {
-                await message.AddReactionAsync(CustomEmoji.EBlobDance, DefaultOptions);
-            }
-        }
-
-
-        [Command("neat"), Summary("Neat"), HideHelp]
-        public async Task Neat() => await ReplyAsync("neat");
-
-        [Command("nice"), Summary("Nice"), HideHelp]
-        public async Task Nice() => await ReplyAsync("nice");
-
-
-
         [Command("command"), ExampleUsage("help play"), HideHelp]
         [Summary("This is not a real command. If you want to see help for a specific command, please do `{prefix}help [command name]`, " +
                  "where \"[command name]\" is the name of a command.")]

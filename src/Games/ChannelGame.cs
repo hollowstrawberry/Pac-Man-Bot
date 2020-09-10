@@ -19,7 +19,8 @@ namespace PacManBot.Games
         public virtual ulong ChannelId { get; set; }
         /// <summary>Discord snowflake ID of the latest message used by this game.</summary>
         public virtual ulong MessageId { get; set; }
-
+        /// <summary>The time when the message used by this game was last moved.</summary>
+        public virtual DateTime LastBumped { get; set; }
 
         /// <summary>Retrieves this game's channel's guild. Null when the channel is a DM channel.</summary>
         public IGuild Guild => (Channel as IGuildChannel)?.Guild;

@@ -75,9 +75,9 @@ namespace PacManBot.Services
 
 
 
-        private Task OnMessageReceived(SocketMessage m)
+        private Task OnMessageReceived(SocketMessage genericMessage)
         {
-            if (m is SocketUserMessage message && !message.Author.IsBot
+            if (genericMessage is SocketUserMessage message && !message.Author.IsBot
                     && message.Channel.BotCan(ChannelPermission.SendMessages | ChannelPermission.ReadMessageHistory))
             {
                 try
