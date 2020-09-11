@@ -250,6 +250,7 @@ namespace PacManBot.Commands.Modules.GameModules
             Game.lastHeal = DateTime.Now;
             Game.player.Life = Game.player.MaxLife;
             Game.player.Mana = Game.player.MaxMana;
+            Game.player.Buffs.Clear();
             await SaveGameAsync();
 
             await ReplyAsync($"💟 Fully restored!");

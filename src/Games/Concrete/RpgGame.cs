@@ -354,7 +354,8 @@ namespace PacManBot.Games.Concrete
         {
             if (IsPvp)
             {
-                return PvpBattleConfirmed && isPvpTurn && userId == OwnerId;
+                return PvpBattleConfirmed &&
+                    (isPvpTurn && userId == OwnerId || PvpGame.isPvpTurn && userId == pvpUserId);
             }
 
             string emote = value.Mention();
@@ -372,6 +373,11 @@ namespace PacManBot.Games.Concrete
 
             if (IsPvp)
             {
+                if (userId == pvpUserId) // spaghetti
+                {
+                    await PvpGame.InputAsync(input, userId);
+                    return;
+                }
                 lastEmote = emote;
                 var otherGame = PvpGame;
                 fightEmbed = FightPvP(true);
