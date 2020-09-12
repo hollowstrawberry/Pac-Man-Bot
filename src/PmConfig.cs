@@ -45,9 +45,6 @@ namespace PacManBot
         /// <summary>How long in milliseconds until the gateway connection to Discord times out.</summary>
         [DataMember] public readonly int connectionTimeout = 30000;
 
-        /// <summary>Whether all users should be downloaded and cached as guilds come available.</summary>
-        [DataMember] public readonly bool downloadAllUsers = true;
-
         /// <summary>Whether bulk deleting should raise only a bulk delete event or both a bulk event and the delete events.</summary>
         [DataMember] public readonly bool exclusiveBulkDelete = false;
 
@@ -104,10 +101,10 @@ namespace PacManBot
             LogLevel = clientLogLevel,
             MessageCacheSize = messageCacheSize,
             ConnectionTimeout = connectionTimeout,
-            AlwaysDownloadUsers = downloadAllUsers,
             ExclusiveBulkDelete = exclusiveBulkDelete,
             HandlerTimeout = handlerTimeout,
             DefaultRetryMode = RetryMode.AlwaysRetry,
+            AlwaysDownloadUsers = false,
 
             GatewayIntents =
                 GatewayIntents.Guilds | GatewayIntents.DirectMessages | GatewayIntents.DirectMessageReactions

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Concurrent;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
@@ -25,9 +24,10 @@ namespace PacManBot.Services
         private readonly GameService games;
 
         private readonly ConcurrentDictionary<PendingResponse, byte> pendingResponses;
+        private readonly ConcurrentDictionary<ulong, DateTime> lastGuildUsersDownload;
 
 
-        public InputService(PmConfig config, PmDiscordClient client, LoggingService log,
+        public InputService(PmDiscordClient client, LoggingService log,
             StorageService storage, PmCommandService commands, GameService games)
         {
             this.client = client;
@@ -37,6 +37,7 @@ namespace PacManBot.Services
             this.games = games;
 
             pendingResponses = new ConcurrentDictionary<PendingResponse, byte>();
+            lastGuildUsersDownload = new ConcurrentDictionary<ulong, DateTime>();
         }
 
 
@@ -82,8 +83,14 @@ namespace PacManBot.Services
             {
                 try
                 {
-                    if (PendingResponse(message) || MessageGameInput(message) || Command(message))
+                    if (PendingResponse(message)
+                        || MessageGameInput(message)
+                        || Command(message))
                     {
+                        if (message.Channel is SocketGuildChannel channel)
+                        {
+                            _ = EnsureUsersDownloadedAsync(channel.Guild);
+                        }
                         return Task.CompletedTask;
                     }
                 }
@@ -95,7 +102,6 @@ namespace PacManBot.Services
 
             return Task.CompletedTask;
         }
-
 
         private Task OnReactionAddedOrRemoved(Cacheable<IUserMessage, ulong> messageData, ISocketMessageChannel channel, SocketReaction reaction)
         {
@@ -115,9 +121,30 @@ namespace PacManBot.Services
                 if (game == null || !game.IsInput(reaction.Emote, reaction.UserId)) return Task.CompletedTask;
 
                 _ = ExecuteReactionGameInputAsync(game, reaction, message, channel);
+                if (channel is SocketGuildChannel guildChannel)
+                {
+                    _ = EnsureUsersDownloadedAsync(guildChannel.Guild);
+                }
             }
 
             return Task.CompletedTask;
+        }
+
+
+        private async Task EnsureUsersDownloadedAsync(SocketGuild guild)
+        {
+            if (guild != null && guild.MemberCount < 80000 && !guild.HasAllMembers)
+            {
+                if (!lastGuildUsersDownload.TryGetValue(guild.Id, out DateTime last)
+                    || (DateTime.Now - last) > TimeSpan.FromMinutes(30))
+                {
+                    lastGuildUsersDownload[guild.Id] = DateTime.Now;
+                    int oldCount = guild.Users.Count;
+                    await guild.DownloadUsersAsync();
+                    int time = (DateTime.Now - lastGuildUsersDownload[guild.Id]).Milliseconds;
+                    log.Info($"Downloaded {guild.Users.Count() - oldCount} users from {guild.FullName()} in {time}ms");
+                }
+            }
         }
 
 
