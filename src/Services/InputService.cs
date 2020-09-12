@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
@@ -25,6 +26,8 @@ namespace PacManBot.Services
 
         private readonly ConcurrentDictionary<PendingResponse, byte> pendingResponses;
         private readonly ConcurrentDictionary<ulong, DateTime> lastGuildUsersDownload;
+
+        private readonly Regex StartsWithMention = new Regex(@"^<(@|#|a?:)");
 
 
         public InputService(PmDiscordClient client, LoggingService log,
@@ -169,11 +172,13 @@ namespace PacManBot.Services
             string prefix = storage.GetGuildPrefix((message.Channel as SocketGuildChannel)?.Guild);
             bool requiresPrefix = storage.RequiresPrefix(message.Channel);
 
-            int pos = message.GetMentionCommandPos(client)
+            int? mentionPos = message.GetMentionCommandPos(client);
+            int pos = mentionPos
                 ?? message.GetCommandPos(prefix)
                 ?? (requiresPrefix ? -1 : 0);
 
-            if (pos >= 0)
+            // I added a check for non-self mentions as the default prefix is < which is also the first character of discord mentions
+            if (pos >= 0 && (mentionPos != null || !StartsWithMention.IsMatch(message.Content)))
             {
                 _ = commands.ExecuteAsync(message, pos);
                 return true;
