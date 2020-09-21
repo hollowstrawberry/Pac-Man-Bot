@@ -138,9 +138,11 @@ namespace PacManBot.Games.Concrete
             }
             else if (State == GameState.Win)
             {
+                var wow = Math.Max(6, 7 + 2 * (Code.Length - 4));
                 embed.AddField(Empty, $"\n`{guesses.Count, 2}.` {Code.Select(x => CustomEmoji.Number[x - '0']).JoinString()}" +
                     $"{CustomEmoji.Empty}`{Code.Length}M` `0N`" +
-                    $"\n**Cracked the code in {guesses.Count} guesses!**{" ***Wow!***".If(guesses.Count <= 7)}", false);            }
+                    $"\n**Cracked the code in {guesses.Count} guesses!**{" ***Congratulations!***".If(guesses.Count <= wow)}", false);            
+            }
             return embed;
         }
 
