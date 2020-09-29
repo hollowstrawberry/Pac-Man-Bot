@@ -48,20 +48,20 @@ namespace PacManBot.Services
 
 
         /// <summary>Start listening to input events from Discord.</summary>
-        public void StartListening()
+        public void StartListening(DiscordClient shard)
         {
-            client.MessageReceived += OnMessageReceived;
-            client.ReactionAdded += OnReactionAddedOrRemoved;
-            client.ReactionRemoved += OnReactionAddedOrRemoved;
+            shard.MessageCreated += OnMessageReceived;
+            shard.MessageReactionAdded += OnReactionAddedOrRemoved;
+            shard.MessageReactionRemoved += OnReactionAddedOrRemoved;
         }
 
 
         /// <summary>Stop listening to input events from Discord.</summary>
-        public void StopListening()
+        public void StopListening(DiscordClient shard)
         {
-            client.MessageReceived -= OnMessageReceived;
-            client.ReactionAdded -= OnReactionAddedOrRemoved;
-            client.ReactionRemoved -= OnReactionAddedOrRemoved;
+            shard.MessageCreated -= OnMessageReceived;
+            shard.MessageReactionAdded -= OnReactionAddedOrRemoved;
+            shard.MessageReactionRemoved -= OnReactionAddedOrRemoved;
         }
 
 

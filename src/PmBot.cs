@@ -7,6 +7,8 @@ using DiscordBotsList.Api;
 using PacManBot.Constants;
 using PacManBot.Extensions;
 using PacManBot.Services;
+using DSharpPlus.EventArgs;
+using DSharpPlus.Entities;
 
 namespace PacManBot
 {
@@ -15,11 +17,6 @@ namespace PacManBot
     /// </summary>
     public class PmBot
     {
-        public static readonly RequestOptions DefaultOptions = new RequestOptions {
-            RetryMode = RetryMode.RetryRatelimit,
-            Timeout = 10000
-        };
-
         /// <summary>Runtime configuration of the bot.</summary>
         public PmConfig Config { get; }
 
@@ -55,49 +52,34 @@ namespace PacManBot
             await commands.AddAllModulesAsync();
             await games.LoadGamesAsync();
 
-            client.ShardConnected += ConnectedAsync;
-            client.AllShardsReady += ReadyAsync;
-
-            await client.LoginAsync(TokenType.Bot, Config.discordToken);
-            await client.StartAsync();
-        }
-
-
-        private async Task ConnectedAsync(DiscordSocketClient shard)
-        {
-            client.ShardConnected -= ConnectedAsync;
-            await client.SetStatusAsync(UserStatus.Idle);
-            await client.SetGameAsync("Booting up...");
-        }
-
-
-        private async Task ReadyAsync()
-        {
-            client.AllShardsReady -= ReadyAsync;
-            log.Info("All shards ready");
-
-            input.StartListening();
-            schedule.StartTimers();
-
+            client.Ready += ReadyAsync;
             schedule.PrepareRestart += StopAsync;
-            client.JoinedGuild += OnJoinedGuild;
-            client.LeftGuild += OnLeftGuild;
-            client.ChannelDestroyed += OnChannelDestroyed;
 
-            await client.SetStatusAsync(UserStatus.Online);
+            await client.StartAsync();
+            await client.UpdateStatusAsync(
+                new DiscordActivity("Booting up...", ActivityType.Custom), UserStatus.Idle, DateTime.Now);
 
             if (!string.IsNullOrWhiteSpace(Config.discordBotListToken))
             {
                 discordBotList = new AuthDiscordBotListApi(client.CurrentUser.Id, Config.discordBotListToken);
             }
+        }
 
-            UpdateGuildCount();
 
-            if (Config.messageOwnerOnStartup)
-            {
-                var app = await client.GetApplicationInfoAsync();
-                await app.Owner.SendMessageAsync($"{DateTime.Now} - Startup finished");
-            }
+        private async Task ReadyAsync(ReadyEventArgs args)
+        {
+            var shard = args.Client;
+            log.Info($"Shard {shard.ShardId} is ready");
+
+            input.StartListening(shard);
+            shard.GuildCreated += OnJoinedGuild;
+            shard.GuildDeleted += OnLeftGuild;
+            shard.ChannelDeleted += OnChannelDeleted;
+
+            await shard.UpdateStatusAsync(
+                new DiscordActivity($"{Config.defaultPrefix}help", ActivityType.Custom), UserStatus.Online, DateTime.Now);
+
+            if (schedule.timers.Count == 0) schedule.StartTimers();
 
             if (File.Exists(Files.ManualRestart))
             {
@@ -105,12 +87,15 @@ namespace PacManBot
                 {
                     ulong[] id = File.ReadAllText(Files.ManualRestart)
                         .Split("/").Select(ulong.Parse).ToArray();
-                    File.Delete(Files.ManualRestart);
 
-                    var message = await client.GetMessageChannel(id[0])?.GetUserMessageAsync(id[1]);
-                    if (message != null) await message.ModifyAsync(x => x.Content = CustomEmoji.Check);
-
-                    log.Info("Resumed after manual restart");
+                    var channel = await shard.GetChannelAsync(id[0]);
+                    if (channel != null)
+                    {
+                        var message = await channel.GetMessageAsync(id[1]);
+                        if (message != null) await message.ModifyAsync(CustomEmoji.Check);
+                        File.Delete(Files.ManualRestart);
+                        log.Info("Resumed after manual restart");
+                    }
                 }
                 catch (Exception e)
                 {
@@ -123,113 +108,60 @@ namespace PacManBot
         /// <summary>Safely stop most activity from the bot and disconnect from Discord.</summary>
         public async Task StopAsync()
         {
-            await client.SetStatusAsync(UserStatus.DoNotDisturb); // why not
+            await client.UpdateStatusAsync(userStatus: UserStatus.DoNotDisturb); // why not
 
-            input.StopListening();
+            foreach (var shard in client.ShardClients.Values) input.StopListening(shard);
             schedule.StopTimers();
-            client.JoinedGuild -= OnJoinedGuild;
-            client.LeftGuild -= OnLeftGuild;
-            client.ChannelDestroyed -= OnChannelDestroyed;
+            client.GuildCreated -= OnJoinedGuild;
+            client.GuildDeleted -= OnLeftGuild;
+            client.ChannelDeleted -= OnChannelDeleted;
 
             await Task.Delay(6_000); // Buffer time to finish up doing whatever
 
-            await client.LogoutAsync();
             await client.StopAsync();
-
-            log.Dispose();
         }
 
 
-        private async Task OnJoinedGuild(SocketGuild guild)
+        private async Task OnJoinedGuild(GuildCreateEventArgs args)
         {
-            await SendWelcomeMessage(guild);
-
-            UpdateGuildCount();
+            await UpdateGuildCountAsync();
         }
 
 
-        private Task OnLeftGuild(SocketGuild guild)
+        private async Task OnLeftGuild(GuildDeleteEventArgs args)
         {
-            foreach (var channel in guild.Channels)
+            foreach (var channel in args.Guild.Channels)
             {
-                games.Remove(games.GetForChannel(channel.Id));
+                games.Remove(games.GetForChannel(channel.Key));
             }
 
-            UpdateGuildCount();
+            await UpdateGuildCountAsync();
+        }
+
+
+        private Task OnChannelDeleted(ChannelDeleteEventArgs args)
+        {
+            games.Remove(games.GetForChannel(args.Channel.Id));
 
             return Task.CompletedTask;
         }
 
-
-        private Task OnChannelDestroyed(SocketChannel channel)
-        {
-            games.Remove(games.GetForChannel(channel.Id));
-
-            return Task.CompletedTask;
-        }
-
-
-
-        private async Task SendWelcomeMessage(SocketGuild guild)
-        {
-            var channel = guild.DefaultChannel;
-            var guildPerms = guild.CurrentUser.GuildPermissions;
-            var channelPerms = guild.CurrentUser.GetPermissions(channel);
-
-            if (!channel.BotCan(ChannelPermission.SendMessages)) return;
-
-            string message = Config.Content.welcome.Replace("{prefix}", Config.defaultPrefix);
-            EmbedBuilder embed = null;
-
-            if (channelPerms.EmbedLinks && channelPerms.UseExternalEmojis)
-            {
-                embed = new EmbedBuilder { Color = Colors.PacManYellow };
-                foreach (var (name, desc) in Config.Content.welcomeFields)
-                {
-                    embed.AddField(name, desc, false);
-                }
-            }
-            else if (!guildPerms.EmbedLinks || !guildPerms.UseExternalEmojis)
-            {
-                message += "\n\nThis bot needs the permission to **Embed Links** and **Use External Emoji**!";
-            }
-
-            if (!guild.CurrentUser.GuildPermissions.ManageMessages)
-            {
-                message += "\n\nThis bot works better with the permission to **Manage Messages**.\n" +
-                           "If the bot can delete messages, the games will be less spammy.";
-            }
-
-            await channel.SendMessageAsync(message, false, embed?.Build(), DefaultOptions);
-        }
-
-
-
-        // Meant to be fire-and-forget so Discord can't complain about busy handlers
-        private async void UpdateGuildCount()
-        {
-            try
-            {
-                await UpdateGuildCountAsync();
-            }
-            catch (Exception e)
-            {
-                log.Exception($"Updating guild count", e);
-            }
-        }
 
         private async Task UpdateGuildCountAsync()
         {
-            var now = DateTime.Now;
-            if ((now - lastGuildCountUpdate).TotalMinutes < 30.0) return;
+            if (discordBotList == null || (DateTime.Now - lastGuildCountUpdate).TotalMinutes < 30.0) return;
 
-            lastGuildCountUpdate = now;
-            int guilds = client.Guilds.Count;
-            await client.SetGameAsync($"{Config.defaultPrefix}help | {guilds} guilds");
-
-            if (discordBotList != null)
+            int guilds = 0;
+            foreach (var shard in client.ShardClients.Values)
             {
-                await discordBotList.UpdateStats(guilds, client.Shards.Count);
+                guilds += shard.Guilds.Count;
+            }
+
+            var recordedGuilds = (await discordBotList.GetBotStatsAsync(client.CurrentUser.Id)).GuildCount;
+            if (recordedGuilds < guilds)
+            {
+                await discordBotList.UpdateStats(guilds, client.ShardClients.Count);
+                lastGuildCountUpdate = DateTime.Now;
             }
 
             log.Info($"Guild count updated to {guilds}");
