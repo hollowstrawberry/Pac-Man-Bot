@@ -12,6 +12,7 @@
             Storage = "Storage",
             Scheduling = "Scheduling",
             Owner = "Owner",
-            Eval = "Eval";
+            Eval = "Eval",
+            Client = "Client";
     }
 }

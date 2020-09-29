@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Runtime.Serialization;
-using Discord;
-using Discord.WebSocket;
+using DSharpPlus;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using PacManBot.Constants;
 using PacManBot.Extensions;
@@ -45,20 +45,14 @@ namespace PacManBot
         /// <summary>How long in milliseconds until the gateway connection to Discord times out.</summary>
         [DataMember] public readonly int connectionTimeout = 30000;
 
-        /// <summary>Whether bulk deleting should raise only a bulk delete event or both a bulk event and the delete events.</summary>
-        [DataMember] public readonly bool exclusiveBulkDelete = false;
-
-        /// <summary>Whether the bot subscribes to presence and typing events among others.</summary>
-        [DataMember] public readonly bool guildSubscriptions = false;
-
-        /// <summary>How many milliseconds before an event handler throws a warning.</summary>
-        [DataMember] public readonly int handlerTimeout = 5000;
+        /// <summary>Sets the timeout for HTTP events.</summary>
+        [DataMember] public readonly int httpTimeout = 10000;
 
         /// <summary>How many messages this program should log. See <see cref="LogSeverity"/> for possible values.</summary>
-        [DataMember] public readonly LogSeverity logLevel = LogSeverity.Debug;
+        [DataMember] public readonly LogLevel logLevel = LogLevel.Debug;
 
         /// <summary>How many messages to log coming from the Discord client. See <see cref="LogSeverity"/> for possible values.</summary>
-        [DataMember] public readonly LogSeverity clientLogLevel = LogSeverity.Info;
+        [DataMember] public readonly LogLevel clientLogLevel = LogLevel.Information;
 
         /// <summary>Strings that when found cause a log event to be ignored. Use with caution.</summary>
         [DataMember] public readonly string[] logExclude = { };
@@ -95,20 +89,17 @@ namespace PacManBot
 
 
         /// <summary>Gets a configuration object for a <see cref="DiscordSocketClient"/>.</summary>
-        public DiscordSocketConfig ClientConfig => new DiscordSocketConfig
+        public DiscordConfiguration ClientConfig => new DiscordConfiguration
         {
-            TotalShards = shardCount,
-            LogLevel = clientLogLevel,
+            Token = discordToken,
+            HttpTimeout = TimeSpan.FromSeconds(httpTimeout),
+            
+            MinimumLogLevel = clientLogLevel,
             MessageCacheSize = messageCacheSize,
-            ConnectionTimeout = connectionTimeout,
-            ExclusiveBulkDelete = exclusiveBulkDelete,
-            HandlerTimeout = handlerTimeout,
-            DefaultRetryMode = RetryMode.AlwaysRetry,
-            AlwaysDownloadUsers = false,
 
-            GatewayIntents =
-                GatewayIntents.Guilds | GatewayIntents.DirectMessages | GatewayIntents.DirectMessageReactions
-                | GatewayIntents.GuildMembers | GatewayIntents.GuildMessages | GatewayIntents.GuildMessageReactions,
+            Intents =
+                DiscordIntents.Guilds | DiscordIntents.DirectMessages | DiscordIntents.DirectMessageReactions
+                | DiscordIntents.GuildMembers | DiscordIntents.GuildMessages | DiscordIntents.GuildMessageReactions,
         };
     }
 }

@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
-using Discord;
+using DSharpPlus;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using PacManBot.Constants;
@@ -58,12 +58,14 @@ namespace PacManBot
                     $"Missing {nameof(config.discordToken)} in {Files.Config}: Bot can't run");
             }
 
+            DiscordShardedClient client = new DiscordShardedClient(config.ClientConfig);
+
 
             // Set up services
             var serviceCollection = new ServiceCollection()
                 .AddSingleton(config)
+                .AddSingleton(client)
                 .AddSingleton<PmBot>()
-                .AddSingleton<PmDiscordClient>()
                 .AddSingleton<LoggingService>()
                 .AddSingleton<StorageService>()
                 .AddSingleton<PmCommandService>()

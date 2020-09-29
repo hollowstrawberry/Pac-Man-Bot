@@ -3,8 +3,7 @@ using System.Collections.Concurrent;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Discord;
-using Discord.WebSocket;
+using DSharpPlus;
 using PacManBot.Extensions;
 using PacManBot.Games;
 using PacManBot.Games.Concrete;
@@ -18,7 +17,7 @@ namespace PacManBot.Services
     /// </summary>
     public class InputService
     {
-        private readonly PmDiscordClient client;
+        private readonly DiscordShardedClient client;
         private readonly PmCommandService commands;
         private readonly StorageService storage;
         private readonly LoggingService log;
@@ -28,9 +27,13 @@ namespace PacManBot.Services
         private readonly ConcurrentDictionary<ulong, DateTime> lastGuildUsersDownload;
 
         private readonly Regex StartsWithMention = new Regex(@"^<(@|#|a?:)");
+        private Regex mentionPrefixRegex = null;
+
+        /// <summary>Is a match when the given text begins with a mention to the bot's current user.</summary>
+        public Regex MentionPrefix => mentionPrefixRegex ?? (mentionPrefixRegex = new Regex($@"^<@!?{client.CurrentUser.Id}>"));
 
 
-        public InputService(PmDiscordClient client, LoggingService log,
+        public InputService(DiscordShardedClient client, LoggingService log,
             StorageService storage, PmCommandService commands, GameService games)
         {
             this.client = client;

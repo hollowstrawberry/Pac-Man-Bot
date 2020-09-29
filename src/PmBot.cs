@@ -2,8 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Discord;
-using Discord.WebSocket;
+using DSharpPlus;
 using DiscordBotsList.Api;
 using PacManBot.Constants;
 using PacManBot.Extensions;
@@ -24,7 +23,7 @@ namespace PacManBot
         /// <summary>Runtime configuration of the bot.</summary>
         public PmConfig Config { get; }
 
-        private readonly PmDiscordClient client;
+        private readonly DiscordShardedClient client;
         private readonly LoggingService log;
         private readonly StorageService storage;
         private readonly GameService games;
@@ -36,7 +35,7 @@ namespace PacManBot
         private DateTime lastGuildCountUpdate = DateTime.MinValue;
 
 
-        public PmBot(PmConfig config, PmDiscordClient client, LoggingService log, StorageService storage,
+        public PmBot(PmConfig config, DiscordShardedClient client, LoggingService log, StorageService storage,
             GameService games, InputService input, PmCommandService commands, SchedulingService schedule)
         {
             Config = config;
@@ -56,7 +55,6 @@ namespace PacManBot
             await commands.AddAllModulesAsync();
             await games.LoadGamesAsync();
 
-            client.Log += log.ClientLog;
             client.ShardConnected += ConnectedAsync;
             client.AllShardsReady += ReadyAsync;
 

@@ -461,7 +461,7 @@ namespace PacManBot.Games.Concrete
         public async Task<bool> TrySetImageUrlAsync(string text)
         {
             string url = text?.Trim('<', '>');
-            if (url == null || WebUtil.IsImageUrl(url))
+            if (url == null || await WebUtil.IsImageUrlAsync(url))
             {
                 petImageUrl = url;
                 await UpdateAndSaveAsync();

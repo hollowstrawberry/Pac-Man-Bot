@@ -8,7 +8,7 @@ namespace PacManBot.Utils
     {
         /// <summary>Ensures that the provided string is a valid URL, then performs a web request to determine
         /// whether the URL links to an image.</summary>
-        public static async ValueTask<bool> IsImageUrl(string value)
+        public static async ValueTask<bool> IsImageUrlAsync(string value)
         {
             try
             {
