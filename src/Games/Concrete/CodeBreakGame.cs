@@ -18,7 +18,7 @@ namespace PacManBot.Games.Concrete
         public static readonly Regex Numbers = new Regex(@"^[0-9]+$");
         public override string GameName => "Code Break";
         public override int GameIndex => 14;
-        public override TimeSpan Expiry => TimeSpan.FromDays(7);
+        public override TimeSpan Expiry => TimeSpan.FromHours(24);
         public string FilenameKey => "code";
 
         [DataMember] public string Code { get; protected set; }

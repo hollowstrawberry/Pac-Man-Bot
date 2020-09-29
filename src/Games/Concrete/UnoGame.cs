@@ -21,7 +21,7 @@ namespace PacManBot.Games.Concrete
 
         public override int GameIndex => 10;
         public override string GameName => "Uno";
-        public override TimeSpan Expiry => TimeSpan.FromDays(2);
+        public override TimeSpan Expiry => TimeSpan.FromHours(48);
         public string FilenameKey => "uno";
 
         private const int CardsPerPlayer = 7;

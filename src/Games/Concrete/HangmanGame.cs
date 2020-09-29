@@ -16,7 +16,7 @@ namespace PacManBot.Games.Concrete
 
         public override string GameName => "Hangman";
         public override int GameIndex => 13;
-        public override TimeSpan Expiry => TimeSpan.FromMinutes(60);
+        public override TimeSpan Expiry => TimeSpan.FromHours(1);
 
         private string word;
         private char[] progress;

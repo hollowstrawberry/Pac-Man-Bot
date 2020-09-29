@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.Net;
+using Discord.WebSocket;
 using PacManBot.Constants;
 using PacManBot.Extensions;
 using PacManBot.Games;
