@@ -9,6 +9,7 @@ using PacManBot.Extensions;
 using PacManBot.Services;
 using DSharpPlus.EventArgs;
 using DSharpPlus.Entities;
+using DSharpPlus.CommandsNext;
 
 namespace PacManBot
 {
@@ -17,39 +18,46 @@ namespace PacManBot
     /// </summary>
     public class PmBot
     {
-        /// <summary>Runtime configuration of the bot.</summary>
-        public PmConfig Config { get; }
-
+        private readonly PmConfig config;
+        private readonly IServiceProvider services;
         private readonly DiscordShardedClient client;
         private readonly LoggingService log;
-        private readonly StorageService storage;
         private readonly GameService games;
         private readonly InputService input;
-        private readonly PmCommandService commands;
         private readonly SchedulingService schedule;
 
         private AuthDiscordBotListApi discordBotList = null;
         private DateTime lastGuildCountUpdate = DateTime.MinValue;
 
 
-        public PmBot(PmConfig config, DiscordShardedClient client, LoggingService log, StorageService storage,
-            GameService games, InputService input, PmCommandService commands, SchedulingService schedule)
+        public PmBot(PmConfig config, IServiceProvider services)
         {
-            Config = config;
-            this.client = client;
-            this.log = log;
-            this.storage = storage;
-            this.games = games;
-            this.input = input;
-            this.commands = commands;
-            this.schedule = schedule;
+            this.config = config;
+            this.services = services;
+            client = services.Get<DiscordShardedClient>();
+            log = services.Get<LoggingService>();
+            games = services.Get<GameService>();
+            input = services.Get<InputService>();
+            schedule = services.Get<SchedulingService>();
         }
 
 
         /// <summary>Starts the bot and its connection to Discord.</summary>
         public async Task StartAsync()
         {
-            await commands.AddAllModulesAsync();
+            await client.UseCommandsNextAsync(new CommandsNextConfiguration
+            {
+                EnableDefaultHelp = false,
+                UseDefaultCommandHandler = false,
+                Services = services,
+            });
+            foreach (var (shard, commands) in client.GetCommandsNext())
+            {
+                commands.RegisterCommands(typeof(PmBot).Assembly);
+                commands.CommandExecuted += OnCommandExecuted;
+                commands.CommandErrored += OnCommandErrored;
+            }
+
             await games.LoadGamesAsync();
 
             client.Ready += ReadyAsync;
@@ -59,9 +67,9 @@ namespace PacManBot
             await client.UpdateStatusAsync(
                 new DiscordActivity("Booting up...", ActivityType.Custom), UserStatus.Idle, DateTime.Now);
 
-            if (!string.IsNullOrWhiteSpace(Config.discordBotListToken))
+            if (!string.IsNullOrWhiteSpace(config.discordBotListToken))
             {
-                discordBotList = new AuthDiscordBotListApi(client.CurrentUser.Id, Config.discordBotListToken);
+                discordBotList = new AuthDiscordBotListApi(client.CurrentUser.Id, config.discordBotListToken);
             }
         }
 
@@ -122,11 +130,33 @@ namespace PacManBot
         }
 
 
+        private Task OnCommandExecuted(CommandExecutionEventArgs args)
+        {
+            log.Verbose($"Executed {args.Command.Name} for {args.Context.User.DebugName()} in {args.Context.Channel.DebugName()}");
+            return Task.CompletedTask;
+        }
+
+        private async Task OnCommandErrored(CommandErrorEventArgs args)
+        {
+            if (args.Exception.InnerException != null)
+            {
+                await args.Context.RespondAsync($"Something went wrong! {args.Exception.InnerException.Message}");
+                log.Exception($"While executing {args.Command.Name} for {args.Context.User.DebugName()} " +
+                    $"in {args.Context.Channel.DebugName()}", args.Exception);
+            }
+            else
+            {
+                await args.Context.RespondAsync(args.Exception.Message);
+                log.Verbose($"Couldn't execute {args.Command.Name} for {args.Context.User.DebugName()} " +
+                    $"in {args.Context.Channel.DebugName()}", args.Exception.Message);
+            }
+        }
+
+
         private async Task OnJoinedGuild(GuildCreateEventArgs args)
         {
             await UpdateGuildCountAsync();
         }
-
 
         private async Task OnLeftGuild(GuildDeleteEventArgs args)
         {

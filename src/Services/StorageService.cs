@@ -3,8 +3,9 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Discord;
-using Discord.Commands;
+using DSharpPlus;
+using DSharpPlus.CommandsNext;
+using DSharpPlus.Entities;
 using PacManBot.Constants;
 using PacManBot.Extensions;
 using PacManBot.Services.Database;
@@ -17,7 +18,7 @@ namespace PacManBot.Services
     /// </summary>
     public class StorageService
     {
-        private readonly PmDiscordClient client;
+        private readonly DiscordShardedClient client;
         private readonly LoggingService log;
         private readonly string dbConnection;
 
@@ -32,7 +33,7 @@ namespace PacManBot.Services
         private PacManDbContext MakeDbContext() => new PacManDbContext(dbConnection);
 
 
-        public StorageService(PmConfig config, PmDiscordClient client, LoggingService log)
+        public StorageService(PmConfig config, DiscordShardedClient client, LoggingService log)
         {
             this.client = client;
             this.log = log;
@@ -55,20 +56,17 @@ namespace PacManBot.Services
 
 
         /// <summary>Retrieves the prefix used in a particular context, or an empty string if none is necessary.</summary>
-        public string GetPrefix(ICommandContext context) => GetPrefix(context?.Channel);
+        public string GetPrefix(CommandContext context) => GetPrefix(context?.Channel);
 
         /// <summary>Retrieves the prefix used in a particular channel, or an empty string if none is necessary.</summary>
-        public string GetPrefix(ulong channelId) => GetPrefix(client.GetMessageChannel(channelId));
-
-        /// <summary>Retrieves the prefix used in a particular channel, or an empty string if none is necessary.</summary>
-        public string GetPrefix(IMessageChannel channel)
+        public string GetPrefix(DiscordChannel channel)
         {
-            return RequiresPrefix(channel) ? GetGuildPrefix((channel as IGuildChannel)?.Guild) : "";
+            return RequiresPrefix(channel) ? GetGuildPrefix(channel.Guild) : "";
         }
 
 
         /// <summary>Retrieves the specified guild's custom prefix, or the default prefix if no record is found.</summary>
-        public string GetGuildPrefix(IGuild guild) => guild == null ? DefaultPrefix : GetGuildPrefix(guild.Id);
+        public string GetGuildPrefix(DiscordGuild guild) => guild == null ? DefaultPrefix : GetGuildPrefix(guild.Id);
 
         /// <summary>Retrieves the specified guild's custom prefix, or the default prefix if no record is found.</summary>
         public string GetGuildPrefix(ulong guildId)
@@ -86,7 +84,7 @@ namespace PacManBot.Services
 
         /// <summary>Retrieves the specified guild's custom prefix, or the default prefix if no record is found.
         /// Provides the benefit of an asynchronous database access if one is necessary.</summary>
-        public async ValueTask<string> GetGuildPrefixAsync(IGuild guild)
+        public async ValueTask<string> GetGuildPrefixAsync(DiscordGuild guild)
         {
             if (guild == null) return DefaultPrefix;
             if (cachedPrefixes.TryGetValue(guild.Id, out string prefix)) return prefix;
@@ -125,42 +123,19 @@ namespace PacManBot.Services
 
 
         /// <summary>Whether the specified context requires a prefix for commands.</summary>
-        public bool RequiresPrefix(ICommandContext context) => RequiresPrefix(context?.Channel);
+        public bool RequiresPrefix(CommandContext context) => RequiresPrefix(context?.Channel);
 
         /// <summary>Whether the specified channel requires a prefix for commands.</summary>
-        public bool RequiresPrefix(ulong channelId) => RequiresPrefix(client.GetChannel(channelId));
-
-        /// <summary>Whether the specified channel requires a prefix for commands.</summary>
-        public bool RequiresPrefix(IChannel channel)
+        public bool RequiresPrefix(DiscordChannel channel)
         {
             if (channel == null) return false;
             if (cachedNeedsPrefix.TryGetValue(channel.Id, out bool needs)) return needs;
 
             using (var db = MakeDbContext())
             {
-                needs = channel is IGuildChannel && db.NoPrefixGuildChannels.Find(channel.Id) == null;
+                needs = channel.Guild != null && db.NoPrefixGuildChannels.Find(channel.Id) == null;
             }
 
-            cachedNeedsPrefix.TryAdd(channel.Id, needs);
-            return needs;
-        }
-
-        /// <summary>Whether the specified channel requires a prefix for commands.
-        /// Provides the benefit of an asynchronous database access if it is necessary.</summary>
-        public async ValueTask<bool> RequiresPrefixAsync(IChannel channel)
-        {
-            if (channel == null) return false;
-            if (cachedNeedsPrefix.TryGetValue(channel.Id, out bool needs)) return needs;
-
-            if (channel is IGuildChannel)
-            {
-                using (var db = MakeDbContext())
-                {
-                    needs = await db.NoPrefixGuildChannels.FindAsync(channel.Id) == null;
-                }
-            }
-            else needs = false;
-            
             cachedNeedsPrefix.TryAdd(channel.Id, needs);
             return needs;
         }
@@ -183,62 +158,6 @@ namespace PacManBot.Services
                 return nowNeeds;
             }
         }
-
-
-
-        /// <summary>Whether the specified guild is set to allow message autoresponses.</summary>
-        public bool AllowsAutoresponse(IGuild guild) => guild == null || AllowsAutoresponse(guild.Id);
-
-        /// <summary>Whether the specified guild is set to allow message autoresponses.</summary>
-        public bool AllowsAutoresponse(ulong guildId)
-        {
-            if (cachedAllowsAutoresponse.TryGetValue(guildId, out bool allows)) return allows;
-
-            using (var db = MakeDbContext())
-            {
-                allows = db.NoAutoresponseGuilds.Find(guildId) == null;
-            }
-
-            cachedAllowsAutoresponse.TryAdd(guildId, allows);
-            return allows;
-        }
-
-        /// <summary>Whether the specified guild is set to allow message autoresponses.
-        /// Provides the benefit of an asynchronous database access if it is necessary.</summary>
-        public async Task<bool> AllowsAutoresponseAsync(IGuild guild)
-        {
-            if (guild == null) return true;
-            if (cachedAllowsAutoresponse.TryGetValue(guild.Id, out bool allows)) return allows;
-
-            using (var db = MakeDbContext())
-            {
-                allows = await db.NoAutoresponseGuilds.FindAsync(guild.Id) == null;
-            }
-
-            cachedAllowsAutoresponse.TryAdd(guild.Id, allows);
-            return allows;
-        }
-
-
-        /// <summary>Toggles message autoresponses on or off in the specified guild and returns the new value.</summary>
-        public bool ToggleAutoresponse(ulong guildId)
-        {
-            using (var db = MakeDbContext())
-            {
-                var entry = db.NoAutoresponseGuilds.Find(guildId);
-
-                if (entry == null) db.NoAutoresponseGuilds.Add(guildId);
-                else db.NoAutoresponseGuilds.Remove(entry);
-
-                db.SaveChanges();
-
-                var nowAllows = entry != null;
-                cachedAllowsAutoresponse[guildId] = nowAllows;
-                return nowAllows;
-            }
-        }
-
-
 
 
         /// <summary>Adds a new entry to the <see cref="Games.Concrete.PacManGame"/> scoreboard.</summary>

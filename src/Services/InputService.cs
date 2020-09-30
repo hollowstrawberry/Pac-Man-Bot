@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using DSharpPlus;
+using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
 using PacManBot.Extensions;
@@ -20,7 +21,6 @@ namespace PacManBot.Services
     public class InputService
     {
         private readonly DiscordShardedClient client;
-        private readonly PmCommandService commands;
         private readonly StorageService storage;
         private readonly LoggingService log;
         private readonly GameService games;
@@ -28,7 +28,7 @@ namespace PacManBot.Services
         private readonly ConcurrentDictionary<PendingResponse, byte> pendingResponses;
         private readonly ConcurrentDictionary<ulong, DateTime> lastGuildUsersDownload;
 
-        private readonly Regex StartsWithMention = new Regex(@"^<(@|#|a?:)");
+        private readonly Regex StartsWithAnyMention = new Regex(@"^<(@|#|a?:)");
         private Regex mentionPrefixRegex = null;
 
         /// <summary>Is a match when the given text begins with a mention to the bot's current user.</summary>
@@ -36,10 +36,9 @@ namespace PacManBot.Services
 
 
         public InputService(DiscordShardedClient client, LoggingService log,
-            StorageService storage, PmCommandService commands, GameService games)
+            StorageService storage, GameService games)
         {
             this.client = client;
-            this.commands = commands;
             this.storage = storage;
             this.log = log;
             this.games = games;
@@ -94,7 +93,7 @@ namespace PacManBot.Services
                 {
                     if (PendingResponse(message)
                         || MessageGameInput(message)
-                        || Command(message))
+                        || Command(message, args.Client))
                     {
                         if (message.Channel.Guild != null)
                         {
@@ -178,20 +177,23 @@ namespace PacManBot.Services
 
 
         /// <summary>Tries to find and execute a command. Returns whether it is successful.</summary>
-        private bool Command(DiscordMessage message)
+        private bool Command(DiscordMessage message, DiscordClient client)
         {
             string prefix = storage.GetGuildPrefix(message.Channel?.Guild);
             bool requiresPrefix = storage.RequiresPrefix(message.Channel);
 
-            int? mentionPos = message.GetMentionCommandPos(this);
-            int pos = mentionPos
+            int? selfMentionPos = message.GetMentionCommandPos(this);
+            int pos = selfMentionPos
                 ?? message.GetCommandPos(prefix)
                 ?? (requiresPrefix ? -1 : 0);
 
             // I added a check for non-self mentions as the default prefix is < which is also the first character of discord mentions
-            if (pos >= 0 && (mentionPos != null || !StartsWithMention.IsMatch(message.Content)))
+            if (pos >= 0 && (selfMentionPos != null || !StartsWithAnyMention.IsMatch(message.Content)))
             {
-                _ = commands.ExecuteAsync(message, pos);
+                var commands = client.GetCommandsNext();
+                var command = commands.FindCommand(message.Content.Substring(pos), out string rawArguments);
+                var context = commands.CreateContext(message, pos == 0 ? "" : prefix, command, rawArguments);
+                _ = commands.ExecuteCommandAsync(context);
                 return true;
             }
 

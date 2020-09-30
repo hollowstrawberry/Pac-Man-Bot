@@ -21,15 +21,15 @@ namespace PacManBot.Services
                     "System", "System.IO", "System.Text", "System.Linq", "System.Reflection", "System.Diagnostics",
                     "System.Threading.Tasks", "System.Collections.Generic", "System.Text.RegularExpressions",
                     "Microsoft.EntityFrameworkCore", "Newtonsoft.Json",
-                    "Discord", "Discord.Rest", "Discord.Commands", "Discord.WebSocket",
+                    "DSharpPlus", "DSharpPlus.CommandsNext", "DSharpPlus.Entities",
                     "PacManBot", "PacManBot.Constants", "PacManBot.Utils", "PacManBot.Extensions", 
                     "PacManBot.Games", "PacManBot.Games.Concrete", "PacManBot.Games.Concrete.Rpg",
                     "PacManBot.Commands", "PacManBot.Commands.Modules", "PacManBot.Commands.Modules.GameModules",
                     "PacManBot.Services", "PacManBot.Services.Database"
                 )
                 .WithReferences(
-                    typeof(ScriptingService).Assembly,
-                    typeof(Discord.DiscordConfig).Assembly
+                    typeof(PmBot).Assembly,
+                    typeof(DSharpPlus.DiscordClient).Assembly
                 );
         }
 

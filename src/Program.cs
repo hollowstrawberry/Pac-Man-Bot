@@ -65,10 +65,8 @@ namespace PacManBot
                 .AddSingleton<DiscordShardedClient>()
                 .AddSingleton<PmBot>()
                 .AddSingleton<StorageService>()
-                .AddSingleton<PmCommandService>()
                 .AddSingleton<InputService>()
                 .AddSingleton<GameService>()
-                .AddSingleton<PmCommandService>()
                 .AddSingleton<SchedulingService>()
                 .AddSingleton<ScriptingService>();
 

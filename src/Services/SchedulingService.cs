@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Discord;
-using Discord.Net;
-using Discord.WebSocket;
+using DSharpPlus;
 using PacManBot.Constants;
 using PacManBot.Extensions;
 using PacManBot.Games;
@@ -18,7 +16,7 @@ namespace PacManBot.Services
     /// </summary>
     public class SchedulingService
     {
-        private readonly PmDiscordClient client;
+        private readonly DiscordShardedClient client;
         private readonly LoggingService log;
         private readonly GameService games;
         private readonly bool scheduledRestart;
@@ -31,7 +29,7 @@ namespace PacManBot.Services
         public event Func<Task> PrepareRestart;
         
 
-        public SchedulingService(PmConfig config, PmDiscordClient client, LoggingService log, GameService games)
+        public SchedulingService(PmConfig config, DiscordShardedClient client, LoggingService log, GameService games)
         {
             this.client = client;
             this.log = log;
@@ -94,17 +92,14 @@ namespace PacManBot.Services
             }
 
 
-            if (client?.LoginState == LoginState.LoggedIn)
+            foreach (var game in removedChannelGames)
             {
-                foreach (var game in removedChannelGames)
+                try
                 {
-                    try
-                    {
-                        var gameMessage = await game.GetMessageAsync();
-                        if (gameMessage != null) await gameMessage.ModifyAsync(game.GetMessageUpdate(), PmBot.DefaultOptions);
-                    }
-                    catch (HttpException) { } // Something happened to the message, we can ignore it
+                    var gameMessage = await game.GetMessageAsync();
+                    if (gameMessage != null) await gameMessage.ModifyAsync(game.GetMessageUpdate());
                 }
+                catch (HttpException) { } // Something happened to the message, we can ignore it
             }
         }
 
