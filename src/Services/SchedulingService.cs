@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using DSharpPlus;
+using DSharpPlus.Exceptions;
 using PacManBot.Constants;
 using PacManBot.Extensions;
 using PacManBot.Games;
@@ -29,7 +30,7 @@ namespace PacManBot.Services
         public event Func<Task> PrepareRestart;
         
 
-        public SchedulingService(PmConfig config, DiscordShardedClient client, LoggingService log, GameService games)
+        public SchedulingService(PmBotConfig config, DiscordShardedClient client, LoggingService log, GameService games)
         {
             this.client = client;
             this.log = log;
@@ -97,9 +98,9 @@ namespace PacManBot.Services
                 try
                 {
                     var gameMessage = await game.GetMessageAsync();
-                    if (gameMessage != null) await gameMessage.ModifyAsync(game.GetMessageUpdate());
+                    if (gameMessage != null) await gameMessage.ModifyAsync(await game.GetContentAsync(), (await game.GetEmbedAsync()).Build());
                 }
-                catch (HttpException) { } // Something happened to the message, we can ignore it
+                catch (NotFoundException) { }
             }
         }
 

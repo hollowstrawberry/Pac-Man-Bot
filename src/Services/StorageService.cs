@@ -32,7 +32,7 @@ namespace PacManBot.Services
         private PacManDbContext MakeDbContext() => new PacManDbContext(dbConnection);
 
 
-        public StorageService(PmConfig config, DiscordShardedClient client, LoggingService log)
+        public StorageService(PmBotConfig config, DiscordShardedClient client, LoggingService log)
         {
             this.client = client;
             this.log = log;

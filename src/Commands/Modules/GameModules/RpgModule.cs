@@ -84,19 +84,19 @@ namespace PacManBot.Commands.Modules.GameModules
                 }
 
                 string response = await UseActiveSkill(skill);
-                if (response != null) await ReplyAsync(response);
+                if (response != null) await RespondAsync(response);
             }
             else
             {
                 if (Game == null && command.Get<NotRequiresRpgAttribute>() == null)
                 {
-                    await ReplyAsync($"You can use `{Context.Prefix}rpg start` to start your adventure.");
+                    await RespondAsync($"You can use `{Context.Prefix}rpg start` to start your adventure.");
                     return;
                 }
 
                 ExtraArg = args.Trim();
                 string response = await command.Invoke<Task<string>>(this);
-                if (response != null) await ReplyAsync(response);
+                if (response != null) await RespondAsync(response);
             }
         }
 
@@ -215,12 +215,12 @@ namespace PacManBot.Commands.Modules.GameModules
 
             if (rpg == null)
             {
-                if (otherUser == null) await ReplyAsync($"You can use `{Context.Prefix}rpg start` to start your adventure."); 
-                else await ReplyAsync("This person hasn't started their adventure.");
+                if (otherUser == null) await RespondAsync($"You can use `{Context.Prefix}rpg start` to start your adventure."); 
+                else await RespondAsync("This person hasn't started their adventure.");
                 return null;
             }
 
-            await ReplyAsync(rpg.player.Profile(Context.Prefix, own: otherUser == null));
+            await RespondAsync(rpg.player.Profile(Context.Prefix, own: otherUser == null));
             return null;
         }
 
@@ -228,7 +228,7 @@ namespace PacManBot.Commands.Modules.GameModules
         [RpgCommand("skills", "skill", "s", "spells")]
         public async Task<string> SendSkills()
         {
-            await ReplyAsync(Game.player.Skills(Context.Prefix));
+            await RespondAsync(Game.player.Skills(Context.Prefix));
             return null;
         }
 
@@ -253,7 +253,7 @@ namespace PacManBot.Commands.Modules.GameModules
             Game.player.Buffs.Clear();
             await SaveGameAsync();
 
-            await ReplyAsync($"💟 Fully restored!");
+            await RespondAsync($"💟 Fully restored!");
 
             if (Game.State == GameState.Active)
             {
@@ -301,7 +301,7 @@ namespace PacManBot.Commands.Modules.GameModules
 
             Game.player.EquipItem(bestMatch.Key);
             await SaveGameAsync();
-            await ReplyAsync($"⚔ Equipped `{bestMatch}`.");
+            await RespondAsync($"⚔ Equipped `{bestMatch}`.");
 
             if (Game.State == GameState.Active && !Game.IsPvp)
             {
@@ -397,7 +397,7 @@ namespace PacManBot.Commands.Modules.GameModules
 
             if (name == "")
             {
-                await ReplyAsync("Say your hero's new name:");
+                await RespondAsync("Say your hero's new name:");
 
                 msg = await GetResponseAsync();
                 if (msg == null) return "Timed out 💨";
@@ -420,7 +420,7 @@ namespace PacManBot.Commands.Modules.GameModules
         {
             if (ExtraArg == "")
             {
-                await ReplyAsync("Say the name or hex code of your new color:");
+                await RespondAsync("Say the name or hex code of your new color:");
 
                 var response = await GetResponseAsync(60);
                 if (response == null) return "Timed out 💨";
@@ -437,7 +437,7 @@ namespace PacManBot.Commands.Modules.GameModules
             Game.player.Color = color.Value;
             await SaveGameAsync();
 
-            await ReplyAsync(new EmbedBuilder
+            await RespondAsync(new EmbedBuilder
             {
                 Title = "Player color set",
                 Description = $"#{color.Value.RawValue:X6}",
@@ -480,7 +480,7 @@ namespace PacManBot.Commands.Modules.GameModules
 
             if (ExtraArg == "")
             {
-                await ReplyAsync("Specify the user you want to challenge:");
+                await RespondAsync("Specify the user you want to challenge:");
                 var rsp = await GetResponseAsync();
                 if (rsp == null) return "Timed out 💨";
                 ExtraArg = rsp.Content;
@@ -567,7 +567,7 @@ namespace PacManBot.Commands.Modules.GameModules
         [RpgCommand("delete")]
         public async Task<string> DeleteGame()
         {
-            await ReplyAsync(
+            await RespondAsync(
                 $"❗ You're about to completely delete your progress in ReactionRPG.\n" +
                 $"Are you sure you want to delete your level {Game.player.Level} hero? (Yes/No)");
 
@@ -638,7 +638,7 @@ namespace PacManBot.Commands.Modules.GameModules
                 $"To use an active skill you unlocked, use that skill's command which can be found in the skills page.",
             });
 
-            await ReplyAsync(embed);
+            await RespondAsync(embed);
             return null;
         }
 

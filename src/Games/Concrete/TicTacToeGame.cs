@@ -37,20 +37,20 @@ namespace PacManBot.Games.Concrete
 
 
 
-        public async ValueTask<bool> IsInputAsync(string value, ulong userId)
+        public ValueTask<bool> IsInputAsync(string value, ulong userId)
         {
-            return userId == UserId[Turn] && int.TryParse(StripPrefix(value), out int num)
-                && num > 0 && num <= board.Length;
+            return new ValueTask<bool>(
+                userId == UserId[Turn] && int.TryParse(StripPrefix(value), out int num) && num > 0 && num <= board.Length);
         }
 
 
-        public async Task InputAsync(string input, ulong userId = 1)
+        public Task InputAsync(string input, ulong userId = 1)
         {
             int cell = int.Parse(StripPrefix(input)) - 1;
             int y = cell / board.Width;
             int x = cell % board.Width;
 
-            if (State != GameState.Active || board[x, y] != Player.None) return;
+            if (State != GameState.Active || board[x, y] != Player.None) return Task.CompletedTask;
 
             board[x, y] = Turn;
             Time++;
@@ -68,6 +68,8 @@ namespace PacManBot.Games.Concrete
                 State = GameState.Completed;
                 Turn = Winner;
             }
+
+            return Task.CompletedTask;
         }
 
 

@@ -43,7 +43,7 @@ namespace PacManBot.Commands.Modules.GameModules
                         "These rotate the entire cube in the direction of R, U and F respectively. " +
                         "They can also be counterclockwise or double.";
 
-                    await ReplyAsync(moveHelp);
+                    await RespondAsync(moveHelp);
                     return;
 
 
@@ -70,7 +70,7 @@ namespace PacManBot.Commands.Modules.GameModules
                 case "showguide":
                     Game.ShowHelp = !Game.ShowHelp;
                     if (Game.ShowHelp) await AutoReactAsync();
-                    else await ReplyAsync("❗ You just disabled the help displayed below the cube.\n" +
+                    else await RespondAsync("❗ You just disabled the help displayed below the cube.\n" +
                                           "Consider re-enabling it if you're not used to the game.");
                     break;
 

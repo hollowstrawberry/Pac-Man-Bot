@@ -16,7 +16,7 @@ using PacManBot.Services;
 namespace PacManBot.Commands.Modules
 {
     [Name(ModuleNames.General), Remarks("1")]
-    public class GeneralModule : BaseModule
+    public class GeneralModule : BasePmBotModule
     {
         private static readonly IEnumerable<string> GameNames = ReflectionExtensions.AllTypes
             .MakeObjects<BaseGame>()
@@ -54,7 +54,7 @@ namespace PacManBot.Commands.Modules
                 embed.AddField(name, desc, true);
             }
 
-            await ReplyAsync(embed);
+            await RespondAsync(embed);
         }
 
 
@@ -80,7 +80,7 @@ namespace PacManBot.Commands.Modules
 
             embed.AddField("Uptime", (DateTime.Now - process.StartTime).Humanized(3), false);
 
-            await ReplyAsync(embed);
+            await RespondAsync(embed);
         }
 
 
@@ -117,7 +117,7 @@ namespace PacManBot.Commands.Modules
         public async Task Ping([Remainder]string uselessArgs = "")
         {
             var stopwatch = Stopwatch.StartNew(); // Measure the time it takes to send a message to chat
-            var message = await ReplyAsync($"{CustomEmoji.Loading} Waka");
+            var message = await RespondAsync($"{CustomEmoji.Loading} Waka");
             stopwatch.Stop();
 
             var content = new StringBuilder();
@@ -137,7 +137,7 @@ namespace PacManBot.Commands.Modules
         [Summary("Repeats back any message.")]
         [RequireContext(ContextType.DM)]
         public async Task Say([Remainder]string message)
-            => await ReplyAsync(message.SanitizeMentions());
+            => await RespondAsync(message.SanitizeMentions());
 
 
         [Command("allgames"), Alias("gamestats"), Parameters(""), Remarks("Info about the bot's current games")]
@@ -155,7 +155,7 @@ namespace PacManBot.Commands.Modules
                 }).ToList()
             };
 
-            await ReplyAsync(embed);
+            await RespondAsync(embed);
         }
 
 
@@ -182,7 +182,7 @@ namespace PacManBot.Commands.Modules
                 }
             }
 
-            await ReplyAsync(message);
+            await RespondAsync(message);
         }
 
 
@@ -207,7 +207,7 @@ namespace PacManBot.Commands.Modules
                 },
             };
 
-            await ReplyAsync(embed);
+            await RespondAsync(embed);
         }
 
 
@@ -224,7 +224,7 @@ namespace PacManBot.Commands.Modules
                 ThumbnailUrl = Context.Client.GetGuild(409803292219277313).IconUrl,
             };
 
-            await ReplyAsync(embed);
+            await RespondAsync(embed);
         }
 
 
@@ -241,7 +241,7 @@ namespace PacManBot.Commands.Modules
                 ThumbnailUrl = "https://cdn.discordapp.com/attachments/541768631445618689/541768699929952257/GitHub.png",
             };
 
-            await ReplyAsync(embed);
+            await RespondAsync(embed);
         }
 
 
@@ -263,7 +263,7 @@ namespace PacManBot.Commands.Modules
                 $"[Click here to go to my PayPal](http://paypal.me/samrux)"
             };
 
-            await ReplyAsync(embed);
+            await RespondAsync(embed);
         }
 
 
@@ -275,7 +275,7 @@ namespace PacManBot.Commands.Modules
             try
             {
                 File.AppendAllText(Files.FeedbackLog, $"[{Context.User.FullName()}] {message}\n\n");
-                await ReplyAsync($"{CustomEmoji.Check} Message sent. Thank you!");
+                await RespondAsync($"{CustomEmoji.Check} Message sent. Thank you!");
                 string content = $"```diff\n+Feedback received: {Context.User.FullName()}```\n{message}".Truncate(2000);
 
                 var app = await Context.Client.GetApplicationInfoAsync(PmBot.DefaultOptions);
@@ -284,7 +284,7 @@ namespace PacManBot.Commands.Modules
             catch (Exception e)
             {
                 Log.Exception($"Sending feedback from {Context.User.FullName()} at {Context.Channel.FullName()}", e);
-                await ReplyAsync("Oops, I didn't catch that, please try again. I think the developer messed up big time.");
+                await RespondAsync("Oops, I didn't catch that, please try again. I think the developer messed up big time.");
             }
         }
 

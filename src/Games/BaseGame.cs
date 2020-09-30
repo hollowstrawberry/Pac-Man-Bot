@@ -14,15 +14,15 @@ namespace PacManBot.Games
     public abstract class BaseGame : IBaseGame
     {
         /// <summary>Invisible character to be used in embeds.</summary>
-        protected const string Empty = DiscordExtensions.Empty;
+        protected const string Empty = DiscordEntityExtensions.Empty;
 
         protected DiscordShardedClient shardedClient;
-        protected PmConfig config;
+        protected PmBotConfig config;
         protected LoggingService log;
         protected StorageService storage;
         protected GameService games;
 
-        protected PmContent Content => config.Content;
+        protected PmBotContent Content => config.Content;
 
 
 
@@ -85,7 +85,7 @@ namespace PacManBot.Games
         /// <summary>Sets the services that will be used by this game instance.</summary>
         protected virtual void SetServices(IServiceProvider services)
         {
-            config = services.Get<PmConfig>();
+            config = services.Get<PmBotConfig>();
             shardedClient = services.Get<DiscordShardedClient>();
             log = services.Get<LoggingService>();
             storage = services.Get<StorageService>();

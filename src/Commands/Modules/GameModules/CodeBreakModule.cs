@@ -22,7 +22,7 @@ namespace PacManBot.Commands.Modules.GameModules
 
             if (digits < 2 || digits > 10)
             {
-                await ReplyAsync("The amount of digits must be between 2 and 10.");
+                await RespondAsync("The amount of digits must be between 2 and 10.");
                 return;
             }
 

@@ -217,7 +217,7 @@ namespace PacManBot.Services
             }
             catch (Exception e)
             {
-                log.Exception($"During input \"{message.Content}\" in {(await game.GetChannelAsync()).DebugName()}", e, game.GameName);
+                log.Exception($"During input \"{message.Content}\" in {game.Channel.DebugName()}", e, game.GameName);
             }
 
             return true;

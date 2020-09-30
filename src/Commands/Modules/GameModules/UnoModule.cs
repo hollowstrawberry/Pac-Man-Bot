@@ -71,17 +71,17 @@ namespace PacManBot.Commands.Modules.GameModules
 
             if (Game == null)
             {
-                await ReplyAsync($"There's no Uno game in this channel! Use `{Context.Prefix}uno` to start.");
+                await RespondAsync($"There's no Uno game in this channel! Use `{Context.Prefix}uno` to start.");
                 return;
             }
             if (Game.UserId.Contains(user.Id))
             {
-                await ReplyAsync($"{(self ? "You're" : "They're")} already playing!");
+                await RespondAsync($"{(self ? "You're" : "They're")} already playing!");
                 return;
             }
             if (!self && !user.IsBot)
             {
-                await ReplyAsync($"{user.Mention} You're being invited to play {Game.GameName}.\nDo `{Context.Prefix}uno join` to join.");
+                await RespondAsync($"{user.Mention} You're being invited to play {Game.GameName}.\nDo `{Context.Prefix}uno join` to join.");
                 return;
             }
 
@@ -94,7 +94,7 @@ namespace PacManBot.Commands.Modules.GameModules
             }
             else
             {
-                await ReplyAsync($"{user.Mention} {"You ".If(self)}can't join this game: {failReason}");
+                await RespondAsync($"{user.Mention} {"You ".If(self)}can't join this game: {failReason}");
             }
 
             if (Context.BotCan(ChannelPermission.ManageMessages)) await Context.Message.DeleteAsync(DefaultOptions);
@@ -109,12 +109,12 @@ namespace PacManBot.Commands.Modules.GameModules
         {
             if (Game == null)
             {
-                await ReplyAsync($"There's no Uno game in this channel! Use `{Context.Prefix}uno` to start.");
+                await RespondAsync($"There's no Uno game in this channel! Use `{Context.Prefix}uno` to start.");
                 return;
             }
             if (!Game.UserId.Contains(Context.User.Id))
             {
-                await ReplyAsync($"You're not in the game.");
+                await RespondAsync($"You're not in the game.");
                 return;
             }
 
@@ -142,22 +142,22 @@ namespace PacManBot.Commands.Modules.GameModules
         {
             if (Game == null)
             {
-                await ReplyAsync($"There's no Uno game in this channel! Use `{Context.Prefix}uno` to start.");
+                await RespondAsync($"There's no Uno game in this channel! Use `{Context.Prefix}uno` to start.");
                 return;
             }
             if (user == null)
             {
-                await ReplyAsync($"You must specify a user to kick from the game.");
+                await RespondAsync($"You must specify a user to kick from the game.");
                 return;
             }
             if (!Game.UserId.Contains(user.Id))
             {
-                await ReplyAsync($"That user is not in the game.");
+                await RespondAsync($"That user is not in the game.");
                 return;
             }
             if (!user.IsBot && (Game.UserId[Game.Turn] != user.Id || (DateTime.Now - Game.LastPlayed) < TimeSpan.FromMinutes(1)))
             {
-                await ReplyAsync("To remove another user they must be inactive for at least 1 minute during their turn.");
+                await RespondAsync("To remove another user they must be inactive for at least 1 minute during their turn.");
             }
 
             Game.RemovePlayer(user);

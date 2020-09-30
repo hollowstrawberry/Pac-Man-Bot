@@ -14,7 +14,7 @@ namespace PacManBot
     /// Contains the runtime settings of the bot.
     /// </summary>
     [DataContract]
-    public class PmConfig
+    public class PmBotConfig
     {
         /// <summary>Secret token used to connect to Discord. Must be provided for the bot to run.</summary>
         [DataMember] public readonly string discordToken;
@@ -72,9 +72,9 @@ namespace PacManBot
         /// <summary>Reloads <see cref="Content"/> from the provided json.</summary>
         public void LoadContent(string json)
         {
-            var cont = JsonConvert.DeserializeObject<PmContent>(json);
+            var cont = JsonConvert.DeserializeObject<PmBotContent>(json);
 
-            var missingFields = typeof(PmContent).GetFields().Where(x => x.GetValue(cont) == null).ToList();
+            var missingFields = typeof(PmBotContent).GetFields().Where(x => x.GetValue(cont) == null).ToList();
             if (missingFields.Count > 0)
             {
                 throw new InvalidOperationException(
@@ -86,7 +86,7 @@ namespace PacManBot
 
 
         /// <summary>Content used throughout the bot. Set using <see cref="LoadContent(string)"/>.</summary>
-        public PmContent Content { get; private set; }
+        public PmBotContent Content { get; private set; }
 
 
         /// <summary>Gets a configuration object for a <see cref="DiscordSocketClient"/>.</summary>

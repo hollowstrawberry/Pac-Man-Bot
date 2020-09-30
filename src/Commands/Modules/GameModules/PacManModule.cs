@@ -51,7 +51,7 @@ namespace PacManBot.Commands.Modules.GameModules
                     embed.AddField(name, $"[Click here]({url} \"{url}\")", true);
                 }
 
-                await ReplyAsync(message, embed);
+                await RespondAsync(message, embed);
                 return;
             }
 
@@ -86,7 +86,7 @@ namespace PacManBot.Commands.Modules.GameModules
         {
             if (Game == null)
             {
-                await ReplyAsync("There is no active Pac-Man game in this channel!");
+                await RespondAsync("There is no active Pac-Man game in this channel!");
                 return;
             }
 

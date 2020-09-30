@@ -76,19 +76,19 @@ namespace PacManBot.Commands.Modules.GameModules
 
             if (command == null)
             {
-                await ReplyAsync($"Unknown pet command! Do `{Context.Prefix}pet help` for help");
+                await RespondAsync($"Unknown pet command! Do `{Context.Prefix}pet help` for help");
             }
             else
             {
                 if (Game == null && command.Get<RequiresPetAttribute>() != null)
                 {
-                    await ReplyAsync(AdoptPetMessage);
+                    await RespondAsync(AdoptPetMessage);
                     return;
                 }
 
                 ExtraArg = args;
                 string response = await command.Invoke<Task<string>>(this);
-                if (response != null) await ReplyAsync(response);
+                if (response != null) await RespondAsync(response);
             }
         }
 
@@ -197,8 +197,8 @@ namespace PacManBot.Commands.Modules.GameModules
                     otherPet.happiness = PetGame.MaxStat;
                     await Games.SaveAsync(otherPet);
 
-                    await ReplyAsync($"{CustomEmoji.PetRight}{playEmote}{CustomEmoji.PetLeft}");
-                    await ReplyAsync($"{Game.petName} and {otherPet.petName} are happy to play together!");
+                    await RespondAsync($"{CustomEmoji.PetRight}{playEmote}{CustomEmoji.PetLeft}");
+                    await RespondAsync($"{Game.petName} and {otherPet.petName} are happy to play together!");
                 }
                 return null;
             }
@@ -248,7 +248,7 @@ namespace PacManBot.Commands.Modules.GameModules
 
             if (name == "")
             {
-                await ReplyAsync("Say your pet's new name:");
+                await RespondAsync("Say your pet's new name:");
 
                 msg = await GetResponseAsync();
                 if (msg == null) return "Timed out 💨";
@@ -275,7 +275,7 @@ namespace PacManBot.Commands.Modules.GameModules
 
             if (string.IsNullOrWhiteSpace(url))
             {
-                await ReplyAsync("Send your pet's new image or image URL, or \"reset\" to reset it.");
+                await RespondAsync("Send your pet's new image or image URL, or \"reset\" to reset it.");
 
                 msg = await GetResponseAsync(120);
                 if (msg == null) return "Timed out 💨";
@@ -328,7 +328,7 @@ namespace PacManBot.Commands.Modules.GameModules
                         ? $"{CustomEmoji.Cross} That's enough petting! {60 - (int)passed.TotalSeconds} seconds left."
                         : $"{CustomEmoji.Cross} You may pet once a minute in guilds. You can pet more in DMs with the bot.";
                         
-                    await ReplyAsync(response);
+                    await RespondAsync(response);
                 }
                 return null;
             }
@@ -386,7 +386,7 @@ namespace PacManBot.Commands.Modules.GameModules
                 return $"Goodbye {Game.GameName}!";
             }
 
-            await ReplyAsync(
+            await RespondAsync(
                 $"❗ Are you sure you want to release **{Game.petName}**?\n" +
                 $"It will be gone forever, along with your stats and achievements, and you can't get it back.\n" +
                 $"Release your pet? (Yes/No)");

@@ -41,10 +41,10 @@ namespace PacManBot
 
 
             // Set up configuration
-            PmConfig config;
+            PmBotConfig config;
             try
             {
-                config = JsonConvert.DeserializeObject<PmConfig>(File.ReadAllText(Files.Config));
+                config = JsonConvert.DeserializeObject<PmBotConfig>(File.ReadAllText(Files.Config));
                 config.LoadContent(File.ReadAllText(Files.Contents));
             }
             catch (JsonReaderException e)

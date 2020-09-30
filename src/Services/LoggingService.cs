@@ -20,7 +20,7 @@ namespace PacManBot.Services
         private readonly string[] hardExclusions;
 
 
-        public LoggingService(PmConfig config)
+        public LoggingService(PmBotConfig config)
         {
             minLogLevel = config.logLevel;
             minClientLogLevel = config.clientLogLevel;
@@ -117,9 +117,9 @@ namespace PacManBot.Services
     /// <summary> This shouldn't need to exist.</summary>
     class LoggingServiceFactory : ILoggerFactory
     {
-        private readonly PmConfig config;
+        private readonly PmBotConfig config;
 
-        public LoggingServiceFactory(PmConfig config)
+        public LoggingServiceFactory(PmBotConfig config)
         {
             this.config = config;
         }

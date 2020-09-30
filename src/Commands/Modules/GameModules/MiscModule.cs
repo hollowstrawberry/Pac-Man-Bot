@@ -23,7 +23,7 @@ namespace PacManBot.Commands.Modules.GameModules
         {
             if (Game == null)
             {
-                await ReplyAsync("There is no active game in this channel!");
+                await RespondAsync("There is no active game in this channel!");
                 return;
             }
 
@@ -48,7 +48,7 @@ namespace PacManBot.Commands.Modules.GameModules
         {
             if (Game == null)
             {
-                await ReplyAsync("There is no active game in this channel!");
+                await RespondAsync("There is no active game in this channel!");
                 return;
             }
 
@@ -62,7 +62,7 @@ namespace PacManBot.Commands.Modules.GameModules
                 {
                     if (Context.Guild != null)
                     {
-                        await ReplyAsync($"Game ended.\n**Result:** {pacManGame.score} points in {pacManGame.Time} turns");
+                        await RespondAsync($"Game ended.\n**Result:** {pacManGame.score} points in {pacManGame.Time} turns");
                     }
                     if (msg != null && Context.BotCan(ChannelPermission.ManageMessages))
                     {
@@ -77,7 +77,7 @@ namespace PacManBot.Commands.Modules.GameModules
             }
             else
             {
-                await ReplyAsync("You can't cancel this game because someone else is still playing! Try again in a minute.");
+                await RespondAsync("You can't cancel this game because someone else is still playing! Try again in a minute.");
             }
         }
 
@@ -89,11 +89,11 @@ namespace PacManBot.Commands.Modules.GameModules
         {
             if (faces < 2 || faces > 100)
             {
-                await ReplyAsync("The dice must have between 2 and 100 faces.");
+                await RespondAsync("The dice must have between 2 and 100 faces.");
                 return;
             }
             int dice = Program.Random.Next(1, faces + 1);
-            await ReplyAsync($"🎲{dice.ToString().Select(x => CustomEmoji.Number[x - '0']).JoinString()}");
+            await RespondAsync($"🎲{dice.ToString().Select(x => CustomEmoji.Number[x - '0']).JoinString()}");
         }
 
 
@@ -102,7 +102,7 @@ namespace PacManBot.Commands.Modules.GameModules
         [Summary("Flip a coin, heads or tails.")]
         public async Task CoinFlip()
         {
-            await ReplyAsync(Program.Random.OneIn(2) ? "🤴 **Heads!**" : "⚖️ **Tails!**");
+            await RespondAsync(Program.Random.OneIn(2) ? "🤴 **Heads!**" : "⚖️ **Tails!**");
         }
 
 
@@ -113,8 +113,8 @@ namespace PacManBot.Commands.Modules.GameModules
         public async Task BlobDance(ulong number = 0)
         {
             if (number < 1) await Context.Message.AddReactionAsync(CustomEmoji.EBlobDance, DefaultOptions);
-            else if (number <= 5) await ReplyAsync(CustomEmoji.BlobDance.Repeat((int)number));
-            else if (number <= 1000000) await ReplyAsync("That's too many.");
+            else if (number <= 5) await RespondAsync(CustomEmoji.BlobDance.Repeat((int)number));
+            else if (number <= 1000000) await RespondAsync("That's too many.");
             else if (Context.UserCan(ChannelPermission.ManageMessages)) // Message ID
             {
                 if (await Context.Channel.GetMessageAsync(number) is IUserMessage message)
@@ -129,14 +129,14 @@ namespace PacManBot.Commands.Modules.GameModules
         [Command("neat"), Summary("Neat"), HideHelp]
         public async Task Neat([Remainder] string arg = "")
         {
-            await ReplyAsync("neat");
+            await RespondAsync("neat");
         }
 
 
         [Command("nice"), Summary("Nice"), HideHelp]
         public async Task Nice([Remainder] string arg = "")
         {
-            await ReplyAsync("nice");
+            await RespondAsync("nice");
         }
     }
 }

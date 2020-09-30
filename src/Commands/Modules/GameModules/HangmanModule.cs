@@ -44,7 +44,7 @@ namespace PacManBot.Commands.Modules.GameModules
         {
             if (Context.Guild == null)
             {
-                await ReplyAsync($"There's nobody here to guess! To play alone, use `hangman`");
+                await RespondAsync($"There's nobody here to guess! To play alone, use `hangman`");
                 return;
             }
 
@@ -61,7 +61,7 @@ namespace PacManBot.Commands.Modules.GameModules
             }
             catch (HttpException e) when (e.DiscordCode == 50007) // Can't send DMs
             {
-                await ReplyAsync($"{Context.User.Mention} You must enable DMs!");
+                await RespondAsync($"{Context.User.Mention} You must enable DMs!");
                 EndGame();
                 return;
             }

@@ -9,7 +9,7 @@ using PacManBot.Utils;
 namespace PacManBot.Commands.Modules.GameModules
 {
     [Name(ModuleNames.Games), Remarks("3")]
-    public class MinesweeperModule : BaseModule
+    public class MinesweeperModule : BasePmBotModule
     {
         [Command("minesweeper"), Alias("ms")]
         [Remarks("Send a Minesweeper board in chat.")]
@@ -23,18 +23,18 @@ namespace PacManBot.Commands.Modules.GameModules
         {
             if (size < 5 || size > 14)
             {
-                await ReplyAsync("The board size must range between 5 and 14");
+                await RespondAsync("The board size must range between 5 and 14");
                 return;
             }
             if (difficulty < 1 || difficulty > 9)
             {
-                await ReplyAsync("The difficulty must range between 1 and 9");
+                await RespondAsync("The difficulty must range between 1 and 9");
                 return;
             }
 
             var board = GenerateBoard(size, difficulty);
             var content = board.ToString(x => $"||{(x == Bomb ? BombChar : NumberChars[x])}|| ");
-            await ReplyAsync(content);
+            await RespondAsync(content);
         }
 
 

@@ -18,7 +18,7 @@ namespace PacManBot
     /// </summary>
     public class PmBot
     {
-        private readonly PmConfig config;
+        private readonly PmBotConfig config;
         private readonly IServiceProvider services;
         private readonly DiscordShardedClient client;
         private readonly LoggingService log;
@@ -30,7 +30,7 @@ namespace PacManBot
         private DateTime lastGuildCountUpdate = DateTime.MinValue;
 
 
-        public PmBot(PmConfig config, IServiceProvider services)
+        public PmBot(PmBotConfig config, IServiceProvider services)
         {
             this.config = config;
             this.services = services;

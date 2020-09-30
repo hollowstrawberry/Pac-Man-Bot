@@ -8,7 +8,7 @@ namespace PacManBot
     /// Contains data used throughout the bot, loaded from a file.
     /// </summary>
     [DataContract]
-    public class PmContent
+    public class PmBotContent
     {
         /// <summary>Short invite link for the bot.</summary>
         [DataMember] public readonly string inviteLink;

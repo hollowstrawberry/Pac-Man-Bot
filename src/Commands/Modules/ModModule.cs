@@ -11,7 +11,7 @@ namespace PacManBot.Commands.Modules
 {
     [Name(ModuleNames.Mod), Remarks("5")]
     [PmRequireUserPermission(GuildPermission.ManageMessages)]
-    public class ModModule : BaseModule
+    public class ModModule : BasePmBotModule
     {
         string ContactMessage => $"Please try again or, if the problem persists, contact the bot owner using `{Context.Prefix}feedback`.";
 
@@ -19,7 +19,7 @@ namespace PacManBot.Commands.Modules
         [Command("say"), Remarks("Make the bot say anything")]
         [Summary("Repeats back the message provided. Only users with the Manage Messages permission can use this command.")]
         public async Task Say([Remainder]string message)
-            => await ReplyAsync(message.SanitizeMentions());
+            => await RespondAsync(message.SanitizeMentions());
 
 
         [Command("clear"), Alias("clean"), Remarks("Clear this bot's messages and commands")]
@@ -71,7 +71,7 @@ namespace PacManBot.Commands.Modules
 
             if (error != null)
             {
-                await ReplyAsync($"{CustomEmoji.Cross} {error}");
+                await RespondAsync($"{CustomEmoji.Cross} {error}");
                 return;
             }
 
@@ -79,13 +79,13 @@ namespace PacManBot.Commands.Modules
             try
             {
                 Storage.SetGuildPrefix(Context.Guild.Id, prefix);
-                await ReplyAsync($"{CustomEmoji.Check} Prefix for this server has been successfully set to `{prefix}`");
+                await RespondAsync($"{CustomEmoji.Check} Prefix for this server has been successfully set to `{prefix}`");
                 Log.Verbose($"Prefix for server {Context.Guild.Id} set to {prefix}");
             }
             catch (Exception e)
             {
                 Log.Exception($"Setting prefix for {Context.Guild} ({Context.Guild.Id})", e);
-                await ReplyAsync($"{CustomEmoji.Cross} There was a problem setting the prefix. {ContactMessage}");
+                await RespondAsync($"{CustomEmoji.Cross} There was a problem setting the prefix. {ContactMessage}");
             }
         }
 
@@ -107,7 +107,7 @@ namespace PacManBot.Commands.Modules
                 if (otherChannel is ISocketMessageChannel ch) channel = ch;
                 else
                 {
-                    await ReplyAsync($"{otherChannel.Name} is not a text channel!");
+                    await RespondAsync($"{otherChannel.Name} is not a text channel!");
                     return;
                 }
             }
@@ -139,13 +139,13 @@ namespace PacManBot.Commands.Modules
                 }
                 else
                 {
-                    await ReplyAsync("Cancelled.");
+                    await RespondAsync("Cancelled.");
                 }
             }
             catch (Exception e)
             {
                 Log.Exception($"Toggling prefix for {Context.Channel.FullName()}", e);
-                await ReplyAsync($"{CustomEmoji.Cross} Oops, something went wrong. {ContactMessage}");
+                await RespondAsync($"{CustomEmoji.Cross} Oops, something went wrong. {ContactMessage}");
             }
         }
     }

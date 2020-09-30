@@ -21,7 +21,7 @@ namespace PacManBot.Commands.Modules
 {
     [Name(ModuleNames.Dev), Remarks("0")]
     [RequireDeveloper]
-    public class DevModule : BaseModule
+    public class DevModule : BasePmBotModule
     {
         public PmBot Bot { get; set; }
         public GameService Games { get; set; }
@@ -46,7 +46,7 @@ namespace PacManBot.Commands.Modules
                 Description = commands
             };
 
-            await ReplyAsync(embed);
+            await RespondAsync(embed);
         }
 
 
@@ -54,7 +54,7 @@ namespace PacManBot.Commands.Modules
         [Summary("Shuts down the bot. Developer only.")]
         public async Task ShutDown()
         {
-            var message = await ReplyAsync(CustomEmoji.Loading);
+            var message = await RespondAsync(CustomEmoji.Loading);
             File.WriteAllText(Files.ManualRestart, $"{message.Channel.Id}/{message.Id}");
 
             Log.Info("Restarting", LogSource.Owner);
@@ -69,7 +69,7 @@ namespace PacManBot.Commands.Modules
         {
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                await ReplyAsync("This command is currently only available on Linux systems.");
+                await RespondAsync("This command is currently only available on Linux systems.");
                 return;
             }
 
@@ -95,7 +95,7 @@ namespace PacManBot.Commands.Modules
 
             if (!updated) await AutoReactAsync(false);
 
-            await ReplyAsync($"```\n{result.Truncate(1990)}```");
+            await RespondAsync($"```\n{result.Truncate(1990)}```");
 
             if (updated) await ShutDown();
         }
@@ -177,7 +177,7 @@ namespace PacManBot.Commands.Modules
             }
 
             await Context.Message.RemoveReactionAsync(CustomEmoji.ELoading, Context.Client.CurrentUser, DefaultOptions);
-            if (result != null) await ReplyAsync($"```\n{result.ToString().Truncate(1990)}```");
+            if (result != null) await RespondAsync($"```\n{result.ToString().Truncate(1990)}```");
         }
 
 
@@ -228,7 +228,7 @@ namespace PacManBot.Commands.Modules
             if (table.Length > 0) message.Append($"```{table.ToString().Truncate(1990 - message.Length)}```");
 
             await AutoReactAsync(success);
-            await ReplyAsync(message);
+            await RespondAsync(message);
         }
 
 
@@ -272,7 +272,7 @@ namespace PacManBot.Commands.Modules
             }
 
             await Context.Message.RemoveReactionAsync(CustomEmoji.ELoading, Context.Client.CurrentUser, DefaultOptions);
-            await ReplyAsync(message.Length == 0 ? "*No output*" : $"```\n{message.ToString().Truncate(1990)}```");
+            await RespondAsync(message.Length == 0 ? "*No output*" : $"```\n{message.ToString().Truncate(1990)}```");
         }
 
 
@@ -292,7 +292,7 @@ namespace PacManBot.Commands.Modules
             {
                 Log.Debug($"{e.Message}");
                 await AutoReactAsync(false);
-                await ReplyAsync($"```{e.Message}```");
+                await RespondAsync($"```{e.Message}```");
             }
         }
 
@@ -308,7 +308,7 @@ namespace PacManBot.Commands.Modules
             catch (Exception e)
             {
                 Log.Error($"Failed to load bot content: {e}");
-                await ReplyAsync($"```{e.Message}```");
+                await RespondAsync($"```{e.Message}```");
             }
 
             Log.Info("Reloaded bot content");
@@ -346,7 +346,7 @@ namespace PacManBot.Commands.Modules
                 .OrderBy(x => x.Animated)
                 .Select(x => x.Mention());
 
-            await ReplyAsync($"```{emotes.JoinString("\n")}```".Truncate(2000));
+            await RespondAsync($"```{emotes.JoinString("\n")}```".Truncate(2000));
         }
 
 
@@ -358,12 +358,12 @@ namespace PacManBot.Commands.Modules
             {
                 string content = File.ReadAllText(filename).Replace("```", "`​``").Substring(start).Truncate(length);
                 content = content.Replace(Config.discordToken, ""); // Can't be too safe
-                await ReplyAsync($"```{filename.Split('.').Last()}\n{content}".Truncate(1997) + "```");
+                await RespondAsync($"```{filename.Split('.').Last()}\n{content}".Truncate(1997) + "```");
             }
             catch (Exception e)
             {
                 Log.Debug($"Reading file {filename}: {e.Message}");
-                await ReplyAsync($"```Reading file {filename}: {e.Message}```");
+                await RespondAsync($"```Reading file {filename}: {e.Message}```");
             }
         }
 
@@ -381,7 +381,7 @@ namespace PacManBot.Commands.Modules
         public async Task GetGuildMembers()
         {
             var guilds = Context.Client.Guilds.OrderByDescending(g => g.MemberCount).Take(100);
-            await ReplyAsync(guilds.Select(g => $"{g.Name}: {g.MemberCount}").JoinString("\n").Truncate(2000));
+            await RespondAsync(guilds.Select(g => $"{g.Name}: {g.MemberCount}").JoinString("\n").Truncate(2000));
         }
 
 
@@ -410,7 +410,7 @@ namespace PacManBot.Commands.Modules
         [Summary("Say anything. Developer-only version.")]
         public async Task ClearGameMessages([Remainder]string message)
         {
-            await ReplyAsync(message);
+            await RespondAsync(message);
         }
 
 
@@ -421,7 +421,7 @@ namespace PacManBot.Commands.Modules
             var game = Games.GetForChannel<IMessagesGame>(Context.Channel.Id);
             if (game == null)
             {
-                await ReplyAsync("How about you start a game first");
+                await RespondAsync("How about you start a game first");
                 return;
             }
 
@@ -462,7 +462,7 @@ namespace PacManBot.Commands.Modules
         public async Task ThrowError(bool arg = true)
         {
             if (arg) throw new Exception("oops");
-            else await ReplyAsync("no");
+            else await RespondAsync("no");
         }
     }
 }
