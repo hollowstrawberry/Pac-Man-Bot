@@ -11,7 +11,7 @@ namespace PacManBot.Constants
     /// </summary>
     public static class CustomEmoji
     {
-        public static readonly DiscordGuildEmoji
+        public static readonly DiscordEmoji
             ECheck = Check.ToEmoji(),
             ECross = Cross.ToEmoji(),
             ELoading = Loading.ToEmoji(),

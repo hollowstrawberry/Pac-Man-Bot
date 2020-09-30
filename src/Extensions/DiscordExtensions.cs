@@ -159,7 +159,7 @@ namespace PacManBot.Extensions
         /// <summary>Attempts to parse a guild emoji from its mention, or null if invalid.</summary>
         public static DiscordEmoji ToEmoji(this string text)
         {
-            var match = Regex.Match(text, @"^<?a?:?(.+:.+)>?$");
+            var match = Regex.Match(text.Trim(), @"^<?a?:?([a-zA-Z0-9_]+:[0-9]+)>?$");
             return match.Success ? DiscordEmoji.FromUnicode(match.Groups[1].Value) : null;
         }
 
