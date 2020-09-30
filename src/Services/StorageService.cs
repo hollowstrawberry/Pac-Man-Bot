@@ -7,7 +7,6 @@ using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
 using PacManBot.Constants;
-using PacManBot.Extensions;
 using PacManBot.Services.Database;
 using PacManBot.Utils;
 

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Runtime.Serialization;
-using Discord;
+using DSharpPlus.Entities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using PacManBot.Constants;
@@ -27,7 +27,7 @@ namespace PacManBot.Games
 
 
         /// <summary>Standard player colors for multiplayer games.</summary>
-        public static readonly Color[] RgbColors = {
+        public static readonly DiscordColor[] RgbColors = {
             Colors.Red, Colors.Blue, Colors.Green, Colors.Yellow, Colors.Purple, Colors.Orange,
         };
 
@@ -56,7 +56,7 @@ namespace PacManBot.Games
         public Player Opponent => value == Red ? Blue : Red;
 
         /// <summary>Returns the <see cref="Discord.Color"/> that represents this player.</summary>
-        public Color Color
+        public DiscordColor Color
         {
             get
             {

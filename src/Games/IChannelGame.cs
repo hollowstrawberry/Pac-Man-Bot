@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using Discord;
-using Discord.WebSocket;
+using DSharpPlus.Entities;
 
 namespace PacManBot.Games
 {
@@ -20,12 +19,9 @@ namespace PacManBot.Games
         DateTime LastBumped { get; set; }
 
         /// <summary>Retrieves the channel where this game is taking place in.</summary>
-        ISocketMessageChannel Channel { get; }
-
-        /// <summary>Retrieves this game's channel's guild. Null when the channel is a DM channel.</summary>
-        IGuild Guild { get; }
+        ValueTask<DiscordChannel> GetChannelAsync();
 
         /// <summary>Retrieves this game's latest message.</summary>
-        ValueTask<IUserMessage> GetMessageAsync();
+        ValueTask<DiscordMessage> GetMessageAsync();
     }
 }

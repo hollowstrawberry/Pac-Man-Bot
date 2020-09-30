@@ -1,4 +1,4 @@
-﻿using Discord;
+﻿using DSharpPlus.Entities;
 
 namespace PacManBot.Constants
 {
@@ -7,21 +7,21 @@ namespace PacManBot.Constants
     /// </summary>
     public static class Colors
     {
-        public static readonly Color
+        public static readonly DiscordColor
             // Discord emotes color scheme
-            Red = new Color(221, 46, 68),
-            Blue = new Color(85, 172, 238),
-            Green = new Color(120, 177, 89),
-            Yellow = new Color(253, 203, 88),
-            Purple = new Color(170, 142, 214),
-            Orange = new Color(244, 144, 12),
-            White = new Color(230, 231, 232),
-            Black = new Color(41, 47, 51),
+            Red    = new DiscordColor(221, 46, 68),
+            Blue   = new DiscordColor(85, 172, 238),
+            Green  = new DiscordColor(120, 177, 89),
+            Yellow = new DiscordColor(253, 203, 88),
+            Purple = new DiscordColor(170, 142, 214),
+            Orange = new DiscordColor(244, 144, 12),
+            White  = new DiscordColor(230, 231, 232),
+            Black  = new DiscordColor(41, 47, 51),
 
             // Custom colors
-            Gray = new Color(150, 150, 150),
-            PureWhite = new Color(255, 255, 255),
-            DarkBlack = new Color(20, 26, 30),
-            PacManYellow = new Color(241, 195, 15);
+            Gray      = new DiscordColor(150, 150, 150),
+            PureWhite = new DiscordColor(255, 255, 255),
+            DarkBlack = new DiscordColor(20, 26, 30),
+            PacManYellow = new DiscordColor(241, 195, 15);
     }
 }

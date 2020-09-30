@@ -1,6 +1,8 @@
 using System;
 using System.Threading;
-using Discord;
+using System.Threading.Tasks;
+using DSharpPlus;
+using DSharpPlus.Entities;
 using PacManBot.Extensions;
 using PacManBot.Services;
 
@@ -14,7 +16,7 @@ namespace PacManBot.Games
         /// <summary>Invisible character to be used in embeds.</summary>
         protected const string Empty = DiscordExtensions.Empty;
 
-        protected PmDiscordClient client;
+        protected DiscordShardedClient shardedClient;
         protected PmConfig config;
         protected LoggingService log;
         protected StorageService storage;
@@ -22,9 +24,6 @@ namespace PacManBot.Games
 
         protected PmContent Content => config.Content;
 
-        /// <summary>Used to manage previous game tasks such as 
-        /// ongoing Discord message editions to prevent them from piling up when new ones come in.</summary>
-        protected CancellationTokenSource discordRequestCTS = new CancellationTokenSource();
 
 
         /// <summary>The display name of this game's type.</summary>
@@ -50,14 +49,21 @@ namespace PacManBot.Games
         /// <summary>Discord snowflake ID of all users participating in this game.</summary>
         public virtual ulong[] UserId { get; set; }
 
-
-
         /// <summary>Discord snowflake ID of the first user of this game, or its owner in case of <see cref="IUserGame"/>s.</summary>
         public virtual ulong OwnerId { get => UserId[0]; protected set => UserId = new[] { value }; }
 
-        /// <summary>Retrieves the first user of this game, or its owner in case of <see cref="IUserGame"/>s.</summary>
-        public virtual IUser Owner => client.GetUser(OwnerId);
+        private DiscordUser owner;
 
+        /// <summary>Retrieves the user whose game this is.</summary>
+        public virtual async ValueTask<DiscordUser> GetOwnerAsync()
+        {
+            if (owner != null) return owner;
+            foreach (var (_, shard) in shardedClient.ShardClients)
+            {
+                if ((owner = await shard.GetUserAsync(OwnerId)) != null) break; 
+            }
+            return owner;
+        }
 
 
 
@@ -80,7 +86,7 @@ namespace PacManBot.Games
         protected virtual void SetServices(IServiceProvider services)
         {
             config = services.Get<PmConfig>();
-            client = services.Get<PmDiscordClient>();
+            shardedClient = services.Get<DiscordShardedClient>();
             log = services.Get<LoggingService>();
             storage = services.Get<StorageService>();
             games = services.Get<GameService>();
@@ -88,40 +94,16 @@ namespace PacManBot.Games
 
 
         /// <summary>Creates an updated string content for this game, to be put in a message.</summary>
-        public virtual string GetContent(bool showHelp = true) => "";
+        public virtual ValueTask<string> GetContentAsync(bool showHelp = true) => new ValueTask<string>("");
 
         /// <summary>Creates an updated message embed for this game.</summary>
-        public virtual EmbedBuilder GetEmbed(bool showHelp = true) => null;
-
-        /// <summary>Creates a <see cref="RequestOptions"/> to be used in Discord tasks related to this game,
-        /// such as message editions. Tasks with these options can be cancelled using <see cref="CancelRequests"/>.</summary>
-        public RequestOptions GetRequestOptions() => new RequestOptions
-        {
-            Timeout = 10000,
-            RetryMode = RetryMode.RetryRatelimit,
-            CancelToken = discordRequestCTS.Token
-        };
-
-        /// <summary>Creates a delegate to be passed to <see cref="IUserMessage.ModifyAsync(Action{MessageProperties}, RequestOptions)"/>.
-        /// The message will be updated with the latest content and embed from this game.</summary>
-        public Action<MessageProperties> GetMessageUpdate() => msg => {
-            msg.Content = GetContent();
-            msg.Embed = GetEmbed()?.Build();
-        };
-
-
-        /// <summary>Cancels all previous Discord requests made using the options from <see cref="GetRequestOptions"/>.</summary>
-        public virtual void CancelRequests()
-        {
-            discordRequestCTS.Cancel();
-            discordRequestCTS = new CancellationTokenSource();
-        }
+        public virtual ValueTask<DiscordEmbedBuilder> GetEmbedAsync(bool showHelp = true) => new ValueTask<DiscordEmbedBuilder>((DiscordEmbedBuilder)null);
 
 
         /// <summary>Creates a default message embed to be used when a game has timed out or been manually cancelled.</summary>
-        protected EmbedBuilder CancelledEmbed()
+        protected DiscordEmbedBuilder CancelledEmbed()
         {
-            return new EmbedBuilder()
+            return new DiscordEmbedBuilder()
             {
                 Title = GameName,
                 Description = DateTime.Now - LastPlayed > Expiry ? "Game timed out" : "Game cancelled",

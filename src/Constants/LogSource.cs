@@ -3,6 +3,7 @@
     /// <summary>
     /// The source of a <see cref="Services.LoggingService"/> entry.
     /// </summary>
+    // TODO: Delete
     public static class LogSource
     {
         public const string

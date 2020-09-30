@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Discord;
-using Discord.WebSocket;
+using DSharpPlus;
+using DSharpPlus.Entities;
 using PacManBot.Extensions;
 
 namespace PacManBot.Games
@@ -11,10 +11,6 @@ namespace PacManBot.Games
     /// </summary>
     public abstract class ChannelGame : BaseGame, IChannelGame
     {
-        private ISocketMessageChannel internalChannel;
-        private IUserMessage internalMessage;
-
-
         /// <summary>Discord snowflake ID of the channel where this game is taking place in.</summary>
         public virtual ulong ChannelId { get; set; }
         /// <summary>Discord snowflake ID of the latest message used by this game.</summary>
@@ -22,25 +18,60 @@ namespace PacManBot.Games
         /// <summary>The time when the message used by this game was last moved.</summary>
         public virtual DateTime LastBumped { get; set; }
 
-        /// <summary>Retrieves this game's channel's guild. Null when the channel is a DM channel.</summary>
-        public IGuild Guild => (Channel as IGuildChannel)?.Guild;
 
-        public override IUser Owner => Guild == null ? client.GetUser(OwnerId) : client.GetGuild(Guild.Id).GetUser(OwnerId);
+        private DiscordClient client;
+        private DiscordChannel channel;
+        private DiscordMessage message;
+        private DiscordUser owner;
 
-        /// <summary>Retrieves the channel where this game is taking place in.</summary>
-        public ISocketMessageChannel Channel
+        /// <summary>Returns the game's current shard, caching it if it wasn't already.</summary>
+        public async ValueTask<DiscordClient> GetClientAsync()
         {
-            get => internalChannel != null && internalChannel.Id == ChannelId
-                ? internalChannel : (internalChannel = client.GetMessageChannel(ChannelId)); // Lazy load
+            if (client != null) return client;
+
+            foreach (var (_, shard) in shardedClient.ShardClients)
+            {
+                channel = await shard.GetChannelAsync(ChannelId);
+                if (channel != null)
+                {
+                    if (MessageId > 0) message = await channel.GetMessageAsync(MessageId);
+                    return client = shard;
+                }
+            }
+            return null;
         }
 
-        /// <summary>Retrieves this game's latest message. Null if not retrievable.</summary>
-        public async ValueTask<IUserMessage> GetMessageAsync()
+        /// <summary>Returns the game's current channel, caching it if it wasn't already.</summary>
+        public async ValueTask<DiscordChannel> GetChannelAsync()
         {
-            if (MessageId == 0 || Channel == null) return (internalMessage = null);
+            if (client == null) await GetClientAsync();
+            return channel;
+        }
 
-            return internalMessage != null && internalMessage.Id == MessageId ? internalMessage
-                : (internalMessage = await Channel.GetUserMessageAsync(MessageId)); // Lazy load
+        /// <summary>Returns the game's current message, caching it if it wasn't already.</summary>
+        public async ValueTask<DiscordMessage> GetMessageAsync()
+        {
+            if (client == null) await GetClientAsync();
+            if (channel != null && message?.Id != MessageId)
+            {
+                message = await channel.GetMessageAsync(MessageId);
+            }
+            return message;
+        }
+
+        /// <summary>Retrieves this game's guild. Null when the channel is a DM channel.</summary>
+        public async ValueTask<DiscordGuild> GetGuildAsync()
+        {
+            if (client == null) await GetClientAsync();
+            return channel?.Guild;
+        }
+
+        /// <summary>Retrieves this game's owner (its first player).</summary>
+        public override async ValueTask<DiscordUser> GetOwnerAsync()
+        {
+            if (owner != null) return owner;
+            var guild = await GetGuildAsync();
+            return owner = (guild == null ? await client.GetUserAsync(OwnerId) : await guild.GetMemberAsync(OwnerId));
         }
 
 
@@ -56,9 +87,9 @@ namespace PacManBot.Games
 
 
         /// <summary>Used to remove the guild prefix from game input, as it is to be ignored.</summary>
-        protected string StripPrefix(string value)
+        protected async ValueTask<string> StripPrefix(string value)
         {
-            string prefix = storage.GetPrefix(Channel);
+            string prefix = storage.GetPrefix(await GetChannelAsync());
             return value.StartsWith(prefix) ? value.Substring(prefix.Length) : value;
         }
     }

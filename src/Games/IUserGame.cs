@@ -1,4 +1,5 @@
-using Discord;
+using System.Threading.Tasks;
+using DSharpPlus.Entities;
 
 namespace PacManBot.Games
 {
@@ -12,6 +13,6 @@ namespace PacManBot.Games
         ulong OwnerId { get; }
 
         /// <summary>Retrieves the user whose game this is.</summary>
-        IUser Owner { get; }
+        ValueTask<DiscordUser> GetOwnerAsync();
     }
 }

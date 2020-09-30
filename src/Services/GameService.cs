@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Discord;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using PacManBot.Constants;
 using PacManBot.Extensions;
@@ -166,7 +166,7 @@ namespace PacManBot.Services
                 {
                     log.Log(
                         $"Couldn't load game at {file}: {(firstFail ? e.ToString() : e.Message)}",
-                        firstFail ? LogSeverity.Error : LogSeverity.Verbose, LogSource.Game);
+                        firstFail ? LogLevel.Error : LogLevel.Trace, LogSource.Game);
                     fail++;
                     firstFail = false;
                 }

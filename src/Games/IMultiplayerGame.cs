@@ -1,4 +1,4 @@
-using Discord;
+using DSharpPlus.Entities;
 using System.Threading.Tasks;
 
 namespace PacManBot.Games
@@ -17,16 +17,11 @@ namespace PacManBot.Games
         /// <summary>The message displayed at the top of this game.</summary>
         string Message { get; }
 
-
         /// <summary>Whether the current turn belongs to a bot.</summary>
-        bool BotTurn { get; }
-
-        /// <summary>Whether this game's players are all bots.</summary>
-        bool AllBots { get; }
-
+        ValueTask<bool> IsBotTurnAsync();
 
         /// <summary>Retrieves the user at the specified index. Null if unreachable or not found.</summary>
-        IUser User(int i = 0);
+        ValueTask<DiscordUser> GetUserAsync(int i = 0);
 
         /// <summary>Executes automatic AI input, assuming it is a bot's turn.</summary>
         Task BotInputAsync();

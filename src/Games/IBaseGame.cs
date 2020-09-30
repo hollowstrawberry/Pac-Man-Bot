@@ -1,5 +1,6 @@
 using System;
-using Discord;
+using System.Threading.Tasks;
+using DSharpPlus.Entities;
 
 namespace PacManBot.Games
 {
@@ -31,20 +32,9 @@ namespace PacManBot.Games
 
 
         /// <summary>Creates an updated string content for this game, to be put in a message.</summary>
-        string GetContent(bool showHelp = true);
+        ValueTask<string> GetContentAsync(bool showHelp = true);
 
         /// <summary>Creates an updated message embed for this game.</summary>
-        EmbedBuilder GetEmbed(bool showHelp = true);
-
-        /// <summary>Creates a <see cref="RequestOptions"/> to be used in Discord tasks related to this game,
-        /// such as message editions. Tasks with these options can be cancelled using <see cref="CancelRequests"/>.</summary>
-        RequestOptions GetRequestOptions();
-
-        /// <summary>Creates a delegate to be passed to <see cref="IUserMessage.ModifyAsync(Action{MessageProperties}, RequestOptions)"/>.
-        /// The message will be updated with the latest content and embed from this game.</summary>
-        Action<MessageProperties> GetMessageUpdate();
-
-        /// <summary>Cancels all previous Discord requests made using the options from <see cref="GetRequestOptions"/>.</summary>
-        void CancelRequests();
+        ValueTask<DiscordEmbedBuilder> GetEmbedAsync(bool showHelp = true);
     }
 }
