@@ -4,7 +4,8 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
-using Discord;
+using DSharpPlus;
+using DSharpPlus.Entities;
 using PacManBot.Constants;
 using PacManBot.Extensions;
 using PacManBot.Games.Concrete.Rpg;
@@ -30,7 +31,7 @@ namespace PacManBot.Games.Concrete
 
 
         public string lastEmote;
-        public EmbedBuilder fightEmbed;
+        public DiscordEmbedBuilder fightEmbed;
 
         /// <summary>All information about this game's player.</summary>
         [DataMember] public RpgPlayer player;
@@ -135,9 +136,9 @@ namespace PacManBot.Games.Concrete
 
 
         /// <summary>Returns an embed containing secondary information about the current fight.</summary>
-        public EmbedBuilder FightMenu()
+        public DiscordEmbedBuilder FightMenu()
         {
-            var embed = new EmbedBuilder
+            var embed = new DiscordEmbedBuilder
             {
                 Title = $"⚔ ReactionRPG Battle",
                 Description = "React again to close",
@@ -154,9 +155,9 @@ namespace PacManBot.Games.Concrete
 
 
         /// <summary>Returns an embed displaying the current fight, performing an action first if applicable.</summary>
-        public EmbedBuilder Fight(int? attack = null, Skill skill = null)
+        public DiscordEmbedBuilder Fight(int? attack = null, Skill skill = null)
         {
-            var embed = new EmbedBuilder
+            var embed = new DiscordEmbedBuilder
             {
                 Title = $"⚔ ReactionRPG Battle",
                 Color = Colors.DarkBlack,
@@ -216,9 +217,9 @@ namespace PacManBot.Games.Concrete
                     string lvlUp = player.TryLevelUp();
                     if (lvlUp != null)
                     {
-                        Channel.SendMessageAsync(options: PmBot.DefaultOptions, text:
-                            $"\n⏫ Level up! {lvlUp}" +
-                            "\n⭐ **You reached the maximum level! Congratulations!**".If(player.Level == RpgPlayer.LevelCap));
+                        GetChannelAsync().GetAwaiter().GetResult()
+                            .SendMessageAsync($"\n⏫ Level up! {lvlUp}" +
+                                "\n⭐ **You reached the maximum level! Congratulations!**".If(player.Level == RpgPlayer.LevelCap));
                     }
 
                     enemies.RemoveAt(i);
@@ -248,11 +249,11 @@ namespace PacManBot.Games.Concrete
 
 
         /// <summary>Returns an embed displaying the current PVP fight, performing an action first if applicable.</summary>
-        public EmbedBuilder FightPvP(bool attack = false, Skill skill = null)
+        public DiscordEmbedBuilder FightPvP(bool attack = false, Skill skill = null)
         {
             var players = new[] { this, PvpGame }.OrderBy(g => g.OwnerId).Select(g => g.player);
 
-            var embed = new EmbedBuilder
+            var embed = new DiscordEmbedBuilder
             {
                 Title = players.JoinString(" ⚔ "),
             };
@@ -291,8 +292,8 @@ namespace PacManBot.Games.Concrete
             if (PvpGame.player.Life == 0)
             {
                 embed.Color = player.Color;
-                embed.ThumbnailUrl = Owner.GetAvatarUrl();
-                desc.AppendLine($"\n🎺 {Owner.Mention} won!");
+                embed.WithThumbnail(GetOwnerAsync().GetAwaiter().GetResult().GetAvatarUrl(ImageFormat.Auto));
+                desc.AppendLine($"\n🎺 {GetOwnerAsync().GetAwaiter().GetResult().Mention} won!");
                 desc.AppendLine($"You both should heal.");
 
                 PvpGame.player.Life = 1;
@@ -304,8 +305,8 @@ namespace PacManBot.Games.Concrete
             else if (player.Life == 0)
             {
                 embed.Color = PvpGame.player.Color;
-                embed.ThumbnailUrl = PvpGame.Owner.GetAvatarUrl();
-                desc.AppendLine($"\n🎺 {PvpGame.Owner.Mention} won!");
+                embed.WithThumbnail(PvpGame.GetOwnerAsync().GetAwaiter().GetResult().GetAvatarUrl(ImageFormat.Auto));
+                desc.AppendLine($"\n🎺 {PvpGame.GetOwnerAsync().GetAwaiter().GetResult().Mention} won!");
                 desc.AppendLine($"You both should heal.");
 
                 player.Life = 1;
@@ -316,16 +317,18 @@ namespace PacManBot.Games.Concrete
             else
             {
                 embed.Color = isPvpTurn ? player.Color : PvpGame.player.Color;
-                embed.ThumbnailUrl = isPvpTurn ? Owner.GetAvatarUrl() : PvpGame.Owner.GetAvatarUrl();
+                embed.WithThumbnail(isPvpTurn
+                    ? GetOwnerAsync().GetAwaiter().GetResult().GetAvatarUrl(ImageFormat.Auto)
+                    : PvpGame.GetOwnerAsync().GetAwaiter().GetResult().GetAvatarUrl(ImageFormat.Auto));
 
                 if (PvpBattleConfirmed)
                 {
-                    desc.AppendLine($"{(isPvpTurn ? this : PvpGame).Owner.Mention}'s turn");
+                    desc.AppendLine($"{(isPvpTurn ? this : PvpGame).GetOwnerAsync().GetAwaiter().GetResult().Mention}'s turn");
                 }
                 else
                 {
-                    string prefix = storage.GetPrefix(Channel);
-                    desc.AppendLine($"Waiting for {PvpGame.Owner.Mention} to accept the challenge.");
+                    string prefix = storage.GetPrefix(GetChannelAsync().GetAwaiter().GetResult());
+                    desc.AppendLine($"Waiting for {PvpGame.GetOwnerAsync().GetAwaiter().GetResult().Mention} to accept the challenge.");
                 }
             }
 
@@ -350,26 +353,25 @@ namespace PacManBot.Games.Concrete
 
 
 
-        public bool IsInput(IEmote value, ulong userId)
+        public ValueTask<bool> IsInputAsync(DiscordEmoji value, ulong userId)
         {
             if (IsPvp)
             {
-                return PvpBattleConfirmed &&
-                    (isPvpTurn && userId == OwnerId || PvpGame.isPvpTurn && userId == pvpUserId);
+                return new ValueTask<bool>(PvpBattleConfirmed &&
+                    (isPvpTurn && userId == OwnerId || PvpGame.isPvpTurn && userId == pvpUserId));
             }
 
-            string emote = value.Mention();
-            if (userId != OwnerId) return false;
+            string emote = value.ToString();
+            if (userId != OwnerId) return new ValueTask<bool>(false);
 
             int index = EmoteNumberInputs.IndexOf(emote);
-            if (index >= 0) return index < Opponents.Count;
-            else return EmoteOtherInputs.Contains(emote);
+            return new ValueTask<bool>(index >= 0 ? index < Opponents.Count : EmoteOtherInputs.Contains(emote));
         }
 
 
-        public async Task InputAsync(IEmote input, ulong userId = 1)
+        public async Task InputAsync(DiscordEmoji input, ulong userId = 1)
         {
-            var emote = input.Mention();
+            var emote = input.ToString();
 
             if (IsPvp)
             {
@@ -402,7 +404,7 @@ namespace PacManBot.Games.Concrete
                 if (lastEmote == emote)
                 {
                     lastEmote = SkillsEmote;
-                    fightEmbed = player.Skills(storage.GetPrefix(Channel), true);
+                    fightEmbed = player.Skills(storage.GetPrefix(await GetChannelAsync()), true);
                 }
                 else if (lastEmote == SkillsEmote)
                 {
@@ -412,7 +414,7 @@ namespace PacManBot.Games.Concrete
                 else
                 {
                     lastEmote = emote;
-                    fightEmbed = player.Profile(storage.GetPrefix(Channel), reaction: true);
+                    fightEmbed = player.Profile(storage.GetPrefix(await GetChannelAsync()), reaction: true);
                 }
             }
             else
@@ -428,9 +430,10 @@ namespace PacManBot.Games.Concrete
         }
 
 
-        public override EmbedBuilder GetEmbed(bool showHelp = true)
+        public override ValueTask<DiscordEmbedBuilder> GetEmbedAsync(bool showHelp = true)
         {
-            return fightEmbed ?? new EmbedBuilder { Title = GameName, Description = "Error" };
+            return new ValueTask<DiscordEmbedBuilder>(
+                fightEmbed ?? new DiscordEmbedBuilder { Title = GameName, Description = "Error" });
         }
 
 

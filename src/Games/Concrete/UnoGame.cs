@@ -297,7 +297,7 @@ namespace PacManBot.Games.Concrete
         {
             if (players.Count < 2) return false;
 
-            value = StripPrefix(value.ToLowerInvariant());
+            value = StripPrefixAsync(value.ToLowerInvariant());
 
             if (UserId.Contains(userId))
             {
@@ -317,7 +317,7 @@ namespace PacManBot.Games.Concrete
         public async Task InputAsync(string input, ulong userId = 1)
         {
             LastPlayed = DateTime.Now;
-            input = StripPrefix(input.ToLowerInvariant());
+            input = StripPrefixAsync(input.ToLowerInvariant());
             bool calledByAi = CurrentPlayer.User.IsBot;
 
 

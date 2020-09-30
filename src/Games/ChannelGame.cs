@@ -87,7 +87,7 @@ namespace PacManBot.Games
 
 
         /// <summary>Used to remove the guild prefix from game input, as it is to be ignored.</summary>
-        protected async ValueTask<string> StripPrefix(string value)
+        protected async ValueTask<string> StripPrefixAsync(string value)
         {
             string prefix = storage.GetPrefix(await GetChannelAsync());
             return value.StartsWith(prefix) ? value.Substring(prefix.Length) : value;

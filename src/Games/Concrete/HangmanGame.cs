@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Discord;
+using DSharpPlus.Entities;
 using PacManBot.Constants;
 using PacManBot.Extensions;
 
@@ -52,9 +52,9 @@ namespace PacManBot.Games.Concrete
 
 
 
-        public bool IsInput(string value, ulong userId)
+        public async ValueTask<bool> IsInputAsync(string value, ulong userId)
         {
-            value = StripPrefix(value.ToUpperInvariant());
+            value = await StripPrefixAsync(value.ToUpperInvariant());
 
             if (word == null
                 || userId == OwnerId
@@ -67,15 +67,15 @@ namespace PacManBot.Games.Concrete
         }
 
 
-        public Task InputAsync(string input, ulong userId = 1)
+        public async Task InputAsync(string input, ulong userId = 1)
         {
-            input = StripPrefix(input.ToUpperInvariant());
+            input = await StripPrefixAsync(input.ToUpperInvariant());
 
             if (input.Length == 1)
             {
                 char ch = input[0];
 
-                if (progress.Contains(ch) || wrongChars.Contains(ch)) return Task.CompletedTask;
+                if (progress.Contains(ch) || wrongChars.Contains(ch)) return;
 
                 int neat = 0;
                 for (int i = 0; i < word.Length; ++i)
@@ -116,19 +116,17 @@ namespace PacManBot.Games.Concrete
                     progress = word.ToArray();
                 }
             }
-
-            return Task.CompletedTask;
         }
 
 
 
-        public override EmbedBuilder GetEmbed(bool showHelp = true)
+        public override async ValueTask<DiscordEmbedBuilder> GetEmbedAsync(bool showHelp = true)
         {
             if (State == GameState.Cancelled) return CancelledEmbed();
 
-            var embed = new EmbedBuilder();
+            var embed = new DiscordEmbedBuilder();
 
-            if (OwnerId != 1) embed.Title = $"{Owner?.DisplayName()}'s {GameName}";
+            if (OwnerId != 1) embed.Title = $"{(await GetOwnerAsync())?.DisplayName()}'s {GameName}";
             else embed.Title = GameName;
 
             if (State == GameState.Lose)
@@ -154,7 +152,7 @@ namespace PacManBot.Games.Concrete
             }
 
             int stage = mistakes < config.Content.hangmanStageImages.Length ? mistakes : config.Content.hangmanStageImages.Length - 1;
-            embed.ThumbnailUrl = config.Content.hangmanStageImages[stage];
+            embed.WithThumbnail(config.Content.hangmanStageImages[stage]);
 
 
             string displayWord = progress.Select(x => x == ' ' ? " " : $"`{x}`").JoinString(' ').Replace("   ", "\n");
@@ -168,34 +166,18 @@ namespace PacManBot.Games.Concrete
                     .SelectMany(c => c)
                     .ToList();
 
-                embed.Fields = new List<EmbedFieldBuilder>
-                {
-                    new EmbedFieldBuilder
-                    {
-                        Name = Empty,
-                        IsInline = true,
-                        Value = displayWord,
-                    },
-                    new EmbedFieldBuilder
-                    {
-                        Name = missed.Count == 0 ? Empty : "_Missed_",
-                        IsInline = true,
-                        Value = missed.Count == 0 ? Empty : missed.Split(5).Select(x => x.JoinString(' ')).JoinString('\n'),
-                    },
-                    new EmbedFieldBuilder
-                    {
-                        Name = Empty,
-                        IsInline = false,
-                        Value = $"_Guess a letter or the full {(word.Contains(' ') ? "phrase" : "word")}!_",
-                    },
-                };
+                embed.AddField(Empty, displayWord, true);
+                embed.AddField(missed.Count == 0 ? Empty : "_Missed_",
+                    missed.Count == 0 ? Empty : missed.Split(5).Select(x => x.JoinString(' ')).JoinString('\n'), true);
+                embed.AddField(Empty, $"_Guess a letter or the full {(word.Contains(' ') ? "phrase" : "word")}!_", false);
             }
             else
             {
                 embed.Description = displayWord;
                 if (State == GameState.Win)
                 {
-                    embed.Description += $"\n\n{client.GetUser(winnerId)?.Mention ?? "Someone"} guessed it!";
+                    var user = await (await GetClientAsync()).GetUserAsync(winnerId);
+                    embed.Description += $"\n\n{user?.Mention ?? "Someone"} guessed it!";
                 }
             }
 

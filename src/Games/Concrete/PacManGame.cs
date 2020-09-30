@@ -5,7 +5,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
-using Discord;
+using DSharpPlus.Entities;
 using PacManBot.Constants;
 using PacManBot.Extensions;
 
@@ -31,7 +31,7 @@ namespace PacManBot.Games.Concrete
         public string FilenameKey => "";
 
 
-        public static readonly IReadOnlyDictionary<IEmote, PacManInput> GameInputs = new Dictionary<IEmote, PacManInput>() {
+        public static readonly IReadOnlyDictionary<DiscordEmoji, PacManInput> GameInputs = new Dictionary<DiscordEmoji, PacManInput>() {
             { "⬅".ToEmoji(), PacManInput.Left },
             { "⬆".ToEmoji(), PacManInput.Up },
             { "⬇".ToEmoji(), PacManInput.Down },
@@ -253,13 +253,13 @@ namespace PacManBot.Games.Concrete
 
 
 
-        public bool IsInput(IEmote emote, ulong userId = 1)
+        public ValueTask<bool> IsInputAsync(DiscordEmoji emote, ulong userId = 1)
         {
-            return GameInputs.ContainsKey(emote);
+            return new ValueTask<bool>(GameInputs.ContainsKey(emote));
         }
 
 
-        public async Task InputAsync(IEmote emote, ulong userId = 1)
+        public async Task InputAsync(DiscordEmoji emote, ulong userId = 1)
         {
             if (State != GameState.Active) return;
 
@@ -396,16 +396,16 @@ namespace PacManBot.Games.Concrete
         }
 
 
-        public override string GetContent(bool showHelp = true)
+        public override async ValueTask<string> GetContentAsync(bool showHelp = true)
         {
-            if (State == GameState.Cancelled && Channel is IGuildChannel) // So as to not spam
+            if (State == GameState.Cancelled && (await GetChannelAsync()).Guild != null) // So as to not spam
             {
                 return "";
             }
 
             if (lastInput == PacManInput.Help)
             {
-                return Content.gameHelp.Replace("{prefix}", storage.GetPrefix(Channel));
+                return Content.gameHelp.Replace("{prefix}", storage.GetPrefix(await GetChannelAsync()));
             }
 
             try
@@ -522,17 +522,17 @@ namespace PacManBot.Games.Concrete
             }
             catch (Exception e)
             {
-                log.Exception($"Displaying game in {Channel.FullName()}", e, GameName);
+                log.Exception($"Displaying game in {(await GetChannelAsync()).DebugName()}", e, GameName);
                 return $"```There was an error displaying the game. {"Make sure your custom map is valid. ".If(custom)}" +
                        $"If this problem persists, please contact the author of the bot using the " +
-                       $"{storage.GetPrefix(Channel)}feedback command.```";
+                       $"{storage.GetPrefix(await GetChannelAsync())}feedback command.```";
             }
         }
 
 
-        public override EmbedBuilder GetEmbed(bool showHelp = true)
+        public override async ValueTask<DiscordEmbedBuilder> GetEmbedAsync(bool showHelp = true)
         {
-            return State == GameState.Cancelled && Channel is IGuildChannel ? CancelledEmbed() : null;
+            return State == GameState.Cancelled && (await GetChannelAsync()).Guild == null ? null : CancelledEmbed();
         }
 
 

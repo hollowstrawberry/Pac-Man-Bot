@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
-using Discord;
+using DSharpPlus.Entities;
 using PacManBot.Constants;
 using PacManBot.Extensions;
 using PacManBot.Utils;
@@ -44,16 +44,16 @@ namespace PacManBot.Games.Concrete.Rpg
             set => internalMana = Math.Clamp(value, 0, MaxMana);
         }
         /// <summary>Profile embed color.</summary>
-        public Color Color
+        public DiscordColor Color
         {
-            set => rawColor = value.RawValue;
-            get => new Color(rawColor);
+            set => rawColor = value.Value;
+            get => new DiscordColor(rawColor);
         }
 
 
         [DataMember] private string name;
         [DataMember] private int internalMana;
-        [DataMember] private uint rawColor;
+        [DataMember] private int rawColor;
 
         /// <summary>The player's current level.</summary>
         [DataMember] public int Level { get; set; } = 1;
@@ -210,11 +210,11 @@ namespace PacManBot.Games.Concrete.Rpg
 
 
         /// <summary>Obtain a Discord embed with this person's profile.</summary>
-        public EmbedBuilder Profile(string channelPrefix = "", bool own = true, bool reaction = false)
+        public DiscordEmbedBuilder Profile(string channelPrefix = "", bool own = true, bool reaction = false)
         {
             UpdateStats();
 
-            var embed = new EmbedBuilder
+            var embed = new DiscordEmbedBuilder
             {
                 Title = $"{Name}'s Profile",
                 Color = Color,
@@ -254,7 +254,7 @@ namespace PacManBot.Games.Concrete.Rpg
 
 
         /// <summary>Obtain a Discord embed displaying this person's skills.</summary>
-        public EmbedBuilder Skills(string channelPrefix = "", bool reaction = false)
+        public DiscordEmbedBuilder Skills(string channelPrefix = "", bool reaction = false)
         {
             var desc = new StringBuilder();
 
@@ -276,40 +276,36 @@ namespace PacManBot.Games.Concrete.Rpg
             desc.AppendLine(unlocked.Count() == 0 ? "*None unlocked*" : $"{unlocked.JoinString("\n")}\n{DiscordExtensions.Empty}");
 
 
-            var embed = new EmbedBuilder
+            var embed = new DiscordEmbedBuilder
             {
                 Title = $"{Name}'s Skills",
                 Color = Color,
                 Description = desc.ToString().Truncate(2048),
             };
 
-            embed.AddField(SkillField("Power", SkillType.Dmg,
-                $"Represents your mastery of weapons.\nEvery 2 power increases damage by 1"));
+            AddSkillField(embed, "Power", SkillType.Dmg,
+                $"Represents your mastery of weapons.\nEvery 2 power increases damage by 1");
 
-            embed.AddField(SkillField("Grit", SkillType.Def,
-                $"Represents your ability to take hits.\nEvery 2 grit increases defense by 1"));
+            AddSkillField(embed, "Grit", SkillType.Def,
+                $"Represents your ability to take hits.\nEvery 2 grit increases defense by 1");
 
-            embed.AddField(SkillField("Focus", SkillType.Crit,
-                $"Represents your capacity to target enemy weak points.\nEvery 2 focus increases critical hit chance by 1%"));
+            AddSkillField(embed, "Focus", SkillType.Crit,
+                $"Represents your capacity to target enemy weak points.\nEvery 2 focus increases critical hit chance by 1%");
 
             return embed;
         }
 
 
-        private EmbedFieldBuilder SkillField(string title, SkillType type, string desc)
+        private DiscordEmbedBuilder AddSkillField(DiscordEmbedBuilder embed, string title, SkillType type, string desc)
         {
             var active = RpgExtensions.SkillTypes.Values.Where(x => x.Type == type).ToList().Sorted();
-
-            return new EmbedFieldBuilder
-            {
-                Name = $"{type.Icon()}{title} `{spentSkill[type]}/{SkillMax}`",
-                IsInline = true,
-                Value =
+            string name = $"{type.Icon()}{title} `{spentSkill[type]}/{SkillMax}`";
+            string value =
                 $"`[{ProgressBar(spentSkill[type], SkillMax, active.Select(x => x.SkillGet))}]`" +
                 $"\n{desc}\n__Active skills:__\n" +
                 active.Select(x => x.SkillGet <= spentSkill[type] ? x.Name : $"`{x.SkillGet}: {x.Name}`").JoinString("\n")
-                + $"\n{DiscordExtensions.Empty}".If(type < EnumTraits<SkillType>.MaxValue), // padding
-            };
+                + $"\n{DiscordExtensions.Empty}".If(type < EnumTraits<SkillType>.MaxValue); // padding
+            return embed.AddField(name, value, true);
         }
 
 

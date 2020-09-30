@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Discord;
+using DSharpPlus.Entities;
 using PacManBot.Constants;
 using PacManBot.Extensions;
 using Range = PacManBot.Utils.Range;
@@ -52,15 +52,15 @@ namespace PacManBot.Games.Concrete
             guesses = new List<string>();
         }
 
-        public bool IsInput(string value, ulong userId)
+        public async ValueTask<bool> IsInputAsync(string value, ulong userId)
         {
-            value = StripPrefix(value);
+            value = await StripPrefixAsync(value);
             return value.Length == Code.Length && Numbers.IsMatch(value);
         }
 
         public async Task InputAsync(string input, ulong userId = 1)
         {
-            input = StripPrefix(input);
+            input = await StripPrefixAsync(input);
             if (guesses.Count > 0 && guesses.Last() == null) guesses.Pop();
             if (input == Code) State = GameState.Win;
             if (input.Distinct().Count() < Code.Length) input = null; // can't contain the same digit twice
@@ -69,11 +69,11 @@ namespace PacManBot.Games.Concrete
             await games.SaveAsync(this);
         }
 
-        public override EmbedBuilder GetEmbed(bool showHelp = true)
+        public override ValueTask<DiscordEmbedBuilder> GetEmbedAsync(bool showHelp = true)
         {
-            if (State == GameState.Cancelled) return CancelledEmbed();
+            if (State == GameState.Cancelled) return new ValueTask<DiscordEmbedBuilder>(CancelledEmbed());
 
-            var embed = new EmbedBuilder();
+            var embed = new DiscordEmbedBuilder();
 
             if (State == GameState.Lose)
             {
@@ -143,7 +143,7 @@ namespace PacManBot.Games.Concrete
                     $"{CustomEmoji.Empty}`{Code.Length}M` `0N`" +
                     $"\n**Cracked the code in {guesses.Count} guesses!**{" ***Congratulations!***".If(guesses.Count <= wow)}", false);            
             }
-            return embed;
+            return new ValueTask<DiscordEmbedBuilder>(embed);
         }
 
         public void PostDeserialize(IServiceProvider services)

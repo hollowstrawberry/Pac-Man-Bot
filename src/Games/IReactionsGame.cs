@@ -9,7 +9,7 @@ namespace PacManBot.Games
     public interface IReactionsGame : IChannelGame
     {
         /// <summary>Whether the given value is a valid input given the player sending it.</summary>
-        bool IsInput(DiscordEmoji value, ulong userId);
+        ValueTask<bool> IsInputAsync(DiscordEmoji value, ulong userId);
 
         /// <summary>Executes an input expected to be valid.</summary>
         Task InputAsync(DiscordEmoji input, ulong userId = 1);

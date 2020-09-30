@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Discord;
-using Discord.WebSocket;
+using DSharpPlus;
+using DSharpPlus.Entities;
 using PacManBot.Constants;
 using PacManBot.Extensions;
 
@@ -24,7 +24,7 @@ namespace PacManBot.Games.Concrete
 
         private TicTacToeGame() { }
 
-        protected override Task InitializeAsync(ulong channelId, SocketUser[] players, IServiceProvider services)
+        protected override Task InitializeAsync(ulong channelId, DiscordUser[] players, IServiceProvider services)
         {
             base.InitializeAsync(channelId, players, services);
 
@@ -37,19 +37,20 @@ namespace PacManBot.Games.Concrete
 
 
 
-        public bool IsInput(string value, ulong userId)
+        public async ValueTask<bool> IsInputAsync(string value, ulong userId)
         {
-            return userId == User(Turn)?.Id && int.TryParse(StripPrefix(value), out int num) && num > 0 && num <= board.Length;
+            return userId == UserId[Turn] && int.TryParse(await StripPrefixAsync(value), out int num)
+                && num > 0 && num <= board.Length;
         }
 
 
-        public Task InputAsync(string input, ulong userId = 1)
+        public async Task InputAsync(string input, ulong userId = 1)
         {
-            int cell = int.Parse(StripPrefix(input)) - 1;
+            int cell = int.Parse(await StripPrefixAsync(input)) - 1;
             int y = cell / board.Width;
             int x = cell % board.Width;
 
-            if (State != GameState.Active || board[x, y] != Player.None) return Task.CompletedTask;
+            if (State != GameState.Active || board[x, y] != Player.None) return;
 
             board[x, y] = Turn;
             Time++;
@@ -67,12 +68,10 @@ namespace PacManBot.Games.Concrete
                 State = GameState.Completed;
                 Turn = Winner;
             }
-
-            return Task.CompletedTask;
         }
 
 
-        public override EmbedBuilder GetEmbed(bool showHelp = true)
+        public override async ValueTask<DiscordEmbedBuilder> GetEmbedAsync(bool showHelp = true)
         {
             if (State == GameState.Cancelled) return CancelledEmbed();
 
@@ -80,7 +79,7 @@ namespace PacManBot.Games.Concrete
 
             for (int i = 0; i < UserId.Length; i++)
             {
-                description.Append($"{"►".If(i == Turn)}{((Player)i).Symbol()} - {User(i).Mention}\n");
+                description.Append($"{"►".If(i == Turn)}{((Player)i).Symbol()} - {(await GetUserAsync(i)).Mention}\n");
             }
 
             description.Append($"{Empty}\n");
@@ -97,13 +96,11 @@ namespace PacManBot.Games.Concrete
 
             if (State == GameState.Active) description.Append($"{Empty}\n*Say the number of a cell (1 to 9) to place an {(Turn == Player.Red ? "X" : "O")}*");
 
-            return new EmbedBuilder
-            {
-                Title = ColorEmbedTitle(),
-                Description = description.ToString(),
-                Color = Turn.Color,
-                ThumbnailUrl = Winner == Player.None ? Turn.Symbol().ToEmoji()?.Url : User(Winner)?.GetAvatarUrl(),
-            };
+            return new DiscordEmbedBuilder()
+                .WithTitle(ColorEmbedTitle())
+                .WithDescription(description.ToString())
+                .WithColor(Turn.Color)
+                .WithThumbnail(Winner < 0 ? "" : (await GetUserAsync(Winner))?.GetAvatarUrl(ImageFormat.Auto));
         }
 
 

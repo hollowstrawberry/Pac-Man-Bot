@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Discord;
+using DSharpPlus.Entities;
 using PacManBot.Constants;
 using PacManBot.Extensions;
 using PacManBot.Utils;
@@ -210,17 +210,17 @@ namespace PacManBot.Games.Concrete
         }
 
 
-        public override EmbedBuilder GetEmbed(bool showHelp = true) => GetEmbed(null);
+        public override ValueTask<DiscordEmbedBuilder> GetEmbedAsync(bool showHelp = true) => GetEmbedAsync(null);
 
         /// <summary>Returns an embed showing the profile of a pet.</summary>
-        public EmbedBuilder GetEmbed(IGuildUser ownerGuildUser, bool decimals = false)
+        public async ValueTask<DiscordEmbedBuilder> GetEmbedAsync(DiscordMember ownerMember, bool decimals = false)
         {
             bool wasAsleep = asleep;
             UpdateStats();
 
             var description = new StringBuilder();
 
-            string prefix = storage.GetGuildPrefix(ownerGuildUser?.Guild);
+            string prefix = storage.GetGuildPrefix(ownerMember?.Guild);
             if (string.IsNullOrWhiteSpace(petName))
             {
                 description.Append("Congratulations on your new wakagotchi!\n" +
@@ -254,34 +254,20 @@ namespace PacManBot.Games.Concrete
 
             var unlocks = achievements.GetIcons().Split(3).Select(x => x.JoinString(" ")).JoinString("\n");
 
-            return new EmbedBuilder
-            {
-                Title = $"{ownerGuildUser?.Nickname ?? Owner?.DisplayName() ?? "Unknown"}'s Wakagotchi",
-                Description = description.ToString(),
-                Color = TotalStats.Ceiling() >= 60 ? new Color(0, 200, 0) : TotalStats.Ceiling() >= 25 ? new Color(255, 200, 0) : new Color(255, 0, 0),
-                ThumbnailUrl = petImageUrl ?? Content.petImageUrl,
-                ImageUrl = Content.petBannerUrl[achievements.Attention],
-                Fields = new List<EmbedFieldBuilder>
-                {
-                    new EmbedFieldBuilder
-                    {
-                        IsInline = true,
-                        Name = "Status",
-                        Value = status.ToString(),
-                    },
-                    new EmbedFieldBuilder
-                    {
-                        IsInline = true,
-                        Name = "Unlocks",
-                        Value = string.IsNullOrWhiteSpace(unlocks) ? "None" : unlocks,
-                    },
-                }
-            };
+            return new DiscordEmbedBuilder()
+                .WithTitle($"{ownerMember?.Nickname ?? (await GetOwnerAsync())?.DisplayName() ?? "Unknown"}'s Wakagotchi")
+                .WithDescription(description.ToString())
+                .WithColor(TotalStats.Ceiling() >= 60 ? new DiscordColor(0, 200, 0)
+                    : TotalStats.Ceiling() >= 25 ? new DiscordColor(255, 200, 0) : new DiscordColor(255, 0, 0))
+                .WithThumbnail(petImageUrl ?? Content.petImageUrl)
+                .WithImageUrl(Content.petBannerUrl[achievements.Attention])
+                .AddField("Status", status.ToString(), true)
+                .AddField("Unlocks", string.IsNullOrWhiteSpace(unlocks) ? "None" : unlocks, true);
         }
 
 
         /// <summary>Returns an embed showing the stats and unlocks of a pet.</summary>
-        public EmbedBuilder GetEmbedAchievements(IGuildUser ownerGuildUser)
+        public async ValueTask<DiscordEmbedBuilder> GetEmbedAchievementsAsync(DiscordMember ownerMember)
         {
             UpdateStats();
 
@@ -309,27 +295,12 @@ namespace PacManBot.Games.Concrete
                 group?.Append($"\n{ach.Icon} **{ach.Name}** - {ach.Description}");
             }
 
-            return new EmbedBuilder
-            {
-                Title = $"{ownerGuildUser?.Nickname ?? Owner?.DisplayName() ?? "Unknown"}'s Wakagotchi",
-                Color = new Color(150, 0, 220),
-                ThumbnailUrl = petImageUrl ?? Content.petImageUrl,
-                Fields = new List<EmbedFieldBuilder>
-                {
-                    new EmbedFieldBuilder
-                    {
-                        IsInline = false,
-                        Name = "Statistics 📊",
-                        Value = stats.ToString(),
-                    },
-                    new EmbedFieldBuilder
-                    {
-                        IsInline = false,
-                        Name = "Achievements 🏆",
-                        Value = achievOn.Replace("\n", $"\n{CustomEmoji.Check}").ToString() + achievOff,
-                    },
-                }
-            };
+            return new DiscordEmbedBuilder()
+                .WithTitle($"{ownerMember?.Nickname ?? (await GetOwnerAsync())?.DisplayName() ?? "Unknown"}'s Wakagotchi")
+                .WithColor(new DiscordColor(150, 0, 220))
+                .WithThumbnail(petImageUrl ?? Content.petImageUrl)
+                .AddField("Statistics 📊", stats.ToString(), false)
+                .AddField("Achievements 🏆", achievOn.Replace("\n", $"\n{CustomEmoji.Check}").ToString() + achievOff, false);
         }
 
 
@@ -520,7 +491,7 @@ namespace PacManBot.Games.Concrete
             {
                 achievements.PetGod = true;
                 pet = "👼 Having petted 10,000 times, and having lived a long and just life as Pet King, you and your pet ascend into the realm of the pet-angels.\n\n" +
-                      $"After arriving to their heavenly dominion, some angels begin chanting: *\"{Owner?.DisplayName().SanitizeMarkdown() ?? "Owner"}, {petName}\"*. " +
+                      $"After arriving to their heavenly dominion, some angels begin chanting: *\"{(await GetOwnerAsync())?.DisplayName()?.SanitizeMarkdown() ?? "Owner"}, {petName}\"*. " +
                       "Soon more and more join them, until ten billion voices act in unison. A blinding glare falls upon the pedestal you stand on. " +
                       "Your entire being slowly fades away, morphing into something else, something like... __pure petting energy__.\n" +
                       "The sounds of grand bells and trumpets fill the realm. You have been chosen as a new **Pet God**.\n\n" +

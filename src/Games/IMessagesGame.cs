@@ -8,7 +8,7 @@ namespace PacManBot.Games
     public interface IMessagesGame : IChannelGame
     {
         /// <summary>Whether the given value is a valid input given the player sending it.</summary>
-        bool IsInput(string value, ulong userId);
+        ValueTask<bool> IsInputAsync(string value, ulong userId);
 
         /// <summary>Executes an input expected to be valid.</summary>
         Task InputAsync(string input, ulong userId = 1);

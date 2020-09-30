@@ -5,7 +5,8 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Text.RegularExpressions;
-using Discord;
+using System.Threading.Tasks;
+using DSharpPlus.Entities;
 using PacManBot.Constants;
 using PacManBot.Extensions;
 using PacManBot.Utils;
@@ -230,9 +231,9 @@ namespace PacManBot.Games.Concrete
         }
 
         
-        public override EmbedBuilder GetEmbed(bool _ = true) => GetEmbed(null);
+        public override ValueTask<DiscordEmbedBuilder> GetEmbedAsync(bool _ = true) => GetEmbedAsync(null);
 
-        public EmbedBuilder GetEmbed(IGuild guild)
+        public async ValueTask<DiscordEmbedBuilder> GetEmbedAsync(DiscordGuild guild)
         {
             var description = new StringBuilder();
 
@@ -260,16 +261,16 @@ namespace PacManBot.Games.Concrete
             }
 
 
-            var embed = new EmbedBuilder
+            var embed = new DiscordEmbedBuilder
             {
-                Title = $"{Owner?.DisplayName()}'s Rubik's Cube",
+                Title = $"{(await GetOwnerAsync())?.DisplayName()}'s Rubik's Cube",
                 Description = description.ToString().Truncate(2048),
                 Color = Colors.Black,
             };
 
             if (ShowHelp)
             {
-                string prefix = storage.GetPrefix(Channel);
+                string prefix = storage.GetPrefix(await GetChannelAsync());
                 embed.AddField("Faces", $"```css\n  U\nL F R B\n  D```Do **{prefix}rubik moves** for help controlling the cube.");
             }
 

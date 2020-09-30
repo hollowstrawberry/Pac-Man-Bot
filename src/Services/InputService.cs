@@ -89,26 +89,30 @@ namespace PacManBot.Services
             if (message.Author != null && !message.Author.IsBot
                     && message.Channel.BotCan(Permissions.SendMessages | Permissions.ReadMessageHistory))
             {
-                try
-                {
-                    if (PendingResponse(message)
-                        || MessageGameInput(message)
-                        || Command(message, args.Client))
-                    {
-                        if (message.Channel.Guild != null)
-                        {
-                            _ = EnsureUsersDownloadedAsync(message.Channel.Guild);
-                        }
-                        return Task.CompletedTask;
-                    }
-                }
-                catch (Exception e)
-                {
-                    log.Exception($"In {message.Channel.DebugName()}", e);
-                }
+                _ = InnerOnMessageReceivedAsync(message, args.Client);
             }
 
             return Task.CompletedTask;
+        }
+
+        private async Task InnerOnMessageReceivedAsync(DiscordMessage message, DiscordClient client)
+        {
+            try
+            {
+                if (PendingResponse(message)
+                    || await MessageGameInputAsync(message)
+                    || await CommandAsync(message, client))
+                {
+                    if (message.Channel.Guild != null)
+                    {
+                        await EnsureUsersDownloadedAsync(message.Channel.Guild);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                log.Exception($"In {message.Channel.DebugName()}", e);
+            }
         }
 
         private Task OnReactionAdded(MessageReactionAddEventArgs args)
@@ -129,7 +133,7 @@ namespace PacManBot.Services
                     .OfType<IReactionsGame>()
                     .FirstOrDefault(g => g.MessageId == message.Id);
 
-                if (game == null || !game.IsInput(emoji, user.Id)) return Task.CompletedTask;
+                if (game == null) return Task.CompletedTask;
 
                 _ = ExecuteReactionGameInputAsync(game, message, user, emoji);
                 if (message.Channel?.Guild != null)
@@ -177,7 +181,7 @@ namespace PacManBot.Services
 
 
         /// <summary>Tries to find and execute a command. Returns whether it is successful.</summary>
-        private bool Command(DiscordMessage message, DiscordClient client)
+        private async ValueTask<bool> CommandAsync(DiscordMessage message, DiscordClient client)
         {
             string prefix = storage.GetGuildPrefix(message.Channel?.Guild);
             bool requiresPrefix = storage.RequiresPrefix(message.Channel);
@@ -193,7 +197,7 @@ namespace PacManBot.Services
                 var commands = client.GetCommandsNext();
                 var command = commands.FindCommand(message.Content.Substring(pos), out string rawArguments);
                 var context = commands.CreateContext(message, pos == 0 ? "" : prefix, command, rawArguments);
-                _ = commands.ExecuteCommandAsync(context);
+                await commands.ExecuteCommandAsync(context);
                 return true;
             }
 
@@ -202,29 +206,24 @@ namespace PacManBot.Services
 
 
         /// <summary>Tries to find a game and execute message input. Returns whether it is successful.</summary>
-        private bool MessageGameInput(DiscordMessage message)
+        private async ValueTask<bool> MessageGameInputAsync(DiscordMessage message)
         {
             var game = games.GetForChannel<IMessagesGame>(message.Channel.Id);
-            if (game == null || !game.IsInput(message.Content, message.Author.Id)) return false;
+            if (game == null || !await game.IsInputAsync(message.Content, message.Author.Id)) return false;
 
-            _ = ExecuteGameInputAsync(game, message);
+            try
+            {
+                await ExecuteMessageGameInputAsync(game, message);
+            }
+            catch (Exception e)
+            {
+                log.Exception($"During input \"{message.Content}\" in {(await game.GetChannelAsync()).DebugName()}", e, game.GameName);
+            }
 
             return true;
         }
 
-        private async Task ExecuteGameInputAsync(IMessagesGame game, DiscordMessage message)
-        {
-            try
-            {
-                await InnerExecuteGameInputAsync(game, message);
-            }
-            catch (Exception e)
-            {
-                log.Exception($"During input \"{message.Content}\" in {game.Channel.FullName()}", e, game.GameName);
-            }
-        }
-
-        private async Task InnerExecuteGameInputAsync(IMessagesGame game, DiscordMessage message)
+        private async Task ExecuteMessageGameInputAsync(IMessagesGame game, DiscordMessage message)
         {
             var gameMessage = await game.GetMessageAsync();
 
@@ -236,28 +235,21 @@ namespace PacManBot.Services
 
             if (game is MultiplayerGame mGame)
             {
-                while(mGame.BotTurn) await mGame.BotInputAsync();
+                while(await mGame.IsBotTurnAsync()) await mGame.BotInputAsync();
             }
 
             if (game.State != GameState.Active) games.Remove(game);
 
             if (gameMessage != null && message.Channel.BotCan(Permissions.ManageMessages))
             {
-                game.CancelRequests();
-                try { await gameMessage.ModifyAsync(game.GetMessageUpdate(), game.GetRequestOptions()); }
-                catch (OperationCanceledException) { }
-
+                await gameMessage.ModifyAsync(await game.GetContentAsync(), (await game.GetEmbedAsync()).Build());
                 await message.DeleteAsync();
             }
             else
             {
-                game.CancelRequests();
-                try
-                {
-                    var newMsg = await message.Channel.SendMessageAsync(game.GetContent(), false, game.GetEmbed()?.Build(), game.GetRequestOptions());
-                    game.MessageId = newMsg.Id;
-                }
-                catch (OperationCanceledException) { }
+                var newMsg = await message.Channel.SendMessageAsync(
+                    await game.GetContentAsync(), false, (await game.GetEmbedAsync())?.Build());
+                game.MessageId = newMsg.Id;
 
                 if (gameMessage != null) await gameMessage.DeleteAsync();
             }
@@ -268,6 +260,7 @@ namespace PacManBot.Services
         {
             try
             {
+                if (!await game.IsInputAsync(emoji, user.Id)) return;
                 if (message == null) message = await game.GetMessageAsync();
                 if (message == null) return; // oof
 
@@ -304,11 +297,9 @@ namespace PacManBot.Services
                 }
             }
 
-            game.CancelRequests();
             if (message != null)
             {
-                try { await message.ModifyAsync(game.GetMessageUpdate(), game.GetRequestOptions()); }
-                catch (OperationCanceledException) { }
+                await message.ModifyAsync(await game.GetContentAsync(), (await game.GetEmbedAsync()).Build());
             }
         }
     }

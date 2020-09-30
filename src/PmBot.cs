@@ -47,7 +47,6 @@ namespace PacManBot
         {
             await client.UseCommandsNextAsync(new CommandsNextConfiguration
             {
-                EnableDefaultHelp = false,
                 UseDefaultCommandHandler = false,
                 Services = services,
             });
