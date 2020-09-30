@@ -4,12 +4,11 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
-using Discord;
-using Discord.Net;
-using Discord.WebSocket;
+using DSharpPlus;
+using DSharpPlus.Entities;
+using DSharpPlus.Exceptions;
 using PacManBot.Constants;
 using PacManBot.Extensions;
-using PacManBot.Services;
 using PacManBot.Utils;
 
 namespace PacManBot.Games.Concrete
@@ -29,7 +28,7 @@ namespace PacManBot.Games.Concrete
         private static readonly Card Wild = new Card(CardType.Wild, CardColor.Black);
         private static readonly Card WildDrawFour = new Card(CardType.WildDrawFour, CardColor.Black);
 
-        private static readonly Color[] RgbCardColor = {
+        private static readonly DiscordColor[] RgbCardColor = {
             Colors.Red, Colors.Blue, Colors.Green, Colors.Yellow, Colors.DarkBlack,
         };
         private static readonly string[] CardColorEmote = {
@@ -65,12 +64,13 @@ namespace PacManBot.Games.Concrete
         private Player FollowingTurn => reversed ? PreviousPlayer() : NextPlayer();
         private Player PrecedingTurn => reversed ? NextPlayer() : PreviousPlayer();
 
-        public override bool BotTurn => players.Count > 1 && State == GameState.Active && CurrentPlayer.User.IsBot;
-        public override bool AllBots => players.All(x => x.User?.IsBot ?? false);
+        public override async ValueTask<bool> IsBotTurnAsync()
+            => players.Count > 1 && State == GameState.Active && await CurrentPlayer.IsBotAsync();
+
         public override ulong[] UserId
         {
             get => players?.Select(x => x.id).ToArray();
-            set => throw new InvalidOperationException($"Use {nameof(TryAddPlayerAsync)} and {nameof(RemovePlayer)} instead");
+            set => throw new InvalidOperationException($"Use {nameof(TryAddPlayerAsync)} and {nameof(RemovePlayerAsync)} instead");
         }
 
 
@@ -126,20 +126,25 @@ namespace PacManBot.Games.Concrete
             [DataMember] public UnoState uno = UnoState.None;
 
             public UnoGame game;
-            public IUserMessage message;
-            private IUser user;
-        
+            public DiscordMessage message;
+            private DiscordUser user;
 
-            public IUser User => user ?? (user = game.Guild == null
-                                                 ? game.client.GetUser(id)
-                                                 : game.client.GetGuild(game.Guild.Id).GetUser(id));
 
-            public override string ToString() => User.DisplayName();
+            public async ValueTask<DiscordUser> GetUserAsync()
+            {
+                if (user != null) return user;
+                return user = game.Guild == null ? await game.Client.GetUserAsync(id) : await game.Guild.GetMemberAsync(id);
+            }
+
+            public async ValueTask<bool> IsBotAsync() => (await GetUserAsync()).IsBot;
+            public async ValueTask<string> MentionAsync() => (await GetUserAsync())?.Mention;
+
+            public override string ToString() => GetUserAsync().GetAwaiter().GetResult().DisplayName();
 
 
             private UnoPlayer() { } // Used in serialization
 
-            public UnoPlayer(IUser user, UnoGame game)
+            public UnoPlayer(DiscordUser user, UnoGame game)
             {
                 id = user.Id;
                 this.user = user;
@@ -243,7 +248,7 @@ namespace PacManBot.Games.Concrete
 
         private UnoGame() { }
 
-        protected override async Task InitializeAsync(ulong channelId, SocketUser[] players, IServiceProvider services)
+        protected override async Task InitializeAsync(ulong channelId, DiscordUser[] players, IServiceProvider services)
         {
             await base.InitializeAsync(channelId, null, services);
 
@@ -293,17 +298,17 @@ namespace PacManBot.Games.Concrete
 
 
 
-        public bool IsInput(string value, ulong userId)
+        public async ValueTask<bool> IsInputAsync(string value, ulong userId)
         {
             if (players.Count < 2) return false;
 
-            value = StripPrefixAsync(value.ToLowerInvariant());
+            value = StripPrefix(value.ToLowerInvariant());
 
             if (UserId.Contains(userId))
             {
                 if (value == "cards" || value == "uno" || value == "callout") return true;
 
-                if (userId == CurrentPlayer.User?.Id)
+                if (userId == (await CurrentPlayer.GetUserAsync()).Id)
                 {
                     if (IsWaitingForColor()) return Enum.TryParse<CardColor>(value, true, out _); // Wild color
                     else return value == "draw" || value == "skip" || value.Contains("auto") || Card.Parse(value, this).HasValue;
@@ -317,16 +322,16 @@ namespace PacManBot.Games.Concrete
         public async Task InputAsync(string input, ulong userId = 1)
         {
             LastPlayed = DateTime.Now;
-            input = StripPrefixAsync(input.ToLowerInvariant());
-            bool calledByAi = CurrentPlayer.User.IsBot;
+            input = StripPrefix(input.ToLowerInvariant());
+            bool calledByAi = await CurrentPlayer.IsBotAsync();
 
 
             // Send cards
             if (input == "cards")
             {
-                var player = players.First(x => x.User?.Id == userId);
+                var player = players.First(x => x.id == userId);
                 player.message = null;
-                await SendCards(player);
+                await SendCardsAsync(player);
                 return;
             }
 
@@ -339,7 +344,7 @@ namespace PacManBot.Games.Concrete
                 if (forgot.id == userId) forgot.uno = UnoState.Said;
                 else
                 {
-                    ClearGameLog();
+                    await ClearGameLogAsync();
                     Callout(forgot);
                 }
                 await games.SaveAsync(this);
@@ -358,7 +363,7 @@ namespace PacManBot.Games.Concrete
             // Drawing a card
             else if (input == "draw" || input == "skip" || input == "auto" && CurrentPlayer.cards.All(x => !CanDiscard(x)))
             {
-                ClearGameLog();
+                await ClearGameLogAsync();
 
                 UnoState previousUno = CurrentPlayer.uno;
                 CancelCallouts();
@@ -367,7 +372,7 @@ namespace PacManBot.Games.Concrete
                 var drawn = CurrentPlayer.cards.Last();
                 if (CanDiscard(drawn))
                 {
-                    if (CurrentPlayer.User.IsBot && drawn.Color == CardColor.Black)
+                    if (await CurrentPlayer.IsBotAsync() && drawn.Color == CardColor.Black)
                     {
                         drawn = new Card(drawn.Type, HighestColor(CurrentPlayer.cards));
                     }
@@ -389,7 +394,7 @@ namespace PacManBot.Games.Concrete
             // Checking and playing a card
             else
             {
-                ClearGameLog();
+                await ClearGameLogAsync();
 
                 Card card;
                 var tryCard = Card.Parse(input, this);
@@ -398,7 +403,7 @@ namespace PacManBot.Games.Concrete
                 else
                 {
                     if (input.Contains("auto")) gameLog.Add("Oops, \"auto\" found no valid matches.");
-                    else throw new FormatException($"Unexpected invalid card \"{input}\" from {CurrentPlayer.User.FullName()} in {Channel.FullName()}");
+                    else throw new FormatException($"Unexpected invalid card \"{input}\" from {(await CurrentPlayer.GetUserAsync()).DebugName()} in {Channel.DebugName()}");
                     return;
                 }
 
@@ -415,7 +420,7 @@ namespace PacManBot.Games.Concrete
 
                 gameLog.Add($"• {CurrentPlayer} plays {card}");
 
-                if (!CurrentPlayer.User.IsBot) updatedPlayers.Add(CurrentPlayer);
+                if (!await CurrentPlayer.IsBotAsync()) updatedPlayers.Add(CurrentPlayer);
 
                 CurrentPlayer.cards.Remove(card.NormalizeColor());
                 Discard(card);
@@ -430,7 +435,7 @@ namespace PacManBot.Games.Concrete
                 {
                     State = GameState.Completed;
                     Winner = Turn;
-                    if (CurrentPlayer.id == client.CurrentUser.Id) gameLog.Add($"\n {Program.Random.Choose(Content.gameWinTexts)}");
+                    if (CurrentPlayer.id == Client.CurrentUser.Id) gameLog.Add($"\n {Program.Random.Choose(Content.gameWinTexts)}");
                     return;
                 }
 
@@ -439,22 +444,22 @@ namespace PacManBot.Games.Concrete
 
             if (IsWaitingForColor())
             {
-                Message = $"{CurrentPlayer.User?.Mention} choose a color: red/blue/green/yellow";
+                Message = $"{await CurrentPlayer.MentionAsync()} choose a color: red/blue/green/yellow";
             }
-            else if (Channel is IGuildChannel && !AllBots)
+            else if (Guild != null)
             {
-                Message = $"Your turn, {CurrentPlayer.User?.Mention}";
+                Message = $"Your turn, {await CurrentPlayer.MentionAsync()}";
             }
 
 
             updatedPlayers.Add(CurrentPlayer);
 
-            if (!calledByAi || !CurrentPlayer.User.IsBot)
+            if (!calledByAi || !await CurrentPlayer.IsBotAsync())
             {
                 await games.SaveAsync(this);
-                foreach (var player in updatedPlayers.Distinct().Where(x => !x.User.IsBot).ToArray())
+                foreach (var player in updatedPlayers.Distinct().Where(x => !x.IsBotAsync().GetAwaiter().GetResult()).ToArray())
                 {
-                    await SendCards(player);
+                    await SendCardsAsync(player);
                 }
                 updatedPlayers = new List<UnoPlayer>();
             }
@@ -488,7 +493,7 @@ namespace PacManBot.Games.Concrete
             }
 
             var forgot = players.FirstOrDefault(x => x.uno == UnoState.Forgot);
-            if (forgot != null && (forgot.User.IsBot || !Program.Random.OneIn(3))) // Sometimes calls out
+            if (forgot != null && (await forgot.IsBotAsync() || !Program.Random.OneIn(3))) // Sometimes calls out
             {
                 Callout(forgot);
             }
@@ -507,7 +512,7 @@ namespace PacManBot.Games.Concrete
 
 
 
-        public override EmbedBuilder GetEmbed(bool showHelp = true)
+        public override async ValueTask<DiscordEmbedBuilder> GetEmbedAsync(bool showHelp = true)
         {
             if (State == GameState.Cancelled) return CancelledEmbed();
 
@@ -520,7 +525,7 @@ namespace PacManBot.Games.Concrete
             for (int i = 0; i < players.Count; i++)
             {
                 string pre = i == Turn ? "+ " : Winner != Player.None ? "- " : "";
-                description.Append($"{pre}{players[i].User?.DisplayName()}");
+                description.Append($"{pre}{players[i]}");
                 if (players[i].cards.Count > 0) description.Append($" - {players[i].cards.Count}🃏{" Uno!".If(players[i].uno == UnoState.Said)}");
                 description.Append('\n');
             }
@@ -530,34 +535,31 @@ namespace PacManBot.Games.Concrete
             {
                 description.Append(
                     $"{Empty}\nSay the name of a card to discard it or \"draw\" to draw another.\n" +
-                    $"Your cards are shown in a DM, say \"cards\" to resend.\n".If(Channel is IGuildChannel) +
-                    $"Use **{prefix}uno join** to join the game.\n".If(Channel is IGuildChannel) +
+                    $"Your cards are shown in a DM, say \"cards\" to resend.\n".If(Guild != null) +
+                    $"Use **{prefix}uno join** to join the game.\n".If(Guild != null) +
                     $"Use **{prefix}uno help** for rules and more commands.");
             }
 
 
-            var embed = new EmbedBuilder()
-            {
-                Title = Winner == Player.None
+            var embed = new DiscordEmbedBuilder()
+                .WithTitle(Winner == Player.None
                     ? $"{(reversed ? "🔼" : "🔽")} {CurrentPlayer}'s turn"
-                    : $"🎉 {CurrentPlayer} is the winner! 🎉",
+                    : $"🎉 {CurrentPlayer} is the winner! 🎉")
+                .WithDescription(description.ToString().Truncate(2047))
+                .WithColor(RgbCardColor[(int)TopCard.Color])
+                .WithThumbnail((await CurrentPlayer.GetUserAsync()).GetAvatarUrl(ImageFormat.Auto));
 
-                Description = description.ToString().Truncate(2047),
-                Color = RgbCardColor[(int)TopCard.Color],
-                ThumbnailUrl = CurrentPlayer.User?.GetAvatarUrl(),
-            };
-
-            if (Channel is IDMChannel) embed.AddField("Your cards", CardsDisplay(players[0]));
+            if (Guild == null) embed.AddField("Your cards", CardsDisplay(players[0]));
 
             return embed;
         }
 
 
-        public override string GetContent(bool showHelp = true)
+        public override ValueTask<string> GetContentAsync(bool showHelp = true)
         {
-            if (State == GameState.Cancelled) return "";
+            if (State == GameState.Cancelled) return new ValueTask<string>("");
 
-            return $"{gameLog.JoinString("\n")}\n{Message}".TruncateStart(2000);
+            return new ValueTask<string>($"{gameLog.JoinString("\n")}\n{Message}".TruncateStart(2000));
         }
 
 
@@ -639,9 +641,9 @@ namespace PacManBot.Games.Concrete
         }
 
 
-        private bool ClearGameLog()
+        private async ValueTask<bool> ClearGameLogAsync()
         {
-            bool clear = !CurrentPlayer.User.IsBot || AllBots;
+            bool clear = !await CurrentPlayer.IsBotAsync();
             if (clear) gameLog.Clear();
             Message = "";
             return clear;
@@ -678,40 +680,40 @@ namespace PacManBot.Games.Concrete
         }
 
 
-        private async Task SendCards(UnoPlayer player)
+        private async Task SendCardsAsync(UnoPlayer player)
         {
-            if (player.User == null || player.User.IsBot || Channel is IDMChannel) return;
+            if (await player.GetUserAsync() == null || await player.IsBotAsync() || Guild == null) return;
 
-            var embed = new EmbedBuilder
+            var embed = new DiscordEmbedBuilder
             {
                 Title = $"{GameName}",
-                Description = $"Send the name of a card in {Channel.Mention()} to discard that card." +
+                Description = $"Send the name of a card in {Channel.Mention} to discard that card." +
                               $"\nIf you can't or don't want to choose any card, say \"draw\" instead." +
                               $"\nYou can also use \"auto\" instead of a color/number/both.\n{Empty}",
                 Color = RgbCardColor[(int)TopCard.Color],
             };
 
-            embed.AddField("Your cards", CardsDisplay(player).Truncate(1024));
+            embed.AddField("Your cards", CardsDisplay(player).Truncate(1024), false);
 
             bool resend = false;
 
             if (player.message == null) resend = true;
             else
             {
-                try { await player.message.ModifyAsync(m => m.Embed = embed.Build(), PmBot.DefaultOptions); }
-                catch (HttpException) { resend = true; }
+                try { await player.message.ModifyAsync(embed: embed.Build()); }
+                catch (NotFoundException) { resend = true; }
             }
 
             if (resend)
             {
                 try
                 {
-                    player.message = await player.User.SendMessageAsync(embed: embed.Build(), options: PmBot.DefaultOptions);
+                    player.message = await (await player.GetUserAsync() as DiscordMember).SendMessageAsync(embed: embed.Build());
                 }
-                catch (HttpException e) when (e.DiscordCode == 50007) // Can't send DMs
+                catch (UnauthorizedException)
                 {
-                    gameLog.Add($"{player.User?.Mention} You can't play unless you have DMs enabled!\n");
-                    RemovePlayer(player);
+                    gameLog.Add($"{await player.MentionAsync()} You can't play unless you have DMs enabled!\n");
+                    await RemovePlayerAsync(player);
                 } 
             }
         }
@@ -719,7 +721,7 @@ namespace PacManBot.Games.Concrete
 
 
         /// <summary>Adds a new player to the game. Returns the fail reason if it can't be added.</summary>
-        public async Task<string> TryAddPlayerAsync(IUser user)
+        public async Task<string> TryAddPlayerAsync(DiscordUser user)
         {
             if (players.Count == 10) return "The game is full!";
             if (players.Any(x => x.id == user.Id)) return "You're already playing!";
@@ -728,23 +730,21 @@ namespace PacManBot.Games.Concrete
             players.Add(player);
             Draw(player, CardsPerPlayer);
 
-            await SendCards(player);
+            await SendCardsAsync(player);
 
             return null;
         }
 
 
         /// <summary>Removes a user from the game.</summary>
-        public void RemovePlayer(IUser user) => RemovePlayer(players.First(x => x.id == user.Id));
+        public Task RemovePlayerAsync(DiscordUser user) => RemovePlayerAsync(players.First(x => x.id == user.Id));
 
-        private void RemovePlayer(UnoPlayer player)
+        private async Task RemovePlayerAsync(UnoPlayer player)
         {
             drawPile.AddRange(player.cards);
             players.Remove(player);
 
-            if (AllBots) return;
-
-            while (Turn >= players.Count || CurrentPlayer.User.IsBot) Turn = FollowingTurn;
+            while (Turn >= players.Count || await CurrentPlayer.IsBotAsync()) Turn = FollowingTurn;
         }
 
 

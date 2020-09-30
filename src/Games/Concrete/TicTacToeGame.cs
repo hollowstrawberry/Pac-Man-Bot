@@ -39,14 +39,14 @@ namespace PacManBot.Games.Concrete
 
         public async ValueTask<bool> IsInputAsync(string value, ulong userId)
         {
-            return userId == UserId[Turn] && int.TryParse(await StripPrefixAsync(value), out int num)
+            return userId == UserId[Turn] && int.TryParse(StripPrefix(value), out int num)
                 && num > 0 && num <= board.Length;
         }
 
 
         public async Task InputAsync(string input, ulong userId = 1)
         {
-            int cell = int.Parse(await StripPrefixAsync(input)) - 1;
+            int cell = int.Parse(StripPrefix(input)) - 1;
             int y = cell / board.Width;
             int x = cell % board.Width;
 

@@ -52,9 +52,9 @@ namespace PacManBot.Games.Concrete
 
 
 
-        public async ValueTask<bool> IsInputAsync(string value, ulong userId)
+        public ValueTask<bool> IsInputAsync(string value, ulong userId)
         {
-            value = await StripPrefixAsync(value.ToUpperInvariant());
+            value = StripPrefix(value.ToUpperInvariant());
 
             if (word == null
                 || userId == OwnerId
@@ -62,20 +62,20 @@ namespace PacManBot.Games.Concrete
                 || !Alphabet.IsMatch(value)
                 || value.Length == 1 && wrongChars.Contains(value[0])
                 || value.Length == 1 && progress.Contains(value[0]))
-                return false;
-            return true;
+                return new ValueTask<bool>(false);
+            return new ValueTask<bool>(true);
         }
 
 
-        public async Task InputAsync(string input, ulong userId = 1)
+        public Task InputAsync(string input, ulong userId = 1)
         {
-            input = await StripPrefixAsync(input.ToUpperInvariant());
+            input = StripPrefix(input.ToUpperInvariant());
 
             if (input.Length == 1)
             {
                 char ch = input[0];
 
-                if (progress.Contains(ch) || wrongChars.Contains(ch)) return;
+                if (progress.Contains(ch) || wrongChars.Contains(ch)) return Task.CompletedTask;
 
                 int neat = 0;
                 for (int i = 0; i < word.Length; ++i)
@@ -116,6 +116,8 @@ namespace PacManBot.Games.Concrete
                     progress = word.ToArray();
                 }
             }
+
+            return Task.CompletedTask;
         }
 
 
@@ -176,7 +178,7 @@ namespace PacManBot.Games.Concrete
                 embed.Description = displayWord;
                 if (State == GameState.Win)
                 {
-                    var user = await (await GetClientAsync()).GetUserAsync(winnerId);
+                    var user = await Client.GetUserAsync(winnerId);
                     embed.Description += $"\n\n{user?.Mention ?? "Someone"} guessed it!";
                 }
             }

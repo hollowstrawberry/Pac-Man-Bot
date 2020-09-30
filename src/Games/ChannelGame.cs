@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.Entities;
@@ -19,59 +20,57 @@ namespace PacManBot.Games
         public virtual DateTime LastBumped { get; set; }
 
 
-        private DiscordClient client;
-        private DiscordChannel channel;
-        private DiscordMessage message;
-        private DiscordUser owner;
+        private DiscordClient _client;
+        private DiscordChannel _channel;
+        private DiscordMessage _message;
 
-        /// <summary>Returns the game's current shard, caching it if it wasn't already.</summary>
-        public async ValueTask<DiscordClient> GetClientAsync()
+        /// <summary>Retrieves the game's current shard.</summary>
+        public DiscordClient Client
         {
-            if (client != null) return client;
-
-            foreach (var (_, shard) in shardedClient.ShardClients)
+            get
             {
-                channel = await shard.GetChannelAsync(ChannelId);
-                if (channel != null)
+                if (_client != null) return _client;
+
+                foreach (var shard in shardedClient.ShardClients.Values)
                 {
-                    if (MessageId > 0) message = await channel.GetMessageAsync(MessageId);
-                    return client = shard;
+                    if (shard.PrivateChannels.TryGetValue(ChannelId, out var dmChannel))
+                    {
+                        _channel = dmChannel;
+                        return _client = shard;
+                    }
+
+                    foreach (var guild in shard.Guilds.Values)
+                    {
+                        if (guild.Channels.TryGetValue(ChannelId, out _channel))
+                        {
+                            return _client = shard;
+                        }
+                    }
                 }
+                return null;
             }
-            return null;
         }
 
-        /// <summary>Returns the game's current channel, caching it if it wasn't already.</summary>
-        public async ValueTask<DiscordChannel> GetChannelAsync()
-        {
-            if (client == null) await GetClientAsync();
-            return channel;
-        }
+        /// <summary>Returns the game's current channel.</summary>
+        public DiscordChannel Channel => Client == null ? null : _channel;
+
+        /// <summary>Retrieves this game's guild. Null when the channel is a DM channel.</summary>
+        public DiscordGuild Guild => Channel?.Guild;
 
         /// <summary>Returns the game's current message, caching it if it wasn't already.</summary>
         public async ValueTask<DiscordMessage> GetMessageAsync()
         {
-            if (client == null) await GetClientAsync();
-            if (channel != null && message?.Id != MessageId)
+            if (Channel != null && _message?.Id != MessageId)
             {
-                message = await channel.GetMessageAsync(MessageId);
+                _message = await Channel.GetMessageAsync(MessageId);
             }
-            return message;
-        }
-
-        /// <summary>Retrieves this game's guild. Null when the channel is a DM channel.</summary>
-        public async ValueTask<DiscordGuild> GetGuildAsync()
-        {
-            if (client == null) await GetClientAsync();
-            return channel?.Guild;
+            return _message;
         }
 
         /// <summary>Retrieves this game's owner (its first player).</summary>
         public override async ValueTask<DiscordUser> GetOwnerAsync()
         {
-            if (owner != null) return owner;
-            var guild = await GetGuildAsync();
-            return owner = (guild == null ? await client.GetUserAsync(OwnerId) : await guild.GetMemberAsync(OwnerId));
+            return Guild == null ? await Client.GetUserAsync(OwnerId) : await Guild.GetMemberAsync(OwnerId);
         }
 
 
@@ -87,9 +86,9 @@ namespace PacManBot.Games
 
 
         /// <summary>Used to remove the guild prefix from game input, as it is to be ignored.</summary>
-        protected async ValueTask<string> StripPrefixAsync(string value)
+        protected string StripPrefix(string value)
         {
-            string prefix = storage.GetPrefix(await GetChannelAsync());
+            string prefix = storage.GetPrefix(Channel);
             return value.StartsWith(prefix) ? value.Substring(prefix.Length) : value;
         }
     }

@@ -217,9 +217,8 @@ namespace PacManBot.Games.Concrete
                     string lvlUp = player.TryLevelUp();
                     if (lvlUp != null)
                     {
-                        GetChannelAsync().GetAwaiter().GetResult()
-                            .SendMessageAsync($"\n⏫ Level up! {lvlUp}" +
-                                "\n⭐ **You reached the maximum level! Congratulations!**".If(player.Level == RpgPlayer.LevelCap));
+                        Channel.SendMessageAsync($"\n⏫ Level up! {lvlUp}" +
+                            "\n⭐ **You reached the maximum level! Congratulations!**".If(player.Level == RpgPlayer.LevelCap));
                     }
 
                     enemies.RemoveAt(i);
@@ -327,7 +326,7 @@ namespace PacManBot.Games.Concrete
                 }
                 else
                 {
-                    string prefix = storage.GetPrefix(GetChannelAsync().GetAwaiter().GetResult());
+                    string prefix = storage.GetPrefix(Channel);
                     desc.AppendLine($"Waiting for {PvpGame.GetOwnerAsync().GetAwaiter().GetResult().Mention} to accept the challenge.");
                 }
             }
@@ -404,7 +403,7 @@ namespace PacManBot.Games.Concrete
                 if (lastEmote == emote)
                 {
                     lastEmote = SkillsEmote;
-                    fightEmbed = player.Skills(storage.GetPrefix(await GetChannelAsync()), true);
+                    fightEmbed = player.Skills(storage.GetPrefix(Channel), true);
                 }
                 else if (lastEmote == SkillsEmote)
                 {
@@ -414,7 +413,7 @@ namespace PacManBot.Games.Concrete
                 else
                 {
                     lastEmote = emote;
-                    fightEmbed = player.Profile(storage.GetPrefix(await GetChannelAsync()), reaction: true);
+                    fightEmbed = player.Profile(storage.GetPrefix(Channel), reaction: true);
                 }
             }
             else

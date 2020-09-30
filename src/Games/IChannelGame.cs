@@ -19,7 +19,7 @@ namespace PacManBot.Games
         DateTime LastBumped { get; set; }
 
         /// <summary>Retrieves the channel where this game is taking place in.</summary>
-        ValueTask<DiscordChannel> GetChannelAsync();
+        DiscordChannel Channel { get; }
 
         /// <summary>Retrieves this game's latest message.</summary>
         ValueTask<DiscordMessage> GetMessageAsync();

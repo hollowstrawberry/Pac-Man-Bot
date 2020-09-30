@@ -37,7 +37,7 @@ namespace PacManBot.Games
         public virtual async ValueTask<DiscordUser> GetUserAsync(int i = 0)
         {
             if (i < 0 || i >= UserId.Length) return null;
-            return internalUsers[i] ?? (internalUsers[i] = await (await GetClientAsync()).GetUserAsync(UserId[i]));
+            return internalUsers[i] ?? (internalUsers[i] = await Client.GetUserAsync(UserId[i]));
         }
 
         
@@ -114,7 +114,7 @@ namespace PacManBot.Games
                 if (Time == 0 && showHelp && UserId.Length > 1 && UserId[0] != UserId[1])
                 {
                     return $"{(await GetUserAsync(0)).Mention} You were invited to play {GameName}.\nChoose an action below, " +
-                           $"or type `{storage.GetPrefix(await GetChannelAsync())}cancel` if you don't want to play";
+                           $"or type `{storage.GetPrefix(Channel)}cancel` if you don't want to play";
                 }
             }
 

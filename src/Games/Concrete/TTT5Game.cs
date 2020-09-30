@@ -40,13 +40,13 @@ namespace PacManBot.Games.Concrete
 
         public async ValueTask<bool> IsInputAsync(string value, ulong userId)
         {
-            return userId == UserId[Turn] && Regex.IsMatch((await StripPrefixAsync(value)).ToUpperInvariant(), @"^[ABCDE][12345]$");
+            return userId == UserId[Turn] && Regex.IsMatch((StripPrefix(value)).ToUpperInvariant(), @"^[ABCDE][12345]$");
         }
 
 
         public async Task InputAsync(string input, ulong userId = 1)
         {
-            input = (await StripPrefixAsync(input)).ToUpperInvariant();
+            input = (StripPrefix(input)).ToUpperInvariant();
             int x = input[0] - 'A';
             int y = input[1] - '1';
 

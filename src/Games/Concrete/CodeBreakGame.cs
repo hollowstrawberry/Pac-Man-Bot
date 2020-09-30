@@ -52,15 +52,15 @@ namespace PacManBot.Games.Concrete
             guesses = new List<string>();
         }
 
-        public async ValueTask<bool> IsInputAsync(string value, ulong userId)
+        public ValueTask<bool> IsInputAsync(string value, ulong userId)
         {
-            value = await StripPrefixAsync(value);
-            return value.Length == Code.Length && Numbers.IsMatch(value);
+            value = StripPrefix(value);
+            return new ValueTask<bool>(value.Length == Code.Length && Numbers.IsMatch(value));
         }
 
         public async Task InputAsync(string input, ulong userId = 1)
         {
-            input = await StripPrefixAsync(input);
+            input = StripPrefix(input);
             if (guesses.Count > 0 && guesses.Last() == null) guesses.Pop();
             if (input == Code) State = GameState.Win;
             if (input.Distinct().Count() < Code.Length) input = null; // can't contain the same digit twice

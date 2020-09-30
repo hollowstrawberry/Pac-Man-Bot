@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.Entities;
@@ -40,20 +39,20 @@ namespace PacManBot.Games.Concrete
 
 
 
-        public async ValueTask<bool> IsInputAsync(string value, ulong userId)
+        public ValueTask<bool> IsInputAsync(string value, ulong userId)
         {
-            return userId == UserId[Turn] && int.TryParse(await StripPrefixAsync(value), out int num)
-                && num > 0 && num <= Columns;
+            return new ValueTask<bool>(
+                userId == UserId[Turn] && int.TryParse(StripPrefix(value), out int num) && num > 0 && num <= Columns);
         }
 
 
-        public async Task InputAsync(string input, ulong userId = 1)
+        public Task InputAsync(string input, ulong userId = 1)
         {
-            if (State != GameState.Active) return;
+            if (State != GameState.Active) return Task.CompletedTask;
             LastPlayed = DateTime.Now;
 
-            int column = int.Parse(await StripPrefixAsync(input)) - 1;
-            if (!AvailableColumns(board).Contains(column)) return; // Column is full
+            int column = int.Parse(StripPrefix(input)) - 1;
+            if (!AvailableColumns(board).Contains(column)) return Task.CompletedTask; // Column is full
 
             DropPiece(board, column, Turn);
 
@@ -71,6 +70,8 @@ namespace PacManBot.Games.Concrete
                 State = GameState.Completed;
                 Turn = Winner;
             }
+
+            return Task.CompletedTask;
         }
 
 
