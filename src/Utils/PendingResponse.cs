@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading;
-using Discord.WebSocket;
+using DSharpPlus.Entities;
 
 namespace PacManBot.Utils
 {
@@ -10,16 +10,16 @@ namespace PacManBot.Utils
     public class PendingResponse
     {
         private CancellationTokenSource cancelSource = new CancellationTokenSource();
-        private SocketUserMessage internalResponse = null;
+        private DiscordMessage internalResponse = null;
 
         /// <summary>The condition that a message has to fulfill in order to be accepted as a response.</summary>
-        public Func<SocketUserMessage, bool> Condition { get; }
+        public Func<DiscordMessage, bool> Condition { get; }
 
         /// <summary>Is automatically cancelled when a message response is accepted.</summary>
         public CancellationToken Token => cancelSource.Token;
 
         /// <summary>The message response that gets accepted, if any.</summary>
-        public SocketUserMessage Response
+        public DiscordMessage Response
         {
             get => internalResponse;
             set
@@ -30,7 +30,7 @@ namespace PacManBot.Utils
         }
 
 
-        public PendingResponse(Func<SocketUserMessage, bool> condition)
+        public PendingResponse(Func<DiscordMessage, bool> condition)
         {
             Condition = condition;
         }

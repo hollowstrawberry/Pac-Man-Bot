@@ -58,15 +58,12 @@ namespace PacManBot
                     $"Missing {nameof(config.discordToken)} in {Files.Config}: Bot can't run");
             }
 
-            DiscordShardedClient client = new DiscordShardedClient(config.ClientConfig);
-
-
             // Set up services
             var serviceCollection = new ServiceCollection()
                 .AddSingleton(config)
-                .AddSingleton(client)
+                .AddSingleton(config.ClientConfig)
+                .AddSingleton<DiscordShardedClient>()
                 .AddSingleton<PmBot>()
-                .AddSingleton<LoggingService>()
                 .AddSingleton<StorageService>()
                 .AddSingleton<PmCommandService>()
                 .AddSingleton<InputService>()

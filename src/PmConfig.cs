@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using PacManBot.Constants;
 using PacManBot.Extensions;
+using PacManBot.Services;
 
 namespace PacManBot
 {
@@ -93,7 +94,7 @@ namespace PacManBot
         {
             Token = discordToken,
             HttpTimeout = TimeSpan.FromSeconds(httpTimeout),
-            
+            LoggerFactory = new LoggingServiceFactory(this),
             MinimumLogLevel = clientLogLevel,
             MessageCacheSize = messageCacheSize,
 

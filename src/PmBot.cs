@@ -77,7 +77,7 @@ namespace PacManBot
             shard.ChannelDeleted += OnChannelDeleted;
 
             await shard.UpdateStatusAsync(
-                new DiscordActivity($"{Config.defaultPrefix}help", ActivityType.Custom), UserStatus.Online, DateTime.Now);
+                new DiscordActivity($"with you!", ActivityType.Playing), UserStatus.Online, DateTime.Now);
 
             if (schedule.timers.Count == 0) schedule.StartTimers();
 

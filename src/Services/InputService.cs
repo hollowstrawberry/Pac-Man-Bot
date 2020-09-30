@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using DSharpPlus;
+using DSharpPlus.Entities;
+using DSharpPlus.EventArgs;
 using PacManBot.Extensions;
 using PacManBot.Games;
 using PacManBot.Games.Concrete;
@@ -51,8 +53,8 @@ namespace PacManBot.Services
         public void StartListening(DiscordClient shard)
         {
             shard.MessageCreated += OnMessageReceived;
-            shard.MessageReactionAdded += OnReactionAddedOrRemoved;
-            shard.MessageReactionRemoved += OnReactionAddedOrRemoved;
+            shard.MessageReactionAdded += OnReactionAdded;
+            shard.MessageReactionRemoved += OnReactionRemoved;
         }
 
 
@@ -60,14 +62,14 @@ namespace PacManBot.Services
         public void StopListening(DiscordClient shard)
         {
             shard.MessageCreated -= OnMessageReceived;
-            shard.MessageReactionAdded -= OnReactionAddedOrRemoved;
-            shard.MessageReactionRemoved -= OnReactionAddedOrRemoved;
+            shard.MessageReactionAdded -= OnReactionAdded;
+            shard.MessageReactionRemoved -= OnReactionRemoved;
         }
 
 
         /// <summary>Returns the first new message that satisfies the given condition within 
         /// a timeout period in seconds, or null if no match is received.</summary>
-        public async Task<SocketUserMessage> GetResponseAsync(Func<SocketUserMessage, bool> condition, int timeout = 30)
+        public async Task<DiscordMessage> GetResponseAsync(Func<DiscordMessage, bool> condition, int timeout = 30)
         {
             var pending = new PendingResponse(condition);
             pendingResponses.TryAdd(pending, 0);
@@ -82,9 +84,10 @@ namespace PacManBot.Services
 
 
 
-        private Task OnMessageReceived(SocketMessage genericMessage)
+        private Task OnMessageReceived(MessageCreateEventArgs args)
         {
-            if (genericMessage is SocketUserMessage message && !message.Author.IsBot
+            var message = args.Message;
+            if (message.Author != null && !message.Author.IsBot
                     && message.Channel.BotCan(ChannelPermission.SendMessages | ChannelPermission.ReadMessageHistory))
             {
                 try
@@ -93,9 +96,9 @@ namespace PacManBot.Services
                         || MessageGameInput(message)
                         || Command(message))
                     {
-                        if (message.Channel is SocketGuildChannel channel)
+                        if (message.Channel.Guild != null)
                         {
-                            _ = EnsureUsersDownloadedAsync(channel.Guild);
+                            _ = EnsureUsersDownloadedAsync(message.Channel.Guild);
                         }
                         return Task.CompletedTask;
                     }
@@ -109,27 +112,30 @@ namespace PacManBot.Services
             return Task.CompletedTask;
         }
 
-        private Task OnReactionAddedOrRemoved(Cacheable<IUserMessage, ulong> messageData, ISocketMessageChannel channel, SocketReaction reaction)
-        {
-            if (channel.BotCan(ChannelPermission.SendMessages | ChannelPermission.ReadMessageHistory))
-            {
-                if (reaction.UserId == client.CurrentUser.Id) return Task.CompletedTask;
+        private Task OnReactionAdded(MessageReactionAddEventArgs args)
+            => OnReactionAddedOrRemoved(args.Message, args.User, args.Emoji);
 
-                IUserMessage message = reaction.Message.GetValueOrDefault();
-                if (message == null && messageData.HasValue) message = messageData.Value;
+        private Task OnReactionRemoved(MessageReactionRemoveEventArgs args)
+            => OnReactionAddedOrRemoved(args.Message, args.User, args.Emoji);
+
+        private Task OnReactionAddedOrRemoved(DiscordMessage message, DiscordUser user, DiscordEmoji emoji)
+        {
+            if (message.Channel.BotCan(Permissions.SendMessages | Permissions.ReadMessageHistory))
+            {
+                if (user.Id == client.CurrentUser.Id) return Task.CompletedTask;
 
                 if (message != null && message.Author.Id != client.CurrentUser.Id) return Task.CompletedTask;
 
                 var game = games.AllGames
                     .OfType<IReactionsGame>()
-                    .FirstOrDefault(g => g.MessageId == reaction.MessageId);
+                    .FirstOrDefault(g => g.MessageId == message.Id);
 
-                if (game == null || !game.IsInput(reaction.Emote, reaction.UserId)) return Task.CompletedTask;
+                if (game == null || !game.IsInput(emoji, user.Id)) return Task.CompletedTask;
 
-                _ = ExecuteReactionGameInputAsync(game, reaction, message, channel);
-                if (channel is SocketGuildChannel guildChannel)
+                _ = ExecuteReactionGameInputAsync(game, message, user, emoji);
+                if (message.Channel?.Guild != null)
                 {
-                    _ = EnsureUsersDownloadedAsync(guildChannel.Guild);
+                    _ = EnsureUsersDownloadedAsync(message.Channel.Guild);
                 }
             }
 
@@ -137,25 +143,27 @@ namespace PacManBot.Services
         }
 
 
-        private async Task EnsureUsersDownloadedAsync(SocketGuild guild)
+        private async Task EnsureUsersDownloadedAsync(DiscordGuild guild)
         {
-            if (guild != null && guild.MemberCount < 80000 && !guild.HasAllMembers)
+            if (guild != null && guild.MemberCount < 50000)
             {
                 if (!lastGuildUsersDownload.TryGetValue(guild.Id, out DateTime last)
                     || (DateTime.Now - last) > TimeSpan.FromMinutes(30))
                 {
                     lastGuildUsersDownload[guild.Id] = DateTime.Now;
-                    int oldCount = guild.Users.Count;
-                    await guild.DownloadUsersAsync();
+                    int oldCount = guild.Members.Count();
+
+                    await guild.RequestMembersAsync();
+
                     int time = (DateTime.Now - lastGuildUsersDownload[guild.Id]).Milliseconds;
-                    log.Info($"Downloaded {guild.Users.Count() - oldCount} users from {guild.FullName()} in {time}ms");
+                    log.Info($"Downloaded {guild.Members.Count() - oldCount} users from {guild.FullName()} in {time}ms");
                 }
             }
         }
 
 
         /// <summary>Tries to find and complete a pending response. Returns whether it is successful.</summary>
-        private bool PendingResponse(SocketUserMessage message)
+        private bool PendingResponse(DiscordMessage message)
         {
             var pending = pendingResponses.Select(x => x.Key).FirstOrDefault(x => x.Condition(message));
 
@@ -170,9 +178,9 @@ namespace PacManBot.Services
 
 
         /// <summary>Tries to find and execute a command. Returns whether it is successful.</summary>
-        private bool Command(SocketUserMessage message)
+        private bool Command(DiscordMessage message)
         {
-            string prefix = storage.GetGuildPrefix((message.Channel as SocketGuildChannel)?.Guild);
+            string prefix = storage.GetGuildPrefix(message.Channel?.Guild);
             bool requiresPrefix = storage.RequiresPrefix(message.Channel);
 
             int? mentionPos = message.GetMentionCommandPos(client);
@@ -192,7 +200,7 @@ namespace PacManBot.Services
 
 
         /// <summary>Tries to find a game and execute message input. Returns whether it is successful.</summary>
-        private bool MessageGameInput(SocketUserMessage message)
+        private bool MessageGameInput(DiscordMessage message)
         {
             var game = games.GetForChannel<IMessagesGame>(message.Channel.Id);
             if (game == null || !game.IsInput(message.Content, message.Author.Id)) return false;
@@ -202,7 +210,7 @@ namespace PacManBot.Services
             return true;
         }
 
-        private async Task ExecuteGameInputAsync(IMessagesGame game, SocketUserMessage message)
+        private async Task ExecuteGameInputAsync(IMessagesGame game, DiscordMessage message)
         {
             try
             {
@@ -214,7 +222,7 @@ namespace PacManBot.Services
             }
         }
 
-        private async Task InnerExecuteGameInputAsync(IMessagesGame game, SocketUserMessage message)
+        private async Task InnerExecuteGameInputAsync(IMessagesGame game, DiscordMessage message)
         {
             var gameMessage = await game.GetMessageAsync();
 
@@ -231,13 +239,13 @@ namespace PacManBot.Services
 
             if (game.State != GameState.Active) games.Remove(game);
 
-            if (gameMessage != null && message.Channel.BotCan(ChannelPermission.ManageMessages))
+            if (gameMessage != null && message.Channel.BotCan(Permissions.ManageMessages))
             {
                 game.CancelRequests();
                 try { await gameMessage.ModifyAsync(game.GetMessageUpdate(), game.GetRequestOptions()); }
                 catch (OperationCanceledException) { }
 
-                await message.DeleteAsync(PmBot.DefaultOptions);
+                await message.DeleteAsync();
             }
             else
             {
@@ -249,37 +257,34 @@ namespace PacManBot.Services
                 }
                 catch (OperationCanceledException) { }
 
-                if (gameMessage != null) await gameMessage.DeleteAsync(PmBot.DefaultOptions);
+                if (gameMessage != null) await gameMessage.DeleteAsync();
             }
         }
 
 
-        private async Task ExecuteReactionGameInputAsync(IReactionsGame game, SocketReaction reaction, IUserMessage message, ISocketMessageChannel channel)
+        private async Task ExecuteReactionGameInputAsync(IReactionsGame game, DiscordMessage message, DiscordUser user, DiscordEmoji emoji)
         {
             try
             {
                 if (message == null) message = await game.GetMessageAsync();
                 if (message == null) return; // oof
 
-                await InnerExecuteReactionGameInputAsync(game, reaction, message, channel);
+                await InnerExecuteReactionGameInputAsync(game, message, user, emoji);
             }
             catch (Exception e)
             {
-                log.Exception($"During input \"{reaction.Emote.ReadableName()}\" in {channel.FullName()}", e, game.GameName);
+                log.Exception($"During input \"{emoji.GetDiscordName()}\" in {message.Channel.FullName()}", e, game.GameName);
             }
         }
 
-        private async Task InnerExecuteReactionGameInputAsync(IReactionsGame game, SocketReaction reaction, IUserMessage message, ISocketMessageChannel channel)
+        private async Task InnerExecuteReactionGameInputAsync(IReactionsGame game, DiscordMessage message, DiscordUser user, DiscordEmoji emoji)
         {
-            var userId = reaction.UserId;
-            var user = reaction.User.GetValueOrDefault() ?? client.GetUser(reaction.UserId);
-            var guild = (channel as SocketTextChannel)?.Guild;
-
+            var guild = message.Channel?.Guild;
             log.Verbose(
-                $"Input {reaction.Emote.ReadableName()} by {user?.FullName()} in {channel.FullName()}",
+                $"Input {emoji.GetDiscordName()} by {user.FullName()} in {message.Channel?.FullName()}",
                 game.GameName);
 
-            await game.InputAsync(reaction.Emote, userId);
+            await game.InputAsync(emoji, user.Id);
 
             if (game.State != GameState.Active)
             {
@@ -287,13 +292,13 @@ namespace PacManBot.Services
 
                 if (game is PacManGame pmGame && pmGame.State != GameState.Cancelled && !pmGame.custom)
                 {
-                    storage.AddScore(new ScoreEntry(pmGame.score, userId, pmGame.State, pmGame.Time,
-                        user?.NameandDisc(), $"{guild?.Name}/{channel.Name}", DateTime.Now));
+                    storage.AddScore(new ScoreEntry(pmGame.score, user.Id, pmGame.State, pmGame.Time,
+                        user.NameandDisc(), $"{guild?.Name}/{message.Channel?.Name}", DateTime.Now));
                 }
 
-                if (channel.BotCan(ChannelPermission.ManageMessages) && message != null)
+                if (message.Channel.BotCan(Permissions.ManageMessages) && message != null)
                 {
-                    await message.RemoveAllReactionsAsync(PmBot.DefaultOptions);
+                    await message.DeleteAllReactionsAsync();
                 }
             }
 

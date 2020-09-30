@@ -112,4 +112,20 @@ namespace PacManBot.Services
             return this;
         }
     }
+
+
+    /// <summary> This shouldn't need to exist.</summary>
+    class LoggingServiceFactory : ILoggerFactory
+    {
+        private readonly PmConfig config;
+
+        public LoggingServiceFactory(PmConfig config)
+        {
+            this.config = config;
+        }
+
+        public Microsoft.Extensions.Logging.ILogger CreateLogger(string categoryName) => new LoggingService(config); // help
+        public void AddProvider(ILoggerProvider provider) { } // what
+        public void Dispose() { } // why
+    }
 }
