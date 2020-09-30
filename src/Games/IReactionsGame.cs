@@ -1,4 +1,4 @@
-using Discord;
+using DSharpPlus.Entities;
 using System.Threading.Tasks;
 
 namespace PacManBot.Games
@@ -9,9 +9,9 @@ namespace PacManBot.Games
     public interface IReactionsGame : IChannelGame
     {
         /// <summary>Whether the given value is a valid input given the player sending it.</summary>
-        bool IsInput(IEmote value, ulong userId);
+        bool IsInput(DiscordEmoji value, ulong userId);
 
         /// <summary>Executes an input expected to be valid.</summary>
-        Task InputAsync(IEmote input, ulong userId = 1);
+        Task InputAsync(DiscordEmoji input, ulong userId = 1);
     }
 }

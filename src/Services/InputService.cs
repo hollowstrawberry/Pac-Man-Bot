@@ -88,7 +88,7 @@ namespace PacManBot.Services
         {
             var message = args.Message;
             if (message.Author != null && !message.Author.IsBot
-                    && message.Channel.BotCan(ChannelPermission.SendMessages | ChannelPermission.ReadMessageHistory))
+                    && message.Channel.BotCan(Permissions.SendMessages | Permissions.ReadMessageHistory))
             {
                 try
                 {
@@ -105,7 +105,7 @@ namespace PacManBot.Services
                 }
                 catch (Exception e)
                 {
-                    log.Exception($"In {message.Channel.FullName()}", e);
+                    log.Exception($"In {message.Channel.DebugName()}", e);
                 }
             }
 
@@ -156,7 +156,7 @@ namespace PacManBot.Services
                     await guild.RequestMembersAsync();
 
                     int time = (DateTime.Now - lastGuildUsersDownload[guild.Id]).Milliseconds;
-                    log.Info($"Downloaded {guild.Members.Count() - oldCount} users from {guild.FullName()} in {time}ms");
+                    log.Info($"Downloaded {guild.Members.Count() - oldCount} users from {guild.DebugName()} in {time}ms");
                 }
             }
         }
@@ -183,7 +183,7 @@ namespace PacManBot.Services
             string prefix = storage.GetGuildPrefix(message.Channel?.Guild);
             bool requiresPrefix = storage.RequiresPrefix(message.Channel);
 
-            int? mentionPos = message.GetMentionCommandPos(client);
+            int? mentionPos = message.GetMentionCommandPos(this);
             int pos = mentionPos
                 ?? message.GetCommandPos(prefix)
                 ?? (requiresPrefix ? -1 : 0);
@@ -227,7 +227,7 @@ namespace PacManBot.Services
             var gameMessage = await game.GetMessageAsync();
 
             log.Verbose(
-                $"Input {message.Content} by {message.Author.FullName()} in {message.Channel.FullName()}",
+                $"Input {message.Content} by {message.Author.DebugName()} in {message.Channel.DebugName()}",
                 game.GameName);
 
             await game.InputAsync(message.Content, message.Author.Id);
@@ -273,7 +273,7 @@ namespace PacManBot.Services
             }
             catch (Exception e)
             {
-                log.Exception($"During input \"{emoji.GetDiscordName()}\" in {message.Channel.FullName()}", e, game.GameName);
+                log.Exception($"During input \"{emoji.GetDiscordName()}\" in {message.Channel.DebugName()}", e, game.GameName);
             }
         }
 
@@ -281,7 +281,7 @@ namespace PacManBot.Services
         {
             var guild = message.Channel?.Guild;
             log.Verbose(
-                $"Input {emoji.GetDiscordName()} by {user.FullName()} in {message.Channel?.FullName()}",
+                $"Input {emoji.GetDiscordName()} by {user.DebugName()} in {message.Channel?.DebugName()}",
                 game.GameName);
 
             await game.InputAsync(emoji, user.Id);

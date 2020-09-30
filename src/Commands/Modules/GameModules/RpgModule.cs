@@ -661,7 +661,7 @@ namespace PacManBot.Commands.Modules.GameModules
             {
                 foreach (var emote in emotes)
                 {
-                    await message.AddReactionAsync((IEmote)emote.ToEmote() ?? emote.ToEmoji(), DefaultOptions);
+                    await message.AddReactionAsync((IEmote)emote.ToEmoji() ?? emote.ToEmoji(), DefaultOptions);
                 }
             }
             catch (HttpException) { }

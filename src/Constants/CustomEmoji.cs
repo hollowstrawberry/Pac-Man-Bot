@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Discord;
+using DSharpPlus.Entities;
 using PacManBot.Extensions;
 using Range = PacManBot.Utils.Range;
 
@@ -11,13 +11,13 @@ namespace PacManBot.Constants
     /// </summary>
     public static class CustomEmoji
     {
-        public static readonly Emote
-            ECheck = Check.ToEmote(),
-            ECross = Cross.ToEmote(),
-            ELoading = Loading.ToEmote(),
-            EHelp = Help.ToEmote(),
-            EGitHub = GitHub.ToEmote(),
-            EBlobDance = BlobDance.ToEmote();
+        public static readonly DiscordGuildEmoji
+            ECheck = Check.ToEmoji(),
+            ECross = Cross.ToEmoji(),
+            ELoading = Loading.ToEmoji(),
+            EHelp = Help.ToEmoji(),
+            EGitHub = GitHub.ToEmoji(),
+            EBlobDance = BlobDance.ToEmoji();
 
 
         public static readonly IReadOnlyList<string> Number =

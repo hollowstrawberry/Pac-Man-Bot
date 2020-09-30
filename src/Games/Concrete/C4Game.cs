@@ -112,7 +112,7 @@ namespace PacManBot.Games.Concrete
                 Title = ColorEmbedTitle(),
                 Description = description.ToString(),
                 Color = Turn.Color,
-                ThumbnailUrl = Winner == Player.None ? Turn.Circle().ToEmote()?.Url : User(Winner)?.GetAvatarUrl(),
+                ThumbnailUrl = Winner == Player.None ? Turn.Circle().ToEmoji()?.Url : User(Winner)?.GetAvatarUrl(),
             };
         }
 
