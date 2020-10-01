@@ -9,7 +9,6 @@ using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
-using DSharpPlus.Exceptions;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using PacManBot.Constants;
