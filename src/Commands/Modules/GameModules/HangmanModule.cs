@@ -1,83 +1,87 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Discord.Commands;
-using Discord.Net;
+using DSharpPlus.CommandsNext;
+using DSharpPlus.CommandsNext.Attributes;
+using DSharpPlus.Entities;
+using DSharpPlus.Exceptions;
 using PacManBot.Extensions;
 using PacManBot.Games.Concrete;
 
 namespace PacManBot.Commands.Modules
 {
-    [Name(ModuleNames.Games), Remarks("3")]
+    [Group(ModuleNames.Games), Description("3")]
     public class HangmanModule : BaseGameModule<HangmanGame>
     {
-        [Command("hangman"), Alias("hang"), Priority(2)]
-        [Remarks("Start a game of Hangman in a channel")]
-        [Summary("When this command is used, the channel becomes a public game of hangman.\n" +
-                 "Anyone will be able to guess either a letter or the full word. Up to 10 wrong guesses!\n\n" +
-                 "You can use **{prefix}hangman choose** if you want to choose a word or phrase for your friends to guess. " +
-                 "Don't send it in the chat! The bot will ask in private.")]
-        public async Task StartHangman([Remainder]string args = null)
+        [Command("hangman"), Aliases("hang"), Priority(2)]
+        [Description(
+            "When this command is used, the channel becomes a public game of hangman.\n" +
+            "Anyone will be able to guess either a letter or the full word. Up to 10 wrong guesses!\n\n" +
+            "You can use **{prefix}hangman choose** if you want to choose a word or phrase for your friends to guess. " +
+            "Don't send it in the chat! The bot will ask in private.")]
+        public async Task StartHangman(CommandContext ctx, [RemainingText]string args = null)
         {
-            if (await CheckGameAlreadyExistsAsync()) return;
+            if (await CheckGameAlreadyExistsAsync(ctx)) return;
 
             if (args != null)
             {
-                await ReplyAsync(
-                    $"You can use `{Context.Prefix}hangman choose` if you want to choose what the rest will have to guess.\n" +
+                await ctx.RespondAsync(
+                    $"You can use `{Storage.GetPrefix(ctx)}hangman choose` if you want to choose what the rest will have to guess.\n" +
                     $"The bot will ask you in private!");
                 return;
             }
 
-            StartNewGame(new HangmanGame(Context.Channel.Id, Services));
-            await ReplyGameAsync();
+            StartNewGame(new HangmanGame(ctx.Channel.Id, Services));
+            await RespondGameAsync(ctx);
         }
 
 
-        [Command("hangman choose"), Alias("hang choose", "hangman custom", "hang custom", "hangman word", "hang word")]
-        [Priority(10), HideHelp]
-        [Summary("When this command is used, you will be sent a DM asking for a word or phrase in private. " +
-                 "Once you give it, the game will start in the original channel where you used this command.\n" +
-                 "Anyone will be able to guess either a letter or the full phrase. Up to 10 wrong guesses!\n\n" +
-                 "To start a normal game with a random word, use **{prefix}hangman**")]
-        public async Task StartHangmanCustom()
+        [Command("hangman choose"), Aliases("hang choose", "hangman custom", "hang custom", "hangman word", "hang word")]
+        [Priority(10), Hidden]
+        [Description(
+            "When this command is used, you will be sent a DM asking for a word or phrase in private. " +
+            "Once you give it, the game will start in the original channel where you used this command.\n" +
+            "Anyone will be able to guess either a letter or the full phrase. Up to 10 wrong guesses!\n\n" +
+            "To start a normal game with a random word, use **{prefix}hangman**")]
+        [RequireGuild]
+        public async Task StartHangmanCustom(CommandContext ctx)
         {
-            if (Context.Guild == null)
+            if (ctx.Guild == null)
             {
-                await RespondAsync($"There's nobody here to guess! To play alone, use `hangman`");
+                await ctx.RespondAsync($"There's nobody here to guess! To play alone, use `hangman`");
                 return;
             }
 
-            if (await CheckGameAlreadyExistsAsync()) return;
+            if (await CheckGameAlreadyExistsAsync(ctx)) return;
 
 
-            StartNewGame(new HangmanGame(Context.Channel.Id, Context.User.Id, Services));
+            StartNewGame(new HangmanGame(ctx.Channel.Id, ctx.User.Id, Services));
 
-            var userChannel = await Context.User.GetOrCreateDMChannelAsync();
+            var dm = await ctx.Member.CreateDmChannelAsync();
             try
             {
-                await userChannel.SendMessageAsync(
-                    $"Send the secret word or phrase for the {Game.GameName} game in {Context.Channel.Mention()}:");
+                await dm.SendMessageAsync(
+                    $"Send the secret word or phrase for the {Game(ctx).GameName} game in {ctx.Channel.Mention}:");
             }
-            catch (HttpException e) when (e.DiscordCode == 50007) // Can't send DMs
+            catch (BadRequestException)
             {
-                await RespondAsync($"{Context.User.Mention} You must enable DMs!");
-                EndGame();
+                await ctx.RespondAsync($"{ctx.User.Mention} You must enable DMs!");
+                EndGame(ctx);
                 return;
             }
 
-            var msg = await ReplyGameAsync($"{Context.User.Mention} check your DMs!");
+            var msg = await RespondGameAsync(ctx, $"{ctx.User.Mention} check your DMs!");
 
             while (true)
             {
                 var response = await Input.GetResponseAsync(x =>
-                    x.Channel.Id == userChannel.Id && x.Author.Id == Context.User.Id, 90);
+                    x.Channel.Id == dm.Id && x.Author.Id == ctx.User.Id, 90);
 
                 if (response == null)
                 {
-                    EndGame();
-                    await userChannel.SendMessageAsync("Timed out 💨");
-                    await UpdateGameMessageAsync();
+                    EndGame(ctx);
+                    await dm.SendMessageAsync("Timed out 💨");
+                    await UpdateGameMessageAsync(ctx);
                     return;
                 }
 
@@ -86,24 +90,24 @@ namespace PacManBot.Commands.Modules
 
                 if (!HangmanGame.Alphabet.IsMatch(word))
                 {
-                    await userChannel.SendMessageAsync(
+                    await dm.SendMessageAsync(
                         $"Sorry, but your secret {wf} can only contain alphabet characters (A-Z).\nTry again.");
                 }
                 else if (word.Length > 40)
                 {
-                    await userChannel.SendMessageAsync(
+                    await dm.SendMessageAsync(
                         $"Sorry, but your secret {wf} can only be up to 40 characters long.\nTry again.");
                 }
                 else if (word.Count(x => x == ' ') > 5)
                 {
-                    await userChannel.SendMessageAsync(
+                    await dm.SendMessageAsync(
                         $"Sorry, but your secret phrase can only be up to six words long.\nTry again.");
                 }
                 else
                 {
-                    Game.SetWord(word);
+                    Game(ctx).SetWord(word);
                     await response.AutoReactAsync();
-                    await SendOrUpdateGameMessageAsync();
+                    await SendOrUpdateGameMessageAsync(ctx);
                     return;
                 }
             }

@@ -17,7 +17,7 @@ namespace PacManBot.Commands
 
 
         /// <summary>Attempts to create a <typeparamref name="TGame"/> for this context.</summary>
-        public async Task RunMultiplayerGameAsync(CommandContext ctx, params DiscordUser[] players)
+        public async Task StartNewMPGameAsync(CommandContext ctx, params DiscordUser[] players)
         {
             if (await CheckGameAlreadyExistsAsync(ctx)) return;
 

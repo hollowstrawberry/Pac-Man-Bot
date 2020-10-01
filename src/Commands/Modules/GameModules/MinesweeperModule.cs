@@ -1,40 +1,54 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Discord.Commands;
+using DSharpPlus.CommandsNext;
+using DSharpPlus.CommandsNext.Attributes;
 using PacManBot.Extensions;
 using PacManBot.Games;
 using PacManBot.Utils;
 
 namespace PacManBot.Commands.Modules
 {
-    [Name(ModuleNames.Games), Remarks("3")]
+    [Group(ModuleNames.Games), Description("3")]
     public class MinesweeperModule : BasePmBotModule
     {
-        [Command("minesweeper"), Alias("ms")]
-        [Remarks("Send a Minesweeper board in chat.")]
-        [Summary("Sends a newly generated Minesweeper board in chat.\n" +
-                 "You can specify a size between 5 and 14 (default 8), and a difficulty between 1 and 9 (default 3).\n\n" +
-                 "The game is completely controlled by the user, with no interaction with the bot. " +
-                 "To play, simply click a tile to reveal its contents. If it's a bomb, you lose. " +
-                 "If it's a number, that number will indicate the number of bombs around that tile.\n" +
-                 "The top-left tile is never a bomb. You win once all non-bomb tiles have been uncovered!")]
-        public async Task Minesweeper(int size = 8, int difficulty = 3)
+        private const string BombChar = "💥";
+
+        private static readonly string[] NumberChars = new Range(9)
+            .Select(x => (char)('\U00000030' + x) + "\U000020e3").ToArray(); // Two-character emoji
+
+
+        private const int Bomb = -1;
+
+        private static readonly Pos[] AdjacentPos = {
+            (0, 1), (0, -1), (1, 0), (-1, 0), (1, 1), (1, -1), (-1, 1), (-1, -1),
+        };
+
+
+        [Command("minesweeper"), Aliases("ms")]
+        [Description(
+            "Sends a newly generated Minesweeper board in chat.\n" +
+            "You can specify a size between 5 and 14 (default 8), and a difficulty between 1 and 9 (default 3).\n\n" +
+            "The game is completely controlled by the user, with no interaction with the bot. " +
+            "To play, simply click a tile to reveal its contents. If it's a bomb, you lose. " +
+            "If it's a number, that number will indicate the number of bombs around that tile.\n" +
+            "The top-left tile is never a bomb. You win once all non-bomb tiles have been uncovered!")]
+        public async Task Minesweeper(CommandContext ctx, int size = 8, int difficulty = 3)
         {
             if (size < 5 || size > 14)
             {
-                await RespondAsync("The board size must range between 5 and 14");
+                await ctx.RespondAsync("The board size must range between 5 and 14");
                 return;
             }
             if (difficulty < 1 || difficulty > 9)
             {
-                await RespondAsync("The difficulty must range between 1 and 9");
+                await ctx.RespondAsync("The difficulty must range between 1 and 9");
                 return;
             }
 
             var board = GenerateBoard(size, difficulty);
             var content = board.ToString(x => $"||{(x == Bomb ? BombChar : NumberChars[x])}|| ");
-            await RespondAsync(content);
+            await ctx.RespondAsync(content);
         }
 
 
@@ -66,19 +80,5 @@ namespace PacManBot.Commands.Modules
 
             return board;
         }
-
-
-
-        private const string BombChar = "💥";
-
-        private static readonly string[] NumberChars = new Range(9)
-            .Select(x => (char)('\U00000030' + x) + "\U000020e3").ToArray(); // Two-character emoji
-
-
-        private const int Bomb = -1;
-
-        private static readonly Pos[] AdjacentPos = {
-            (0, 1), (0, -1), (1, 0), (-1, 0), (1, 1), (1, -1), (-1, 1), (-1, -1),
-        };
     }
 }
