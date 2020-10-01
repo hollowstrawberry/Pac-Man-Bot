@@ -57,8 +57,9 @@ namespace PacManBot.Commands.Modules
             if (game.UserId.Contains(ctx.User.Id) || ctx.UserCan(Permissions.ManageMessages)
                 || DateTime.Now - game.LastPlayed > TimeSpan.FromSeconds(60))
             {
+                var msg = await game.GetMessageAsync();
                 EndGame(ctx);
-                var msg = await UpdateGameMessageAsync(ctx);
+                await msg.ModifyWithGameAsync(game);
 
                 if (game is PacManGame pacManGame)
                 {

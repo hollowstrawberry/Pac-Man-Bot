@@ -63,8 +63,8 @@ namespace PacManBot
             schedule.PrepareRestart += StopAsync;
 
             await client.StartAsync();
-            await client.UpdateStatusAsync(
-                new DiscordActivity("Booting up...", ActivityType.Custom), UserStatus.Idle, DateTime.Now);
+            //await client.UpdateStatusAsync(
+            //    new DiscordActivity("Booting up...", ActivityType.Playing), UserStatus.Idle, DateTime.Now);
 
             if (!string.IsNullOrWhiteSpace(config.discordBotListToken))
             {
@@ -86,7 +86,7 @@ namespace PacManBot
             await shard.UpdateStatusAsync(
                 new DiscordActivity($"with you!", ActivityType.Playing), UserStatus.Online, DateTime.Now);
 
-            if (schedule.timers.Count == 0) schedule.StartTimers();
+            if (schedule.timers == null) schedule.StartTimers();
 
             if (File.Exists(Files.ManualRestart))
             {
@@ -140,14 +140,22 @@ namespace PacManBot
             if (args.Exception.InnerException != null)
             {
                 await args.Context.RespondAsync($"Something went wrong! {args.Exception.InnerException.Message}");
-                log.Exception($"While executing {args.Command.Name} for {args.Context.User.DebugName()} " +
+                log.Exception($"While executing {args.Command?.Name} for {args.Context.User.DebugName()} " +
                     $"in {args.Context.Channel.DebugName()}", args.Exception);
             }
             else
             {
-                await args.Context.RespondAsync(args.Exception.Message);
+                switch (args.Exception)
+                {
+                    case ArgumentException _:
+                        await args.Context.RespondAsync($"Invalid command parameters for `{args.Command.Name}`");
+                        break;
+                    default:
+                        await args.Context.RespondAsync(args.Exception.Message);
+                        break;
+                }
                 log.Verbose($"Couldn't execute {args.Command.Name} for {args.Context.User.DebugName()} " +
-                    $"in {args.Context.Channel.DebugName()}", args.Exception.Message);
+                    $"in {args.Context.Channel.DebugName()}:\n{args.Exception}");
             }
         }
 

@@ -320,11 +320,11 @@ namespace PacManBot.Commands.Modules
             }
         }
 
-        [Command("file"), Aliases("readfile"), Hidden]
+        [Command("file"), Hidden]
         public async Task ReadFile(CommandContext ctx, int start, [RemainingText]string file)
             => await ReadFile(ctx, start, 2000, file);
 
-        [Command("file"), Aliases("readfile"), Hidden]
+        [Command("file"), Hidden]
         public async Task ReadFile(CommandContext ctx, [RemainingText]string file)
             => await ReadFile(ctx, 0, 2000, file);
 

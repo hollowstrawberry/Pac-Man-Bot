@@ -76,7 +76,7 @@ namespace PacManBot.Games
                         }
                     }
                 }
-                return null;
+                return _channel;
             }
         }
 

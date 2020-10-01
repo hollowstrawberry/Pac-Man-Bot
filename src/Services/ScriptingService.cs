@@ -21,10 +21,10 @@ namespace PacManBot.Services
                     "System", "System.IO", "System.Text", "System.Linq", "System.Reflection", "System.Diagnostics",
                     "System.Threading.Tasks", "System.Collections.Generic", "System.Text.RegularExpressions",
                     "Microsoft.EntityFrameworkCore", "Newtonsoft.Json",
-                    "DSharpPlus", "DSharpPlus.CommandsNext", "DSharpPlus.Entities",
+                    "DSharpPlus", "DSharpPlus.CommandsNext", "DSharpPlus.Entities", "DSharpPlus.Exceptions",
                     "PacManBot", "PacManBot.Constants", "PacManBot.Utils", "PacManBot.Extensions", 
                     "PacManBot.Games", "PacManBot.Games.Concrete", "PacManBot.Games.Concrete.Rpg",
-                    "PacManBot.Commands", "PacManBot.Commands.Modules", "PacManBot.Commands.Modules.GameModules",
+                    "PacManBot.Commands", "PacManBot.Commands.Modules",
                     "PacManBot.Services", "PacManBot.Services.Database"
                 )
                 .WithReferences(

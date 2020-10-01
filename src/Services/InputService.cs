@@ -196,6 +196,7 @@ namespace PacManBot.Services
             {
                 var commands = client.GetCommandsNext();
                 var command = commands.FindCommand(message.Content.Substring(pos), out string rawArguments);
+                if (command == null) return false;
                 var context = commands.CreateContext(message, pos == 0 ? "" : prefix, command, rawArguments);
                 await commands.ExecuteCommandAsync(context);
                 return true;
