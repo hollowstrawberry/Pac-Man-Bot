@@ -90,7 +90,7 @@ namespace PacManBot.Commands.Modules
                     return;
                 }
 
-                string response = await command.Invoke<Task<string>>(this, ctx, args);
+                string response = await command.Invoke<Task<string>>(this, ctx, args.Trim());
                 if (response != null) await ctx.RespondAsync(response);
             }
         }
