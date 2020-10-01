@@ -233,7 +233,7 @@ namespace PacManBot.Commands.Modules
 
         [Command("equip"), Aliases("e", "weapon", "armor")]
         [Description("Equip an item from your inventory")]
-        public async Task EquipItem(CommandContext ctx, string itemName = "")
+        public async Task EquipItem(CommandContext ctx, [RemainingText] string itemName = "")
         {
             if (Game(ctx) == null)
             {
@@ -368,7 +368,7 @@ namespace PacManBot.Commands.Modules
 
         [Command("name"), Aliases("setname")]
         [Description("Set your character's name")]
-        public async Task SetPlayerName(CommandContext ctx, string name)
+        public async Task SetPlayerName(CommandContext ctx, [RemainingText] string name)
         {
             if (Game(ctx) == null)
             {
@@ -407,7 +407,7 @@ namespace PacManBot.Commands.Modules
 
         [Command("color"), Aliases("setcolor")]
         [Description("Set your character's color, displayed in embeds")]
-        public async Task SetPlayerColor(CommandContext ctx, string arg)
+        public async Task SetPlayerColor(CommandContext ctx, [RemainingText] string colorString)
         {
             if (Game(ctx) == null)
             {
@@ -415,7 +415,7 @@ namespace PacManBot.Commands.Modules
                 return;
             }
 
-            if (arg == "")
+            if (colorString == "")
             {
                 await ctx.RespondAsync("Say the name or hex code of your new color:");
 
@@ -426,11 +426,11 @@ namespace PacManBot.Commands.Modules
                     return;
                 }
 
-                arg = response.Content;
-                if (string.IsNullOrWhiteSpace(arg)) return;
+                colorString = response.Content;
+                if (string.IsNullOrWhiteSpace(colorString)) return;
             }
 
-            var color = arg.ToColor();
+            var color = colorString.ToColor();
 
             if (color == null)
             {

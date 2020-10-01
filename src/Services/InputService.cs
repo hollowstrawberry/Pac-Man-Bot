@@ -83,13 +83,13 @@ namespace PacManBot.Services
 
 
 
-        private Task OnMessageReceived(MessageCreateEventArgs args)
+        private Task OnMessageReceived(DiscordClient client, MessageCreateEventArgs args)
         {
             var message = args.Message;
             if (message.Author != null && !message.Author.IsBot
                     && message.Channel.BotCan(Permissions.SendMessages | Permissions.ReadMessageHistory))
             {
-                _ = InnerOnMessageReceivedAsync(message, args.Client);
+                _ = InnerOnMessageReceivedAsync(message, client);
             }
 
             return Task.CompletedTask;
@@ -115,10 +115,10 @@ namespace PacManBot.Services
             }
         }
 
-        private Task OnReactionAdded(MessageReactionAddEventArgs args)
+        private Task OnReactionAdded(DiscordClient client, MessageReactionAddEventArgs args)
             => OnReactionAddedOrRemoved(args.Message, args.User, args.Emoji);
 
-        private Task OnReactionRemoved(MessageReactionRemoveEventArgs args)
+        private Task OnReactionRemoved(DiscordClient client, MessageReactionRemoveEventArgs args)
             => OnReactionAddedOrRemoved(args.Message, args.User, args.Emoji);
 
         private Task OnReactionAddedOrRemoved(DiscordMessage message, DiscordUser user, DiscordEmoji emoji)

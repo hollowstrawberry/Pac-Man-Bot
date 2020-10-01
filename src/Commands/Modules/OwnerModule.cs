@@ -99,6 +99,7 @@ namespace PacManBot.Commands.Modules
             if (updated) await ShutDown(ctx);
         }
 
+        public CommandContext ctx;
 
         [Command("eval"), Aliases("evalasync", "run", "runasync"), Hidden]
         [Description("Run code, super dangerous do not try at home. Developer only.")]
@@ -111,6 +112,7 @@ namespace PacManBot.Commands.Modules
             object result;
             try
             {
+                this.ctx = ctx;
                 result = await Scripting.EvalAsync(code, this);
                 Log.Debug($"Successfully executed:\n {code}", LogSource.Eval);
                 await ctx.AutoReactAsync(true);

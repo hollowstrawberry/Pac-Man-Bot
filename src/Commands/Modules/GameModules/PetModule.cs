@@ -12,7 +12,8 @@ using PacManBot.Games.Concrete;
 
 namespace PacManBot.Commands.Modules
 {
-    [Description(ModuleNames.Games)]
+    [Group("pet")]
+    [Description("Take care of your own little wakagotchi!")]
     public class PetModule : BaseGameModule<PetGame>
     {
         public string AdoptPetMessage(CommandContext ctx)
@@ -223,7 +224,8 @@ namespace PacManBot.Commands.Modules
 
 
         [Command("name")]
-        public async Task SetName(CommandContext ctx, string arg)
+        [Description("Give a name to your pet")]
+        public async Task SetName(CommandContext ctx, [RemainingText] string name)
         {
             if (Game(ctx) == null)
             {
@@ -232,7 +234,6 @@ namespace PacManBot.Commands.Modules
             }
 
             var msg = ctx.Message;
-            string name = arg;
 
             if (name == "")
             {
@@ -266,7 +267,7 @@ namespace PacManBot.Commands.Modules
 
         [Command("image"), Aliases("url", "avatar")]
         [Description("Set your pet's image")]
-        public async Task SetImage(CommandContext ctx, string arg)
+        public async Task SetImage(CommandContext ctx, [RemainingText] string arg)
         {
             if (Game(ctx) == null)
             {
