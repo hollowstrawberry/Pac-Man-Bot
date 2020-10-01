@@ -97,7 +97,7 @@ namespace PacManBot
             LoggerFactory = new LoggingServiceFactory(),
             MinimumLogLevel = clientLogLevel,
             MessageCacheSize = messageCacheSize,
-
+            
             Intents =
                 DiscordIntents.Guilds | DiscordIntents.DirectMessages | DiscordIntents.DirectMessageReactions
                 | DiscordIntents.GuildMembers | DiscordIntents.GuildMessages | DiscordIntents.GuildMessageReactions,

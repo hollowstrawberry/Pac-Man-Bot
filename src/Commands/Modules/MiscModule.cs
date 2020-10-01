@@ -13,7 +13,7 @@ using PacManBot.Games.Concrete;
 
 namespace PacManBot.Commands.Modules
 {
-    [Description(ModuleNames.Misc)]
+    [Module(ModuleNames.Misc)]
     public class MiscModule : BaseGameModule<IChannelGame>
     {
         [Command("bump"), Aliases("b", "refresh"), Priority(2)]
@@ -128,14 +128,14 @@ namespace PacManBot.Commands.Modules
 
 
         [Command("neat"), Description("Neat"), Hidden]
-        public async Task Neat(CommandContext ctx, [RemainingText] string arg = "")
+        public async Task Neat(CommandContext ctx, [RemainingText] string neat = "")
         {
             await ctx.RespondAsync("neat");
         }
 
 
         [Command("nice"), Description("Nice"), Hidden]
-        public async Task Nice(CommandContext ctx, [RemainingText] string arg = "")
+        public async Task Nice(CommandContext ctx, [RemainingText] string nice = "")
         {
             await ctx.RespondAsync("nice");
         }

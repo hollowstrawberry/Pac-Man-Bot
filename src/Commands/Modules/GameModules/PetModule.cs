@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
-using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
@@ -12,6 +10,7 @@ using PacManBot.Games.Concrete;
 
 namespace PacManBot.Commands.Modules
 {
+    [Module(ModuleNames.Games)]
     [Group("pet")]
     [Description("Take care of your own little wakagotchi!")]
     public class PetModule : BaseGameModule<PetGame>

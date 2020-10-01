@@ -8,7 +8,7 @@ using PacManBot.Games.Concrete;
 
 namespace PacManBot.Commands.Modules
 {
-    [Description(ModuleNames.Games)]
+    [Module(ModuleNames.Games)]
     public class HangmanModule : BaseGameModule<HangmanGame>
     {
         [Command("hangman"), Aliases("hang"), Priority(2)]

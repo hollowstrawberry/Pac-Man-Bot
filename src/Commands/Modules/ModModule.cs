@@ -10,7 +10,7 @@ using PacManBot.Extensions;
 
 namespace PacManBot.Commands.Modules
 {
-    [Description(ModuleNames.Mod)]
+    [Module(ModuleNames.Mod)]
     [RequireUserPermissions(Permissions.ManageMessages)]
     public class ModModule : BasePmBotModule
     {

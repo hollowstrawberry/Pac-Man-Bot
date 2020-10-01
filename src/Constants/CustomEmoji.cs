@@ -31,6 +31,7 @@ namespace PacManBot.Constants
             PacMan = "<a:pacman:409803570544902144>",
             Help = "<:help:438481218674229248>",
             BlobDance = "<a:danceblob:751079963473477693>",
+            GameCube = "<:gamecube:761373355742986290>",
 
             Discord = "<:discord:409811304103149569>",
             GitHub = "<:github:409803419717599234>",

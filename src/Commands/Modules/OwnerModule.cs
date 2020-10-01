@@ -20,7 +20,7 @@ using PacManBot.Utils;
 
 namespace PacManBot.Commands.Modules
 {
-    [Description(ModuleNames.Dev)]
+    [Module(ModuleNames.Dev)]
     [RequireOwner]
     public class OwnerModule : BasePmBotModule
     {

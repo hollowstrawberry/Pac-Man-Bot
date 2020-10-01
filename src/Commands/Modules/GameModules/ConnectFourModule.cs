@@ -6,7 +6,7 @@ using PacManBot.Games.Concrete;
 
 namespace PacManBot.Commands.Modules
 {
-    [Description(ModuleNames.Games)]
+    [Module(ModuleNames.Games)]
     public class ConnectFourModule : MultiplayerGameModule<C4Game>
     {
         [Command("connect4"), Aliases("c4", "four"), Priority(1)]

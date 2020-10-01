@@ -10,6 +10,7 @@ using PacManBot.Services;
 using DSharpPlus.EventArgs;
 using DSharpPlus.Entities;
 using DSharpPlus.CommandsNext;
+using PacManBot.Commands;
 
 namespace PacManBot
 {
@@ -53,6 +54,7 @@ namespace PacManBot
             foreach (var (shard, commands) in shardedClient.GetCommandsNext())
             {
                 commands.RegisterCommands(typeof(PmBot).Assembly);
+                commands.SetHelpFormatter<HelpFormatter>();
                 commands.CommandExecuted += OnCommandExecuted;
                 commands.CommandErrored += OnCommandErrored;
             }
@@ -136,26 +138,20 @@ namespace PacManBot
 
         private async Task OnCommandErrored(CommandsNextExtension sender, CommandErrorEventArgs args)
         {
-            if (args.Exception.InnerException != null)
+            switch (args.Exception)
             {
-                await args.Context.RespondAsync($"Something went wrong! {args.Exception.InnerException.Message}");
-                log.Exception($"While executing {args.Command?.Name} for {args.Context.User.DebugName()} " +
-                    $"in {args.Context.Channel.DebugName()}", args.Exception);
+                case ArgumentException e when e.Message.Contains("suitable overload"):
+                    await args.Context.RespondAsync($"Invalid command parameters for `{args.Command.Name}`");
+                    break;
+
+                default:
+                    await args.Context.RespondAsync($"Something went wrong! {args.Exception.Message}");
+                    log.Exception($"While executing {args.Command?.Name} for {args.Context.User.DebugName()} " +
+                        $"in {args.Context.Channel.DebugName()}", args.Exception);
+                    return;
             }
-            else
-            {
-                switch (args.Exception)
-                {
-                    case ArgumentException _:
-                        await args.Context.RespondAsync($"Invalid command parameters for `{args.Command.Name}`");
-                        break;
-                    default:
-                        await args.Context.RespondAsync(args.Exception.Message);
-                        break;
-                }
-                log.Verbose($"Couldn't execute {args.Command.Name} for {args.Context.User.DebugName()} " +
-                    $"in {args.Context.Channel.DebugName()}:\n{args.Exception}");
-            }
+            log.Verbose($"Couldn't execute {args.Command.Name} for {args.Context.User.DebugName()} " +
+                $"in {args.Context.Channel.DebugName()}:\n{args.Exception}");
         }
 
 

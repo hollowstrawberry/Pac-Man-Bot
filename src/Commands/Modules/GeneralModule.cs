@@ -14,7 +14,7 @@ using PacManBot.Games;
 
 namespace PacManBot.Commands.Modules
 {
-    [Description(ModuleNames.General)]
+    [Module(ModuleNames.General)]
     public class GeneralModule : BasePmBotModule
     {
         private static readonly IEnumerable<string> GameNames = ReflectionExtensions.AllTypes
@@ -77,7 +77,7 @@ namespace PacManBot.Commands.Modules
 
         [Command("waka"), Aliases("ping")]
         [Description("Check how quickly the bot is responding to commands.")]
-        public async Task Ping(CommandContext ctx, [RemainingText]string uselessArgs = "")
+        public async Task Ping(CommandContext ctx, [RemainingText]string waka = "")
         {
             var stopwatch = Stopwatch.StartNew(); // Measure the time it takes to send a message to chat
             var message = await ctx.RespondAsync($"{CustomEmoji.Loading} Waka");
