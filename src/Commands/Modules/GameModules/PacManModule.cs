@@ -10,7 +10,7 @@ using PacManBot.Games.Concrete;
 
 namespace PacManBot.Commands.Modules
 {
-    [Group(ModuleNames.Games), Description("3")]
+    [Description(ModuleNames.Games)]
     public class PacManModule : BaseGameModule<PacManGame>
     {
         [Command("pacman"), Priority(1)]

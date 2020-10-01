@@ -8,7 +8,7 @@ using PacManBot.Games.Concrete;
 
 namespace PacManBot.Commands.Modules
 {
-    [Group(ModuleNames.Games), Description("3")]
+    [Description(ModuleNames.Games)]
     public class RubiksModule : BaseGameModule<RubiksGame>
     {
         [Command("rubik"), Aliases("rubiks", "rubix")]

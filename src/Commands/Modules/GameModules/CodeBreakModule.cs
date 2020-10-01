@@ -5,7 +5,7 @@ using PacManBot.Games.Concrete;
 
 namespace PacManBot.Commands.Modules
 {
-    [Group(ModuleNames.Games), Description("3")]
+    [Description(ModuleNames.Games)]
     public class CodeBreakModule : BaseGameModule<CodeBreakGame>
     {
         [Command("codebreak"), Aliases("code", "break")]
@@ -17,7 +17,7 @@ namespace PacManBot.Commands.Modules
             "The code can never have 2 or more of the same digit.\n" +
             "You can also specify the amount of digits from 2 to 10.\n" +
             "Fun fact: Any 4-digit code can be cracked in 7 guesses or less if played perfectly!")]
-        public async Task StartHangman(CommandContext ctx, int digits = 4)
+        public async Task StartCodebreak(CommandContext ctx, int digits = 4)
         {
             if (await CheckGameAlreadyExistsAsync(ctx)) return;
 

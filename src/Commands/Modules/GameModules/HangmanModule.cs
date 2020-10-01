@@ -1,23 +1,21 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
-using DSharpPlus.Entities;
 using DSharpPlus.Exceptions;
 using PacManBot.Extensions;
 using PacManBot.Games.Concrete;
 
 namespace PacManBot.Commands.Modules
 {
-    [Group(ModuleNames.Games), Description("3")]
+    [Description(ModuleNames.Games)]
     public class HangmanModule : BaseGameModule<HangmanGame>
     {
         [Command("hangman"), Aliases("hang"), Priority(2)]
         [Description(
             "When this command is used, the channel becomes a public game of hangman.\n" +
             "Anyone will be able to guess either a letter or the full word. Up to 10 wrong guesses!\n\n" +
-            "You can use **{prefix}hangman choose** if you want to choose a word or phrase for your friends to guess. " +
+            "You can use **{prefix}hangmanword** if you want to choose a word or phrase for your friends to guess. " +
             "Don't send it in the chat! The bot will ask in private.")]
         public async Task StartHangman(CommandContext ctx, [RemainingText]string args = null)
         {
@@ -26,7 +24,7 @@ namespace PacManBot.Commands.Modules
             if (args != null)
             {
                 await ctx.RespondAsync(
-                    $"You can use `{Storage.GetPrefix(ctx)}hangman choose` if you want to choose what the rest will have to guess.\n" +
+                    $"You can use `{Storage.GetPrefix(ctx)}hangmanword` if you want to choose what the rest will have to guess.\n" +
                     $"The bot will ask you in private!");
                 return;
             }
@@ -36,7 +34,7 @@ namespace PacManBot.Commands.Modules
         }
 
 
-        [Command("hangman choose"), Aliases("hang choose", "hangman custom", "hang custom", "hangman word", "hang word")]
+        [Command("hangmanword"), Aliases("hangchoose", "hangmanchoose", "hangword")]
         [Priority(10), Hidden]
         [Description(
             "When this command is used, you will be sent a DM asking for a word or phrase in private. " +

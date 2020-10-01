@@ -11,10 +11,10 @@ using PacManBot.Games.Concrete;
 
 namespace PacManBot.Commands.Modules
 {
-    [Group(ModuleNames.Games), Description("3")]
+    [Group("uno"), Description(ModuleNames.Games)]
     public class UnoModule : MultiplayerGameModule<UnoGame>
     {
-        [Command("uno"), Priority(3)]
+        [GroupCommand, Priority(3)]
         [Description(
             "__Tip__: Switching back and forth with DMs to see your cards can be tiresome, " +
             "so try having your cards open in your phone while you're playing in a computer." +
@@ -52,7 +52,7 @@ namespace PacManBot.Commands.Modules
         }
 
 
-        [Command("uno help"), Aliases("uno h", "uno rules", "uno commands"), Priority(-1), Hidden]
+        [Command("help"), Aliases("h", "rules", "commands"), Priority(-1), Hidden]
         [Description("Gives rules and commands for the Uno game.")]
         public async Task UnoHelp(CommandContext ctx)
         {
@@ -61,7 +61,7 @@ namespace PacManBot.Commands.Modules
         }
 
 
-        [Command("uno join"), Aliases("uno add", "uno invite"), Priority(-1), Hidden]
+        [Command("join"), Aliases("add", "invite"), Priority(-1), Hidden]
         [Description("Joins an ongoing Uno game in this channel. Fails if the game is full or if there aren't enough cards to draw for you.\n" +
                  "You can also invite a bot or another user to play.")]
         [RequireGuild]
@@ -107,7 +107,7 @@ namespace PacManBot.Commands.Modules
         }
 
 
-        [Command("uno leave"), Priority(-1), Hidden]
+        [Command("leave"), Priority(-1), Hidden]
         [Description("Lets you leave the Uno game in this channel.")]
         [RequireGuild]
         public async Task LeaveUno(CommandContext ctx)
@@ -140,7 +140,7 @@ namespace PacManBot.Commands.Modules
         }
 
 
-        [Command("uno kick"), Aliases("uno remove"), Priority(-1), Hidden]
+        [Command("kick"), Aliases("remove"), Priority(-1), Hidden]
         [Description("Lets you kick another player or bot in the current Uno game.")]
         [RequireGuild]
         public async Task KickUno(CommandContext ctx, DiscordMember member = null)

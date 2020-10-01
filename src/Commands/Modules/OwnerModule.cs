@@ -20,7 +20,7 @@ using PacManBot.Utils;
 
 namespace PacManBot.Commands.Modules
 {
-    [Group(ModuleNames.Dev), Description("0")]
+    [Description(ModuleNames.Dev)]
     [RequireOwner]
     public class OwnerModule : BasePmBotModule
     {
@@ -342,7 +342,7 @@ namespace PacManBot.Commands.Modules
         }
 
 
-        [Command("sudo clear"), Aliases("sudoclear", "sudo cl", "wipe"), Hidden]
+        [Command("sudoclear"), Aliases("wipe"), Hidden]
         [Description("Clear all messages in a range. Developer only.")]
         [RequireBotPermissions(Permissions.ReadMessageHistory | Permissions.ManageMessages)]
         public async Task ClearAllMessages(CommandContext ctx, int amount = 10)
@@ -356,7 +356,7 @@ namespace PacManBot.Commands.Modules
         }
 
 
-        [Command("sudo say"), Aliases("sudosay"), Hidden]
+        [Command("sudosay"), Hidden]
         [Description("Say anything. Developer-only version.")]
         public async Task ClearGameMessages(CommandContext ctx, [RemainingText]string message)
         {

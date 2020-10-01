@@ -14,10 +14,11 @@ using PacManBot.Games.Concrete;
 
 namespace PacManBot.Commands.Modules
 {
-    [Group(ModuleNames.Games), Description("3")]
+    [Description(ModuleNames.Games)]
     [SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Reflection")]
     public class PetModule : BaseGameModule<PetGame>
     {
+        // TODO: Remove custom command system and use command group
         private static readonly IEnumerable<MethodInfo> PetMethods = typeof(PetModule).GetMethods()
             .Where(x => x.Get<PetCommandAttribute>()?.VerifyMethod(x) != null)
             .ToArray();

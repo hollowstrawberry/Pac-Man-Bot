@@ -6,7 +6,7 @@ using PacManBot.Games.Concrete;
 
 namespace PacManBot.Commands.Modules
 {
-    [Group(ModuleNames.Games), Description("3")]
+    [Description(ModuleNames.Games)]
     public class TTT5Module : MultiplayerGameModule<TTT5Game>
     {
         [Command("5ttt"), Aliases("ttt5", "5tictactoe", "5tic"), Priority(1)]
@@ -16,14 +16,14 @@ namespace PacManBot.Commands.Modules
             "The player who makes the **most lines of 3 symbols** wins. However, if a player makes a lines of **4**, they win instantly.\n\n" +
             "Do `{prefix}cancel` to end the game or `{prefix}bump` to move it to the bottom of the chat. " +
             "The game times out in case of extended inactivity.\n\n" +
-            "You can also make the bot challenge another user or bot with `{prefix}5ttt vs <opponent>`")]
+            "You can also make the bot challenge another user or bot with `{prefix}5tttvs <opponent>`")]
         public async Task StartTicTacToe5(CommandContext ctx, DiscordUser opponent = null)
         {
             await StartNewMPGameAsync(ctx, opponent ?? ctx.Client.CurrentUser, ctx.User);
         }
 
 
-        [Command("5ttt vs"), Aliases("ttt5 vs", "5tictactoe vs", "5tic vs"), Priority(-1), Hidden]
+        [Command("5tttvs"), Aliases("ttt5vs", "5tictactoevs", "5ticvs"), Priority(-1), Hidden]
         [Description("Make the bot challenge a user... or another bot")]
         public async Task Start5TicTacToeVs(CommandContext ctx, DiscordUser opponent)
         {

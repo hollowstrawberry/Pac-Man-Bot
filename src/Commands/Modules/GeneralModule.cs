@@ -14,7 +14,7 @@ using PacManBot.Games;
 
 namespace PacManBot.Commands.Modules
 {
-    [Group(ModuleNames.General), Description("1")]
+    [Description(ModuleNames.General)]
     public class GeneralModule : BasePmBotModule
     {
         private static readonly IEnumerable<string> GameNames = ReflectionExtensions.AllTypes
@@ -92,13 +92,6 @@ namespace PacManBot.Commands.Modules
 
             await message.ModifyAsync(content);                   
         }
-
-
-        [Command("say"), Priority(-1)]
-        [Description("Repeats back any message.")]
-        [RequireDirectMessage]
-        public async Task Say(CommandContext ctx, [RemainingText]string message)
-            => await ctx.RespondAsync(message.SanitizeMentions());
 
 
         [Command("allgames"), Aliases("gamestats")]

@@ -9,7 +9,7 @@ using PacManBot.Utils;
 
 namespace PacManBot.Commands.Modules
 {
-    [Group(ModuleNames.Games), Description("3")]
+    [Description(ModuleNames.Games)]
     public class MinesweeperModule : BasePmBotModule
     {
         private const string BombChar = "💥";

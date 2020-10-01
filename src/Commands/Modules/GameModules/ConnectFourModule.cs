@@ -6,7 +6,7 @@ using PacManBot.Games.Concrete;
 
 namespace PacManBot.Commands.Modules
 {
-    [Group(ModuleNames.Games), Description("3")]
+    [Description(ModuleNames.Games)]
     public class ConnectFourModule : MultiplayerGameModule<C4Game>
     {
         [Command("connect4"), Aliases("c4", "four"), Priority(1)]
@@ -16,14 +16,14 @@ namespace PacManBot.Commands.Modules
             "in chat while it is your turn, and to win you must make a line of 3 symbols in any direction\n\n" +
             "Do `{prefix}cancel` to end the game or `{prefix}bump` to move it to the bottom of the chat. " +
             "The game times out in case of extended inactivity.\n\n" +
-            "You can also make the bot challenge another user or bot with `{prefix}c4 vs <opponent>`")]
+            "You can also make the bot challenge another user or bot with `{prefix}c4vs <opponent>`")]
         public async Task StartConnectFour(CommandContext ctx, DiscordUser opponent = null)
         {
             await StartNewMPGameAsync(ctx, opponent ?? ctx.Client.CurrentUser, ctx.User);
         }
 
 
-        [Command("connect4 vs"), Aliases("c4 vs", "four vs"), Priority(-1), Hidden]
+        [Command("connect4vs"), Aliases("c4vs", "fourvs"), Priority(-1), Hidden]
         [Description("Make the bot challenge a user... or another bot")]
         public async Task StartConnectFourVs(CommandContext ctx, DiscordUser opponent)
         {

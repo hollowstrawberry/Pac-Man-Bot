@@ -13,7 +13,7 @@ using PacManBot.Games.Concrete;
 
 namespace PacManBot.Commands.Modules
 {
-    [Group(ModuleNames.Misc), Description("4")]
+    [Description(ModuleNames.Misc)]
     public class MiscModule : BaseGameModule<IChannelGame>
     {
         [Command("bump"), Aliases("b", "refresh"), Priority(2)]
