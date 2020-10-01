@@ -201,7 +201,7 @@ namespace PacManBot.Commands.Modules
                     await Games.SaveAsync(otherPet);
 
                     await ctx.RespondAsync($"{CustomEmoji.PetRight}{playEmote}{CustomEmoji.PetLeft}");
-                    await ctx.RespondAsync($"{Game(ctx).petName} and {otherPet.petName} are happy to play together!");
+                    await ctx.RespondAsync($"{Game(ctx).PetName} and {otherPet.PetName} are happy to play together!");
                 }
                 return null;
             }
@@ -384,21 +384,21 @@ namespace PacManBot.Commands.Modules
         [PetCommand("release"), RequiresPet]
         public async Task<string> DeleteGame(CommandContext ctx, string arg)
         {
-            if (string.IsNullOrWhiteSpace(Game(ctx).petName))
+            if (string.IsNullOrWhiteSpace(Game(ctx).PetName))
             {
                 Games.Remove(Game(ctx));
                 return $"Goodbye {Game(ctx).GameName}!";
             }
 
             await ctx.RespondAsync(
-                $"❗ Are you sure you want to release **{Game(ctx).petName}**?\n" +
+                $"❗ Are you sure you want to release **{Game(ctx).PetName}**?\n" +
                 $"It will be gone forever, along with your stats and achievements, and you can't get it back.\n" +
                 $"Release your pet? (Yes/No)");
 
             if (await ctx.GetYesResponseAsync() ?? false)
             {
                 Games.Remove(Game(ctx));
-                return $"Goodbye {Game(ctx).petName}!";
+                return $"Goodbye {Game(ctx).PetName}!";
             }
             return "Pet not released ❤";
         }

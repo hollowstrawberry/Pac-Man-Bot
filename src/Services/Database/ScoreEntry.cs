@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Discord.WebSocket;
+using DSharpPlus;
 using PacManBot.Extensions;
 using PacManBot.Games;
 
@@ -33,15 +33,15 @@ namespace PacManBot.Services.Database
         }
 
 
-        public string GetUsername(BaseSocketClient client)
+        public string GetUsername(DiscordClient client)
         {
-            return client?.GetUser(UserId)?.NameandDisc() ?? Username ?? "Unknown";
+            return client?.GetUserAsync(UserId)?.GetAwaiter().GetResult().NameandDisc() ?? Username ?? "Unknown";
         }
 
 
         public override string ToString() => ToString(null);
 
-        public string ToString(BaseSocketClient client)
+        public string ToString(DiscordClient client)
         {
             return $"({State}) {Score} points in {Turns} turns by user " +
                    $"{GetUsername(client).SanitizeMarkdown().SanitizeMentions()}";

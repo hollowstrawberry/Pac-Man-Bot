@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -17,6 +18,7 @@ using PacManBot.Games.Concrete.Rpg;
 namespace PacManBot.Commands.Modules
 {
     [Group(ModuleNames.Games), Description("3")]
+    [SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Reflection")]
     public class RpgModule : BaseGameModule<RpgGame>
     {
         private static readonly IEnumerable<MethodInfo> RpgMethods = typeof(RpgModule).GetMethods()
@@ -146,8 +148,6 @@ namespace PacManBot.Commands.Modules
                 return "You can only use an active skill during battle!";
             if (Game(ctx).IsPvp && !Game(ctx).isPvpTurn)
                 return "It's not your turn.";
-
-            var unlocked = Game(ctx).player.UnlockedSkills;
 
             if (!Game(ctx).player.UnlockedSkills.Contains(skill))
                 return $"You haven't unlocked the `{skill.Shortcut}` active skill.";

@@ -147,7 +147,7 @@ namespace PacManBot.Games.Concrete
 
             foreach (var en in Opponents.Cast<Enemy>())
             {
-                embed.AddField(en.Summary());
+                en.AddSummaryField(embed);
             }
 
             return embed;

@@ -26,8 +26,8 @@ namespace PacManBot.Games.Concrete
 
         // Fields
 
-        [DataMember] public string petName { get; private set; }
-        [DataMember] public string petImageUrl { get; private set; }
+        [DataMember] public string PetName { get; private set; }
+        [DataMember] public string PetImageUrl { get; private set; }
         [DataMember] public double satiation = 15;
         [DataMember] public double hygiene = 15;
         [DataMember] public double happiness = 15;
@@ -156,7 +156,7 @@ namespace PacManBot.Games.Concrete
                 else if (pet.TotalStats == 0) lastNeglected = DateTime.Now;
                 double days = (DateTime.Now - lastNeglected).TotalDays;
 
-                if (!string.IsNullOrWhiteSpace(pet.petName) && !string.IsNullOrWhiteSpace(pet.petImageUrl)) Custom = true;
+                if (!string.IsNullOrWhiteSpace(pet.PetName) && !string.IsNullOrWhiteSpace(pet.PetImageUrl)) Custom = true;
 
                 if (days >= 90 && Attention < 4) Attention = 4;
                 else if (days >= 30 && Attention < 3) Attention = 3;
@@ -221,13 +221,13 @@ namespace PacManBot.Games.Concrete
             var description = new StringBuilder();
 
             string prefix = storage.GetGuildPrefix(ownerMember?.Guild);
-            if (string.IsNullOrWhiteSpace(petName))
+            if (string.IsNullOrWhiteSpace(PetName))
             {
                 description.Append("Congratulations on your new wakagotchi!\n" +
                                    $"Use `{prefix}pet name` to name it and `{prefix}pet help` for more info\n\n");
             }
 
-            description.Append($"**Name:** {(string.IsNullOrWhiteSpace(petName) ? "*Unnamed*" : petName)}\n");
+            description.Append($"**Name:** {(string.IsNullOrWhiteSpace(PetName) ? "*Unnamed*" : PetName)}\n");
 
             description.Append($"**Age:** {(DateTime.Now - bornDate).Humanized(3, "Newborn")}\n{Empty}\n");
 
@@ -259,7 +259,7 @@ namespace PacManBot.Games.Concrete
                 .WithDescription(description.ToString())
                 .WithColor(TotalStats.Ceiling() >= 60 ? new DiscordColor(0, 200, 0)
                     : TotalStats.Ceiling() >= 25 ? new DiscordColor(255, 200, 0) : new DiscordColor(255, 0, 0))
-                .WithThumbnail(petImageUrl ?? Content.petImageUrl)
+                .WithThumbnail(PetImageUrl ?? Content.petImageUrl)
                 .WithImageUrl(Content.petBannerUrl[achievements.Attention])
                 .AddField("Status", status.ToString(), true)
                 .AddField("Unlocks", string.IsNullOrWhiteSpace(unlocks) ? "None" : unlocks, true);
@@ -298,7 +298,7 @@ namespace PacManBot.Games.Concrete
             return new DiscordEmbedBuilder()
                 .WithTitle($"{ownerMember?.Nickname ?? (await GetOwnerAsync())?.DisplayName() ?? "Unknown"}'s Wakagotchi")
                 .WithColor(new DiscordColor(150, 0, 220))
-                .WithThumbnail(petImageUrl ?? Content.petImageUrl)
+                .WithThumbnail(PetImageUrl ?? Content.petImageUrl)
                 .AddField("Statistics 📊", stats.ToString(), false)
                 .AddField("Achievements 🏆", achievOn.Replace("\n", $"\n{CustomEmoji.Check}").ToString() + achievOff, false);
         }
@@ -423,7 +423,7 @@ namespace PacManBot.Games.Concrete
         /// <summary>Sets the pet's name.</summary>
         public async Task SetPetNameAsync(string text)
         {
-            petName = text?.Trim().Truncate(NameCharLimit).SanitizeMarkdown().SanitizeMentions();
+            PetName = text?.Trim().Truncate(NameCharLimit).SanitizeMarkdown().SanitizeMentions();
             await UpdateAndSaveAsync();
         }
 
@@ -434,7 +434,7 @@ namespace PacManBot.Games.Concrete
             string url = text?.Trim('<', '>');
             if (url == null || await WebUtil.IsImageUrlAsync(url))
             {
-                petImageUrl = url;
+                PetImageUrl = url;
                 await UpdateAndSaveAsync();
                 return true;
             }
@@ -491,7 +491,7 @@ namespace PacManBot.Games.Concrete
             {
                 achievements.PetGod = true;
                 pet = "👼 Having petted 10,000 times, and having lived a long and just life as Pet King, you and your pet ascend into the realm of the pet-angels.\n\n" +
-                      $"After arriving to their heavenly dominion, some angels begin chanting: *\"{(await GetOwnerAsync())?.DisplayName()?.SanitizeMarkdown() ?? "Owner"}, {petName}\"*. " +
+                      $"After arriving to their heavenly dominion, some angels begin chanting: *\"{(await GetOwnerAsync())?.DisplayName()?.SanitizeMarkdown() ?? "Owner"}, {PetName}\"*. " +
                       "Soon more and more join them, until ten billion voices act in unison. A blinding glare falls upon the pedestal you stand on. " +
                       "Your entire being slowly fades away, morphing into something else, something like... __pure petting energy__.\n" +
                       "The sounds of grand bells and trumpets fill the realm. You have been chosen as a new **Pet God**.\n\n" +

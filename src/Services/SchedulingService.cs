@@ -17,7 +17,6 @@ namespace PacManBot.Services
     /// </summary>
     public class SchedulingService
     {
-        private readonly DiscordShardedClient client;
         private readonly LoggingService log;
         private readonly GameService games;
         private readonly bool scheduledRestart;
@@ -30,9 +29,8 @@ namespace PacManBot.Services
         public event Func<Task> PrepareRestart;
         
 
-        public SchedulingService(PmBotConfig config, DiscordShardedClient client, LoggingService log, GameService games)
+        public SchedulingService(PmBotConfig config, LoggingService log, GameService games)
         {
-            this.client = client;
             this.log = log;
             this.games = games;
 

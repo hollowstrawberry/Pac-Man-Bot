@@ -99,7 +99,6 @@ namespace PacManBot.Services
         {
             if (game == null) return;
 
-            game.CancelRequests();
             bool success = false;
 
             if (game is IUserGame uGame)

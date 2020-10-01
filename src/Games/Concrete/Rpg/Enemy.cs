@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
-using Discord;
+using DSharpPlus.Entities;
 using Newtonsoft.Json;
 using PacManBot.Constants;
 using PacManBot.Extensions;
@@ -74,7 +74,7 @@ namespace PacManBot.Games.Concrete.Rpg
 
 
         /// <summary>Returns a Discord embed field about this enemy.</summary>
-        public virtual EmbedFieldBuilder Summary()
+        public virtual DiscordEmbedBuilder AddSummaryField(DiscordEmbedBuilder embed)
         {
             UpdateStats();
 
@@ -96,12 +96,7 @@ namespace PacManBot.Games.Concrete.Rpg
 
             desc.AppendLine($"*\"{Description}\"*");
 
-            return new EmbedFieldBuilder
-            {
-                Name = $"Summary: {Name}",
-                Value = desc.ToString(),
-                IsInline = true,
-            };
+            return embed.AddField($"Summary: {Name}", desc.ToString(), true);
         }
     }
 }

@@ -263,7 +263,7 @@ namespace PacManBot.Games.Concrete
 
             var embed = new DiscordEmbedBuilder
             {
-                Title = $"{(await GetOwnerAsync())?.DisplayName()}'s Rubik's Cube",
+                Title = $"{(await guild.GetMemberAsync(OwnerId))?.DisplayName()}'s Rubik's Cube",
                 Description = description.ToString().Truncate(2048),
                 Color = Colors.Black,
             };

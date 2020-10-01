@@ -14,7 +14,7 @@ namespace PacManBot.Games
     public abstract class BaseGame : IBaseGame
     {
         /// <summary>Invisible character to be used in embeds.</summary>
-        protected const string Empty = DiscordEntityExtensions.Empty;
+        protected const string Empty = DiscordStringUtilities.Empty;
 
         protected DiscordShardedClient shardedClient;
         protected PmBotConfig config;

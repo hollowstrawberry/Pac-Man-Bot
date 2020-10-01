@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
-using DSharpPlus.CommandsNext.Attributes
+using DSharpPlus.CommandsNext.Attributes;
 using PacManBot.Constants;
 using PacManBot.Extensions;
 using PacManBot.Games.Concrete;
