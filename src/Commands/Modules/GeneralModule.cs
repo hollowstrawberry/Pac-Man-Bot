@@ -211,9 +211,13 @@ namespace PacManBot.Commands.Modules
         {
             try
             {
+                if (string.IsNullOrWhiteSpace(message))
+                {
+                    await ctx.RespondAsync("You may use this command to send a message to the bot's developer.");
+                    return;
+                }
+
                 File.AppendAllText(Files.FeedbackLog, $"[{ctx.User.DebugName()}] {message}\n\n");
-                await ctx.RespondAsync($"{CustomEmoji.Check} Message sent. Thank you!");
-                string content = $"```diff\n+Feedback received: {ctx.User.DebugName()}```\n{message}".Truncate(2000);
 
                 // this shouldn't be this complicated
                 var app = await ctx.Client.GetCurrentApplicationAsync();
@@ -222,21 +226,19 @@ namespace PacManBot.Commands.Modules
                         foreach (var guild in shard.Guilds.Values)
                             if (guild.Members.TryGetValue(owner.Id, out var ownerMember))
                             {
+                                string content = $"```diff\n+Feedback received: {ctx.User.DebugName()}```\n{message}".Truncate(2000);
                                 await ownerMember.SendMessageAsync(content);
+                                await ctx.RespondAsync($"{CustomEmoji.Check} Message sent. Thank you!");
                                 return;
                             }
+                throw new InvalidOperationException("Couldn't find owner member");
             }
             catch (Exception e)
             {
                 Log.Exception($"Sending feedback from {ctx.User.DebugName()} at {ctx.Channel.DebugName()}", e);
-                await ctx.RespondAsync("Oops, I didn't catch that, please try again. I think the developer messed up big time.");
+                await ctx.RespondAsync("Oops, I didn't catch that, please try again. " +
+                    "If this keeps happening join the support server to let my owner know.");
             }
         }
-
-
-        [Command("command")]
-        [Description("This is not a real command. If you want to see help for a specific command, please do `{prefix}help [command name]`, " +
-                 "where \"[command name]\" is the name of a command.")]
-        public void DoNothing(CommandContext ctx) => Log.Debug("Someone tried to do \"<command\" lol");
     }
 }

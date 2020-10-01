@@ -126,8 +126,9 @@ namespace PacManBot.Services
             if (message.Channel.BotCan(Permissions.SendMessages | Permissions.ReadMessageHistory))
             {
                 if (user.Id == client.CurrentUser.Id) return Task.CompletedTask;
-
-                if (message != null && message.Author.Id != client.CurrentUser.Id) return Task.CompletedTask;
+                
+                // TODO: Can't check author ID in the current version of the library with message cache off
+                //if (message != null && message.Author.Id != client.CurrentUser.Id) return Task.CompletedTask;
 
                 var game = games.AllGames
                     .OfType<IReactionsGame>()

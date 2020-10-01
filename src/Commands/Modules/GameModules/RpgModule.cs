@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -17,128 +15,68 @@ using PacManBot.Games.Concrete.Rpg;
 
 namespace PacManBot.Commands.Modules
 {
-    [Description(ModuleNames.Games)]
-    [SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Reflection")]
+    [Group("rpg")]
+    [Description(
+    "Play ReactionRPG, a new game where you beat monsters and level up." +
+    "\nThe game is yours. You can play in **any channel** anywhere you go, even DMs with the bot.")]
     public class RpgModule : BaseGameModule<RpgGame>
     {
-        private static readonly IEnumerable<MethodInfo> RpgMethods = typeof(RpgModule).GetMethods()
-            .Where(x => x.Get<RpgCommandAttribute>()?.VerifyMethod(x) != null)
-            .ToArray();
-
-        [AttributeUsage(AttributeTargets.Method)]
-        private class NotRequiresRpgAttribute : Attribute { }
-
-        [AttributeUsage(AttributeTargets.Method)]
-        private class RpgCommandAttribute : Attribute
+        [GroupCommand, Aliases("fight", "battle"), Priority(-1)]
+        public async Task RpgMaster(CommandContext ctx, string skillName = "")
         {
-            public string[] Names { get; }
-            public RpgCommandAttribute(params string[] names)
+            if (Game(ctx) == null)
             {
-                Names = names;
+                await ctx.RespondAsync($"You haven't started your adventure! Use `{Storage.GetPrefix(ctx)}rpg start` to create a character.");
+                return;
             }
 
-            // Runtime check that all commands are valid
-            public object VerifyMethod(MethodInfo method)
+            if (string.IsNullOrWhiteSpace(skillName))
             {
-                if (method.ReturnType != typeof(Task<string>) || method.GetParameters().Length != 2
-                    || method.GetParameters().First().GetType() != typeof(CommandContext)
-                    || method.GetParameters().Skip(1).First().GetType() != typeof(string))
+                if (Game(ctx).State == GameState.Active)
                 {
-                    throw new InvalidOperationException($"{method.Name} does not match the expected {GetType().Name} signature.");
+                    await DeleteGameMessageAsync(ctx);
                 }
-                return this;
+                else
+                {
+                    var timeLeft = TimeSpan.FromSeconds(30) - (DateTime.Now - Game(ctx).lastBattle);
+                    if (timeLeft > TimeSpan.Zero)
+                    {
+                        await ctx.RespondAsync($"{CustomEmoji.Cross} You may battle again in {timeLeft.Humanized(empty: "1 second")}");
+                        return;
+                    }
+
+                    Game(ctx).StartFight();
+                    Game(ctx).fightEmbed = Game(ctx).Fight();
+                }
+
+                Game(ctx).fightEmbed = Game(ctx).fightEmbed ?? (Game(ctx).IsPvp ? Game(ctx).FightPvP() : Game(ctx).Fight());
+                var msg = await RespondGameAsync(ctx);
+
+                if (Game(ctx).IsPvp && Game(ctx).PvpBattleConfirmed)
+                {
+                    Game(ctx).PvpGame.ChannelId = ctx.Channel.Id;
+                    Game(ctx).PvpGame.MessageId = msg.Id;
+                }
+
+                await SaveGameAsync(ctx);
+
+                await AddBattleEmotes(msg, Game(ctx));
             }
-        }
-
-
-
-        [Command("rpg"), Priority(2)]
-        [Description(
-            "Play ReactionRPG, a new game where you beat monsters and level up." +
-            "\nThe game is yours. You can play in **any channel** anywhere you go, even DMs with the bot." +
-            "\n\n**__Commands:__**" +
-            "\n**{prefix}rpg manual** - See detailed instructions for the game." +
-            "\n\n**{prefix}rpg** - Start a new battle or resend the current battle." +
-            "\n**{prefix}rpg pvp <player>** - Challenge a user to a battle!" +
-            "\n**{prefix}rpg equip <item>** - Equip an item in your inventory." +
-            "\n**{prefix}rpg heal** - Refill your HP, only once per battle." +
-            "\n**{prefix}rpg cancel** - Cancel a battle, dying instantly against monsters." +
-            "\n\n**{prefix}rpg profile** - Check a summary of your hero (or another person's)." +
-            "\n**{prefix}rpg skills** - Check your hero's skills lines and active skills." +
-            "\n**{prefix}rpg spend <skill> <amount>** - Spend skill points on a skill line." +
-            "\n**{prefix}rpg name <name>** - Change your hero's name." +
-            "\n**{prefix}rpg color <color>** - Change the color of your hero's profile." +
-            "\n**{prefix}rpg delete** - Delete your hero.")]
-        public async Task RpgMaster(CommandContext ctx, string commandName = "", [RemainingText]string args = "")
-        {
-            commandName = commandName.ToLowerInvariant();
-
-            var command = RpgMethods
-                .FirstOrDefault(x => x.Get<RpgCommandAttribute>().Names.Contains(commandName));
-
-            if (command == null)
+            else
             {
                 var skill = Game(ctx) == null ? null
-                    : RpgExtensions.SkillTypes.Values.FirstOrDefault(x => x.Shortcut == commandName);
+                    : RpgExtensions.SkillTypes.Values.FirstOrDefault(x => x.Shortcut == skillName);
 
                 if (skill == null)
                 {
                     await ctx.RespondAsync($"Unknown RPG command! Do `{ctx.Prefix}rpg manual` for game instructions," +
-                        $" or `{ctx.Prefix}rpg help` for a list of commands.");
+                        $" or `{ctx.Prefix}help rpg` for a list of commands.");
                     return;
                 }
 
                 string response = await UseActiveSkill(ctx, skill);
                 if (response != null) await ctx.RespondAsync(response);
             }
-            else
-            {
-                if (Game(ctx) == null && command.Get<NotRequiresRpgAttribute>() == null)
-                {
-                    await ctx.RespondAsync($"You can use `{ctx.Prefix}rpg start` to start your adventure.");
-                    return;
-                }
-
-                string response = await command.Invoke<Task<string>>(this, ctx, args.Trim());
-                if (response != null) await ctx.RespondAsync(response);
-            }
-        }
-
-
-
-
-        [RpgCommand("", "battle", "fight", "b", "rpg", "bump")]
-        public async Task<string> Battle(CommandContext ctx, string arg)
-        {
-            if (Game(ctx).State == GameState.Active)
-            {
-                await DeleteGameMessageAsync(ctx);
-            }
-            else
-            {
-                var timeLeft = TimeSpan.FromSeconds(30) - (DateTime.Now - Game(ctx).lastBattle);
-                if (timeLeft > TimeSpan.Zero)
-                {
-                    return $"{CustomEmoji.Cross} You may battle again in {timeLeft.Humanized(empty: "1 second")}";
-                }
-
-                Game(ctx).StartFight();
-                Game(ctx).fightEmbed = Game(ctx).Fight();
-            }
-
-            Game(ctx).fightEmbed = Game(ctx).fightEmbed ?? (Game(ctx).IsPvp ? Game(ctx).FightPvP() : Game(ctx).Fight());
-            var msg = await RespondGameAsync(ctx);
-
-            if (Game(ctx).IsPvp && Game(ctx).PvpBattleConfirmed)
-            {
-                Game(ctx).PvpGame.ChannelId = ctx.Channel.Id;
-                Game(ctx).PvpGame.MessageId = msg.Id;
-            }
-
-            await SaveGameAsync(ctx);
-
-            await AddBattleEmotes(msg, Game(ctx));
-            return null;
         }
 
 
@@ -206,48 +144,66 @@ namespace PacManBot.Commands.Modules
         }
 
 
-
-
-        [RpgCommand("profile", "p", "stats", "inventory", "inv"), NotRequiresRpg]
-        public async Task<string> SendProfile(CommandContext ctx, string arg)
+        [Command("profile"), Aliases("p", "stats", "inventory", "inv")]
+        [Description("See yours or another person's profile")]
+        public async Task SendProfile(CommandContext ctx, DiscordMember otherMember = null)
         {
             var rpg = Game(ctx);
-            var otherMember = (DiscordMember)await ctx.Client.GetCommandsNext().ConvertArgument<DiscordMember>(arg, ctx);
             if (otherMember != null) rpg = Games.GetForUser<RpgGame>(otherMember.Id);
 
             if (rpg == null)
             {
                 if (otherMember == null) await ctx.RespondAsync($"You can use `{ctx.Prefix}rpg start` to start your adventure."); 
                 else await ctx.RespondAsync("This person hasn't started their adventure.");
-                return null;
             }
 
             await ctx.RespondAsync(rpg.player.Profile(ctx.Prefix, own: otherMember == null));
-            return null;
         }
 
 
-        [RpgCommand("skills", "skill", "s", "spells")]
-        public async Task<string> SendSkills(CommandContext ctx, string arg)
+        [Command("skills"), Aliases("skill", "s", "spells")]
+        [Description("View your character's skills")]
+        public async Task SendSkills(CommandContext ctx)
         {
+            if (Game(ctx) == null)
+            {
+                await ctx.RespondAsync($"You haven't started your adventure! Use `{Storage.GetPrefix(ctx)}rpg start` to create a character.");
+                return;
+            }
+
             await ctx.RespondAsync(Game(ctx).player.Skills(ctx.Prefix));
-            return null;
         }
 
 
 
-        [RpgCommand("heal", "h", "potion")]
-        public async Task<string> HealPlayer(CommandContext ctx, string arg)
+        [Command("heal"), Aliases("h", "potion")]
+        [Description("Heal your character every 5 minutes, and once per battle")]
+        public async Task HealPlayer(CommandContext ctx)
         {
+            if (Game(ctx) == null)
+            {
+                await ctx.RespondAsync($"You haven't started your adventure! Use `{Storage.GetPrefix(ctx)}rpg start` to create a character.");
+                return;
+            }
+
             if (Game(ctx).lastHeal > Game(ctx).lastBattle && Game(ctx).State == GameState.Active)
-                return $"{CustomEmoji.Cross} You already healed during this battle.";
+            {
+                await ctx.RespondAsync($"{CustomEmoji.Cross} You already healed during this battle.");
+                return;
+            }
             else if (Game(ctx).IsPvp && Game(ctx).PvpBattleConfirmed)
-                return $"{CustomEmoji.Cross} You can't heal in a PVP battle.";
+            {
+                await ctx.RespondAsync($"{CustomEmoji.Cross} You can't heal in a PVP battle.");
+                return;
+            }
 
             var timeLeft = TimeSpan.FromMinutes(5) - (DateTime.Now - Game(ctx).lastHeal);
 
             if (timeLeft > TimeSpan.Zero)
-                return $"{CustomEmoji.Cross} You may heal again in {timeLeft.Humanized(empty: "1 second")}";
+            {
+                await ctx.RespondAsync($"{CustomEmoji.Cross} You may heal again in {timeLeft.Humanized(empty: "1 second")}");
+                return;
+            }
 
             Game(ctx).lastHeal = DateTime.Now;
             Game(ctx).player.Life = Game(ctx).player.MaxLife;
@@ -272,21 +228,30 @@ namespace PacManBot.Commands.Modules
                     await ctx.Message.DeleteAsync();
                 }
             }
-
-            return null;
         }
 
 
-        [RpgCommand("equip", "e", "weapon", "armor")]
-        public async Task<string> EquipItem(CommandContext ctx, string arg)
+        [Command("equip"), Aliases("e", "weapon", "armor")]
+        [Description("Equip an item from your inventory")]
+        public async Task EquipItem(CommandContext ctx, string itemName = "")
         {
-            if (arg == "") return "You must specify an item from your inventory.";
+            if (Game(ctx) == null)
+            {
+                await ctx.RespondAsync($"You haven't started your adventure! Use `{Storage.GetPrefix(ctx)}rpg start` to create a character.");
+                return;
+            }
+
+            if (itemName == "")
+            {
+                await ctx.RespondAsync("You must specify an item from your inventory.");
+                return;
+            }
 
             Equipment bestMatch = null;
             double bestPercent = 0;
             foreach (var item in Game(ctx).player.inventory.Select(x => x.GetEquip()))
             {
-                double sim = arg.Similarity(item.Name, false);
+                double sim = itemName.Similarity(item.Name, false);
                 if (sim > bestPercent)
                 {
                     bestMatch = item;
@@ -296,10 +261,15 @@ namespace PacManBot.Commands.Modules
             }
 
             if (bestPercent < 0.69)
-                return $"Can't find a weapon with that name in your inventory." +
-                       $" Did you mean `{bestMatch}`?".If(bestPercent > 0.39);
+            {
+                await ctx.RespondAsync($"Can't find a weapon with that name in your inventory." +
+                    $" Did you mean `{bestMatch}`?".If(bestPercent > 0.39));
+                return;
+            }
             if (bestMatch is Armor && Game(ctx).State == GameState.Active)
-                return "You can't switch armors mid-battle (but you can switch weapons).";
+            {
+                await ctx.RespondAsync("You can't switch armors mid-battle (but you can switch weapons).");
+            }
 
             Game(ctx).player.EquipItem(bestMatch.Key);
             await SaveGameAsync(ctx);
@@ -316,27 +286,34 @@ namespace PacManBot.Commands.Modules
                     await ctx.Message.DeleteAsync();
                 }
             }
-
-            return null;
         }
 
 
-        [RpgCommand("spend", "invest")]
-        public async Task<string> SpendSkillPoints(CommandContext ctx, string arg)
+        [Command("spend")]
+        [Description("Use your skill points in power, grit or focus")]
+        public async Task SpendSkillPoints(CommandContext ctx, string skill = "", int amount = 1)
         {
-            if (arg == "") return "Please specify a skill and amount to spend.";
-
-            string[] splice = arg.ToLowerInvariant().Split(' ', 2);
-            string skill = splice[0];
-            int amount = 0;
-            if (splice.Length == 2)
+            if (Game(ctx) == null)
             {
-                if (splice[1] == "all") amount = Game(ctx).player.skillPoints;
-                else int.TryParse(splice[1], out amount); // Default value 0
+                await ctx.RespondAsync($"You haven't started your adventure! Use `{Storage.GetPrefix(ctx)}rpg start` to create a character.");
+                return;
             }
 
-            if (amount < 1) return "Please specify a valid amount of skill points to spend.";
-            if (amount > Game(ctx).player.skillPoints) return "You don't have that many skill points!";
+            if (skill == "")
+            {
+                await ctx.RespondAsync("Please specify a skill and amount to spend.");
+                return;
+            }
+            if (amount < 1)
+            {
+                await ctx.RespondAsync("Please specify a valid amount of skill points to spend.");
+                return;
+            }
+            if (amount > Game(ctx).player.skillPoints)
+            {
+                await ctx.RespondAsync("You don't have that many skill points!");
+                return;
+            }
 
             SkillType type;
 
@@ -346,21 +323,21 @@ namespace PacManBot.Commands.Modules
                 case "pow": case "damage": case "dmg":
                     type = SkillType.Dmg;
                     break;
-
                 case "g": case "grit": case "defense": case "def":
                     type = SkillType.Def;
                     break;
-
                 case "f": case "focus": case "luck": case "critchance": case "crit":
                     type = SkillType.Crit;
                     break;
-
                 default:
-                    return "That's not a valid skill name! You can choose power, grit or focus.";
+                    await ctx.RespondAsync("That's not a valid skill name! You can choose power, grit or focus.");
+                    return;
             }
 
             if (Game(ctx).player.spentSkill[type] + amount > RpgPlayer.SkillMax)
-                return $"A skill line can only have {RpgPlayer.SkillMax} skill points invested.";
+            {
+                await ctx.RespondAsync($"A skill line can only have {RpgPlayer.SkillMax} skill points invested.");
+            }
 
             int oldValue = Game(ctx).player.spentSkill[type];
             Game(ctx).player.spentSkill[type] += amount;
@@ -386,55 +363,80 @@ namespace PacManBot.Commands.Modules
                 Game(ctx).fightEmbed = Game(ctx).player.Skills(ctx.Prefix, true);
                 await SendOrUpdateGameMessageAsync(ctx);
             }
-
-            return null;
         }
 
 
-        [RpgCommand("name", "setname")]
-        public async Task<string> SetPlayerName(CommandContext ctx, string arg)
+        [Command("name"), Aliases("setname")]
+        [Description("Set your character's name")]
+        public async Task SetPlayerName(CommandContext ctx, string name)
         {
+            if (Game(ctx) == null)
+            {
+                await ctx.RespondAsync($"You haven't started your adventure! Use `{Storage.GetPrefix(ctx)}rpg start` to create a character.");
+                return;
+            }
+
             var msg = ctx.Message;
-            string name = arg;
 
             if (name == "")
             {
                 await ctx.RespondAsync("Say your hero's new name:");
 
                 msg = await ctx.GetResponseAsync();
-                if (msg == null) return "Timed out 💨";
+                if (msg == null)
+                {
+                    await ctx.RespondAsync("Timed out 💨");
+                    return;
+                }
 
                 name = msg.Content;
-                if (string.IsNullOrWhiteSpace(name)) return null;
+                if (string.IsNullOrWhiteSpace(name)) return;
             }
 
-            if (name.Length > RpgGame.NameCharLimit) return "Your name can't be longer than 32 characters.";
+            if (name.Length > RpgGame.NameCharLimit)
+            {
+                await ctx.RespondAsync("Your name can't be longer than 32 characters.");
+                return;
+            };
 
             Game(ctx).player.SetName(name);
             await SaveGameAsync(ctx);
             await msg.AutoReactAsync();
-            return null;
         }
 
 
-        [RpgCommand("color", "setcolor")]
-        public async Task<string> SetPlayerColor(CommandContext ctx, string arg)
+        [Command("color"), Aliases("setcolor")]
+        [Description("Set your character's color, displayed in embeds")]
+        public async Task SetPlayerColor(CommandContext ctx, string arg)
         {
+            if (Game(ctx) == null)
+            {
+                await ctx.RespondAsync($"You haven't started your adventure! Use `{Storage.GetPrefix(ctx)}rpg start` to create a character.");
+                return;
+            }
+
             if (arg == "")
             {
                 await ctx.RespondAsync("Say the name or hex code of your new color:");
 
                 var response = await ctx.GetResponseAsync(60);
-                if (response == null) return "Timed out 💨";
+                if (response == null)
+                {
+                    await ctx.RespondAsync("Timed out 💨");
+                    return;
+                }
 
                 arg = response.Content;
-                if (string.IsNullOrWhiteSpace(arg)) return null;
+                if (string.IsNullOrWhiteSpace(arg)) return;
             }
 
             var color = arg.ToColor();
 
-            if (color == null) return $"{CustomEmoji.Cross} That is neither a valid color name or hex code. " +
-                                      $"Example: `red` or `#FF0000`";
+            if (color == null)
+            {
+                await ctx.RespondAsync($"{CustomEmoji.Cross} That is neither a valid color name or hex code. Example: `red` or `#FF0000`");
+                return;
+            }
 
             Game(ctx).player.Color = color.Value;
             await SaveGameAsync(ctx);
@@ -445,14 +447,23 @@ namespace PacManBot.Commands.Modules
                 Description = $"#{color.Value.Value:X6}",
                 Color = color.Value,
             });
-            return null;
         }
 
 
-        [RpgCommand("cancel", "die", "end", "killme")]
-        public async Task<string> CancelBattle(CommandContext ctx, string arg)
+        [Command("cancel"), Aliases("kill", "die", "surrender")]
+        [Description("Surrender and lose the current battle")]
+        public async Task CancelBattle(CommandContext ctx)
         {
-            if (Game(ctx).State != GameState.Active) return "You're not fighting anything.";
+            if (Game(ctx) == null)
+            {
+                await ctx.RespondAsync($"You haven't started your adventure! Use `{Storage.GetPrefix(ctx)}rpg start` to create a character.");
+                return;
+            }
+
+            if (Game(ctx).State != GameState.Active)
+            {
+                await ctx.RespondAsync("You're not fighting anything.");
+            }
 
             string reply;
 
@@ -471,30 +482,48 @@ namespace PacManBot.Commands.Modules
 
             Game(ctx).ResetBattle(GameState.Completed);
 
-            return reply;
+            await ctx.RespondAsync(reply);
         }
 
 
-        [RpgCommand("pvp", "vs", "challenge")]
-        public async Task<string> StartPvpBattle(CommandContext ctx, string arg)
+        [Command("pvp"), Aliases("vs", "challenge")]
+        [Description("Starts a PVP battle with another user")]
+        public async Task StartPvpBattle(CommandContext ctx, DiscordMember otherMember)
         {
-            if (Game(ctx).State == GameState.Active) return "You're already busy fighting.";
-
-            if (arg == "")
+            if (Game(ctx) == null)
             {
-                await ctx.RespondAsync("Specify the user you want to challenge:");
-                var rsp = await ctx.GetResponseAsync();
-                if (rsp == null) return "Timed out 💨";
-                arg = rsp.Content;
+                await ctx.RespondAsync($"You haven't started your adventure! Use `{Storage.GetPrefix(ctx)}rpg start` to create a character.");
+                return;
             }
 
-            var otherMember = (DiscordMember)await ctx.Client.GetCommandsNext().ConvertArgument<DiscordMember>(arg, ctx);
-            if (otherMember == null) return "Can't find that user to challenge!";
-            if (otherMember.Id == ctx.User.Id) return "You can't battle yourself, smart guy.";
+            if (Game(ctx).State == GameState.Active)
+            {
+                await ctx.RespondAsync("You're already busy fighting.");
+                return;
+            }
+
+            if (otherMember == null)
+            {
+                await ctx.RespondAsync("Can't find that user to challenge!");
+                return;
+            }
+            if (otherMember.Id == ctx.User.Id)
+            {
+                await ctx.RespondAsync("You can't battle yourself, smart guy.");
+                return;
+            }
 
             var otherGame = Games.GetForUser<RpgGame>(otherMember.Id);
-            if (otherGame == null) return "This person doesn't have a hero.";
-            if (otherGame.State == GameState.Active) return "This person is already busy fighting.";
+            if (otherGame == null)
+            {
+                await ctx.RespondAsync("This person doesn't have a hero.");
+                return;
+            }
+            if (otherGame.State == GameState.Active)
+            {
+                await ctx.RespondAsync("This person is already busy fighting.");
+                return;
+            }
 
             Game(ctx).StartFight(otherMember.Id);
             Game(ctx).isPvpTurn = false;
@@ -510,25 +539,23 @@ namespace PacManBot.Commands.Modules
                 x.Channel.Id == ctx.Channel.Id && x.Author.Id == otherMember.Id
                 && new[] { "accept", "cancel" }.Contains(x.Content.ToLowerInvariant()), 120);
 
-            if (Game(ctx).pvpUserId != otherMember.Id) return null; // Cancelled by challenger before getting a response
+            if (Game(ctx).pvpUserId != otherMember.Id) return; // Cancelled by challenger before getting a response
 
             if (response == null)
             {
                 Game(ctx).ResetBattle(GameState.Cancelled);
 
                 try { await msg.ModifyAsync("Timed out 💨", null); }
-                catch (NotFoundException) { return "Timed out 💨"; }
-                return null;
+                catch (NotFoundException) { await ctx.RespondAsync("Timed out 💨"); }
             }
             else if (response.Content.Equals("cancel", StringComparison.OrdinalIgnoreCase))
             {
                 Game(ctx).ResetBattle(GameState.Cancelled);
 
                 try { await msg.ModifyAsync("Battle cancelled ⚔", null); }
-                catch (NotFoundException) { return "Battle cancelled ⚔"; }
+                catch (NotFoundException) { await ctx.RespondAsync("Battle cancelled ⚔"); }
 
                 await response.AutoReactAsync();
-                return null;
             }
             else
             {
@@ -547,26 +574,35 @@ namespace PacManBot.Commands.Modules
                 msg = await SendOrUpdateGameMessageAsync(ctx);
                 await AddBattleEmotes(msg, Game(ctx));
             }
-
-            return null;
         }
 
 
-        [RpgCommand("start"), NotRequiresRpg]
-        public async Task<string> StartGame(CommandContext ctx, string arg)
+        [Command("start")]
+        [Description("Creates your RPG character")]
+        public async Task StartGame(CommandContext ctx)
         {
-            if (Game(ctx) != null) return "You already have a hero!";
+            if (Game(ctx) != null)
+            {
+                await ctx.RespondAsync("You already have a hero!");
+                return;
+            }
 
             StartNewGame(new RpgGame(ctx.User.Username, ctx.User.Id, Services));
 
-            await SendManual(ctx, arg);
-            return null;
+            await SendManual(ctx);
         }
 
 
-        [RpgCommand("delete")]
-        public async Task<string> DeleteGame(CommandContext ctx, string arg)
+        [Command("delete")]
+        [Description("Deletes your RPG character permanently")]
+        public async Task DeleteGame(CommandContext ctx)
         {
+            if (Game(ctx) == null)
+            {
+                await ctx.RespondAsync($"You haven't started your adventure! Use `{Storage.GetPrefix(ctx)}rpg start` to create a character.");
+                return;
+            }
+
             await ctx.RespondAsync(
                 $"❗ You're about to completely delete your progress in ReactionRPG.\n" +
                 $"Are you sure you want to delete your level {Game(ctx).player.Level} hero? (Yes/No)");
@@ -574,23 +610,15 @@ namespace PacManBot.Commands.Modules
             if (await ctx.GetYesResponseAsync() ?? false)
             {
                 EndGame(ctx);
-                return "Hero deleted 💀";
+                await ctx.RespondAsync("Hero deleted 💀");
             }
-            return "Hero not deleted ⚔";
+            else await ctx.RespondAsync("Hero not deleted ⚔");
         }
 
 
-        [RpgCommand("help", "commands"), NotRequiresRpg]
-        public async Task<string> SendHelp(CommandContext ctx, string arg)
-        {
-            var desc = typeof(RpgModule).GetMethod(nameof(RpgMaster)).GetCustomAttribute<DescriptionAttribute>();
-            await ctx.RespondAsync(desc.Description);
-            return null;
-        }
-
-
-        [RpgCommand("manual", "instructions"), NotRequiresRpg]
-        public async Task<string> SendManual(CommandContext ctx, string arg)
+        [Command("manual"), Aliases("help", "instructions")]
+        [Description("Read the game's manual")]
+        public async Task SendManual(CommandContext ctx)
         {
             var embed = new DiscordEmbedBuilder
             {
@@ -631,7 +659,6 @@ namespace PacManBot.Commands.Modules
             );
 
             await ctx.RespondAsync(embed);
-            return null;
         }
 
 

@@ -39,8 +39,8 @@ namespace PacManBot.Commands.Modules
             public object VerifyMethod(MethodInfo method)
             {
                 if (method.ReturnType != typeof(Task<string>) || method.GetParameters().Length != 2
-                    || method.GetParameters().First().GetType() != typeof(CommandContext)
-                    || method.GetParameters().Skip(1).First().GetType() != typeof(string))
+                    || method.GetParameters()[0].ParameterType != typeof(CommandContext)
+                    || method.GetParameters()[1].ParameterType != typeof(string))
                 {
                     throw new InvalidOperationException($"{method.Name} does not match the expected {GetType().Name} signature.");
                 }

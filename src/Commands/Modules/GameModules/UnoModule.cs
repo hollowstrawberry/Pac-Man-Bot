@@ -11,11 +11,8 @@ using PacManBot.Games.Concrete;
 
 namespace PacManBot.Commands.Modules
 {
-    [Group("uno"), Description(ModuleNames.Games)]
-    public class UnoModule : MultiplayerGameModule<UnoGame>
-    {
-        [GroupCommand, Priority(3)]
-        [Description(
+    [Group("uno")]
+    [Description(
             "__Tip__: Switching back and forth with DMs to see your cards can be tiresome, " +
             "so try having your cards open in your phone while you're playing in a computer." +
             "\n\n__**Commands:**__\n" +
@@ -39,6 +36,9 @@ namespace PacManBot.Commands.Modules
             "or act like Skip cards with only two players." +
             " *Draw* cards force the next player to draw cards and skip a turn. *Wild* cards let you choose the color, " +
             "and will match with any card.")]
+    public class UnoModule : MultiplayerGameModule<UnoGame>
+    {
+        [GroupCommand, Priority(3)]
         public async Task StartUno(CommandContext ctx, params DiscordMember[] startingPlayers)
         {
             if (ctx.Guild == null)
