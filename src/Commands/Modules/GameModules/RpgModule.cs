@@ -12,7 +12,7 @@ using PacManBot.Games;
 using PacManBot.Games.Concrete;
 using PacManBot.Games.Concrete.Rpg;
 
-namespace PacManBot.Commands.Modules.GameModules
+namespace PacManBot.Commands.Modules
 {
     [Name(ModuleNames.Games), Remarks("3")]
     public class RpgModule : BaseGameModule<RpgGame>

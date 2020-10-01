@@ -6,7 +6,7 @@ using PacManBot.Extensions;
 using PacManBot.Games;
 using PacManBot.Utils;
 
-namespace PacManBot.Commands.Modules.GameModules
+namespace PacManBot.Commands.Modules
 {
     [Name(ModuleNames.Games), Remarks("3")]
     public class MinesweeperModule : BasePmBotModule

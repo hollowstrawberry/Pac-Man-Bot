@@ -10,7 +10,7 @@ using PacManBot.Extensions;
 using PacManBot.Games;
 using PacManBot.Games.Concrete;
 
-namespace PacManBot.Commands.Modules.GameModules
+namespace PacManBot.Commands.Modules
 {
     [Name(ModuleNames.Misc), Remarks("4")]
     public class MiscModule : BaseGameModule<IChannelGame>

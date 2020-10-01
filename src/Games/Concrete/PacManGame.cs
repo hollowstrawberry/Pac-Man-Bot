@@ -396,16 +396,16 @@ namespace PacManBot.Games.Concrete
         }
 
 
-        public override async ValueTask<string> GetContentAsync(bool showHelp = true)
+        public override ValueTask<string> GetContentAsync(bool showHelp = true)
         {
-            if (State == GameState.Cancelled && (await GetChannelAsync()).Guild != null) // So as to not spam
+            if (State == GameState.Cancelled && Guild != null) // So as to not spam
             {
-                return "";
+                return new ValueTask<string>("");
             }
 
             if (lastInput == PacManInput.Help)
             {
-                return Content.gameHelp.Replace("{prefix}", storage.GetPrefix(await GetChannelAsync()));
+                return new ValueTask<string>(Content.gameHelp.Replace("{prefix}", storage.GetPrefix(Channel)));
             }
 
             try
@@ -518,21 +518,23 @@ namespace PacManBot.Games.Concrete
                 }
 
 
-                return display.ToString();
+                return new ValueTask<string>(display.ToString());
             }
             catch (Exception e)
             {
-                log.Exception($"Displaying game in {(await GetChannelAsync()).DebugName()}", e, GameName);
-                return $"```There was an error displaying the game. {"Make sure your custom map is valid. ".If(custom)}" +
-                       $"If this problem persists, please contact the author of the bot using the " +
-                       $"{storage.GetPrefix(await GetChannelAsync())}feedback command.```";
+                log.Exception($"Displaying game in {Channel.DebugName()}", e, GameName);
+                return new ValueTask<string>(
+                    $"```There was an error displaying the game. {"Make sure your custom map is valid. ".If(custom)}" +
+                    $"If this problem persists, please contact the author of the bot using the " +
+                    $"{storage.GetPrefix(Channel)}feedback command.```");
             }
         }
 
 
-        public override async ValueTask<DiscordEmbedBuilder> GetEmbedAsync(bool showHelp = true)
+        public override ValueTask<DiscordEmbedBuilder> GetEmbedAsync(bool showHelp = true)
         {
-            return State == GameState.Cancelled && (await GetChannelAsync()).Guild == null ? null : CancelledEmbed();
+            return new ValueTask<DiscordEmbedBuilder>(
+                State == GameState.Cancelled && Guild == null ? null : CancelledEmbed());
         }
 
 

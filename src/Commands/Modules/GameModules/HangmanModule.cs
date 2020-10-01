@@ -6,7 +6,7 @@ using Discord.Net;
 using PacManBot.Extensions;
 using PacManBot.Games.Concrete;
 
-namespace PacManBot.Commands.Modules.GameModules
+namespace PacManBot.Commands.Modules
 {
     [Name(ModuleNames.Games), Remarks("3")]
     public class HangmanModule : BaseGameModule<HangmanGame>

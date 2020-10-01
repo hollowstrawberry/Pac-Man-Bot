@@ -25,6 +25,8 @@ namespace PacManBot.Commands
         public PmBotConfig Config { get; set; }
         /// <summary>Content used throughout the bot.</summary>
         public PmBotContent Content => Config.Content;
+        /// <summary>All services used to create new games.</summary>
+        public IServiceProvider Services { get; set; }
         /// <summary>The bot's overarching sharded client.</summary>
         public DiscordShardedClient ShardedClient { get; set; }
         /// <summary>Logs everything in the console and on disk.</summary>
@@ -33,5 +35,7 @@ namespace PacManBot.Commands
         public StorageService Storage { get; set; }
         /// <summary>Gives access to input manipulation.</summary>
         public InputService Input { get; set; }
+        /// <summary>Gives access to active games.</summary>
+        public GameService Games { get; set; }
     }
 }

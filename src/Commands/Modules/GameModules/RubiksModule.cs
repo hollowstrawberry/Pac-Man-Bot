@@ -3,7 +3,7 @@ using Discord.Commands;
 using PacManBot.Constants;
 using PacManBot.Games.Concrete;
 
-namespace PacManBot.Commands.Modules.GameModules
+namespace PacManBot.Commands.Modules
 {
     [Name(ModuleNames.Games), Remarks("3")]
     public class RubiksModule : BaseGameModule<RubiksGame>

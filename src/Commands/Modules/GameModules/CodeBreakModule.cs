@@ -2,7 +2,7 @@
 using Discord.Commands;
 using PacManBot.Games.Concrete;
 
-namespace PacManBot.Commands.Modules.GameModules
+namespace PacManBot.Commands.Modules
 {
     [Name(ModuleNames.Games), Remarks("3")]
     public class CodeBreakModule : BaseGameModule<CodeBreakGame>

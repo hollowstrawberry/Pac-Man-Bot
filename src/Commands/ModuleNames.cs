@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using PacManBot.Constants;
+﻿using PacManBot.Constants;
 
-namespace PacManBot.Commands.Modules
+namespace PacManBot.Commands
 {
     static class ModuleNames
     {

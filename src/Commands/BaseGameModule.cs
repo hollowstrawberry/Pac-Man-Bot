@@ -18,12 +18,6 @@ namespace PacManBot.Commands
     public abstract class BaseGameModule<TGame> : BasePmBotModule
         where TGame : class, IBaseGame
     {
-        /// <summary>All services used to create new games.</summary>
-        public IServiceProvider Services { get; set; }
-        /// <summary>Gives access to active games.</summary>
-        public GameService Games { get; set; }
-
-
         /// <summary>Obtains the game for the current context from the game service.</summary>
         protected virtual TGame Game(CommandContext ctx)
         {
