@@ -1,26 +1,29 @@
-﻿using System.Threading.Tasks;
-using Discord.Commands;
+﻿using System.Reflection;
+using System.Threading.Tasks;
+using DSharpPlus.CommandsNext;
+using DSharpPlus.CommandsNext.Attributes
 using PacManBot.Constants;
+using PacManBot.Extensions;
 using PacManBot.Games.Concrete;
 
 namespace PacManBot.Commands.Modules
 {
-    [Name(ModuleNames.Games), Remarks("3")]
+    [Group(ModuleNames.Games), Description("3")]
     public class RubiksModule : BaseGameModule<RubiksGame>
     {
-        [Command("rubik"), Alias("rubiks", "rubix")]
-        [Remarks("Your personal rubik's cube")]
-        [Summary("Gives you a personal Rubik's Cube that you can take to any server or in DMs with the bot.\n\n__**Commands:**__" +
-         "\n**{prefix}rubik [sequence]** - Execute a sequence of turns to apply on the cube." +
-         "\n**{prefix}rubik moves** - Show notation help to control the cube." +
-         "\n**{prefix}rubik scramble** - Scrambles the cube pieces completely." +
-         "\n**{prefix}rubik reset** - Delete the cube, going back to its solved state." +
-         "\n**{prefix}rubik showguide** - Toggle the help displayed below the cube. For pros.")]
-        public async Task RubiksCube([Remainder]string input = "")
+        [Command("rubik"), Aliases("rubiks", "rubix")]
+        [Description(
+            "Gives you a personal Rubik's Cube that you can take to any server or in DMs with the bot.\n\n__**Commands:**__" +
+            "\n**{prefix}rubik [sequence]** - Execute a sequence of turns to apply on the cube." +
+            "\n**{prefix}rubik moves** - Show notation help to control the cube." +
+            "\n**{prefix}rubik scramble** - Scrambles the cube pieces completely." +
+            "\n**{prefix}rubik reset** - Delete the cube, going back to its solved state." +
+            "\n**{prefix}rubik showguide** - Toggle the help displayed below the cube. For pros.")]
+        public async Task RubiksCube(CommandContext ctx, [RemainingText]string input = "")
         {
-            if (Game == null)
+            if (Game(ctx) == null)
             {
-                StartNewGame(new RubiksGame(Context.Channel.Id, Context.User.Id, Services));
+                StartNewGame(new RubiksGame(ctx.Channel.Id, ctx.User.Id, Services));
             }
 
             bool removeOld = false;
@@ -29,8 +32,8 @@ namespace PacManBot.Commands.Modules
                 case "moves":
                 case "notation":
                     string moveHelp =
-                        $"You can give a sequence of turns using the **{Context.Prefix}rubik** command, " +
-                        $"with turns separated by spaces.\nYou can do **{Context.Prefix}rubik help** for a few more commands.\n\n" +
+                        $"You can give a sequence of turns using the **{Storage.GetPrefix(ctx)}rubik** command, " +
+                        $"with turns separated by spaces.\nYou can do **{Storage.GetPrefix(ctx)}rubik help** for a few more commands.\n\n" +
                         "**Simple turns:** U, D, L, R, F, B\nThese are the basic clockwise turns of the cube. " +
                         "They stand for the Up, Down, Left, Right, Front and Back sides.\n" +
                         "**Counterclockwise turns:** Add `'`. Example: U', R'\n" +
@@ -43,45 +46,46 @@ namespace PacManBot.Commands.Modules
                         "These rotate the entire cube in the direction of R, U and F respectively. " +
                         "They can also be counterclockwise or double.";
 
-                    await RespondAsync(moveHelp);
+                    await ctx.RespondAsync(moveHelp);
                     return;
 
 
                 case "h":
                 case "help":
-                    await ReplyAsync(Commands.GetCommandHelp("rubik", Context));
+                    var desc = MethodBase.GetCurrentMethod().GetCustomAttribute<DescriptionAttribute>();
+                    await ctx.RespondAsync(desc.Description);
                     return;
 
 
                 case "reset":
                 case "solve":
-                    EndGame();
-                    await AutoReactAsync();
+                    EndGame(ctx);
+                    await ctx.AutoReactAsync();
                     return;
 
 
                 case "scramble":
                 case "shuffle":
-                    Game.Scramble();
+                    Game(ctx).Scramble();
                     removeOld = true;
                     break;
 
 
                 case "showguide":
-                    Game.ShowHelp = !Game.ShowHelp;
-                    if (Game.ShowHelp) await AutoReactAsync();
-                    else await RespondAsync("❗ You just disabled the help displayed below the cube.\n" +
-                                          "Consider re-enabling it if you're not used to the game.");
+                    Game(ctx).ShowHelp = !Game(ctx).ShowHelp;
+                    if (Game(ctx).ShowHelp) await ctx.AutoReactAsync();
+                    else await ctx.RespondAsync("❗ You just disabled the help displayed below the cube.\n" +
+                                                "Consider re-enabling it if you're not used to the game.");
                     break;
 
 
                 default:
                     if (!string.IsNullOrEmpty(input))
                     {
-                        if (!Game.TryDoMoves(input))
+                        if (!Game(ctx).TryDoMoves(input))
                         {
-                            await ReplyAsync($"{CustomEmoji.Cross} Invalid sequence of moves. " +
-                                             $"Do **{Context.Prefix}rubik help** for commands.");
+                            await ctx.RespondAsync($"{CustomEmoji.Cross} Invalid sequence of moves. " +
+                                $"Do **{Storage.GetPrefix(ctx)}rubik help** for commands.");
                             return;
                         }
                     }
@@ -89,9 +93,9 @@ namespace PacManBot.Commands.Modules
                     break;
             }
 
-            if (removeOld && Game.ChannelId == Context.Channel.Id) await DeleteGameMessageAsync();
-            await ReplyGameAsync();
-            await SaveGameAsync();
+            if (removeOld && Game(ctx).ChannelId == ctx.Channel.Id) await DeleteGameMessageAsync(ctx);
+            await RespondGameAsync(ctx);
+            await SaveGameAsync(ctx);
         }
     }
 }

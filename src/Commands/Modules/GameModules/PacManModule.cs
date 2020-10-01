@@ -10,91 +10,91 @@ using PacManBot.Games.Concrete;
 
 namespace PacManBot.Commands.Modules
 {
-    [Name(ModuleNames.Games), Remarks("3")]
+    [Group(ModuleNames.Games), Description("3")]
     public class PacManModule : BaseGameModule<PacManGame>
     {
-        [Command("pacman"), Parameters("[mobile]"), Priority(1)]
-        [Remarks("Start a pacman game in this channel")]
-        [Summary("Starts a new Pac-Man game in this channel.\nYou can add \"slim\" or \"s\" " +
-                 "after the command to use **Slim Mode**, which fits better on phones. If slim mode is still too wide, " +
-                 "you could reduce the font size in your phone's settings, if you want to." +
-                 "Use **{prefix}display** to change display modes later.\n" +
-                 "You can also play a custom Pac-Man map with the command **{prefix}custompacman**\n\n" +
-                 "Use **{prefix}bump** to move the game message to the bottom of the chat. Use **{prefix}cancel** to end the game. ")]
-        public async Task StartGame(string arg = "")
+        [Command("pacman"), Priority(1)]
+        [Description(
+            "Starts a new Pac-Man game in this channel.\nYou can add \"slim\" or \"s\" " +
+            "after the command to use **Slim Mode**, which fits better on phones. If slim mode is still too wide, " +
+            "you could reduce the font size in your phone's settings, if you want to." +
+            "Use **{prefix}display** to change display modes later.\n" +
+            "You can also play a custom Pac-Man map with the command **{prefix}custompacman**\n\n" +
+            "Use **{prefix}bump** to move the game message to the bottom of the chat. Use **{prefix}cancel** to end the game. ")]
+        public async Task StartGame(CommandContext ctx, string arg = "")
         {
-            if (await CheckGameAlreadyExistsAsync()) return;
+            if (await CheckGameAlreadyExistsAsync(ctx)) return;
 
             arg = arg.ToLowerInvariant();
             bool mobile = arg.StartsWith("s") || arg.StartsWith("m");
 
-            StartNewGame(new PacManGame(Context.Channel.Id, Context.User.Id, null, mobile, Services));
-            var msg = await ReplyGameAsync(Game.GetContent(showHelp: false) + "```diff\n+Starting game```");
-            await AddControls(Game, msg);
+            StartNewGame(new PacManGame(ctx.Channel.Id, ctx.User.Id, null, mobile, Services));
+            var msg = await RespondGameAsync(ctx, await Game(ctx).GetContentAsync(showHelp: false) + "```diff\n+Starting game```");
+            await AddControls(Game(ctx), msg);
         }
 
 
-        [Command("custompacman"), Alias("pacmancustom"), Priority(0)]
-        [Remarks("Start a pacman game with a custom map")]
-        [Summary("Starts a new Pac-Man game in this channel using the provided custom map.\n" +
-                 "Use **{prefix}custompacman** by itself to see a guide for custom maps.\n\n" +
-                 "Use **{prefix}display** to switch between normal mode and slim mode. " +
-                 "Use **{prefix}bump** to move the game message to the bottom of the chat. Use **{prefix}cancel** to end the game.")]
-        public async Task StartCustomGame([Remainder]string map = null)
+        [Command("custompacman"), Priority(0)]
+        [Description(
+            "Starts a new Pac-Man game in this channel using the provided custom map.\n" +
+            "Use **{prefix}custompacman** by itself to see a guide for custom maps.\n\n" +
+            "Use **{prefix}display** to switch between normal mode and slim mode. " +
+            "Use **{prefix}bump** to move the game message to the bottom of the chat. Use **{prefix}cancel** to end the game.")]
+        public async Task StartCustomGame(CommandContext ctx, [RemainingText]string map = null)
         {
             if (map == null)
             {
-                string message = Content.customHelp.Replace("{prefix}", Context.Prefix);
+                string message = Content.customHelp.Replace("{prefix}", ctx.Prefix);
 
-                var embed = new EmbedBuilder { Color = Colors.PacManYellow };
+                var embed = new DiscordEmbedBuilder { Color = Colors.PacManYellow };
                 foreach (var (name, url) in Content.customLinks)
                 {
                     embed.AddField(name, $"[Click here]({url} \"{url}\")", true);
                 }
 
-                await RespondAsync(message, embed);
+                await ctx.RespondAsync(message, embed);
                 return;
             }
 
-            if (await CheckGameAlreadyExistsAsync()) return;
+            if (await CheckGameAlreadyExistsAsync(ctx)) return;
 
             map = map.ExtractCode();
 
             PacManGame newGame;
             try
             {
-                newGame = new PacManGame(Context.Channel.Id, Context.User.Id, map, false, Services);
+                newGame = new PacManGame(ctx.Channel.Id, ctx.User.Id, map, false, Services);
             }
             catch (InvalidMapException e)
             {
-                await ReplyAsync(
+                await ctx.RespondAsync(
                     $"That's not a valid map!: {e.Message}.\n" +
-                    $"Use `{Context.Prefix}custompacman` by itself for a guide on custom maps.");
+                    $"Use `{Storage.GetPrefix(ctx)}custompacman` by itself for a guide on custom maps.");
                 return;
             }
 
             StartNewGame(newGame);
 
-            var msg = await ReplyGameAsync(Game.GetContent(showHelp: false) + "```diff\n+Starting game```");
-            await AddControls(Game, msg);
+            var msg = await RespondGameAsync(ctx, await Game(ctx).GetContentAsync(showHelp: false) + "```diff\n+Starting game```");
+            await AddControls(Game(ctx), msg);
         }
 
 
-        [Command("changedisplay"), Alias("display"), Remarks("Switch between normal and slim display"), HideHelp]
-        [Summary("A Pac-Man game can either be in normal or slim mode. Slim mode fits better on phones." +
+        [Command("changedisplay"), Aliases("display"), Hidden]
+        [Description("A Pac-Man game can either be in normal or slim mode. Slim mode fits better on phones." +
                  "Using this command will switch modes for the current game in this channel.")]
-        public async Task ChangeGameDisplay()
+        public async Task ChangeGameDisplay(CommandContext ctx)
         {
-            if (Game == null)
+            if (Game(ctx) == null)
             {
-                await RespondAsync("There is no active Pac-Man game in this channel!");
+                await ctx.RespondAsync("There is no active Pac-Man game in this channel!");
                 return;
             }
 
-            Game.slimDisplay = !Game.slimDisplay;
-            await UpdateGameMessageAsync();
+            Game(ctx).slimDisplay = !Game(ctx).slimDisplay;
+            await UpdateGameMessageAsync(ctx);
 
-            await AutoReactAsync();
+            await ctx.AutoReactAsync();
         }
 
 

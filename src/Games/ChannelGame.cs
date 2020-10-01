@@ -51,8 +51,34 @@ namespace PacManBot.Games
             }
         }
 
-        /// <summary>Returns the game's current channel.</summary>
-        public DiscordChannel Channel => Client == null ? null : _channel;
+        /// <summary>Retrieves the game's current channel.</summary>
+        public DiscordChannel Channel
+        {
+            get
+            {
+                if (_channel?.Id != ChannelId) // if the channel changed, all bets are off
+                {
+                    foreach (var shard in shardedClient.ShardClients.Values)
+                    {
+                        if (shard.PrivateChannels.TryGetValue(ChannelId, out var dmChannel))
+                        {
+                            _client = shard;
+                            return _channel = dmChannel;
+                        }
+
+                        foreach (var guild in shard.Guilds.Values)
+                        {
+                            if (guild.Channels.TryGetValue(ChannelId, out _channel))
+                            {
+                                _client = shard;
+                                return _channel;
+                            }
+                        }
+                    }
+                }
+                return null;
+            }
+        }
 
         /// <summary>Retrieves this game's guild. Null when the channel is a DM channel.</summary>
         public DiscordGuild Guild => Channel?.Guild;
