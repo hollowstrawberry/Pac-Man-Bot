@@ -15,15 +15,7 @@ namespace PacManBot.Commands.Modules
     [Description(
             "__Tip__: Switching back and forth with DMs to see your cards can be tiresome, " +
             "so try having your cards open in your phone while you're playing in a computer." +
-            "\n\n__**Commands:**__\n" +
-            "\n • **{prefix}uno** - Starts a new Uno game for up to 10 players. You can specify players and bots as players. " +
-            "Players can join or leave at any time." +
-            "\n • **{prefix}uno bots** - Starts a bot-only game with the specified bots." +
-            "\n • **{prefix}uno join** - Join a game or invite a user or bot." +
-            "\n • **{prefix}uno leave/kick** - Leave the game or kick a bot or inactive user." +
-            "\n • **{prefix}bump** - Move the game to the bottom of the chat." +
-            "\n • **{prefix}cancel** - End the game in the current channel." +
-            "\n\n\n__**Rules:**__\n" +
+            "\n\n__**Rules:**__\n" +
             "\n • Each player is given 7 cards." +
             "\n • The current turn's player must choose to discard a card that matches either the color, number or type of the last card." +
             "\n • If the player doesn't have any matching card, or they don't want to discard any of their cards, " +
@@ -52,16 +44,7 @@ namespace PacManBot.Commands.Modules
         }
 
 
-        [Command("help"), Aliases("h", "rules", "commands"), Priority(-1), Hidden]
-        [Description("Gives rules and commands for the Uno game.")]
-        public async Task UnoHelp(CommandContext ctx)
-        {
-            var desc = MethodBase.GetCurrentMethod().GetCustomAttribute<DescriptionAttribute>();
-            await ctx.RespondAsync(desc.Description);
-        }
-
-
-        [Command("join"), Aliases("add", "invite"), Priority(-1), Hidden]
+        [Command("join"), Aliases("add", "invite"), Priority(-1)]
         [Description("Joins an ongoing Uno game in this channel. Fails if the game is full or if there aren't enough cards to draw for you.\n" +
                  "You can also invite a bot or another user to play.")]
         [RequireGuild]
@@ -107,7 +90,7 @@ namespace PacManBot.Commands.Modules
         }
 
 
-        [Command("leave"), Priority(-1), Hidden]
+        [Command("leave"), Priority(-1)]
         [Description("Lets you leave the Uno game in this channel.")]
         [RequireGuild]
         public async Task LeaveUno(CommandContext ctx)
@@ -140,7 +123,7 @@ namespace PacManBot.Commands.Modules
         }
 
 
-        [Command("kick"), Aliases("remove"), Priority(-1), Hidden]
+        [Command("kick"), Aliases("remove"), Priority(-1)]
         [Description("Lets you kick another player or bot in the current Uno game.")]
         [RequireGuild]
         public async Task KickUno(CommandContext ctx, DiscordMember member = null)

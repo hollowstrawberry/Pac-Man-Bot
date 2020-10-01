@@ -534,7 +534,7 @@ namespace PacManBot.Games.Concrete
         public override ValueTask<DiscordEmbedBuilder> GetEmbedAsync(bool showHelp = true)
         {
             return new ValueTask<DiscordEmbedBuilder>(
-                State == GameState.Cancelled && Guild == null ? null : CancelledEmbed());
+                State == GameState.Cancelled ? CancelledEmbed() : null);
         }
 
 
