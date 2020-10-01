@@ -1,7 +1,8 @@
 using System.Threading.Tasks;
-using Discord;
-using Discord.Commands;
-using Discord.Net;
+using DSharpPlus.CommandsNext;
+using DSharpPlus.CommandsNext.Attributes;
+using DSharpPlus.Entities;
+using DSharpPlus.Exceptions;
 using PacManBot.Constants;
 using PacManBot.Extensions;
 using PacManBot.Games;
@@ -99,22 +100,19 @@ namespace PacManBot.Commands.Modules
 
 
 
-        public static async Task AddControls(PacManGame game, IUserMessage message)
+        public static async Task AddControls(PacManGame game, DiscordMessage message)
         {
             try
             {
-                var requestOptions = game.GetRequestOptions(); // So the edit can be cancelled
-
                 foreach (var input in PacManGame.GameInputs.Keys)
                 {
                     if (game.State != GameState.Active) break;
-                    await message.AddReactionAsync(input, DefaultOptions);
+                    await message.CreateReactionAsync(input);
                 }
 
-                await message.ModifyAsync(game.GetMessageUpdate(), requestOptions); // Restore display to normal
+                await message.ModifyWithGameAsync(game);
             }
-            catch (HttpException) { } // Message is deleted while controls are added
-            catch (TaskCanceledException) { } // Message is edited before the post-controls edit
+            catch (NotFoundException) { }
         }
     }
 }

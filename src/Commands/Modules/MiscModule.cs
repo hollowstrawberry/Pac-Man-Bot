@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Discord;
-using Discord.Commands;
-using Discord.Net;
-using Discord.WebSocket;
+using DSharpPlus;
+using DSharpPlus.CommandsNext;
+using DSharpPlus.CommandsNext.Attributes;
+using DSharpPlus.Entities;
+using DSharpPlus.Exceptions;
 using PacManBot.Constants;
 using PacManBot.Extensions;
 using PacManBot.Games;
@@ -12,131 +13,130 @@ using PacManBot.Games.Concrete;
 
 namespace PacManBot.Commands.Modules
 {
-    [Name(ModuleNames.Misc), Remarks("4")]
+    [Group(ModuleNames.Misc), Description("4")]
     public class MiscModule : BaseGameModule<IChannelGame>
     {
-        [Command("bump"), Alias("b", "refresh"), Priority(2)]
-        [Remarks("Move any game to the bottom of the chat")]
-        [Summary("Moves the current game's message in this channel to the bottom of the chat, deleting the old one." +
-                 "This is useful if the game got lost in a sea of other messages, or if the game stopped responding")]
-        public async Task MoveGame()
+        [Command("bump"), Aliases("b", "refresh"), Priority(2)]
+        [Description(
+            "Moves the current game's message in this channel to the bottom of the chat, deleting the old one." +
+            "This is useful if the game got lost in a sea of other messages, or if the game stopped responding")]
+        public async Task MoveGame(CommandContext ctx)
         {
-            if (Game == null)
+            var game = Game(ctx);
+            if (game == null)
             {
-                await RespondAsync("There is no active game in this channel!");
+                await ctx.RespondAsync("There is no active game in this channel!");
                 return;
             }
 
-            if (DateTime.Now - Game.LastBumped > TimeSpan.FromSeconds(2))
+            if (DateTime.Now - game.LastBumped > TimeSpan.FromSeconds(2))
             {
-                Game.LastBumped = DateTime.Now;
-                await DeleteGameMessageAsync();
-                Game.LastBumped = DateTime.Now;
-                var msg = await ReplyGameAsync();
-                Game.LastBumped = DateTime.Now;
+                game.LastBumped = DateTime.Now;
+                await DeleteGameMessageAsync(ctx);
+                game.LastBumped = DateTime.Now;
+                var msg = await RespondGameAsync(ctx);
+                game.LastBumped = DateTime.Now;
 
-                if (Game is PacManGame pacmanGame) await PacManModule.AddControls(pacmanGame, msg);
+                if (game is PacManGame pacmanGame) await PacManModule.AddControls(pacmanGame, msg);
             }
         }
 
 
-        [Command("cancel"), Alias("endgame"), Priority(1)]
-        [Remarks("Cancel any game you're playing. Always usable by moderators")]
-        [Summary("Cancels the current game in this channel, but only if you started or if nobody has played in over a minute. " +
-                 "Always usable by users with the Manage Messages permission.")]
-        public async Task CancelGame()
+        [Command("cancel"), Aliases("endgame"), Priority(1)]
+        [Description("Cancels the current game in this channel, but only if you started or if nobody has played in over a minute. " +
+                     "Always usable by users with the Manage Messages permission.")]
+        public async Task CancelGame(CommandContext ctx)
         {
-            if (Game == null)
+            var game = Game(ctx);
+            if (game == null)
             {
-                await RespondAsync("There is no active game in this channel!");
+                await ctx.RespondAsync("There is no active game in this channel!");
                 return;
             }
 
-            if (Game.UserId.Contains(Context.User.Id) || Context.UserCan(ChannelPermission.ManageMessages)
-                || DateTime.Now - Game.LastPlayed > TimeSpan.FromSeconds(60) || Game is MultiplayerGame mpGame && mpGame.AllBots)
+            if (game.UserId.Contains(ctx.User.Id) || ctx.UserCan(Permissions.ManageMessages)
+                || DateTime.Now - game.LastPlayed > TimeSpan.FromSeconds(60))
             {
-                EndGame();
-                var msg = await UpdateGameMessageAsync();
+                EndGame(ctx);
+                var msg = await UpdateGameMessageAsync(ctx);
 
-                if (Game is PacManGame pacManGame)
+                if (game is PacManGame pacManGame)
                 {
-                    if (Context.Guild != null)
+                    if (ctx.Guild != null)
                     {
-                        await RespondAsync($"Game ended.\n**Result:** {pacManGame.score} points in {pacManGame.Time} turns");
+                        await ctx.RespondAsync($"Game ended.\n**Result:** {pacManGame.score} points in {pacManGame.Time} turns");
                     }
-                    if (msg != null && Context.BotCan(ChannelPermission.ManageMessages))
+                    if (msg != null && ctx.BotCan(Permissions.ManageMessages))
                     {
-                        try { await msg.RemoveAllReactionsAsync(DefaultOptions); }
-                        catch (HttpException) { }
+                        try { await msg.DeleteAllReactionsAsync(); }
+                        catch (NotFoundException) { }
                     }
                 }
                 else
                 {
-                    await AutoReactAsync();
+                    await ctx.AutoReactAsync();
                 }
             }
             else
             {
-                await RespondAsync("You can't cancel this game because someone else is still playing! Try again in a minute.");
+                await ctx.RespondAsync("You can't cancel this game because someone else is still playing! Try again in a minute.");
             }
         }
 
 
-        [Command("dice"), Alias("die", "roll"), Parameters("[faces]")]
-        [Remarks("Roll a dice")]
-        [Summary("Roll a 6-sided dice, or specify a size of dice up to 100.")]
-        public async Task RollDice(int faces = 6)
+        [Command("dice"), Aliases("die", "roll")]
+        [Description("Roll a 6-sided dice, or specify a size of dice up to 100.")]
+        public async Task RollDice(CommandContext ctx, int faces = 6)
         {
             if (faces < 2 || faces > 100)
             {
-                await RespondAsync("The dice must have between 2 and 100 faces.");
+                await ctx.RespondAsync("The dice must have between 2 and 100 faces.");
                 return;
             }
             int dice = Program.Random.Next(1, faces + 1);
-            await RespondAsync($"🎲{dice.ToString().Select(x => CustomEmoji.Number[x - '0']).JoinString()}");
+            await ctx.RespondAsync($"🎲{dice.ToString().Select(x => CustomEmoji.Number[x - '0']).JoinString()}");
         }
 
 
-        [Command("coinflip"), Alias("coin", "flip", "cointoss")]
-        [Remarks("Flip a coin")]
-        [Summary("Flip a coin, heads or tails.")]
-        public async Task CoinFlip()
+        [Command("coinflip"), Aliases("coin", "flip", "cointoss")]
+        [Description("Flip a coin, heads or tails.")]
+        public async Task CoinFlip(CommandContext ctx)
         {
-            await RespondAsync(Program.Random.OneIn(2) ? "🤴 **Heads!**" : "⚖️ **Tails!**");
+            await ctx.RespondAsync(Program.Random.OneIn(2) ? "🤴 **Heads!**" : "⚖️ **Tails!**");
         }
 
 
-        [Command("party"), Alias("blob", "dance"), HideHelp]
-        [Summary("Takes a number which can be either an amount of emotes to send or a message ID to react to. " +
+        [Command("party"), Aliases("blob", "dance"), Hidden]
+        [Description("Takes a number which can be either an amount of emotes to send or a message ID to react to. " +
                  "Reacts to the command by default.")]
-        [PmRequireBotPermission(ChannelPermission.UseExternalEmojis | ChannelPermission.AddReactions)]
-        public async Task BlobDance(ulong number = 0)
+        [RequirePermissions(Permissions.UseExternalEmojis | Permissions.AddReactions)]
+        public async Task BlobDance(CommandContext ctx, ulong number = 0)
         {
-            if (number < 1) await Context.Message.AddReactionAsync(CustomEmoji.EBlobDance, DefaultOptions);
-            else if (number <= 5) await RespondAsync(CustomEmoji.BlobDance.Repeat((int)number));
-            else if (number <= 1000000) await RespondAsync("That's too many.");
-            else if (Context.UserCan(ChannelPermission.ManageMessages)) // Message ID
+            if (number < 1) await ctx.Message.CreateReactionAsync(CustomEmoji.EBlobDance);
+            else if (number <= 5) await ctx.RespondAsync(CustomEmoji.BlobDance.Repeat((int)number));
+            else if (number <= 1000000) await ctx.RespondAsync("That's too many.");
+            else if (ctx.UserCan(Permissions.ManageMessages)) // Message ID
             {
-                if (await Context.Channel.GetMessageAsync(number) is IUserMessage message)
+                if (await ctx.Channel.GetMessageAsync(number) is DiscordMessage message)
                 {
-                    await message.AddReactionAsync(CustomEmoji.EBlobDance, DefaultOptions);
+                    await message.CreateReactionAsync(CustomEmoji.EBlobDance);
                 }
-                else await AutoReactAsync(false);
+                else await ctx.AutoReactAsync(false);
             }
         }
 
 
-        [Command("neat"), Summary("Neat"), HideHelp]
-        public async Task Neat([Remainder] string arg = "")
+        [Command("neat"), Description("Neat"), Hidden]
+        public async Task Neat(CommandContext ctx, [RemainingText] string arg = "")
         {
-            await RespondAsync("neat");
+            await ctx.RespondAsync("neat");
         }
 
 
-        [Command("nice"), Summary("Nice"), HideHelp]
-        public async Task Nice([Remainder] string arg = "")
+        [Command("nice"), Description("Nice"), Hidden]
+        public async Task Nice(CommandContext ctx, [RemainingText] string arg = "")
         {
-            await RespondAsync("nice");
+            await ctx.RespondAsync("nice");
         }
     }
 }
