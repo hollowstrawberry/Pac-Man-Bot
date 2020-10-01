@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
@@ -22,6 +21,7 @@ namespace PacManBot.Commands.Modules
     public class RpgModule : BaseGameModule<RpgGame>
     {
         [GroupCommand, Aliases("fight", "battle"), Priority(-1)]
+        [Description("Battle monsters to earn experience")]
         public async Task RpgMaster(CommandContext ctx, string skillName = "")
         {
             if (Game(ctx) == null)
