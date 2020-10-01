@@ -26,37 +26,35 @@ namespace PacManBot.Commands.Modules
     public class OwnerModule : BasePmBotModule
     {
         public PmBot Bot { get; set; }
-        public GameService Games { get; set; }
         public ScriptingService Scripting { get; set; }
-        public IServiceProvider Services { get; set; }
 
 
-        [Command("dev"), Alias("devcommands"), Remarks("List developer commands")]
-        [Summary("Lists developer commands. Developer only.")]
-        public async Task ShowDevCommands()
+        [Command("dev"), Aliases("devcommands")]
+        [Description("Lists developer commands. Developer only.")]
+        public async Task ShowDevCommands(CommandContext ctx)
         {
             var commands = typeof(OwnerModule).GetMethods()
-                .Select(x => x.Get<CommandAttribute>()?.Text)
+                .Select(x => x.Get<CommandAttribute>()?.Name)
                 .Where(x => x != null)
                 .Distinct()
                 .JoinString(", ");
 
-            var embed = new EmbedBuilder
+            var embed = new DiscordEmbedBuilder
             {
                 Title = $"{CustomEmoji.Staff} Developer Commands",
                 Color = Colors.PacManYellow,
                 Description = commands
             };
 
-            await RespondAsync(embed);
+            await ctx.RespondAsync(embed);
         }
 
 
-        [Command("$restart"), Alias("$shutdown"), HideHelp]
-        [Summary("Shuts down the bot. Developer only.")]
-        public async Task ShutDown()
+        [Command("$restart"), Aliases("$shutdown"), Hidden]
+        [Description("Shuts down the bot. Developer only.")]
+        public async Task ShutDown(CommandContext ctx)
         {
-            var message = await RespondAsync(CustomEmoji.Loading);
+            var message = await ctx.RespondAsync(CustomEmoji.Loading);
             File.WriteAllText(Files.ManualRestart, $"{message.Channel.Id}/{message.Id}");
 
             Log.Info("Restarting", LogSource.Owner);
@@ -65,13 +63,13 @@ namespace PacManBot.Commands.Modules
         }
 
 
-        [Command("$update"), HideHelp]
-        [Summary("Perform a `git pull` and close the bot. Developer only.")]
-        public async Task UpdateAndShutDown()
+        [Command("$update"), Hidden]
+        [Description("Perform a `git pull` and close the bot. Developer only.")]
+        public async Task UpdateAndShutDown(CommandContext ctx)
         {
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                await RespondAsync("This command is currently only available on Linux systems.");
+                await ctx.RespondAsync("This command is currently only available on Linux systems.");
                 return;
             }
 
@@ -95,97 +93,44 @@ namespace PacManBot.Commands.Modules
 
             bool updated = !result.Contains("Already up-to-date");
 
-            if (!updated) await AutoReactAsync(false);
+            if (!updated) await ctx.AutoReactAsync(false);
 
-            await RespondAsync($"```\n{result.Truncate(1990)}```");
+            await ctx.RespondAsync($"```\n{result.Truncate(1990)}```");
 
-            if (updated) await ShutDown();
+            if (updated) await ShutDown(ctx);
         }
 
 
-        [Command("setusername"), HideHelp]
-        [Summary("Set the bot's username in all servers. Developer only.")]
-        public async Task SetUsername([Remainder]string name)
-        {
-            try
-            {
-                await Context.Client.CurrentUser.ModifyAsync(x => x.Username = name, DefaultOptions);
-                await AutoReactAsync();
-            }
-            catch
-            {
-                await AutoReactAsync(false);
-                throw;
-            }
-        }
-
-
-        [Command("setnickname"), HideHelp]
-        [Summary("Set the bot's nickname in this server. Developer only.")]
-        [RequireContext(ContextType.Guild)]
-        public async Task SetNickname([Remainder]string name = null)
-        {
-            try
-            {
-                await Context.Guild.CurrentUser.ModifyAsync(x => x.Nickname = name, DefaultOptions);
-                await AutoReactAsync();
-            }
-            catch
-            {
-                await AutoReactAsync(false);
-                throw;
-            }
-        }
-
-
-        [Command("setavatar"), HideHelp]
-        [Summary("Set the bot's avatar to a file. Developer only.")]
-        [RequireContext(ContextType.Guild)]
-        public async Task SetAvatar([Remainder]string path)
-        {
-            try
-            {
-                await Context.Client.CurrentUser.ModifyAsync(x => x.Avatar = new Image(path), DefaultOptions);
-                await AutoReactAsync();
-            }
-            catch
-            {
-                await AutoReactAsync(false);
-                throw;
-            }
-        }
-
-
-        [Command("eval"), Alias("evalasync", "run", "runasync"), HideHelp]
-        [Summary("Run code, super dangerous do not try at home. Developer only.")]
-        public async Task ScriptEval([Remainder]string code)
+        [Command("eval"), Aliases("evalasync", "run", "runasync"), Hidden]
+        [Description("Run code, super dangerous do not try at home. Developer only.")]
+        public async Task ScriptEval(CommandContext ctx, [RemainingText]string code)
         {
             code = code.ExtractCode();
 
-            await Context.Message.AddReactionAsync(CustomEmoji.ELoading, DefaultOptions);
+            await ctx.Message.CreateReactionAsync(CustomEmoji.ELoading);
 
             object result;
             try
             {
                 result = await Scripting.EvalAsync(code, this);
                 Log.Debug($"Successfully executed:\n {code}", LogSource.Eval);
-                await AutoReactAsync(true);
+                await ctx.AutoReactAsync(true);
             }
             catch (Exception e)
             {
                 result = e.Message;
                 Log.Debug($"{e}", LogSource.Eval);
-                await AutoReactAsync(false);
+                await ctx.AutoReactAsync(false);
             }
 
-            await Context.Message.RemoveReactionAsync(CustomEmoji.ELoading, Context.Client.CurrentUser, DefaultOptions);
-            if (result != null) await RespondAsync($"```\n{result.ToString().Truncate(1990)}```");
+            await ctx.Message.DeleteOwnReactionAsync(CustomEmoji.ELoading);
+            if (result != null) await ctx.RespondAsync($"```\n{result.ToString().Truncate(1990)}```");
         }
 
 
-        [Command("sql"), HideHelp]
-        [Summary("Execute a raw SQL query on the database. Dangerous. Developer only.")]
-        public async Task SqlQuery([Remainder]string query)
+        [Command("sql"), Hidden]
+        [Description("Execute a raw SQL query on the database. Dangerous. Developer only.")]
+        public async Task SqlQuery(CommandContext ctx, [RemainingText]string query)
         {
             query = query.ExtractCode();
 
@@ -196,7 +141,7 @@ namespace PacManBot.Commands.Modules
 
             try
             {
-                using (var db = new PacManDbContext(Bot.Config.dbConnectionString))
+                using (var db = new PacManDbContext(Config.dbConnectionString))
                 {
                     using (var command = db.Database.GetDbConnection().CreateCommand())
                     {
@@ -229,16 +174,16 @@ namespace PacManBot.Commands.Modules
             if (affected >= 0) message.Append($"`{affected} rows affected`\n");
             if (table.Length > 0) message.Append($"```{table.ToString().Truncate(1990 - message.Length)}```");
 
-            await AutoReactAsync(success);
-            await RespondAsync(message);
+            await ctx.AutoReactAsync(success);
+            await ctx.RespondAsync(message);
         }
 
 
-        [Command("bf"), Alias("brainf", "brainfuck"), HideHelp]
-        [Summary("Run a program in the Brainfuck language. Separate code and input with an exclamation point. Developer only.")]
-        public async Task RunBrainf([Remainder]string userInput)
+        [Command("bf"), Aliases("brainf", "brainfuck"), Hidden]
+        [Description("Run a program in the Brainfuck language. Separate code and input with an exclamation point. Developer only.")]
+        public async Task RunBrainf(CommandContext ctx, [RemainingText]string userInput)
         {
-            await Context.Message.AddReactionAsync(CustomEmoji.ELoading, DefaultOptions);
+            await ctx.Message.CreateReactionAsync(CustomEmoji.ELoading);
 
             var slice = userInput.ExtractCode().Split('!', 2);
             string program = slice[0];
@@ -250,7 +195,7 @@ namespace PacManBot.Commands.Modules
             try
             {
                 message.Append(await bf.RunAsync(3000));
-                await AutoReactAsync(true);
+                await ctx.AutoReactAsync(true);
             }
             catch (Exception e)
             {
@@ -263,167 +208,171 @@ namespace PacManBot.Commands.Modules
                         message.AppendLine($"Output up to this point:\n{bf.Output}");
                         break;
 
-                    case ArgumentException ae:
+                    case ArgumentException _:
                         message.AppendLine("The provided program has invalid syntax.");
                         break;
 
                     default:
                         throw e;
                 }
-                await AutoReactAsync(false);
+                await ctx.AutoReactAsync(false);
             }
 
-            await Context.Message.RemoveReactionAsync(CustomEmoji.ELoading, Context.Client.CurrentUser, DefaultOptions);
-            await RespondAsync(message.Length == 0 ? "*No output*" : $"```\n{message.ToString().Truncate(1990)}```");
+            await ctx.Message.DeleteOwnReactionAsync(CustomEmoji.ELoading);
+            await ctx.RespondAsync(message.Length == 0 ? "*No output*" : $"```\n{message.ToString().Truncate(1990)}```");
         }
 
 
-        [Command("feedbackreply"), Alias("reply"), HideHelp]
-        [Summary("This is how Samrux replies to feedback. Developer only.")]
-        public async Task ReplyFeedback(ulong userId, [Remainder]string message)
+        [Command("feedbackreply"), Aliases("reply"), Hidden]
+        [Description("This is how Samrux replies to feedback. Developer only.")]
+        public async Task ReplyFeedback(CommandContext ctx, ulong userId, [RemainingText]string message)
         {
             try
             {
                 string pre = "```diff\n+The following message was sent to you by this bot's owner." +
                              "\n-To reply to this message, use the 'feedback' command.```\n";
 
-                await Context.Client.GetUser(userId).SendMessageAsync(pre + message, options: DefaultOptions);
-                await AutoReactAsync();
+                // this shouldn't be this complicated
+                foreach (var shard in ShardedClient.ShardClients.Values)
+                    foreach (var guild in shard.Guilds.Values)
+                        if (guild.Members.TryGetValue(userId, out var member))
+                        {
+                            await member.SendMessageAsync(pre + message);
+                            await ctx.AutoReactAsync();
+                            return;
+                        }
             }
             catch (Exception e)
             {
                 Log.Debug($"{e.Message}");
-                await AutoReactAsync(false);
-                await RespondAsync($"```{e.Message}```");
+                await ctx.AutoReactAsync(false);
+                await ctx.RespondAsync($"```{e.Message}```");
             }
         }
 
 
-        [Command("reloadcontent"), Alias("reload"), HideHelp]
-        [Summary("Reloads the content.bot file. Developer only")]
-        public async Task ReloadContent()
+        [Command("reloadcontent"), Aliases("reload"), Hidden]
+        [Description("Reloads the content.bot file. Developer only")]
+        public async Task ReloadContent(CommandContext ctx)
         {
             try
             {
-                Bot.Config.LoadContent(File.ReadAllText(Files.Contents));
+                Config.LoadContent(File.ReadAllText(Files.Contents));
             }
             catch (Exception e)
             {
                 Log.Error($"Failed to load bot content: {e}");
-                await RespondAsync($"```{e.Message}```");
+                await ctx.RespondAsync($"```{e.Message}```");
             }
 
             Log.Info("Reloaded bot content");
-            await AutoReactAsync();
+            await ctx.AutoReactAsync();
         }
 
 
-        [Command("log"), HideHelp]
-        [Summary("Stores an entry in the bot logs. Developer only")]
-        public async Task DoLog([Remainder]string message)
+        [Command("log"), Hidden]
+        [Description("Stores an entry in the bot logs. Developer only")]
+        public async Task DoLog(CommandContext ctx, [RemainingText]string message)
         {
             Log.Info(message, LogSource.Owner);
-            await AutoReactAsync();
+            await ctx.AutoReactAsync();
         }
 
 
-        [Command("garbagecollect"), Alias("gc"), HideHelp]
-        [Summary("Clears unused memory if possible. Developer only.")]
-        public async Task DoGarbageCollect()
+        [Command("garbagecollect"), Aliases("gc"), Hidden]
+        [Description("Clears unused memory if possible. Developer only.")]
+        public async Task DoGarbageCollect(CommandContext ctx)
         {
             GC.Collect();
             GC.WaitForPendingFinalizers();
             GC.Collect();
 
-            await AutoReactAsync();
+            await ctx.AutoReactAsync();
         }
 
 
-        [Command("emotes"), Alias("showemotes"), HideHelp]
-        [Summary("Sends all emote codes in this server. Developer only.")]
-        [RequireContext(ContextType.Guild)]
-        public async Task SendServerEmotes()
+        [Command("emotes"), Aliases("showemotes"), Hidden]
+        [Description("Sends all emote codes in this server. Developer only.")]
+        [RequireGuild]
+        public async Task SendServerEmotes(CommandContext ctx)
         {
-            var emotes = Context.Guild.Emotes
-                .OrderBy(x => x.Animated)
-                .Select(x => x.Mention());
+            var emotes = ctx.Guild.Emojis.Values
+                .OrderBy(x => x.IsAnimated)
+                .Select(x => x.ToString());
 
-            await RespondAsync($"```{emotes.JoinString("\n")}```".Truncate(2000));
+            await ctx.RespondAsync($"```{emotes.JoinString("\n")}```".Truncate(2000));
         }
 
 
-        [Command("file"), Alias("readfile"), HideHelp, Parameters("[start] [length] <file>")]
-        [Summary("Sends the contents of a file in the bot's host location. Developer only.")]
-        public async Task ReadFile(int start, int length, [Remainder]string filename)
+        [Command("file"), Aliases("readfile"), Hidden]
+        [Description("Sends the contents of a file in the bot's host location. Developer only.")]
+        public async Task ReadFile(CommandContext ctx, int start, int length, [RemainingText]string filename)
         {
             try
             {
                 string content = File.ReadAllText(filename).Replace("```", "`​``").Substring(start).Truncate(length);
                 content = content.Replace(Config.discordToken, ""); // Can't be too safe
-                await RespondAsync($"```{filename.Split('.').Last()}\n{content}".Truncate(1997) + "```");
+                await ctx.RespondAsync($"```{filename.Split('.').Last()}\n{content}".Truncate(1997) + "```");
             }
             catch (Exception e)
             {
                 Log.Debug($"Reading file {filename}: {e.Message}");
-                await RespondAsync($"```Reading file {filename}: {e.Message}```");
+                await ctx.RespondAsync($"```Reading file {filename}: {e.Message}```");
             }
         }
 
-        [Command("file"), Alias("readfile"), HideHelp]
-        public async Task ReadFile(int start, [Remainder]string file)
-            => await ReadFile(start, 2000, file);
+        [Command("file"), Aliases("readfile"), Hidden]
+        public async Task ReadFile(CommandContext ctx, int start, [RemainingText]string file)
+            => await ReadFile(ctx, start, 2000, file);
 
-        [Command("file"), Alias("readfile"), HideHelp]
-        public async Task ReadFile([Remainder]string file)
-            => await ReadFile(0, 2000, file);
+        [Command("file"), Aliases("readfile"), Hidden]
+        public async Task ReadFile(CommandContext ctx, [RemainingText]string file)
+            => await ReadFile(ctx, 0, 2000, file);
 
 
-        [Command("getguilds"), Alias("guilds"), HideHelp]
-        [Summary("Gets a list of top 100 guilds and member counts where this bot is in. Developer only.")]
-        public async Task GetGuildMembers()
+        [Command("getguilds"), Aliases("guilds"), Hidden]
+        [Description("Gets a list of top 100 guilds and member counts where this bot is in. Developer only.")]
+        [RequireDirectMessage]
+        public async Task GetGuildMembers(CommandContext ctx)
         {
-            var guilds = Context.Client.Guilds.OrderByDescending(g => g.MemberCount).Take(100);
-            await RespondAsync(guilds.Select(g => $"{g.Name}: {g.MemberCount}").JoinString("\n").Truncate(2000));
+            var guilds = ShardedClient.ShardClients.Values
+                .SelectMany(x => x.Guilds.Values)
+                .OrderByDescending(x => x.MemberCount).Take(100)
+                .Select(g => $"{g.Name}: {g.MemberCount}");
+            await ctx.RespondAsync(guilds.JoinString("\n").Truncate(2000));
         }
 
 
-        [Command("sudo clear"), Alias("sudoclear", "sudo cl", "wipe"), HideHelp]
-        [Summary("Clear all messages in a range. Developer only.")]
-        [PmRequireBotPermission(ChannelPermission.ReadMessageHistory | ChannelPermission.ManageMessages)]
-        public async Task ClearAllMessages(int amount = 10)
+        [Command("sudo clear"), Aliases("sudoclear", "sudo cl", "wipe"), Hidden]
+        [Description("Clear all messages in a range. Developer only.")]
+        [RequireBotPermissions(Permissions.ReadMessageHistory | Permissions.ManageMessages)]
+        public async Task ClearAllMessages(CommandContext ctx, int amount = 10)
         {
-            foreach (var message in await Context.Channel
-                .GetMessagesAsync(amount, options: DefaultOptions)
-                .FlattenAsync())
+            if (amount < 1 || amount > 100)
             {
-                try
-                {
-                    await message.DeleteAsync(DefaultOptions);
-                }
-                catch (HttpException e)
-                {
-                    Log.Verbose($"Couldn't delete message {message.Id} in {Context.Channel.FullName()}: {e.Message}");
-                }
+                await ctx.RespondAsync("bruh");
+                return;
             }
+            await ctx.Channel.DeleteMessagesAsync(await ctx.Channel.GetMessagesAsync(amount));
         }
 
 
-        [Command("sudo say"), Alias("sudosay"), HideHelp]
-        [Summary("Say anything. Developer-only version.")]
-        public async Task ClearGameMessages([Remainder]string message)
+        [Command("sudo say"), Aliases("sudosay"), Hidden]
+        [Description("Say anything. Developer-only version.")]
+        public async Task ClearGameMessages(CommandContext ctx, [RemainingText]string message)
         {
-            await RespondAsync(message);
+            await ctx.RespondAsync(message);
         }
 
 
-        [Command("deusexmachina"), Alias("deus", "domoves"), HideHelp]
-        [Summary("Execute game moves in sequence regardless of turn or dignity. Developer only.")]
-        public async Task DoRemoteGameMoves(params string[] moves)
+        [Command("deusexmachina"), Aliases("deus", "domoves"), Hidden]
+        [Description("Execute game moves in sequence regardless of turn or dignity. Developer only.")]
+        public async Task DoRemoteGameMoves(CommandContext ctx, params string[] moves)
         {
-            var game = Games.GetForChannel<IMessagesGame>(Context.Channel.Id);
+            var game = Games.GetForChannel<IMessagesGame>(ctx.Channel.Id);
             if (game == null)
             {
-                await RespondAsync("How about you start a game first");
+                await ctx.RespondAsync("How about you start a game first");
                 return;
             }
 
@@ -443,28 +392,28 @@ namespace PacManBot.Commands.Modules
             }
 
             var msg = await game.GetMessageAsync();
-            if (msg != null) await msg.ModifyAsync(game.GetMessageUpdate(), DefaultOptions);
-            else msg = await ReplyAsync(game.GetContent(), game.GetEmbed());
+            if (msg != null) await msg.ModifyWithGameAsync(game);
+            else msg = await ctx.RespondAsync(await game.GetContentAsync(), await game.GetEmbedAsync());
 
-            if (game is MultiplayerGame tpGame && tpGame.BotTurn)
+            if (game is MultiplayerGame mgame && await mgame.IsBotTurnAsync())
             {
-                await tpGame.BotInputAsync();
+                await mgame.BotInputAsync();
                 await Task.Delay(1000);
-                await msg.ModifyAsync(game.GetMessageUpdate(), DefaultOptions);
+                await msg.ModifyWithGameAsync(mgame);
             }
 
             if (game.State != GameState.Active) Games.Remove(game);
 
-            await AutoReactAsync(success);
+            await ctx.AutoReactAsync(success);
         }
 
 
-        [Command("throw"), HideHelp]
-        [Summary("Throws an error. Developer only.")]
-        public async Task ThrowError(bool arg = true)
+        [Command("throw"), Hidden]
+        [Description("Throws an error. Developer only.")]
+        public async Task ThrowError(CommandContext ctx, bool arg = true)
         {
             if (arg) throw new Exception("oops");
-            else await RespondAsync("no");
+            else await ctx.RespondAsync("no");
         }
     }
 }

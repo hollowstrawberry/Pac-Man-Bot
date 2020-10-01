@@ -242,7 +242,7 @@ namespace PacManBot.Services
 
             if (gameMessage != null && message.Channel.BotCan(Permissions.ManageMessages))
             {
-                await gameMessage.ModifyAsync(await game.GetContentAsync(), (await game.GetEmbedAsync()).Build());
+                await gameMessage.ModifyWithGameAsync(game);
                 await message.DeleteAsync();
             }
             else
@@ -299,7 +299,7 @@ namespace PacManBot.Services
 
             if (message != null)
             {
-                await message.ModifyAsync(await game.GetContentAsync(), (await game.GetEmbedAsync()).Build());
+                await message.ModifyWithGameAsync(game);
             }
         }
     }

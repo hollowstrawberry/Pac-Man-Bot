@@ -86,7 +86,7 @@ namespace PacManBot.Commands
             var msg = await cgame.GetMessageAsync();
             try
             {
-                if (msg != null) await msg.ModifyAsync(await cgame.GetContentAsync(), (await cgame.GetEmbedAsync()).Build());
+                if (msg != null) await msg.ModifyWithGameAsync(cgame);
                 return msg;
             }
             catch (NotFoundException) { return null; }

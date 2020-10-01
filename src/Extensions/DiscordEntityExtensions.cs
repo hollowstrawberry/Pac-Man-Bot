@@ -1,15 +1,7 @@
-﻿using Serilog.Events;
-using System;
-using System.Drawing;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using DSharpPlus;
+﻿using System.Threading.Tasks;
 using DSharpPlus.Entities;
-using DSharpPlus.CommandsNext;
 using PacManBot.Constants;
-using PacManBot.Services;
-using Microsoft.Extensions.Logging;
+using PacManBot.Games;
 
 namespace PacManBot.Extensions
 {
@@ -19,6 +11,13 @@ namespace PacManBot.Extensions
         public static async Task AutoReactAsync(this DiscordMessage message, bool success = true)
         {
             await message.CreateReactionAsync(success ? CustomEmoji.ECheck : CustomEmoji.ECross);
+        }
+
+
+        /// <summary>Modifies a message to update the game being displayed.</summary>
+        public static async Task ModifyWithGameAsync(this DiscordMessage message, IChannelGame game)
+        {
+            await message.ModifyAsync(await game.GetContentAsync(), (await game.GetEmbedAsync()).Build());
         }
 
 

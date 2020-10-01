@@ -98,7 +98,7 @@ namespace PacManBot.Services
                 try
                 {
                     var gameMessage = await game.GetMessageAsync();
-                    if (gameMessage != null) await gameMessage.ModifyAsync(await game.GetContentAsync(), (await game.GetEmbedAsync()).Build());
+                    if (gameMessage != null) await gameMessage.ModifyWithGameAsync(game);
                 }
                 catch (NotFoundException) { }
             }
