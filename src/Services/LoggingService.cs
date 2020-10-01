@@ -14,6 +14,8 @@ namespace PacManBot.Services
     /// </summary>
     public class LoggingService : ILogger<DiscordShardedClient>, IDisposable
     {
+        public static LoggingService Instance { get; set; }
+
         private readonly Logger logger;
         private readonly LogLevel minLogLevel;
         private readonly LogLevel minClientLogLevel;
@@ -111,21 +113,5 @@ namespace PacManBot.Services
         {
             return this;
         }
-    }
-
-
-    /// <summary> This shouldn't need to exist.</summary>
-    class LoggingServiceFactory : ILoggerFactory
-    {
-        private readonly PmBotConfig config;
-
-        public LoggingServiceFactory(PmBotConfig config)
-        {
-            this.config = config;
-        }
-
-        public Microsoft.Extensions.Logging.ILogger CreateLogger(string categoryName) => new LoggingService(config); // help
-        public void AddProvider(ILoggerProvider provider) { } // what
-        public void Dispose() { } // why
     }
 }

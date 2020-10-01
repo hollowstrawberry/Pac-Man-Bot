@@ -223,7 +223,7 @@ namespace PacManBot.Games.Concrete.Rpg
             if (own)
             {
                 embed.Description =
-                    $"\n**You have unspent skill points!**\n{DiscordEntityExtensions.Empty}\n".If(skillPoints > 0) +
+                    $"\n**You have unspent skill points!**\n{DiscordStringUtilities.Empty}\n".If(skillPoints > 0) +
                     (reaction ? "React again for skills" : $"Do **{channelPrefix}rpg skills** for skills.");
             }
 
@@ -273,7 +273,7 @@ namespace PacManBot.Games.Concrete.Rpg
                 $"\n*{x.Description}*");
 
             desc.AppendLine("__**Active Skills:**__");
-            desc.AppendLine(unlocked.Count() == 0 ? "*None unlocked*" : $"{unlocked.JoinString("\n")}\n{DiscordEntityExtensions.Empty}");
+            desc.AppendLine(unlocked.Count() == 0 ? "*None unlocked*" : $"{unlocked.JoinString("\n")}\n{DiscordStringUtilities.Empty}");
 
 
             var embed = new DiscordEmbedBuilder
@@ -304,7 +304,7 @@ namespace PacManBot.Games.Concrete.Rpg
                 $"`[{ProgressBar(spentSkill[type], SkillMax, active.Select(x => x.SkillGet))}]`" +
                 $"\n{desc}\n__Active skills:__\n" +
                 active.Select(x => x.SkillGet <= spentSkill[type] ? x.Name : $"`{x.SkillGet}: {x.Name}`").JoinString("\n")
-                + $"\n{DiscordEntityExtensions.Empty}".If(type < EnumTraits<SkillType>.MaxValue); // padding
+                + $"\n{DiscordStringUtilities.Empty}".If(type < EnumTraits<SkillType>.MaxValue); // padding
             return embed.AddField(name, value, true);
         }
 

@@ -59,9 +59,13 @@ namespace PacManBot
             }
 
             // Set up services
+            var log = LoggingService.Instance = new LoggingService(config);
+            log.Info($"Pac-Man Bot v{Version}");
+
             var serviceCollection = new ServiceCollection()
                 .AddSingleton(config)
                 .AddSingleton(config.ClientConfig)
+                .AddSingleton(LoggingService.Instance)
                 .AddSingleton<DiscordShardedClient>()
                 .AddSingleton<PmBot>()
                 .AddSingleton<StorageService>()
@@ -71,9 +75,6 @@ namespace PacManBot
                 .AddSingleton<ScriptingService>();
 
             var services = serviceCollection.BuildServiceProvider();
-            var log = services.Get<LoggingService>();
-            log.Info($"Pac-Man Bot v{Version}");
-
 
             // Let's go
             try

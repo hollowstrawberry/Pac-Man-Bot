@@ -29,7 +29,7 @@ namespace PacManBot.Commands.Modules
         public async Task SendBotInfo(CommandContext ctx)
         {
             var app = await ctx.Client.GetCurrentApplicationAsync();
-            var dnetv = typeof(DiscordClient).Assembly.GetName().Version;
+            var dsp = typeof(DiscordClient).Assembly.GetName().Version;
 
             var embed = new DiscordEmbedBuilder()
                 .WithTitle($"{CustomEmoji.PacMan} __**Pac-Man Bot**__")
@@ -40,7 +40,7 @@ namespace PacManBot.Commands.Modules
                 .AddField("Host", Environment.MachineName, true)
                 .AddField("Owner", app.Owners.Select(x => x.NameandDisc()).JoinString(", "), true)
                 .AddField("Bot version", Program.Version, true)
-                .AddField("Library", $"Discord.Net {dnetv.Major}.{dnetv.Minor} (C#)", true);
+                .AddField("Library", $"DSharpPlus {dsp.Major}.{dsp.Minor} (C#)", true);
 
             foreach (var (name, desc) in Content.aboutFields)
             {

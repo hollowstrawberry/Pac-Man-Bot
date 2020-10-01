@@ -94,7 +94,7 @@ namespace PacManBot
         {
             Token = discordToken,
             HttpTimeout = TimeSpan.FromSeconds(httpTimeout),
-            LoggerFactory = new LoggingServiceFactory(this),
+            LoggerFactory = new LoggingServiceFactory(),
             MinimumLogLevel = clientLogLevel,
             MessageCacheSize = messageCacheSize,
 
@@ -102,5 +102,15 @@ namespace PacManBot
                 DiscordIntents.Guilds | DiscordIntents.DirectMessages | DiscordIntents.DirectMessageReactions
                 | DiscordIntents.GuildMembers | DiscordIntents.GuildMessages | DiscordIntents.GuildMessageReactions,
         };
+
+        /// <summary> This shouldn't need to exist.</summary>
+        class LoggingServiceFactory : ILoggerFactory
+        {
+            public LoggingServiceFactory() { }
+
+            public ILogger CreateLogger(string categoryName) => LoggingService.Instance; // help
+            public void AddProvider(ILoggerProvider provider) { } // what
+            public void Dispose() { } // why
+        }
     }
 }

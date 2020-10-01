@@ -21,7 +21,7 @@ namespace PacManBot.Games.Concrete
         private string word;
         private char[] progress;
         private int mistakes;
-        private List<char> wrongChars = new List<char>();
+        private readonly List<char> wrongChars = new List<char>();
         private ulong winnerId;
 
 
