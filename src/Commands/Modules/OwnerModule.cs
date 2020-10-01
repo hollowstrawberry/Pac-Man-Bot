@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
+using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using DSharpPlus.Exceptions;
 using Microsoft.Data.Sqlite;
@@ -20,9 +21,9 @@ using PacManBot.Utils;
 
 namespace PacManBot.Commands.Modules
 {
-    [Name(ModuleNames.Dev), Remarks("0")]
-    [RequireDeveloper]
-    public class DevModule : BasePmBotModule
+    [Group(ModuleNames.Dev), Description("0")]
+    [RequireOwner]
+    public class OwnerModule : BasePmBotModule
     {
         public PmBot Bot { get; set; }
         public GameService Games { get; set; }
@@ -34,7 +35,7 @@ namespace PacManBot.Commands.Modules
         [Summary("Lists developer commands. Developer only.")]
         public async Task ShowDevCommands()
         {
-            var commands = typeof(DevModule).GetMethods()
+            var commands = typeof(OwnerModule).GetMethods()
                 .Select(x => x.Get<CommandAttribute>()?.Text)
                 .Where(x => x != null)
                 .Distinct()

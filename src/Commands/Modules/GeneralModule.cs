@@ -3,17 +3,14 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
-using DSharpPlus.Exceptions;
 using PacManBot.Constants;
 using PacManBot.Extensions;
 using PacManBot.Games;
-using PacManBot.Services;
 
 namespace PacManBot.Commands.Modules
 {
