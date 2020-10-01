@@ -18,9 +18,9 @@ namespace PacManBot.Commands.Modules
             "Starts a new Pac-Man game in this channel.\nYou can add \"slim\" or \"s\" " +
             "after the command to use **Slim Mode**, which fits better on phones. If slim mode is still too wide, " +
             "you could reduce the font size in your phone's settings, if you want to." +
-            "Use **{prefix}display** to change display modes later.\n" +
-            "You can also play a custom Pac-Man map with the command **{prefix}custompacman**\n\n" +
-            "Use **{prefix}bump** to move the game message to the bottom of the chat. Use **{prefix}cancel** to end the game. ")]
+            "Use `display` to change display modes later.\n" +
+            "You can also play a custom Pac-Man map with the command `custompacman`\n\n" +
+            "Use `bump` to move the game message to the bottom of the chat. Use `cancel` to end the game. ")]
         public async Task StartGame(CommandContext ctx, string arg = "")
         {
             if (await CheckGameAlreadyExistsAsync(ctx)) return;
@@ -34,12 +34,12 @@ namespace PacManBot.Commands.Modules
         }
 
 
-        [Command("custompacman"), Priority(0)]
+        [Command("pacmancustom"), Priority(0)]
         [Description(
             "Starts a new Pac-Man game in this channel using the provided custom map.\n" +
-            "Use **{prefix}custompacman** by itself to see a guide for custom maps.\n\n" +
-            "Use **{prefix}display** to switch between normal mode and slim mode. " +
-            "Use **{prefix}bump** to move the game message to the bottom of the chat. Use **{prefix}cancel** to end the game.")]
+            "Use `pacmancustom` by itself to see a guide for custom maps.\n\n" +
+            "Use `display` to switch between normal mode and slim mode. " +
+            "Use `bump` to move the game message to the bottom of the chat. Use `cancel` to end the game.")]
         public async Task StartCustomGame(CommandContext ctx, [RemainingText]string map = null)
         {
             if (map == null)

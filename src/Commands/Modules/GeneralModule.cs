@@ -32,7 +32,7 @@ namespace PacManBot.Commands.Modules
             var dsp = typeof(DiscordClient).Assembly.GetName().Version;
 
             var embed = new DiscordEmbedBuilder()
-                .WithTitle($"{CustomEmoji.PacMan} __**Pac-Man Bot**__")
+                .WithTitle($"PacMan Bot {CustomEmoji.PacMan}•••")
                 .WithDescription(Content.about.Replace("{prefix}", ctx.Prefix))
                 .WithColor(Colors.PacManYellow)
                 .AddField("Total guilds", $"{ctx.Client.Guilds.Count}", true)
@@ -58,7 +58,7 @@ namespace PacManBot.Commands.Modules
             var process = Process.GetCurrentProcess();
 
             var embed = new DiscordEmbedBuilder()
-                .WithTitle($"{CustomEmoji.PacMan} __**Pac-Man Bot**__")
+                .WithTitle($"PacMan Bot {CustomEmoji.PacMan}•••")
                 .WithColor(Colors.PacManYellow)
 
                 .AddField("Latency", $"{ctx.Client.Ping}ms", true)
@@ -101,7 +101,7 @@ namespace PacManBot.Commands.Modules
             var embed = new DiscordEmbedBuilder
             {
                 Color = Colors.PacManYellow,
-                Title = $"{CustomEmoji.PacMan} Active games in all guilds",
+                Title = $"Active games in all guilds {CustomEmoji.PacMan}•••",
             };
 
             foreach (var name in GameNames)
@@ -115,7 +115,7 @@ namespace PacManBot.Commands.Modules
 
         [Command("prefix"), Hidden]
         [Description("Shows this bot's prefix for this server, even though you can already see it here.\n" +
-                 "You can use the **{prefix}setprefix** command to set a prefix if you're an Administrator.")]
+                 "You can use the `setprefix` command to set a prefix if you're an Administrator.")]
         public async Task GetServerPrefix(CommandContext ctx)
         {
             string message;

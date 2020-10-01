@@ -14,11 +14,11 @@ namespace PacManBot.Commands.Modules
         [Command("rubik"), Aliases("rubiks", "rubix")]
         [Description(
             "Gives you a personal Rubik's Cube that you can take to any server or in DMs with the bot.\n\n__**Commands:**__" +
-            "\n**{prefix}rubik [sequence]** - Execute a sequence of turns to apply on the cube." +
-            "\n**{prefix}rubik moves** - Show notation help to control the cube." +
-            "\n**{prefix}rubik scramble** - Scrambles the cube pieces completely." +
-            "\n**{prefix}rubik reset** - Delete the cube, going back to its solved state." +
-            "\n**{prefix}rubik showguide** - Toggle the help displayed below the cube. For pros.")]
+            "\n`rubik [sequence]` - Execute a sequence of turns to apply on the cube." +
+            "\n`rubik moves` - Show notation help to control the cube." +
+            "\n`rubik scramble` - Scrambles the cube pieces completely." +
+            "\n`rubik reset` - Delete the cube, going back to its solved state." +
+            "\n`rubik showguide` - Toggle the help displayed below the cube. For pros.")]
         public async Task RubiksCube(CommandContext ctx, [RemainingText]string input = "")
         {
             if (Game(ctx) == null)

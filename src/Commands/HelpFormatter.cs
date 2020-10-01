@@ -44,7 +44,7 @@ namespace PacManBot.Commands
             
             if (Command == null)
             {
-                embed.WithTitle("<a:pacman:409803570544902144> PacMan Commands");
+                embed.WithTitle("PacMan Commands <a:pacman:409803570544902144>•••");
 
                 if (Context.Guild == null) embed.WithDescription("No prefix needed in this channel!");
                 else
