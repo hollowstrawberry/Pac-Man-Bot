@@ -6,29 +6,18 @@ using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
+using PacManBot.Constants;
 using PacManBot.Extensions;
+using PacManBot.Games;
 using PacManBot.Games.Concrete;
 
 namespace PacManBot.Commands.Modules
 {
     [Module(ModuleNames.Games)]
     [Group("uno")]
-    [Description(
+    [Description("Play Uno with your friends or bots!\n" +
     "__Tip__: Switching back and forth with DMs to see your cards can be tiresome, " +
-    "so try having your cards open in your phone while you're playing in a computer." +
-    "\n\n__**Rules:**__\n" +
-    "\n • Each player is given 7 cards." +
-    "\n • The current turn's player must choose to discard a card that matches either the color, number or type of the last card." +
-    "\n • If the player doesn't have any matching card, or they don't want to discard any of their cards, " +
-    "they can say \"**draw**\" to draw a card. That card will be discarded immediately if possible." +
-    "\n • When you only have one card left, you must say \"**uno**\" (You can add it to your card like \"red4 uno\", " +
-    "or you can say it directly after if you forget). If you forget, someone else can say \"uno\" to call you out before the " +
-    "next player plays, and you will draw 2 cards." +
-    "\n • The first player to lose all of their cards wins the game." +
-    "\n • **Special cards:** *Skip* cards make the next player skip a turn. *Reverse* cards change the turn direction, " +
-    "or act like Skip cards with only two players." +
-    " *Draw* cards force the next player to draw cards and skip a turn. *Wild* cards let you choose the color, " +
-    "and will match with any card.")]
+    "so try having your cards open in your phone while you're playing in a computer.")]
     [RequireBotPermissions(BaseBotPermissions)]
     public class UnoModule : MultiplayerGameModule<UnoGame>
     {
@@ -43,6 +32,25 @@ namespace PacManBot.Commands.Modules
             {
                 await StartNewMPGameAsync(ctx, new[] { ctx.Member }.Concatenate(startingPlayers));
             }
+        }
+
+        [Command("rules"), Aliases("manual", "help")]
+        [Description("Show the game's rules")]
+        public async Task UnoRules(CommandContext ctx)
+        {
+            await ctx.RespondAsync($"\n\n__**{CustomEmoji.UnoWild} Uno Rules:**__\n" +
+                "\n • Each player is given 7 cards." +
+                "\n • The current turn's player must choose to discard a card that matches either the color, number or type of the last card." +
+                "\n • If the player doesn't have any matching card, or they don't want to discard any of their cards, " +
+                "they can say \"**draw**\" to draw a card. That card will be discarded immediately if possible." +
+                "\n • When you only have one card left, you must say \"**uno**\" (You can add it to your card like \"red4 uno\", " +
+                "or you can say it directly after if you forget). If you forget, someone else can say \"uno\" to call you out before the " +
+                "next player plays, and you will draw 2 cards." +
+                "\n • The first player to lose all of their cards wins the game." +
+                "\n • **Special cards:** *Skip* cards make the next player skip a turn. *Reverse* cards change the turn direction, " +
+                "or act like Skip cards with only two players." +
+                " *Draw* cards force the next player to draw cards and skip a turn. *Wild* cards let you choose the color, " +
+                "and will match with any card.");
         }
 
 
@@ -97,23 +105,24 @@ namespace PacManBot.Commands.Modules
         [RequireGuild]
         public async Task LeaveUno(CommandContext ctx)
         {
-            if (Game(ctx) == null)
+            var game = Game(ctx);
+            if (game == null)
             {
-                await ctx.RespondAsync($"There's no Uno game in this channel! Use `{ctx.Prefix}uno` to start.");
+                await ctx.RespondAsync($"There's no Uno game in this channel! Use `uno` to start.");
                 return;
             }
-            if (!Game(ctx).UserId.Contains(ctx.User.Id))
+            if (!game.UserId.Contains(ctx.User.Id))
             {
                 await ctx.RespondAsync($"You're not in the game.");
                 return;
             }
 
-            await Game(ctx).RemovePlayerAsync(ctx.User);
+            await game.RemovePlayerAsync(ctx.User);
 
-            if (Game(ctx).UserId.Length < 2 || Game(ctx).UserId.Select(x => ctx.Guild.Members[x]).All(x => x.IsBot))
+            if (game.State == GameState.Cancelled)
             {
-                EndGame(ctx);
                 await UpdateGameMessageAsync(ctx);
+                EndGame(ctx);
             }
             else
             {
@@ -130,7 +139,8 @@ namespace PacManBot.Commands.Modules
         [RequireGuild]
         public async Task KickUno(CommandContext ctx, DiscordMember member = null)
         {
-            if (Game(ctx) == null)
+            var game = Game(ctx);
+            if (game == null)
             {
                 await ctx.RespondAsync($"There's no Uno game in this channel! Use `{ctx.Prefix}uno` to start.");
                 return;
@@ -140,22 +150,22 @@ namespace PacManBot.Commands.Modules
                 await ctx.RespondAsync($"You must specify a user to kick from the game.");
                 return;
             }
-            if (!Game(ctx).UserId.Contains(member.Id))
+            if (!game.UserId.Contains(member.Id))
             {
                 await ctx.RespondAsync($"That user is not in the game.");
                 return;
             }
-            if (!member.IsBot && (Game(ctx).UserId[Game(ctx).Turn] != member.Id || (DateTime.Now - Game(ctx).LastPlayed) < TimeSpan.FromMinutes(1)))
+            if (!member.IsBot && (game.UserId[Game(ctx).Turn] != member.Id || (DateTime.Now - game.LastPlayed) < TimeSpan.FromMinutes(1)))
             {
                 await ctx.RespondAsync("To remove another user they must be inactive for at least 1 minute during their turn.");
             }
 
-            await Game(ctx).RemovePlayerAsync(member);
+            await game.RemovePlayerAsync(member);
 
-            if (Game(ctx).UserId.Length < 2 || Game(ctx).UserId.Select(x => ctx.Guild.Members[x]).All(x => x.IsBot))
+            if (game.State == GameState.Cancelled)
             {
-                EndGame(ctx);
                 await UpdateGameMessageAsync(ctx);
+                EndGame(ctx);
             }
             else
             {

@@ -736,7 +736,7 @@ namespace PacManBot.Games.Concrete
         }
 
 
-        /// <summary>Removes a user from the game.</summary>
+        /// <summary>Removes a user from the game, and cancels the game if it can't continue.</summary>
         public Task RemovePlayerAsync(DiscordUser user) => RemovePlayerAsync(players.First(x => x.id == user.Id));
 
         private async Task RemovePlayerAsync(UnoPlayer player)
@@ -744,7 +744,23 @@ namespace PacManBot.Games.Concrete
             drawPile.AddRange(player.cards);
             players.Remove(player);
 
-            while (Turn >= players.Count || await CurrentPlayer.IsBotAsync()) Turn = FollowingTurn;
+            if (players.Count < 2)
+            {
+                State = GameState.Cancelled;
+                return;
+            }
+
+            int xturns = 0;
+            while (Turn >= players.Count || await CurrentPlayer.IsBotAsync())
+            {
+                Turn = FollowingTurn;
+
+                if (++xturns > players.Count) // all bots
+                {
+                    State = GameState.Cancelled;
+                    return;
+                }
+            }
         }
 
 

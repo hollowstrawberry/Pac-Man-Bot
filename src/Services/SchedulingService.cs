@@ -87,7 +87,7 @@ namespace PacManBot.Services
 
             if (count > 0)
             {
-                log.Info($"Removed {count} expired game{"s".If(count > 1)}");
+                log.Debug($"Removed {count} expired game{"s".If(count > 1)}");
             }
 
 

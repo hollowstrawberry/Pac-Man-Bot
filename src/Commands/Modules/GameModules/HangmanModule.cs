@@ -16,7 +16,7 @@ namespace PacManBot.Commands.Modules
         [Description(
             "When this command is used, the channel becomes a public game of hangman.\n" +
             "Anyone will be able to guess either a letter or the full word. Up to 10 wrong guesses!\n\n" +
-            "You can use **{prefix}hangmanword** if you want to choose a word or phrase for your friends to guess. " +
+            "You can use `hangmanword` if you want to choose a word or phrase for your friends to guess. " +
             "Don't send it in the chat! The bot will ask in private.")]
         public async Task StartHangman(CommandContext ctx, [RemainingText]string args = null)
         {
@@ -41,7 +41,7 @@ namespace PacManBot.Commands.Modules
             "When this command is used, you will be sent a DM asking for a word or phrase in private. " +
             "Once you give it, the game will start in the original channel where you used this command.\n" +
             "Anyone will be able to guess either a letter or the full phrase. Up to 10 wrong guesses!\n\n" +
-            "To start a normal game with a random word, use **{prefix}hangman**")]
+            "To start a normal game with a random word, use `hangman`")]
         [RequireGuild]
         public async Task StartHangmanCustom(CommandContext ctx)
         {
