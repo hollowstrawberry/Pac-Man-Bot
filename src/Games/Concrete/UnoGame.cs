@@ -710,7 +710,7 @@ namespace PacManBot.Games.Concrete
                 {
                     player.message = await (await player.GetUserAsync() as DiscordMember).SendMessageAsync(embed: embed.Build());
                 }
-                catch (BadRequestException)
+                catch (UnauthorizedException)
                 {
                     gameLog.Add($"{await player.MentionAsync()} You can't play unless you have DMs enabled!\n");
                     await RemovePlayerAsync(player);

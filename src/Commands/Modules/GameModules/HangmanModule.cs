@@ -62,7 +62,7 @@ namespace PacManBot.Commands.Modules
                 await dm.SendMessageAsync(
                     $"Send the secret word or phrase for the {Game(ctx).GameName} game in {ctx.Channel.Mention}:");
             }
-            catch (BadRequestException)
+            catch (UnauthorizedException)
             {
                 await ctx.RespondAsync($"{ctx.User.Mention} You must enable DMs!");
                 EndGame(ctx);

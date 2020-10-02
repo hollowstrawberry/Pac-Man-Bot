@@ -12,7 +12,6 @@ using PacManBot.Extensions;
 namespace PacManBot.Commands.Modules
 {
     [Module(ModuleNames.Mod)]
-    [RequireUserPermissions(Permissions.ManageMessages)]
     [RequireBotPermissions(BaseBotPermissions)]
     public class ModModule : BasePmBotModule
     {
@@ -21,14 +20,18 @@ namespace PacManBot.Commands.Modules
 
 
         [Command("say")]
-        [Description("Repeats back the message provided. Only users with the Manage Messages permission can use this command.")]
-        public async Task Say(CommandContext ctx, [RemainingText]string message)
-            => await ctx.RespondAsync(message?.SanitizeMentions());
+        [Description("Repeats back the message provided.")]
+        [RequireUserPermissions(Permissions.ManageMessages)]
+        public Task Say(CommandContext ctx, [RemainingText] string message)
+        {
+            if (string.IsNullOrWhiteSpace(message)) return ctx.RespondAsync("Did you want me to say something?");
+            return ctx.RespondAsync(message.SanitizeMentions());
+        }
 
 
         [Command("clear"), Aliases("clean")]
         [Description("Clears all commands and messages for *this bot only*, by default the last 10 commands.")]
-        [RequireGuild]
+        [RequireGuild, RequireUserPermissions(Permissions.ManageMessages)]
         public async Task ClearCommandMessages(CommandContext ctx, int amount = 10)
         {
             if (amount < 1 || amount > 100)
