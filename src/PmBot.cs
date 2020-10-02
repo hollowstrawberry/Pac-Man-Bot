@@ -154,22 +154,29 @@ namespace PacManBot
 
         private async Task UpdateGuildCountAsync()
         {
-            if (discordBotList == null || (DateTime.Now - lastGuildCountUpdate).TotalMinutes < 30.0) return;
-
-            int guilds = 0;
-            foreach (var shard in shardedClient.ShardClients.Values)
+            try
             {
-                guilds += shard.Guilds.Count;
-            }
+                if (discordBotList == null || (DateTime.Now - lastGuildCountUpdate).TotalMinutes < 30.0) return;
 
-            var recordedGuilds = (await discordBotList.GetBotStatsAsync(shardedClient.CurrentUser.Id)).GuildCount;
-            if (recordedGuilds < guilds)
+                int guilds = 0;
+                foreach (var shard in shardedClient.ShardClients.Values)
+                {
+                    guilds += shard.Guilds.Count;
+                }
+
+                var recordedGuilds = (await discordBotList.GetBotStatsAsync(shardedClient.CurrentUser.Id)).GuildCount;
+                if (recordedGuilds < guilds)
+                {
+                    await discordBotList.UpdateStats(guilds, shardedClient.ShardClients.Count);
+                    lastGuildCountUpdate = DateTime.Now;
+                }
+
+                log.Info($"Guild count updated to {guilds}");
+            }
+            catch (Exception e)
             {
-                await discordBotList.UpdateStats(guilds, shardedClient.ShardClients.Count);
-                lastGuildCountUpdate = DateTime.Now;
+                log.Exception("While updating guild count", e);
             }
-
-            log.Info($"Guild count updated to {guilds}");
         }
     }
 }

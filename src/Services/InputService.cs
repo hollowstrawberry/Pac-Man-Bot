@@ -96,30 +96,25 @@ namespace PacManBot.Services
             if (message.Author != null && !message.Author.IsBot
                     && message.Channel.BotCan(Permissions.SendMessages | Permissions.ReadMessageHistory))
             {
-                _ = InnerOnMessageReceivedAsync(message, client);
+                try
+                {
+                    if (PendingResponse(message)
+                        || MessageGameInput(message)
+                        || Command(message, client))
+                    {
+                        if (message.Channel.Guild != null)
+                        {
+                            _ = EnsureUsersDownloadedAsync(message.Channel.Guild);
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    log.Exception($"In {message.Channel.DebugName()}", e);
+                }
             }
 
             return Task.CompletedTask;
-        }
-
-        private async Task InnerOnMessageReceivedAsync(DiscordMessage message, DiscordClient client)
-        {
-            try
-            {
-                if (PendingResponse(message)
-                    || await MessageGameInputAsync(message)
-                    || await CommandAsync(message, client))
-                {
-                    if (message.Channel.Guild != null)
-                    {
-                        await EnsureUsersDownloadedAsync(message.Channel.Guild);
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                log.Exception($"In {message.Channel.DebugName()}", e);
-            }
         }
 
         private Task OnReactionAdded(DiscordClient client, MessageReactionAddEventArgs args)
@@ -221,12 +216,8 @@ namespace PacManBot.Services
                     || (DateTime.Now - last) > TimeSpan.FromMinutes(30))
                 {
                     lastGuildUsersDownload[guild.Id] = DateTime.Now;
-                    int oldCount = guild.Members.Count();
-
                     await guild.RequestMembersAsync();
-
-                    int time = (DateTime.Now - lastGuildUsersDownload[guild.Id]).Milliseconds;
-                    log.Info($"Downloaded {guild.Members.Count() - oldCount} users from {guild.DebugName()} in {time}ms");
+                    log.Info($"Downloaded users from {guild.DebugName()}");
                 }
             }
         }
@@ -248,7 +239,7 @@ namespace PacManBot.Services
 
 
         /// <summary>Tries to find and execute a command. Returns whether it is successful.</summary>
-        private async ValueTask<bool> CommandAsync(DiscordMessage message, DiscordClient client)
+        private bool Command(DiscordMessage message, DiscordClient client)
         {
             string prefix = storage.GetGuildPrefix(message.Channel?.Guild);
             bool requiresPrefix = storage.RequiresPrefix(message.Channel);
@@ -265,7 +256,7 @@ namespace PacManBot.Services
                 var command = commands.FindCommand(message.Content.Substring(pos), out string rawArguments);
                 if (command == null) return false;
                 var context = commands.CreateContext(message, pos == 0 ? "" : prefix, command, rawArguments);
-                await commands.ExecuteCommandAsync(context);
+                _ = commands.ExecuteCommandAsync(context);
                 return true;
             }
 
@@ -274,14 +265,14 @@ namespace PacManBot.Services
 
 
         /// <summary>Tries to find a game and execute message input. Returns whether it is successful.</summary>
-        private async ValueTask<bool> MessageGameInputAsync(DiscordMessage message)
+        private bool MessageGameInput(DiscordMessage message)
         {
             var game = games.GetForChannel<IMessagesGame>(message.Channel.Id);
-            if (game == null || !await game.IsInputAsync(message.Content, message.Author.Id)) return false;
+            if (game == null || !game.IsInput(message.Content, message.Author.Id)) return false;
 
             try
             {
-                await ExecuteMessageGameInputAsync(game, message);
+                _ = ExecuteMessageGameInputAsync(game, message);
             }
             catch (Exception e)
             {

@@ -298,7 +298,7 @@ namespace PacManBot.Games.Concrete
 
 
 
-        public async ValueTask<bool> IsInputAsync(string value, ulong userId)
+        public bool IsInput(string value, ulong userId)
         {
             if (players.Count < 2) return false;
 
@@ -308,7 +308,7 @@ namespace PacManBot.Games.Concrete
             {
                 if (value == "cards" || value == "uno" || value == "callout") return true;
 
-                if (userId == (await CurrentPlayer.GetUserAsync()).Id)
+                if (userId == (CurrentPlayer.GetUserAsync().GetAwaiter().GetResult()).Id)
                 {
                     if (IsWaitingForColor()) return Enum.TryParse<CardColor>(value, true, out _); // Wild color
                     else return value == "draw" || value == "skip" || value.Contains("auto") || Card.Parse(value, this).HasValue;

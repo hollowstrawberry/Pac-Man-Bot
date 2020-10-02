@@ -52,7 +52,7 @@ namespace PacManBot.Games.Concrete
 
 
 
-        public ValueTask<bool> IsInputAsync(string value, ulong userId)
+        public bool IsInput(string value, ulong userId)
         {
             value = StripPrefix(value.ToUpperInvariant());
 
@@ -62,8 +62,8 @@ namespace PacManBot.Games.Concrete
                 || !Alphabet.IsMatch(value)
                 || value.Length == 1 && wrongChars.Contains(value[0])
                 || value.Length == 1 && progress.Contains(value[0]))
-                return new ValueTask<bool>(false);
-            return new ValueTask<bool>(true);
+                return false;
+            return true;
         }
 
 

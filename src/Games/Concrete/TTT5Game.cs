@@ -38,10 +38,9 @@ namespace PacManBot.Games.Concrete
 
 
 
-        public ValueTask<bool> IsInputAsync(string value, ulong userId)
+        public bool IsInput(string value, ulong userId)
         {
-            return new ValueTask<bool>(
-                userId == UserId[Turn] && Regex.IsMatch(StripPrefix(value).ToUpperInvariant(), @"^[ABCDE][12345]$"));
+            return userId == UserId[Turn] && Regex.IsMatch(StripPrefix(value).ToUpperInvariant(), @"^[ABCDE][12345]$");
         }
 
 

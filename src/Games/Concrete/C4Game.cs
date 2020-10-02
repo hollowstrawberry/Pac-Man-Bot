@@ -39,10 +39,9 @@ namespace PacManBot.Games.Concrete
 
 
 
-        public ValueTask<bool> IsInputAsync(string value, ulong userId)
+        public bool IsInput(string value, ulong userId)
         {
-            return new ValueTask<bool>(
-                userId == UserId[Turn] && int.TryParse(StripPrefix(value), out int num) && num > 0 && num <= Columns);
+            return userId == UserId[Turn] && int.TryParse(StripPrefix(value), out int num) && num > 0 && num <= Columns;
         }
 
 

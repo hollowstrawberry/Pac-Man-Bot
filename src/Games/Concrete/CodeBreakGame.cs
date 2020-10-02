@@ -52,10 +52,10 @@ namespace PacManBot.Games.Concrete
             guesses = new List<string>();
         }
 
-        public ValueTask<bool> IsInputAsync(string value, ulong userId)
+        public bool IsInput(string value, ulong userId)
         {
             value = StripPrefix(value);
-            return new ValueTask<bool>(value.Length == Code.Length && Numbers.IsMatch(value));
+            return value.Length == Code.Length && Numbers.IsMatch(value);
         }
 
         public async Task InputAsync(string input, ulong userId = 1)
