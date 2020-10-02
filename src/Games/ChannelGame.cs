@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.Entities;
+using DSharpPlus.Exceptions;
 using PacManBot.Extensions;
 
 namespace PacManBot.Games
@@ -88,7 +89,8 @@ namespace PacManBot.Games
         {
             if (Channel != null && _message?.Id != MessageId)
             {
-                _message = await Channel.GetMessageAsync(MessageId);
+                try { _message = await Channel.GetMessageAsync(MessageId); }
+                catch (NotFoundException) { return _message = null; }
             }
             return _message;
         }

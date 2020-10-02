@@ -14,7 +14,8 @@ using PacManBot.Games.Concrete;
 namespace PacManBot.Commands.Modules
 {
     [Module(ModuleNames.Misc)]
-    public class MiscModule : BaseGameModule<IChannelGame>
+    [RequireBotPermissions(BaseBotPermissions)]
+    public class MiscModule : BaseGameModule<ChannelGame>
     {
         [Command("bump"), Aliases("b", "refresh"), Priority(2)]
         [Description(
@@ -110,7 +111,6 @@ namespace PacManBot.Commands.Modules
         [Command("party"), Aliases("blob", "dance"), Hidden]
         [Description("Takes a number which can be either an amount of emotes to send or a message ID to react to. " +
                  "Reacts to the command by default.")]
-        [RequirePermissions(Permissions.UseExternalEmojis | Permissions.AddReactions)]
         public async Task BlobDance(CommandContext ctx, ulong number = 0)
         {
             if (number < 1) await ctx.Message.CreateReactionAsync(CustomEmoji.EBlobDance);

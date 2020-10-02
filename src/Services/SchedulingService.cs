@@ -87,7 +87,7 @@ namespace PacManBot.Services
 
             if (count > 0)
             {
-                log.Info($"Removed {count} expired game{"s".If(count > 1)}", LogSource.Scheduling);
+                log.Info($"Removed {count} expired game{"s".If(count > 1)}");
             }
 
 
@@ -105,7 +105,7 @@ namespace PacManBot.Services
 
         private async void RestartBot(object state)
         {
-            log.Info("Restarting", LogSource.Scheduling);
+            log.Info("Restarting");
             await PrepareRestart.Invoke();
             Environment.Exit(ExitCodes.ScheduledReboot);
         }

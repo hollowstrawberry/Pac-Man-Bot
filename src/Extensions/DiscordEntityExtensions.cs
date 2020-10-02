@@ -17,7 +17,7 @@ namespace PacManBot.Extensions
         /// <summary>Modifies a message to update the game being displayed.</summary>
         public static async Task ModifyWithGameAsync(this DiscordMessage message, IChannelGame game)
         {
-            await message.ModifyAsync(await game.GetContentAsync(), (await game.GetEmbedAsync()).Build());
+            await message.ModifyAsync(await game.GetContentAsync(), (await game.GetEmbedAsync())?.Build());
         }
 
 

@@ -5,8 +5,11 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
+using DSharpPlus.CommandsNext.Attributes;
+using DSharpPlus.CommandsNext.Exceptions;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
+using DSharpPlus.Exceptions;
 using PacManBot.Extensions;
 using PacManBot.Games;
 using PacManBot.Games.Concrete;
@@ -54,6 +57,8 @@ namespace PacManBot.Services
             shard.MessageCreated += OnMessageReceived;
             shard.MessageReactionAdded += OnReactionAdded;
             shard.MessageReactionRemoved += OnReactionRemoved;
+            shard.GetCommandsNext().CommandErrored += OnCommandErrored;
+            shard.GetCommandsNext().CommandExecuted += OnCommandExecuted;
         }
 
 
@@ -63,6 +68,8 @@ namespace PacManBot.Services
             shard.MessageCreated -= OnMessageReceived;
             shard.MessageReactionAdded -= OnReactionAdded;
             shard.MessageReactionRemoved -= OnReactionRemoved;
+            shard.GetCommandsNext().CommandErrored -= OnCommandErrored;
+            shard.GetCommandsNext().CommandExecuted -= OnCommandExecuted;
         }
 
 
@@ -147,6 +154,65 @@ namespace PacManBot.Services
         }
 
 
+        private Task OnCommandExecuted(CommandsNextExtension sender, CommandExecutionEventArgs args)
+        {
+            log.Verbose($"Executed {args.Command.Name} for {args.Context.User.DebugName()} in {args.Context.Channel.DebugName()}");
+            return Task.CompletedTask;
+        }
+
+
+        private async Task OnCommandErrored(CommandsNextExtension sender, CommandErrorEventArgs args)
+        {
+            var ctx = args.Context;
+            switch (args.Exception)
+            {
+                case ArgumentException e when e.Message.Contains("suitable overload"):
+                    await ctx.RespondAsync($"Invalid command parameters for `{args.Command.Name}`");
+                    return;
+
+                case ChecksFailedException e:
+                    switch (e.FailedChecks.First())
+                    {
+                        case RequireOwnerAttribute _:
+                            return;
+
+                        case RequireBotPermissionsAttribute r when ctx.Guild != null:
+                            var curPerms = ctx.Channel.PermissionsFor(ctx.Guild.CurrentMember);
+                            var perms = (r.Permissions ^ curPerms) & r.Permissions; // missing
+                            await ctx.RespondAsync($"This bot requires permission to {perms.ToPermissionString().ToLower()}!");
+                            return;
+
+                        case RequireUserPermissionsAttribute r when ctx.Guild != null:
+                            curPerms = ctx.Channel.PermissionsFor(ctx.Member);
+                            perms = (r.Permissions ^ curPerms) & r.Permissions; // missing
+                            await ctx.RespondAsync($"You need permission to {perms.ToPermissionString().ToLower()} to use this command.");
+                            return;
+
+                        case RequireDirectMessageAttribute _:
+                        case RequireBotPermissionsAttribute _ when ctx.Guild == null:
+                        case RequireUserPermissionsAttribute _ when ctx.Guild == null:
+                            await ctx.RespondAsync("This command can only be used in DMs with the bot.");
+                            return;
+
+                        case RequireGuildAttribute _:
+                            await ctx.RespondAsync("This command can only be used in a guild.");
+                            return;
+
+                        default:
+                            await ctx.RespondAsync($"Can't execute command: {e.Message}");
+                            return;
+                    }
+
+                default:
+                    await ctx.RespondAsync($"Something went wrong! {args.Exception.Message}");
+
+                    log.Exception($"While executing {args.Command?.Name} for {ctx.User.DebugName()} " +
+                        $"in {ctx.Channel.DebugName()}", args.Exception);
+                    return;
+            }
+        }
+
+
         private async Task EnsureUsersDownloadedAsync(DiscordGuild guild)
         {
             if (guild != null && guild.MemberCount < 50000)
@@ -219,7 +285,7 @@ namespace PacManBot.Services
             }
             catch (Exception e)
             {
-                log.Exception($"During input \"{message.Content}\" in {game.Channel.DebugName()}", e, game.GameName);
+                log.Exception($"During input \"{message.Content}\" in {game.Channel.DebugName()}", e);
             }
 
             return true;
@@ -229,9 +295,7 @@ namespace PacManBot.Services
         {
             var gameMessage = await game.GetMessageAsync();
 
-            log.Verbose(
-                $"Input {message.Content} by {message.Author.DebugName()} in {message.Channel.DebugName()}",
-                game.GameName);
+            log.Verbose($"Input {message.Content} by {message.Author.DebugName()} in {message.Channel.DebugName()}");
 
             await game.InputAsync(message.Content, message.Author.Id);
 
@@ -270,16 +334,14 @@ namespace PacManBot.Services
             }
             catch (Exception e)
             {
-                log.Exception($"During input \"{emoji.GetDiscordName()}\" in {message.Channel.DebugName()}", e, game.GameName);
+                log.Exception($"During input \"{emoji.GetDiscordName()}\" in {message.Channel.DebugName()}", e);
             }
         }
 
         private async Task InnerExecuteReactionGameInputAsync(IReactionsGame game, DiscordMessage message, DiscordUser user, DiscordEmoji emoji)
         {
             var guild = message.Channel?.Guild;
-            log.Verbose(
-                $"Input {emoji.GetDiscordName()} by {user.DebugName()} in {message.Channel?.DebugName()}",
-                game.GameName);
+            log.Verbose($"Input {emoji.GetDiscordName()} by {user.DebugName()} in {message.Channel?.DebugName()}");
 
             await game.InputAsync(emoji, user.Id);
 

@@ -15,6 +15,7 @@ using PacManBot.Games;
 namespace PacManBot.Commands.Modules
 {
     [Module(ModuleNames.General)]
+    [RequireBotPermissions(BaseBotPermissions)]
     public class GeneralModule : BasePmBotModule
     {
         private static readonly IEnumerable<string> GameNames = ReflectionExtensions.AllTypes
@@ -83,11 +84,11 @@ namespace PacManBot.Commands.Modules
             var message = await ctx.RespondAsync($"{CustomEmoji.Loading} Waka");
             stopwatch.Stop();
 
-            var content = $"{CustomEmoji.PacMan} Waka in `{(int)stopwatch.ElapsedMilliseconds}`ms";
+            var content = $"{CustomEmoji.PacMan} Waka in `{(int)stopwatch.ElapsedMilliseconds}`ms **|** Latency `{ctx.Client.Ping}`ms";
 
             if (ctx.Client.ShardCount > 1)
             {
-                content += $" **|** Latency `{ctx.Client.Ping}` **|** `Shard {ctx.Client.ShardId + 1}/{ctx.Client.ShardCount}`";
+                content += $" **|** `Shard {ctx.Client.ShardId + 1}/{ctx.Client.ShardCount}`";
             }
 
             await message.ModifyAsync(content);                   

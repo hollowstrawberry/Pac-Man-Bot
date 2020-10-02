@@ -11,6 +11,7 @@ using PacManBot.Games.Concrete;
 namespace PacManBot.Commands.Modules
 {
     [Module(ModuleNames.Games)]
+    [RequireBotPermissions(BaseBotPermissions)]
     public class PacManModule : BaseGameModule<PacManGame>
     {
         [Command("pacman"), Priority(1)]

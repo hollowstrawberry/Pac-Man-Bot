@@ -522,7 +522,7 @@ namespace PacManBot.Games.Concrete
             }
             catch (Exception e)
             {
-                log.Exception($"Displaying game in {Channel.DebugName()}", e, GameName);
+                log.Exception($"Displaying game in {Channel.DebugName()}", e);
                 return new ValueTask<string>(
                     $"```There was an error displaying the game. {"Make sure your custom map is valid. ".If(custom)}" +
                     $"If this problem persists, please contact the author of the bot using the " +

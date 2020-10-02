@@ -13,6 +13,7 @@ namespace PacManBot.Commands.Modules
     [Module(ModuleNames.Games)]
     [Group("pet")]
     [Description("Take care of your own little wakagotchi!")]
+    [RequireBotPermissions(BaseBotPermissions)]
     public class PetModule : BaseGameModule<PetGame>
     {
         public string AdoptPetMessage(CommandContext ctx)

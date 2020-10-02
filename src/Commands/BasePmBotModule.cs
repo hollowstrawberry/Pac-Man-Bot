@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
-using DSharpPlus.CommandsNext.Attributes;
-using DSharpPlus.Entities;
 using PacManBot.Extensions;
 using PacManBot.Services;
 
@@ -13,10 +9,13 @@ namespace PacManBot.Commands
     /// <summary>
     /// The base for Pac-Man Bot modules, including their main services and some utilities.
     /// </summary>
-    [RequireBotPermissions(Permissions.ReadMessageHistory | Permissions.EmbedLinks |
-                           Permissions.UseExternalEmojis | Permissions.AddReactions)]
     public abstract class BasePmBotModule : BaseCommandModule
     {
+        /// <summary>Base permissions needed by all commands of the bot.</summary>
+        protected const Permissions BaseBotPermissions =
+            Permissions.ReadMessageHistory | Permissions.EmbedLinks |
+            Permissions.UseExternalEmojis | Permissions.AddReactions;
+
         /// <summary>Invisible character to be used in embeds.</summary>
         protected const string Empty = DiscordStringUtilities.Empty;
 

@@ -25,9 +25,6 @@ namespace PacManBot
         /// <summary>The prefix used for all guilds that don't set a custom prefix.</summary>
         [DataMember] public readonly string defaultPrefix = "<";
 
-        /// <summary>User IDs of users to be considered developers and able to use developer commands. Dangerous.</summary>
-        [DataMember] public readonly ulong[] developers = { };
-
         /// <summary>User IDs of people helping test and debug the bot. Effects may change at any point.</summary>
         [DataMember] public readonly ulong[] testers = { };
 

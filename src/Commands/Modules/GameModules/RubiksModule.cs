@@ -9,6 +9,7 @@ using PacManBot.Games.Concrete;
 namespace PacManBot.Commands.Modules
 {
     [Module(ModuleNames.Games)]
+    [RequireBotPermissions(BaseBotPermissions)]
     public class RubiksModule : BaseGameModule<RubiksGame>
     {
         [Command("rubik"), Aliases("rubiks", "rubix")]

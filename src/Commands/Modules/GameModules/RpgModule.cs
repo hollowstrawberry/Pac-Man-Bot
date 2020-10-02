@@ -19,6 +19,7 @@ namespace PacManBot.Commands.Modules
     [Description(
     "Play ReactionRPG, a new game where you beat monsters and level up." +
     "\nThe game is yours. You can play in **any channel** anywhere you go, even DMs with the bot.")]
+    [RequireBotPermissions(BaseBotPermissions)]
     public class RpgModule : BaseGameModule<RpgGame>
     {
         [GroupCommand, Aliases("fight", "battle"), Priority(-1)]
@@ -135,7 +136,7 @@ namespace PacManBot.Commands.Modules
             else
             {
                 await SaveGameAsync(ctx);
-                try { await msg.ModifyAsync(default, Game(ctx).fightEmbed.Build()); }
+                try { await msg.ModifyAsync(default, Game(ctx).fightEmbed?.Build()); }
                 catch (NotFoundException) { }
             }
 

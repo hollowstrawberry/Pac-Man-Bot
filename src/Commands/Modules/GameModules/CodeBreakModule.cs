@@ -6,6 +6,7 @@ using PacManBot.Games.Concrete;
 namespace PacManBot.Commands.Modules
 {
     [Module(ModuleNames.Games)]
+    [RequireBotPermissions(BaseBotPermissions)]
     public class CodeBreakModule : BaseGameModule<CodeBreakGame>
     {
         [Command("codebreak"), Aliases("code", "break")]

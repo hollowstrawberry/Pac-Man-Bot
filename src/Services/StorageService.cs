@@ -17,13 +17,11 @@ namespace PacManBot.Services
     /// </summary>
     public class StorageService
     {
-        private readonly DiscordShardedClient client;
         private readonly LoggingService log;
         private readonly string dbConnection;
 
 
         private readonly ConcurrentDictionary<ulong, string> cachedPrefixes;
-        private readonly ConcurrentDictionary<ulong, bool> cachedAllowsAutoresponse;
         private readonly ConcurrentDictionary<ulong, bool> cachedNeedsPrefix;
 
         public string DefaultPrefix { get; }
@@ -32,23 +30,21 @@ namespace PacManBot.Services
         private PacManDbContext MakeDbContext() => new PacManDbContext(dbConnection);
 
 
-        public StorageService(PmBotConfig config, DiscordShardedClient client, LoggingService log)
+        public StorageService(PmBotConfig config, LoggingService log)
         {
-            this.client = client;
             this.log = log;
 
             DefaultPrefix = config.defaultPrefix;
             dbConnection = config.dbConnectionString;
 
             cachedPrefixes = new ConcurrentDictionary<ulong, string>();
-            cachedAllowsAutoresponse = new ConcurrentDictionary<ulong, bool>();
             cachedNeedsPrefix = new ConcurrentDictionary<ulong, bool>();
 
             using (var db = MakeDbContext())
             {
                 db.Database.EnsureCreated();
                 db.Prefixes.Find((ulong)0);
-                log.Info("Database ready", LogSource.Storage);
+                log.Info("Database ready");
             }
         }
 
@@ -168,7 +164,7 @@ namespace PacManBot.Services
                 db.SaveChanges();
             }
 
-            log.Verbose($"New scoreboard entry: {entry}", LogSource.Storage);
+            log.Verbose($"New scoreboard entry: {entry}");
         }
 
 
@@ -187,7 +183,7 @@ namespace PacManBot.Services
                 if (userId != null) scores = scores.Where(x => x.UserId == userId);
 
                 var list = scores.OrderByDescending(x => x.Score).Skip(start).Take(amount).ToList();
-                log.Verbose($"Grabbed {list.Count} score entries", LogSource.Storage);
+                log.Verbose($"Grabbed {list.Count} score entries");
                 return list;
             }
         }

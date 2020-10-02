@@ -55,8 +55,6 @@ namespace PacManBot
             {
                 commands.RegisterCommands(typeof(PmBot).Assembly);
                 commands.SetHelpFormatter<HelpFormatter>();
-                commands.CommandExecuted += OnCommandExecuted;
-                commands.CommandErrored += OnCommandErrored;
             }
 
             await games.LoadGamesAsync();
@@ -127,31 +125,6 @@ namespace PacManBot
             await Task.Delay(6_000); // Buffer time to finish up doing whatever
 
             await shardedClient.StopAsync();
-        }
-
-
-        private Task OnCommandExecuted(CommandsNextExtension sender, CommandExecutionEventArgs args)
-        {
-            log.Verbose($"Executed {args.Command.Name} for {args.Context.User.DebugName()} in {args.Context.Channel.DebugName()}");
-            return Task.CompletedTask;
-        }
-
-        private async Task OnCommandErrored(CommandsNextExtension sender, CommandErrorEventArgs args)
-        {
-            switch (args.Exception)
-            {
-                case ArgumentException e when e.Message.Contains("suitable overload"):
-                    await args.Context.RespondAsync($"Invalid command parameters for `{args.Command.Name}`");
-                    break;
-
-                default:
-                    await args.Context.RespondAsync($"Something went wrong! {args.Exception.Message}");
-                    log.Exception($"While executing {args.Command?.Name} for {args.Context.User.DebugName()} " +
-                        $"in {args.Context.Channel.DebugName()}", args.Exception);
-                    return;
-            }
-            log.Verbose($"Couldn't execute {args.Command.Name} for {args.Context.User.DebugName()} " +
-                $"in {args.Context.Channel.DebugName()}:\n{args.Exception}");
         }
 
 

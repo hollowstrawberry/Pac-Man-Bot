@@ -7,6 +7,7 @@ using PacManBot.Games.Concrete;
 namespace PacManBot.Commands.Modules
 {
     [Module(ModuleNames.Games)]
+    [RequireBotPermissions(BaseBotPermissions)]
     public class TicTacToeModule : MultiplayerGameModule<TicTacToeGame>
     {
         [Command("tictactoe"), Aliases("ttt", "tic"), Priority(1)]

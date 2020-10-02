@@ -28,7 +28,7 @@ namespace PacManBot.Services
             minClientLogLevel = config.clientLogLevel;
             hardExclusions = config.logExclude;
 
-            const string template = "{Timestamp:HH:mm:ss}|{Level:u3}|{Message}{NewLine}";
+            const string template = "{Timestamp:HH:mm:ss}|{Level:u3}> {Message}{NewLine}";
 
             logger = new LoggerConfiguration()
                 .MinimumLevel.Verbose()
@@ -44,58 +44,54 @@ namespace PacManBot.Services
             if (logLevel < minClientLogLevel) return;
             var message = formatter(state, exception);
             if (message.ContainsAny(hardExclusions)) return;
-            logger.Write((Serilog.Events.LogEventLevel)logLevel, $"{LogSource.Client}> {message}");
+            logger.Write((Serilog.Events.LogEventLevel)logLevel, message);
         }
 
         /// <summary>Logs a message.</summary>
-        public void Log(string message, LogLevel logLevel, string source = LogSource.Bot)
+        public void Log(string message, LogLevel logLevel)
         {
             if (logLevel < minLogLevel || message.ContainsAny(hardExclusions)) return;
-            logger.Write((Serilog.Events.LogEventLevel)logLevel, $"{source}> {message}");
+            logger.Write((Serilog.Events.LogEventLevel)logLevel, message);
         }
 
 
         /// <summary>Logs an exception. Connection-related exceptions will be treated as warnings,
         /// while more important exceptions will be treated as an error.</summary>
-        public void Exception(string message, Exception e, string source = LogSource.Bot)
+        public void Exception(string message, Exception e)
         {
             if (message != null) message += " - ";
 
             if (e is ServerErrorException || e is RateLimitException
                 || e is TimeoutException || e is OperationCanceledException)
             {
-                Warning($"{message}{e.GetType()}: {e.Message}", source);
+                Warning($"{message}{e.GetType()}: {e.Message}");
             }
             else
             {
-                Error($"{message}{e}", source); // Full stacktrace
+                Error($"{message}{e}"); // Full stacktrace
             }
         }
 
 
         /// <summary>Logs a message.</summary>
-        public void Debug(string message, string source = LogSource.Bot)
-            => Log(message, LogLevel.Debug, source);
+        public void Verbose(string message)
+            => Log(message, LogLevel.Debug);
 
         /// <summary>Logs a message.</summary>
-        public void Verbose(string message, string source = LogSource.Bot)
-            => Log(message, LogLevel.Debug, source);
+        public void Info(string message)
+            => Log(message, LogLevel.Information);
 
         /// <summary>Logs a message.</summary>
-        public void Info(string message, string source = LogSource.Bot)
-            => Log(message, LogLevel.Information, source);
+        public void Warning(string message)
+            => Log(message, LogLevel.Warning);
 
         /// <summary>Logs a message.</summary>
-        public void Warning(string message, string source = LogSource.Bot)
-            => Log(message, LogLevel.Warning, source);
+        public void Error(string message)
+            => Log(message, LogLevel.Error);
 
         /// <summary>Logs a message.</summary>
-        public void Error(string message, string source = LogSource.Bot)
-            => Log(message, LogLevel.Error, source);
-
-        /// <summary>Logs a message.</summary>
-        public void Fatal(string message, string source = LogSource.Bot)
-            => Log(message, LogLevel.Critical, source);
+        public void Fatal(string message)
+            => Log(message, LogLevel.Critical);
 
 
         /// <summary>Release all resources used for logging.</summary>

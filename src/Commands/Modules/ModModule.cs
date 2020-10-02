@@ -12,6 +12,7 @@ namespace PacManBot.Commands.Modules
 {
     [Module(ModuleNames.Mod)]
     [RequireUserPermissions(Permissions.ManageMessages)]
+    [RequireBotPermissions(BaseBotPermissions)]
     public class ModModule : BasePmBotModule
     {
         string ContactMessage(CommandContext ctx) =>

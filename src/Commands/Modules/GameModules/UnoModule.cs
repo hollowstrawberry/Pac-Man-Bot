@@ -29,6 +29,7 @@ namespace PacManBot.Commands.Modules
     "or act like Skip cards with only two players." +
     " *Draw* cards force the next player to draw cards and skip a turn. *Wild* cards let you choose the color, " +
     "and will match with any card.")]
+    [RequireBotPermissions(BaseBotPermissions)]
     public class UnoModule : MultiplayerGameModule<UnoGame>
     {
         [GroupCommand, Priority(3)]

@@ -22,6 +22,7 @@ namespace PacManBot.Commands.Modules
 {
     [Module(ModuleNames.Dev)]
     [RequireOwner]
+    [RequireBotPermissions(BaseBotPermissions)]
     public class OwnerModule : BasePmBotModule
     {
         public PmBot Bot { get; set; }
@@ -56,7 +57,7 @@ namespace PacManBot.Commands.Modules
             var message = await ctx.RespondAsync(CustomEmoji.Loading);
             File.WriteAllText(Files.ManualRestart, $"{message.Channel.Id}/{message.Id}");
 
-            Log.Info("Restarting", LogSource.Owner);
+            Log.Info("Restarting");
             await Bot.StopAsync();
             Environment.Exit(ExitCodes.ManualReboot);
         }
@@ -114,13 +115,13 @@ namespace PacManBot.Commands.Modules
             {
                 this.ctx = ctx;
                 result = await Scripting.EvalAsync(code, this);
-                Log.Debug($"Successfully executed:\n {code}", LogSource.Eval);
+                Log.Info($"Successfully executed:\n {code}");
                 await ctx.AutoReactAsync(true);
             }
             catch (Exception e)
             {
                 result = e.Message;
-                Log.Debug($"{e}", LogSource.Eval);
+                Log.Info($"{e}");
                 await ctx.AutoReactAsync(false);
             }
 
@@ -245,7 +246,7 @@ namespace PacManBot.Commands.Modules
             }
             catch (Exception e)
             {
-                Log.Debug($"{e.Message}");
+                Log.Verbose($"{e.Message}");
                 await ctx.AutoReactAsync(false);
                 await ctx.RespondAsync($"```{e.Message}```");
             }
@@ -275,7 +276,7 @@ namespace PacManBot.Commands.Modules
         [Description("Stores an entry in the bot logs. Developer only")]
         public async Task DoLog(CommandContext ctx, [RemainingText]string message)
         {
-            Log.Info(message, LogSource.Owner);
+            Log.Info(message);
             await ctx.AutoReactAsync();
         }
 
@@ -317,7 +318,7 @@ namespace PacManBot.Commands.Modules
             }
             catch (Exception e)
             {
-                Log.Debug($"Reading file {filename}: {e.Message}");
+                Log.Verbose($"Reading file {filename}: {e.Message}");
                 await ctx.RespondAsync($"```Reading file {filename}: {e.Message}```");
             }
         }
@@ -387,7 +388,7 @@ namespace PacManBot.Commands.Modules
                 }
                 catch (Exception e)
                 {
-                    Log.Debug($"While executing debug game input: {e}");
+                    Log.Verbose($"While executing debug game input: {e}");
                     success = false;
                 }
             }
