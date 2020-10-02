@@ -235,7 +235,7 @@ namespace PacManBot.Commands.Modules
 
             var msg = ctx.Message;
 
-            if (name == "")
+            if (string.IsNullOrWhiteSpace(name))
             {
                 await ctx.RespondAsync("Say your pet's new name:");
 
@@ -408,28 +408,29 @@ namespace PacManBot.Commands.Modules
         [Description("Gives your pet to a loving family that will take care of it (Deletes pet forever)")]
         public async Task DeleteGame(CommandContext ctx)
         {
-            if (Game(ctx) == null)
+            var pet = Game(ctx);
+            if (pet == null)
             {
                 await ctx.RespondAsync(AdoptPetMessage(ctx));
                 return;
             }
 
-            if (string.IsNullOrWhiteSpace(Game(ctx).PetName))
+            if (string.IsNullOrWhiteSpace(pet.PetName))
             {
-                Games.Remove(Game(ctx));
-                await ctx.RespondAsync($"Goodbye {Game(ctx).GameName}!");
+                Games.Remove(pet);
+                await ctx.RespondAsync($"Goodbye {pet.GameName}!");
                 return;
             }
 
             await ctx.RespondAsync(
-                $"❗ Are you sure you want to release **{Game(ctx).PetName}**?\n" +
+                $"❗ Are you sure you want to release **{pet.PetName}**?\n" +
                 $"It will be gone forever, along with your stats and achievements, and you can't get it back.\n" +
                 $"Release your pet? (Yes/No)");
 
             if (await ctx.GetYesResponseAsync() ?? false)
             {
-                Games.Remove(Game(ctx));
-                await ctx.RespondAsync($"Goodbye {Game(ctx).PetName}!");
+                Games.Remove(pet);
+                await ctx.RespondAsync($"Goodbye {pet.PetName}!");
             }
             else await ctx.RespondAsync("Pet not released ❤");
         }

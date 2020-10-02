@@ -74,7 +74,7 @@ namespace PacManBot.Services
 
 
         /// <summary>Logs a message.</summary>
-        public void Verbose(string message)
+        public void Debug(string message)
             => Log(message, LogLevel.Debug);
 
         /// <summary>Logs a message.</summary>

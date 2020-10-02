@@ -164,7 +164,7 @@ namespace PacManBot.Services
                 db.SaveChanges();
             }
 
-            log.Verbose($"New scoreboard entry: {entry}");
+            log.Debug($"New scoreboard entry: {entry}");
         }
 
 
@@ -183,7 +183,7 @@ namespace PacManBot.Services
                 if (userId != null) scores = scores.Where(x => x.UserId == userId);
 
                 var list = scores.OrderByDescending(x => x.Score).Skip(start).Take(amount).ToList();
-                log.Verbose($"Grabbed {list.Count} score entries");
+                log.Debug($"Grabbed {list.Count} score entries");
                 return list;
             }
         }

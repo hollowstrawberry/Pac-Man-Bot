@@ -118,7 +118,7 @@ namespace PacManBot.Services
 
             if (success && doLog)
             {
-                log.Verbose($"Removed {game.GetType().Name} at {game.IdentifierId()}");
+                log.Debug($"Removed {game.GetType().Name} at {game.IdentifierId()}");
             }
         }
 

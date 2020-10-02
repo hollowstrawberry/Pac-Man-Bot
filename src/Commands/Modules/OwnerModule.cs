@@ -21,33 +21,12 @@ using PacManBot.Utils;
 namespace PacManBot.Commands.Modules
 {
     [Module(ModuleNames.Dev)]
-    [RequireOwner]
+    [RequireOwner, Hidden]
     [RequireBotPermissions(BaseBotPermissions)]
     public class OwnerModule : BasePmBotModule
     {
         public PmBot Bot { get; set; }
         public ScriptingService Scripting { get; set; }
-
-
-        [Command("dev"), Aliases("devcommands")]
-        [Description("Lists developer commands. Developer only.")]
-        public async Task ShowDevCommands(CommandContext ctx)
-        {
-            var commands = typeof(OwnerModule).GetMethods()
-                .Select(x => x.Get<CommandAttribute>()?.Name)
-                .Where(x => x != null)
-                .Distinct()
-                .JoinString(", ");
-
-            var embed = new DiscordEmbedBuilder
-            {
-                Title = $"{CustomEmoji.Staff} Developer Commands",
-                Color = Colors.PacManYellow,
-                Description = commands
-            };
-
-            await ctx.RespondAsync(embed);
-        }
 
 
         [Command("$restart"), Aliases("$shutdown"), Hidden]
@@ -246,7 +225,7 @@ namespace PacManBot.Commands.Modules
             }
             catch (Exception e)
             {
-                Log.Verbose($"{e.Message}");
+                Log.Debug($"{e.Message}");
                 await ctx.AutoReactAsync(false);
                 await ctx.RespondAsync($"```{e.Message}```");
             }
@@ -318,7 +297,7 @@ namespace PacManBot.Commands.Modules
             }
             catch (Exception e)
             {
-                Log.Verbose($"Reading file {filename}: {e.Message}");
+                Log.Debug($"Reading file {filename}: {e.Message}");
                 await ctx.RespondAsync($"```Reading file {filename}: {e.Message}```");
             }
         }
@@ -388,7 +367,7 @@ namespace PacManBot.Commands.Modules
                 }
                 catch (Exception e)
                 {
-                    Log.Verbose($"While executing debug game input: {e}");
+                    Log.Debug($"While executing debug game input: {e}");
                     success = false;
                 }
             }

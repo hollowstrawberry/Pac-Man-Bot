@@ -12,6 +12,7 @@ namespace PacManBot.Commands
             Games = CustomEmoji.GameCube + " Games",
             Misc = "💡 Misc";
 
-        public static readonly IReadOnlyList<string> Order = new string[] { Dev, General, Games, Misc, Mod };
+        public static readonly IReadOnlyList<string> Order
+            = new string[] { Dev, General, Games, Misc, Mod };
     }
 }

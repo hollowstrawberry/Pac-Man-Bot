@@ -4,7 +4,9 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using DSharpPlus;
 using DSharpPlus.CommandsNext;
+using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.CommandsNext.Converters;
 using DSharpPlus.CommandsNext.Entities;
 using DSharpPlus.Entities;
@@ -77,6 +79,14 @@ namespace PacManBot.Commands
 
                 embed.WithTitle(title.ToString()).WithDescription(Command.Description);
 
+                if (Command.ExecutionChecks.OfType<RequireOwnerAttribute>().Any())
+                    embed.AddField($"{CustomEmoji.Staff} Developer", "You can't use it!", true);
+                else if (Command.IsHidden)
+                    embed.AddField("👻 Hidden", "How did you find it?", true);
+
+                var userPerms = Command.ExecutionChecks.OfType<RequireUserPermissionsAttribute>().FirstOrDefault();
+                if (userPerms != null)
+                    embed.AddField("Requires Permissions", userPerms.Permissions.ToPermissionString(), true);
                 if (Command.Aliases.Any())
                     embed.AddField("Aliases", Command.Aliases.Select(x => $"`{x}`").JoinString(", "), true);
                 if (Subcommands != null)

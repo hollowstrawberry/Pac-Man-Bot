@@ -151,7 +151,7 @@ namespace PacManBot.Services
 
         private Task OnCommandExecuted(CommandsNextExtension sender, CommandExecutionEventArgs args)
         {
-            log.Verbose($"Executed {args.Command.Name} for {args.Context.User.DebugName()} in {args.Context.Channel.DebugName()}");
+            log.Debug($"Executed {args.Command.Name} for {args.Context.User.DebugName()} in {args.Context.Channel.DebugName()}");
             return Task.CompletedTask;
         }
 
@@ -198,6 +198,10 @@ namespace PacManBot.Services
                             return;
                     }
 
+                case CommandNotFoundException e when args.Command.Name == "help":
+                    await ctx.RespondAsync($"The command `{e.CommandName}` doesn't exist!");
+                    return;
+
                 default:
                     await ctx.RespondAsync($"Something went wrong! {args.Exception.Message}");
 
@@ -217,7 +221,7 @@ namespace PacManBot.Services
                 {
                     lastGuildUsersDownload[guild.Id] = DateTime.Now;
                     await guild.RequestMembersAsync();
-                    log.Info($"Downloaded users from {guild.DebugName()}");
+                    log.Debug($"Downloaded users from {guild.DebugName()}");
                 }
             }
         }
@@ -286,7 +290,7 @@ namespace PacManBot.Services
         {
             var gameMessage = await game.GetMessageAsync();
 
-            log.Verbose($"Input {message.Content} by {message.Author.DebugName()} in {message.Channel.DebugName()}");
+            log.Debug($"Input {message.Content} by {message.Author.DebugName()} in {message.Channel.DebugName()}");
 
             await game.InputAsync(message.Content, message.Author.Id);
 
@@ -332,7 +336,7 @@ namespace PacManBot.Services
         private async Task InnerExecuteReactionGameInputAsync(IReactionsGame game, DiscordMessage message, DiscordUser user, DiscordEmoji emoji)
         {
             var guild = message.Channel?.Guild;
-            log.Verbose($"Input {emoji.GetDiscordName()} by {user.DebugName()} in {message.Channel?.DebugName()}");
+            log.Debug($"Input {emoji.GetDiscordName()} by {user.DebugName()} in {message.Channel?.DebugName()}");
 
             await game.InputAsync(emoji, user.Id);
 
