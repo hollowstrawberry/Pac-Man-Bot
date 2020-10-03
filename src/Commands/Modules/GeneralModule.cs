@@ -41,7 +41,7 @@ namespace PacManBot.Commands.Modules
                 .AddField("Host", Environment.MachineName, true)
                 .AddField("Owner", app.Owners.Select(x => x.NameandDisc()).JoinString(", "), true)
                 .AddField("Bot version", Program.Version, true)
-                .AddField("Library", $"DSharpPlus {dsp.Major}.{dsp.Minor} (C#)", true);
+                .AddField("Library", $"DSharpPlus {dsp.Major}.{dsp.Minor}.{dsp.Revision}", true);
 
             foreach (var (name, desc) in Content.aboutFields)
             {
