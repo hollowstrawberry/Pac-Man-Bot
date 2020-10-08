@@ -32,11 +32,17 @@ namespace PacManBot.Commands.Modules
             var app = await ctx.Client.GetCurrentApplicationAsync();
             var dsp = typeof(DiscordClient).Assembly.GetName().Version;
 
+            int guilds = 0;
+            foreach (var shard in ShardedClient.ShardClients.Values)
+            {
+                guilds += shard.Guilds.Count;
+            }
+
             var embed = new DiscordEmbedBuilder()
                 .WithTitle($"PacMan Bot {CustomEmoji.PacMan}•••")
                 .WithDescription(Content.about.Replace("{prefix}", ctx.Prefix))
                 .WithColor(Colors.PacManYellow)
-                .AddField("Total guilds", $"{ctx.Client.Guilds.Count}", true)
+                .AddField("Total guilds", $"{guilds}", true)
                 .AddField("Total games", $"{Games.AllGames.Count()}", true)
                 .AddField("Host", Environment.MachineName, true)
                 .AddField("Owner", app.Owners.Select(x => x.NameandDisc()).JoinString(", "), true)
@@ -58,12 +64,18 @@ namespace PacManBot.Commands.Modules
         {
             var process = Process.GetCurrentProcess();
 
+            int guilds = 0;
+            foreach (var shard in ShardedClient.ShardClients.Values)
+            {
+                guilds += shard.Guilds.Count;
+            }
+
             var embed = new DiscordEmbedBuilder()
                 .WithTitle($"PacMan Bot {CustomEmoji.PacMan}•••")
                 .WithColor(Colors.PacManYellow)
 
                 .AddField("Latency", $"{ctx.Client.Ping}ms", true)
-                .AddField("Total guilds", $"{ctx.Client.Guilds.Count}", true)
+                .AddField("Total guilds", $"{guilds}", true)
                 .AddField("Total games", $"{Games.AllGames.Count()}", true)
 
                 .AddField("Memory", $"{process.PrivateMemorySize64 / 1024 / 1024.0:n2} MB", true)
