@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
 using PacManBot.Games;
@@ -7,7 +6,7 @@ using PacManBot.Games;
 namespace PacManBot.Commands
 {
     /// <summary>A module equipped to run multiplayer games.</summary>
-    public abstract class MultiplayerGameModule<TGame> : BaseGameModule<TGame>
+    public abstract class BaseMultiplayerModule<TGame> : BaseGameModule<TGame>
         where TGame : MultiplayerGame
     {
         protected override TGame Game(CommandContext ctx)

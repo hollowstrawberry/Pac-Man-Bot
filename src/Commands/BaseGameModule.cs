@@ -15,7 +15,7 @@ namespace PacManBot.Commands
     /// The base for a module that controls a game.
     /// </summary>
     /// <typeparam name="TGame">The game type that this module controls.</typeparam>
-    public abstract class BaseGameModule<TGame> : BasePmBotModule
+    public abstract class BaseGameModule<TGame> : BaseModule
         where TGame : class, IBaseGame
     {
         /// <summary>Obtains the game for the current context from the game service.</summary>
@@ -104,7 +104,7 @@ namespace PacManBot.Commands
 
 
         /// <summary>If a game already exists in this channel, sends a message and returns true.</summary>
-        public async Task<bool> CheckGameAlreadyExistsAsync(CommandContext ctx)
+        public async ValueTask<bool> CheckGameAlreadyExistsAsync(CommandContext ctx)
         {
             var existing = Games.GetForChannel(ctx.Channel.Id);
             if (existing != null)

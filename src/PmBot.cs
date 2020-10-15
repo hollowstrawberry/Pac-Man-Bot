@@ -51,9 +51,9 @@ namespace PacManBot
                 UseDefaultCommandHandler = false,
                 Services = services,
             });
-            foreach (var (shard, commands) in shardedClient.GetCommandsNext())
+            foreach (var (shard, commands) in await shardedClient.GetCommandsNextAsync())
             {
-                commands.RegisterCommands(typeof(PmBot).Assembly);
+                commands.RegisterCommands(typeof(BaseModule).Assembly);
                 commands.SetHelpFormatter<HelpFormatter>();
             }
 

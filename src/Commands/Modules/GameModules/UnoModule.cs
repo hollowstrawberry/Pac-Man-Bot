@@ -13,13 +13,13 @@ using PacManBot.Games.Concrete;
 
 namespace PacManBot.Commands.Modules
 {
-    [Module(ModuleNames.Games)]
+    [Category(Categories.Games)]
     [Group("uno")]
     [Description("Play Uno with your friends or bots!\n" +
     "__Tip__: Switching back and forth with DMs to see your cards can be tiresome, " +
     "so try having your cards open in your phone while you're playing in a computer.")]
     [RequireBotPermissions(BaseBotPermissions)]
-    public class UnoModule : MultiplayerGameModule<UnoGame>
+    public class UnoModule : BaseMultiplayerModule<UnoGame>
     {
         [GroupCommand, Priority(3)]
         public async Task StartUno(CommandContext ctx, params DiscordMember[] startingPlayers)

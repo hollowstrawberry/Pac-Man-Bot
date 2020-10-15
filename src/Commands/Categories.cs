@@ -3,7 +3,7 @@ using PacManBot.Constants;
 
 namespace PacManBot.Commands
 {
-    static class ModuleNames
+    public static class Categories
     {
         public const string
             Dev = CustomEmoji.Discord + " Developer",

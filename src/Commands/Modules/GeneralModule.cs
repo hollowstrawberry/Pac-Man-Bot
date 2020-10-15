@@ -14,9 +14,9 @@ using PacManBot.Games;
 
 namespace PacManBot.Commands.Modules
 {
-    [Module(ModuleNames.General)]
+    [Category(Categories.General)]
     [RequireBotPermissions(BaseBotPermissions)]
-    public class GeneralModule : BasePmBotModule
+    public class GeneralModule : BaseModule
     {
         private static readonly IEnumerable<string> GameNames = ReflectionExtensions.AllTypes
             .MakeObjects<BaseGame>()
@@ -47,7 +47,7 @@ namespace PacManBot.Commands.Modules
                 .AddField("Host", Environment.MachineName, true)
                 .AddField("Owner", app.Owners.Select(x => x.NameandDisc()).JoinString(", "), true)
                 .AddField("Bot version", Program.Version, true)
-                .AddField("Library", $"DSharpPlus {dsp.Major}.{dsp.Minor}.{dsp.Revision}", true);
+                .AddField("Library", $"DSharpPlus {dsp.Major}.{dsp.Minor}-{dsp.Revision}", true);
 
             foreach (var (name, desc) in Content.aboutFields)
             {

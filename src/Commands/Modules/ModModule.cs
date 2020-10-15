@@ -11,9 +11,9 @@ using PacManBot.Extensions;
 
 namespace PacManBot.Commands.Modules
 {
-    [Module(ModuleNames.Mod)]
+    [Category(Categories.Mod)]
     [RequireBotPermissions(BaseBotPermissions)]
-    public class ModModule : BasePmBotModule
+    public class ModModule : BaseModule
     {
         string ContactMessage(CommandContext ctx) =>
             $"Please try again or, if the problem persists, contact the bot owner using `{Storage.GetPrefix(ctx)}feedback`.";

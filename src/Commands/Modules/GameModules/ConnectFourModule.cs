@@ -6,9 +6,9 @@ using PacManBot.Games.Concrete;
 
 namespace PacManBot.Commands.Modules
 {
-    [Module(ModuleNames.Games)]
+    [Category(Categories.Games)]
     [RequireBotPermissions(BaseBotPermissions)]
-    public class ConnectFourModule : MultiplayerGameModule<C4Game>
+    public class ConnectFourModule : BaseMultiplayerModule<C4Game>
     {
         [Command("connect4"), Aliases("c4", "four"), Priority(1)]
         [Description(

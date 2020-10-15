@@ -20,10 +20,10 @@ using PacManBot.Utils;
 
 namespace PacManBot.Commands.Modules
 {
-    [Module(ModuleNames.Dev)]
+    [Category(Categories.Dev)]
     [RequireOwner, Hidden]
     [RequireBotPermissions(BaseBotPermissions)]
-    public class OwnerModule : BasePmBotModule
+    public class OwnerModule : BaseModule
     {
         public PmBot Bot { get; set; }
         public ScriptingService Scripting { get; set; }

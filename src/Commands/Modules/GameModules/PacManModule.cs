@@ -10,7 +10,7 @@ using PacManBot.Games.Concrete;
 
 namespace PacManBot.Commands.Modules
 {
-    [Module(ModuleNames.Games)]
+    [Category(Categories.Games)]
     [RequireBotPermissions(BaseBotPermissions)]
     public class PacManModule : BaseGameModule<PacManGame>
     {

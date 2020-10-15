@@ -13,7 +13,7 @@ using PacManBot.Games.Concrete;
 
 namespace PacManBot.Commands.Modules
 {
-    [Module(ModuleNames.Misc)]
+    [Category(Categories.Misc)]
     [RequireBotPermissions(BaseBotPermissions)]
     public class MiscModule : BaseGameModule<ChannelGame>
     {

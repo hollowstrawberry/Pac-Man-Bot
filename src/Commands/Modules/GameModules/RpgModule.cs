@@ -14,7 +14,7 @@ using PacManBot.Games.Concrete.Rpg;
 
 namespace PacManBot.Commands.Modules
 {
-    [Module(ModuleNames.Games)]
+    [Category(Categories.Games)]
     [Group("rpg")]
     [Description(
     "Play ReactionRPG, a new game where you beat monsters and level up." +

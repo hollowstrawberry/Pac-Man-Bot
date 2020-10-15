@@ -9,7 +9,7 @@ namespace PacManBot.Commands
     /// <summary>
     /// The base for Pac-Man Bot modules, including their main services and some utilities.
     /// </summary>
-    public abstract class BasePmBotModule : BaseCommandModule
+    public abstract class BaseModule : BaseCommandModule
     {
         /// <summary>Base permissions needed by all commands of the bot.</summary>
         protected const Permissions BaseBotPermissions =

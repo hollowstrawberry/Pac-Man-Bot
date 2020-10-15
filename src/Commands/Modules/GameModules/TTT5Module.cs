@@ -6,9 +6,9 @@ using PacManBot.Games.Concrete;
 
 namespace PacManBot.Commands.Modules
 {
-    [Module(ModuleNames.Games)]
+    [Category(Categories.Games)]
     [RequireBotPermissions(BaseBotPermissions)]
-    public class TTT5Module : MultiplayerGameModule<TTT5Game>
+    public class TTT5Module : BaseMultiplayerModule<TTT5Game>
     {
         [Command("5ttt"), Aliases("ttt5", "5tictactoe", "5tic"), Priority(1)]
         [Description(

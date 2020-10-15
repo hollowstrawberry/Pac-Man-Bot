@@ -64,6 +64,8 @@ namespace PacManBot
 
 
 
+        /// <summary>Content used throughout the bot. Set using <see cref="LoadContent(string)"/>.</summary>
+        public PmBotContent Content { get; private set; }
 
 
         /// <summary>Reloads <see cref="Content"/> from the provided json.</summary>
@@ -82,32 +84,36 @@ namespace PacManBot
         }
 
 
-        /// <summary>Content used throughout the bot. Set using <see cref="LoadContent(string)"/>.</summary>
-        public PmBotContent Content { get; private set; }
-
-
         /// <summary>Gets a configuration object for a <see cref="DiscordSocketClient"/>.</summary>
-        public DiscordConfiguration ClientConfig => new DiscordConfiguration
+        public DiscordConfiguration MakeClientConfig(LoggingService log)
         {
-            Token = discordToken,
-            HttpTimeout = TimeSpan.FromSeconds(httpTimeout),
-            LoggerFactory = new LoggingServiceFactory(),
-            MinimumLogLevel = clientLogLevel,
-            MessageCacheSize = messageCacheSize,
-            
-            Intents =
+            return new DiscordConfiguration
+            {
+                Token = discordToken,
+                HttpTimeout = TimeSpan.FromSeconds(httpTimeout),
+                LoggerFactory = new LoggingServiceWrapper(log),
+                MinimumLogLevel = clientLogLevel,
+                MessageCacheSize = messageCacheSize,
+
+                Intents =
                 DiscordIntents.Guilds | DiscordIntents.DirectMessages | DiscordIntents.DirectMessageReactions
                 | DiscordIntents.GuildMembers | DiscordIntents.GuildMessages | DiscordIntents.GuildMessageReactions,
-        };
+            };
+        }
 
-        /// <summary> This shouldn't need to exist.</summary>
-        class LoggingServiceFactory : ILoggerFactory
+
+        class LoggingServiceWrapper : ILoggerFactory
         {
-            public LoggingServiceFactory() { }
+            public LoggingService Log { get; }
 
-            public ILogger CreateLogger(string categoryName) => LoggingService.Instance; // help
-            public void AddProvider(ILoggerProvider provider) { } // what
-            public void Dispose() { } // why
+            public LoggingServiceWrapper(LoggingService log)
+            {
+                Log = log;
+            }
+
+            public ILogger CreateLogger(string categoryName) => Log;
+            public void AddProvider(ILoggerProvider provider) { }
+            public void Dispose() { }
         }
     }
 }

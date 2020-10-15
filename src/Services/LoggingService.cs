@@ -2,7 +2,6 @@ using Serilog;
 using Serilog.Core;
 using System;
 using DSharpPlus;
-using PacManBot.Constants;
 using PacManBot.Extensions;
 using Microsoft.Extensions.Logging;
 using DSharpPlus.Exceptions;
@@ -14,8 +13,6 @@ namespace PacManBot.Services
     /// </summary>
     public class LoggingService : ILogger<DiscordShardedClient>, IDisposable
     {
-        public static LoggingService Instance { get; set; }
-
         private readonly Logger logger;
         private readonly LogLevel minLogLevel;
         private readonly LogLevel minClientLogLevel;

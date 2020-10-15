@@ -57,9 +57,9 @@ namespace PacManBot.Commands
                 }
 
                 var modules = Subcommands
-                    .GroupBy(x => x.Module.ModuleType.GetCustomAttribute<ModuleAttribute>()?.Name)
+                    .GroupBy(x => x.Module.ModuleType.GetCustomAttribute<CategoryAttribute>()?.Name)
                     .Where(x => x.Key != null)
-                    .OrderBy(x => ModuleNames.Order.IndexOf(x.Key));
+                    .OrderBy(x => Categories.Order.IndexOf(x.Key));
                 foreach (var commands in modules)
                 {
                     embed.AddField(commands.Key, commands.Select(x => $"`{x.Name}`").JoinString(", "), false);

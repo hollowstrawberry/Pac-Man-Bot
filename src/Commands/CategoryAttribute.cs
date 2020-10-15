@@ -1,18 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace PacManBot.Commands
 {
     /// <summary>
-    /// Marks this class as being part of a command module with a name and index
+    /// Marks this class as being part of a command category with a specific name
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
-    public class ModuleAttribute : Attribute
+    public class CategoryAttribute : Attribute
     {
         public string Name { get; private set; }
 
-        public ModuleAttribute(string name)
+        public CategoryAttribute(string name)
         {
             Name = name;
         }

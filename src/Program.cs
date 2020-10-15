@@ -59,14 +59,13 @@ namespace PacManBot
             }
 
             // Set up services
-            var log = LoggingService.Instance = new LoggingService(config);
-            log.Info($"Pac-Man Bot v{Version}");
+            var log = new LoggingService(config);
+            var discord = new DiscordShardedClient(config.MakeClientConfig(log));
 
             var serviceCollection = new ServiceCollection()
                 .AddSingleton(config)
-                .AddSingleton(config.ClientConfig)
-                .AddSingleton(LoggingService.Instance)
-                .AddSingleton<DiscordShardedClient>()
+                .AddSingleton(log)
+                .AddSingleton(discord)
                 .AddSingleton<PmBot>()
                 .AddSingleton<StorageService>()
                 .AddSingleton<InputService>()
@@ -79,6 +78,7 @@ namespace PacManBot
             // Let's go
             try
             {
+                log.Info($"Pac-Man Bot v{Version}");
                 await services.Get<PmBot>().StartAsync();
                 await Task.Delay(-1);
             }
