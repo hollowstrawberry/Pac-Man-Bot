@@ -93,7 +93,7 @@ namespace PacManBot.Services
         private Task OnMessageReceived(DiscordClient client, MessageCreateEventArgs args)
         {
             var message = args.Message;
-            if (message.Author != null && !message.Author.IsBot
+            if (message?.Author != null && !message.Author.IsBot
                     && message.Channel.BotCan(Permissions.SendMessages | Permissions.ReadMessageHistory))
             {
                 try

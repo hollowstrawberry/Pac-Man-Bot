@@ -29,6 +29,7 @@ namespace PacManBot
 
         private AuthDiscordBotListApi discordBotList = null;
         private DateTime lastGuildCountUpdate = DateTime.MinValue;
+        private int ready = 0;
 
 
         public PmBot(PmBotConfig config, IServiceProvider services)
@@ -60,6 +61,7 @@ namespace PacManBot
             await games.LoadGamesAsync();
 
             shardedClient.Ready += OnReadyAsync;
+            shardedClient.ClientErrored += OnClientErrored;
             schedule.PrepareRestart += StopAsync;
 
             await shardedClient.StartAsync();
@@ -69,44 +71,6 @@ namespace PacManBot
             if (!string.IsNullOrWhiteSpace(config.discordBotListToken))
             {
                 discordBotList = new AuthDiscordBotListApi(shardedClient.CurrentUser.Id, config.discordBotListToken);
-            }
-        }
-
-
-        private async Task OnReadyAsync(DiscordClient client, ReadyEventArgs args)
-        {
-            log.Info($"Shard {client.ShardId} is ready");
-
-            input.StartListening(client);
-            client.GuildCreated += OnJoinedGuild;
-            client.GuildDeleted += OnLeftGuild;
-            client.ChannelDeleted += OnChannelDeleted;
-
-            await client.UpdateStatusAsync(
-                new DiscordActivity($"with you!", ActivityType.Playing), UserStatus.Online, DateTime.Now);
-
-            if (schedule.timers == null) schedule.StartTimers();
-
-            if (File.Exists(Files.ManualRestart))
-            {
-                try
-                {
-                    ulong[] id = File.ReadAllText(Files.ManualRestart)
-                        .Split("/").Select(ulong.Parse).ToArray();
-
-                    var channel = await client.GetChannelAsync(id[0]);
-                    if (channel != null)
-                    {
-                        var message = await channel.GetMessageAsync(id[1]);
-                        if (message != null) await message.ModifyAsync(CustomEmoji.Check);
-                        File.Delete(Files.ManualRestart);
-                        log.Info("Resumed after manual restart");
-                    }
-                }
-                catch (Exception e)
-                {
-                    log.Warning($"Resuming after manual restart: {e.Message}");
-                }
             }
         }
 
@@ -128,10 +92,77 @@ namespace PacManBot
         }
 
 
+
+
+        private Task OnClientErrored(DiscordClient sender, ClientErrorEventArgs e)
+        {
+            log.Exception($"On {e.EventName} handler", e.Exception);
+            return Task.CompletedTask;
+        }
+
+
+        private Task OnReadyAsync(DiscordClient client, ReadyEventArgs args)
+        {
+            if (++ready == client.ShardCount)
+            {
+                _ = OnAllReadyAsync();
+            }
+            return Task.CompletedTask;
+        }
+
+
+        private async Task OnAllReadyAsync()
+        {
+            await Task.Delay(1000 * shardedClient.ShardClients.Count); // needs some time to chill on my raspberry pi
+
+            await shardedClient.UpdateStatusAsync(
+                new DiscordActivity($"with you!", ActivityType.Playing), UserStatus.Online, DateTime.Now);
+
+            foreach (var shard in shardedClient.ShardClients.Values)
+            {
+                input.StartListening(shard);
+                shard.GuildCreated += OnJoinedGuild;
+                shard.GuildDeleted += OnLeftGuild;
+                shard.ChannelDeleted += OnChannelDeleted;
+            }
+
+            log.Info($"All Shards ready");
+
+            schedule.StartTimers();
+
+            if (File.Exists(Files.ManualRestart))
+            {
+                try
+                {
+                    ulong[] id = File.ReadAllText(Files.ManualRestart)
+                        .Split("/").Select(ulong.Parse).ToArray();
+
+                    foreach (var shard in shardedClient.ShardClients.Values)
+                    {
+                        var channel = await shard.GetChannelAsync(id[0]);
+                        if (channel != null)
+                        {
+                            var message = await channel.GetMessageAsync(id[1]);
+                            if (message != null) await message.ModifyAsync(CustomEmoji.Check);
+                            File.Delete(Files.ManualRestart);
+                            log.Info("Resumed after manual restart");
+                            break;
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    log.Warning($"Resuming after manual restart: {e.Message}");
+                }
+            }
+        }
+
+
         private async Task OnJoinedGuild(DiscordClient sender, GuildCreateEventArgs args)
         {
             await UpdateGuildCountAsync();
         }
+
 
         private async Task OnLeftGuild(DiscordClient sender, GuildDeleteEventArgs args)
         {

@@ -33,7 +33,7 @@ namespace PacManBot.Services
                 .WriteTo.RollingFile("logs/{Date}.txt", outputTemplate: template)
                 .CreateLogger();
         }
-
+        
 
         /// <summary>Logs a message. Used by the Discord client.</summary>
         public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
@@ -59,7 +59,8 @@ namespace PacManBot.Services
             if (message != null) message += " - ";
 
             if (e is ServerErrorException || e is RateLimitException
-                || e is TimeoutException || e is OperationCanceledException)
+                || e is TimeoutException || e is OperationCanceledException
+                || e.GetType().Name.Contains("AsyncEventTimeoutException")) // stupid generic exception with no base
             {
                 Warning($"{message}{e.GetType()}: {e.Message}");
             }
