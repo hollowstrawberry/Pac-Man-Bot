@@ -28,6 +28,11 @@ namespace PacManBot.Extensions
             => method.Invoke(obj, parameters.Length == 0 ? null : parameters);
 
 
+        /// <summary>Whether a type is part of a generic type definition.</summary>
+        public static bool IsGeneric(this Type type, Type genericType)
+            => type.IsGenericType && type.GetGenericTypeDefinition() == genericType;
+
+
         /// <summary>Creates an instance of a given type using the default constructor and casts it to a known type.</summary>
         public static T CreateInstance<T>(this Type type)
             => (T)Activator.CreateInstance(type, true);

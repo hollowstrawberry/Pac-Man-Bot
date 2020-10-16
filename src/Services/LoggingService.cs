@@ -60,16 +60,14 @@ namespace PacManBot.Services
         /// while more important exceptions will be treated as an error.</summary>
         public void Exception(string message, Exception e)
         {
-            if (message != null) message += " - ";
-
             if (e is ServerErrorException || e is RateLimitException || e is NotFoundException
-                || e.GetType().GetGenericTypeDefinition() == typeof(AsyncEventTimeoutException<,>))
+                || e.GetType().IsGeneric(typeof(AsyncEventTimeoutException<,>)))
             {
                 Warning($"{message}{e.GetType().Name}: {e.Message}");
             }
             else
             {
-                Error($"{message}{e}"); // Full stacktrace
+                Error($"{message}{" - ".If(message != null)}{e}"); // Full stacktrace
             }
         }
 

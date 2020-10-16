@@ -131,6 +131,8 @@ namespace PacManBot
 
         private async Task OnAllReadyAsync()
         {
+            log.Info("Preparing shards");
+
             foreach (var shard in shardedClient.ShardClients.Values)
             {
                 input.StartListening(shard);
