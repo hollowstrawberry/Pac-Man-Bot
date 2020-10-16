@@ -21,7 +21,7 @@ namespace PacManBot
     {
         private readonly PmBotConfig config;
         private readonly IServiceProvider services;
-        private readonly DiscordShardedClient shardedClient;
+        private readonly DiscordShardedClient client;
         private readonly LoggingService log;
         private readonly GameService games;
         private readonly InputService input;
@@ -36,7 +36,7 @@ namespace PacManBot
         {
             this.config = config;
             this.services = services;
-            shardedClient = services.Get<DiscordShardedClient>();
+            client = services.Get<DiscordShardedClient>();
             log = services.Get<LoggingService>();
             games = services.Get<GameService>();
             input = services.Get<InputService>();
@@ -47,12 +47,12 @@ namespace PacManBot
         /// <summary>Starts the bot and its connection to Discord.</summary>
         public async Task StartAsync()
         {
-            await shardedClient.UseCommandsNextAsync(new CommandsNextConfiguration
+            await client.UseCommandsNextAsync(new CommandsNextConfiguration
             {
                 UseDefaultCommandHandler = false,
                 Services = services,
             });
-            foreach (var (shard, commands) in await shardedClient.GetCommandsNextAsync())
+            foreach (var (shard, commands) in await client.GetCommandsNextAsync())
             {
                 commands.RegisterCommands(typeof(BaseModule).Assembly);
                 commands.SetHelpFormatter<HelpFormatter>();
@@ -60,22 +60,22 @@ namespace PacManBot
 
             await games.LoadGamesAsync();
 
-            shardedClient.Ready += OnReadyAsync;
-            shardedClient.ClientErrored += OnClientErrored;
-            shardedClient.SocketErrored += OnSocketErrored;
-            shardedClient.GuildCreated += OnJoinedGuild;
-            shardedClient.GuildDeleted += OnLeftGuild;
-            shardedClient.ChannelDeleted += OnChannelDeleted;
+            client.Ready += OnReadyAsync;
+            client.ClientErrored += OnClientErrored;
+            client.SocketErrored += OnSocketErrored;
+            client.GuildCreated += OnJoinedGuild;
+            client.GuildDeleted += OnLeftGuild;
+            client.ChannelDeleted += OnChannelDeleted;
 
             schedule.PrepareRestart += StopAsync;
 
-            await shardedClient.StartAsync();
+            await client.StartAsync();
             //await client.UpdateStatusAsync(
             //    new DiscordActivity("Booting up...", ActivityType.Playing), UserStatus.Idle, DateTime.Now);
 
             if (!string.IsNullOrWhiteSpace(config.discordBotListToken))
             {
-                discordBotList = new AuthDiscordBotListApi(shardedClient.CurrentUser.Id, config.discordBotListToken);
+                discordBotList = new AuthDiscordBotListApi(client.CurrentUser.Id, config.discordBotListToken);
             }
         }
 
@@ -83,103 +83,93 @@ namespace PacManBot
         /// <summary>Safely stop most activity from the bot and disconnect from Discord.</summary>
         public async Task StopAsync()
         {
-            await shardedClient.UpdateStatusAsync(userStatus: UserStatus.DoNotDisturb); // why not
+            await client.UpdateStatusAsync(userStatus: UserStatus.DoNotDisturb); // why not
 
-            foreach (var shard in shardedClient.ShardClients.Values)
+            foreach (var shard in client.ShardClients.Values)
                 input.StopListening(shard);
 
             schedule.StopTimers();
 
-            shardedClient.Ready -= OnReadyAsync;
-            shardedClient.ClientErrored -= OnClientErrored;
-            shardedClient.SocketErrored -= OnSocketErrored;
-            shardedClient.GuildCreated -= OnJoinedGuild;
-            shardedClient.GuildDeleted -= OnLeftGuild;
-            shardedClient.ChannelDeleted -= OnChannelDeleted;
+            client.Ready -= OnReadyAsync;
+            client.ClientErrored -= OnClientErrored;
+            client.SocketErrored -= OnSocketErrored;
+            client.GuildCreated -= OnJoinedGuild;
+            client.GuildDeleted -= OnLeftGuild;
+            client.ChannelDeleted -= OnChannelDeleted;
 
             await Task.Delay(5_000); // Buffer time to finish up doing whatever
 
-            await shardedClient.StopAsync();
+            await client.StopAsync();
         }
 
 
 
 
-        private Task OnClientErrored(DiscordClient client, ClientErrorEventArgs args)
+        private Task OnClientErrored(DiscordClient shard, ClientErrorEventArgs args)
         {
             log.Exception($"On {args.EventName} handler", args.Exception);
             return Task.CompletedTask;
         }
 
 
-        private Task OnSocketErrored(DiscordClient client, SocketErrorEventArgs args)
+        private Task OnSocketErrored(DiscordClient shard, SocketErrorEventArgs args)
         {
-            log.Exception($"On shard {client.ShardId}", args.Exception);
+            log.Exception($"On shard {shard.ShardId}", args.Exception);
             return Task.CompletedTask;
         }
 
 
-        private Task OnReadyAsync(DiscordClient client, ReadyEventArgs args)
+        private Task OnReadyAsync(DiscordClient shard, ReadyEventArgs args)
         {
-            if (++ready == client.ShardCount)
-            {
-                _ = OnAllReadyAsync();
-            }
+            _ = InnerOnReadyAsync(shard);
             return Task.CompletedTask;
         }
 
 
-        private async Task OnAllReadyAsync()
+        private async Task InnerOnReadyAsync(DiscordClient shard)
         {
-            log.Info("Preparing shards");
+            input.StartListening(shard);
 
-            foreach (var shard in shardedClient.ShardClients.Values)
+            if (++ready == shard.ShardCount)
             {
-                input.StartListening(shard);
-                await Task.Delay(5000); // give it time to process events
-                await shard.UpdateStatusAsync(
+                schedule.StartTimers();
+                await client.UpdateStatusAsync(
                     new DiscordActivity($"with you!", ActivityType.Playing), UserStatus.Online, DateTime.Now);
+                log.Info($"All Shards ready");
             }
-
-            log.Info($"All Shards ready");
-
-            schedule.StartTimers();
 
             if (File.Exists(Files.ManualRestart))
             {
                 try
                 {
                     ulong[] id = File.ReadAllText(Files.ManualRestart)
-                        .Split("/").Select(ulong.Parse).ToArray();
+                    .Split("/").Select(ulong.Parse).ToArray();
 
-                    foreach (var shard in shardedClient.ShardClients.Values)
+                    var channel = await shard.GetChannelAsync(id[0]);
+                    if (channel != null)
                     {
-                        var channel = await shard.GetChannelAsync(id[0]);
-                        if (channel != null)
-                        {
-                            var message = await channel.GetMessageAsync(id[1]);
-                            if (message != null) await message.ModifyAsync(CustomEmoji.Check);
-                            File.Delete(Files.ManualRestart);
-                            log.Info("Resumed after manual restart");
-                            break;
-                        }
+                        File.Delete(Files.ManualRestart);
+                        var message = await channel.GetMessageAsync(id[1]);
+                        if (message != null) await message.ModifyAsync(CustomEmoji.Check);
+                        log.Info("Resumed after manual restart");
                     }
                 }
                 catch (Exception e)
                 {
-                    log.Warning($"Resuming after manual restart: {e.Message}");
+                    log.Exception("After manual restart", e);
+                    if (File.Exists(Files.ManualRestart) && !(e is IOException)) File.Delete(Files.ManualRestart);
                 }
             }
         }
 
 
-        private async Task OnJoinedGuild(DiscordClient sender, GuildCreateEventArgs args)
+        private async Task OnJoinedGuild(DiscordClient shard, GuildCreateEventArgs args)
         {
             await UpdateGuildCountAsync();
         }
 
 
-        private async Task OnLeftGuild(DiscordClient sender, GuildDeleteEventArgs args)
+        private async Task OnLeftGuild(DiscordClient shard, GuildDeleteEventArgs args)
         {
             foreach (var channel in args.Guild.Channels)
             {
@@ -190,7 +180,7 @@ namespace PacManBot
         }
 
 
-        private Task OnChannelDeleted(DiscordClient sender, ChannelDeleteEventArgs args)
+        private Task OnChannelDeleted(DiscordClient shard, ChannelDeleteEventArgs args)
         {
             games.Remove(games.GetForChannel(args.Channel.Id));
 
@@ -205,15 +195,15 @@ namespace PacManBot
                 if (discordBotList == null || (DateTime.Now - lastGuildCountUpdate).TotalMinutes < 30.0) return;
 
                 int guilds = 0;
-                foreach (var shard in shardedClient.ShardClients.Values)
+                foreach (var shard in client.ShardClients.Values)
                 {
                     guilds += shard.Guilds.Count;
                 }
 
-                var recordedGuilds = (await discordBotList.GetBotStatsAsync(shardedClient.CurrentUser.Id)).GuildCount;
+                var recordedGuilds = (await discordBotList.GetBotStatsAsync(client.CurrentUser.Id)).GuildCount;
                 if (recordedGuilds < guilds)
                 {
-                    await discordBotList.UpdateStats(guilds, shardedClient.ShardClients.Count);
+                    await discordBotList.UpdateStats(guilds, client.ShardClients.Count);
                     lastGuildCountUpdate = DateTime.Now;
                 }
 

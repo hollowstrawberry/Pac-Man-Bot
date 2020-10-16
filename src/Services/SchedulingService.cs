@@ -43,7 +43,7 @@ namespace PacManBot.Services
         {
             timers = new List<Timer>
             {
-                new Timer(DeleteOldGames, null, TimeSpan.Zero, TimeSpan.FromSeconds(10))
+                new Timer(DeleteOldGames, null, TimeSpan.FromSeconds(60), TimeSpan.FromSeconds(60))
             };
 
             if (scheduledRestart)
