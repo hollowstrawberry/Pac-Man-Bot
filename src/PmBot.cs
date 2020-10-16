@@ -62,6 +62,11 @@ namespace PacManBot
 
             shardedClient.Ready += OnReadyAsync;
             shardedClient.ClientErrored += OnClientErrored;
+            shardedClient.SocketErrored += OnSocketErrored;
+            shardedClient.GuildCreated += OnJoinedGuild;
+            shardedClient.GuildDeleted += OnLeftGuild;
+            shardedClient.ChannelDeleted += OnChannelDeleted;
+
             schedule.PrepareRestart += StopAsync;
 
             await shardedClient.StartAsync();
@@ -80,13 +85,19 @@ namespace PacManBot
         {
             await shardedClient.UpdateStatusAsync(userStatus: UserStatus.DoNotDisturb); // why not
 
-            foreach (var shard in shardedClient.ShardClients.Values) input.StopListening(shard);
+            foreach (var shard in shardedClient.ShardClients.Values)
+                input.StopListening(shard);
+
             schedule.StopTimers();
+
+            shardedClient.Ready -= OnReadyAsync;
+            shardedClient.ClientErrored -= OnClientErrored;
+            shardedClient.SocketErrored -= OnSocketErrored;
             shardedClient.GuildCreated -= OnJoinedGuild;
             shardedClient.GuildDeleted -= OnLeftGuild;
             shardedClient.ChannelDeleted -= OnChannelDeleted;
 
-            await Task.Delay(6_000); // Buffer time to finish up doing whatever
+            await Task.Delay(5_000); // Buffer time to finish up doing whatever
 
             await shardedClient.StopAsync();
         }
@@ -94,9 +105,16 @@ namespace PacManBot
 
 
 
-        private Task OnClientErrored(DiscordClient sender, ClientErrorEventArgs e)
+        private Task OnClientErrored(DiscordClient client, ClientErrorEventArgs args)
         {
-            log.Exception($"On {e.EventName} handler", e.Exception);
+            log.Exception($"On {args.EventName} handler", args.Exception);
+            return Task.CompletedTask;
+        }
+
+
+        private Task OnSocketErrored(DiscordClient client, SocketErrorEventArgs args)
+        {
+            log.Exception($"On shard {client.ShardId}", args.Exception);
             return Task.CompletedTask;
         }
 
@@ -116,9 +134,6 @@ namespace PacManBot
             foreach (var shard in shardedClient.ShardClients.Values)
             {
                 input.StartListening(shard);
-                shard.GuildCreated += OnJoinedGuild;
-                shard.GuildDeleted += OnLeftGuild;
-                shard.ChannelDeleted += OnChannelDeleted;
                 await Task.Delay(5000); // give it time to process events
                 await shard.UpdateStatusAsync(
                     new DiscordActivity($"with you!", ActivityType.Playing), UserStatus.Online, DateTime.Now);

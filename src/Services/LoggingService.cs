@@ -41,7 +41,10 @@ namespace PacManBot.Services
         {
             if (logLevel < minClientLogLevel) return;
             var message = formatter(state, exception);
+
             if (message.ContainsAny(hardExclusions)) return;
+            if (logLevel == LogLevel.Critical && message.Contains("(4000, '')")) logLevel = LogLevel.Information; // reconnection
+
             logger.Write((Serilog.Events.LogEventLevel)logLevel, message);
         }
 
