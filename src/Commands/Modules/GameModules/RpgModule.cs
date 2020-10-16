@@ -235,7 +235,7 @@ namespace PacManBot.Commands.Modules
 
         [Command("equip"), Aliases("e", "weapon", "armor")]
         [Description("Equip an item from your inventory")]
-        public async Task EquipItem(CommandContext ctx, [RemainingText] string itemName = "")
+        public async Task EquipItem(CommandContext ctx, [RemainingText] string itemName)
         {
             if (Game(ctx) == null)
             {
@@ -243,7 +243,7 @@ namespace PacManBot.Commands.Modules
                 return;
             }
 
-            if (itemName == "")
+            if (string.IsNullOrWhiteSpace(itemName))
             {
                 await ctx.RespondAsync("You must specify an item from your inventory.");
                 return;
@@ -301,7 +301,7 @@ namespace PacManBot.Commands.Modules
                 return;
             }
 
-            if (skill == "")
+            if (string.IsNullOrWhiteSpace(skill))
             {
                 await ctx.RespondAsync("Please specify a skill and amount to spend.");
                 return;
@@ -380,7 +380,7 @@ namespace PacManBot.Commands.Modules
 
             var msg = ctx.Message;
 
-            if (name == "")
+            if (string.IsNullOrWhiteSpace(name))
             {
                 await ctx.RespondAsync("Say your hero's new name:");
 
@@ -417,7 +417,7 @@ namespace PacManBot.Commands.Modules
                 return;
             }
 
-            if (colorString == "")
+            if (string.IsNullOrWhiteSpace(colorString))
             {
                 await ctx.RespondAsync("Say the name or hex code of your new color:");
 
