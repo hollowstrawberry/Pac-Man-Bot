@@ -113,17 +113,15 @@ namespace PacManBot
 
         private async Task OnAllReadyAsync()
         {
-            await Task.Delay(1000 * shardedClient.ShardClients.Count); // needs some time to chill on my raspberry pi
-
-            await shardedClient.UpdateStatusAsync(
-                new DiscordActivity($"with you!", ActivityType.Playing), UserStatus.Online, DateTime.Now);
-
             foreach (var shard in shardedClient.ShardClients.Values)
             {
                 input.StartListening(shard);
                 shard.GuildCreated += OnJoinedGuild;
                 shard.GuildDeleted += OnLeftGuild;
                 shard.ChannelDeleted += OnChannelDeleted;
+                await Task.Delay(5000); // give it time to process events
+                await shard.UpdateStatusAsync(
+                    new DiscordActivity($"with you!", ActivityType.Playing), UserStatus.Online, DateTime.Now);
             }
 
             log.Info($"All Shards ready");

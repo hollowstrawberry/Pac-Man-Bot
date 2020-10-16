@@ -6,13 +6,13 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <PreserveCompilationContext>false</PreserveCompilationContext>
     <RootNamespace>PacManBot</RootNamespace>
-    <Version>5.0.2</Version>
+    <Version>5.0.3</Version>
     <Authors>OrchidAlloy</Authors>
     <Product>Pac-Man Bot</Product>
     <Company></Company>
     <LangVersion>8.0</LangVersion>
-    <AssemblyVersion>5.0.2.0</AssemblyVersion>
-    <FileVersion>5.0.2.0</FileVersion>
+    <AssemblyVersion>5.0.3.0</AssemblyVersion>
+    <FileVersion>5.0.3.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

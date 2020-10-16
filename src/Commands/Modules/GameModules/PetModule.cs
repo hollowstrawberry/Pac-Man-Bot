@@ -11,7 +11,7 @@ using PacManBot.Games.Concrete;
 namespace PacManBot.Commands.Modules
 {
     [Category(Categories.Games)]
-    [Group("pet")]
+    [Group("pet"), Aliases("wakagotchi")]
     [Description("Take care of your own little wakagotchi!")]
     [RequireBotPermissions(BaseBotPermissions)]
     public class PetModule : BaseGameModule<PetGame>

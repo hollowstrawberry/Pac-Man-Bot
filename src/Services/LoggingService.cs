@@ -5,6 +5,7 @@ using DSharpPlus;
 using PacManBot.Extensions;
 using Microsoft.Extensions.Logging;
 using DSharpPlus.Exceptions;
+using Emzi0767.Utilities;
 
 namespace PacManBot.Services
 {
@@ -58,11 +59,10 @@ namespace PacManBot.Services
         {
             if (message != null) message += " - ";
 
-            if (e is ServerErrorException || e is RateLimitException
-                || e is TimeoutException || e is OperationCanceledException
-                || e.GetType().Name.Contains("AsyncEventTimeoutException")) // stupid generic exception with no base
+            if (e is ServerErrorException || e is RateLimitException || e is NotFoundException
+                || e.GetType().GetGenericTypeDefinition() == typeof(AsyncEventTimeoutException<,>))
             {
-                Warning($"{message}{e.GetType()}: {e.Message}");
+                Warning($"{message}{e.GetType().Name}: {e.Message}");
             }
             else
             {
