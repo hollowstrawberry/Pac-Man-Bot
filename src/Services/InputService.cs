@@ -203,10 +203,10 @@ namespace PacManBot.Services
                     return;
 
                 default:
-                    await ctx.RespondAsync($"Something went wrong! {args.Exception.Message}");
-
                     log.Exception($"While executing {args.Command?.Name} for {ctx.User.DebugName()} " +
                         $"in {ctx.Channel.DebugName()}", args.Exception);
+                    try { await ctx.RespondAsync($"Something went wrong! {args.Exception.Message}"); }
+                    catch (UnauthorizedException) { }
                     return;
             }
         }

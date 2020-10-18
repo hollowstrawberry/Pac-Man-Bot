@@ -63,7 +63,7 @@ namespace PacManBot.Services
             if (e is ServerErrorException || e is RateLimitException || e is NotFoundException
                 || e.GetType().IsGeneric(typeof(AsyncEventTimeoutException<,>)))
             {
-                Warning($"{message}{e.GetType().Name}: {e.Message}");
+                Warning($"{message}{" - ".If(message != null)}{e.GetType().Name}: {e.Message}");
             }
             else
             {
