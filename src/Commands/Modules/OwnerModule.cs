@@ -205,7 +205,7 @@ namespace PacManBot.Commands.Modules
 
 
         [Command("feedbackreply"), Aliases("reply"), Hidden]
-        [Description("This is how Samrux replies to feedback. Developer only.")]
+        [Description("This is how the owner replies to feedback. Developer only.")]
         public async Task ReplyFeedback(CommandContext ctx, ulong userId, [RemainingText]string message)
         {
             try
@@ -214,14 +214,13 @@ namespace PacManBot.Commands.Modules
                              "\n-To reply to this message, use the 'feedback' command.```\n";
 
                 // this shouldn't be this complicated
-                foreach (var shard in ShardedClient.ShardClients.Values)
-                    foreach (var guild in shard.Guilds.Values)
-                        if (guild.Members.TryGetValue(userId, out var member))
-                        {
-                            await member.SendMessageAsync(pre + message);
-                            await ctx.AutoReactAsync();
-                            return;
-                        }
+                foreach (var guild in ShardedClient.ShardClients.Values.SelectMany(x => x.Guilds.Values))
+                    if (guild.Members.TryGetValue(userId, out var member))
+                    {
+                        await member.SendMessageAsync(pre + message);
+                        await ctx.AutoReactAsync();
+                        return;
+                    }
             }
             catch (Exception e)
             {

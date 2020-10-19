@@ -80,13 +80,14 @@ namespace PacManBot
             {
                 log.Info($"Pac-Man Bot v{Version}");
                 await services.Get<PmBot>().StartAsync();
-                await Task.Delay(-1);
             }
             catch (Exception e)
             {
                 log.Fatal($"While starting the bot: {e}");
                 await Task.Delay(5000);
             }
+
+            await Task.Delay(-1);
         }
     }
 }

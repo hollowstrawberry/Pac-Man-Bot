@@ -32,11 +32,7 @@ namespace PacManBot.Commands.Modules
             var app = await ctx.Client.GetCurrentApplicationAsync();
             var dsp = typeof(DiscordClient).Assembly.GetName().Version;
 
-            int guilds = 0;
-            foreach (var shard in ShardedClient.ShardClients.Values)
-            {
-                guilds += shard.Guilds.Count;
-            }
+            int guilds = ShardedClient.ShardClients.Values.Select(x => x.Guilds.Count).Aggregate((a, b) => a + b);
 
             var embed = new DiscordEmbedBuilder()
                 .WithTitle($"PacMan Bot {CustomEmoji.PacMan}•••")
@@ -64,11 +60,7 @@ namespace PacManBot.Commands.Modules
         {
             var process = Process.GetCurrentProcess();
 
-            int guilds = 0;
-            foreach (var shard in ShardedClient.ShardClients.Values)
-            {
-                guilds += shard.Guilds.Count;
-            }
+            int guilds = ShardedClient.ShardClients.Values.Select(x => x.Guilds.Count).Aggregate((a, b) => a + b);
 
             var embed = new DiscordEmbedBuilder()
                 .WithTitle($"PacMan Bot {CustomEmoji.PacMan}•••")
@@ -235,15 +227,14 @@ namespace PacManBot.Commands.Modules
                 // this shouldn't be this complicated
                 var app = await ctx.Client.GetCurrentApplicationAsync();
                 foreach (var owner in app.Owners)
-                    foreach (var shard in ShardedClient.ShardClients.Values)
-                        foreach (var guild in shard.Guilds.Values)
-                            if (guild.Members.TryGetValue(owner.Id, out var ownerMember))
-                            {
-                                string content = $"```diff\n+Feedback received: {ctx.User.DebugName()}```\n{message}".Truncate(2000);
-                                await ownerMember.SendMessageAsync(content);
-                                await ctx.RespondAsync($"{CustomEmoji.Check} Message sent. Thank you!");
-                                return;
-                            }
+                    foreach (var guild in ShardedClient.ShardClients.Values.SelectMany(x => x.Guilds.Values))
+                        if (guild.Members.TryGetValue(owner.Id, out var ownerMember))
+                        {
+                            string content = $"```diff\n+Feedback received: {ctx.User.DebugName()}```\n{message}".Truncate(2000);
+                            await ownerMember.SendMessageAsync(content);
+                            await ctx.RespondAsync($"{CustomEmoji.Check} Message sent. Thank you!");
+                            return;
+                        }
                 throw new InvalidOperationException("Couldn't find owner member");
             }
             catch (Exception e)

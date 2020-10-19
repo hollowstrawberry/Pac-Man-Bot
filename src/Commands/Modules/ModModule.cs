@@ -54,14 +54,8 @@ namespace PacManBot.Commands.Modules
 
             if (toDelete.Count() > 0)
             {
-                try
-                {
-                    await ctx.Channel.DeleteMessagesAsync(toDelete);
-                }
-                catch (Exception e)
-                {
-                    Log.Exception($"Couldn't delete messages in {ctx.Channel.DebugName()}", e);
-                }
+                await ctx.Channel.DeleteMessagesAsync(toDelete)
+                    .LogExceptions(Log, $"Couldn't delete messages in {ctx.Channel.DebugName()}");
             }
         }
 

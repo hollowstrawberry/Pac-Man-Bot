@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace PacManBot.Extensions
 {
@@ -46,5 +47,12 @@ namespace PacManBot.Extensions
         /// <summary>Obtains all subtypes of a known type and instatiates them, to access their properties.</summary>
         public static IEnumerable<T> MakeObjects<T>(this IEnumerable<Type> source)
             => source.SubclassesOf<T>().Select(t => t.CreateInstance<T>());
+
+
+
+
+        /// <summary>Gets a service of type <typeparamref name="T"/> from a <see cref="IServiceProvider"/>. 
+        /// Throws an exception if one is not found. I didn't like the long name of the original.</summary>
+        public static T Get<T>(this IServiceProvider provider) => provider.GetRequiredService<T>();
     }
 }

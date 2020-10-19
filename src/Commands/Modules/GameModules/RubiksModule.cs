@@ -22,7 +22,8 @@ namespace PacManBot.Commands.Modules
             "\n`rubik showguide` - Toggle the help displayed below the cube. For pros.")]
         public async Task RubiksCube(CommandContext ctx, [RemainingText]string input = "")
         {
-            if (Game(ctx) == null)
+            var game = Game(ctx);
+            if (game == null)
             {
                 StartNewGame(new RubiksGame(ctx.Channel.Id, ctx.User.Id, Services));
             }
@@ -30,11 +31,13 @@ namespace PacManBot.Commands.Modules
             bool removeOld = false;
             switch (input.ToLowerInvariant())
             {
+                case "h":
+                case "help":
                 case "moves":
                 case "notation":
                     string moveHelp =
                         $"You can input a sequence of turns using the `rubik [input]` command, " +
-                        $"with turns separated by spaces.\nYou can do `rubik help` to see a few more commands.\n\n" +
+                        $"with turns separated by spaces.\nYou can do `help rubik` to see a few more commands.\n\n" +
                         "**Simple turns:** U, D, L, R, F, B\nThese are the basic clockwise turns of the cube. " +
                         "They stand for the Up, Down, Left, Right, Front and Back sides.\n" +
                         "**Counterclockwise turns:** Add `'`. Example: U', R'\n" +
@@ -51,13 +54,6 @@ namespace PacManBot.Commands.Modules
                     return;
 
 
-                case "h":
-                case "help":
-                    var desc = MethodBase.GetCurrentMethod().GetCustomAttribute<DescriptionAttribute>();
-                    await ctx.RespondAsync(desc.Description);
-                    return;
-
-
                 case "reset":
                 case "solve":
                     EndGame(ctx);
@@ -67,14 +63,14 @@ namespace PacManBot.Commands.Modules
 
                 case "scramble":
                 case "shuffle":
-                    Game(ctx).Scramble();
+                    game.Scramble();
                     removeOld = true;
                     break;
 
 
                 case "showguide":
-                    Game(ctx).ShowHelp = !Game(ctx).ShowHelp;
-                    if (Game(ctx).ShowHelp) await ctx.AutoReactAsync();
+                    game.ShowHelp = !game.ShowHelp;
+                    if (game.ShowHelp) await ctx.AutoReactAsync();
                     else await ctx.RespondAsync("❗ You just disabled the help displayed below the cube.\n" +
                                                 "Consider re-enabling it if you're not used to the game.");
                     break;
@@ -83,7 +79,7 @@ namespace PacManBot.Commands.Modules
                 default:
                     if (!string.IsNullOrEmpty(input))
                     {
-                        if (!Game(ctx).TryDoMoves(input))
+                        if (!game.TryDoMoves(input))
                         {
                             await ctx.RespondAsync($"{CustomEmoji.Cross} Invalid sequence of moves. " +
                                 $"Do **{Storage.GetPrefix(ctx)}rubik help** for commands.");
@@ -94,7 +90,7 @@ namespace PacManBot.Commands.Modules
                     break;
             }
 
-            if (removeOld && Game(ctx).ChannelId == ctx.Channel.Id) await DeleteGameMessageAsync(ctx);
+            if (removeOld && game.ChannelId == ctx.Channel.Id) await DeleteGameMessageAsync(ctx);
             await RespondGameAsync(ctx);
             await SaveGameAsync(ctx);
         }

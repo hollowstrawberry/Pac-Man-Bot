@@ -98,13 +98,14 @@ namespace PacManBot.Services
             {
                 try
                 {
-                    if (PendingResponse(message)
-                        || MessageGameInput(message)
-                        || Command(message, client))
+                    if (PendingResponse(message) ||
+                        MessageGameInput(message) ||
+                        Command(message, client))
                     {
                         if (message.Channel.Guild != null)
                         {
-                            _ = EnsureUsersDownloadedAsync(message.Channel.Guild);
+                            _ = EnsureUsersDownloadedAsync(message.Channel.Guild)
+                                .LogExceptions(log, $"Downloading users for guild {message.Channel.Guild.DebugName()}");
                         }
                     }
                 }
@@ -138,10 +139,13 @@ namespace PacManBot.Services
 
                 if (game == null) return Task.CompletedTask;
 
-                _ = ExecuteReactionGameInputAsync(game, message, user, emoji);
+                _ = ExecuteReactionGameInputAsync(game, message, user, emoji)
+                    .LogExceptions(log, $"During input \"{emoji.GetDiscordName()}\" in {message.Channel.DebugName()}");
+
                 if (message.Channel?.Guild != null)
                 {
-                    _ = EnsureUsersDownloadedAsync(message.Channel.Guild);
+                    _ = EnsureUsersDownloadedAsync(message.Channel.Guild)
+                        .LogExceptions(log, $"Downloading users for guild {message.Channel.Guild.DebugName()}");
                 }
             }
 
@@ -274,14 +278,8 @@ namespace PacManBot.Services
             var game = games.GetForChannel<IMessagesGame>(message.Channel.Id);
             if (game == null || !game.IsInput(message.Content, message.Author.Id)) return false;
 
-            try
-            {
-                _ = ExecuteMessageGameInputAsync(game, message);
-            }
-            catch (Exception e)
-            {
-                log.Exception($"During input \"{message.Content}\" in {game.Channel.DebugName()}", e);
-            }
+            _ = ExecuteMessageGameInputAsync(game, message)
+                .LogExceptions(log, $"During input \"{message.Content}\" in {game.Channel.DebugName()}");
 
             return true;
         }
@@ -319,22 +317,10 @@ namespace PacManBot.Services
 
         private async Task ExecuteReactionGameInputAsync(IReactionsGame game, DiscordMessage message, DiscordUser user, DiscordEmoji emoji)
         {
-            try
-            {
-                if (!await game.IsInputAsync(emoji, user.Id)) return;
-                if (message == null) message = await game.GetMessageAsync();
-                if (message == null) return; // oof
+            if (!await game.IsInputAsync(emoji, user.Id)) return;
+            if (message == null) message = await game.GetMessageAsync();
+            if (message == null) return; // oof
 
-                await InnerExecuteReactionGameInputAsync(game, message, user, emoji);
-            }
-            catch (Exception e)
-            {
-                log.Exception($"During input \"{emoji.GetDiscordName()}\" in {message.Channel.DebugName()}", e);
-            }
-        }
-
-        private async Task InnerExecuteReactionGameInputAsync(IReactionsGame game, DiscordMessage message, DiscordUser user, DiscordEmoji emoji)
-        {
             var guild = message.Channel?.Guild;
             log.Debug($"Input {emoji.GetDiscordName()} by {user.DebugName()} in {message.Channel?.DebugName()}");
 
