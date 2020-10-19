@@ -34,6 +34,13 @@ namespace PacManBot.Commands.Modules
         [RequireGuild, RequireUserPermissions(Permissions.ManageMessages)]
         public async Task ClearCommandMessages(CommandContext ctx, int amount = 10)
         {
+            if (!ctx.BotCan(Permissions.ManageMessages))
+            {
+                await ctx.RespondAsync("The bot needs the permission to Manage Messages to clear messages!\n" +
+                    "Also, game inputs are cleared automatically when the bot has this permission enabled.");
+                return;
+            }
+
             if (amount < 1 || amount > 100)
             {
                 await ctx.RespondAsync("Please choose a reasonable number of messages to delete.");
@@ -42,20 +49,15 @@ namespace PacManBot.Commands.Modules
 
             IEnumerable<DiscordMessage> toDelete = await ctx.Channel.GetMessagesAsync();
 
-            if (ctx.BotCan(Permissions.ManageMessages))
-            {
-                toDelete = toDelete.Where(x => x.Author.Id == ctx.Client.CurrentUser.Id
-                    || x.Content.StartsWith(Storage.GetGuildPrefix(ctx.Guild))
-                    || Input.MentionPrefix.IsMatch(x.Content));
-            }
-            else toDelete = toDelete.Where(x => x.Author.Id == ctx.Client.CurrentUser.Id);
+            toDelete = toDelete.Where(x => x.Author.Id == ctx.Client.CurrentUser.Id
+                || x.Content.StartsWith(Storage.GetGuildPrefix(ctx.Guild))
+                || Input.MentionPrefix.IsMatch(x.Content));
 
             toDelete = toDelete.Take(amount);
 
             if (toDelete.Count() > 0)
             {
-                await ctx.Channel.DeleteMessagesAsync(toDelete)
-                    .LogExceptions(Log, $"Couldn't delete messages in {ctx.Channel.DebugName()}");
+                await ctx.Channel.DeleteMessagesAsync(toDelete);
             }
         }
 

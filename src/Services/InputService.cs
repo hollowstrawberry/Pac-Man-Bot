@@ -178,13 +178,13 @@ namespace PacManBot.Services
                         case RequireBotPermissionsAttribute r when ctx.Guild != null:
                             var curPerms = ctx.Channel.PermissionsFor(ctx.Guild.CurrentMember);
                             var perms = (r.Permissions ^ curPerms) & r.Permissions; // missing
-                            await ctx.RespondAsync($"This bot requires permission to {perms.ToPermissionString().ToLower()}!");
+                            await ctx.RespondAsync($"This bot requires the permission to {perms.ToPermissionString().ToLower()}!");
                             return;
 
                         case RequireUserPermissionsAttribute r when ctx.Guild != null:
                             curPerms = ctx.Channel.PermissionsFor(ctx.Member);
                             perms = (r.Permissions ^ curPerms) & r.Permissions; // missing
-                            await ctx.RespondAsync($"You need permission to {perms.ToPermissionString().ToLower()} to use this command.");
+                            await ctx.RespondAsync($"You need the permission to {perms.ToPermissionString().ToLower()} to use this command.");
                             return;
 
                         case RequireDirectMessageAttribute _:
@@ -204,6 +204,15 @@ namespace PacManBot.Services
 
                 case CommandNotFoundException e when args.Command.Name == "help":
                     await ctx.RespondAsync($"The command `{e.CommandName}` doesn't exist!");
+                    return;
+
+                case UnauthorizedException _ when args.Command.Name == "help":
+                    await ctx.RespondAsync($"This bot requires the permission to use embeds!");
+                    return;
+
+                case UnauthorizedException e when args.Command.Name != "help":
+                    await ctx.RespondAsync($"Something went wrong: The bot is missing permissions to perform this action!");
+                    log.Exception($"Bot is missing permissions in command {args.Command.Name}", e);
                     return;
 
                 default:
