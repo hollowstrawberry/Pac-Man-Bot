@@ -31,7 +31,7 @@ namespace PacManBot.Commands
         /// <summary>Logs everything in the console and on disk.</summary>
         public LoggingService Log { get; set; }
         /// <summary>Gives access to the bot's database.</summary>
-        public StorageService Storage { get; set; }
+        public DatabaseService Storage { get; set; }
         /// <summary>Gives access to input manipulation.</summary>
         public InputService Input { get; set; }
         /// <summary>Gives access to active games.</summary>

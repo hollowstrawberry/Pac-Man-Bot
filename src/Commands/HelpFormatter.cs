@@ -51,7 +51,7 @@ namespace PacManBot.Commands
                 if (Context.Guild == null) embed.WithDescription("No prefix needed in this channel!");
                 else
                 {
-                    var storage = Context.Services.Get<StorageService>();
+                    var storage = Context.Services.Get<DatabaseService>();
                     embed.WithDescription($"Command prefix: `{storage.GetGuildPrefix(Context.Guild)}`" +
                         $"\nNo prefix is needed in this channel!".If(!storage.RequiresPrefix(Context)));
                 }

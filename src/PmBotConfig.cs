@@ -25,10 +25,7 @@ namespace PacManBot
         /// <summary>The prefix used for all guilds that don't set a custom prefix.</summary>
         [DataMember] public readonly string defaultPrefix = "<";
 
-        /// <summary>User IDs of people helping test and debug the bot. Effects may change at any point.</summary>
-        [DataMember] public readonly ulong[] testers = { };
-
-        /// <summary>The string that defines the connection to the SQLite database in <see cref="Services.StorageService"/>.</summary>
+        /// <summary>The string that defines the connection to the SQLite database in <see cref="Services.DatabaseService"/>.</summary>
         [DataMember] public readonly string dbConnectionString = $"Data Source={Files.DefaultDatabase};";
 
         /// <summary>Number of shards to divide the bot into. 1 shard per 1000 guilds is enough.</summary>
@@ -38,10 +35,7 @@ namespace PacManBot
         [DataMember] public readonly bool scheduledRestart = false;
 
         /// <summary>How many messages to keep on memory per channel. Keep it to a reasonable amount.</summary>
-        [DataMember] public readonly int messageCacheSize = 50;
-
-        /// <summary>How long in milliseconds until the gateway connection to Discord times out.</summary>
-        [DataMember] public readonly int connectionTimeout = 30000;
+        [DataMember] public readonly int messageCacheSize = 20;
 
         /// <summary>Sets the timeout for HTTP events.</summary>
         [DataMember] public readonly int httpTimeout = 10000;

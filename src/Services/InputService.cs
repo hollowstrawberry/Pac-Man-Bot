@@ -24,7 +24,7 @@ namespace PacManBot.Services
     public class InputService
     {
         private readonly DiscordShardedClient client;
-        private readonly StorageService storage;
+        private readonly DatabaseService storage;
         private readonly LoggingService log;
         private readonly GameService games;
 
@@ -39,7 +39,7 @@ namespace PacManBot.Services
 
 
         public InputService(DiscordShardedClient client, LoggingService log,
-            StorageService storage, GameService games)
+            DatabaseService storage, GameService games)
         {
             this.client = client;
             this.storage = storage;

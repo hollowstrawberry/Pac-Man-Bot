@@ -67,7 +67,7 @@ namespace PacManBot
                 .AddSingleton(log)
                 .AddSingleton(discord)
                 .AddSingleton<PmBot>()
-                .AddSingleton<StorageService>()
+                .AddSingleton<DatabaseService>()
                 .AddSingleton<InputService>()
                 .AddSingleton<GameService>()
                 .AddSingleton<SchedulingService>()

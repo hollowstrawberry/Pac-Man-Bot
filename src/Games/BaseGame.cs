@@ -19,7 +19,7 @@ namespace PacManBot.Games
         protected DiscordShardedClient shardedClient;
         protected PmBotConfig config;
         protected LoggingService log;
-        protected StorageService storage;
+        protected DatabaseService storage;
         protected GameService games;
 
         protected PmBotContent Content => config.Content;
@@ -88,7 +88,7 @@ namespace PacManBot.Games
             config = services.Get<PmBotConfig>();
             shardedClient = services.Get<DiscordShardedClient>();
             log = services.Get<LoggingService>();
-            storage = services.Get<StorageService>();
+            storage = services.Get<DatabaseService>();
             games = services.Get<GameService>();
         }
 

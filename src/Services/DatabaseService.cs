@@ -3,10 +3,8 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
-using PacManBot.Constants;
 using PacManBot.Services.Database;
 using PacManBot.Utils;
 
@@ -15,7 +13,7 @@ namespace PacManBot.Services
     /// <summary>
     /// Manages access to the bot's database.
     /// </summary>
-    public class StorageService
+    public class DatabaseService
     {
         private readonly LoggingService log;
         private readonly string dbConnection;
@@ -30,7 +28,7 @@ namespace PacManBot.Services
         private PacManDbContext MakeDbContext() => new PacManDbContext(dbConnection);
 
 
-        public StorageService(PmBotConfig config, LoggingService log)
+        public DatabaseService(PmBotConfig config, LoggingService log)
         {
             this.log = log;
 
