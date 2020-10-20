@@ -126,7 +126,7 @@ namespace PacManBot.Services
 
         private Task OnReactionAddedOrRemoved(DiscordMessage message, DiscordUser user, DiscordEmoji emoji)
         {
-            if (message.Channel.BotCan(Permissions.SendMessages | Permissions.ReadMessageHistory))
+            if (message.Channel != null && message.Channel.BotCan(Permissions.SendMessages | Permissions.ReadMessageHistory))
             {
                 if (user.Id == _client.CurrentUser.Id) return Task.CompletedTask;
                 
@@ -314,8 +314,8 @@ namespace PacManBot.Services
             if (message == null) message = await game.GetMessageAsync();
             if (message == null) return; // oof
 
-            var guild = message.Channel?.Guild;
-            _log.Debug($"Input {emoji.GetDiscordName()} by {user.DebugName()} in {message.Channel?.DebugName()}");
+            var guild = message.Channel.Guild;
+            _log.Debug($"Input {emoji.GetDiscordName()} by {user.DebugName()} in {message.Channel.DebugName()}");
 
             await game.InputAsync(emoji, user.Id);
 
@@ -326,7 +326,7 @@ namespace PacManBot.Services
                 if (game is PacManGame pmGame && pmGame.State != GameState.Cancelled && !pmGame.custom)
                 {
                     _storage.AddScore(new ScoreEntry(pmGame.score, user.Id, pmGame.State, pmGame.Time,
-                        user.NameandDisc(), $"{guild?.Name}/{message.Channel?.Name}", DateTime.Now));
+                        user.NameandDisc(), $"{guild?.Name}/{message.Channel.Name}", DateTime.Now));
                 }
 
                 if (message.Channel.BotCan(Permissions.ManageMessages) && message != null)
