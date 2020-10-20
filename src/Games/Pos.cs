@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Serialization;
 using PacManBot.Extensions;
 
 namespace PacManBot.Games
@@ -6,13 +7,14 @@ namespace PacManBot.Games
     /// <summary>
     /// A position in a <see cref="Board{T}"/>, expressed as x and y coordinates.
     /// </summary>
+    [DataContract]
     public struct Pos : IEquatable<Pos>
     {
         public static readonly Pos Origin = (0, 0);
 
 
-        public readonly int x;
-        public readonly int y;
+        [DataMember] public int x;
+        [DataMember] public int y;
 
         public Pos(int x, int y)
         {
