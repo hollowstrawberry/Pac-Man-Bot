@@ -12,12 +12,12 @@ namespace PacManBot.Extensions
         /// which can be its owner's user ID or the housing channel's ID depending on the type.</summary>
         public static ulong IdentifierId(this IBaseGame game)
         {
-            switch (game)
+            return game switch
             {
-                case IUserGame userGame: return userGame.OwnerId;
-                case IChannelGame channelGame: return channelGame.ChannelId;
-                default: return game.UserId[0];
-            }
+                IUserGame userGame => userGame.OwnerId,
+                IChannelGame channelGame => channelGame.ChannelId,
+                _ => game.UserId[0],
+            };
         }
 
 
@@ -35,29 +35,28 @@ namespace PacManBot.Extensions
         /// <summary>Returns the opposite direction to the one provided.</summary>
         public static Dir Opposite(this Dir dir)
         {
-            switch (dir)
+            return dir switch
             {
-                case Dir.Up:    return Dir.Down;
-                case Dir.Down:  return Dir.Up;
-                case Dir.Left:  return Dir.Right;
-                case Dir.Right: return Dir.Left;
-
-                default: return Dir.None;
-            }
+                Dir.Up => Dir.Down,
+                Dir.Down => Dir.Up,
+                Dir.Left => Dir.Right,
+                Dir.Right => Dir.Left,
+                _ => Dir.None,
+            };
         }
 
 
         /// <summary>Converts a direction into a <see cref="Pos"/> vector with the given length.</summary>
         public static Pos ToPos(this Dir dir, int length = 1)
         {
-            switch (dir)
+            return dir switch
             {
-                case Dir.Up:    return (0, -length);
-                case Dir.Down:  return (0, +length);
-                case Dir.Left:  return (-length, 0);
-                case Dir.Right: return (+length, 0);
-                default: return Pos.Origin;
-            }
+                Dir.Up    => (0, -length),
+                Dir.Down  => (0, +length),
+                Dir.Left  => (-length, 0),
+                Dir.Right => (+length, 0),
+                _         => Pos.Origin,
+            };
         }
 
 

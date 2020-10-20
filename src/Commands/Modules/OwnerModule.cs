@@ -122,28 +122,22 @@ namespace PacManBot.Commands.Modules
 
             try
             {
-                using (var db = new PacManDbContext(Config.dbConnectionString))
+                using var db = new PacManDbContext(Config.dbConnectionString);
+                using var command = db.Database.GetDbConnection().CreateCommand();
+                command.CommandText = query;
+                db.Database.OpenConnection();
+                using var result = command.ExecuteReader();
+                affected = result.RecordsAffected;
+                while (result.Read())
                 {
-                    using (var command = db.Database.GetDbConnection().CreateCommand())
-                    {
-                        command.CommandText = query;
-                        db.Database.OpenConnection();
-                        using (var result = command.ExecuteReader())
-                        {
-                            affected = result.RecordsAffected;
-                            while (result.Read())
-                            {
-                                object[] values = new object[result.FieldCount];
-                                result.GetValues(values);
+                    object[] values = new object[result.FieldCount];
+                    result.GetValues(values);
 
-                                for (int i = 0; i < values.Length; i++)
-                                    if (values[i] is string str && str.ContainsAny(" ", "\n"))
-                                        values[i] = $"\"{values[i]}\"";
+                    for (int i = 0; i < values.Length; i++)
+                        if (values[i] is string str && str.ContainsAny(" ", "\n"))
+                            values[i] = $"\"{values[i]}\"";
 
-                                table.AppendLine(values?.JoinString("  "));
-                            }
-                        }
-                    }
+                    table.AppendLine(values?.JoinString("  "));
                 }
             }
             catch (SqliteException e)

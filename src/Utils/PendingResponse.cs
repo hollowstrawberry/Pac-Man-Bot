@@ -9,7 +9,7 @@ namespace PacManBot.Utils
     /// </summary>
     public class PendingResponse
     {
-        private CancellationTokenSource _cancelSource = new CancellationTokenSource();
+        private readonly CancellationTokenSource _cancelSource = new CancellationTokenSource();
         private DiscordMessage _response = null;
 
         /// <summary>The condition that a message has to fulfill in order to be accepted as a response.</summary>

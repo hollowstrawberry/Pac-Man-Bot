@@ -60,7 +60,7 @@ namespace PacManBot.Games.Concrete
         /// <summary>Opponents in the current battle, whether it's against enemies or a player.</summary>
         public IReadOnlyList<Entity> Opponents => IsPvp ? new Entity[] { PvpGame.player } : (IReadOnlyList<Entity>)enemies;
 
-        private RpgGame internalPvpGame;
+        private RpgGame _pvpGame;
 
         /// <summary>The opponent's game object in a PVP battle. Managed by <see cref="pvpUserId"/>.</summary>
         public RpgGame PvpGame
@@ -69,21 +69,21 @@ namespace PacManBot.Games.Concrete
             {
                 if (pvpUserId == 0)
                 {
-                    internalPvpGame = null;
+                    _pvpGame = null;
                 }
-                else if (pvpUserId != internalPvpGame?.OwnerId) // Inconsistency
+                else if (pvpUserId != _pvpGame?.OwnerId) // Inconsistency
                 {
-                    internalPvpGame = Games.GetForUser<RpgGame>(pvpUserId);
+                    _pvpGame = Games.GetForUser<RpgGame>(pvpUserId);
 
                     // Reset fight if invalid opponent
-                    if (internalPvpGame == null)
+                    if (_pvpGame == null)
                     {
                         ResetBattle(GameState.Completed);
                         return null;
                     }
                 }
 
-                return internalPvpGame;
+                return _pvpGame;
             }
         }
 

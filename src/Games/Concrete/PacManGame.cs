@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -62,8 +63,8 @@ namespace PacManBot.Games.Concrete
         [DataMember] private readonly int maxPellets;
         [DataMember] private int pellets;
         [DataMember] private int oldScore;
-        [DataMember] private PacMan pacMan;
-        [DataMember] private List<Ghost> ghosts;
+        [DataMember] private readonly PacMan pacMan;
+        [DataMember] private readonly List<Ghost> ghosts;
         [DataMember] private int fruitTimer;
         [DataMember] private Pos fruitSpawnPos; // Where all fruit will spawn
         [DataMember] private PacManInput lastInput = PacManInput.None;
@@ -87,6 +88,7 @@ namespace PacManBot.Games.Concrete
 
 
         [DataMember]
+        [SuppressMessage("CodeQuality", "IDE0052:Remove unread private members", Justification = "Data Member")]
         private string FullMap // Converts map between char[,] and string
         {
             get => map.ToString();

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
@@ -37,6 +38,8 @@ namespace PacManBot.Games.Concrete.Rpg
 
 
         [JsonConstructor]
+        [SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "Serialization")]
+        [SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Serialization")]
         private Enemy(string Name) { /* Do nothing on deserialization */ }
 
         protected Enemy() : base()

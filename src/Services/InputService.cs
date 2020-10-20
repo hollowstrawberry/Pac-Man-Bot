@@ -35,7 +35,7 @@ namespace PacManBot.Services
         
         private Regex _mentionPrefix = null;
         /// <summary>Is a match when the given text begins with a mention to the bot's current user.</summary>
-        public Regex MentionPrefix => _mentionPrefix ?? (_mentionPrefix = new Regex($@"^<@!?{_client.CurrentUser.Id}>"));
+        public Regex MentionPrefix => _mentionPrefix ??= new Regex($@"^<@!?{_client.CurrentUser.Id}>");
 
 
         public InputService(DiscordShardedClient client, LoggingService log,

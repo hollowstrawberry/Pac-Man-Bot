@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using PacManBot.Extensions;

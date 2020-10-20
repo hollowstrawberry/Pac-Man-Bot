@@ -55,11 +55,10 @@ namespace PacManBot.Utils
         private int memPtr;
         private int inputPtr;
 
-        private CancellationTokenSource cts = new CancellationTokenSource();
+        private readonly CancellationTokenSource cts = new CancellationTokenSource();
 
         private char CurrentInstr => instr[instrPtr];
         private byte CurrentValue { get => memory[memPtr]; set => memory[memPtr] = value; }
-        private byte CurrentInput => input[inputPtr];
 
         public bool Finished => instrPtr >= instr.Length - 1;
         public string Output => Encoding.ASCII.GetString(output.ToArray());

@@ -41,11 +41,11 @@ namespace PacManBot.Games.Concrete
 
         // Fields
 
-        [DataMember] private List<UnoPlayer> players = new List<UnoPlayer>();
+        [DataMember] private readonly List<UnoPlayer> players = new List<UnoPlayer>();
         [DataMember] private List<Card> drawPile = new List<Card>();
         [DataMember] private List<Card> discardPile = new List<Card>();
         [DataMember] private bool reversed;
-        [IgnoreDataMember] private List<string> gameLog = new List<string>();
+        [IgnoreDataMember] private readonly List<string> gameLog = new List<string>();
         [IgnoreDataMember] private List<UnoPlayer> updatedPlayers = new List<UnoPlayer>();
 
 

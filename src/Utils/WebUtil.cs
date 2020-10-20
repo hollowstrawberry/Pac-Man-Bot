@@ -16,10 +16,8 @@ namespace PacManBot.Utils
 
                 var req = WebRequest.Create(uri);
                 req.Method = "HEAD";
-                using (var resp = await req.GetResponseAsync())
-                {
-                    return resp.ContentType.ToLowerInvariant().StartsWith("image/");
-                }
+                using var resp = await req.GetResponseAsync();
+                return resp.ContentType.ToLowerInvariant().StartsWith("image/");
             }
             catch (WebException)
             {

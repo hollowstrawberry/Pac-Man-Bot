@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,6 +17,7 @@ namespace PacManBot.Commands.Modules
 {
     [Category(Categories.General)]
     [RequireBotPermissions(BaseBotPermissions)]
+    [SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Command handling")]
     public class GeneralModule : BaseModule
     {
         private static readonly IEnumerable<string> GameNames = ReflectionExtensions.AllTypes

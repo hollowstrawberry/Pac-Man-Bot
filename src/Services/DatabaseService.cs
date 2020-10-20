@@ -37,12 +37,10 @@ namespace PacManBot.Services
             _cachedPrefixes = new ConcurrentDictionary<ulong, string>();
             _cachedNeedsPrefix = new ConcurrentDictionary<ulong, bool>();
 
-            using (var db = MakeDbContext())
-            {
-                db.Database.EnsureCreated();
-                db.Prefixes.Find((ulong)0);
-                log.Info("Database ready");
-            }
+            using var db = MakeDbContext();
+            db.Database.EnsureCreated();
+            db.Prefixes.Find((ulong)0);
+            log.Info("Database ready");
         }
 
 
@@ -94,23 +92,21 @@ namespace PacManBot.Services
         /// <summary>Changes the prefix of the specified guild.</summary>
         public void SetGuildPrefix(ulong guildId, string prefix)
         {
-            using (var db = MakeDbContext())
+            using var db = MakeDbContext();
+            var entry = db.Prefixes.Find(guildId);
+
+            if (entry == null)
             {
-                var entry = db.Prefixes.Find(guildId);
-
-                if (entry == null)
-                {
-                    if (prefix != DefaultPrefix) db.Prefixes.Add((guildId, prefix));
-                }
-                else
-                {
-                    if (prefix == DefaultPrefix) db.Prefixes.Remove(entry);
-                    else entry.Prefix = prefix;
-                }
-
-                db.SaveChanges();
-                _cachedPrefixes[guildId] = prefix;
+                if (prefix != DefaultPrefix) db.Prefixes.Add((guildId, prefix));
             }
+            else
+            {
+                if (prefix == DefaultPrefix) db.Prefixes.Remove(entry);
+                else entry.Prefix = prefix;
+            }
+
+            db.SaveChanges();
+            _cachedPrefixes[guildId] = prefix;
         }
 
 
@@ -136,19 +132,17 @@ namespace PacManBot.Services
         /// <summary>Toggles the specified guild channel between requiring a prefix for commands and not, and returns the new value.</summary>
         public bool ToggleChannelGuildPrefix(ulong channelId)
         {
-            using (var db = MakeDbContext())
-            {
-                var entry = db.NoPrefixGuildChannels.Find(channelId);
+            using var db = MakeDbContext();
+            var entry = db.NoPrefixGuildChannels.Find(channelId);
 
-                if (entry == null) db.NoPrefixGuildChannels.Add(channelId);
-                else db.NoPrefixGuildChannels.Remove(entry);
+            if (entry == null) db.NoPrefixGuildChannels.Add(channelId);
+            else db.NoPrefixGuildChannels.Remove(entry);
 
-                db.SaveChanges();
+            db.SaveChanges();
 
-                var nowNeeds = entry != null;
-                _cachedNeedsPrefix[channelId] = nowNeeds;
-                return nowNeeds;
-            }
+            var nowNeeds = entry != null;
+            _cachedNeedsPrefix[channelId] = nowNeeds;
+            return nowNeeds;
         }
 
 
@@ -168,21 +162,19 @@ namespace PacManBot.Services
         /// <summary>Retrieves a list of scores from the database that fulfills the specified requirements.</summary>
         public List<ScoreEntry> GetScores(TimePeriod period, int start = 0, int amount = 1, ulong? userId = null)
         {
-            using (var db = MakeDbContext())
+            using var db = MakeDbContext();
+            IQueryable<ScoreEntry> scores = db.PacManScores;
+
+            if (period != TimePeriod.All)
             {
-                IQueryable<ScoreEntry> scores = db.PacManScores;
-
-                if (period != TimePeriod.All)
-                {
-                    var minDate = DateTime.Now - TimeSpan.FromHours((int)period);
-                    scores = scores.Where(x => x.Date > minDate);
-                }
-                if (userId != null) scores = scores.Where(x => x.UserId == userId);
-
-                var list = scores.OrderByDescending(x => x.Score).Skip(start).Take(amount).ToList();
-                _log.Debug($"Grabbed {list.Count} score entries");
-                return list;
+                var minDate = DateTime.Now - TimeSpan.FromHours((int)period);
+                scores = scores.Where(x => x.Date > minDate);
             }
+            if (userId != null) scores = scores.Where(x => x.UserId == userId);
+
+            var list = scores.OrderByDescending(x => x.Score).Skip(start).Take(amount).ToList();
+            _log.Debug($"Grabbed {list.Count} score entries");
+            return list;
         }
     }
 }

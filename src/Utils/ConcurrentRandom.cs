@@ -68,9 +68,6 @@ namespace PacManBot.Utils
         }
 
 
-        public override int GetHashCode()
-        {
-            return _crypto.GetHashCode();
-        }
+        public override int GetHashCode() => HashCode.Combine(_crypto);
     }
 }
