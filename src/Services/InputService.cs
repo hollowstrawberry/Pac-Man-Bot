@@ -297,6 +297,7 @@ namespace PacManBot.Services
         {
             _log.Debug($"Input {inputMsg.Content} by {inputMsg.Author.DebugName()} in {inputMsg.Channel.DebugName()}");
 
+            var gameMessage = await game.GetMessageAsync();
             await game.InputAsync(inputMsg.Content, inputMsg.Author.Id);
 
             if (game is MultiplayerGame mGame)
@@ -306,7 +307,7 @@ namespace PacManBot.Services
 
             if (game.State != GameState.Active) _games.Remove(game);
 
-            await game.UpdateMessageAsync(inputMsg);
+            await game.UpdateMessageAsync(gameMessage, inputMsg);
         }
 
 

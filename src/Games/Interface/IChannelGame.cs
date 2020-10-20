@@ -26,8 +26,8 @@ namespace PacManBot.Games
 
         /// <summary>Schedules the updating of this game's message, be it editing or creating it.
         /// Manages multiple calls close together and caps out at 1 update per second.</summary>
-        /// <param name="updateKey">A DateTime or DiscordMessage that uniquely identifies this update.
-        /// Provided messages are deleted afterwards.</param>
-        Task UpdateMessageAsync(object updateKey = null);
+        /// <param name="gameMessage">Optionally, the game's own pre-fetched message.</param>
+        /// <param name="inputMessage">A DiscordMessage that called for this update, to be deleted afterwards.</param>
+        Task UpdateMessageAsync(DiscordMessage gameMessage = null, DiscordMessage inputMessage = null);
     }
 }

@@ -138,19 +138,19 @@ namespace PacManBot.Games
 
         /// <summary>Schedules the updating of this game's message, be it editing or creating it.
         /// Manages multiple calls close together.</summary>
-        /// <param name="updateKey">A DateTime or DiscordMessage that uniquely identifies this update.
-        /// Provided messages are deleted afterwards.</param>
-        public async Task UpdateMessageAsync(object updateKey = null)
+        /// <param name="gameMessage">Optionally, the game's own pre-fetched message</param>
+        /// <param name="inputMessage">A DiscordMessage that called for this update, to be deleted afterwards.</param>
+        public async Task UpdateMessageAsync(DiscordMessage gameMessage = null, DiscordMessage inputMessage = null)
         {
-            var gameMessage = await GetMessageAsync();
+            if (gameMessage == null) gameMessage = await GetMessageAsync();
             if (gameMessage == null) return;
 
-            if (updateKey == null) updateKey = DateTime.Now;
+            var updateKey = (object)inputMessage ?? DateTime.Now;
             PendingUpdates.Push(updateKey);
             
             if (DateTime.Now - LastUpdated > TimeSpan.FromMilliseconds(UpdateMillis))
             {
-                await EditOrCreateMessageAsync(gameMessage);
+                await EditOrCreateMessageAsync(gameMessage, inputMessage != null);
                 return;
             }
 
@@ -158,25 +158,25 @@ namespace PacManBot.Games
 
             if (PendingUpdates.TryPeek(out object latest) && latest == updateKey)
             {
-                await EditOrCreateMessageAsync(gameMessage);
+                await EditOrCreateMessageAsync(gameMessage, inputMessage != null);
             }
         }
 
-        private async Task EditOrCreateMessageAsync(DiscordMessage gameMessage)
+        private async Task EditOrCreateMessageAsync(DiscordMessage gameMessage, bool messageInput)
         {
             var updates = PendingUpdates.ToList();
             PendingUpdates.Clear();
             LastUpdated = DateTime.Now;
 
-            if (gameMessage != null && (Channel?.BotCan(Permissions.ManageMessages) ?? true))
+            if (gameMessage != null && (!messageInput || Channel.BotCan(Permissions.ManageMessages)))
             {
                 await gameMessage.ModifyAsync(await GetContentAsync(), (await GetEmbedAsync())?.Build());
 
-                var messages = updates.OfType<DiscordMessage>(); // when the edit keys are input messages
                 if (Channel != null)
                 {
-                    if (messages.Count() > 1) await Channel.DeleteMessagesAsync(messages);
-                    else if (messages.Count() == 1) await Channel.DeleteMessageAsync(messages.First());
+                    var inputMessages = updates.OfType<DiscordMessage>().ToList();
+                    if (inputMessages.Count > 1) await Channel.DeleteMessagesAsync(inputMessages);
+                    else if (inputMessages.Count == 1) await Channel.DeleteMessageAsync(inputMessages.First());
                 }
             }
             else

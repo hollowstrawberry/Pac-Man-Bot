@@ -130,7 +130,7 @@ namespace PacManBot.Commands.Modules
                 else
                 {
                     await SaveGameAsync(ctx);
-                    await UpdateGameMessageAsync(ctx);
+                    await UpdateGameMessageAsync(ctx, msg);
                 }
             }
             else
