@@ -22,10 +22,11 @@ namespace PacManBot.Games
         /// <summary>The time when the message used by this game was last moved.</summary>
         public virtual DateTime LastBumped { get; set; }
 
-        /// <summary>The last time this game's message was edited/updated.</summary>
-        protected DateTime LastEdited { get; set; } = default;
+        /// <summary>The last time this game's message was updated.</summary>
+        protected DateTime LastUpdated { get; set; } = default;
 
-        protected ConcurrentStack<object> PendingEdits { get; } = new ConcurrentStack<object>();
+        /// <summary>Unique objects that identify requests to update this game's message</summary>
+        protected ConcurrentStack<object> PendingUpdates { get; } = new ConcurrentStack<object>();
 
         /// <summary>Empty game constructor, used only with reflection and serialization.</summary>
         protected ChannelGame() { }
@@ -130,7 +131,8 @@ namespace PacManBot.Games
         }
 
 
-        public const int updateMillis = 1000;
+        private const int UpdateMillis = 1000;
+
         /// <summary>Schedules the updating of this game's message, be it editing or creating it.
         /// Manages multiple calls close together.</summary>
         /// <param name="editKey">The unique object to identify this update request, usually a DateTime
@@ -139,17 +141,17 @@ namespace PacManBot.Games
             var gameMessage = await GetMessageAsync();
             if (gameMessage == null) return;
 
-            PendingEdits.Push(editKey);
+            PendingUpdates.Push(editKey);
             
-            if (DateTime.Now - LastEdited > TimeSpan.FromMilliseconds(updateMillis))
+            if (DateTime.Now - LastUpdated > TimeSpan.FromMilliseconds(UpdateMillis))
             {
                 await EditOrCreateMessageAsync(gameMessage);
                 return;
             }
 
-            await Task.Delay(TimeSpan.FromMilliseconds(updateMillis) - (DateTime.Now - LastEdited));
+            await Task.Delay(TimeSpan.FromMilliseconds(UpdateMillis) - (DateTime.Now - LastUpdated));
 
-            if (PendingEdits.TryPeek(out object latest) && latest == editKey)
+            if (PendingUpdates.TryPeek(out object latest) && latest == editKey)
             {
                 await EditOrCreateMessageAsync(gameMessage);
             }
@@ -157,15 +159,15 @@ namespace PacManBot.Games
 
         private async Task EditOrCreateMessageAsync(DiscordMessage gameMessage)
         {
-            var edits = PendingEdits.ToList();
-            PendingEdits.Clear();
-            LastEdited = DateTime.Now;
+            var updates = PendingUpdates.ToList();
+            PendingUpdates.Clear();
+            LastUpdated = DateTime.Now;
 
             if (gameMessage != null && (Channel?.BotCan(Permissions.ManageMessages) ?? true))
             {
                 await gameMessage.ModifyAsync(await GetContentAsync(), (await GetEmbedAsync())?.Build());
 
-                var messages = edits.OfType<DiscordMessage>(); // when the edit keys are input messages
+                var messages = updates.OfType<DiscordMessage>(); // when the edit keys are input messages
                 if (Channel != null)
                 {
                     if (messages.Count() > 1) await Channel.DeleteMessagesAsync(messages);
@@ -181,7 +183,7 @@ namespace PacManBot.Games
                 if (gameMessage != null) await gameMessage.DeleteAsync();
             }
 
-            LastEdited = DateTime.Now;
+            LastUpdated = DateTime.Now;
         }
     }
 }
