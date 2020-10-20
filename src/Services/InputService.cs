@@ -293,13 +293,11 @@ namespace PacManBot.Services
             return true;
         }
 
-        private async Task ExecuteMessageGameInputAsync(IMessagesGame game, DiscordMessage message)
+        private async Task ExecuteMessageGameInputAsync(IMessagesGame game, DiscordMessage inputMsg)
         {
-            var gameMessage = await game.GetMessageAsync();
+            log.Debug($"Input {inputMsg.Content} by {inputMsg.Author.DebugName()} in {inputMsg.Channel.DebugName()}");
 
-            log.Debug($"Input {message.Content} by {message.Author.DebugName()} in {message.Channel.DebugName()}");
-
-            await game.InputAsync(message.Content, message.Author.Id);
+            await game.InputAsync(inputMsg.Content, inputMsg.Author.Id);
 
             if (game is MultiplayerGame mGame)
             {
@@ -308,19 +306,7 @@ namespace PacManBot.Services
 
             if (game.State != GameState.Active) games.Remove(game);
 
-            if (gameMessage != null && message.Channel.BotCan(Permissions.ManageMessages))
-            {
-                await gameMessage.ModifyWithGameAsync(game);
-                await message.DeleteAsync();
-            }
-            else
-            {
-                var newMsg = await message.Channel.SendMessageAsync(
-                    await game.GetContentAsync(), false, (await game.GetEmbedAsync())?.Build());
-                game.MessageId = newMsg.Id;
-
-                if (gameMessage != null) await gameMessage.DeleteAsync();
-            }
+            await game.UpdateMessageAsync(inputMsg);
         }
 
 
@@ -351,10 +337,7 @@ namespace PacManBot.Services
                 }
             }
 
-            if (message != null)
-            {
-                await message.ModifyWithGameAsync(game);
-            }
+            await game.UpdateMessageAsync(DateTime.Now);
         }
     }
 }

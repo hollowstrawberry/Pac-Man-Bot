@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
@@ -111,7 +112,7 @@ namespace PacManBot.Commands.Modules
                     await message.CreateReactionAsync(input);
                 }
 
-                await message.ModifyWithGameAsync(game);
+                await game.UpdateMessageAsync(DateTime.Now);
             }
             catch (NotFoundException) { }
         }

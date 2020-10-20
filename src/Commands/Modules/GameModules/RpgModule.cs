@@ -281,7 +281,7 @@ namespace PacManBot.Commands.Modules
             {
                 Game(ctx).lastEmote = RpgGame.ProfileEmote;
                 Game(ctx).fightEmbed = Game(ctx).player.Profile(ctx.Prefix, reaction: true);
-                await SendOrUpdateGameMessageAsync(ctx);
+                await UpdateGameMessageAsync(ctx);
 
                 if (ctx.BotCan(Permissions.ManageMessages))
                 {
@@ -363,7 +363,7 @@ namespace PacManBot.Commands.Modules
             {
                 Game(ctx).lastEmote = RpgGame.SkillsEmote;
                 Game(ctx).fightEmbed = Game(ctx).player.Skills(ctx.Prefix, true);
-                await SendOrUpdateGameMessageAsync(ctx);
+                await UpdateGameMessageAsync(ctx);
             }
         }
 
@@ -573,7 +573,7 @@ namespace PacManBot.Commands.Modules
                 Game(ctx).fightEmbed = Game(ctx).FightPvP();
                 otherGame.fightEmbed = Game(ctx).fightEmbed;
 
-                msg = await SendOrUpdateGameMessageAsync(ctx);
+                msg = await UpdateGameMessageAsync(ctx);
                 await AddBattleEmotes(msg, Game(ctx));
             }
         }

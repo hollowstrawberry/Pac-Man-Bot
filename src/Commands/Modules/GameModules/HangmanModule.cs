@@ -106,7 +106,7 @@ namespace PacManBot.Commands.Modules
                 {
                     Game(ctx).SetWord(word);
                     await response.AutoReactAsync();
-                    await SendOrUpdateGameMessageAsync(ctx);
+                    await UpdateGameMessageAsync(ctx);
                     return;
                 }
             }

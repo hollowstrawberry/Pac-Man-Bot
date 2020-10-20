@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DSharpPlus;
@@ -20,11 +22,23 @@ namespace PacManBot.Games
         /// <summary>The time when the message used by this game was last moved.</summary>
         public virtual DateTime LastBumped { get; set; }
 
+        /// <summary>The last time this game's message was edited/updated.</summary>
+        protected DateTime LastEdited { get; set; } = default;
+
+        protected ConcurrentStack<object> PendingEdits { get; } = new ConcurrentStack<object>();
+
+        /// <summary>Empty game constructor, used only with reflection and serialization.</summary>
+        protected ChannelGame() { }
+
+        /// <summary>Creates a new game instance in the specified channel and with the specified players.</summary>
+        protected ChannelGame(ulong channelId, ulong[] userIds, IServiceProvider services)
+            : base(userIds, services)
+        {
+            ChannelId = channelId;
+        }
+
 
         private DiscordClient _client;
-        private DiscordChannel _channel;
-        private DiscordMessage _message;
-
         /// <summary>Retrieves the game's current shard.</summary>
         public DiscordClient Client
         {
@@ -52,6 +66,8 @@ namespace PacManBot.Games
             }
         }
 
+
+        private DiscordChannel _channel;
         /// <summary>Retrieves the game's current channel.</summary>
         public DiscordChannel Channel
         {
@@ -81,9 +97,12 @@ namespace PacManBot.Games
             }
         }
 
+
         /// <summary>Retrieves this game's guild. Null when the channel is a DM channel.</summary>
         public DiscordGuild Guild => Channel?.Guild;
 
+
+        private DiscordMessage _message;
         /// <summary>Returns the game's current message, caching it if it wasn't already.</summary>
         public async ValueTask<DiscordMessage> GetMessageAsync()
         {
@@ -95,21 +114,11 @@ namespace PacManBot.Games
             return _message;
         }
 
+
         /// <summary>Retrieves this game's owner (its first player).</summary>
         public override async ValueTask<DiscordUser> GetOwnerAsync()
         {
             return Guild == null ? await Client.GetUserAsync(OwnerId) : await Guild.GetMemberAsync(OwnerId);
-        }
-
-
-        /// <summary>Empty game constructor, used only with reflection and serialization.</summary>
-        protected ChannelGame() { }
-
-        /// <summary>Creates a new game instance in the specified channel and with the specified players.</summary>
-        protected ChannelGame(ulong channelId, ulong[] userIds, IServiceProvider services)
-            : base(userIds, services)
-        {
-            ChannelId = channelId;
         }
 
 
@@ -118,6 +127,61 @@ namespace PacManBot.Games
         {
             string prefix = storage.GetPrefix(Channel);
             return value.StartsWith(prefix) ? value.Substring(prefix.Length) : value;
+        }
+
+
+        public const int updateMillis = 1000;
+        /// <summary>Schedules the updating of this game's message, be it editing or creating it.
+        /// Manages multiple calls close together.</summary>
+        /// <param name="editKey">The unique object to identify this update request, usually a DateTime
+        public async Task UpdateMessageAsync(object editKey)
+        {
+            var gameMessage = await GetMessageAsync();
+            if (gameMessage == null) return;
+
+            PendingEdits.Push(editKey);
+            
+            if (DateTime.Now - LastEdited > TimeSpan.FromMilliseconds(updateMillis))
+            {
+                await EditOrCreateMessageAsync(gameMessage);
+                return;
+            }
+
+            await Task.Delay(TimeSpan.FromMilliseconds(updateMillis) - (DateTime.Now - LastEdited));
+
+            if (PendingEdits.TryPeek(out object latest) && latest == editKey)
+            {
+                await EditOrCreateMessageAsync(gameMessage);
+            }
+        }
+
+        private async Task EditOrCreateMessageAsync(DiscordMessage gameMessage)
+        {
+            var edits = PendingEdits.ToList();
+            PendingEdits.Clear();
+            LastEdited = DateTime.Now;
+
+            if (gameMessage != null && (Channel?.BotCan(Permissions.ManageMessages) ?? true))
+            {
+                await gameMessage.ModifyAsync(await GetContentAsync(), (await GetEmbedAsync())?.Build());
+
+                var messages = edits.OfType<DiscordMessage>(); // when the edit keys are input messages
+                if (Channel != null)
+                {
+                    if (messages.Count() > 1) await Channel.DeleteMessagesAsync(messages);
+                    else if (messages.Count() == 1) await Channel.DeleteMessageAsync(messages.First());
+                }
+            }
+            else
+            {
+                var newMsg = await gameMessage.Channel
+                    .SendMessageAsync(await GetContentAsync(), false, (await GetEmbedAsync())?.Build());
+                MessageId = newMsg.Id;
+
+                if (gameMessage != null) await gameMessage.DeleteAsync();
+            }
+
+            LastEdited = DateTime.Now;
         }
     }
 }

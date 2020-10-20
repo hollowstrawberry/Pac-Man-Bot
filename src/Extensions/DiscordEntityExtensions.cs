@@ -88,13 +88,6 @@ namespace PacManBot.Extensions
             => ctx.Message.AutoReactAsync(success);
 
 
-        /// <summary>Modifies a message to update the game being displayed.</summary>
-        public static async Task ModifyWithGameAsync(this DiscordMessage message, IChannelGame game)
-        {
-            await message.ModifyAsync(await game.GetContentAsync(), (await game.GetEmbedAsync())?.Build());
-        }
-
-
         /// <summary>The nickname of this user if it has one, otherwise its username.</summary>
         public static string DisplayName(this DiscordUser user)
         {

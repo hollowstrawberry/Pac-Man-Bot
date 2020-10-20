@@ -23,5 +23,11 @@ namespace PacManBot.Games
 
         /// <summary>Retrieves this game's latest message.</summary>
         ValueTask<DiscordMessage> GetMessageAsync();
+
+        /// <summary>Schedules the updating of this game's message, be it editing or creating it.
+        /// Manages multiple calls close together and caps out at 1 update per second.</summary>
+        /// <param name="editKey">The unique object to identify this update request, usually a DateTime
+        /// or DiscordMessage. Discord messages provided will be deleted afterwards if possible.</param>
+        Task UpdateMessageAsync(object editKey);
     }
 }

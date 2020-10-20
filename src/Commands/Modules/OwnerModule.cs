@@ -371,15 +371,13 @@ namespace PacManBot.Commands.Modules
                 }
             }
 
-            var msg = await game.GetMessageAsync();
-            if (msg != null) await msg.ModifyWithGameAsync(game);
-            else msg = await ctx.RespondAsync(await game.GetContentAsync(), await game.GetEmbedAsync());
+            await game.UpdateMessageAsync(DateTime.Now);
 
             if (game is MultiplayerGame mgame && await mgame.IsBotTurnAsync())
             {
                 await mgame.BotInputAsync();
                 await Task.Delay(1000);
-                await msg.ModifyWithGameAsync(mgame);
+                await mgame.UpdateMessageAsync(DateTime.Now);
             }
 
             if (game.State != GameState.Active) Games.Remove(game);
