@@ -27,7 +27,7 @@ namespace PacManBot.Games
         int Time { get; set; }
 
         /// <summary>Discord snowflake ID of all users participating in this game.</summary>
-        ulong[] UserId { get; set; } // Players
+        ulong[] UserId { get; } // Players
 
 
 

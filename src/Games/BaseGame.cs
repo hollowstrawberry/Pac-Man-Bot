@@ -47,10 +47,10 @@ namespace PacManBot.Games
         public virtual int Time { get; set; }
 
         /// <summary>Discord snowflake ID of all users participating in this game.</summary>
-        public virtual ulong[] UserId { get; set; }
+        public virtual ulong[] UserId { get; }
 
         /// <summary>Discord snowflake ID of the first user of this game, or its owner in case of <see cref="IUserGame"/>s.</summary>
-        public virtual ulong OwnerId { get => UserId[0]; protected set => UserId = new[] { value }; }
+        public virtual ulong OwnerId { get => UserId[0]; protected set => UserId[0] = value; }
 
         private DiscordUser _owner;
 

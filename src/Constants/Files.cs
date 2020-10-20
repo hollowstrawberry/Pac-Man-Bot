@@ -11,6 +11,7 @@
             DefaultDatabase = "database.sqlite",
             FeedbackLog = "logs/feedback.txt",
             CustomMapLog = "logs/custom.txt",
+            Words = "words.txt",
             GameFolder = "games/",
             GameExtension = ".json",
             ManualRestart = "restart";
