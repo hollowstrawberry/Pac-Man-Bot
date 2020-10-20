@@ -7,7 +7,6 @@ namespace PacManBot.Services.Database
         public DbSet<ScoreEntry> PacManScores { get; private set; }
         public DbSet<GuildPrefix> Prefixes { get; private set; }
         public DbSet<NoPrefixGuildChannel> NoPrefixGuildChannels { get; private set; }
-        public DbSet<NoAutoresponseGuild> NoAutoresponseGuilds { get; private set; }
 
         private readonly string connectionString;
 
