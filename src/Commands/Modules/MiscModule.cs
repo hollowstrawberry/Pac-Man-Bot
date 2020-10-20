@@ -60,7 +60,7 @@ namespace PacManBot.Commands.Modules
             {
                 var msg = await game.GetMessageAsync();
                 EndGame(ctx);
-                if (msg != null) await game.UpdateMessageAsync(DateTime.Now);
+                if (msg != null) await game.UpdateMessageAsync();
 
                 if (game is PacManGame pacManGame)
                 {

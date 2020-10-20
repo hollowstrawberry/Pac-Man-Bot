@@ -85,7 +85,7 @@ namespace PacManBot.Commands
 
             try
             {
-                await cgame.UpdateMessageAsync(DateTime.Now);
+                await cgame.UpdateMessageAsync();
                 return await cgame.GetMessageAsync();
             }
             catch (NotFoundException) { return null; }

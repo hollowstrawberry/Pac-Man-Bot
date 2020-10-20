@@ -112,7 +112,7 @@ namespace PacManBot.Commands.Modules
                     await message.CreateReactionAsync(input);
                 }
 
-                await game.UpdateMessageAsync(DateTime.Now);
+                await game.UpdateMessageAsync();
             }
             catch (NotFoundException) { }
         }

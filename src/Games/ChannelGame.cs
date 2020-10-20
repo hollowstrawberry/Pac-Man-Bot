@@ -135,13 +135,15 @@ namespace PacManBot.Games
 
         /// <summary>Schedules the updating of this game's message, be it editing or creating it.
         /// Manages multiple calls close together.</summary>
-        /// <param name="editKey">The unique object to identify this update request, usually a DateTime
-        public async Task UpdateMessageAsync(object editKey)
+        /// <param name="updateKey">A DateTime or DiscordMessage that uniquely identifies this update.
+        /// Provided messages are deleted afterwards.</param>
+        public async Task UpdateMessageAsync(object updateKey = null)
         {
             var gameMessage = await GetMessageAsync();
             if (gameMessage == null) return;
 
-            PendingUpdates.Push(editKey);
+            if (updateKey == null) updateKey = DateTime.Now;
+            PendingUpdates.Push(updateKey);
             
             if (DateTime.Now - LastUpdated > TimeSpan.FromMilliseconds(UpdateMillis))
             {
@@ -151,7 +153,7 @@ namespace PacManBot.Games
 
             await Task.Delay(TimeSpan.FromMilliseconds(UpdateMillis) - (DateTime.Now - LastUpdated));
 
-            if (PendingUpdates.TryPeek(out object latest) && latest == editKey)
+            if (PendingUpdates.TryPeek(out object latest) && latest == updateKey)
             {
                 await EditOrCreateMessageAsync(gameMessage);
             }

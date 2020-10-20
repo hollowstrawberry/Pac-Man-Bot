@@ -337,7 +337,7 @@ namespace PacManBot.Services
                 }
             }
 
-            await game.UpdateMessageAsync(DateTime.Now);
+            await game.UpdateMessageAsync();
         }
     }
 }

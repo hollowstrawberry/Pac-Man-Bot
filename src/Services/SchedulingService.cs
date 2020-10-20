@@ -95,7 +95,7 @@ namespace PacManBot.Services
             {
                 try
                 {
-                    await game.UpdateMessageAsync(DateTime.Now);
+                    await game.UpdateMessageAsync();
                 }
                 catch (NotFoundException) { }
             }
