@@ -143,7 +143,6 @@ namespace PacManBot.Games
         public async Task UpdateMessageAsync(DiscordMessage gameMessage = null, DiscordMessage inputMessage = null)
         {
             if (gameMessage == null) gameMessage = await GetMessageAsync();
-            if (gameMessage == null) return;
 
             var updateKey = (object)inputMessage ?? DateTime.Now;
             PendingUpdates.Push(updateKey);
