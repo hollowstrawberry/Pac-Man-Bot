@@ -16,13 +16,13 @@ namespace PacManBot.Games
         /// <summary>Invisible character to be used in embeds.</summary>
         protected const string Empty = DiscordStringUtilities.Empty;
 
-        protected DiscordShardedClient shardedClient;
-        protected PmBotConfig config;
-        protected LoggingService log;
-        protected DatabaseService storage;
-        protected GameService games;
+        protected DiscordShardedClient ShardedClient { get; private set; }
+        protected PmBotConfig Config { get; private set; }
+        protected LoggingService Log { get; private set; }
+        protected DatabaseService Storage { get; private set; }
+        protected GameService Games { get; private set; }
 
-        protected PmBotContent Content => config.Content;
+        protected PmBotContent Content => Config.Content;
 
 
 
@@ -52,17 +52,17 @@ namespace PacManBot.Games
         /// <summary>Discord snowflake ID of the first user of this game, or its owner in case of <see cref="IUserGame"/>s.</summary>
         public virtual ulong OwnerId { get => UserId[0]; protected set => UserId = new[] { value }; }
 
-        private DiscordUser owner;
+        private DiscordUser _owner;
 
         /// <summary>Retrieves the user whose game this is.</summary>
         public virtual async ValueTask<DiscordUser> GetOwnerAsync()
         {
-            if (owner != null) return owner;
-            foreach (var (_, shard) in shardedClient.ShardClients)
+            if (_owner != null) return _owner;
+            foreach (var (_, shard) in ShardedClient.ShardClients)
             {
-                if ((owner = await shard.GetUserAsync(OwnerId)) != null) break; 
+                if ((_owner = await shard.GetUserAsync(OwnerId)) != null) break; 
             }
-            return owner;
+            return _owner;
         }
 
 
@@ -85,11 +85,11 @@ namespace PacManBot.Games
         /// <summary>Sets the services that will be used by this game instance.</summary>
         protected virtual void SetServices(IServiceProvider services)
         {
-            config = services.Get<PmBotConfig>();
-            shardedClient = services.Get<DiscordShardedClient>();
-            log = services.Get<LoggingService>();
-            storage = services.Get<DatabaseService>();
-            games = services.Get<GameService>();
+            Config = services.Get<PmBotConfig>();
+            ShardedClient = services.Get<DiscordShardedClient>();
+            Log = services.Get<LoggingService>();
+            Storage = services.Get<DatabaseService>();
+            Games = services.Get<GameService>();
         }
 
 

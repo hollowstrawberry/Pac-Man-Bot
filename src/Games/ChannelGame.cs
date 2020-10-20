@@ -40,6 +40,7 @@ namespace PacManBot.Games
 
 
         private DiscordClient _client;
+
         /// <summary>Retrieves the game's current shard.</summary>
         public DiscordClient Client
         {
@@ -47,7 +48,7 @@ namespace PacManBot.Games
             {
                 if (_client != null) return _client;
 
-                foreach (var shard in shardedClient.ShardClients.Values)
+                foreach (var shard in ShardedClient.ShardClients.Values)
                 {
                     if (shard.PrivateChannels.TryGetValue(ChannelId, out var dmChannel))
                     {
@@ -69,6 +70,7 @@ namespace PacManBot.Games
 
 
         private DiscordChannel _channel;
+
         /// <summary>Retrieves the game's current channel.</summary>
         public DiscordChannel Channel
         {
@@ -76,7 +78,7 @@ namespace PacManBot.Games
             {
                 if (_channel?.Id != ChannelId) // if the channel changed, all bets are off
                 {
-                    foreach (var shard in shardedClient.ShardClients.Values)
+                    foreach (var shard in ShardedClient.ShardClients.Values)
                     {
                         if (shard.PrivateChannels.TryGetValue(ChannelId, out var dmChannel))
                         {
@@ -104,6 +106,7 @@ namespace PacManBot.Games
 
 
         private DiscordMessage _message;
+
         /// <summary>Returns the game's current message, caching it if it wasn't already.</summary>
         public async ValueTask<DiscordMessage> GetMessageAsync()
         {
@@ -126,7 +129,7 @@ namespace PacManBot.Games
         /// <summary>Used to remove the guild prefix from game input, as it is to be ignored.</summary>
         protected string StripPrefix(string value)
         {
-            string prefix = storage.GetPrefix(Channel);
+            string prefix = Storage.GetPrefix(Channel);
             return value.StartsWith(prefix) ? value.Substring(prefix.Length) : value;
         }
 

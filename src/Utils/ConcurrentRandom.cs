@@ -9,7 +9,7 @@ namespace PacManBot.Utils
     /// </summary>
     public class ConcurrentRandom : Random
     {
-        private readonly RNGCryptoServiceProvider crypto;
+        private readonly RNGCryptoServiceProvider _crypto;
 
         /// <summary>Creates a new instance.</summary>
         public ConcurrentRandom() : this(new RNGCryptoServiceProvider()) {}
@@ -17,14 +17,14 @@ namespace PacManBot.Utils
         /// <summary>Creates a new instance that is a wrapper for the given <see cref="RNGCryptoServiceProvider"/>.</summary>
         public ConcurrentRandom(RNGCryptoServiceProvider crypto)
         {
-            this.crypto = crypto;
+            _crypto = crypto;
         }
 
 
         /// <summary>Fills the elements of a specified array of bytes with random numbers.</summary>
         public override void NextBytes(byte[] buffer)
         {
-            crypto.GetBytes(buffer);
+            _crypto.GetBytes(buffer);
         }
 
 
@@ -70,7 +70,7 @@ namespace PacManBot.Utils
 
         public override int GetHashCode()
         {
-            return crypto.GetHashCode();
+            return _crypto.GetHashCode();
         }
     }
 }

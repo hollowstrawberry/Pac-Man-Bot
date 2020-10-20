@@ -15,17 +15,17 @@ namespace PacManBot.Games
     [DataContract]
     public class Board<T>
     {
-        [DataMember] protected readonly T[,] values;
+        [DataMember] protected readonly T[,] _values;
 
 
         /// <summary>Number of elements in the board.</summary>
-        public int Length => values.Length;
+        public int Length => _values.Length;
 
         /// <summary>Number of columns in the board.</summary>
-        public int Width => values.GetLength(0);
+        public int Width => _values.GetLength(0);
 
         /// <summary>Number of rows in the board.</summary>
-        public int Height => values.GetLength(1);
+        public int Height => _values.GetLength(1);
 
         /// <summary>Enumerates through all positions in the board in order.</summary>
         public IEnumerable<Pos> Positions => new Range(Width * Height).Select(i => new Pos(i % Width, i / Width));
@@ -38,7 +38,7 @@ namespace PacManBot.Games
             if (width < 1) throw new ArgumentOutOfRangeException(nameof(width));
             if (height < 1) throw new ArgumentOutOfRangeException(nameof(height));
 
-            values = new T[width, height];
+            _values = new T[width, height];
             if (EqualityComparer<T>.Default.Equals(fillValue, default)) Fill(fillValue);
         }
 
@@ -47,7 +47,7 @@ namespace PacManBot.Games
         [JsonConstructor]
         public Board(T[,] values)
         {
-            this.values = values ?? throw new ArgumentNullException(nameof(values));
+            this._values = values ?? throw new ArgumentNullException(nameof(values));
         }
 
 
@@ -66,20 +66,20 @@ namespace PacManBot.Games
             get
             {
                 Wrap(ref pos);
-                return values[pos.x, pos.y];
+                return _values[pos.x, pos.y];
             }
 
             set
             {
                 Wrap(ref pos);
-                values[pos.x, pos.y] = value;
+                _values[pos.x, pos.y] = value;
             }
         }
 
 
         public static implicit operator Board<T>(T[,] array) => new Board<T>(array);
 
-        public static explicit operator T[,] (Board<T> board) => board.values;
+        public static explicit operator T[,] (Board<T> board) => board._values;
 
         public static bool operator ==(Board<T> left, Board<T> right) => left.Equals(right);
 
@@ -89,7 +89,7 @@ namespace PacManBot.Games
         /// <summary>Creates a shallow copy of this board.</summary>
         public Board<T> Copy()
         {
-            return new Board<T>((T[,])values.Clone());
+            return new Board<T>((T[,])_values.Clone());
         }
 
 
@@ -100,7 +100,7 @@ namespace PacManBot.Games
             {
                 for (int y = 0; y < Height; y++)
                 {
-                    values[x, y] = value;
+                    _values[x, y] = value;
                 }
             }
 
@@ -116,7 +116,7 @@ namespace PacManBot.Games
             {
                 for (int y = 0; y < Height; y++)
                 {
-                    values[x, y] = valueSelector((x, y));
+                    _values[x, y] = valueSelector((x, y));
                 }
             }
 
@@ -145,7 +145,7 @@ namespace PacManBot.Games
                 if (y > 0) sb.Append('\n');
                 for (int x = 0; x < Width; x++)
                 {
-                    sb.Append(values[x, y]);
+                    sb.Append(_values[x, y]);
                     if (x < Width - 1 && typeof(T) != typeof(char)) sb.Append(' ');
                 }
             }
@@ -165,7 +165,7 @@ namespace PacManBot.Games
                 if (y > 0) sb.Append('\n');
                 for (int x = 0; x < Width; x++)
                 {
-                    sb.Append(stringSelector(values[x, y]));
+                    sb.Append(stringSelector(_values[x, y]));
                 }
             }
 
@@ -173,8 +173,8 @@ namespace PacManBot.Games
         }
 
 
-        public override bool Equals(object obj) => obj is Board<T> board && values == board.values;
+        public override bool Equals(object obj) => obj is Board<T> board && _values == board._values;
 
-        public override int GetHashCode() => values.GetHashCode();
+        public override int GetHashCode() => _values.GetHashCode();
     }
 }

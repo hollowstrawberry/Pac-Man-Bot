@@ -17,13 +17,13 @@ namespace PacManBot.Services
     /// </summary>
     public class SchedulingService
     {
-        private readonly LoggingService log;
-        private readonly GameService games;
-        private readonly bool scheduledRestart;
+        private readonly LoggingService _log;
+        private readonly GameService _games;
+        private readonly bool _scheduledRestart;
 
 
         /// <summary>All active scheduled actions.</summary>
-        public List<Timer> timers;
+        public List<Timer> Timers { get; private set; }
 
         /// <summary>Fired when a scheduled restart is due.</summary>
         public event Func<Task> PrepareRestart;
@@ -31,27 +31,27 @@ namespace PacManBot.Services
 
         public SchedulingService(PmBotConfig config, LoggingService log, GameService games)
         {
-            this.log = log;
-            this.games = games;
+            _log = log;
+            _games = games;
 
-            scheduledRestart = config.scheduledRestart;
+            _scheduledRestart = config.scheduledRestart;
         }
 
 
         /// <summary>Starts scheduling all predefined actions.</summary>
         public void StartTimers()
         {
-            timers = new List<Timer>
+            Timers = new List<Timer>
             {
                 new Timer(DeleteOldGames, null, TimeSpan.FromSeconds(60), TimeSpan.FromSeconds(60))
             };
 
-            if (scheduledRestart)
+            if (_scheduledRestart)
             {
                 TimeSpan timeToGo = TimeSpan.FromDays(1) - DateTime.Now.TimeOfDay;
                 if (timeToGo < TimeSpan.FromMinutes(60)) timeToGo += TimeSpan.FromDays(1);
 
-                timers.Add(new Timer(RestartBot, null, timeToGo, Timeout.InfiniteTimeSpan));
+                Timers.Add(new Timer(RestartBot, null, timeToGo, Timeout.InfiniteTimeSpan));
             }
         }
 
@@ -59,8 +59,8 @@ namespace PacManBot.Services
         /// <summary>Cease all scheduled actions</summary>
         public void StopTimers()
         {
-            foreach(var timer in timers) timer.Dispose();
-            timers = new List<Timer>();
+            foreach(var timer in Timers) timer.Dispose();
+            Timers = new List<Timer>();
         }
 
 
@@ -71,7 +71,7 @@ namespace PacManBot.Services
 
             var removedChannelGames = new List<IChannelGame>();
 
-            var expiredGames = games.AllGames
+            var expiredGames = _games.AllGames
                 .Where(g => now - g.LastPlayed > g.Expiry)
                 .Where(g => !(g is IUserGame)) // The bot was offline for a long time and I don't want to delete pets
                 .ToArray();
@@ -79,7 +79,7 @@ namespace PacManBot.Services
             {
                 count++;
                 game.State = GameState.Cancelled;
-                games.Remove(game, false);
+                _games.Remove(game, false);
 
                 if (game is IChannelGame cGame) removedChannelGames.Add(cGame);
             }
@@ -87,7 +87,7 @@ namespace PacManBot.Services
 
             if (count > 0)
             {
-                log.Debug($"Removed {count} expired game{"s".If(count > 1)}");
+                _log.Debug($"Removed {count} expired game{"s".If(count > 1)}");
             }
 
 
@@ -104,7 +104,7 @@ namespace PacManBot.Services
 
         private async void RestartBot(object state)
         {
-            log.Info("Restarting");
+            _log.Info("Restarting");
             await PrepareRestart.Invoke();
             Environment.Exit(ExitCodes.ScheduledReboot);
         }

@@ -283,7 +283,7 @@ namespace PacManBot.Games.Concrete
             {
                 var mentions = toInvite.Select(x => x.Mention);
                 string inviteMsg = $"{string.Join(", ", mentions)} You've been invited to play Uno. " +
-                                   $"Type `{storage.GetPrefix(Channel)}uno join` to join.\n";
+                                   $"Type `{Storage.GetPrefix(Channel)}uno join` to join.\n";
                 Message = inviteMsg;
             }
 
@@ -293,7 +293,7 @@ namespace PacManBot.Games.Concrete
 
             if (Turn < 0 || Turn >= players.Length) Turn = 0; // There's an error I don't know how is caused or how to fix
 
-            await games.SaveAsync(this);
+            await Games.SaveAsync(this);
         }
 
 
@@ -347,7 +347,7 @@ namespace PacManBot.Games.Concrete
                     await ClearGameLogAsync();
                     Callout(forgot);
                 }
-                await games.SaveAsync(this);
+                await Games.SaveAsync(this);
                 return;
             }
 
@@ -456,7 +456,7 @@ namespace PacManBot.Games.Concrete
 
             if (!calledByAi || !await CurrentPlayer.IsBotAsync())
             {
-                await games.SaveAsync(this);
+                await Games.SaveAsync(this);
                 foreach (var player in updatedPlayers.Distinct().Where(x => !x.IsBotAsync().GetAwaiter().GetResult()).ToArray())
                 {
                     await SendCardsAsync(player);
@@ -517,7 +517,7 @@ namespace PacManBot.Games.Concrete
             if (State == GameState.Cancelled) return CancelledEmbed();
 
             var description = new StringBuilder();
-            string prefix = storage.GetPrefix(Channel);
+            string prefix = Storage.GetPrefix(Channel);
 
             if (players.Count < 2) description.Append("👥 You need at least 2 players.\nWait for friends to join or invite some bots!\n\n");
 

@@ -372,7 +372,7 @@ namespace PacManBot.Games.Concrete
 
             if (State == GameState.Active)
             {
-                await games.SaveAsync(this);
+                await Games.SaveAsync(this);
             }
         }
 
@@ -405,7 +405,7 @@ namespace PacManBot.Games.Concrete
 
             if (lastInput == PacManInput.Help)
             {
-                return new ValueTask<string>(Content.gameHelp.Replace("{prefix}", storage.GetPrefix(Channel)));
+                return new ValueTask<string>(Content.gameHelp.Replace("{prefix}", Storage.GetPrefix(Channel)));
             }
 
             try
@@ -522,11 +522,11 @@ namespace PacManBot.Games.Concrete
             }
             catch (Exception e)
             {
-                log.Exception($"Displaying game in {Channel.DebugName()}", e);
+                Log.Exception($"Displaying game in {Channel.DebugName()}", e);
                 return new ValueTask<string>(
                     $"```There was an error displaying the game. {"Make sure your custom map is valid. ".If(custom)}" +
                     $"If this problem persists, please contact the author of the bot using the " +
-                    $"{storage.GetPrefix(Channel)}feedback command.```");
+                    $"{Storage.GetPrefix(Channel)}feedback command.```");
             }
         }
 

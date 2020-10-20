@@ -39,29 +39,29 @@ namespace PacManBot.Games
 
 
 
-        private readonly int value;
+        private readonly int _value;
 
         private Player(int value)
         {
-            this.value = value;
+            this._value = value;
         }
 
 
-        public static implicit operator int(Player player) => player.value;
+        public static implicit operator int(Player player) => player._value;
 
         public static implicit operator Player(int value) => new Player(value);
 
 
         /// <summary>Returns the opposing player in a two-player game.</summary>
-        public Player Opponent => value == Red ? Blue : Red;
+        public Player Opponent => _value == Red ? Blue : Red;
 
         /// <summary>Returns the <see cref="Discord.Color"/> that represents this player.</summary>
         public DiscordColor Color
         {
             get
             {
-                if (value >= 0 && value < RgbColors.Length) return RgbColors[value];
-                if (value == Tie) return Colors.Green;
+                if (_value >= 0 && _value < RgbColors.Length) return RgbColors[_value];
+                if (_value == Tie) return Colors.Green;
                 return Colors.Gray;
             }
         }
@@ -72,7 +72,7 @@ namespace PacManBot.Games
         {
             get
             {
-                if (value >= 0 && value < ColorNames.Length) return ColorNames[value];
+                if (_value >= 0 && _value < ColorNames.Length) return ColorNames[_value];
                 return "???";
             }
         }
@@ -81,9 +81,9 @@ namespace PacManBot.Games
         /// <summary>Returns this player's circle custom emoji.</summary>
         public string Circle(bool highlighted = false)
         {
-            if (value == Red)  return highlighted ? CustomEmoji.C4redHL : CustomEmoji.C4red;
-            if (value == Blue) return highlighted ? CustomEmoji.C4blueHL : CustomEmoji.C4blue;
-            if (value == None) return CustomEmoji.BlackCircle;
+            if (_value == Red)  return highlighted ? CustomEmoji.C4redHL : CustomEmoji.C4red;
+            if (_value == Blue) return highlighted ? CustomEmoji.C4blueHL : CustomEmoji.C4blue;
+            if (_value == None) return CustomEmoji.BlackCircle;
             return CustomEmoji.Staff;
         }
 
@@ -91,18 +91,18 @@ namespace PacManBot.Games
         /// <summary>Returns this player's Tic-Tac-Toe symbol custom emoji.</summary>
         public string Symbol(bool highlighted = false)
         {
-            if (value == Red) return highlighted ? CustomEmoji.TTTxHL : CustomEmoji.TTTx;
-            if (value == Blue) return highlighted ? CustomEmoji.TTToHL : CustomEmoji.TTTo;
-            if (value == None) return null;
+            if (_value == Red) return highlighted ? CustomEmoji.TTTxHL : CustomEmoji.TTTx;
+            if (_value == Blue) return highlighted ? CustomEmoji.TTToHL : CustomEmoji.TTTo;
+            if (_value == None) return null;
             return CustomEmoji.Staff;
         }
 
 
-        public override string ToString() => value.ToString();
+        public override string ToString() => _value.ToString();
 
-        public override bool Equals(object obj) => obj is Player p ? p == this : obj is int i && i == value;
+        public override bool Equals(object obj) => obj is Player p ? p == this : obj is int i && i == _value;
 
-        public override int GetHashCode() => value.GetHashCode();
+        public override int GetHashCode() => _value.GetHashCode();
 
 
 
@@ -117,7 +117,7 @@ namespace PacManBot.Games
 
             public override void WriteJson(JsonWriter writer, Player value, JsonSerializer serializer)
             {
-                writer.WriteValue(value.value);
+                writer.WriteValue(value._value);
             }
         }
     }

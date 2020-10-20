@@ -31,7 +31,7 @@ namespace PacManBot.Games.Concrete
         public HangmanGame(ulong channelId, IServiceProvider services)
             : base(channelId, new ulong[] { 1 }, services)
         {
-            SetWord(Program.Random.Choose(config.Content.hangmanWords));
+            SetWord(Program.Random.Choose(Config.Content.hangmanWords));
         }
 
 
@@ -148,8 +148,8 @@ namespace PacManBot.Games.Concrete
                 return embed;
             }
 
-            int stage = mistakes < config.Content.hangmanStageImages.Length ? mistakes : config.Content.hangmanStageImages.Length - 1;
-            embed.WithThumbnail(config.Content.hangmanStageImages[stage]);
+            int stage = mistakes < Config.Content.hangmanStageImages.Length ? mistakes : Config.Content.hangmanStageImages.Length - 1;
+            embed.WithThumbnail(Config.Content.hangmanStageImages[stage]);
 
 
             string displayWord = progress.Select(x => x == ' ' ? " " : $"`{x}`").JoinString(' ').Replace("   ", "\n");

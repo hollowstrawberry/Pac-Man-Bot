@@ -23,31 +23,31 @@ namespace PacManBot.Services
     /// </summary>
     public class InputService
     {
-        private readonly DiscordShardedClient client;
-        private readonly DatabaseService storage;
-        private readonly LoggingService log;
-        private readonly GameService games;
+        private readonly DiscordShardedClient _client;
+        private readonly DatabaseService _storage;
+        private readonly LoggingService _log;
+        private readonly GameService _games;
 
-        private readonly ConcurrentDictionary<PendingResponse, byte> pendingResponses;
-        private readonly ConcurrentDictionary<ulong, DateTime> lastGuildUsersDownload;
+        private readonly ConcurrentDictionary<PendingResponse, byte> _pendingResponses;
+        private readonly ConcurrentDictionary<ulong, DateTime> _lastGuildUsersDownload;
 
-        private readonly Regex StartsWithAnyMention = new Regex(@"^<(@|#|a?:)");
-        private Regex mentionPrefixRegex = null;
-
+        private static readonly Regex StartsWithAnyMention = new Regex(@"^<(@|#|a?:)");
+        
+        private Regex _mentionPrefix = null;
         /// <summary>Is a match when the given text begins with a mention to the bot's current user.</summary>
-        public Regex MentionPrefix => mentionPrefixRegex ?? (mentionPrefixRegex = new Regex($@"^<@!?{client.CurrentUser.Id}>"));
+        public Regex MentionPrefix => _mentionPrefix ?? (_mentionPrefix = new Regex($@"^<@!?{_client.CurrentUser.Id}>"));
 
 
         public InputService(DiscordShardedClient client, LoggingService log,
             DatabaseService storage, GameService games)
         {
-            this.client = client;
-            this.storage = storage;
-            this.log = log;
-            this.games = games;
+            _client = client;
+            _storage = storage;
+            _log = log;
+            _games = games;
 
-            pendingResponses = new ConcurrentDictionary<PendingResponse, byte>();
-            lastGuildUsersDownload = new ConcurrentDictionary<ulong, DateTime>();
+            _pendingResponses = new ConcurrentDictionary<PendingResponse, byte>();
+            _lastGuildUsersDownload = new ConcurrentDictionary<ulong, DateTime>();
         }
 
 
@@ -78,11 +78,11 @@ namespace PacManBot.Services
         public async Task<DiscordMessage> GetResponseAsync(Func<DiscordMessage, bool> condition, int timeout = 30)
         {
             var pending = new PendingResponse(condition);
-            pendingResponses.TryAdd(pending, 0);
+            _pendingResponses.TryAdd(pending, 0);
 
             try { await Task.Delay(timeout * 1000, pending.Token); }
             catch (OperationCanceledException) { }
-            finally { pendingResponses.TryRemove(pending); }
+            finally { _pendingResponses.TryRemove(pending); }
 
             return pending.Response;
         }
@@ -105,13 +105,13 @@ namespace PacManBot.Services
                         if (message.Channel.Guild != null)
                         {
                             _ = EnsureUsersDownloadedAsync(message.Channel.Guild)
-                                .LogExceptions(log, $"Downloading users for guild {message.Channel.Guild.DebugName()}");
+                                .LogExceptions(_log, $"Downloading users for guild {message.Channel.Guild.DebugName()}");
                         }
                     }
                 }
                 catch (Exception e)
                 {
-                    log.Exception($"In {message.Channel.DebugName()}", e);
+                    _log.Exception($"In {message.Channel.DebugName()}", e);
                 }
             }
 
@@ -128,24 +128,24 @@ namespace PacManBot.Services
         {
             if (message.Channel.BotCan(Permissions.SendMessages | Permissions.ReadMessageHistory))
             {
-                if (user.Id == client.CurrentUser.Id) return Task.CompletedTask;
+                if (user.Id == _client.CurrentUser.Id) return Task.CompletedTask;
                 
                 // TODO: Can't check author ID in the current version of the library with message cache off
                 //if (message != null && message.Author.Id != client.CurrentUser.Id) return Task.CompletedTask;
 
-                var game = games.AllGames
+                var game = _games.AllGames
                     .OfType<IReactionsGame>()
                     .FirstOrDefault(g => g.MessageId == message.Id);
 
                 if (game == null) return Task.CompletedTask;
 
                 _ = ExecuteReactionGameInputAsync(game, message, user, emoji)
-                    .LogExceptions(log, $"During input \"{emoji.GetDiscordName()}\" in {message.Channel.DebugName()}");
+                    .LogExceptions(_log, $"During input \"{emoji.GetDiscordName()}\" in {message.Channel.DebugName()}");
 
                 if (message.Channel?.Guild != null)
                 {
                     _ = EnsureUsersDownloadedAsync(message.Channel.Guild)
-                        .LogExceptions(log, $"Downloading users for guild {message.Channel.Guild.DebugName()}");
+                        .LogExceptions(_log, $"Downloading users for guild {message.Channel.Guild.DebugName()}");
                 }
             }
 
@@ -155,7 +155,7 @@ namespace PacManBot.Services
 
         private Task OnCommandExecuted(CommandsNextExtension sender, CommandExecutionEventArgs args)
         {
-            log.Debug($"Executed {args.Command.Name} for {args.Context.User.DebugName()} in {args.Context.Channel.DebugName()}");
+            _log.Debug($"Executed {args.Command.Name} for {args.Context.User.DebugName()} in {args.Context.Channel.DebugName()}");
             return Task.CompletedTask;
         }
 
@@ -212,11 +212,11 @@ namespace PacManBot.Services
 
                 case UnauthorizedException e when args.Command.Name != "help":
                     await ctx.RespondAsync($"Something went wrong: The bot is missing permissions to perform this action!");
-                    log.Exception($"Bot is missing permissions in command {args.Command.Name}", e);
+                    _log.Exception($"Bot is missing permissions in command {args.Command.Name}", e);
                     return;
 
                 default:
-                    log.Exception($"While executing {args.Command?.Name} for {ctx.User.DebugName()} " +
+                    _log.Exception($"While executing {args.Command?.Name} for {ctx.User.DebugName()} " +
                         $"in {ctx.Channel.DebugName()}", args.Exception);
                     try { await ctx.RespondAsync($"Something went wrong! {args.Exception.Message}"); }
                     catch (UnauthorizedException) { }
@@ -229,12 +229,12 @@ namespace PacManBot.Services
         {
             if (guild != null && guild.MemberCount < 50000)
             {
-                if (!lastGuildUsersDownload.TryGetValue(guild.Id, out DateTime last)
+                if (!_lastGuildUsersDownload.TryGetValue(guild.Id, out DateTime last)
                     || (DateTime.Now - last) > TimeSpan.FromMinutes(30))
                 {
-                    lastGuildUsersDownload[guild.Id] = DateTime.Now;
+                    _lastGuildUsersDownload[guild.Id] = DateTime.Now;
                     await guild.RequestMembersAsync();
-                    log.Debug($"Downloaded users from {guild.DebugName()}");
+                    _log.Debug($"Downloaded users from {guild.DebugName()}");
                 }
             }
         }
@@ -243,7 +243,7 @@ namespace PacManBot.Services
         /// <summary>Tries to find and complete a pending response. Returns whether it is successful.</summary>
         private bool PendingResponse(DiscordMessage message)
         {
-            var pending = pendingResponses.Select(x => x.Key).FirstOrDefault(x => x.Condition(message));
+            var pending = _pendingResponses.Select(x => x.Key).FirstOrDefault(x => x.Condition(message));
 
             if (pending != null)
             {
@@ -258,8 +258,8 @@ namespace PacManBot.Services
         /// <summary>Tries to find and execute a command. Returns whether it is successful.</summary>
         private bool Command(DiscordMessage message, DiscordClient client)
         {
-            string prefix = storage.GetGuildPrefix(message.Channel?.Guild);
-            bool requiresPrefix = storage.RequiresPrefix(message.Channel);
+            string prefix = _storage.GetGuildPrefix(message.Channel?.Guild);
+            bool requiresPrefix = _storage.RequiresPrefix(message.Channel);
 
             int? selfMentionPos = message.GetMentionCommandPos(this);
             int pos = selfMentionPos
@@ -284,18 +284,18 @@ namespace PacManBot.Services
         /// <summary>Tries to find a game and execute message input. Returns whether it is successful.</summary>
         private bool MessageGameInput(DiscordMessage message)
         {
-            var game = games.GetForChannel<IMessagesGame>(message.Channel.Id);
+            var game = _games.GetForChannel<IMessagesGame>(message.Channel.Id);
             if (game == null || !game.IsInput(message.Content, message.Author.Id)) return false;
 
             _ = ExecuteMessageGameInputAsync(game, message)
-                .LogExceptions(log, $"During input \"{message.Content}\" in {game.Channel.DebugName()}");
+                .LogExceptions(_log, $"During input \"{message.Content}\" in {game.Channel.DebugName()}");
 
             return true;
         }
 
         private async Task ExecuteMessageGameInputAsync(IMessagesGame game, DiscordMessage inputMsg)
         {
-            log.Debug($"Input {inputMsg.Content} by {inputMsg.Author.DebugName()} in {inputMsg.Channel.DebugName()}");
+            _log.Debug($"Input {inputMsg.Content} by {inputMsg.Author.DebugName()} in {inputMsg.Channel.DebugName()}");
 
             await game.InputAsync(inputMsg.Content, inputMsg.Author.Id);
 
@@ -304,7 +304,7 @@ namespace PacManBot.Services
                 while(await mGame.IsBotTurnAsync()) await mGame.BotInputAsync();
             }
 
-            if (game.State != GameState.Active) games.Remove(game);
+            if (game.State != GameState.Active) _games.Remove(game);
 
             await game.UpdateMessageAsync(inputMsg);
         }
@@ -317,17 +317,17 @@ namespace PacManBot.Services
             if (message == null) return; // oof
 
             var guild = message.Channel?.Guild;
-            log.Debug($"Input {emoji.GetDiscordName()} by {user.DebugName()} in {message.Channel?.DebugName()}");
+            _log.Debug($"Input {emoji.GetDiscordName()} by {user.DebugName()} in {message.Channel?.DebugName()}");
 
             await game.InputAsync(emoji, user.Id);
 
             if (game.State != GameState.Active)
             {
-                if (!(game is IUserGame)) games.Remove(game);
+                if (!(game is IUserGame)) _games.Remove(game);
 
                 if (game is PacManGame pmGame && pmGame.State != GameState.Cancelled && !pmGame.custom)
                 {
-                    storage.AddScore(new ScoreEntry(pmGame.score, user.Id, pmGame.State, pmGame.Time,
+                    _storage.AddScore(new ScoreEntry(pmGame.score, user.Id, pmGame.State, pmGame.Time,
                         user.NameandDisc(), $"{guild?.Name}/{message.Channel?.Name}", DateTime.Now));
                 }
 

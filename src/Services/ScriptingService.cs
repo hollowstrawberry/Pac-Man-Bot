@@ -11,12 +11,12 @@ namespace PacManBot.Services
     /// </summary>
     public class ScriptingService
     {
-        private readonly ScriptOptions scriptOptions;
+        private readonly ScriptOptions _scriptOptions;
 
 
         public ScriptingService()
         {
-            scriptOptions = ScriptOptions.Default
+            _scriptOptions = ScriptOptions.Default
                 .WithImports( // Just give me everything
                     "System", "System.IO", "System.Text", "System.Linq", "System.Reflection", "System.Diagnostics",
                     "System.Threading.Tasks", "System.Collections.Generic", "System.Text.RegularExpressions",
@@ -38,7 +38,7 @@ namespace PacManBot.Services
         {
             try
             {
-                return await CSharpScript.EvaluateAsync(code, scriptOptions, globals);
+                return await CSharpScript.EvaluateAsync(code, _scriptOptions, globals);
             }
             finally
             {

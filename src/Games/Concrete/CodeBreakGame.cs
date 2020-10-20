@@ -66,7 +66,7 @@ namespace PacManBot.Games.Concrete
             if (input.Distinct().Count() < Code.Length) input = null; // can't contain the same digit twice
             guesses.Add(input);
             if (guesses.Count >= 99 && input != Code) State = GameState.Lose;
-            await games.SaveAsync(this);
+            await Games.SaveAsync(this);
         }
 
         public override ValueTask<DiscordEmbedBuilder> GetEmbedAsync(bool showHelp = true)

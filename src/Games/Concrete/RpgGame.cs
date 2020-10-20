@@ -73,7 +73,7 @@ namespace PacManBot.Games.Concrete
                 }
                 else if (pvpUserId != internalPvpGame?.OwnerId) // Inconsistency
                 {
-                    internalPvpGame = games.GetForUser<RpgGame>(pvpUserId);
+                    internalPvpGame = Games.GetForUser<RpgGame>(pvpUserId);
 
                     // Reset fight if invalid opponent
                     if (internalPvpGame == null)
@@ -326,7 +326,7 @@ namespace PacManBot.Games.Concrete
                 }
                 else
                 {
-                    string prefix = storage.GetPrefix(Channel);
+                    string prefix = Storage.GetPrefix(Channel);
                     desc.AppendLine($"Waiting for {PvpGame.GetOwnerAsync().GetAwaiter().GetResult().Mention} to accept the challenge.");
                 }
             }
@@ -383,7 +383,7 @@ namespace PacManBot.Games.Concrete
                 var otherGame = PvpGame;
                 fightEmbed = FightPvP(true);
                 otherGame.fightEmbed = fightEmbed;
-                await games.SaveAsync(otherGame);
+                await Games.SaveAsync(otherGame);
             }
             else if (emote == MenuEmote)
             {
@@ -403,7 +403,7 @@ namespace PacManBot.Games.Concrete
                 if (lastEmote == emote)
                 {
                     lastEmote = SkillsEmote;
-                    fightEmbed = player.Skills(storage.GetPrefix(Channel), true);
+                    fightEmbed = player.Skills(Storage.GetPrefix(Channel), true);
                 }
                 else if (lastEmote == SkillsEmote)
                 {
@@ -413,7 +413,7 @@ namespace PacManBot.Games.Concrete
                 else
                 {
                     lastEmote = emote;
-                    fightEmbed = player.Profile(storage.GetPrefix(Channel), reaction: true);
+                    fightEmbed = player.Profile(Storage.GetPrefix(Channel), reaction: true);
                 }
             }
             else
@@ -425,7 +425,7 @@ namespace PacManBot.Games.Concrete
                 fightEmbed = Fight(index);
             }
 
-            await games.SaveAsync(this);
+            await Games.SaveAsync(this);
         }
 
 

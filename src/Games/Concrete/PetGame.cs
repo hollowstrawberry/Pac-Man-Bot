@@ -220,7 +220,7 @@ namespace PacManBot.Games.Concrete
 
             var description = new StringBuilder();
 
-            string prefix = storage.GetGuildPrefix(ownerMember?.Guild);
+            string prefix = Storage.GetGuildPrefix(ownerMember?.Guild);
             if (string.IsNullOrWhiteSpace(PetName))
             {
                 description.Append("Congratulations on your new wakagotchi!\n" +
@@ -332,7 +332,7 @@ namespace PacManBot.Games.Concrete
         public async Task UpdateAndSaveAsync()
         {
             UpdateStats();
-            await games.SaveAsync(this);
+            await Games.SaveAsync(this);
         }
 
 
@@ -358,7 +358,7 @@ namespace PacManBot.Games.Concrete
                 energy = Math.Max(0, energy - 1);
             }
 
-            await games.SaveAsync(this);
+            await Games.SaveAsync(this);
             return canEat;
         }
 
@@ -379,7 +379,7 @@ namespace PacManBot.Games.Concrete
                 energy = Math.Max(0, energy - 1);
             }
 
-            await games.SaveAsync(this);
+            await Games.SaveAsync(this);
             return canClean;
         }
 
@@ -407,7 +407,7 @@ namespace PacManBot.Games.Concrete
                 energy = Math.Max(0, energy - 1);
             }
 
-            await games.SaveAsync(this);
+            await Games.SaveAsync(this);
             return canPlay;
         }
 
@@ -416,7 +416,7 @@ namespace PacManBot.Games.Concrete
         public async Task ToggleSleepAsync()
         {
             asleep = !asleep;
-            await games.SaveAsync(this);
+            await Games.SaveAsync(this);
         }
 
 
@@ -509,7 +509,7 @@ namespace PacManBot.Games.Concrete
                 king = true;
             }
 
-            await games.SaveAsync(this);
+            await Games.SaveAsync(this);
 
             pet = Regex.Replace(pet, @"{.*}", "");
             if ((amount == 0) == hide || godEffect) pet = pet.Trim(' ') + $" ({"👼 ".If(godEffect)}{amount:+0;-#} pets)";

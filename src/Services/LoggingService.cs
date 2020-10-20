@@ -14,21 +14,21 @@ namespace PacManBot.Services
     /// </summary>
     public class LoggingService : ILogger<DiscordShardedClient>, IDisposable
     {
-        private readonly Logger logger;
-        private readonly LogLevel minLogLevel;
-        private readonly LogLevel minClientLogLevel;
-        private readonly string[] hardExclusions;
+        private readonly Logger _logger;
+        private readonly LogLevel _minLogLevel;
+        private readonly LogLevel _minClientLogLevel;
+        private readonly string[] _hardExclusions;
 
 
         public LoggingService(PmBotConfig config)
         {
-            minLogLevel = config.logLevel;
-            minClientLogLevel = config.clientLogLevel;
-            hardExclusions = config.logExclude;
+            _minLogLevel = config.logLevel;
+            _minClientLogLevel = config.clientLogLevel;
+            _hardExclusions = config.logExclude;
 
             const string template = "{Timestamp:HH:mm:ss}|{Level:u3}> {Message}{NewLine}";
 
-            logger = new LoggerConfiguration()
+            _logger = new LoggerConfiguration()
                 .MinimumLevel.Verbose()
                 .WriteTo.Console(outputTemplate: template)
                 .WriteTo.RollingFile("logs/{Date}.txt", outputTemplate: template)
@@ -39,20 +39,20 @@ namespace PacManBot.Services
         /// <summary>Logs a message. Used by the Discord client.</summary>
         public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
         {
-            if (logLevel < minClientLogLevel) return;
+            if (logLevel < _minClientLogLevel) return;
             var message = formatter(state, exception);
 
-            if (message.ContainsAny(hardExclusions)) return;
+            if (message.ContainsAny(_hardExclusions)) return;
             if (logLevel == LogLevel.Critical && message.Contains("(4000, '')")) logLevel = LogLevel.Information; // reconnection
 
-            logger.Write((Serilog.Events.LogEventLevel)logLevel, message);
+            _logger.Write((Serilog.Events.LogEventLevel)logLevel, message);
         }
 
         /// <summary>Logs a message.</summary>
         public void Log(string message, LogLevel logLevel)
         {
-            if (logLevel < minLogLevel || message.ContainsAny(hardExclusions)) return;
-            logger.Write((Serilog.Events.LogEventLevel)logLevel, message);
+            if (logLevel < _minLogLevel || message.ContainsAny(_hardExclusions)) return;
+            _logger.Write((Serilog.Events.LogEventLevel)logLevel, message);
         }
 
 
@@ -96,12 +96,12 @@ namespace PacManBot.Services
         /// <summary>Release all resources used for logging.</summary>
         public void Dispose()
         {
-            logger.Dispose();
+            _logger.Dispose();
         }
 
         public bool IsEnabled(LogLevel logLevel)
         {
-            return logLevel >= minLogLevel;
+            return logLevel >= _minLogLevel;
         }
 
         public IDisposable BeginScope<TState>(TState state)

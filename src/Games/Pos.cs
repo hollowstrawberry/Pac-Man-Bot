@@ -11,8 +11,8 @@ namespace PacManBot.Games
         public static readonly Pos Origin = (0, 0);
 
 
-        public int x;
-        public int y;
+        public readonly int x;
+        public readonly int y;
 
         public Pos(int x, int y)
         {

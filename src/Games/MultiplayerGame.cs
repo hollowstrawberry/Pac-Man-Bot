@@ -13,7 +13,7 @@ namespace PacManBot.Games
     /// </summary>
     public abstract class MultiplayerGame : ChannelGame, IMultiplayerGame
     {
-        private DiscordUser[] internalUsers;
+        private DiscordUser[] _users;
 
 
         /// <summary>The current <see cref="Player"/> whose turn it is.</summary>
@@ -37,7 +37,7 @@ namespace PacManBot.Games
         public virtual async ValueTask<DiscordUser> GetUserAsync(int i = 0)
         {
             if (i < 0 || i >= UserId.Length) return null;
-            return internalUsers[i] ?? (internalUsers[i] = await Client.GetUserAsync(UserId[i]));
+            return _users[i] ?? (_users[i] = await Client.GetUserAsync(UserId[i]));
         }
 
         
@@ -65,7 +65,7 @@ namespace PacManBot.Games
             if (players != null)
             {
                 UserId = players.Select(x => x.Id).ToArray();
-                internalUsers = new DiscordUser[UserId.Length];
+                _users = new DiscordUser[UserId.Length];
             }
             LastPlayed = DateTime.Now;
             Turn = 0;
@@ -83,7 +83,7 @@ namespace PacManBot.Games
         /// <summary>Default string content of a multiplayer game message. Displays flavor text in AI matches.</summary>
         public override async ValueTask<string> GetContentAsync(bool showHelp = true)
         {
-            if (State != GameState.Cancelled && UserId.Count(id => id == shardedClient.CurrentUser.Id) == 1)
+            if (State != GameState.Cancelled && UserId.Count(id => id == ShardedClient.CurrentUser.Id) == 1)
             {
                 var texts = new[] { Message };
 
@@ -97,7 +97,7 @@ namespace PacManBot.Games
                 }
                 else if (Winner != Player.None)
                 {
-                    texts = Winner != Player.Tie && UserId[Winner] == shardedClient.CurrentUser.Id
+                    texts = Winner != Player.Tie && UserId[Winner] == ShardedClient.CurrentUser.Id
                         ? Content.gameWinTexts
                         : Content.gameNotWinTexts;
                 }
@@ -107,14 +107,14 @@ namespace PacManBot.Games
 
             if (State == GameState.Active)
             {
-                if (UserId[0] == UserId[1] && !UserId.Contains(shardedClient.CurrentUser.Id))
+                if (UserId[0] == UserId[1] && !UserId.Contains(ShardedClient.CurrentUser.Id))
                 {
                     return "Feeling lonely, or just testing the bot?";
                 }
                 if (Time == 0 && showHelp && UserId.Length > 1 && UserId[0] != UserId[1])
                 {
                     return $"{(await GetUserAsync(0)).Mention} You were invited to play {GameName}.\nChoose an action below, " +
-                           $"or type `{storage.GetPrefix(Channel)}cancel` if you don't want to play";
+                           $"or type `{Storage.GetPrefix(Channel)}cancel` if you don't want to play";
                 }
             }
 
@@ -146,7 +146,7 @@ namespace PacManBot.Games
             return Winner == Player.None ? $"{Turn.ColorName} Player's turn" :
                    Winner == Player.Tie ? "It's a tie!" :
                    UserId[0] != UserId[1] ? $"{Turn.ColorName} is the winner!" :
-                   UserId[0] == shardedClient.CurrentUser.Id ? "I win!" : "A winner is you!"; // These two are for laughs
+                   UserId[0] == ShardedClient.CurrentUser.Id ? "I win!" : "A winner is you!"; // These two are for laughs
         }
     }
 }

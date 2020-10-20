@@ -19,65 +19,65 @@ namespace PacManBot
     /// </summary>
     public class PmBot
     {
-        private readonly PmBotConfig config;
-        private readonly IServiceProvider services;
+        private readonly PmBotConfig _config;
+        private readonly IServiceProvider _services;
 
-        private readonly DiscordShardedClient client;
-        private readonly LoggingService log;
-        private readonly GameService games;
-        private readonly InputService input;
-        private readonly SchedulingService schedule;
+        private readonly DiscordShardedClient _client;
+        private readonly LoggingService _log;
+        private readonly GameService _games;
+        private readonly InputService _input;
+        private readonly SchedulingService _schedule;
 
-        private AuthDiscordBotListApi discordBotList = null;
-        private DateTime lastGuildCountUpdate = DateTime.MinValue;
-        private int ready = 0;
+        private AuthDiscordBotListApi _discordBotList = null;
+        private DateTime _lastGuildCountUpdate = DateTime.MinValue;
+        private int _ready = 0;
 
 
         public PmBot(PmBotConfig config, IServiceProvider services, DiscordShardedClient client,
             LoggingService log, GameService games, InputService input, SchedulingService schedule)
         {
-            this.config = config;
-            this.services = services;
-            this.client = client;
-            this.log = log;
-            this.games = games;
-            this.input = input;
-            this.schedule = schedule;
+            _config = config;
+            _services = services;
+            _client = client;
+            _log = log;
+            _games = games;
+            _input = input;
+            _schedule = schedule;
         }
 
 
         /// <summary>Starts the bot and its connection to Discord.</summary>
         public async Task StartAsync()
         {
-            await client.UseCommandsNextAsync(new CommandsNextConfiguration
+            await _client.UseCommandsNextAsync(new CommandsNextConfiguration
             {
                 UseDefaultCommandHandler = false,
-                Services = services,
+                Services = _services,
             });
-            foreach (var (shard, commands) in await client.GetCommandsNextAsync())
+            foreach (var (shard, commands) in await _client.GetCommandsNextAsync())
             {
                 commands.RegisterCommands(typeof(BaseModule).Assembly);
                 commands.SetHelpFormatter<HelpFormatter>();
             }
 
-            await games.LoadGamesAsync();
+            await _games.LoadGamesAsync();
 
-            client.Ready += OnReady;
-            client.ClientErrored += OnClientErrored;
-            client.SocketErrored += OnSocketErrored;
-            client.GuildCreated += OnJoinedGuild;
-            client.GuildDeleted += OnLeftGuild;
-            client.ChannelDeleted += OnChannelDeleted;
+            _client.Ready += OnReady;
+            _client.ClientErrored += OnClientErrored;
+            _client.SocketErrored += OnSocketErrored;
+            _client.GuildCreated += OnJoinedGuild;
+            _client.GuildDeleted += OnLeftGuild;
+            _client.ChannelDeleted += OnChannelDeleted;
 
-            schedule.PrepareRestart += StopAsync;
+            _schedule.PrepareRestart += StopAsync;
 
-            await client.StartAsync();
+            await _client.StartAsync();
             //await client.UpdateStatusAsync(
             //    new DiscordActivity("Booting up...", ActivityType.Playing), UserStatus.Idle, DateTime.Now);
 
-            if (!string.IsNullOrWhiteSpace(config.discordBotListToken))
+            if (!string.IsNullOrWhiteSpace(_config.discordBotListToken))
             {
-                discordBotList = new AuthDiscordBotListApi(client.CurrentUser.Id, config.discordBotListToken);
+                _discordBotList = new AuthDiscordBotListApi(_client.CurrentUser.Id, _config.discordBotListToken);
             }
         }
 
@@ -85,23 +85,23 @@ namespace PacManBot
         /// <summary>Safely stop most activity from the bot and disconnect from Discord.</summary>
         public async Task StopAsync()
         {
-            await client.UpdateStatusAsync(userStatus: UserStatus.DoNotDisturb); // why not
+            await _client.UpdateStatusAsync(userStatus: UserStatus.DoNotDisturb); // why not
 
-            foreach (var shard in client.ShardClients.Values)
-                input.StopListening(shard);
+            foreach (var shard in _client.ShardClients.Values)
+                _input.StopListening(shard);
 
-            schedule.StopTimers();
+            _schedule.StopTimers();
 
-            client.Ready -= OnReady;
-            client.ClientErrored -= OnClientErrored;
-            client.SocketErrored -= OnSocketErrored;
-            client.GuildCreated -= OnJoinedGuild;
-            client.GuildDeleted -= OnLeftGuild;
-            client.ChannelDeleted -= OnChannelDeleted;
+            _client.Ready -= OnReady;
+            _client.ClientErrored -= OnClientErrored;
+            _client.SocketErrored -= OnSocketErrored;
+            _client.GuildCreated -= OnJoinedGuild;
+            _client.GuildDeleted -= OnLeftGuild;
+            _client.ChannelDeleted -= OnChannelDeleted;
 
             await Task.Delay(5_000); // Buffer time to finish up doing whatever
 
-            await client.StopAsync();
+            await _client.StopAsync();
         }
 
 
@@ -109,35 +109,35 @@ namespace PacManBot
 
         private Task OnClientErrored(DiscordClient shard, ClientErrorEventArgs args)
         {
-            log.Exception($"On {args.EventName} handler", args.Exception);
+            _log.Exception($"On {args.EventName} handler", args.Exception);
             return Task.CompletedTask;
         }
 
 
         private Task OnSocketErrored(DiscordClient shard, SocketErrorEventArgs args)
         {
-            log.Exception($"On shard {shard.ShardId}", args.Exception);
+            _log.Exception($"On shard {shard.ShardId}", args.Exception);
             return Task.CompletedTask;
         }
 
 
         private Task OnReady(DiscordClient shard, ReadyEventArgs args)
         {
-            _ = OnReadyAsync(shard).LogExceptions(log, $"On ready {shard.ShardId}");
+            _ = OnReadyAsync(shard).LogExceptions(_log, $"On ready {shard.ShardId}");
             return Task.CompletedTask;
         }
 
 
         private async Task OnReadyAsync(DiscordClient shard)
         {
-            input.StartListening(shard);
+            _input.StartListening(shard);
 
-            if (++ready == shard.ShardCount)
+            if (++_ready == shard.ShardCount)
             {
-                schedule.StartTimers();
-                await client.UpdateStatusAsync(
+                _schedule.StartTimers();
+                await _client.UpdateStatusAsync(
                     new DiscordActivity($"with you!", ActivityType.Playing), UserStatus.Online, DateTime.Now);
-                log.Info($"All Shards ready");
+                _log.Info($"All Shards ready");
             }
 
             if (File.Exists(Files.ManualRestart))
@@ -153,12 +153,12 @@ namespace PacManBot
                         File.Delete(Files.ManualRestart);
                         var message = await channel.GetMessageAsync(id[1]);
                         if (message != null) await message.ModifyAsync(CustomEmoji.Check);
-                        log.Info("Resumed after manual restart");
+                        _log.Info("Resumed after manual restart");
                     }
                 }
                 catch (Exception e)
                 {
-                    log.Exception("After manual restart", e);
+                    _log.Exception("After manual restart", e);
                     if (File.Exists(Files.ManualRestart) && !(e is IOException)) File.Delete(Files.ManualRestart);
                 }
             }
@@ -167,7 +167,7 @@ namespace PacManBot
 
         private Task OnJoinedGuild(DiscordClient shard, GuildCreateEventArgs args)
         {
-            _ = UpdateGuildCountAsync().LogExceptions(log, "While updating guild count");
+            _ = UpdateGuildCountAsync().LogExceptions(_log, "While updating guild count");
             return Task.CompletedTask;
         }
 
@@ -176,35 +176,35 @@ namespace PacManBot
         {
             foreach (var channel in args.Guild.Channels.Keys)
             {
-                games.Remove(games.GetForChannel(channel));
+                _games.Remove(_games.GetForChannel(channel));
             }
 
-            _ = UpdateGuildCountAsync().LogExceptions(log, "While updating guild count");
+            _ = UpdateGuildCountAsync().LogExceptions(_log, "While updating guild count");
             return Task.CompletedTask;
         }
 
 
         private Task OnChannelDeleted(DiscordClient shard, ChannelDeleteEventArgs args)
         {
-            games.Remove(games.GetForChannel(args.Channel.Id));
+            _games.Remove(_games.GetForChannel(args.Channel.Id));
             return Task.CompletedTask;
         }
 
 
         private async Task UpdateGuildCountAsync()
         {
-            if (discordBotList == null || (DateTime.Now - lastGuildCountUpdate).TotalMinutes < 30.0) return;
+            if (_discordBotList == null || (DateTime.Now - _lastGuildCountUpdate).TotalMinutes < 30.0) return;
 
-            int guilds = client.ShardClients.Values.Select(x => x.Guilds.Count).Aggregate((a, b) => a + b);
+            int guilds = _client.ShardClients.Values.Select(x => x.Guilds.Count).Aggregate((a, b) => a + b);
 
-            var recordedGuilds = (await discordBotList.GetBotStatsAsync(client.CurrentUser.Id)).GuildCount;
+            var recordedGuilds = (await _discordBotList.GetBotStatsAsync(_client.CurrentUser.Id)).GuildCount;
             if (recordedGuilds < guilds)
             {
-                await discordBotList.UpdateStats(guilds, client.ShardClients.Count);
-                lastGuildCountUpdate = DateTime.Now;
+                await _discordBotList.UpdateStats(guilds, _client.ShardClients.Count);
+                _lastGuildCountUpdate = DateTime.Now;
             }
 
-            log.Info($"Guild count updated to {guilds}");
+            _log.Info($"Guild count updated to {guilds}");
         }
     }
 }

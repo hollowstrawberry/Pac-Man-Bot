@@ -30,27 +30,27 @@ namespace PacManBot.Services
             TypeNameHandling = TypeNameHandling.Auto,
         };
 
-        private readonly IServiceProvider services;
-        private readonly LoggingService log;
-        private readonly ConcurrentDictionary<ulong, IChannelGame> games;
-        private readonly ConcurrentDictionary<(ulong, Type), IUserGame> userGames;
+        private readonly IServiceProvider _services;
+        private readonly LoggingService _log;
+        private readonly ConcurrentDictionary<ulong, IChannelGame> _games;
+        private readonly ConcurrentDictionary<(ulong, Type), IUserGame> _userGames;
 
 
         /// <summary>Enumerates through all active channel-specific games concurrently.</summary>
-        public IEnumerable<IChannelGame> AllChannelGames => games.Select(x => x.Value);
+        public IEnumerable<IChannelGame> AllChannelGames => _games.Select(x => x.Value);
         /// <summary>Enumerates through all active user-specific games concurrently.</summary>
-        public IEnumerable<IUserGame> AllUserGames => userGames.Select(x => x.Value);
+        public IEnumerable<IUserGame> AllUserGames => _userGames.Select(x => x.Value);
         /// <summary>Enumerates through all active games of any type.</summary>
         public IEnumerable<IBaseGame> AllGames => AllChannelGames.Cast<IBaseGame>().Concat(AllUserGames.Cast<IBaseGame>());
 
 
         public GameService(IServiceProvider services, LoggingService log)
         {
-            this.services = services;
-            this.log = log;
+            _services = services;
+            _log = log;
 
-            games = new ConcurrentDictionary<ulong, IChannelGame>();
-            userGames = new ConcurrentDictionary<(ulong, Type), IUserGame>();
+            _games = new ConcurrentDictionary<ulong, IChannelGame>();
+            _userGames = new ConcurrentDictionary<(ulong, Type), IUserGame>();
         }
 
 
@@ -59,7 +59,7 @@ namespace PacManBot.Services
         /// <summary>Retrieves the active game for the specified channel. Null if not found.</summary>
         public IChannelGame GetForChannel(ulong channelId)
         {
-            return games.TryGetValue(channelId, out var game) ? game : null;
+            return _games.TryGetValue(channelId, out var game) ? game : null;
         }
 
 
@@ -74,22 +74,22 @@ namespace PacManBot.Services
         /// <summary>Retrieves the specified user's game of the desired type. Null if not found.</summary>
         public TGame GetForUser<TGame>(ulong userId) where TGame : class, IUserGame
         {
-            return userGames.TryGetValue((userId, typeof(TGame)), out var game) ? (TGame)game : null;
+            return _userGames.TryGetValue((userId, typeof(TGame)), out var game) ? (TGame)game : null;
         }
 
 
         /// <summary>Retrieves the specified user's game of the desired type. Null if not found.</summary>
         public IUserGame GetForUser(ulong userId, Type type)
         {
-            return userGames.TryGetValue((userId, type), out var game) ? game : null;
+            return _userGames.TryGetValue((userId, type), out var game) ? game : null;
         }
 
 
         /// <summary>Adds a new game to the collection of channel games or user games.</summary>
         public void Add(IBaseGame game)
         {
-            if (game is IUserGame uGame) userGames.TryAdd((uGame.OwnerId, uGame.GetType()), uGame);
-            else if (game is IChannelGame cGame) games.TryAdd(cGame.ChannelId, cGame);
+            if (game is IUserGame uGame) _userGames.TryAdd((uGame.OwnerId, uGame.GetType()), uGame);
+            else if (game is IChannelGame cGame) _games.TryAdd(cGame.ChannelId, cGame);
         }
 
 
@@ -103,22 +103,22 @@ namespace PacManBot.Services
 
             if (game is IUserGame uGame)
             {
-                success = userGames.TryRemove((uGame.OwnerId, uGame.GetType()));
+                success = _userGames.TryRemove((uGame.OwnerId, uGame.GetType()));
             }
             else if (game is IChannelGame cGame)
             {
-                success = games.TryRemove(cGame.ChannelId);
+                success = _games.TryRemove(cGame.ChannelId);
             }
 
             if (game is IStoreableGame sGame && File.Exists(sGame.GameFile()))
             {
                 try { File.Delete(sGame.GameFile()); }
-                catch (IOException e) { log.Exception($"Couldn't delete {sGame.GameFile()}", e); }
+                catch (IOException e) { _log.Exception($"Couldn't delete {sGame.GameFile()}", e); }
             }
 
             if (success && doLog)
             {
-                log.Debug($"Removed {game.GetType().Name} at {game.IdentifierId()}");
+                _log.Debug($"Removed {game.GetType().Name} at {game.IdentifierId()}");
             }
         }
 
@@ -136,13 +136,13 @@ namespace PacManBot.Services
         /// <summary>Reload the entire game collection from disk.</summary>
         public async Task LoadGamesAsync()
         {
-            games.Clear();
-            userGames.Clear();
+            _games.Clear();
+            _userGames.Clear();
 
             if (!Directory.Exists(Files.GameFolder))
             {
                 Directory.CreateDirectory(Files.GameFolder);
-                log.Warning($"Created missing directory \"{Files.GameFolder}\"");
+                _log.Warning($"Created missing directory \"{Files.GameFolder}\"");
                 return;
             }
 
@@ -156,14 +156,14 @@ namespace PacManBot.Services
                     Type gameType = StoreableGameTypes.First(x => file.Contains(x.key)).type;
                     string json = await File.ReadAllTextAsync(file);
                     var game = (IStoreableGame)JsonConvert.DeserializeObject(json, gameType, GameJsonSettings);
-                    game.PostDeserialize(services);
+                    game.PostDeserialize(_services);
 
-                    if (game is IUserGame uGame) userGames.TryAdd((uGame.OwnerId, uGame.GetType()), uGame);
-                    else if (game is IChannelGame cGame) games.TryAdd(cGame.ChannelId, cGame);
+                    if (game is IUserGame uGame) _userGames.TryAdd((uGame.OwnerId, uGame.GetType()), uGame);
+                    else if (game is IChannelGame cGame) _games.TryAdd(cGame.ChannelId, cGame);
                 }
                 catch (Exception e)
                 {
-                    log.Log(
+                    _log.Log(
                         $"Couldn't load game at {file}: {(firstFail ? e.ToString() : e.Message)}",
                         firstFail ? LogLevel.Error : LogLevel.Trace);
                     fail++;
@@ -171,7 +171,7 @@ namespace PacManBot.Services
                 }
             }
 
-            log.Info($"Loaded {games.Count + userGames.Count} games{$" with {fail} errors".If(fail > 0)}");
+            _log.Info($"Loaded {_games.Count + _userGames.Count} games{$" with {fail} errors".If(fail > 0)}");
         }
     }
 }

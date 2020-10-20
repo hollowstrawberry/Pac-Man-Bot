@@ -12,27 +12,27 @@ namespace PacManBot.Utils
     [DataContract]
     public class LoopedList<T> : IList<T>
     {
-        [DataMember] private readonly List<T> list;
+        [DataMember] private readonly List<T> _list;
 
 
         /// <summary>Creates an instance that is a wrapper around a new <see cref="List{T}"/>.</summary>
         public LoopedList()
         {
-            list = new List<T>();
+            _list = new List<T>();
         }
 
         /// <summary>Creates a new <see cref="LoopedList{T}"/> that is a wrapper for the specified list.</summary>
         /// <exception cref="ArgumentNullException"/>
         public LoopedList(List<T> list)
         {
-            this.list = list ?? throw new ArgumentNullException(nameof(list));
+            this._list = list ?? throw new ArgumentNullException(nameof(list));
         }
 
         /// <summary>Creates a new <see cref="LoopedList{T}"/> that is a wrapper for a new list with the specified elements.</summary>
         /// <exception cref="ArgumentNullException"/>
         public LoopedList(IEnumerable<T> elements)
         {
-            list = new List<T>(elements ?? throw new ArgumentNullException(nameof(list)));
+            _list = new List<T>(elements ?? throw new ArgumentNullException(nameof(_list)));
         }
 
 
@@ -41,7 +41,7 @@ namespace PacManBot.Utils
         /// <summary>Creates a shallow copy of the list.</summary>
         public LoopedList<T> Copy()
         {
-            return new List<T>(list);
+            return new List<T>(_list);
         }
 
 
@@ -59,16 +59,16 @@ namespace PacManBot.Utils
         
         public static implicit operator LoopedList<T>(List<T> list) => new LoopedList<T>(list);
 
-        public static implicit operator List<T>(LoopedList<T> list) => list.list;
+        public static implicit operator List<T>(LoopedList<T> list) => list._list;
 
 
         public static bool operator ==(LoopedList<T> left, LoopedList<T> right) => left.Equals(right);
 
         public static bool operator !=(LoopedList<T> left, LoopedList<T> right) => !(left == right);
 
-        public override bool Equals(object obj) => obj is LoopedList<T> list && this.list == list.list;
+        public override bool Equals(object obj) => obj is LoopedList<T> list && this._list == list._list;
 
-        public override int GetHashCode() => list.GetHashCode();
+        public override int GetHashCode() => _list.GetHashCode();
 
 
 
@@ -77,22 +77,22 @@ namespace PacManBot.Utils
 
         public T this[int index]
         {
-            get => list[Wrapped(index)];
-            set => list[Wrapped(index)] = value;
+            get => _list[Wrapped(index)];
+            set => _list[Wrapped(index)] = value;
         }
 
-        public int Count => list.Count;
+        public int Count => _list.Count;
         public bool IsReadOnly => false;
 
-        public void Insert(int index, T item) => list.Insert(Wrapped(index), item);
-        public void RemoveAt(int index) => list.RemoveAt(Wrapped(index));
-        public void Add(T item) => list.Add(item);
-        public bool Remove(T item) => list.Remove(item);
-        public void Clear() => list.Clear();
-        public bool Contains(T item) => list.Contains(item);
-        public void CopyTo(T[] array, int arrayIndex) => list.CopyTo(array, arrayIndex);
-        public int IndexOf(T item) => list.IndexOf(item);
-        public IEnumerator<T> GetEnumerator() => list.GetEnumerator();
-        IEnumerator IEnumerable.GetEnumerator() => list.GetEnumerator();
+        public void Insert(int index, T item) => _list.Insert(Wrapped(index), item);
+        public void RemoveAt(int index) => _list.RemoveAt(Wrapped(index));
+        public void Add(T item) => _list.Add(item);
+        public bool Remove(T item) => _list.Remove(item);
+        public void Clear() => _list.Clear();
+        public bool Contains(T item) => _list.Contains(item);
+        public void CopyTo(T[] array, int arrayIndex) => _list.CopyTo(array, arrayIndex);
+        public int IndexOf(T item) => _list.IndexOf(item);
+        public IEnumerator<T> GetEnumerator() => _list.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => _list.GetEnumerator();
     }
 }

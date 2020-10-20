@@ -15,28 +15,27 @@ namespace PacManBot.Services
     /// </summary>
     public class DatabaseService
     {
-        private readonly LoggingService log;
-        private readonly string dbConnection;
+        private readonly LoggingService _log;
+        private readonly string _dbConnection;
 
-
-        private readonly ConcurrentDictionary<ulong, string> cachedPrefixes;
-        private readonly ConcurrentDictionary<ulong, bool> cachedNeedsPrefix;
+        private readonly ConcurrentDictionary<ulong, string> _cachedPrefixes;
+        private readonly ConcurrentDictionary<ulong, bool> _cachedNeedsPrefix;
 
         public string DefaultPrefix { get; }
 
 
-        private PacManDbContext MakeDbContext() => new PacManDbContext(dbConnection);
+        private PacManDbContext MakeDbContext() => new PacManDbContext(_dbConnection);
 
 
         public DatabaseService(PmBotConfig config, LoggingService log)
         {
-            this.log = log;
+            _log = log;
 
             DefaultPrefix = config.defaultPrefix;
-            dbConnection = config.dbConnectionString;
+            _dbConnection = config.dbConnectionString;
 
-            cachedPrefixes = new ConcurrentDictionary<ulong, string>();
-            cachedNeedsPrefix = new ConcurrentDictionary<ulong, bool>();
+            _cachedPrefixes = new ConcurrentDictionary<ulong, string>();
+            _cachedNeedsPrefix = new ConcurrentDictionary<ulong, bool>();
 
             using (var db = MakeDbContext())
             {
@@ -64,14 +63,14 @@ namespace PacManBot.Services
         /// <summary>Retrieves the specified guild's custom prefix, or the default prefix if no record is found.</summary>
         public string GetGuildPrefix(ulong guildId)
         {
-            if (cachedPrefixes.TryGetValue(guildId, out string prefix)) return prefix;
+            if (_cachedPrefixes.TryGetValue(guildId, out string prefix)) return prefix;
 
             using (var db = MakeDbContext())
             {
                 prefix = db.Prefixes.Find(guildId)?.Prefix ?? DefaultPrefix;
             }
 
-            cachedPrefixes.TryAdd(guildId, prefix);
+            _cachedPrefixes.TryAdd(guildId, prefix);
             return prefix;
         }
 
@@ -80,14 +79,14 @@ namespace PacManBot.Services
         public async ValueTask<string> GetGuildPrefixAsync(DiscordGuild guild)
         {
             if (guild == null) return DefaultPrefix;
-            if (cachedPrefixes.TryGetValue(guild.Id, out string prefix)) return prefix;
+            if (_cachedPrefixes.TryGetValue(guild.Id, out string prefix)) return prefix;
 
             using (var db = MakeDbContext())
             {
                 prefix = (await db.Prefixes.FindAsync(guild.Id))?.Prefix ?? DefaultPrefix;
             }
 
-            cachedPrefixes.TryAdd(guild.Id, prefix);
+            _cachedPrefixes.TryAdd(guild.Id, prefix);
             return prefix;
         }
 
@@ -110,7 +109,7 @@ namespace PacManBot.Services
                 }
 
                 db.SaveChanges();
-                cachedPrefixes[guildId] = prefix;
+                _cachedPrefixes[guildId] = prefix;
             }
         }
 
@@ -122,14 +121,14 @@ namespace PacManBot.Services
         public bool RequiresPrefix(DiscordChannel channel)
         {
             if (channel == null) return false;
-            if (cachedNeedsPrefix.TryGetValue(channel.Id, out bool needs)) return needs;
+            if (_cachedNeedsPrefix.TryGetValue(channel.Id, out bool needs)) return needs;
 
             using (var db = MakeDbContext())
             {
                 needs = channel.Guild != null && db.NoPrefixGuildChannels.Find(channel.Id) == null;
             }
 
-            cachedNeedsPrefix.TryAdd(channel.Id, needs);
+            _cachedNeedsPrefix.TryAdd(channel.Id, needs);
             return needs;
         }
 
@@ -147,7 +146,7 @@ namespace PacManBot.Services
                 db.SaveChanges();
 
                 var nowNeeds = entry != null;
-                cachedNeedsPrefix[channelId] = nowNeeds;
+                _cachedNeedsPrefix[channelId] = nowNeeds;
                 return nowNeeds;
             }
         }
@@ -162,7 +161,7 @@ namespace PacManBot.Services
                 db.SaveChanges();
             }
 
-            log.Debug($"New scoreboard entry: {entry}");
+            _log.Debug($"New scoreboard entry: {entry}");
         }
 
 
@@ -181,7 +180,7 @@ namespace PacManBot.Services
                 if (userId != null) scores = scores.Where(x => x.UserId == userId);
 
                 var list = scores.OrderByDescending(x => x.Score).Skip(start).Take(amount).ToList();
-                log.Debug($"Grabbed {list.Count} score entries");
+                _log.Debug($"Grabbed {list.Count} score entries");
                 return list;
             }
         }
