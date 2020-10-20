@@ -130,9 +130,6 @@ namespace PacManBot.Services
             {
                 if (user.Id == _client.CurrentUser.Id) return Task.CompletedTask;
                 
-                // TODO: Can't check author ID in the current version of the library with message cache off
-                //if (message != null && message.Author.Id != client.CurrentUser.Id) return Task.CompletedTask;
-
                 var game = _games.AllGames
                     .OfType<IReactionsGame>()
                     .FirstOrDefault(g => g.MessageId == message.Id);

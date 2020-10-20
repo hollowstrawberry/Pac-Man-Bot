@@ -149,7 +149,7 @@ namespace PacManBot.Games
             
             if (DateTime.Now - LastUpdated > TimeSpan.FromMilliseconds(UpdateMillis))
             {
-                await EditOrCreateMessageAsync(gameMessage, inputMessage != null);
+                await EditOrCreateMessageAsync(gameMessage);
                 return;
             }
 
@@ -157,17 +157,17 @@ namespace PacManBot.Games
 
             if (PendingUpdates.TryPeek(out object latest) && latest == updateKey)
             {
-                await EditOrCreateMessageAsync(gameMessage, inputMessage != null);
+                await EditOrCreateMessageAsync(gameMessage);
             }
         }
 
-        private async Task EditOrCreateMessageAsync(DiscordMessage gameMessage, bool messageInput)
+        private async Task EditOrCreateMessageAsync(DiscordMessage gameMessage)
         {
+            LastUpdated = DateTime.Now;
             var updates = PendingUpdates.ToList();
             PendingUpdates.Clear();
-            LastUpdated = DateTime.Now;
 
-            if (gameMessage != null && (!messageInput || Channel.BotCan(Permissions.ManageMessages)))
+            if (gameMessage != null && (this is IReactionsGame || Channel.BotCan(Permissions.ManageMessages)))
             {
                 await gameMessage.ModifyAsync(await GetContentAsync(), (await GetEmbedAsync())?.Build());
 

@@ -79,13 +79,13 @@ namespace PacManBot.Commands
 
 
         /// <summary>Safely sends or modifies the game's current message in the chat.</summary>
-        public async Task<DiscordMessage> UpdateGameMessageAsync(CommandContext ctx, DiscordMessage gameMessage = null, DiscordMessage inputMessage = null)
+        public async Task<DiscordMessage> UpdateGameMessageAsync(CommandContext ctx, DiscordMessage gameMessage = null)
         {
             if (!(Game(ctx) is IChannelGame cgame)) return null;
 
             try
             {
-                await cgame.UpdateMessageAsync(gameMessage, inputMessage);
+                await cgame.UpdateMessageAsync(gameMessage);
                 return await cgame.GetMessageAsync();
             }
             catch (NotFoundException) { return null; }
