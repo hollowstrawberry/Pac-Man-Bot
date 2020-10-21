@@ -30,11 +30,8 @@ namespace PacManBot.Commands
         /// <summary>Deletes the game for this context from the bot.</summary>
         public void EndGame(CommandContext ctx, GameState state = GameState.Cancelled)
         {
-            if (Game(ctx) != null)
-            {
-                Game(ctx).State = state;
-                Games.Remove(Game(ctx));
-            }
+            Game(ctx).State = state;
+            Games.Remove(Game(ctx));
         }
 
 

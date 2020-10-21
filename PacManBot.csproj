@@ -69,7 +69,7 @@
   </ItemGroup>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="copy &quot;bin\contents.json&quot; &quot;bin/Debug/netcoreapp3.1/contents.json&quot;&#xD;&#xA;copy &quot;bin\words.txt&quot; &quot;bin/Debug/netcoreapp3.1/words.txt&quot;" />
+    <Exec Command="copy &quot;bin\contents.json&quot; &quot;bin/Debug/netcoreapp2.0/contents.json&quot;" />
   </Target>
 
 </Project>

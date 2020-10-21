@@ -71,8 +71,7 @@ namespace PacManBot
                 .AddSingleton<InputService>()
                 .AddSingleton<GameService>()
                 .AddSingleton<SchedulingService>()
-                .AddSingleton<ScriptingService>()
-                .AddSingleton<WordService>();
+                .AddSingleton<ScriptingService>();
 
             var services = serviceCollection.BuildServiceProvider();
 

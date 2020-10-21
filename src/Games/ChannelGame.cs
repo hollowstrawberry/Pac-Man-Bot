@@ -149,7 +149,7 @@ namespace PacManBot.Games
             
             if (DateTime.Now - LastUpdated > TimeSpan.FromMilliseconds(UpdateMillis))
             {
-                await InnerUpdateMessageAsync(gameMessage);
+                await EditOrCreateMessageAsync(gameMessage);
                 return;
             }
 
@@ -157,11 +157,11 @@ namespace PacManBot.Games
 
             if (PendingUpdates.TryPeek(out object latest) && latest == updateKey)
             {
-                await InnerUpdateMessageAsync(gameMessage);
+                await EditOrCreateMessageAsync(gameMessage);
             }
         }
 
-        private async Task InnerUpdateMessageAsync(DiscordMessage gameMessage)
+        private async Task EditOrCreateMessageAsync(DiscordMessage gameMessage)
         {
             LastUpdated = DateTime.Now;
             var updates = PendingUpdates.ToList();

@@ -67,7 +67,11 @@ namespace PacManBot.Games.Concrete
         public override async ValueTask<bool> IsBotTurnAsync()
             => players.Count > 1 && State == GameState.Active && await CurrentPlayer.IsBotAsync();
 
-        public override ulong[] UserId => players?.Select(x => x.id).ToArray();
+        public override ulong[] UserId
+        {
+            get => players?.Select(x => x.id).ToArray();
+            set => throw new InvalidOperationException($"Use {nameof(TryAddPlayerAsync)} and {nameof(RemovePlayerAsync)} instead");
+        }
 
 
 
