@@ -91,8 +91,8 @@ namespace PacManBot.Commands.Modules
             }
 
             await SaveGameAsync(ctx);
-            await RespondGameAsync(ctx);
             if (removeOld && game.ChannelId == ctx.Channel.Id) await DeleteGameMessageAsync(ctx);
+            await RespondGameAsync(ctx);
         }
     }
 }
