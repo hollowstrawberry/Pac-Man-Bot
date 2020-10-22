@@ -60,6 +60,12 @@ namespace PacManBot.Services
         /// while more important exceptions will be treated as an error.</summary>
         public void Exception(string message, Exception e)
         {
+            if (e is AggregateException ae)
+            {
+                foreach (var ie in ae.InnerExceptions) Exception(message, ie);
+                return;
+            }
+
             if (e is ServerErrorException || e is RateLimitException || e is NotFoundException
                 || e.GetType().IsGeneric(typeof(AsyncEventTimeoutException<,>)))
             {

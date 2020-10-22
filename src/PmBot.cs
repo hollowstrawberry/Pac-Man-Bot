@@ -130,9 +130,12 @@ namespace PacManBot
 
         private async Task OnReadyAsync(DiscordClient shard)
         {
-            _input.StartListening(shard);
-
-            if (++_ready == shard.ShardCount)
+            _ready += 1;
+            if (_ready < shard.ShardCount)
+            {
+                _input.StartListening(shard);
+            }
+            else if (_ready == shard.ShardCount)
             {
                 _schedule.StartTimers();
                 await _client.UpdateStatusAsync(
