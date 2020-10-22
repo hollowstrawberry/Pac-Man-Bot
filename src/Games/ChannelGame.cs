@@ -46,7 +46,8 @@ namespace PacManBot.Games
         {
             get
             {
-                if (_client != null) return _client;
+                if (_client != null && ChannelId == _channel?.Id) return _client;
+                if (ChannelId <= 0) return ShardedClient.ShardClients.Values.First();
 
                 foreach (var shard in ShardedClient.ShardClients.Values)
                 {
@@ -64,7 +65,7 @@ namespace PacManBot.Games
                         }
                     }
                 }
-                return null;
+                return ShardedClient.ShardClients.Values.First();
             }
         }
 

@@ -70,7 +70,7 @@ namespace PacManBot.Commands.Modules
             string result = process.StandardOutput.ReadToEnd();
             process.WaitForExit();
 
-            bool updated = !result.Contains("Already up-to-date");
+            bool updated = !result.Contains("Already up to date");
 
             if (!updated) await ctx.AutoReactAsync(false);
 

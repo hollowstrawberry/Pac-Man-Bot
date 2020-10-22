@@ -25,7 +25,7 @@ namespace PacManBot.Commands.Modules
             var game = Game(ctx);
             if (game == null)
             {
-                StartNewGame(new RubiksGame(ctx.Channel.Id, ctx.User.Id, Services));
+                game = StartNewGame(new RubiksGame(ctx.Channel.Id, ctx.User.Id, Services));
             }
 
             bool removeOld = false;
@@ -82,7 +82,7 @@ namespace PacManBot.Commands.Modules
                         if (!game.TryDoMoves(input))
                         {
                             await ctx.RespondAsync($"{CustomEmoji.Cross} Invalid sequence of moves. " +
-                                $"Do **{Storage.GetPrefix(ctx)}rubik help** for commands.");
+                                $"Do `{Storage.GetPrefix(ctx)}help rubik` for commands.");
                             return;
                         }
                     }
@@ -90,9 +90,9 @@ namespace PacManBot.Commands.Modules
                     break;
             }
 
-            if (removeOld && game.ChannelId == ctx.Channel.Id) await DeleteGameMessageAsync(ctx);
-            await RespondGameAsync(ctx);
             await SaveGameAsync(ctx);
+            await RespondGameAsync(ctx);
+            if (removeOld && game.ChannelId == ctx.Channel.Id) await DeleteGameMessageAsync(ctx);
         }
     }
 }
