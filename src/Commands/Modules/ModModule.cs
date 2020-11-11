@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using DSharpPlus;
@@ -13,6 +14,7 @@ namespace PacManBot.Commands.Modules
 {
     [Category(Categories.Mod)]
     [RequireBotPermissions(BaseBotPermissions)]
+    [SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "Command reflection")]
     public class ModModule : BaseModule
     {
         string ContactMessage(CommandContext ctx) =>
@@ -55,7 +57,7 @@ namespace PacManBot.Commands.Modules
 
             toDelete = toDelete.Take(amount);
 
-            if (toDelete.Count() > 0)
+            if (toDelete.Any())
             {
                 await ctx.Channel.DeleteMessagesAsync(toDelete);
             }

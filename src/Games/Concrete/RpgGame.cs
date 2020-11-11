@@ -248,7 +248,7 @@ namespace PacManBot.Games.Concrete
 
 
         /// <summary>Returns an embed displaying the current PVP fight, performing an action first if applicable.</summary>
-        public DiscordEmbedBuilder FightPvP(bool attack = false, Skill skill = null)
+        public async ValueTask<DiscordEmbedBuilder> FightPvPAsync(bool attack = false, Skill skill = null)
         {
             var players = new[] { this, PvpGame }.OrderBy(g => g.OwnerId).Select(g => g.player);
 
@@ -291,8 +291,8 @@ namespace PacManBot.Games.Concrete
             if (PvpGame.player.Life == 0)
             {
                 embed.Color = player.Color;
-                embed.WithThumbnail(GetOwnerAsync().GetAwaiter().GetResult().GetAvatarUrl(ImageFormat.Auto));
-                desc.AppendLine($"\n🎺 {GetOwnerAsync().GetAwaiter().GetResult().Mention} won!");
+                embed.WithThumbnail((await GetOwnerAsync()).GetAvatarUrl(ImageFormat.Auto));
+                desc.AppendLine($"\n🎺 {(await GetOwnerAsync()).Mention} won!");
                 desc.AppendLine($"You both should heal.");
 
                 PvpGame.player.Life = 1;
@@ -304,8 +304,8 @@ namespace PacManBot.Games.Concrete
             else if (player.Life == 0)
             {
                 embed.Color = PvpGame.player.Color;
-                embed.WithThumbnail(PvpGame.GetOwnerAsync().GetAwaiter().GetResult().GetAvatarUrl(ImageFormat.Auto));
-                desc.AppendLine($"\n🎺 {PvpGame.GetOwnerAsync().GetAwaiter().GetResult().Mention} won!");
+                embed.WithThumbnail((await PvpGame.GetOwnerAsync()).GetAvatarUrl(ImageFormat.Auto));
+                desc.AppendLine($"\n🎺 {(await PvpGame.GetOwnerAsync()).Mention} won!");
                 desc.AppendLine($"You both should heal.");
 
                 player.Life = 1;
@@ -317,17 +317,18 @@ namespace PacManBot.Games.Concrete
             {
                 embed.Color = isPvpTurn ? player.Color : PvpGame.player.Color;
                 embed.WithThumbnail(isPvpTurn
-                    ? GetOwnerAsync().GetAwaiter().GetResult().GetAvatarUrl(ImageFormat.Auto)
-                    : PvpGame.GetOwnerAsync().GetAwaiter().GetResult().GetAvatarUrl(ImageFormat.Auto));
+                    ? (await GetOwnerAsync()).GetAvatarUrl(ImageFormat.Auto)
+                    : (await PvpGame.GetOwnerAsync()).GetAvatarUrl(ImageFormat.Auto));
 
                 if (PvpBattleConfirmed)
                 {
-                    desc.AppendLine($"{(isPvpTurn ? this : PvpGame).GetOwnerAsync().GetAwaiter().GetResult().Mention}'s turn");
+                    var game = isPvpTurn ? this : PvpGame;
+                    desc.AppendLine($"{(await game.GetOwnerAsync()).Mention}'s turn");
                 }
                 else
                 {
                     string prefix = Storage.GetPrefix(Channel);
-                    desc.AppendLine($"Waiting for {PvpGame.GetOwnerAsync().GetAwaiter().GetResult().Mention} to accept the challenge.");
+                    desc.AppendLine($"Waiting for {(await PvpGame.GetOwnerAsync()).Mention} to accept the challenge.");
                 }
             }
 
@@ -381,7 +382,7 @@ namespace PacManBot.Games.Concrete
                 }
                 lastEmote = emote;
                 var otherGame = PvpGame;
-                fightEmbed = FightPvP(true);
+                fightEmbed = await FightPvPAsync(true);
                 otherGame.fightEmbed = fightEmbed;
                 await Games.SaveAsync(otherGame);
             }

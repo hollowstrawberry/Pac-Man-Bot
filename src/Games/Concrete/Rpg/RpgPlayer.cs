@@ -117,8 +117,8 @@ namespace PacManBot.Games.Concrete.Rpg
 
             foreach (var equip in ActiveEquipment) equip.EquipEffects(this);
 
-            Life = Life; // Clamps if out of bounds
-            Mana = Mana;
+            Life += 0; // Clamps if newly out of bounds
+            Mana += 0;
 
             base.UpdateStats();
         }
@@ -199,7 +199,7 @@ namespace PacManBot.Games.Concrete.Rpg
                 .Select(pair => pair.Key)
                 .Where(e => !inventory.Contains(e));
 
-            if (newEquips.Count() > 0)
+            if (newEquips.Any())
             {
                 inventory.AddRange(newEquips);
                 boosts.Add($"new equipment!");
@@ -273,7 +273,7 @@ namespace PacManBot.Games.Concrete.Rpg
                 $"\n*{x.Description}*");
 
             desc.AppendLine("__**Active Skills:**__");
-            desc.AppendLine(unlocked.Count() == 0 ? "*None unlocked*" : $"{unlocked.JoinString("\n")}\n{DiscordStringUtilities.Empty}");
+            desc.AppendLine(unlocked.Any() ? $"{unlocked.JoinString("\n")}\n{DiscordStringUtilities.Empty}" : "*None unlocked*");
 
 
             var embed = new DiscordEmbedBuilder

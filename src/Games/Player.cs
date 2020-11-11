@@ -120,5 +120,15 @@ namespace PacManBot.Games
                 writer.WriteValue(value._value);
             }
         }
+
+        public static bool operator ==(Player left, Player right)
+        {
+            return left._value.Equals(right._value);
+        }
+
+        public static bool operator !=(Player left, Player right)
+        {
+            return !(left == right);
+        }
     }
 }

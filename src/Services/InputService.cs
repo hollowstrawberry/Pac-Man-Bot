@@ -160,14 +160,16 @@ namespace PacManBot.Services
         private async Task OnCommandErrored(CommandsNextExtension sender, CommandErrorEventArgs args)
         {
             var ctx = args.Context;
+            if (ctx == null || ctx.Channel == null) return; // ???
             switch (args.Exception)
             {
                 case ArgumentException e when e.Message.Contains("suitable overload"):
-                    await ctx.RespondAsync($"Invalid command parameters for `{args.Command.Name}`");
+                    await ctx.RespondAsync($"Invalid command parameters for `{args.Command?.Name}`");
                     return;
 
                 case ChecksFailedException e:
-                    switch (e.FailedChecks.First())
+                    if (e.FailedChecks == null || e.FailedChecks.Count == 0) return;
+                    switch (e.FailedChecks[0])
                     {
                         case RequireOwnerAttribute _:
                             return;
@@ -199,23 +201,23 @@ namespace PacManBot.Services
                             return;
                     }
 
-                case CommandNotFoundException e when args.Command.Name == "help":
+                case CommandNotFoundException e when args.Command?.Name == "help":
                     await ctx.RespondAsync($"The command `{e.CommandName}` doesn't exist!");
                     return;
 
-                case UnauthorizedException _ when args.Command.Name == "help":
+                case UnauthorizedException _ when args.Command?.Name == "help":
                     await ctx.RespondAsync($"This bot requires the permission to use embeds!");
                     return;
 
-                case UnauthorizedException e when args.Command.Name != "help":
+                case UnauthorizedException e when args.Command?.Name != "help":
                     await ctx.RespondAsync($"Something went wrong: The bot is missing permissions to perform this action!");
-                    _log.Exception($"Bot is missing permissions in command {args.Command.Name}", e);
+                    _log.Exception($"Bot is missing permissions in command {args.Command?.Name}", e);
                     return;
 
                 default:
-                    _log.Exception($"While executing {args.Command?.Name} for {ctx.User.DebugName()} " +
+                    _log.Exception($"While executing {args.Command?.Name} for {ctx.User?.DebugName()} " +
                         $"in {ctx.Channel.DebugName()}", args.Exception);
-                    try { await ctx.RespondAsync($"Something went wrong! {args.Exception.Message}"); }
+                    try { await ctx.RespondAsync($"Something went wrong! {args.Exception?.Message}"); }
                     catch (UnauthorizedException) { }
                     return;
             }

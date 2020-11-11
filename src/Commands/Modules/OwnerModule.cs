@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -8,7 +9,6 @@ using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
-using DSharpPlus.Entities;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using PacManBot.Constants;
@@ -23,6 +23,7 @@ namespace PacManBot.Commands.Modules
     [Category(Categories.Dev)]
     [RequireOwner, Hidden]
     [RequireBotPermissions(BaseBotPermissions)]
+    [SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "Command reflection")]
     public class OwnerModule : BaseModule
     {
         public PmBot Bot { get; set; }
@@ -188,7 +189,7 @@ namespace PacManBot.Commands.Modules
                         break;
 
                     default:
-                        throw e;
+                        throw;
                 }
                 await ctx.AutoReactAsync(false);
             }

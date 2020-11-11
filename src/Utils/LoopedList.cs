@@ -32,7 +32,7 @@ namespace PacManBot.Utils
         /// <exception cref="ArgumentNullException"/>
         public LoopedList(IEnumerable<T> elements)
         {
-            _list = new List<T>(elements ?? throw new ArgumentNullException(nameof(_list)));
+            _list = new List<T>(elements ?? throw new ArgumentNullException(nameof(elements)));
         }
 
 

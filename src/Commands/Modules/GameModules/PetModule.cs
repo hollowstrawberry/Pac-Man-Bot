@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
@@ -267,6 +268,7 @@ namespace PacManBot.Commands.Modules
 
         [Command("image"), Aliases("url", "avatar")]
         [Description("Set your pet's image")]
+        [SuppressMessage("Performance", "CA1826:Do not use Enumerable methods on indexable collections", Justification = "default")]
         public async Task SetImage(CommandContext ctx, [RemainingText] string arg)
         {
             if (Game(ctx) == null)

@@ -17,6 +17,7 @@ namespace PacManBot.Commands.Modules
     [Category(Categories.Misc)]
     [RequireBotPermissions(BaseBotPermissions)]
     [SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Command handling")]
+    [SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "Command handling")]
     public class MiscModule : BaseGameModule<ChannelGame>
     {
         [Command("bump"), Aliases("b", "refresh"), Priority(2)]

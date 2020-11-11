@@ -51,7 +51,7 @@ namespace PacManBot.Commands.Modules
                     Game(ctx).fightEmbed = Game(ctx).Fight();
                 }
 
-                Game(ctx).fightEmbed = Game(ctx).fightEmbed ?? (Game(ctx).IsPvp ? Game(ctx).FightPvP() : Game(ctx).Fight());
+                Game(ctx).fightEmbed = Game(ctx).fightEmbed ?? (Game(ctx).IsPvp ? await Game(ctx).FightPvPAsync() : Game(ctx).Fight());
                 var msg = await RespondGameAsync(ctx);
 
                 if (Game(ctx).IsPvp && Game(ctx).PvpBattleConfirmed)
@@ -105,7 +105,7 @@ namespace PacManBot.Commands.Modules
             if (Game(ctx).IsPvp)
             {
                 var otherGame = Game(ctx).PvpGame;
-                Game(ctx).fightEmbed = Game(ctx).FightPvP(true, skill);
+                Game(ctx).fightEmbed = await Game(ctx).FightPvPAsync(true, skill);
                 if (Game(ctx).IsPvp) // Match didn't end
                 {
                     Game(ctx).isPvpTurn = false;
@@ -221,7 +221,7 @@ namespace PacManBot.Commands.Modules
                 if (message != null)
                 {
                     Game(ctx).lastEmote = "";
-                    Game(ctx).fightEmbed = Game(ctx).IsPvp ? Game(ctx).FightPvP() : Game(ctx).Fight();
+                    Game(ctx).fightEmbed = Game(ctx).IsPvp ? await Game(ctx).FightPvPAsync() : Game(ctx).Fight();
                     await UpdateGameMessageAsync(ctx);
                 }
 
@@ -534,7 +534,7 @@ namespace PacManBot.Commands.Modules
                              $"Send \"accept\" to accept the challenge, or \"cancel\" to deny.\n" +
                              $"You should heal first!";
 
-            Game(ctx).fightEmbed = Game(ctx).FightPvP();
+            Game(ctx).fightEmbed = await Game(ctx).FightPvPAsync();
             var msg = await RespondGameAsync(ctx, content);
 
             var response = await Input.GetResponseAsync(x =>
@@ -570,7 +570,7 @@ namespace PacManBot.Commands.Modules
 
                 await response.AutoReactAsync();
 
-                Game(ctx).fightEmbed = Game(ctx).FightPvP();
+                Game(ctx).fightEmbed = await Game(ctx).FightPvPAsync();
                 otherGame.fightEmbed = Game(ctx).fightEmbed;
 
                 msg = await UpdateGameMessageAsync(ctx);
@@ -624,7 +624,7 @@ namespace PacManBot.Commands.Modules
         {
             var embed = new DiscordEmbedBuilder
             {
-                Title = $"ReactionRPG Game(ctx) Manual",
+                Title = $"ReactionRPG Game Manual",
                 Color = Colors.Black,
                 Description =
                 $"Welcome to ReactionRPG{$", {Game(ctx)?.player.Name}".If(Game(ctx) != null)}!" +
@@ -676,7 +676,7 @@ namespace PacManBot.Commands.Modules
 
             var emotes = game.IsPvp
                 ? new[] { RpgGame.PvpEmote}
-                : RpgGame.EmoteNumberInputs.Take(game.enemies.Count()).Concat(RpgGame.EmoteOtherInputs);
+                : RpgGame.EmoteNumberInputs.Take(game.enemies.Count).Concat(RpgGame.EmoteOtherInputs);
 
             try
             {

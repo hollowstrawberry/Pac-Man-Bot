@@ -103,6 +103,7 @@ namespace PacManBot.Services
         public void Dispose()
         {
             _logger.Dispose();
+            GC.SuppressFinalize(this);
         }
 
         public bool IsEnabled(LogLevel logLevel)

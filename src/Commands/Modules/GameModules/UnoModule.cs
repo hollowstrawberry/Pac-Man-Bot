@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -19,6 +20,7 @@ namespace PacManBot.Commands.Modules
     "__Tip__: Switching back and forth with DMs to see your cards can be tiresome, " +
     "so try having your cards open in your phone while you're playing in a computer.")]
     [RequireBotPermissions(BaseBotPermissions)]
+    [SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "Command reflection")]
     public class UnoModule : BaseMultiplayerModule<UnoGame>
     {
         [GroupCommand, Priority(3)]

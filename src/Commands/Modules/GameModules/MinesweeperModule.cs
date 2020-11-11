@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
@@ -11,6 +12,7 @@ namespace PacManBot.Commands.Modules
 {
     [Category(Categories.Games)]
     [RequireBotPermissions(BaseBotPermissions)]
+    [SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "Command reflection")]
     public class MinesweeperModule : BaseModule
     {
         private const string BombChar = "💥";

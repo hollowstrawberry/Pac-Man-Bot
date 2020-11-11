@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
@@ -139,6 +140,8 @@ namespace PacManBot.Games.Concrete
             public async ValueTask<bool> IsBotAsync() => (await GetUserAsync()).IsBot;
             public async ValueTask<string> MentionAsync() => (await GetUserAsync())?.Mention;
 
+
+            [SuppressMessage("Reliability", "CA2012:Use ValueTasks correctly", Justification = "It's usually finished already")]
             public override string ToString() => GetUserAsync().GetAwaiter().GetResult().DisplayName();
 
 
@@ -308,7 +311,7 @@ namespace PacManBot.Games.Concrete
             {
                 if (value == "cards" || value == "uno" || value == "callout") return true;
 
-                if (userId == (CurrentPlayer.GetUserAsync().GetAwaiter().GetResult()).Id)
+                if (userId == CurrentPlayer.id)
                 {
                     if (IsWaitingForColor()) return Enum.TryParse<CardColor>(value, true, out _); // Wild color
                     else return value == "draw" || value == "skip" || value.Contains("auto") || Card.Parse(value, this).HasValue;
@@ -457,8 +460,9 @@ namespace PacManBot.Games.Concrete
             if (!calledByAi || !await CurrentPlayer.IsBotAsync())
             {
                 await Games.SaveAsync(this);
-                foreach (var player in updatedPlayers.Distinct().Where(x => !x.IsBotAsync().GetAwaiter().GetResult()).ToArray())
+                foreach (var player in updatedPlayers.Distinct())
                 {
+                    if (await player.IsBotAsync()) continue;
                     await SendCardsAsync(player);
                 }
                 updatedPlayers = new List<UnoPlayer>();
@@ -668,7 +672,7 @@ namespace PacManBot.Games.Concrete
 
 
 
-        private string CardsDisplay(UnoPlayer player)
+        private static string CardsDisplay(UnoPlayer player)
         {
             string cards = player.cards
                 .ToList().Sorted()
