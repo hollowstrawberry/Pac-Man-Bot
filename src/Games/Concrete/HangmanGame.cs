@@ -56,7 +56,7 @@ namespace PacManBot.Games.Concrete
         {
             value = StripPrefix(value.ToUpperInvariant());
 
-            if (word == null || userId == OwnerId || value.Length > 1 && !ValidFullGuess(value) || !Alphabet.IsMatch(value))
+            if (word is null || userId == OwnerId || value.Length > 1 && !ValidFullGuess(value) || !Alphabet.IsMatch(value))
                 return false;
             return true;
         }
@@ -142,7 +142,7 @@ namespace PacManBot.Games.Concrete
                 embed.Color = Colors.PacManYellow;
             }
 
-            if (word == null)
+            if (word is null)
             {
                 embed.Description = $"Waiting for the secret phrase...";
                 return embed;

@@ -46,7 +46,7 @@ namespace PacManBot.Games
         {
             get
             {
-                if (_client != null && ChannelId == _channel?.Id) return _client;
+                if (_client is not null && ChannelId == _channel?.Id) return _client;
                 if (ChannelId <= 0) return ShardedClient.ShardClients.Values.First();
 
                 foreach (var shard in ShardedClient.ShardClients.Values)
@@ -111,7 +111,7 @@ namespace PacManBot.Games
         /// <summary>Returns the game's current message, caching it if it wasn't already.</summary>
         public async ValueTask<DiscordMessage> GetMessageAsync()
         {
-            if (Channel != null && _message?.Id != MessageId)
+            if (Channel is not null && _message?.Id != MessageId)
             {
                 try { _message = await Channel.GetMessageAsync(MessageId); }
                 catch (NotFoundException) { return _message = null; }
@@ -123,7 +123,7 @@ namespace PacManBot.Games
         /// <summary>Retrieves this game's owner (its first player).</summary>
         public override async ValueTask<DiscordUser> GetOwnerAsync()
         {
-            return Guild == null ? await Client.GetUserAsync(OwnerId) : await Guild.GetMemberAsync(OwnerId);
+            return Guild is null ? await Client.GetUserAsync(OwnerId) : await Guild.GetMemberAsync(OwnerId);
         }
 
 
@@ -131,7 +131,7 @@ namespace PacManBot.Games
         protected string StripPrefix(string value)
         {
             string prefix = Storage.GetPrefix(Channel);
-            return value.StartsWith(prefix) ? value.Substring(prefix.Length) : value;
+            return value.StartsWith(prefix) ? value[prefix.Length..] : value;
         }
 
 
@@ -143,7 +143,7 @@ namespace PacManBot.Games
         /// <param name="inputMessage">A DiscordMessage that called for this update, to be deleted afterwards.</param>
         public async Task UpdateMessageAsync(DiscordMessage gameMessage = null, DiscordMessage inputMessage = null)
         {
-            if (gameMessage == null) gameMessage = await GetMessageAsync();
+            if (gameMessage is null) gameMessage = await GetMessageAsync();
 
             var updateKey = (object)inputMessage ?? DateTime.Now;
             PendingUpdates.Push(updateKey);
@@ -168,11 +168,11 @@ namespace PacManBot.Games
             var updates = PendingUpdates.ToList();
             PendingUpdates.Clear();
 
-            if (gameMessage != null && (this is IReactionsGame || Channel.BotCan(Permissions.ManageMessages)))
+            if (gameMessage is not null && (this is IReactionsGame || Channel.BotCan(Permissions.ManageMessages)))
             {
                 await gameMessage.ModifyAsync(await GetContentAsync(), (await GetEmbedAsync())?.Build());
 
-                if (Channel != null)
+                if (Channel is not null)
                 {
                     var inputMessages = updates.OfType<DiscordMessage>().ToList();
                     if (inputMessages.Count > 1) await Channel.DeleteMessagesAsync(inputMessages);
@@ -185,7 +185,7 @@ namespace PacManBot.Games
                     .SendMessageAsync(await GetContentAsync(), false, (await GetEmbedAsync())?.Build());
                 MessageId = newMsg.Id;
 
-                if (gameMessage != null) await gameMessage.DeleteAsync();
+                if (gameMessage is not null) await gameMessage.DeleteAsync();
             }
 
             LastUpdated = DateTime.Now;

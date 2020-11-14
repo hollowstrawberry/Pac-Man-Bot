@@ -26,7 +26,7 @@ namespace PacManBot.Commands.Modules
         public async Task SendProfile(CommandContext ctx)
         {
             var pet = Game(ctx);
-            if (pet == null)
+            if (pet is null)
             {
                 await ctx.RespondAsync(AdoptPetMessage(ctx));
                 return;
@@ -42,18 +42,18 @@ namespace PacManBot.Commands.Modules
             var member = ctx.Member;
             var pet = Game(ctx);
 
-            if (otherMember != null)
+            if (otherMember is not null)
             {
                 member = otherMember;
                 pet = Games.GetForUser<PetGame>(member.Id);
-                if (pet == null)
+                if (pet is null)
                 {
                     await ctx.RespondAsync("This person doesn't have a pet :(");
                     return;
                 }
             }
 
-            if (pet == null)
+            if (pet is null)
             {
                 await ctx.RespondAsync(AdoptPetMessage(ctx));
                 return;
@@ -70,18 +70,18 @@ namespace PacManBot.Commands.Modules
             var member = ctx.Member;
             var pet = Game(ctx);
 
-            if (otherMember != null)
+            if (otherMember is not null)
             {
                 member = otherMember;
                 pet = Games.GetForUser<PetGame>(member.Id);
-                if (pet == null)
+                if (pet is null)
                 {
                     await ctx.RespondAsync("This person doesn't have a pet :(");
                     return;
                 }
             }
 
-            if (pet == null)
+            if (pet is null)
             {
                 await ctx.RespondAsync(AdoptPetMessage(ctx));
                 return;
@@ -95,7 +95,7 @@ namespace PacManBot.Commands.Modules
         [Description("Fills your pet's Satiation and restores a little Energy")]
         public async Task Feed(CommandContext ctx)
         {
-            if (Game(ctx) == null)
+            if (Game(ctx) is null)
             {
                 await ctx.RespondAsync(AdoptPetMessage(ctx));
                 return;
@@ -114,7 +114,7 @@ namespace PacManBot.Commands.Modules
         [Description("Fills your pet's Hygiene")]
         public async Task Clean(CommandContext ctx)
         {
-            if (Game(ctx) == null)
+            if (Game(ctx) is null)
             {
                 await ctx.RespondAsync(AdoptPetMessage(ctx));
                 return;
@@ -134,16 +134,16 @@ namespace PacManBot.Commands.Modules
         "You can make your pet play with another user's pet, in which case they get Happiness for free!\n")]
         public async Task Play(CommandContext ctx, DiscordMember otherMember = null)
         {
-            if (Game(ctx) == null)
+            if (Game(ctx) is null)
             {
                 await ctx.RespondAsync(AdoptPetMessage(ctx));
                 return;
             }
 
             PetGame otherPet = null;
-            if (otherMember != null)
+            if (otherMember is not null)
             {
-                if ((otherPet = Games.GetForUser<PetGame>(otherMember.Id)) == null)
+                if ((otherPet = Games.GetForUser<PetGame>(otherMember.Id)) is null)
                 {
                     await ctx.RespondAsync("This person doesn't have a pet :(");
                     return;
@@ -162,7 +162,7 @@ namespace PacManBot.Commands.Modules
             {
                 var playEmote = Program.Random.Choose(Content.petPlayEmotes).ToEmoji();
 
-                if (otherPet == null) await ctx.Message.CreateReactionAsync(playEmote);
+                if (otherPet is null) await ctx.Message.CreateReactionAsync(playEmote);
                 else
                 {
                     otherPet.happiness = PetGame.MaxStat;
@@ -187,7 +187,7 @@ namespace PacManBot.Commands.Modules
         [Description("Sleep to restore Energy over time")]
         public async Task Sleep(CommandContext ctx)
         {
-            if (Game(ctx) == null)
+            if (Game(ctx) is null)
             {
                 await ctx.RespondAsync(AdoptPetMessage(ctx));
                 return;
@@ -211,7 +211,7 @@ namespace PacManBot.Commands.Modules
         [Description("Wake up your pet")]
         public async Task WakeUp(CommandContext ctx)
         {
-            if (Game(ctx) == null)
+            if (Game(ctx) is null)
             {
                 await ctx.RespondAsync(AdoptPetMessage(ctx));
                 return;
@@ -228,7 +228,7 @@ namespace PacManBot.Commands.Modules
         [Description("Give a name to your pet")]
         public async Task SetName(CommandContext ctx, [RemainingText] string name)
         {
-            if (Game(ctx) == null)
+            if (Game(ctx) is null)
             {
                 await ctx.RespondAsync(AdoptPetMessage(ctx));
                 return;
@@ -241,7 +241,7 @@ namespace PacManBot.Commands.Modules
                 await ctx.RespondAsync("Say your pet's new name:");
 
                 msg = await ctx.GetResponseAsync();
-                if (msg == null)
+                if (msg is null)
                 {
                     await ctx.RespondAsync("Timed out 💨");
                     return;
@@ -271,7 +271,7 @@ namespace PacManBot.Commands.Modules
         [SuppressMessage("Performance", "CA1826:Do not use Enumerable methods on indexable collections", Justification = "default")]
         public async Task SetImage(CommandContext ctx, [RemainingText] string arg)
         {
-            if (Game(ctx) == null)
+            if (Game(ctx) is null)
             {
                 await ctx.RespondAsync(AdoptPetMessage(ctx));
                 return;
@@ -285,7 +285,7 @@ namespace PacManBot.Commands.Modules
                 await ctx.RespondAsync("Send your pet's new image or image URL, or \"reset\" to reset it.");
 
                 msg = await ctx.GetResponseAsync(120);
-                if (msg == null)
+                if (msg is null)
                 {
                     await ctx.RespondAsync("Timed out 💨");
                     return;
@@ -319,7 +319,7 @@ namespace PacManBot.Commands.Modules
         [Description("Pet your pet")]
         public async Task PetPet(CommandContext ctx)
         {
-            if (Game(ctx) == null)
+            if (Game(ctx) is null)
             {
                 await ctx.RespondAsync(AdoptPetMessage(ctx));
                 return;
@@ -333,7 +333,7 @@ namespace PacManBot.Commands.Modules
                 Game(ctx).timesPetSinceTimerStart = 0;
             }
 
-            int limit = ctx.Guild == null ? 10 : 1;
+            int limit = ctx.Guild is null ? 10 : 1;
 
             if (Game(ctx).timesPetSinceTimerStart >= limit)
             {
@@ -341,7 +341,7 @@ namespace PacManBot.Commands.Modules
                 {
                     Game(ctx).timesPetSinceTimerStart += 1;
 
-                    string response = ctx.Guild == null
+                    string response = ctx.Guild is null
                         ? $"{CustomEmoji.Cross} That's enough petting! {60 - (int)passed.TotalSeconds} seconds left."
                         : $"{CustomEmoji.Cross} You may pet once a minute in guilds. You can pet more in DMs with the bot.";
                         
@@ -359,7 +359,7 @@ namespace PacManBot.Commands.Modules
         [Command("abuse"), Hidden, Description("no")]
         public async Task Meme(CommandContext ctx)
         {
-            if (Game(ctx) == null)
+            if (Game(ctx) is null)
             {
                 await ctx.RespondAsync(AdoptPetMessage(ctx));
                 return;
@@ -380,7 +380,7 @@ namespace PacManBot.Commands.Modules
         public async Task SendUser(CommandContext ctx, DiscordMember member)
         {
             var pet = Games.GetForUser<PetGame>(member.Id);
-            if (pet == null)
+            if (pet is null)
             {
                 await ctx.RespondAsync("This person doesn't have a pet :(");
                 return;
@@ -394,7 +394,7 @@ namespace PacManBot.Commands.Modules
         [Description("Adopt your new pet!")]
         public async Task StartGame(CommandContext ctx)
         {
-            if (Game(ctx) != null)
+            if (Game(ctx) is not null)
             {
                 await ctx.RespondAsync($"You already have a pet!");
                 return;
@@ -411,7 +411,7 @@ namespace PacManBot.Commands.Modules
         public async Task DeleteGame(CommandContext ctx)
         {
             var pet = Game(ctx);
-            if (pet == null)
+            if (pet is null)
             {
                 await ctx.RespondAsync(AdoptPetMessage(ctx));
                 return;

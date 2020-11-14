@@ -139,7 +139,7 @@ namespace PacManBot.Games.Concrete
                 this.reverse = reverse;
                 key = key.ToUpperInvariant();
                 baseMove = AllMoves.FirstOrDefault(x => x.Key == key);
-                if (baseMove == null) throw new ArgumentException("Key doesn't match any existing built-in move.", nameof(key));
+                if (baseMove is null) throw new ArgumentException("Key doesn't match any existing built-in move.", nameof(key));
             }
 
 
@@ -170,7 +170,7 @@ namespace PacManBot.Games.Concrete
                 if (!match.Success) return false;
 
                 var baseMove = AllMoves.FirstOrDefault(x => x.Key == match.Groups[1].Value.ToUpperInvariant());
-                if (baseMove == null) return false;
+                if (baseMove is null) return false;
 
                 move = new Move
                 {

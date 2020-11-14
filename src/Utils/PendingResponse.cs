@@ -25,7 +25,7 @@ namespace PacManBot.Utils
             set
             {
                 _response = value;
-                if (value != null) _cancelSource.Cancel();
+                if (value is not null) _cancelSource.Cancel();
             }
         }
 

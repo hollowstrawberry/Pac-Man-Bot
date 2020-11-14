@@ -44,7 +44,7 @@ namespace PacManBot.Commands.Modules
             "Use `bump` to move the game message to the bottom of the chat. Use `cancel` to end the game.")]
         public async Task StartCustomGame(CommandContext ctx, [RemainingText]string map = null)
         {
-            if (map == null)
+            if (map is null)
             {
                 string message = Content.customHelp.Replace("{prefix}", ctx.Prefix);
 
@@ -87,7 +87,7 @@ namespace PacManBot.Commands.Modules
                  "Using this command will switch modes for the current game in this channel.")]
         public async Task ChangeGameDisplay(CommandContext ctx)
         {
-            if (Game(ctx) == null)
+            if (Game(ctx) is null)
             {
                 await ctx.RespondAsync("There is no active Pac-Man game in this channel!");
                 return;

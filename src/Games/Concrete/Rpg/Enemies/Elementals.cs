@@ -30,7 +30,7 @@ namespace PacManBot.Games.Concrete.Rpg.Enemies
         {
             string msg = "";
             var buff = target.Buffs.OfType<Wet>().FirstOrDefault();
-            if (buff == null)
+            if (buff is null)
             {
                 target.AddBuff(buff = new Wet());
                 msg = $"{target} got wet.";

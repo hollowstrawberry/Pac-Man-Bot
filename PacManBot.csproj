@@ -6,22 +6,22 @@
     <TargetFramework>net5.0</TargetFramework>
     <PreserveCompilationContext>false</PreserveCompilationContext>
     <RootNamespace>PacManBot</RootNamespace>
-    <Version>5.0.7</Version>
+    <Version>5.0.8</Version>
     <Authors>OrchidAlloy</Authors>
     <Product>Pac-Man Bot</Product>
     <Company></Company>
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>9.0</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>bin\Debug</OutputPath>
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>9.0</LangVersion>
     <DocumentationFile></DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <OutputPath>bin\Release</OutputPath>
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>9.0</LangVersion>
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
 

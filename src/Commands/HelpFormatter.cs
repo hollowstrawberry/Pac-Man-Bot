@@ -44,11 +44,11 @@ namespace PacManBot.Commands
         {
             var embed = new DiscordEmbedBuilder().WithColor(Colors.PacManYellow);
             
-            if (Command == null)
+            if (Command is null)
             {
                 embed.WithTitle("PacMan Commands <a:pacman:409803570544902144>•••");
 
-                if (Context.Guild == null) embed.WithDescription("No prefix needed in this channel!");
+                if (Context.Guild is null) embed.WithDescription("No prefix needed in this channel!");
                 else
                 {
                     var storage = Context.Services.Get<DatabaseService>();
@@ -58,7 +58,7 @@ namespace PacManBot.Commands
 
                 var modules = Subcommands
                     .GroupBy(x => x.Module.ModuleType.GetCustomAttribute<CategoryAttribute>()?.Name)
-                    .Where(x => x.Key != null)
+                    .Where(x => x.Key is not null)
                     .OrderBy(x => Categories.Order.IndexOf(x.Key));
                 foreach (var commands in modules)
                 {
@@ -85,11 +85,11 @@ namespace PacManBot.Commands
                     embed.AddField("👻 Hidden", "How did you find it?", true);
 
                 var userPerms = Command.ExecutionChecks.OfType<RequireUserPermissionsAttribute>().FirstOrDefault();
-                if (userPerms != null)
+                if (userPerms is not null)
                     embed.AddField("Requires Permissions", userPerms.Permissions.ToPermissionString(), true);
                 if (Command.Aliases.Any())
                     embed.AddField("Aliases", Command.Aliases.Select(x => $"`{x}`").JoinString(", "), true);
-                if (Subcommands != null)
+                if (Subcommands is not null)
                     embed.AddField("Subcommands", Subcommands.Select(x => $"`{x.QualifiedName}`").JoinString(", "), true);
             }
 

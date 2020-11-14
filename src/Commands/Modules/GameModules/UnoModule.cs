@@ -26,7 +26,7 @@ namespace PacManBot.Commands.Modules
         [GroupCommand, Priority(3)]
         public async Task StartUno(CommandContext ctx, params DiscordMember[] startingPlayers)
         {
-            if (ctx.Guild == null)
+            if (ctx.Guild is null)
             {
                 await StartNewMPGameAsync(ctx, ctx.User, ctx.Client.CurrentUser);
             }
@@ -63,13 +63,13 @@ namespace PacManBot.Commands.Modules
         public async Task JoinUno(CommandContext ctx, DiscordMember member = null)
         {
             bool self = false;
-            if (member == null)
+            if (member is null)
             {
                 self = true;
                 member = ctx.Member;
             }
 
-            if (Game(ctx) == null)
+            if (Game(ctx) is null)
             {
                 await ctx.RespondAsync($"There's no Uno game in this channel! Use `{ctx.Prefix}uno` to start.");
                 return;
@@ -87,7 +87,7 @@ namespace PacManBot.Commands.Modules
 
             string failReason = await Game(ctx).TryAddPlayerAsync(member);
 
-            if (failReason == null)
+            if (failReason is null)
             {
                 await DeleteGameMessageAsync(ctx);
                 await RespondGameAsync(ctx);
@@ -98,7 +98,7 @@ namespace PacManBot.Commands.Modules
             }
 
             if (ctx.BotCan(Permissions.ManageMessages)) await ctx.Message.DeleteAsync();
-            else await ctx.AutoReactAsync(failReason == null);
+            else await ctx.AutoReactAsync(failReason is null);
         }
 
 
@@ -108,7 +108,7 @@ namespace PacManBot.Commands.Modules
         public async Task LeaveUno(CommandContext ctx)
         {
             var game = Game(ctx);
-            if (game == null)
+            if (game is null)
             {
                 await ctx.RespondAsync($"There's no Uno game in this channel! Use `uno` to start.");
                 return;
@@ -142,12 +142,12 @@ namespace PacManBot.Commands.Modules
         public async Task KickUno(CommandContext ctx, DiscordMember member = null)
         {
             var game = Game(ctx);
-            if (game == null)
+            if (game is null)
             {
                 await ctx.RespondAsync($"There's no Uno game in this channel! Use `{ctx.Prefix}uno` to start.");
                 return;
             }
-            if (member == null)
+            if (member is null)
             {
                 await ctx.RespondAsync($"You must specify a user to kick from the game.");
                 return;

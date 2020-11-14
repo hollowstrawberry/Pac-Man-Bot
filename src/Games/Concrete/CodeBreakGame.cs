@@ -61,7 +61,7 @@ namespace PacManBot.Games.Concrete
         public async Task InputAsync(string input, ulong userId = 1)
         {
             input = StripPrefix(input);
-            if (guesses.Count > 0 && guesses.Last() == null) guesses.Pop();
+            if (guesses.Count > 0 && guesses.Last() is null) guesses.Pop();
             if (input == Code) State = GameState.Win;
             if (input.Distinct().Count() < Code.Length) input = null; // can't contain the same digit twice
             guesses.Add(input);
@@ -102,7 +102,7 @@ namespace PacManBot.Games.Concrete
                 int lines = Math.Min(20, 120 / Code.Length);
                 foreach ((string guess, int index) in guesses.Select((x, i) => (x, i)).TakeLast(lines))
                 {
-                    if (guess == null)
+                    if (guess is null)
                     {
                         sb.Append($"{CustomEmoji.Cross} Your guess can't contain the same digit twice!\n");
                     }

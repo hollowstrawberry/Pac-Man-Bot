@@ -23,7 +23,7 @@ namespace PacManBot.Commands.Modules
         public async Task RubiksCube(CommandContext ctx, [RemainingText]string input = "")
         {
             var game = Game(ctx);
-            if (game == null)
+            if (game is null)
             {
                 game = StartNewGame(new RubiksGame(ctx.Channel.Id, ctx.User.Id, Services));
             }

@@ -46,7 +46,7 @@ namespace PacManBot.Commands
         /// <summary>Saves the game to disk if the game for this context is storeable.</summary>
         public async Task SaveGameAsync(CommandContext ctx)
         {
-            if (Game(ctx) != null && Game(ctx) is IStoreableGame sgame) await Games.SaveAsync(sgame);
+            if (Game(ctx) is not null && Game(ctx) is IStoreableGame sgame) await Games.SaveAsync(sgame);
         }
 
 
@@ -68,11 +68,11 @@ namespace PacManBot.Commands
         /// <summary>Safely tries to remove the game's current message from chat.</summary>
         public async Task DeleteGameMessageAsync(CommandContext ctx)
         {
-            if (!(Game(ctx) is IChannelGame cgame)) return;
+            if (Game(ctx) is not IChannelGame cgame) return;
             try
             {
                 var msg = await cgame.GetMessageAsync();
-                if (msg != null) await msg.DeleteAsync();
+                if (msg is not null) await msg.DeleteAsync();
             }
             catch (NotFoundException) { }
         }
@@ -81,7 +81,7 @@ namespace PacManBot.Commands
         /// <summary>Safely sends or modifies the game's current message in the chat.</summary>
         public async Task<DiscordMessage> UpdateGameMessageAsync(CommandContext ctx, DiscordMessage gameMessage = null)
         {
-            if (!(Game(ctx) is IChannelGame cgame)) return null;
+            if (Game(ctx) is not IChannelGame cgame) return null;
 
             try
             {
@@ -96,7 +96,7 @@ namespace PacManBot.Commands
         public async ValueTask<bool> CheckGameAlreadyExistsAsync(CommandContext ctx)
         {
             var existing = Games.GetForChannel(ctx.Channel.Id);
-            if (existing != null)
+            if (existing is not null)
             {
                 string prefix = Storage.GetPrefix(ctx.Channel);
                 await ctx.RespondAsync(existing.UserId.Contains(ctx.User.Id)

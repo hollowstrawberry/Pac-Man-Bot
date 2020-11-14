@@ -54,7 +54,7 @@ namespace PacManBot.Games.Concrete
         [DataMember] public override ulong MessageId { get => base.MessageId; set => base.MessageId = value; }
 
         /// <summary>Whether this is a PVP battle, proposed or confirmed.</summary>
-        public bool IsPvp => PvpGame != null;
+        public bool IsPvp => PvpGame is not null;
         /// <summary>Whether both challenger and challenged are in the same PVP battle.</summary>
         public bool PvpBattleConfirmed => PvpGame.pvpUserId == OwnerId;
         /// <summary>Opponents in the current battle, whether it's against enemies or a player.</summary>
@@ -76,7 +76,7 @@ namespace PacManBot.Games.Concrete
                     _pvpGame = Games.GetForUser<RpgGame>(pvpUserId);
 
                     // Reset fight if invalid opponent
-                    if (_pvpGame == null)
+                    if (_pvpGame is null)
                     {
                         ResetBattle(GameState.Completed);
                         return null;
@@ -167,12 +167,12 @@ namespace PacManBot.Games.Concrete
             var desc = new StringBuilder();
 
 
-            if (attack != null)
+            if (attack is not null)
             {
                 player.UpdateStats();
                 foreach (var op in Opponents) op.UpdateStats();
 
-                if (skill != null) desc.AppendLine($"{player} uses {skill.Type.Icon()}**{skill}**!\n{skill.Effect(this)}");
+                if (skill is not null) desc.AppendLine($"{player} uses {skill.Type.Icon()}**{skill}**!\n{skill.Effect(this)}");
                 else desc.AppendLine(player.Attack(enemies[attack.Value]));
 
                 foreach (var enemy in enemies.Where(e => e.Life > 0))
@@ -215,7 +215,7 @@ namespace PacManBot.Games.Concrete
                     desc.AppendLine($"{en} was defeated! +{exp} EXP");
                     player.experience += exp;
                     string lvlUp = player.TryLevelUp();
-                    if (lvlUp != null)
+                    if (lvlUp is not null)
                     {
                         Channel.SendMessageAsync($"\n⏫ Level up! {lvlUp}" +
                             "\n⭐ **You reached the maximum level! Congratulations!**".If(player.Level == RpgPlayer.LevelCap));
@@ -269,7 +269,7 @@ namespace PacManBot.Games.Concrete
                 player.UpdateStats();
                 foreach (var op in Opponents) op.UpdateStats();
 
-                if (skill != null) desc.AppendLine($"{player} uses {skill.Type.Icon()}**{skill}**!\n{skill.Effect(this)}");
+                if (skill is not null) desc.AppendLine($"{player} uses {skill.Type.Icon()}**{skill}**!\n{skill.Effect(this)}");
                 else desc.AppendLine(player.Attack(PvpGame.player));
 
                 if (PvpGame.player.Life > 0)

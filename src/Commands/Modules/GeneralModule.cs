@@ -127,7 +127,7 @@ namespace PacManBot.Commands.Modules
         public async Task GetServerPrefix(CommandContext ctx)
         {
             string message;
-            if (ctx.Guild == null)
+            if (ctx.Guild is null)
             {
                 message = "You can use commands without any prefix in a DM with me!";
             }

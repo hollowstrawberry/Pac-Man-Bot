@@ -95,7 +95,7 @@ namespace PacManBot.Utils
             memory.Add(0);
 
             output.Clear();
-            if (newInput != null) input = Encoding.ASCII.GetBytes(newInput);
+            if (newInput is not null) input = Encoding.ASCII.GetBytes(newInput);
 
             instrPtr = -1;
             memPtr = 0;
@@ -121,7 +121,7 @@ namespace PacManBot.Utils
             try { ReadNext(); }
             catch (Exception e)
             {
-                if (!(e is BrainfuckException)) e = new BrainfuckException(e.Message, this, e);
+                if (e is not BrainfuckException) e = new BrainfuckException(e.Message, this, e);
                 instrPtr = instr.Length; // Acts as though finished
                 throw e;
             }

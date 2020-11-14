@@ -47,10 +47,10 @@ namespace PacManBot.Extensions
             int count = list.Count();
             if (count == 0) return list;
 
-            if (start == null) start = step > 0 ? 0 : count - 1;
+            if (start is null) start = step > 0 ? 0 : count - 1;
             else if (start < 0) start = Math.Max(0, start.Value + count);
 
-            if (stop == null) stop = step > 0 ? count : -1;
+            if (stop is null) stop = step > 0 ? count : -1;
             else if (stop < 0) stop = Math.Max(0, stop.Value + count);
 
             if (step < 0)
@@ -145,8 +145,8 @@ namespace PacManBot.Extensions
         /// <summary>Returns a new array that is the concatenation of all the provided arrays.</summary>
         public static T[] Concatenate<T>(this T[] first, params T[][] others)
         {
-            if (first == null) throw new ArgumentNullException(nameof(first));
-            if (others == null || others.Any(x => x == null)) throw new ArgumentNullException(nameof(others));
+            if (first is null) throw new ArgumentNullException(nameof(first));
+            if (others is null || others.Any(x => x is null)) throw new ArgumentNullException(nameof(others));
 
             var newArray = new T[first.Length + others.Select(x => x.Length).Sum()];
             Array.Copy(first, 0, newArray, 0, first.Length);
@@ -163,7 +163,7 @@ namespace PacManBot.Extensions
 
 
         /// <summary>Attempts to remove the value that has the specified key from the 
-        /// <see cref="System.Collections.Concurrent.ConcurrentDictionary{TKey, TValue}"/>.</summary>
+        /// <see cref="ConcurrentDictionary{TKey, TValue}"/>.</summary>
         public static bool TryRemove<TKey, TValue>(this ConcurrentDictionary<TKey, TValue> dict, TKey key)
         {
             return dict.TryRemove(key, out _);

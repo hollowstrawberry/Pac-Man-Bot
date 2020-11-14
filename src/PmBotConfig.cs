@@ -47,10 +47,10 @@ namespace PacManBot
         [DataMember] public readonly LogLevel clientLogLevel = LogLevel.Information;
 
         /// <summary>Strings that when found cause a log event to be ignored. Use with caution.</summary>
-        [DataMember] public readonly string[] logExclude = { };
+        [DataMember] public readonly string[] logExclude = Array.Empty<string>();
 
         /// <summary>Until a long-term solution to command spam attacks is found, I can just ban channels from using the bot.</summary>
-        [DataMember] public readonly ulong[] bannedChannels = { };
+        [DataMember] public readonly ulong[] bannedChannels = Array.Empty<ulong>();
 
         /// <summary>Whether to send a DM to the owner of the bot's Application on startup.</summary>
         [DataMember] public readonly bool messageOwnerOnStartup = true;
@@ -67,7 +67,7 @@ namespace PacManBot
         {
             var cont = JsonConvert.DeserializeObject<PmBotContent>(json);
 
-            var missingFields = typeof(PmBotContent).GetFields().Where(x => x.GetValue(cont) == null).ToList();
+            var missingFields = typeof(PmBotContent).GetFields().Where(x => x.GetValue(cont) is null).ToList();
             if (missingFields.Count > 0)
             {
                 throw new InvalidOperationException(

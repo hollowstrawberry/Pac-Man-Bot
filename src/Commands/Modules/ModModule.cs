@@ -80,7 +80,7 @@ namespace PacManBot.Commands.Modules
             else if (prefix.Length > 32)
                 error = "Prefix can't be bigger than 32 characters";
 
-            if (error != null)
+            if (error is not null)
             {
                 await ctx.RespondAsync($"{CustomEmoji.Cross} {error}");
                 return;
@@ -112,7 +112,7 @@ namespace PacManBot.Commands.Modules
         public async Task ToggleNoPrefix(CommandContext ctx, DiscordChannel otherChannel = null)
         {
             var channel = ctx.Channel;
-            if (otherChannel != null)
+            if (otherChannel is not null)
             {
                 if (otherChannel.Type == ChannelType.Text) channel = otherChannel;
                 else
@@ -167,7 +167,7 @@ namespace PacManBot.Commands.Modules
         {
             var commands = typeof(OwnerModule).GetMethods()
                 .Select(x => x.Get<CommandAttribute>()?.Name)
-                .Where(x => x != null)
+                .Where(x => x is not null)
                 .Distinct()
                 .Select(x => $"`{x}`")
                 .JoinString(", ");

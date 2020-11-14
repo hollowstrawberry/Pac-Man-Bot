@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -97,7 +98,7 @@ namespace PacManBot.Services
         /// as well as its savefile if there is one.</summary>
         public void Remove(IBaseGame game, bool doLog = true)
         {
-            if (game == null) return;
+            if (game is null) return;
 
             bool success = false;
 
@@ -123,7 +124,9 @@ namespace PacManBot.Services
         }
 
 
+
         /// <summary>Stores a backup of the game on disk asynchronously, to be loaded the next time the bot starts.</summary>
+        [SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "future-proofing")]
         public async Task SaveAsync(IStoreableGame game)
         {
             game.LastPlayed = DateTime.Now;

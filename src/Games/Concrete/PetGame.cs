@@ -171,7 +171,7 @@ namespace PacManBot.Games.Concrete
                 // assigning whether they've been obtained by the current instance
                 return GetType().GetProperties()
                     .Select(x => x.Get<AchievementAttribute>()?.WithObtained(x.GetMethod.Invoke<bool>(this)))
-                    .Where(x => x != null)
+                    .Where(x => x is not null)
                     .ToList().Sorted();
             }
 
@@ -432,7 +432,7 @@ namespace PacManBot.Games.Concrete
         public async Task<bool> TrySetImageUrlAsync(string text)
         {
             string url = text?.Trim('<', '>');
-            if (url == null || await WebUtil.IsImageUrlAsync(url))
+            if (url is null || await WebUtil.IsImageUrlAsync(url))
             {
                 PetImageUrl = url;
                 await UpdateAndSaveAsync();

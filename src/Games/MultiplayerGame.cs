@@ -62,7 +62,7 @@ namespace PacManBot.Games
             SetServices(services);
 
             ChannelId = channelId;
-            if (players != null)
+            if (players is not null)
             {
                 UserId = players.Select(x => x.Id).ToArray();
                 _users = new DiscordUser[UserId.Length];

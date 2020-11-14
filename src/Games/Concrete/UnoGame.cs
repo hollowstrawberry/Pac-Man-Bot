@@ -133,8 +133,8 @@ namespace PacManBot.Games.Concrete
 
             public async ValueTask<DiscordUser> GetUserAsync()
             {
-                if (user != null) return user;
-                return user = game.Guild == null ? await game.Client.GetUserAsync(id) : await game.Guild.GetMemberAsync(id);
+                if (user is not null) return user;
+                return user = game.Guild is null ? await game.Client.GetUserAsync(id) : await game.Guild.GetMemberAsync(id);
             }
 
             public async ValueTask<bool> IsBotAsync() => (await GetUserAsync()).IsBot;
@@ -232,12 +232,12 @@ namespace PacManBot.Games.Concrete
                 {
                     var cards = game.CurrentPlayer.cards.ToList().Sorted();
 
-                    if (color == null && type == null) return value == "" ? cards.FirstOrNull(game.CanDiscard) : null;
-                    if (color == null) return cards.FirstOrNull(x => x.Type == type && game.CanDiscard(x));
-                    if (type == null) return cards.FirstOrNull(x => x.Color == color && game.CanDiscard(x));
+                    if (color is null && type is null) return value == "" ? cards.FirstOrNull(game.CanDiscard) : null;
+                    if (color is null) return cards.FirstOrNull(x => x.Type == type && game.CanDiscard(x));
+                    if (type is null) return cards.FirstOrNull(x => x.Color == color && game.CanDiscard(x));
                 }
 
-                if (color == null && type.HasValue && IsWild(type.Value)) color = CardColor.Black;
+                if (color is null && type.HasValue && IsWild(type.Value)) color = CardColor.Black;
 
                 if (type.HasValue && color.HasValue) return new Card(type.Value, color.Value);
                 else return null;
@@ -342,7 +342,7 @@ namespace PacManBot.Games.Concrete
             else if (input == "uno" || input == "callout")
             {
                 var forgot = players.FirstOrDefault(x => x.uno == UnoState.Forgot);
-                if (forgot == null) return;
+                if (forgot is null) return;
 
                 if (forgot.id == userId) forgot.uno = UnoState.Said;
                 else
@@ -449,7 +449,7 @@ namespace PacManBot.Games.Concrete
             {
                 Message = $"{await CurrentPlayer.MentionAsync()} choose a color: red/blue/green/yellow";
             }
-            else if (Guild != null)
+            else if (Guild is not null)
             {
                 Message = $"Your turn, {await CurrentPlayer.MentionAsync()}";
             }
@@ -497,7 +497,7 @@ namespace PacManBot.Games.Concrete
             }
 
             var forgot = players.FirstOrDefault(x => x.uno == UnoState.Forgot);
-            if (forgot != null && (await forgot.IsBotAsync() || !Program.Random.OneIn(3))) // Sometimes calls out
+            if (forgot is not null && (await forgot.IsBotAsync() || !Program.Random.OneIn(3))) // Sometimes calls out
             {
                 Callout(forgot);
             }
@@ -539,8 +539,8 @@ namespace PacManBot.Games.Concrete
             {
                 description.Append(
                     $"{Empty}\nSay the name of a card to discard it or \"draw\" to draw another.\n" +
-                    $"Your cards are shown in a DM, say \"cards\" to resend.\n".If(Guild != null) +
-                    $"Use **{prefix}uno join** to join the game.\n".If(Guild != null) +
+                    $"Your cards are shown in a DM, say \"cards\" to resend.\n".If(Guild is not null) +
+                    $"Use **{prefix}uno join** to join the game.\n".If(Guild is not null) +
                     $"Use **{prefix}uno help** for rules and more commands.");
             }
 
@@ -553,7 +553,7 @@ namespace PacManBot.Games.Concrete
                 .WithColor(RgbCardColor[(int)TopCard.Color])
                 .WithThumbnail((await CurrentPlayer.GetUserAsync()).GetAvatarUrl(ImageFormat.Auto));
 
-            if (Guild == null) embed.AddField("Your cards", CardsDisplay(players[0]));
+            if (Guild is null) embed.AddField("Your cards", CardsDisplay(players[0]));
 
             return embed;
         }
@@ -686,7 +686,7 @@ namespace PacManBot.Games.Concrete
 
         private async Task SendCardsAsync(UnoPlayer player)
         {
-            if (await player.GetUserAsync() == null || await player.IsBotAsync() || Guild == null) return;
+            if (await player.GetUserAsync() is null || await player.IsBotAsync() || Guild is null) return;
 
             var embed = new DiscordEmbedBuilder
             {
@@ -701,7 +701,7 @@ namespace PacManBot.Games.Concrete
 
             bool resend = false;
 
-            if (player.message == null) resend = true;
+            if (player.message is null) resend = true;
             else
             {
                 try { await player.message.ModifyAsync(embed: embed.Build()); }

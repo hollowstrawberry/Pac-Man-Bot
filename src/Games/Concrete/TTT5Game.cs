@@ -140,27 +140,27 @@ namespace PacManBot.Games.Concrete
 
             if (Time < 2 && board[2, 2] == Player.None && Program.Random.Next(4) > 0) moves = new List<Pos> { (2, 2) };
 
-            if (moves == null) // Lines of 3
+            if (moves is null) // Lines of 3
             {
                 var lines = TryCompleteLines(Turn, 3);
                 var blocks = TryCompleteLines(Turn.Opponent, 3);
 
-                if (lines == null && blocks == null)
+                if (lines is null && blocks is null)
                 {
                     moves = TryCompleteLines(Turn, 2) ?? EmptyCells(board); // Next to itself 
                 }
                 else
                 {
                     var combo = new List<Pos>();
-                    if (lines != null)
+                    if (lines is not null)
                     {
                         combo.AddRange(lines.GroupBy(x => x).Where(g => g.Count() > 1).Select(g => g.Key)); // Double line
                     }
-                    if (blocks != null)
+                    if (blocks is not null)
                     {
                         combo.AddRange(blocks.GroupBy(x => x).Where(g => g.Count() > 1).Select(g => g.Key)); // Double block
                     }
-                    if (lines != null && blocks != null)
+                    if (lines is not null && blocks is not null)
                     {
                         combo.AddRange(lines.Where(x => blocks.Contains(x))); // line + block
                     }
@@ -189,7 +189,7 @@ namespace PacManBot.Games.Concrete
                 if (board[pos] == player) count++; // Consecutive symbols
                 else if (board[pos] == Player.None) // Find a gap
                 {
-                    if (missing != null) count = 0; // There was already a gap, line is broken
+                    if (missing is not null) count = 0; // There was already a gap, line is broken
                     missing = pos;
                 }
                 else // line is broken

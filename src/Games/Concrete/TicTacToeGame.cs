@@ -151,7 +151,7 @@ namespace PacManBot.Games.Concrete
                 {
                     if (board[x, y] == player) count++;
                     else if (board[x, y] == Player.None) missing = (x, y);
-                    if (count == 2 && missing != null) return missing;
+                    if (count == 2 && missing is not null) return missing;
                 }
             }
 
@@ -163,7 +163,7 @@ namespace PacManBot.Games.Concrete
                 {
                     if (board[x, y] == player) count++;
                     else if (board[x, y] == Player.None) missing = (x, y);
-                    if (count == 2 && missing != null) return missing;
+                    if (count == 2 && missing is not null) return missing;
                 }
             }
 
@@ -173,7 +173,7 @@ namespace PacManBot.Games.Concrete
             {
                 if (board[d, d] == player) count++;
                 else if (board[d, d] == Player.None) missing = (d, d);
-                if (count == 2 && missing != null) return missing;
+                if (count == 2 && missing is not null) return missing;
             }
 
             count = 0;
@@ -182,7 +182,7 @@ namespace PacManBot.Games.Concrete
             {
                 if (board[2 - d, d] == player) count++;
                 else if (board[2 - d, d] == Player.None) missing = (2 - d, d);
-                if (count == 2 && missing != null) return missing;
+                if (count == 2 && missing is not null) return missing;
             }
 
             return null;

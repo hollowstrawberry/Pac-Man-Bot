@@ -93,7 +93,7 @@ namespace PacManBot.Services
         private Task OnMessageReceived(DiscordClient client, MessageCreateEventArgs args)
         {
             var message = args.Message;
-            if (message?.Author != null && !message.Author.IsBot
+            if (message?.Author is not null && !message.Author.IsBot
                     && message.Channel.BotCan(Permissions.SendMessages | Permissions.ReadMessageHistory))
             {
                 try
@@ -102,7 +102,7 @@ namespace PacManBot.Services
                         MessageGameInput(message) ||
                         Command(message, client))
                     {
-                        if (message.Channel.Guild != null)
+                        if (message.Channel.Guild is not null)
                         {
                             _ = EnsureUsersDownloadedAsync(message.Channel.Guild)
                                 .LogExceptions(_log, $"Downloading users for guild {message.Channel.Guild.DebugName()}");
@@ -126,7 +126,7 @@ namespace PacManBot.Services
 
         private Task OnReactionAddedOrRemoved(DiscordMessage message, DiscordUser user, DiscordEmoji emoji)
         {
-            if (message.Channel != null && message.Channel.BotCan(Permissions.SendMessages | Permissions.ReadMessageHistory))
+            if (message.Channel is not null && message.Channel.BotCan(Permissions.SendMessages | Permissions.ReadMessageHistory))
             {
                 if (user.Id == _client.CurrentUser.Id) return Task.CompletedTask;
                 
@@ -134,12 +134,12 @@ namespace PacManBot.Services
                     .OfType<IReactionsGame>()
                     .FirstOrDefault(g => g.MessageId == message.Id);
 
-                if (game == null) return Task.CompletedTask;
+                if (game is null) return Task.CompletedTask;
 
                 _ = ExecuteReactionGameInputAsync(game, message, user, emoji)
                     .LogExceptions(_log, $"During input \"{emoji.GetDiscordName()}\" in {message.Channel.DebugName()}");
 
-                if (message.Channel?.Guild != null)
+                if (message.Channel?.Guild is not null)
                 {
                     _ = EnsureUsersDownloadedAsync(message.Channel.Guild)
                         .LogExceptions(_log, $"Downloading users for guild {message.Channel.Guild.DebugName()}");
@@ -160,7 +160,7 @@ namespace PacManBot.Services
         private async Task OnCommandErrored(CommandsNextExtension sender, CommandErrorEventArgs args)
         {
             var ctx = args.Context;
-            if (ctx == null || ctx.Channel == null) return; // ???
+            if (ctx is null || ctx.Channel is null) return; // ???
             switch (args.Exception)
             {
                 case ArgumentException e when e.Message.Contains("suitable overload"):
@@ -168,27 +168,27 @@ namespace PacManBot.Services
                     return;
 
                 case ChecksFailedException e:
-                    if (e.FailedChecks == null || e.FailedChecks.Count == 0) return;
+                    if (e.FailedChecks is null || e.FailedChecks.Count == 0) return;
                     switch (e.FailedChecks[0])
                     {
                         case RequireOwnerAttribute _:
                             return;
 
-                        case RequireBotPermissionsAttribute r when ctx.Guild != null:
+                        case RequireBotPermissionsAttribute r when ctx.Guild is not null:
                             var curPerms = ctx.Channel.PermissionsFor(ctx.Guild.CurrentMember);
                             var perms = (r.Permissions ^ curPerms) & r.Permissions; // missing
                             await ctx.RespondAsync($"This bot requires the permission to {perms.ToPermissionString().ToLower()}!");
                             return;
 
-                        case RequireUserPermissionsAttribute r when ctx.Guild != null:
+                        case RequireUserPermissionsAttribute r when ctx.Guild is not null:
                             curPerms = ctx.Channel.PermissionsFor(ctx.Member);
                             perms = (r.Permissions ^ curPerms) & r.Permissions; // missing
                             await ctx.RespondAsync($"You need the permission to {perms.ToPermissionString().ToLower()} to use this command.");
                             return;
 
                         case RequireDirectMessageAttribute _:
-                        case RequireBotPermissionsAttribute _ when ctx.Guild == null:
-                        case RequireUserPermissionsAttribute _ when ctx.Guild == null:
+                        case RequireBotPermissionsAttribute _ when ctx.Guild is null:
+                        case RequireUserPermissionsAttribute _ when ctx.Guild is null:
                             await ctx.RespondAsync("This command can only be used in DMs with the bot.");
                             return;
 
@@ -226,7 +226,7 @@ namespace PacManBot.Services
 
         private async Task EnsureUsersDownloadedAsync(DiscordGuild guild)
         {
-            if (guild != null && guild.MemberCount < 50000)
+            if (guild is not null && guild.MemberCount < 50000)
             {
                 if (!_lastGuildUsersDownload.TryGetValue(guild.Id, out DateTime last)
                     || (DateTime.Now - last) > TimeSpan.FromMinutes(30))
@@ -244,7 +244,7 @@ namespace PacManBot.Services
         {
             var pending = _pendingResponses.Select(x => x.Key).FirstOrDefault(x => x.Condition(message));
 
-            if (pending != null)
+            if (pending is not null)
             {
                 pending.Response = message;
                 return true;
@@ -266,11 +266,11 @@ namespace PacManBot.Services
                 ?? (requiresPrefix ? -1 : 0);
 
             // I added a check for non-self mentions as the default prefix is < which is also the first character of discord mentions
-            if (pos >= 0 && (selfMentionPos != null || !StartsWithAnyMention.IsMatch(message.Content)))
+            if (pos >= 0 && (selfMentionPos is not null || !StartsWithAnyMention.IsMatch(message.Content)))
             {
                 var commands = client.GetCommandsNext();
-                var command = commands.FindCommand(message.Content.Substring(pos), out string rawArguments);
-                if (command == null) return false;
+                var command = commands.FindCommand(message.Content[pos..], out string rawArguments);
+                if (command is null) return false;
                 var context = commands.CreateContext(message, pos == 0 ? "" : prefix, command, rawArguments);
                 _ = commands.ExecuteCommandAsync(context);
                 return true;
@@ -284,7 +284,7 @@ namespace PacManBot.Services
         private bool MessageGameInput(DiscordMessage message)
         {
             var game = _games.GetForChannel<IMessagesGame>(message.Channel.Id);
-            if (game == null || !game.IsInput(message.Content, message.Author.Id)) return false;
+            if (game is null || !game.IsInput(message.Content, message.Author.Id)) return false;
 
             _ = ExecuteMessageGameInputAsync(game, message)
                 .LogExceptions(_log, $"During input \"{message.Content}\" in {game.Channel.DebugName()}");
@@ -313,8 +313,8 @@ namespace PacManBot.Services
         private async Task ExecuteReactionGameInputAsync(IReactionsGame game, DiscordMessage message, DiscordUser user, DiscordEmoji emoji)
         {
             if (!await game.IsInputAsync(emoji, user.Id)) return;
-            if (message == null) message = await game.GetMessageAsync();
-            if (message == null) return; // oof
+            if (message is null) message = await game.GetMessageAsync();
+            if (message is null) return; // oof
 
             var guild = message.Channel.Guild;
             _log.Debug($"Input {emoji.GetDiscordName()} by {user.DebugName()} in {message.Channel.DebugName()}");
@@ -323,7 +323,7 @@ namespace PacManBot.Services
 
             if (game.State != GameState.Active)
             {
-                if (!(game is IUserGame)) _games.Remove(game);
+                if (game is not IUserGame) _games.Remove(game);
 
                 if (game is PacManGame pmGame && pmGame.State != GameState.Cancelled && !pmGame.custom)
                 {
@@ -331,7 +331,7 @@ namespace PacManBot.Services
                         user.NameandDisc(), $"{guild?.Name}/{message.Channel.Name}", DateTime.Now));
                 }
 
-                if (message.Channel.BotCan(Permissions.ManageMessages) && message != null)
+                if (message.Channel.BotCan(Permissions.ManageMessages) && message is not null)
                 {
                     await message.DeleteAllReactionsAsync();
                 }

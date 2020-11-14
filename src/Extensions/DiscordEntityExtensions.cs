@@ -56,7 +56,7 @@ namespace PacManBot.Extensions
         /// <summary>Whether the bot has the permission to perform an action in the given chanel.</summary>
         public static bool BotCan(this DiscordChannel channel, Permissions permission)
         {
-            return channel.Guild == null
+            return channel.Guild is null
                 ? DmPermissions.HasFlag(permission)
                 : channel.PermissionsFor(channel.Guild.CurrentMember).HasFlag(permission);
         }
@@ -64,7 +64,7 @@ namespace PacManBot.Extensions
         /// <summary>Whether the bot has the permission to perform an action given the command context.</summary>
         public static bool BotCan(this CommandContext ctx, Permissions permission)
         {
-            return ctx.Guild == null
+            return ctx.Guild is null
                 ? DmPermissions.HasFlag(permission)
                 : ctx.Channel.PermissionsFor(ctx.Guild.CurrentMember).HasFlag(permission);
         }
@@ -72,7 +72,7 @@ namespace PacManBot.Extensions
         /// <summary>Whether the user who called this context's command has the permission to perform an action.</summary>
         public static bool UserCan(this CommandContext ctx, Permissions permission)
         {
-            return ctx.Guild == null
+            return ctx.Guild is null
                 ? DmPermissions.HasFlag(permission)
                 : ctx.Channel.PermissionsFor(ctx.Member).HasFlag(permission);
         }
@@ -99,7 +99,7 @@ namespace PacManBot.Extensions
 
         /// <summary>Returns the name of a channel, including its guild if it is a <see cref="IGuildChannel"/>.</summary>
         public static string NameAndGuild(this DiscordChannel channel)
-            => $"{(channel.Guild == null ? "" : $"{channel.Guild.Name}/")}{channel.Name}";
+            => $"{(channel.Guild is null ? "" : $"{channel.Guild.Name}/")}{channel.Name}";
 
 
         /// <summary>Returns the name and discriminator of a user.</summary>

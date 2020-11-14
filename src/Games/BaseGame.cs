@@ -57,10 +57,10 @@ namespace PacManBot.Games
         /// <summary>Retrieves the user whose game this is.</summary>
         public virtual async ValueTask<DiscordUser> GetOwnerAsync()
         {
-            if (_owner != null) return _owner;
+            if (_owner is not null) return _owner;
             foreach (var (_, shard) in ShardedClient.ShardClients)
             {
-                if ((_owner = await shard.GetUserAsync(OwnerId)) != null) break; 
+                if ((_owner = await shard.GetUserAsync(OwnerId)) is not null) break; 
             }
             return _owner;
         }

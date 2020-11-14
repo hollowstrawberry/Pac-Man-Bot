@@ -22,7 +22,7 @@ namespace PacManBot.Commands.Modules
         {
             if (await CheckGameAlreadyExistsAsync(ctx)) return;
 
-            if (args != null)
+            if (args is not null)
             {
                 await ctx.RespondAsync(
                     $"You can use `{Storage.GetPrefix(ctx)}hangmanword` if you want to choose what the rest will have to guess.\n" +
@@ -45,7 +45,7 @@ namespace PacManBot.Commands.Modules
         [RequireGuild]
         public async Task StartHangmanCustom(CommandContext ctx)
         {
-            if (ctx.Guild == null)
+            if (ctx.Guild is null)
             {
                 await ctx.RespondAsync($"There's nobody here to guess! To play alone, use `hangman`");
                 return;
@@ -76,7 +76,7 @@ namespace PacManBot.Commands.Modules
                 var response = await Input.GetResponseAsync(x =>
                     x.Channel.Id == dm.Id && x.Author.Id == ctx.User.Id, 90);
 
-                if (response == null)
+                if (response is null)
                 {
                     EndGame(ctx);
                     await dm.SendMessageAsync("Timed out 💨");

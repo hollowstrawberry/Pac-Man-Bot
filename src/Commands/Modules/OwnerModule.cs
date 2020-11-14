@@ -106,7 +106,7 @@ namespace PacManBot.Commands.Modules
             }
 
             await ctx.Message.DeleteOwnReactionAsync(CustomEmoji.ELoading);
-            if (result != null) await ctx.RespondAsync($"```\n{result.ToString().Truncate(1990)}```");
+            if (result is not null) await ctx.RespondAsync($"```\n{result.ToString().Truncate(1990)}```");
         }
 
 
@@ -179,7 +179,7 @@ namespace PacManBot.Commands.Modules
                 {
                     case Brainfuck.BrainfuckException be:
                         message.AppendLine($"Runtime exception: {be.Message}");
-                        if (e.InnerException != null) message.AppendLine($"Inner exception: {e.InnerException}\n");
+                        if (e.InnerException is not null) message.AppendLine($"Inner exception: {e.InnerException}\n");
                         message.AppendLine($"Memory at this point: {be.Memory}\n");
                         message.AppendLine($"Output up to this point:\n{bf.Output}");
                         break;
@@ -285,7 +285,7 @@ namespace PacManBot.Commands.Modules
         {
             try
             {
-                string content = File.ReadAllText(filename).Replace("```", "`​``").Substring(start).Truncate(length);
+                string content = File.ReadAllText(filename).Replace("```", "`​``")[start..].Truncate(length);
                 content = content.Replace(Config.discordToken, ""); // Can't be too safe
                 await ctx.RespondAsync($"```{filename.Split('.').Last()}\n{content}".Truncate(1997) + "```");
             }
@@ -345,7 +345,7 @@ namespace PacManBot.Commands.Modules
         public async Task DoRemoteGameMoves(CommandContext ctx, params string[] moves)
         {
             var game = Games.GetForChannel<IMessagesGame>(ctx.Channel.Id);
-            if (game == null)
+            if (game is null)
             {
                 await ctx.RespondAsync("How about you start a game first");
                 return;

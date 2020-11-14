@@ -135,7 +135,7 @@ namespace PacManBot.Games.Concrete.Rpg
         /// <summary>Returns whether this entity contains a buff of the given type.</summary>
         public bool HasBuff<TBuff>() where TBuff : Buff
         {
-            return Buffs.OfType<TBuff>().FirstOrDefault() != null;
+            return Buffs.OfType<TBuff>().FirstOrDefault() is not null;
         }
 
         /// <summary>Returns whether this entity contains a buff of the given type.</summary>

@@ -27,7 +27,7 @@ namespace PacManBot.Commands.Modules
         public async Task MoveGame(CommandContext ctx)
         {
             var game = Game(ctx);
-            if (game == null)
+            if (game is null)
             {
                 await ctx.RespondAsync("There is no active game in this channel!");
                 return;
@@ -52,7 +52,7 @@ namespace PacManBot.Commands.Modules
         public async Task CancelGame(CommandContext ctx)
         {
             var game = Game(ctx);
-            if (game == null)
+            if (game is null)
             {
                 await ctx.RespondAsync("There is no active game in this channel!");
                 return;
@@ -63,15 +63,15 @@ namespace PacManBot.Commands.Modules
             {
                 var msg = await game.GetMessageAsync();
                 EndGame(ctx);
-                if (msg != null) await game.UpdateMessageAsync();
+                if (msg is not null) await game.UpdateMessageAsync();
 
                 if (game is PacManGame pacManGame)
                 {
-                    if (ctx.Guild != null)
+                    if (ctx.Guild is not null)
                     {
                         await ctx.RespondAsync($"Game ended.\n**Result:** {pacManGame.score} points in {pacManGame.Time} turns");
                     }
-                    if (msg != null && ctx.BotCan(Permissions.ManageMessages))
+                    if (msg is not null && ctx.BotCan(Permissions.ManageMessages))
                     {
                         try { await msg.DeleteAllReactionsAsync(); }
                         catch (NotFoundException) { }

@@ -151,18 +151,18 @@ namespace PacManBot
                     .Split("/").Select(ulong.Parse).ToArray();
 
                     var channel = await shard.GetChannelAsync(id[0]);
-                    if (channel != null)
+                    if (channel is not null)
                     {
                         File.Delete(Files.ManualRestart);
                         var message = await channel.GetMessageAsync(id[1]);
-                        if (message != null) await message.ModifyAsync(CustomEmoji.Check);
+                        if (message is not null) await message.ModifyAsync(CustomEmoji.Check);
                         _log.Info("Resumed after manual restart");
                     }
                 }
                 catch (Exception e)
                 {
                     _log.Exception("After manual restart", e);
-                    if (File.Exists(Files.ManualRestart) && !(e is IOException)) File.Delete(Files.ManualRestart);
+                    if (File.Exists(Files.ManualRestart) && e is not IOException) File.Delete(Files.ManualRestart);
                 }
             }
         }
@@ -196,7 +196,7 @@ namespace PacManBot
 
         private async Task UpdateGuildCountAsync()
         {
-            if (_discordBotList == null || (DateTime.Now - _lastGuildCountUpdate).TotalMinutes < 30.0) return;
+            if (_discordBotList is null || (DateTime.Now - _lastGuildCountUpdate).TotalMinutes < 30.0) return;
 
             int guilds = _client.ShardClients.Values.Select(x => x.Guilds.Count).Aggregate((a, b) => a + b);
 

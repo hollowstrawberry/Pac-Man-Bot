@@ -73,7 +73,7 @@ namespace PacManBot.Services
 
             var expiredGames = _games.AllGames
                 .Where(g => now - g.LastPlayed > g.Expiry)
-                .Where(g => !(g is IUserGame)) // The bot was offline for a long time and I don't want to delete pets
+                .Where(g => g is not IUserGame) // The bot was offline for a long time and I don't want to delete pets
                 .ToArray();
             foreach (var game in expiredGames)
             {

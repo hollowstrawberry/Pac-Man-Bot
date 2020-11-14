@@ -56,7 +56,7 @@ namespace PacManBot.Services
 
 
         /// <summary>Retrieves the specified guild's custom prefix, or the default prefix if no record is found.</summary>
-        public string GetGuildPrefix(DiscordGuild guild) => guild == null ? DefaultPrefix : GetGuildPrefix(guild.Id);
+        public string GetGuildPrefix(DiscordGuild guild) => guild is null ? DefaultPrefix : GetGuildPrefix(guild.Id);
 
         /// <summary>Retrieves the specified guild's custom prefix, or the default prefix if no record is found.</summary>
         public string GetGuildPrefix(ulong guildId)
@@ -76,7 +76,7 @@ namespace PacManBot.Services
         /// Provides the benefit of an asynchronous database access if one is necessary.</summary>
         public async ValueTask<string> GetGuildPrefixAsync(DiscordGuild guild)
         {
-            if (guild == null) return DefaultPrefix;
+            if (guild is null) return DefaultPrefix;
             if (_cachedPrefixes.TryGetValue(guild.Id, out string prefix)) return prefix;
 
             using (var db = MakeDbContext())
@@ -95,7 +95,7 @@ namespace PacManBot.Services
             using var db = MakeDbContext();
             var entry = db.Prefixes.Find(guildId);
 
-            if (entry == null)
+            if (entry is null)
             {
                 if (prefix != DefaultPrefix) db.Prefixes.Add((guildId, prefix));
             }
@@ -116,12 +116,12 @@ namespace PacManBot.Services
         /// <summary>Whether the specified channel requires a prefix for commands.</summary>
         public bool RequiresPrefix(DiscordChannel channel)
         {
-            if (channel == null) return false;
+            if (channel is null) return false;
             if (_cachedNeedsPrefix.TryGetValue(channel.Id, out bool needs)) return needs;
 
             using (var db = MakeDbContext())
             {
-                needs = channel.Guild != null && db.NoPrefixGuildChannels.Find(channel.Id) == null;
+                needs = channel.Guild is not null && db.NoPrefixGuildChannels.Find(channel.Id) is null;
             }
 
             _cachedNeedsPrefix.TryAdd(channel.Id, needs);
@@ -135,12 +135,12 @@ namespace PacManBot.Services
             using var db = MakeDbContext();
             var entry = db.NoPrefixGuildChannels.Find(channelId);
 
-            if (entry == null) db.NoPrefixGuildChannels.Add(channelId);
+            if (entry is null) db.NoPrefixGuildChannels.Add(channelId);
             else db.NoPrefixGuildChannels.Remove(entry);
 
             db.SaveChanges();
 
-            var nowNeeds = entry != null;
+            var nowNeeds = entry is not null;
             _cachedNeedsPrefix[channelId] = nowNeeds;
             return nowNeeds;
         }
@@ -170,7 +170,7 @@ namespace PacManBot.Services
                 var minDate = DateTime.Now - TimeSpan.FromHours((int)period);
                 scores = scores.Where(x => x.Date > minDate);
             }
-            if (userId != null) scores = scores.Where(x => x.UserId == userId);
+            if (userId is not null) scores = scores.Where(x => x.UserId == userId);
 
             var list = scores.OrderByDescending(x => x.Score).Skip(start).Take(amount).ToList();
             _log.Debug($"Grabbed {list.Count} score entries");

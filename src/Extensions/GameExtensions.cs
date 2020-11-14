@@ -90,7 +90,7 @@ namespace PacManBot.Extensions
                     if (line.Count >= length)
                     {
                         win = true;
-                        if (result != null)
+                        if (result is not null)
                         {
                             if (line.Count == length)
                             {

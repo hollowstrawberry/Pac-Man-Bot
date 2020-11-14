@@ -218,7 +218,7 @@ namespace PacManBot.Games.Concrete
             this.slimDisplay = slimDisplay;
 
             // Map
-            if (newMap == null) newMap = Content.gameMap;
+            if (newMap is null) newMap = Content.gameMap;
             else custom = true;
 
             FullMap = newMap;
@@ -400,7 +400,7 @@ namespace PacManBot.Games.Concrete
 
         public override ValueTask<string> GetContentAsync(bool showHelp = true)
         {
-            if (State == GameState.Cancelled && Guild != null) // So as to not spam
+            if (State == GameState.Cancelled && Guild is not null) // So as to not spam
             {
                 return new ValueTask<string>("");
             }

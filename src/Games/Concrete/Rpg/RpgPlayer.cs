@@ -128,7 +128,7 @@ namespace PacManBot.Games.Concrete.Rpg
         public void EquipItem(string key)
         {
             var equip = key.GetEquip();
-            if (equip == null) throw new ArgumentException($"{key} is not a valid equipment key.");
+            if (equip is null) throw new ArgumentException($"{key} is not a valid equipment key.");
             if (!inventory.Contains(key)) throw new InvalidOperationException($"{key} is not in the player's inventory.");
 
             if (equip is Weapon) weapon = key;

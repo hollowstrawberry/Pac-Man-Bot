@@ -6,6 +6,7 @@ using PacManBot.Extensions;
 using Microsoft.Extensions.Logging;
 using DSharpPlus.Exceptions;
 using Emzi0767.Utilities;
+using System.Net.WebSockets;
 
 namespace PacManBot.Services
 {
@@ -43,7 +44,7 @@ namespace PacManBot.Services
             var message = formatter(state, exception);
 
             if (message.ContainsAny(_hardExclusions)) return;
-            if (logLevel == LogLevel.Critical && message.Contains("(4000, '')")) logLevel = LogLevel.Information; // reconnection
+            if (logLevel == LogLevel.Critical && message.Contains("reconnecting")) logLevel = LogLevel.Information; // reconnection
 
             _logger.Write((Serilog.Events.LogEventLevel)logLevel, message);
         }
@@ -66,14 +67,14 @@ namespace PacManBot.Services
                 return;
             }
 
-            if (e is ServerErrorException || e is RateLimitException || e is NotFoundException
+            if (e is ServerErrorException || e is RateLimitException || e is NotFoundException || e is WebSocketException
                 || e.GetType().IsGeneric(typeof(AsyncEventTimeoutException<,>)))
             {
-                Warning($"{message}{" - ".If(message != null)}{e.GetType().Name}: {e.Message}");
+                Warning($"{message}{" - ".If(message is not null)}{e.GetType().Name}: {e.Message}");
             }
             else
             {
-                Error($"{message}{" - ".If(message != null)}{e}"); // Full stacktrace
+                Error($"{message}{" - ".If(message is not null)}{e}"); // Full stacktrace
             }
         }
 

@@ -18,7 +18,7 @@ namespace PacManBot.Extensions
 
         /// <summary>Retrieves a string with the beginning trimmed off if the original exceeds the provided maximum length.</summary>
         public static string TruncateStart(this string source, int maxLength)
-            => source.Substring(Math.Max(0, source.Length - maxLength));
+            => source[Math.Max(0, source.Length - maxLength)..];
 
 
         /// <summary>Removes an instance of the given suffix string from the source, if found.</summary>
@@ -27,7 +27,7 @@ namespace PacManBot.Extensions
 
         /// <summary>Removes an instance of the given prefix string from the source, if found.</summary>
         public static string TrimStart(this string source, string prefix)
-            => source.StartsWith(prefix) ? source.Substring(prefix.Length) : source;
+            => source.StartsWith(prefix) ? source[prefix.Length..] : source;
 
         /// <summary>Removes an instance of the given string from the start and end of the source, if found.</summary>
         public static string Trim(this string source, string value)
@@ -85,7 +85,7 @@ namespace PacManBot.Extensions
         // https://social.technet.microsoft.com/wiki/contents/articles/26805.c-calculating-percentage-similarity-of-2-strings.aspx
         public static double Similarity(this string a, string b, bool caseSensitive = true)
         {
-            if (a == null || b == null) return 0.0;
+            if (a is null || b is null) return 0.0;
 
             if (!caseSensitive)
             {
