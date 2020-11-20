@@ -6,7 +6,7 @@
     <TargetFramework>net5.0</TargetFramework>
     <PreserveCompilationContext>false</PreserveCompilationContext>
     <RootNamespace>PacManBot</RootNamespace>
-    <Version>5.0.8</Version>
+    <Version>5.0.9</Version>
     <Authors>OrchidAlloy</Authors>
     <Product>Pac-Man Bot</Product>
     <Company></Company>
@@ -53,8 +53,8 @@
 
   <ItemGroup>
     <PackageReference Include="DiscordBotsList.Api" Version="1.4.0" />
-    <PackageReference Include="DSharpPlus" Version="4.0.0-nightly-00748" />
-    <PackageReference Include="DSharpPlus.CommandsNext" Version="4.0.0-nightly-00748" />
+    <PackageReference Include="DSharpPlus" Version="4.0.0-nightly-00755" />
+    <PackageReference Include="DSharpPlus.CommandsNext" Version="4.0.0-nightly-00755" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.7.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.Scripting" Version="3.7.0" />
     <PackageReference Include="Microsoft.Data.SQLite" Version="5.0.0" />
