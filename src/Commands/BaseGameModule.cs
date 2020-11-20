@@ -46,7 +46,7 @@ namespace PacManBot.Commands
         /// <summary>Saves the game to disk if the game for this context is storeable.</summary>
         public async Task SaveGameAsync(CommandContext ctx)
         {
-            if (Game(ctx) is not null && Game(ctx) is IStoreableGame sgame) await Games.SaveAsync(sgame);
+            if (Game(ctx) is IStoreableGame sgame and not null) await Games.SaveAsync(sgame);
         }
 
 

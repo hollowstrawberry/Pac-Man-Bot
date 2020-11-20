@@ -285,18 +285,22 @@ namespace PacManBot.Games.Concrete
             if (toInvite.Any())
             {
                 var mentions = toInvite.Select(x => x.Mention);
-                string inviteMsg = $"{string.Join(", ", mentions)} You've been invited to play Uno. " +
+                string inviteMsg = $"{mentions.JoinString(", ")} You've been invited to play Uno. " +
                                    $"Type `{Storage.GetPrefix(Channel)}uno join` to join.\n";
                 Message = inviteMsg;
             }
 
-            foreach (var player in toAdd) await TryAddPlayerAsync(player);
+            foreach (var player in toAdd)
+            {
+                string failReason = await TryAddPlayerAsync(player);
+                if (failReason != null) await Channel.SendMessageAsync($"{player.Mention} {failReason}");
+            }
 
             ApplyCardEffect();
 
             if (Turn < 0 || Turn >= players.Length) Turn = 0; // There's an error I don't know how is caused or how to fix
 
-            await Games.SaveAsync(this);
+            if (State != GameState.Cancelled) await Games.SaveAsync(this);
         }
 
 
@@ -334,7 +338,7 @@ namespace PacManBot.Games.Concrete
             {
                 var player = players.First(x => x.id == userId);
                 player.message = null;
-                await SendCardsAsync(player);
+                await TrySendCardsAsync(player);
                 return;
             }
 
@@ -463,7 +467,7 @@ namespace PacManBot.Games.Concrete
                 foreach (var player in updatedPlayers.Distinct())
                 {
                     if (await player.IsBotAsync()) continue;
-                    await SendCardsAsync(player);
+                    await TrySendCardsAsync(player);
                 }
                 updatedPlayers = new List<UnoPlayer>();
             }
@@ -684,9 +688,9 @@ namespace PacManBot.Games.Concrete
         }
 
 
-        private async Task SendCardsAsync(UnoPlayer player)
+        private async Task<bool> TrySendCardsAsync(UnoPlayer player)
         {
-            if (await player.GetUserAsync() is null || await player.IsBotAsync() || Guild is null) return;
+            if (await player.GetUserAsync() is null || await player.IsBotAsync() || Guild is null) return false;
 
             var embed = new DiscordEmbedBuilder
             {
@@ -716,10 +720,12 @@ namespace PacManBot.Games.Concrete
                 }
                 catch (UnauthorizedException)
                 {
-                    gameLog.Add($"{await player.MentionAsync()} You can't play unless you have DMs enabled!\n");
+                    gameLog.Add($"{await player.MentionAsync()} You must turn on DMs to be able to play Uno!\n");
                     await RemovePlayerAsync(player);
+                    return false;
                 } 
             }
+            return true;
         }
 
 
@@ -734,7 +740,7 @@ namespace PacManBot.Games.Concrete
             players.Add(player);
             Draw(player, CardsPerPlayer);
 
-            await SendCardsAsync(player);
+            if (!await TrySendCardsAsync(player)) return "You must turn on DMs to be able to play Uno!";
 
             return null;
         }
@@ -748,7 +754,7 @@ namespace PacManBot.Games.Concrete
             drawPile.AddRange(player.cards);
             players.Remove(player);
 
-            if (players.Count < 2)
+            if (players.Count < 1)
             {
                 State = GameState.Cancelled;
                 return;
