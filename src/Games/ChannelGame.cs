@@ -181,8 +181,7 @@ namespace PacManBot.Games
             }
             else
             {
-                var newMsg = await gameMessage.Channel
-                    .SendMessageAsync(await GetContentAsync(), false, (await GetEmbedAsync())?.Build());
+                var newMsg = await Channel.SendMessageAsync(await GetContentAsync(), false, (await GetEmbedAsync())?.Build());
                 MessageId = newMsg.Id;
 
                 if (gameMessage is not null) await gameMessage.DeleteAsync();

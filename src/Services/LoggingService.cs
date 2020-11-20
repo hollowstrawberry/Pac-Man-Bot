@@ -44,7 +44,7 @@ namespace PacManBot.Services
             var message = formatter(state, exception);
 
             if (message.ContainsAny(_hardExclusions)) return;
-            if (logLevel == LogLevel.Critical && message.Contains("reconnecting")) logLevel = LogLevel.Information; // reconnection
+            if (logLevel == LogLevel.Critical && message.Contains("reconnecting")) logLevel = LogLevel.Information; // hardcoding this one
 
             _logger.Write((Serilog.Events.LogEventLevel)logLevel, message);
         }
@@ -80,24 +80,19 @@ namespace PacManBot.Services
 
 
         /// <summary>Logs a message.</summary>
-        public void Debug(string message)
-            => Log(message, LogLevel.Debug);
+        public void Debug(string message) => Log(message, LogLevel.Debug);
 
         /// <summary>Logs a message.</summary>
-        public void Info(string message)
-            => Log(message, LogLevel.Information);
+        public void Info(string message) => Log(message, LogLevel.Information);
 
         /// <summary>Logs a message.</summary>
-        public void Warning(string message)
-            => Log(message, LogLevel.Warning);
+        public void Warning(string message) => Log(message, LogLevel.Warning);
 
         /// <summary>Logs a message.</summary>
-        public void Error(string message)
-            => Log(message, LogLevel.Error);
+        public void Error(string message) => Log(message, LogLevel.Error);
 
         /// <summary>Logs a message.</summary>
-        public void Fatal(string message)
-            => Log(message, LogLevel.Critical);
+        public void Critical(string message) => Log(message, LogLevel.Critical);
 
 
         /// <summary>Release all resources used for logging.</summary>

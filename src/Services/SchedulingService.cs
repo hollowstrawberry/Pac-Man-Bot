@@ -64,40 +64,35 @@ namespace PacManBot.Services
         }
 
 
-        private async void DeleteOldGames(object state)
+        private void DeleteOldGames(object state)
         {
             var now = DateTime.Now;
             int count = 0;
-
             var removedChannelGames = new List<IChannelGame>();
 
-            var expiredGames = _games.AllGames
-                .Where(g => now - g.LastPlayed > g.Expiry)
-                .Where(g => g is not IUserGame) // The bot was offline for a long time and I don't want to delete pets
-                .ToArray();
-            foreach (var game in expiredGames)
+            foreach (var game in _games.AllGames.Where(g => now - g.LastPlayed > g.Expiry).ToArray())
             {
                 count++;
                 game.State = GameState.Cancelled;
                 _games.Remove(game, false);
-
                 if (game is IChannelGame cGame) removedChannelGames.Add(cGame);
             }
-
 
             if (count > 0)
             {
                 _log.Debug($"Removed {count} expired game{"s".If(count > 1)}");
             }
 
-
-            foreach (var game in removedChannelGames)
+            if (removedChannelGames.Count is > 0 and < 10)
             {
-                try
+                Task.Run(async () =>
                 {
-                    await game.UpdateMessageAsync();
-                }
-                catch (NotFoundException) { }
+                    foreach (var game in removedChannelGames)
+                    {
+                        try { await game.UpdateMessageAsync(); }
+                        catch { }
+                    }
+                });
             }
         }
 
@@ -105,7 +100,7 @@ namespace PacManBot.Services
         private async void RestartBot(object state)
         {
             _log.Info("Restarting");
-            await PrepareRestart.Invoke();
+            await PrepareRestart.Invoke().LogExceptions(_log, "Restarting");
             Environment.Exit(ExitCodes.ScheduledReboot);
         }
     }

@@ -116,7 +116,7 @@ namespace PacManBot
 
         private Task OnSocketErrored(DiscordClient shard, SocketErrorEventArgs args)
         {
-            _log.Exception($"On shard {shard.ShardId}", args.Exception);
+            _log.Warning($"On shard {shard.ShardId} - {args.Exception.GetType().Name}: {args.Exception.Message}");
             return Task.CompletedTask;
         }
 

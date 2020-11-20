@@ -464,7 +464,7 @@ namespace PacManBot.Games.Concrete
             if (!calledByAi || !await CurrentPlayer.IsBotAsync())
             {
                 await Games.SaveAsync(this);
-                foreach (var player in updatedPlayers.Distinct())
+                foreach (var player in updatedPlayers.Distinct().ToArray())
                 {
                     if (await player.IsBotAsync()) continue;
                     await TrySendCardsAsync(player);
