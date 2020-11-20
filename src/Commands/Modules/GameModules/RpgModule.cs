@@ -157,6 +157,7 @@ namespace PacManBot.Commands.Modules
             {
                 if (otherMember is null) await ctx.RespondAsync($"You can use `{ctx.Prefix}rpg start` to start your adventure."); 
                 else await ctx.RespondAsync("This person hasn't started their adventure.");
+                return;
             }
 
             await ctx.RespondAsync(rpg.player.Profile(ctx.Prefix, own: otherMember is null));

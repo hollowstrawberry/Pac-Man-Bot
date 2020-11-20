@@ -41,16 +41,16 @@ namespace PacManBot.Services
         public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
         {
             if (logLevel < _minClientLogLevel) return;
-            var message = formatter(state, exception);
-
+            string message = state.ToString();
             if (message.ContainsAny(_hardExclusions)) return;
 
             // Hardcoding some log messages to have different severity
             if (logLevel == LogLevel.Critical && message.Contains("reconnecting")) logLevel = LogLevel.Information;
-            if (logLevel == LogLevel.Warning && message.Contains("Pre-emptive ratelimit")) logLevel = LogLevel.Debug;
-            if (logLevel == LogLevel.Error && message.Contains("Ratelimit hit")) logLevel = LogLevel.Warning;
+            else if (logLevel == LogLevel.Warning && message.Contains("Pre-emptive ratelimit")) logLevel = LogLevel.Debug;
+            else if (logLevel == LogLevel.Error && message.Contains("Ratelimit hit")) logLevel = LogLevel.Warning;
 
-            _logger.Write((Serilog.Events.LogEventLevel)logLevel, message);
+            if (exception is not null && logLevel >= LogLevel.Warning) Exception(message, exception);
+            else Log(message, logLevel);
         }
 
         /// <summary>Logs a message.</summary>

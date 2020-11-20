@@ -181,8 +181,6 @@ namespace PacManBot
             {
                 _games.Remove(_games.GetForChannel(channel));
             }
-
-            _ = Task.Run(() => UpdateGuildCountAsync().LogExceptions(_log, "While updating guild count"));
             return Task.CompletedTask;
         }
 
@@ -205,9 +203,8 @@ namespace PacManBot
             {
                 await _discordBotList.UpdateStats(guilds, _client.ShardClients.Count);
                 _lastGuildCountUpdate = DateTime.Now;
+                _log.Info($"Guild count updated to {guilds}");
             }
-
-            _log.Info($"Guild count updated to {guilds}");
         }
     }
 }

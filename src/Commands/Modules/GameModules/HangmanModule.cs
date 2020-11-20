@@ -87,6 +87,10 @@ namespace PacManBot.Commands.Modules
                 string word = response.Content.ToUpperInvariant().Replace('\n', ' ');
                 string wf = response.Content.Contains(' ') ? "phrase" : "word";
 
+                if (Game(ctx) is null)
+                {
+                    return;
+                }
                 if (!HangmanGame.Alphabet.IsMatch(word))
                 {
                     await dm.SendMessageAsync(

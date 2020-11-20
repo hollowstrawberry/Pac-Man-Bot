@@ -10,6 +10,7 @@ using DSharpPlus.CommandsNext.Exceptions;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
 using DSharpPlus.Exceptions;
+using Newtonsoft.Json;
 using PacManBot.Extensions;
 using PacManBot.Games;
 using PacManBot.Games.Concrete;
@@ -210,6 +211,11 @@ namespace PacManBot.Services
                 case UnauthorizedException e when args.Command?.Name != "help":
                     await ctx.RespondAsync($"Something went wrong: The bot is missing permissions to perform this action!");
                     _log.Exception($"Bot is missing permissions in command {args.Command?.Name}", e);
+                    return;
+
+                case JsonReaderException:
+                    await ctx.RespondAsync("Something went wrong! Discord gave an internal error. Please try again.");
+                    _log.Warning("Invalid JSON content in Discord message");
                     return;
 
                 default:
