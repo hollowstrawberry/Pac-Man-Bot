@@ -34,7 +34,8 @@ namespace PacManBot.Commands.Modules
             {
                 await StartNewMPGameAsync(ctx, new[] { ctx.Member }.Concatenate(startingPlayers));
             }
-            if (Game(ctx).State == GameState.Cancelled) EndGame(ctx);
+
+            if (Game(ctx)?.State == GameState.Cancelled) EndGame(ctx);
         }
 
         [Command("rules"), Aliases("manual", "help")]
@@ -101,7 +102,7 @@ namespace PacManBot.Commands.Modules
             if (ctx.BotCan(Permissions.ManageMessages)) await ctx.Message.DeleteAsync();
             else await ctx.AutoReactAsync(failReason is null);
 
-            if (Game(ctx).State == GameState.Cancelled) EndGame(ctx);
+            if (Game(ctx)?.State == GameState.Cancelled) EndGame(ctx);
         }
 
 

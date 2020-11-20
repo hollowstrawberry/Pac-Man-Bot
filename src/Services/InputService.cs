@@ -104,8 +104,7 @@ namespace PacManBot.Services
                     {
                         if (message.Channel.Guild is not null)
                         {
-                            _ = EnsureUsersDownloadedAsync(message.Channel.Guild)
-                                .LogExceptions(_log, $"Downloading users for guild {message.Channel.Guild.DebugName()}");
+                            _ = Task.Run(() => EnsureUsersDownloadedAsync(message.Channel.Guild));
                         }
                     }
                 }
@@ -136,13 +135,12 @@ namespace PacManBot.Services
 
                 if (game is null) return Task.CompletedTask;
 
-                _ = ExecuteReactionGameInputAsync(game, message, user, emoji)
-                    .LogExceptions(_log, $"During input \"{emoji.GetDiscordName()}\" in {message.Channel.DebugName()}");
+                _ = Task.Run(() => ExecuteReactionGameInputAsync(game, message, user, emoji)
+                    .LogExceptions(_log, $"During input \"{emoji.GetDiscordName()}\" in {message.Channel.DebugName()}"));
 
                 if (message.Channel?.Guild is not null)
                 {
-                    _ = EnsureUsersDownloadedAsync(message.Channel.Guild)
-                        .LogExceptions(_log, $"Downloading users for guild {message.Channel.Guild.DebugName()}");
+                    _ = Task.Run(() => EnsureUsersDownloadedAsync(message.Channel.Guild));
                 }
             }
 
@@ -226,15 +224,22 @@ namespace PacManBot.Services
 
         private async Task EnsureUsersDownloadedAsync(DiscordGuild guild)
         {
-            if (guild is not null && guild.MemberCount < 50000)
+            try
             {
-                if (!_lastGuildUsersDownload.TryGetValue(guild.Id, out DateTime last)
-                    || (DateTime.Now - last) > TimeSpan.FromMinutes(30))
+                if (guild is not null && guild.MemberCount < 50000)
                 {
-                    _lastGuildUsersDownload[guild.Id] = DateTime.Now;
-                    await guild.RequestMembersAsync();
-                    _log.Debug($"Downloaded users from {guild.DebugName()}");
+                    if (!_lastGuildUsersDownload.TryGetValue(guild.Id, out DateTime last)
+                        || (DateTime.Now - last) > TimeSpan.FromMinutes(30))
+                    {
+                        _lastGuildUsersDownload[guild.Id] = DateTime.Now;
+                        await guild.RequestMembersAsync();
+                        _log.Debug($"Downloaded users from {guild.DebugName()}");
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                _log.Exception($"Downloading users for guild {guild?.DebugName()}", e);
             }
         }
 
@@ -272,7 +277,7 @@ namespace PacManBot.Services
                 var command = commands.FindCommand(message.Content[pos..], out string rawArguments);
                 if (command is null) return false;
                 var context = commands.CreateContext(message, pos == 0 ? "" : prefix, command, rawArguments);
-                _ = commands.ExecuteCommandAsync(context);
+                Task.Run(() => commands.ExecuteCommandAsync(context));
                 return true;
             }
 
@@ -286,8 +291,8 @@ namespace PacManBot.Services
             var game = _games.GetForChannel<IMessagesGame>(message.Channel.Id);
             if (game is null || !game.IsInput(message.Content, message.Author.Id)) return false;
 
-            _ = ExecuteMessageGameInputAsync(game, message)
-                .LogExceptions(_log, $"During input \"{message.Content}\" in {game.Channel.DebugName()}");
+            Task.Run(() => ExecuteMessageGameInputAsync(game, message)
+                .LogExceptions(_log, $"During input \"{message.Content}\" in {game.Channel.DebugName()}"));
 
             return true;
         }

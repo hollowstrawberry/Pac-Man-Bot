@@ -44,7 +44,11 @@ namespace PacManBot.Services
             var message = formatter(state, exception);
 
             if (message.ContainsAny(_hardExclusions)) return;
-            if (logLevel == LogLevel.Critical && message.Contains("reconnecting")) logLevel = LogLevel.Information; // hardcoding this one
+
+            // Hardcoding some log messages to have different severity
+            if (logLevel == LogLevel.Critical && message.Contains("reconnecting")) logLevel = LogLevel.Information;
+            if (logLevel == LogLevel.Warning && message.Contains("Pre-emptive ratelimit")) logLevel = LogLevel.Debug;
+            if (logLevel == LogLevel.Error && message.Contains("Ratelimit hit")) logLevel = LogLevel.Warning;
 
             _logger.Write((Serilog.Events.LogEventLevel)logLevel, message);
         }

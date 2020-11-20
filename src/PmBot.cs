@@ -123,7 +123,7 @@ namespace PacManBot
 
         private Task OnReady(DiscordClient shard, ReadyEventArgs args)
         {
-            _ = OnReadyAsync(shard).LogExceptions(_log, $"On ready {shard.ShardId}");
+            _ =Task.Run(() => OnReadyAsync(shard).LogExceptions(_log, $"On ready {shard.ShardId}"));
             return Task.CompletedTask;
         }
 
@@ -170,7 +170,7 @@ namespace PacManBot
 
         private Task OnJoinedGuild(DiscordClient shard, GuildCreateEventArgs args)
         {
-            _ = UpdateGuildCountAsync().LogExceptions(_log, "While updating guild count");
+            _ = Task.Run(() => UpdateGuildCountAsync().LogExceptions(_log, "While updating guild count"));
             return Task.CompletedTask;
         }
 
@@ -182,7 +182,7 @@ namespace PacManBot
                 _games.Remove(_games.GetForChannel(channel));
             }
 
-            _ = UpdateGuildCountAsync().LogExceptions(_log, "While updating guild count");
+            _ = Task.Run(() => UpdateGuildCountAsync().LogExceptions(_log, "While updating guild count"));
             return Task.CompletedTask;
         }
 
