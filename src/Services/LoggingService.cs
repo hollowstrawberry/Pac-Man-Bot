@@ -40,6 +40,7 @@ namespace PacManBot.Services
         /// <summary>Logs a message. Used by the Discord client.</summary>
         public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
         {
+            if (logLevel < _minClientLogLevel) return;
             string message = state.ToString();
 
             // Hardcoding some discord log messages to have different severity
