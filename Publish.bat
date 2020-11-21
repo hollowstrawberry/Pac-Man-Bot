@@ -5,6 +5,6 @@ set RUNTIME=linux-arm
 dotnet publish PacManBot.csproj --runtime %RUNTIME% --configuration Release --no-self-contained
 copy "bin\contents.json" "bin\Release\net5.0\%RUNTIME%\publish\contents.json"
 
-::del /Q "bin\Release\net5.0\%RUNTIME%\*"
+del /Q "bin\Release\net5.0\%RUNTIME%\*"
 
 pause
