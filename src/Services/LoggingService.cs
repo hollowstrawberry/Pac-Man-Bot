@@ -40,11 +40,9 @@ namespace PacManBot.Services
         /// <summary>Logs a message. Used by the Discord client.</summary>
         public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
         {
-            if (logLevel < _minClientLogLevel) return;
             string message = state.ToString();
-            if (message.ContainsAny(_hardExclusions)) return;
 
-            // Hardcoding some log messages to have different severity
+            // Hardcoding some discord log messages to have different severity
             if (logLevel == LogLevel.Critical && message.Contains("reconnecting")) logLevel = LogLevel.Information;
             else if (logLevel == LogLevel.Warning && message.Contains("Pre-emptive ratelimit")) logLevel = LogLevel.Debug;
             else if (logLevel == LogLevel.Error && message.Contains("Ratelimit hit")) logLevel = LogLevel.Warning;
@@ -52,6 +50,7 @@ namespace PacManBot.Services
             if (exception is not null && logLevel >= LogLevel.Warning) Exception(message, exception);
             else Log(message, logLevel);
         }
+
 
         /// <summary>Logs a message.</summary>
         public void Log(string message, LogLevel logLevel)

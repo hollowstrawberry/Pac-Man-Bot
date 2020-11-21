@@ -11,6 +11,7 @@
     <Product>Pac-Man Bot</Product>
     <Company></Company>
     <LangVersion>9.0</LangVersion>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
