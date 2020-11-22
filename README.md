@@ -14,9 +14,9 @@ Features the following games:
 * ReactionRPG: Battle monsters and become stronger, or challenge your friends to battle - Enjoy this simple chat RPG!  
 * Tic-Tac-Toe, Connect Four: Challenge your friends or the bot itself.  
 * Code Break: Uncover the secret code in this public puzzle game.
-* Minesweeper: A basic rendition of minesweeper using the new spoiler feature.
-* Rubik's Cube: Attempt to solve a real cube in chat form. Seriously.
-* Pac-Man: Turn-based controls, arcade-like ghost behavior and a global leaderboard: The original PacManBot game.
+* Minesweeper: A basic rendition of minesweeper using the spoiler text feature.
+* Rubik's Cube: Attempt to solve a cube in chat form. Seriously.
+* Pac-Man: Turn-based controls in a simplistic yet faithful recreation of the arcade game. The original PacManBot game.
 
 [**Bot invite link here**](http://bit.ly/pacman-bot)  
 [**Support server here**](https://discord.gg/hGHnfda)  
@@ -27,15 +27,15 @@ Features the following games:
 
 Should you want to maintain a custom fork of Pac-Man Bot, here are the main steps.
  
-To be able to compile the bot, you'll need to install the [.NET Core SDK here](https://www.microsoft.com/net/download). In Windows, Visual Studio should install it for you.  
+To be able to compile the bot, you'll need to install the [.NET 5.0 SDK here](https://dotnet.microsoft.com/download/dotnet/5.0). In Windows, Visual Studio should install it for you.  
 
 Before compiling, you need to add the NuGet package of the DSharpPlus library, by first adding the nuget source: https://nuget.emzi0767.com/ . If you're using an IDE like Visual Studio or Rider, you can add it through there.
-To compile, you use command such as this one:  
+To compile, use the `Publish.bat` which contains a command such as this one:  
 
-    dotnet publish PacManBot.csproj --runtime %RUNTIME% --configuration Release --self-contained
+    dotnet publish PacManBot.csproj --runtime %RUNTIME% --configuration Release
 
-Where `%RUNTIME%` is the system you'll be building for, like `linux-x64` or `win-x64`. For a Raspberry Pi, use `linux-arm` (you can't build the bot on a Pi, but you can run it on one).  
-The command will generate a `netcoreapp2.0/%RUNTIME%/publish/` folder in the target folder of the project's active configuration. The self-contained program will be inside.  
+Where `%RUNTIME%` is the system you'll be building for, like `linux-x64` or `win-x64`. For a Raspberry Pi, use `linux-arm`.  
+The command will generate a `bin/Release/net5.0/%RUNTIME%/publish/` folder containing the entire program.  
 
 
 ### Using different emotes
@@ -43,7 +43,7 @@ The command will generate a `netcoreapp2.0/%RUNTIME%/publish/` folder in the tar
 I recommend using my own copies of the emotes in the [Pac-Man Bot server](https://discord.gg/hGHnfda), which your bot can join if you ask.  
 If you instead want to use your own copy of the emotes, here are the steps:
 
-1. Grab the emote images from the [_Resources/Emotes/](https://github.com/Samrux/Pac-Man-Bot/tree/master/_Resources/Emotes) folder.  
+1. Grab the emote images from the [_Resources/Emotes/](https://github.com/OrchidAlloy/Pac-Man-Bot/tree/master/_Resources/Emotes) folder.  
 2. Upload them to a Discord server that your bot has access to.  
 3. Obtain all of their codes. You can do this quickly using the bot's 'emotes' developer command.
 4. Modify your `src/Constants/CustomEmoji.cs` file with all the new codes.  
