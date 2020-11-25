@@ -70,8 +70,7 @@ namespace PacManBot
                 .AddSingleton<DatabaseService>()
                 .AddSingleton<InputService>()
                 .AddSingleton<GameService>()
-                .AddSingleton<SchedulingService>()
-                .AddSingleton<ScriptingService>();
+                .AddSingleton<SchedulingService>();
 
             var services = serviceCollection.BuildServiceProvider();
 

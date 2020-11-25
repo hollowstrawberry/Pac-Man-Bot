@@ -9,12 +9,13 @@ using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
+using Microsoft.CodeAnalysis.CSharp.Scripting;
+using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using PacManBot.Constants;
 using PacManBot.Extensions;
 using PacManBot.Games;
-using PacManBot.Services;
 using PacManBot.Services.Database;
 using PacManBot.Utils;
 
@@ -27,7 +28,15 @@ namespace PacManBot.Commands.Modules
     public class OwnerModule : BaseModule
     {
         public PmBot Bot { get; set; }
-        public ScriptingService Scripting { get; set; }
+        
+        private readonly ScriptOptions _scriptOptions = ScriptOptions.Default
+            .WithImports("Microsoft.EntityFrameworkCore", "Newtonsoft.Json",
+                "System", "System.IO", "System.Text", "System.Linq", "System.Reflection", "System.Diagnostics", "System.Threading.Tasks", "System.Collections.Generic", "System.Text.RegularExpressions",
+                "DSharpPlus", "DSharpPlus.CommandsNext", "DSharpPlus.Entities", "DSharpPlus.Exceptions",
+                "PacManBot", "PacManBot.Constants", "PacManBot.Utils", "PacManBot.Extensions", "PacManBot.Games", "PacManBot.Games.Concrete", "PacManBot.Games.Concrete.Rpg", "PacManBot.Commands", "PacManBot.Commands.Modules", "PacManBot.Services", "PacManBot.Services.Database"
+            )
+            .WithReferences(AppDomain.CurrentDomain.GetAssemblies().Where(xa => !xa.IsDynamic && !string.IsNullOrWhiteSpace(xa.Location)));
+
 
 
         [Command("$restart"), Aliases("$shutdown"), Hidden]
@@ -80,6 +89,8 @@ namespace PacManBot.Commands.Modules
             if (updated) await ShutDown(ctx);
         }
 
+
+        /// <summary>Used inside evaluated scripts</summary>
         public CommandContext ctx;
 
         [Command("eval"), Aliases("evalasync", "run", "runasync"), Hidden]
@@ -87,26 +98,31 @@ namespace PacManBot.Commands.Modules
         public async Task ScriptEval(CommandContext ctx, [RemainingText]string code)
         {
             code = code.ExtractCode();
-
+            this.ctx = ctx;
             await ctx.Message.CreateReactionAsync(CustomEmoji.ELoading);
 
-            object result;
             try
             {
-                this.ctx = ctx;
-                result = await Scripting.EvalAsync(code, this);
+                using var eval = CSharpScript.EvaluateAsync(code, _scriptOptions, this);
+                var result = await eval;
                 Log.Info($"Successfully executed:\n {code}");
                 await ctx.AutoReactAsync(true);
+                if (result is not null) await ctx.RespondAsync($"```\n{result.ToString().Truncate(1990)}```");
             }
             catch (Exception e)
             {
-                result = e.Message;
-                Log.Info($"{e}");
+                Log.Info($"Eval - {e}");
                 await ctx.AutoReactAsync(false);
+                await ctx.RespondAsync($"```\n{e.Message}```");
+            }
+            finally
+            {
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+                GC.Collect();
             }
 
             await ctx.Message.DeleteOwnReactionAsync(CustomEmoji.ELoading);
-            if (result is not null) await ctx.RespondAsync($"```\n{result.ToString().Truncate(1990)}```");
         }
 
 
