@@ -1,19 +1,21 @@
-using Serilog;
-using Serilog.Core;
 using System;
+using System.Net.WebSockets;
 using DSharpPlus;
-using PacManBot.Extensions;
-using Microsoft.Extensions.Logging;
 using DSharpPlus.Exceptions;
 using Emzi0767.Utilities;
-using System.Net.WebSockets;
+using Microsoft.Extensions.Logging;
+using PacManBot.Extensions;
+using Serilog;
+using Serilog.Core;
+using Serilog.Events;
+using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace PacManBot.Services
 {
     /// <summary>
     /// Receives and logs messages from everywhere in the bot.
     /// </summary>
-    public class LoggingService : ILogger<DiscordShardedClient>, IDisposable
+    public class LoggingService : ILogger<DiscordShardedClient>, ILoggerFactory, ILoggerProvider, IDisposable
     {
         private readonly Logger _logger;
         private readonly LogLevel _minLogLevel;
@@ -29,27 +31,11 @@ namespace PacManBot.Services
 
             const string template = "{Timestamp:HH:mm:ss}|{Level:u3}> {Message}{NewLine}";
 
-            _logger = new LoggerConfiguration()
+            _logger = new Serilog.LoggerConfiguration()
                 .MinimumLevel.Verbose()
                 .WriteTo.Console(outputTemplate: template)
                 .WriteTo.RollingFile("logs/{Date}.txt", outputTemplate: template)
                 .CreateLogger();
-        }
-        
-
-        /// <summary>Logs a message. Used by the Discord client.</summary>
-        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
-        {
-            if (logLevel < _minClientLogLevel) return;
-            string message = state.ToString();
-
-            // Hardcoding some discord log messages to have different severity
-            if (logLevel == LogLevel.Critical && message.Contains("reconnecting")) logLevel = LogLevel.Information;
-            else if (logLevel == LogLevel.Warning && message.Contains("Pre-emptive ratelimit")) logLevel = LogLevel.Debug;
-            else if (logLevel == LogLevel.Error && message.Contains("Ratelimit hit")) logLevel = LogLevel.Warning;
-
-            if (exception is not null && logLevel >= LogLevel.Warning) Exception(message, exception);
-            else Log(message, logLevel);
         }
 
 
@@ -57,9 +43,23 @@ namespace PacManBot.Services
         public void Log(string message, LogLevel logLevel)
         {
             if (logLevel < _minLogLevel || message.ContainsAny(_hardExclusions)) return;
-            _logger.Write((Serilog.Events.LogEventLevel)logLevel, message);
+            _logger.Write((LogEventLevel)logLevel, message);
         }
 
+        /// <summary>Logs a message.</summary>
+        public void Debug(string message) => Log(message, LogLevel.Debug);
+
+        /// <summary>Logs a message.</summary>
+        public void Info(string message) => Log(message, LogLevel.Information);
+
+        /// <summary>Logs a message.</summary>
+        public void Warning(string message) => Log(message, LogLevel.Warning);
+
+        /// <summary>Logs a message.</summary>
+        public void Error(string message) => Log(message, LogLevel.Error);
+
+        /// <summary>Logs a message.</summary>
+        public void Critical(string message) => Log(message, LogLevel.Critical);
 
         /// <summary>Logs an exception. Connection-related exceptions will be treated as warnings,
         /// while more important exceptions will be treated as an error.</summary>
@@ -83,37 +83,39 @@ namespace PacManBot.Services
         }
 
 
-        /// <summary>Logs a message.</summary>
-        public void Debug(string message) => Log(message, LogLevel.Debug);
-
-        /// <summary>Logs a message.</summary>
-        public void Info(string message) => Log(message, LogLevel.Information);
-
-        /// <summary>Logs a message.</summary>
-        public void Warning(string message) => Log(message, LogLevel.Warning);
-
-        /// <summary>Logs a message.</summary>
-        public void Error(string message) => Log(message, LogLevel.Error);
-
-        /// <summary>Logs a message.</summary>
-        public void Critical(string message) => Log(message, LogLevel.Critical);
 
 
-        /// <summary>Release all resources used for logging.</summary>
-        public void Dispose()
+        void ILogger.Log<TState>(LogLevel level, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
+        {
+            if (level < _minClientLogLevel) return;
+            var message = state.ToString();
+
+            level = eventId.Name switch
+            {
+                "Startup" or "CommandsNext" => LogLevel.Trace,
+                "ConnectionClose" => LogLevel.Information,
+                "RatelimitPreemptive" => LogLevel.Debug,
+                "RatelimitHit" => LogLevel.Warning,
+                null when message.ContainsAny("Hosting environment", "Content root path") => LogLevel.Trace,
+                _ => level,
+            };
+
+            if (exception is not null && level >= LogLevel.Warning) Exception(message, exception);
+            else Log(message, level);
+        }
+
+        bool ILogger.IsEnabled(LogLevel logLevel) => logLevel >= _minLogLevel;
+        IDisposable ILogger.BeginScope<TState>(TState state) => this;
+
+        void ILoggerFactory.AddProvider(ILoggerProvider provider) { }
+        ILogger ILoggerFactory.CreateLogger(string categoryName) => this;
+        ILogger ILoggerProvider.CreateLogger(string categoryName) => this;
+
+        void IDisposable.Dispose()
         {
             _logger.Dispose();
             GC.SuppressFinalize(this);
         }
 
-        public bool IsEnabled(LogLevel logLevel)
-        {
-            return logLevel >= _minLogLevel;
-        }
-
-        public IDisposable BeginScope<TState>(TState state)
-        {
-            return this;
-        }
     }
 }

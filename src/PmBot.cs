@@ -11,13 +11,15 @@ using DSharpPlus.EventArgs;
 using DSharpPlus.Entities;
 using DSharpPlus.CommandsNext;
 using PacManBot.Commands;
+using Microsoft.Extensions.Hosting;
+using System.Threading;
 
 namespace PacManBot
 {
     /// <summary>
     /// Runs an instance of Pac-Man Bot and handles its connection to Discord.
     /// </summary>
-    public class PmBot
+    public class PmBot : IHostedService
     {
         private readonly PmBotConfig _config;
         private readonly IServiceProvider _services;
@@ -30,7 +32,8 @@ namespace PacManBot
 
         private AuthDiscordBotListApi _discordBotList = null;
         private DateTime _lastGuildCountUpdate = DateTime.MinValue;
-        private int _ready = 0;
+        private bool _clientStarted = false;
+        private bool[] _shardReady;
 
 
         public PmBot(PmBotConfig config, IServiceProvider services, DiscordShardedClient client,
@@ -47,8 +50,10 @@ namespace PacManBot
 
 
         /// <summary>Starts the bot and its connection to Discord.</summary>
-        public async Task StartAsync()
+        public async Task StartAsync(CancellationToken ct)
         {
+            _log.Critical($"Pac-Man Bot v{Program.Version}");
+
             await _client.UseCommandsNextAsync(new CommandsNextConfiguration
             {
                 UseDefaultCommandHandler = false,
@@ -71,9 +76,11 @@ namespace PacManBot
 
             _schedule.PrepareRestart += StopAsync;
 
+            if (ct.IsCancellationRequested) return;
+
             await _client.StartAsync();
-            //await client.UpdateStatusAsync(
-            //    new DiscordActivity("Booting up...", ActivityType.Playing), UserStatus.Idle, DateTime.Now);
+            _shardReady = new bool[_client.ShardClients.Count];
+            _clientStarted = true;
 
             if (!string.IsNullOrWhiteSpace(_config.discordBotListToken))
             {
@@ -83,14 +90,12 @@ namespace PacManBot
 
 
         /// <summary>Safely stop most activity from the bot and disconnect from Discord.</summary>
-        public async Task StopAsync()
+        public async Task StopAsync(CancellationToken ct)
         {
-            await _client.UpdateStatusAsync(userStatus: UserStatus.DoNotDisturb); // why not
-
             foreach (var shard in _client.ShardClients.Values)
                 _input.StopListening(shard);
 
-            _schedule.StopTimers();
+            _schedule?.StopTimers();
 
             _client.Ready -= OnReady;
             _client.ClientErrored -= OnClientErrored;
@@ -99,9 +104,11 @@ namespace PacManBot
             _client.GuildDeleted -= OnLeftGuild;
             _client.ChannelDeleted -= OnChannelDeleted;
 
-            await Task.Delay(5_000); // Buffer time to finish up doing whatever
-
-            await _client.StopAsync();
+            if (_clientStarted)
+            {
+                await Task.Delay(1000, ct);
+                await _client.StopAsync();
+            }
         }
 
 
@@ -130,12 +137,12 @@ namespace PacManBot
 
         private async Task OnReadyAsync(DiscordClient shard)
         {
-            _ready += 1;
-            if (_ready <= shard.ShardCount)
+            _shardReady[shard.ShardId] = true;
+            if (_shardReady.Count(x => x) <= shard.ShardCount)
             {
                 _input.StartListening(shard);
             }
-            if (_ready == shard.ShardCount)
+            if (_shardReady.Count(x => x) == shard.ShardCount)
             {
                 _schedule.StartTimers();
                 await _client.UpdateStatusAsync(

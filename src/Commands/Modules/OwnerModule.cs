@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
@@ -47,7 +48,7 @@ namespace PacManBot.Commands.Modules
             File.WriteAllText(Files.ManualRestart, $"{message.Channel.Id}/{message.Id}");
 
             Log.Info("Restarting");
-            await Bot.StopAsync();
+            await Bot.StopAsync(CancellationToken.None);
             Environment.Exit(ExitCodes.ManualReboot);
         }
 

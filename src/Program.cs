@@ -4,6 +4,8 @@ using System.Reflection;
 using System.Threading.Tasks;
 using DSharpPlus;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using PacManBot.Constants;
 using PacManBot.Extensions;
@@ -28,19 +30,13 @@ namespace PacManBot
         public static readonly ConcurrentRandom Random = new ConcurrentRandom();
 
 
-        static async Task Main()
+        public static Task Main(string[] args)
         {
-            // Check files
+            // Load configuration
             foreach (string requiredFile in new[] { Files.Config, Files.Contents })
-            {
                 if (!File.Exists(requiredFile))
-                {
                     throw new InvalidOperationException($"Missing required file {requiredFile}: Bot can't run");
-                }
-            }
 
-
-            // Set up configuration
             PmBotConfig config;
             try
             {
@@ -49,44 +45,29 @@ namespace PacManBot
             }
             catch (JsonReaderException e)
             {
-                throw new InvalidOperationException("The file does not contain valid JSON. Correct the mistake and try again.", e);
+                throw new InvalidOperationException("A required file contains invalid JSON. Correct the mistake and try again.", e);
             }
 
             if (string.IsNullOrWhiteSpace(config.discordToken))
-            {
-                throw new InvalidOperationException(
-                    $"Missing {nameof(config.discordToken)} in {Files.Config}: Bot can't run");
-            }
+                throw new InvalidOperationException($"Missing {nameof(config.discordToken)} in {Files.Config}: Bot can't run");
 
-            // Set up services
-            var log = new LoggingService(config);
-            var discord = new DiscordShardedClient(config.MakeClientConfig(log));
 
-            var serviceCollection = new ServiceCollection()
-                .AddSingleton(config)
-                .AddSingleton(log)
-                .AddSingleton(discord)
-                .AddSingleton<PmBot>()
-                .AddSingleton<DatabaseService>()
-                .AddSingleton<InputService>()
-                .AddSingleton<GameService>()
-                .AddSingleton<SchedulingService>();
+            // Set up and run the bot
+            var logger = new LoggingService(config);
 
-            var services = serviceCollection.BuildServiceProvider();
-
-            // Let's go
-            try
-            {
-                log.Critical($"Pac-Man Bot v{Version}");
-                await services.Get<PmBot>().StartAsync();
-            }
-            catch (Exception e)
-            {
-                log.Critical($"While starting the bot: {e}");
-                await Task.Delay(5000);
-            }
-
-            await Task.Delay(-1);
+            return Host.CreateDefaultBuilder(args)
+                .ConfigureLogging(lb => lb.ClearProviders().AddProvider(logger))
+                .ConfigureServices(services => services
+                    .AddHostedService<PmBot>()
+                    .AddSingleton(config)
+                    .AddSingleton(logger)
+                    .AddSingleton(_ => config.MakeClientConfig(logger))
+                    .AddSingleton<DiscordShardedClient>()
+                    .AddSingleton<DatabaseService>()
+                    .AddSingleton<InputService>()
+                    .AddSingleton<GameService>()
+                    .AddSingleton<SchedulingService>())
+                .RunConsoleAsync();
         }
     }
 }

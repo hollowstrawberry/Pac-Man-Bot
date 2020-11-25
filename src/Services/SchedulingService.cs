@@ -26,7 +26,7 @@ namespace PacManBot.Services
         public List<Timer> Timers { get; private set; }
 
         /// <summary>Fired when a scheduled restart is due.</summary>
-        public event Func<Task> PrepareRestart;
+        public event Func<CancellationToken, Task> PrepareRestart;
         
 
         public SchedulingService(PmBotConfig config, LoggingService log, GameService games)
@@ -59,6 +59,7 @@ namespace PacManBot.Services
         /// <summary>Cease all scheduled actions</summary>
         public void StopTimers()
         {
+            if (Timers == null) return;
             foreach(var timer in Timers) timer.Dispose();
             Timers = new List<Timer>();
         }
@@ -100,7 +101,7 @@ namespace PacManBot.Services
         private async void RestartBot(object state)
         {
             _log.Info("Restarting");
-            await PrepareRestart.Invoke().LogExceptions(_log, "Restarting");
+            await PrepareRestart.Invoke(CancellationToken.None).LogExceptions(_log, "Restarting");
             Environment.Exit(ExitCodes.ScheduledReboot);
         }
     }

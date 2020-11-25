@@ -85,7 +85,7 @@ namespace PacManBot
             {
                 Token = discordToken,
                 HttpTimeout = TimeSpan.FromSeconds(httpTimeout),
-                LoggerFactory = new LoggingServiceWrapper(log),
+                LoggerFactory = log,
                 MinimumLogLevel = clientLogLevel,
                 MessageCacheSize = messageCacheSize,
 
@@ -93,21 +93,6 @@ namespace PacManBot
                 DiscordIntents.Guilds | DiscordIntents.DirectMessages | DiscordIntents.DirectMessageReactions
                 | DiscordIntents.GuildMembers | DiscordIntents.GuildMessages | DiscordIntents.GuildMessageReactions,
             };
-        }
-
-
-        class LoggingServiceWrapper : ILoggerFactory
-        {
-            public LoggingService Log { get; }
-
-            public LoggingServiceWrapper(LoggingService log)
-            {
-                Log = log;
-            }
-
-            public ILogger CreateLogger(string categoryName) => Log;
-            public void AddProvider(ILoggerProvider provider) { }
-            public void Dispose() { }
         }
     }
 }
