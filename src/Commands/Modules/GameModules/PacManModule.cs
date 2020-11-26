@@ -109,7 +109,7 @@ namespace PacManBot.Commands.Modules
                 foreach (var input in PacManGame.GameInputs.Keys)
                 {
                     if (game.State != GameState.Active) break;
-                    await message.CreateReactionAsync(input);
+                    await message.CreateReactionAsync(input.ToEmoji());
                 }
 
                 await game.UpdateMessageAsync();

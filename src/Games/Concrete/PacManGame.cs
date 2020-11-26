@@ -32,13 +32,13 @@ namespace PacManBot.Games.Concrete
         public string FilenameKey => "";
 
 
-        public static readonly IReadOnlyDictionary<DiscordEmoji, PacManInput> GameInputs = new Dictionary<DiscordEmoji, PacManInput>() {
-            { "⬅".ToEmoji(), PacManInput.Left },
-            { "⬆".ToEmoji(), PacManInput.Up },
-            { "⬇".ToEmoji(), PacManInput.Down },
-            { "➡".ToEmoji(), PacManInput.Right },
-            { CustomEmoji.EHelp, PacManInput.Help },
-            { "⏭".ToEmoji(), PacManInput.Fast }
+        public static readonly IReadOnlyDictionary<string, PacManInput> GameInputs = new Dictionary<string, PacManInput>() {
+            { "⬅", PacManInput.Left },
+            { "⬆", PacManInput.Up },
+            { "⬇", PacManInput.Down },
+            { "➡", PacManInput.Right },
+            { CustomEmoji.Help, PacManInput.Help },
+            { "⏭", PacManInput.Fast }
         };
 
         private static readonly IReadOnlyList<char> NonSolidChars = new[] {
@@ -257,7 +257,7 @@ namespace PacManBot.Games.Concrete
 
         public ValueTask<bool> IsInputAsync(DiscordEmoji emote, ulong userId = 1)
         {
-            return new ValueTask<bool>(GameInputs.ContainsKey(emote));
+            return new ValueTask<bool>(GameInputs.ContainsKey(emote.ToString()));
         }
 
 
@@ -265,7 +265,7 @@ namespace PacManBot.Games.Concrete
         {
             if (State != GameState.Active) return;
 
-            PacManInput input = GameInputs[emote];
+            PacManInput input = GameInputs[emote.ToString()];
 
             if (lastInput == PacManInput.Help) // Closes help
             {
