@@ -27,7 +27,7 @@ namespace PacManBot.Services
         private PacManDbContext MakeDbContext() => new PacManDbContext(_dbConnection);
 
 
-        public DatabaseService(PmBotConfig config, LoggingService log)
+        public DatabaseService(BotConfig config, LoggingService log)
         {
             _log = log;
 

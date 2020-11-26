@@ -29,7 +29,7 @@ namespace PacManBot.Services
         public event Func<CancellationToken, Task> PrepareRestart;
         
 
-        public SchedulingService(PmBotConfig config, LoggingService log, GameService games)
+        public SchedulingService(BotConfig config, LoggingService log, GameService games)
         {
             _log = log;
             _games = games;

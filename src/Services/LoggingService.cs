@@ -21,7 +21,7 @@ namespace PacManBot.Services
         private readonly string[] _hardExclusions;
 
 
-        public LoggingService(PmBotConfig config)
+        public LoggingService(BotConfig config)
         {
             _minLogLevel = config.logLevel;
             _minClientLogLevel = config.clientLogLevel;

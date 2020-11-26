@@ -20,9 +20,9 @@ namespace PacManBot
     /// <summary>
     /// Runs an instance of Pac-Man Bot and handles its connection to Discord.
     /// </summary>
-    public class PmBot : IHostedService
+    public class Bot : IHostedService
     {
-        private readonly PmBotConfig _config;
+        private readonly BotConfig _config;
         private readonly IServiceProvider _services;
 
         private readonly DiscordShardedClient _client;
@@ -37,7 +37,7 @@ namespace PacManBot
         private bool[] _shardReady;
 
 
-        public PmBot(PmBotConfig config, IServiceProvider services, DiscordShardedClient client,
+        public Bot(BotConfig config, IServiceProvider services, DiscordShardedClient client,
             LoggingService log, GameService games, InputService input, SchedulingService schedule)
         {
             _config = config;

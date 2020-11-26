@@ -17,12 +17,12 @@ namespace PacManBot.Games
         protected const string Empty = DiscordStringUtilities.Empty;
 
         protected DiscordShardedClient ShardedClient { get; private set; }
-        protected PmBotConfig Config { get; private set; }
+        protected BotConfig Config { get; private set; }
         protected LoggingService Log { get; private set; }
         protected DatabaseService Storage { get; private set; }
         protected GameService Games { get; private set; }
 
-        protected PmBotContent Content => Config.Content;
+        protected BotContent Content => Config.Content;
 
 
 
@@ -85,7 +85,7 @@ namespace PacManBot.Games
         /// <summary>Sets the services that will be used by this game instance.</summary>
         protected virtual void SetServices(IServiceProvider services)
         {
-            Config = services.Get<PmBotConfig>();
+            Config = services.Get<BotConfig>();
             ShardedClient = services.Get<DiscordShardedClient>();
             Log = services.Get<LoggingService>();
             Storage = services.Get<DatabaseService>();

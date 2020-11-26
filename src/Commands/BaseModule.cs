@@ -22,9 +22,9 @@ namespace PacManBot.Commands
 
 
         /// <summary>Runtime settings of the bot.</summary>
-        public PmBotConfig Config { get; set; }
+        public BotConfig Config { get; set; }
         /// <summary>Content used throughout the bot.</summary>
-        public PmBotContent Content => Config.Content;
+        public BotContent Content => Config.Content;
         /// <summary>All services used to create new games.</summary>
         public IServiceProvider Services { get; set; }
         /// <summary>The bot's overarching sharded client.</summary>

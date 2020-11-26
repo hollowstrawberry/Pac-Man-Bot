@@ -37,10 +37,10 @@ namespace PacManBot
                 if (!File.Exists(requiredFile))
                     throw new InvalidOperationException($"Missing required file {requiredFile}: Bot can't run");
 
-            PmBotConfig config;
+            BotConfig config;
             try
             {
-                config = JsonConvert.DeserializeObject<PmBotConfig>(File.ReadAllText(Files.Config));
+                config = JsonConvert.DeserializeObject<BotConfig>(File.ReadAllText(Files.Config));
                 config.LoadContent(File.ReadAllText(Files.Contents));
             }
             catch (JsonReaderException e)
@@ -59,7 +59,7 @@ namespace PacManBot
             return Host.CreateDefaultBuilder(args)
                 .ConfigureLogging(lb => lb.ClearProviders().AddProvider(log))
                 .ConfigureServices(services => services
-                    .AddHostedService<PmBot>()
+                    .AddHostedService<Bot>()
                     .AddSingleton(config)
                     .AddSingleton(log)
                     .AddSingleton(_ => config.MakeClientConfig(log))

@@ -29,7 +29,7 @@ namespace PacManBot.Commands.Modules
     [SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "Command reflection")]
     public class OwnerModule : BaseModule
     {
-        public PmBot Bot { get; set; }
+        public Bot Bot { get; set; }
         
         private readonly ScriptOptions _scriptOptions = ScriptOptions.Default
             .WithImports("Microsoft.EntityFrameworkCore", "Newtonsoft.Json",
