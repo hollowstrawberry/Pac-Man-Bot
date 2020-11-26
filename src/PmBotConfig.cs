@@ -46,6 +46,9 @@ namespace PacManBot
         /// <summary>How many messages to log coming from the Discord client. See <see cref="LogSeverity"/> for possible values.</summary>
         [DataMember] public readonly LogLevel clientLogLevel = LogLevel.Information;
 
+        /// <summary>The serilog log message template.</summary>
+        [DataMember] public readonly string logTemplate = "[{Timestamp:HH:mm:ss}][{Level:u3}] {Message}{NewLine}";
+
         /// <summary>Strings that when found cause a log event to be ignored. Use with caution.</summary>
         [DataMember] public readonly string[] logExclude = Array.Empty<string>();
 

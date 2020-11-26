@@ -1,6 +1,5 @@
 using System;
 using System.Net.WebSockets;
-using DSharpPlus;
 using DSharpPlus.Exceptions;
 using Emzi0767.Utilities;
 using Microsoft.Extensions.Logging;
@@ -28,12 +27,10 @@ namespace PacManBot.Services
             _minClientLogLevel = config.clientLogLevel;
             _hardExclusions = config.logExclude;
 
-            const string template = "{Timestamp:HH:mm:ss} [{Level:u3}] {Message}{NewLine}";
-
-            _logger = new Serilog.LoggerConfiguration()
+            _logger = new LoggerConfiguration()
                 .MinimumLevel.Verbose()
-                .WriteTo.Console(outputTemplate: template)
-                .WriteTo.File("logs/.txt", rollingInterval: RollingInterval.Day, outputTemplate: template)
+                .WriteTo.Console(outputTemplate: config.logTemplate)
+                .WriteTo.File("logs/.txt", rollingInterval: RollingInterval.Day, outputTemplate: config.logTemplate)
                 .CreateLogger();
         }
 
