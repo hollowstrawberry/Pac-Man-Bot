@@ -14,6 +14,7 @@ using PacManBot.Commands;
 using Microsoft.Extensions.Hosting;
 using System.Threading;
 using DSharpPlus.CommandsNext.Converters;
+using System.Collections.Generic;
 
 namespace PacManBot
 {
@@ -34,7 +35,7 @@ namespace PacManBot
         private AuthDiscordBotListApi _discordBotList = null;
         private DateTime _lastGuildCountUpdate = DateTime.MinValue;
         private bool _clientStarted = false;
-        private bool[] _shardReady;
+        private readonly List<int> _shardsReady = new();
 
 
         public Bot(BotConfig config, IServiceProvider services, DiscordShardedClient client,
@@ -80,7 +81,6 @@ namespace PacManBot
             if (ct.IsCancellationRequested) return;
 
             await _client.StartAsync();
-            _shardReady = new bool[_client.ShardClients.Count];
             _clientStarted = true;
 
             if (!string.IsNullOrWhiteSpace(_config.discordBotListToken))
@@ -138,12 +138,12 @@ namespace PacManBot
 
         private async Task OnReadyAsync(DiscordClient shard)
         {
-            _shardReady[shard.ShardId] = true;
-            if (_shardReady.Count(x => x) <= shard.ShardCount)
+            if (!_shardsReady.Contains(shard.ShardId)) _shardsReady.Add(shard.ShardId);
+            if (_shardsReady.Count <= shard.ShardCount)
             {
                 _input.StartListening(shard);
             }
-            if (_shardReady.Count(x => x) == shard.ShardCount)
+            if (_shardsReady.Count == shard.ShardCount)
             {
                 _schedule.StartTimers();
                 await _client.UpdateStatusAsync(

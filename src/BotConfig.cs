@@ -17,10 +17,10 @@ namespace PacManBot
     public class BotConfig
     {
         /// <summary>Secret token used to connect to Discord. Must be provided for the bot to run.</summary>
-        [DataMember] internal readonly string discordToken;
+        [DataMember] internal readonly string discordToken = null;
 
         /// <summary>Secret token to send requests to top.gg</summary>
-        [DataMember] internal readonly string discordBotListToken;
+        [DataMember] internal readonly string discordBotListToken = null;
 
         /// <summary>The prefix used for all guilds that don't set a custom prefix.</summary>
         [DataMember] public readonly string defaultPrefix = "<";
