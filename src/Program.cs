@@ -53,15 +53,16 @@ namespace PacManBot
 
 
             // Set up and run the bot
-            var logger = new LoggingService(config);
+            var log = new LoggingService(config);
+            log.Critical($"Pac-Man Bot v{Version}");
 
             return Host.CreateDefaultBuilder(args)
-                .ConfigureLogging(lb => lb.ClearProviders().AddProvider(logger))
+                .ConfigureLogging(lb => lb.ClearProviders().AddProvider(log))
                 .ConfigureServices(services => services
                     .AddHostedService<PmBot>()
                     .AddSingleton(config)
-                    .AddSingleton(logger)
-                    .AddSingleton(_ => config.MakeClientConfig(logger))
+                    .AddSingleton(log)
+                    .AddSingleton(_ => config.MakeClientConfig(log))
                     .AddSingleton<DiscordShardedClient>()
                     .AddSingleton<DatabaseService>()
                     .AddSingleton<InputService>()

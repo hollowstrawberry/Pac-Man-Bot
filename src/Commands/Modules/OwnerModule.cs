@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
+using DSharpPlus.Entities;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.Data.Sqlite;
@@ -81,13 +82,33 @@ namespace PacManBot.Commands.Modules
             string result = process.StandardOutput.ReadToEnd();
             process.WaitForExit();
 
-            bool updated = !result.Contains("Already up to date");
+            bool updated = result.Contains("Updating");
 
             if (!updated) await ctx.AutoReactAsync(false);
 
             await ctx.RespondAsync($"```\n{result.Truncate(1990)}```");
 
             if (updated) await ShutDown(ctx);
+        }
+
+
+        [Command("setstatus"), Hidden]
+        [Description("Set the bot's status in all shards")]
+        public async Task SetStatus(CommandContext ctx, ActivityType type, [RemainingText]string status)
+        {
+            
+            await ShardedClient.UpdateStatusAsync(new DiscordActivity(status, type));
+            await ctx.AutoReactAsync();
+        }
+
+
+        [Command("setstatus"), Hidden]
+        [Description("Set the bot's status in all shards")]
+        public async Task SetStatus(CommandContext ctx, UserStatus status)
+        {
+
+            await ShardedClient.UpdateStatusAsync(userStatus: status);
+            await ctx.AutoReactAsync();
         }
 
 
@@ -304,6 +325,7 @@ namespace PacManBot.Commands.Modules
             {
                 string content = File.ReadAllText(filename).Replace("```", "`​``")[start..].Truncate(length);
                 content = content.Replace(Config.discordToken, ""); // Can't be too safe
+                if (Config.discordBotListToken is not null) content = content.Replace(Config.discordBotListToken, "");
                 await ctx.RespondAsync($"```{filename.Split('.').Last()}\n{content}".Truncate(1997) + "```");
             }
             catch (Exception e)

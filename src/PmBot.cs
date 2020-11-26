@@ -13,6 +13,7 @@ using DSharpPlus.CommandsNext;
 using PacManBot.Commands;
 using Microsoft.Extensions.Hosting;
 using System.Threading;
+using DSharpPlus.CommandsNext.Converters;
 
 namespace PacManBot
 {
@@ -52,8 +53,6 @@ namespace PacManBot
         /// <summary>Starts the bot and its connection to Discord.</summary>
         public async Task StartAsync(CancellationToken ct)
         {
-            _log.Critical($"Pac-Man Bot v{Program.Version}");
-
             await _client.UseCommandsNextAsync(new CommandsNextConfiguration
             {
                 UseDefaultCommandHandler = false,
@@ -62,6 +61,8 @@ namespace PacManBot
             foreach (var (shard, commands) in await _client.GetCommandsNextAsync())
             {
                 commands.RegisterCommands(typeof(BaseModule).Assembly);
+                commands.RegisterConverter(new EnumConverter<ActivityType>());
+                commands.RegisterConverter(new EnumConverter<UserStatus>());
                 commands.SetHelpFormatter<HelpFormatter>();
             }
 

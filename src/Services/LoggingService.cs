@@ -6,7 +6,6 @@ using Emzi0767.Utilities;
 using Microsoft.Extensions.Logging;
 using PacManBot.Extensions;
 using Serilog;
-using Serilog.Core;
 using Serilog.Events;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
 
@@ -15,9 +14,9 @@ namespace PacManBot.Services
     /// <summary>
     /// Receives and logs messages from everywhere in the bot.
     /// </summary>
-    public class LoggingService : ILogger<DiscordShardedClient>, ILoggerFactory, ILoggerProvider, IDisposable
+    public class LoggingService : ILogger, ILoggerFactory, ILoggerProvider, IDisposable
     {
-        private readonly Logger _logger;
+        private readonly Serilog.Core.Logger _logger;
         private readonly LogLevel _minLogLevel;
         private readonly LogLevel _minClientLogLevel;
         private readonly string[] _hardExclusions;
@@ -29,12 +28,12 @@ namespace PacManBot.Services
             _minClientLogLevel = config.clientLogLevel;
             _hardExclusions = config.logExclude;
 
-            const string template = "{Timestamp:HH:mm:ss}|{Level:u3}> {Message}{NewLine}";
+            const string template = "{Timestamp:HH:mm:ss} [{Level:u3}] {Message}{NewLine}";
 
             _logger = new Serilog.LoggerConfiguration()
                 .MinimumLevel.Verbose()
                 .WriteTo.Console(outputTemplate: template)
-                .WriteTo.RollingFile("logs/{Date}.txt", outputTemplate: template)
+                .WriteTo.File("logs/.txt", rollingInterval: RollingInterval.Day, outputTemplate: template)
                 .CreateLogger();
         }
 
@@ -96,7 +95,7 @@ namespace PacManBot.Services
                 "ConnectionClose" => LogLevel.Information,
                 "RatelimitPreemptive" => LogLevel.Debug,
                 "RatelimitHit" => LogLevel.Warning,
-                null when message.ContainsAny("Hosting environment", "Content root path") => LogLevel.Trace,
+                null when level < LogLevel.Warning => LogLevel.Trace,
                 _ => level,
             };
 
