@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
@@ -15,6 +14,7 @@ using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using PacManBot.Constants;
 using PacManBot.Extensions;
 using PacManBot.Games;
@@ -29,7 +29,7 @@ namespace PacManBot.Commands.Modules
     [SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "Command reflection")]
     public class OwnerModule : BaseModule
     {
-        public Bot Bot { get; set; }
+        public IHostApplicationLifetime App { get; set; }
         
         private readonly ScriptOptions _scriptOptions = ScriptOptions.Default
             .WithImports("Microsoft.EntityFrameworkCore", "Newtonsoft.Json",
@@ -49,8 +49,7 @@ namespace PacManBot.Commands.Modules
             File.WriteAllText(Files.ManualRestart, $"{message.Channel.Id}/{message.Id}");
 
             Log.Info("Restarting");
-            await Bot.StopAsync(CancellationToken.None);
-            Environment.Exit(ExitCodes.ManualReboot);
+            App.StopApplication(ExitCodes.ManualReboot);
         }
 
 

@@ -3,34 +3,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using DSharpPlus;
-using DSharpPlus.Exceptions;
+using Microsoft.Extensions.Hosting;
 using PacManBot.Constants;
 using PacManBot.Extensions;
 using PacManBot.Games;
 
 namespace PacManBot.Services
 {
-
     /// <summary>
     /// Routinely executes specific actions such as connection checks.
     /// </summary>
     public class SchedulingService
     {
+        private readonly IHostApplicationLifetime _app;
         private readonly LoggingService _log;
         private readonly GameService _games;
         private readonly bool _scheduledRestart;
 
-
         /// <summary>All active scheduled actions.</summary>
         public List<Timer> Timers { get; private set; }
-
-        /// <summary>Fired when a scheduled restart is due.</summary>
-        public event Func<CancellationToken, Task> PrepareRestart;
         
-
-        public SchedulingService(BotConfig config, LoggingService log, GameService games)
+        public SchedulingService(IHostApplicationLifetime app, BotConfig config, LoggingService log, GameService games)
         {
+            _app = app;
             _log = log;
             _games = games;
 
@@ -98,11 +93,10 @@ namespace PacManBot.Services
         }
 
 
-        private async void RestartBot(object state)
+        private void RestartBot(object state)
         {
             _log.Info("Restarting");
-            await PrepareRestart.Invoke(CancellationToken.None).LogExceptions(_log, "Restarting");
-            Environment.Exit(ExitCodes.ScheduledReboot);
+            _app.StopApplication(ExitCodes.ScheduledReboot);
         }
     }
 }

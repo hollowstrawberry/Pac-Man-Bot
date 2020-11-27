@@ -76,8 +76,6 @@ namespace PacManBot
             _client.GuildDeleted += OnLeftGuild;
             _client.ChannelDeleted += OnChannelDeleted;
 
-            _schedule.PrepareRestart += StopAsync;
-
             if (ct.IsCancellationRequested) return;
 
             await _client.StartAsync();
@@ -96,7 +94,7 @@ namespace PacManBot
             foreach (var shard in _client.ShardClients.Values)
                 _input.StopListening(shard);
 
-            _schedule?.StopTimers();
+            _schedule.StopTimers();
 
             _client.Ready -= OnReady;
             _client.ClientErrored -= OnClientErrored;

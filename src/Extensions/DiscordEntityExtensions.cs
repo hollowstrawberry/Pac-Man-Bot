@@ -5,7 +5,6 @@ using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
 using PacManBot.Constants;
-using PacManBot.Games;
 using PacManBot.Services;
 
 namespace PacManBot.Extensions
