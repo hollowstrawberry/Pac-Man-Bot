@@ -91,6 +91,8 @@ namespace PacManBot
         /// <summary>Safely stop most activity from the bot and disconnect from Discord.</summary>
         public async Task StopAsync(CancellationToken ct)
         {
+            _log.Info("Shutting down");
+            
             foreach (var shard in _client.ShardClients.Values)
                 _input.StopListening(shard);
 
