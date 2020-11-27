@@ -60,14 +60,14 @@ namespace PacManBot
                 .ConfigureLogging(lb => lb.ClearProviders().AddProvider(log))
                 .ConfigureServices(services => services
                     .AddHostedService<Bot>()
-                    .AddSingleton(config)
-                    .AddSingleton(log)
-                    .AddSingleton(_ => config.MakeClientConfig(log))
                     .AddSingleton<DiscordShardedClient>()
                     .AddSingleton<DatabaseService>()
                     .AddSingleton<InputService>()
                     .AddSingleton<GameService>()
-                    .AddSingleton<SchedulingService>())
+                    .AddSingleton<SchedulingService>()
+                    .AddSingleton(log)
+                    .AddSingleton(config)
+                    .AddSingleton(config.MakeDiscordConfig(log)))
                 .RunConsoleAsync();
         }
     }

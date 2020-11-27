@@ -15,6 +15,7 @@ using Microsoft.Extensions.Hosting;
 using System.Threading;
 using DSharpPlus.CommandsNext.Converters;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 
 namespace PacManBot
 {
@@ -32,10 +33,10 @@ namespace PacManBot
         private readonly InputService _input;
         private readonly SchedulingService _schedule;
 
+        private readonly ConcurrentDictionary<int, DiscordClient> _shardsReady = new();
         private AuthDiscordBotListApi _discordBotList = null;
         private DateTime _lastGuildCountUpdate = DateTime.MinValue;
         private bool _clientStarted = false;
-        private readonly List<int> _shardsReady = new();
 
 
         public Bot(BotConfig config, IServiceProvider services, DiscordShardedClient client,
@@ -138,7 +139,10 @@ namespace PacManBot
 
         private async Task OnReadyAsync(DiscordClient shard)
         {
-            if (!_shardsReady.Contains(shard.ShardId)) _shardsReady.Add(shard.ShardId);
+            if (_shardsReady.ContainsKey(shard.ShardId)) return;
+
+            _shardsReady.TryAdd(shard.ShardId, shard);
+
             if (_shardsReady.Count <= shard.ShardCount)
             {
                 _input.StartListening(shard);
