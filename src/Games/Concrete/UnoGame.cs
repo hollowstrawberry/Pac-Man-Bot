@@ -690,7 +690,8 @@ namespace PacManBot.Games.Concrete
 
         private async Task<bool> TrySendCardsAsync(UnoPlayer player)
         {
-            if (await player.GetUserAsync() is null || await player.IsBotAsync() || Guild is null) return false;
+            if (await player.GetUserAsync() is null) return false;
+            if (await player.IsBotAsync() || Guild is null) return true;
 
             var embed = new DiscordEmbedBuilder
             {

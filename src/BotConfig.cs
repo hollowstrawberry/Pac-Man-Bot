@@ -25,7 +25,7 @@ namespace PacManBot
         /// <summary>The prefix used for all guilds that don't set a custom prefix.</summary>
         [DataMember] public readonly string defaultPrefix = "<";
 
-        /// <summary>The string that defines the connection to the SQLite database in <see cref="Services.DatabaseService"/>.</summary>
+        /// <summary>The string that defines the connection to the SQLite database in <see cref="DatabaseService"/>.</summary>
         [DataMember] public readonly string dbConnectionString = $"Data Source={Files.DefaultDatabase};";
 
         /// <summary>Number of shards to divide the bot into. 1 shard per 1000 guilds is enough.</summary>
@@ -40,10 +40,10 @@ namespace PacManBot
         /// <summary>Sets the timeout for HTTP events.</summary>
         [DataMember] public readonly int httpTimeout = 10000;
 
-        /// <summary>How many messages this program should log. See <see cref="LogSeverity"/> for possible values.</summary>
+        /// <summary>How many messages this program should log. See <see cref="LogLevel"/> for possible values.</summary>
         [DataMember] public readonly LogLevel logLevel = LogLevel.Debug;
 
-        /// <summary>How many messages to log coming from the Discord client. See <see cref="LogSeverity"/> for possible values.</summary>
+        /// <summary>How many messages to log coming from the Discord client. See <see cref="LogLevel"/> for possible values.</summary>
         [DataMember] public readonly LogLevel clientLogLevel = LogLevel.Information;
 
         /// <summary>The serilog log message template.</summary>
@@ -61,11 +61,11 @@ namespace PacManBot
 
 
 
-        /// <summary>Content used throughout the bot. Set using <see cref="LoadContent(string)"/>.</summary>
+        /// <summary>Static data used throughout the bot. Loaded using <see cref="LoadContent(string)"/>.</summary>
         public BotContent Content { get; private set; }
 
 
-        /// <summary>Reloads <see cref="Content"/> from the provided json.</summary>
+        /// <summary>Loads <see cref="Content"/> from the provided json.</summary>
         public void LoadContent(string json)
         {
             var cont = JsonConvert.DeserializeObject<BotContent>(json);

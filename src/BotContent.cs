@@ -5,7 +5,7 @@ using PacManBot.Games.Concrete;
 namespace PacManBot
 {
     /// <summary>
-    /// Contains data used throughout the bot, loaded from a file.
+    /// Contains static data used throughout the bot, loaded from a file.
     /// </summary>
     [DataContract]
     public class BotContent
