@@ -107,8 +107,7 @@ namespace PacManBot
 
             if (_clientStarted)
             {
-                await Task.Delay(1000, ct);
-                await _client.StopAsync();
+                await Task.WhenAny(_client.StopAsync(), Task.Delay(5000, CancellationToken.None));
             }
         }
 
