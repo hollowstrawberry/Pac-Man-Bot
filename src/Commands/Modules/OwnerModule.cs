@@ -426,5 +426,34 @@ namespace PacManBot.Commands.Modules
             if (arg) throw new Exception("oops");
             else await ctx.RespondAsync("no");
         }
+
+
+        [Command("shardstatus"), Hidden]
+        [Description("Check status of all shards")]
+        public async Task ShardStatus(CommandContext ctx)
+        {
+            var sb = new StringBuilder();
+            foreach (var shard in ShardedClient.ShardClients.Values)
+            {
+                var app = await shard.GetCurrentApplicationAsync();
+                var owner = app is null ? null : await shard.GetUserAsync(app.Owners.First().Id);
+                sb.Append($"(#{shard.ShardId + 1}: `{shard.Ping}ms`{" `app`".If(app is not null)}{" `owner`".If(owner is not null)}) ");
+            }
+            await ctx.RespondAsync(sb.ToString());
+        }
+
+
+        [Command("shardretry"), Hidden]
+        [Description("Resusbcribe each shard to events from discord")]
+        public async Task ShardRetry(CommandContext ctx)
+        {
+            foreach (var shard in ShardedClient.ShardClients.Values)
+            {
+                Input.StopListening(shard);
+                Input.StartListening(shard);
+            }
+
+            await ctx.AutoReactAsync();
+        }
     }
 }

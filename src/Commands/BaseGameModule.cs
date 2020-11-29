@@ -15,8 +15,7 @@ namespace PacManBot.Commands
     /// The base for a module that controls a game.
     /// </summary>
     /// <typeparam name="TGame">The game type that this module controls.</typeparam>
-    public abstract class BaseGameModule<TGame> : BaseModule
-        where TGame : class, IBaseGame
+    public abstract class BaseGameModule<TGame> : BaseModule where TGame : class, IBaseGame
     {
         /// <summary>Obtains the game for the current context from the game service.</summary>
         protected virtual TGame Game(CommandContext ctx)

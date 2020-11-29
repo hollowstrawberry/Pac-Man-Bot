@@ -81,7 +81,7 @@ namespace PacManBot
         }
 
 
-        /// <summary>Gets a configuration object for a <see cref="DiscordSocketClient"/>.</summary>
+        /// <summary>Gets a configuration object for a <see cref="DiscordClient"/>.</summary>
         public DiscordConfiguration MakeDiscordConfig(LoggingService log)
         {
             return new DiscordConfiguration

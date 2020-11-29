@@ -14,7 +14,6 @@ using PacManBot.Commands;
 using Microsoft.Extensions.Hosting;
 using System.Threading;
 using DSharpPlus.CommandsNext.Converters;
-using System.Collections.Generic;
 using System.Collections.Concurrent;
 
 namespace PacManBot
@@ -132,7 +131,7 @@ namespace PacManBot
 
         private Task OnReady(DiscordClient shard, ReadyEventArgs args)
         {
-            _ =Task.Run(() => OnReadyAsync(shard).LogExceptions(_log, $"On ready {shard.ShardId}"));
+            _ = Task.Run(() => OnReadyAsync(shard).LogExceptions(_log, $"On ready {shard.ShardId}"));
             return Task.CompletedTask;
         }
 
