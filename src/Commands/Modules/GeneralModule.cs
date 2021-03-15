@@ -102,7 +102,7 @@ namespace PacManBot.Commands.Modules
         }
 
 
-        [Command("allgames"), Aliases("gamestats")]
+        [Command("activegames"), Aliases("gamestats")]
         [Description("Shows information about all active games managed by the bot.")]
         public async Task GameStats(CommandContext ctx)
         {
