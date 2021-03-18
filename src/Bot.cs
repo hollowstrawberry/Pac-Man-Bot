@@ -107,7 +107,13 @@ namespace PacManBot
 
             if (_clientStarted)
             {
-                await Task.WhenAny(_client.StopAsync(), Task.Delay(5000, CancellationToken.None));
+                var stop = _client.StopAsync();
+                await Task.WhenAny(stop, Task.Delay(5000, CancellationToken.None));
+                if (!stop.IsCompleted)
+                {
+                    _log.Info("Force Quitting");
+                    Environment.Exit(0);
+                }
             }
         }
 

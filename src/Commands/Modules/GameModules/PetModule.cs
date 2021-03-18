@@ -248,11 +248,7 @@ namespace PacManBot.Commands.Modules
                 }
 
                 name = msg.Content;
-                if (string.IsNullOrWhiteSpace(name))
-                {
-                    await ctx.RespondAsync(null);
-                    return;
-                }
+                if (string.IsNullOrWhiteSpace(name)) return;
             }
 
             if (name.Length > PetGame.NameCharLimit)
@@ -292,11 +288,7 @@ namespace PacManBot.Commands.Modules
                 }
 
                 url = msg.Attachments.FirstOrDefault()?.Url ?? msg.Content;
-                if (string.IsNullOrWhiteSpace(url))
-                {
-                    await ctx.RespondAsync(null);
-                    return;
-                }
+                if (string.IsNullOrWhiteSpace(url)) return;
             }
 
             if (url.ToLowerInvariant() == "reset")
@@ -365,11 +357,7 @@ namespace PacManBot.Commands.Modules
                 return;
             }
 
-            if (Game(ctx).timesPetSinceTimerStart > 0)
-            {
-                await ctx.RespondAsync(null);
-                return;
-            }
+            if (Game(ctx).timesPetSinceTimerStart > 0) return;
             Game(ctx).timesPetSinceTimerStart = 10;
             await ctx.RespondAsync("no");
         }

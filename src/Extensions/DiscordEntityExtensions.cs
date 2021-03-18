@@ -18,11 +18,11 @@ namespace PacManBot.Extensions
 
         /// <summary>Sends a message in the current context</summary>
         public static Task<DiscordMessage> RespondAsync(this CommandContext ctx, object message, DiscordEmbedBuilder embed = null)
-            => ctx.RespondAsync(message?.ToString(), false, embed?.Build());
+            => ctx.RespondAsync(message?.ToString(), embed?.Build());
 
         /// <summary>Sends a message in the current context containing only an embed</summary>
         public static Task<DiscordMessage> RespondAsync(this CommandContext ctx, DiscordEmbedBuilder embed)
-            => ctx.RespondAsync(null, false, embed.Build());
+            => ctx.RespondAsync(null, embed.Build());
 
 
         /// <summary>Returns whether the next message by the user in this context is equivalent to "yes".</summary>
