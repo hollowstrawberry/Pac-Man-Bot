@@ -123,7 +123,7 @@ namespace PacManBot.Games.Concrete
         private class UnoPlayer
         {
             [DataMember] public readonly ulong id;
-            [DataMember] public List<Card> cards = new List<Card>();
+            [DataMember] public List<Card> cards = new();
             [DataMember] public UnoState uno = UnoState.None;
 
             public UnoGame game;
@@ -717,7 +717,9 @@ namespace PacManBot.Games.Concrete
             {
                 try
                 {
-                    player.message = await (await player.GetUserAsync() as DiscordMember).SendMessageAsync(embed: embed.Build());
+                    var member = await player.GetUserAsync() as DiscordMember;
+                    var dm = Input.CreateDmChannelAsync(await member.CreateDmChannelAsync());
+                    player.message = await dm.SendMessageAsync(embed: embed.Build());
                 }
                 catch (UnauthorizedException)
                 {

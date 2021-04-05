@@ -7,6 +7,7 @@ using DSharpPlus;
 using DSharpPlus.Entities;
 using DSharpPlus.Exceptions;
 using PacManBot.Extensions;
+using PacManBot.Services;
 
 namespace PacManBot.Games
 {
@@ -15,6 +16,8 @@ namespace PacManBot.Games
     /// </summary>
     public abstract class ChannelGame : BaseGame, IChannelGame
     {
+        protected InputService Input { get; private set; }
+
         /// <summary>Discord snowflake ID of the channel where this game is taking place in.</summary>
         public virtual ulong ChannelId { get; set; }
         /// <summary>Discord snowflake ID of the latest message used by this game.</summary>
@@ -27,6 +30,7 @@ namespace PacManBot.Games
 
         /// <summary>Unique objects that identify requests to update this game's message</summary>
         protected ConcurrentStack<object> PendingUpdates { get; } = new ConcurrentStack<object>();
+
 
         /// <summary>Empty game constructor, used only with reflection and serialization.</summary>
         protected ChannelGame() { }
@@ -49,14 +53,14 @@ namespace PacManBot.Games
                 if (_client is not null && ChannelId == _channel?.Id) return _client;
                 if (ChannelId <= 0) return ShardedClient.ShardClients.Values.First();
 
+                _channel = Input.GetDmChannel(ChannelId);
+                if (_channel is not null)
+                {
+                    return _client = ShardedClient.ShardClients[0];
+                }
+
                 foreach (var shard in ShardedClient.ShardClients.Values)
                 {
-                    if (shard.PrivateChannels.TryGetValue(ChannelId, out var dmChannel))
-                    {
-                        _channel = dmChannel;
-                        return _client = shard;
-                    }
-
                     foreach (var guild in shard.Guilds.Values)
                     {
                         if (guild.Channels.TryGetValue(ChannelId, out _channel))
@@ -79,14 +83,15 @@ namespace PacManBot.Games
             {
                 if (_channel?.Id != ChannelId) // if the channel changed, all bets are off
                 {
+                    _channel = Input.GetDmChannel(ChannelId);
+                    if (_channel is not null)
+                    {
+                        _client = ShardedClient.ShardClients[0];
+                        return _channel;
+                    }
+
                     foreach (var shard in ShardedClient.ShardClients.Values)
                     {
-                        if (shard.PrivateChannels.TryGetValue(ChannelId, out var dmChannel))
-                        {
-                            _client = shard;
-                            return _channel = dmChannel;
-                        }
-
                         foreach (var guild in shard.Guilds.Values)
                         {
                             if (guild.Channels.TryGetValue(ChannelId, out _channel))
@@ -188,6 +193,13 @@ namespace PacManBot.Games
             }
 
             LastUpdated = DateTime.Now;
+        }
+
+
+        protected override void SetServices(IServiceProvider services)
+        {
+            Input = services.Get<InputService>();
+            base.SetServices(services);
         }
     }
 }

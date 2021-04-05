@@ -24,6 +24,22 @@ namespace PacManBot.Extensions
         public static Task<DiscordMessage> RespondAsync(this CommandContext ctx, DiscordEmbedBuilder embed)
             => ctx.RespondAsync(null, embed.Build());
 
+        /// <summary>Sends a reply to this message.</summary>
+        public static Task<DiscordMessage> ReplyAsync(this DiscordMessage msg, string content, bool ping = true)
+            => msg.Channel.SendMessageAsync(new DiscordMessageBuilder().WithContent(content).WithReply(msg.Id, ping));
+
+        /// <summary>Sends a reply to this message.</summary>
+        public static Task<DiscordMessage> ReplyAsync(this DiscordMessage msg, DiscordEmbedBuilder embed, bool ping = true)
+            => msg.Channel.SendMessageAsync(new DiscordMessageBuilder().WithEmbed(embed.Build()).WithReply(msg.Id, ping));
+
+        /// <summary>Sends a reply to this context's message.</summary>
+        public static Task<DiscordMessage> ReplyAsync(this CommandContext ctx, string content, bool ping = true)
+            => ctx.Message.ReplyAsync(content, ping);
+
+        /// <summary>Sends a reply to this context's message.</summary>
+        public static Task<DiscordMessage> ReplyAsync(this CommandContext ctx, DiscordEmbedBuilder embed, bool ping = true)
+            => ctx.Message.ReplyAsync(embed, ping);
+
 
         /// <summary>Returns whether the next message by the user in this context is equivalent to "yes".</summary>
         public static async Task<bool?> GetYesResponseAsync(this CommandContext ctx, int timeout = 30)

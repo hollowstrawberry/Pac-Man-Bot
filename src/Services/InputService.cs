@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -29,14 +30,17 @@ namespace PacManBot.Services
         private readonly LoggingService _log;
         private readonly GameService _games;
 
-        private readonly ConcurrentDictionary<PendingResponse, byte> _pendingResponses;
-        private readonly ConcurrentDictionary<ulong, DateTime> _lastGuildUsersDownload;
+        private readonly ConcurrentDictionary<ulong, DiscordChannel> _dmChannels = new();
+        private readonly ConcurrentDictionary<PendingResponse, byte> _pendingResponses = new();
+        private readonly ConcurrentDictionary<ulong, DateTime> _lastGuildUsersDownload = new();
 
-        private static readonly Regex StartsWithAnyMention = new Regex(@"^<(@|#|a?:)");
+        private static readonly Regex StartsWithAnyMention = new(@"^<(@|#|a?:)");
         
         private Regex _mentionPrefix = null;
         /// <summary>Is a match when the given text begins with a mention to the bot's current user.</summary>
         public Regex MentionPrefix => _mentionPrefix ??= new Regex($@"^<@!?{_client.CurrentUser.Id}>");
+
+
 
 
         public InputService(DiscordShardedClient client, LoggingService log,
@@ -46,9 +50,6 @@ namespace PacManBot.Services
             _storage = storage;
             _log = log;
             _games = games;
-
-            _pendingResponses = new ConcurrentDictionary<PendingResponse, byte>();
-            _lastGuildUsersDownload = new ConcurrentDictionary<ulong, DateTime>();
         }
 
 
@@ -89,10 +90,23 @@ namespace PacManBot.Services
         }
 
 
+        /// <summary>Grabs a private channel from cache</summary>
+        public DiscordChannel GetDmChannel(ulong channelId) => _dmChannels.GetValueOrDefault(channelId);
+
+        /// <summary>Adds a private channel to cache</summary>
+        public async Task<DiscordChannel> CreateDmChannelAsync(DiscordMember member)
+        {
+            var channel = await member.CreateDmChannelAsync();
+            return _dmChannels[channel.Id] = channel;
+        }
+
+
 
 
         private Task OnMessageReceived(DiscordClient client, MessageCreateEventArgs args)
         {
+            if (args.Channel.IsPrivate) _dmChannels[args.Channel.Id] = args.Channel;
+
             var message = args.Message;
             if (message?.Author is not null && !message.Author.IsBot
                     && message.Channel.BotCan(Permissions.SendMessages | Permissions.ReadMessageHistory))
@@ -126,7 +140,12 @@ namespace PacManBot.Services
 
         private Task OnReactionAddedOrRemoved(DiscordMessage message, DiscordUser user, DiscordEmoji emoji)
         {
-            if (message.Channel is not null && message.Channel.BotCan(Permissions.SendMessages | Permissions.ReadMessageHistory))
+
+            if (message.Channel is null) return Task.CompletedTask;
+
+            if (message.Channel.IsPrivate) _dmChannels[message.Channel.Id] = message.Channel;
+
+            if (message.Channel.BotCan(Permissions.SendMessages | Permissions.ReadMessageHistory))
             {
                 if (user.Id == _client.CurrentUser.Id) return Task.CompletedTask;
                 

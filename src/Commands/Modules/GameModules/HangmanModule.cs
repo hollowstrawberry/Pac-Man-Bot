@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
+using DSharpPlus.Entities;
 using DSharpPlus.Exceptions;
 using PacManBot.Extensions;
 using PacManBot.Games.Concrete;
@@ -56,15 +57,16 @@ namespace PacManBot.Commands.Modules
 
             StartNewGame(new HangmanGame(ctx.Channel.Id, ctx.User.Id, Services));
 
-            var dm = await ctx.Member.CreateDmChannelAsync();
+            DiscordChannel dm;
             try
             {
+                dm = Input.CreateDmChannelAsync(await ctx.Member.CreateDmChannelAsync());
                 await dm.SendMessageAsync(
                     $"Send the secret word or phrase for the {Game(ctx).GameName} game in {ctx.Channel.Mention}:");
             }
             catch (UnauthorizedException)
             {
-                await ctx.RespondAsync($"{ctx.User.Mention} You must enable DMs!");
+                await ctx.ReplyAsync($"You must enable DMs!");
                 EndGame(ctx);
                 return;
             }
