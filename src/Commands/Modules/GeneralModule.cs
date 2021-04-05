@@ -53,7 +53,7 @@ namespace PacManBot.Commands.Modules
                 embed.AddField(name, desc, true);
             }
 
-            await ctx.ReplyAsync(embed);
+            await ctx.RespondAsync(embed);
         }
 
 
@@ -79,7 +79,7 @@ namespace PacManBot.Commands.Modules
 
                 .AddField("Uptime", (DateTime.Now - process.StartTime).Humanized(3), false);
 
-            await ctx.ReplyAsync(embed);
+            await ctx.RespondAsync(embed);
         }
 
 
@@ -98,7 +98,7 @@ namespace PacManBot.Commands.Modules
                 content += $" **|** `Shard {ctx.Client.ShardId + 1}/{ctx.Client.ShardCount}`";
             }
 
-            await message.ReplyAsync(content);                   
+            await message.ModifyAsync(content);                   
         }
 
 
@@ -117,7 +117,7 @@ namespace PacManBot.Commands.Modules
                 embed.AddField(name, Games.AllGames.Where(g => g.GameName == name).Count().ToString(), true);
             }
 
-            await ctx.ReplyAsync(embed);
+            await ctx.RespondAsync(embed);
         }
 
 

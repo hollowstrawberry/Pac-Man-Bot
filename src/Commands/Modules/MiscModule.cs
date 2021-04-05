@@ -58,7 +58,7 @@ namespace PacManBot.Commands.Modules
                 return;
             }
 
-            if (game.UserId.Contains(ctx.User.Id) || ctx.UserCan(Permissions.ManageMessages)
+            if (ctx.Guild is null || game.UserId.Contains(ctx.User.Id) || ctx.UserCan(Permissions.ManageMessages)
                 || DateTime.Now - game.LastPlayed > TimeSpan.FromSeconds(60))
             {
                 var msg = await game.GetMessageAsync();
@@ -84,7 +84,7 @@ namespace PacManBot.Commands.Modules
             }
             else
             {
-                await ctx.RespondAsync("You can't cancel this game because someone else is still playing! Try again in a minute.");
+                await ctx.RespondAsync("You can't cancel this game because people are playing! Try again in a minute.");
             }
         }
 
