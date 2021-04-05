@@ -38,14 +38,14 @@ namespace PacManBot.Commands.Modules
         {
             if (!ctx.BotCan(Permissions.ManageMessages))
             {
-                await ctx.RespondAsync("The bot needs the permission to Manage Messages to clear messages!\n" +
+                await ctx.ReplyAsync("The bot needs the permission to Manage Messages to clear messages!\n" +
                     "Also, game inputs are cleared automatically when the bot has this permission enabled.");
                 return;
             }
 
             if (amount < 1 || amount > 100)
             {
-                await ctx.RespondAsync("Please choose a reasonable number of messages to delete.");
+                await ctx.ReplyAsync("Please choose a reasonable number of messages to delete.");
                 return;
             }
 
@@ -82,7 +82,7 @@ namespace PacManBot.Commands.Modules
 
             if (error is not null)
             {
-                await ctx.RespondAsync($"{CustomEmoji.Cross} {error}");
+                await ctx.ReplyAsync($"{CustomEmoji.Cross} {error}");
                 return;
             }
 
@@ -117,7 +117,7 @@ namespace PacManBot.Commands.Modules
                 if (otherChannel.Type == ChannelType.Text) channel = otherChannel;
                 else
                 {
-                    await ctx.RespondAsync($"{otherChannel.Name} is not a text channel!");
+                    await ctx.ReplyAsync($"{otherChannel.Name} is not a text channel!");
                     return;
                 }
             }
@@ -133,7 +133,7 @@ namespace PacManBot.Commands.Modules
                     return;
                 }
 
-                await ctx.RespondAsync(
+                await ctx.ReplyAsync(
                     $"❗__**Warning**__\nYou're about to set the channel {channel.Mention} to **No Prefix mode**.\n" +
                     $"All commands will work without the need of a prefix such as `{Storage.GetPrefix(ctx)}`\n" +
                     $"This can lead to a lot of **unnecessary spam**. It's a good idea only in " +
@@ -155,7 +155,7 @@ namespace PacManBot.Commands.Modules
             catch (Exception e)
             {
                 Log.Exception($"Toggling prefix for {ctx.Channel.DebugName()}", e);
-                await ctx.RespondAsync($"{CustomEmoji.Cross} Oops, something went wrong. {ContactMessage(ctx)}");
+                await ctx.ReplyAsync($"{CustomEmoji.Cross} Oops, something went wrong. {ContactMessage(ctx)}");
             }
         }
 

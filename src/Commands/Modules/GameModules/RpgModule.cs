@@ -28,7 +28,7 @@ namespace PacManBot.Commands.Modules
         {
             if (Game(ctx) is null)
             {
-                await ctx.RespondAsync($"You haven't started your adventure! Use `{Storage.GetPrefix(ctx)}rpg start` to create a character.");
+                await ctx.ReplyAsync($"You haven't started your adventure! Use `{Storage.GetPrefix(ctx)}rpg start` to create a character.");
                 return;
             }
 
@@ -43,7 +43,7 @@ namespace PacManBot.Commands.Modules
                     var timeLeft = TimeSpan.FromSeconds(30) - (DateTime.Now - Game(ctx).lastBattle);
                     if (timeLeft > TimeSpan.Zero)
                     {
-                        await ctx.RespondAsync($"{CustomEmoji.Cross} You may battle again in {timeLeft.Humanized(empty: "1 second")}");
+                        await ctx.ReplyAsync($"{CustomEmoji.Cross} You may battle again in {timeLeft.Humanized(empty: "1 second")}");
                         return;
                     }
 
@@ -71,13 +71,13 @@ namespace PacManBot.Commands.Modules
 
                 if (skill is null)
                 {
-                    await ctx.RespondAsync($"Unknown RPG command! Do `{ctx.Prefix}rpg manual` for game instructions," +
+                    await ctx.ReplyAsync($"Unknown RPG command! Do `{ctx.Prefix}rpg manual` for game instructions," +
                         $" or `{ctx.Prefix}help rpg` for a list of commands.");
                     return;
                 }
 
                 string response = await UseActiveSkill(ctx, skill);
-                if (response is not null) await ctx.RespondAsync(response);
+                if (response is not null) await ctx.ReplyAsync(response);
             }
         }
 
@@ -155,8 +155,8 @@ namespace PacManBot.Commands.Modules
 
             if (rpg is null)
             {
-                if (otherMember is null) await ctx.RespondAsync($"You can use `{ctx.Prefix}rpg start` to start your adventure."); 
-                else await ctx.RespondAsync("This person hasn't started their adventure.");
+                if (otherMember is null) await ctx.ReplyAsync($"You can use `{ctx.Prefix}rpg start` to start your adventure."); 
+                else await ctx.ReplyAsync("This person hasn't started their adventure.");
                 return;
             }
 
@@ -170,7 +170,7 @@ namespace PacManBot.Commands.Modules
         {
             if (Game(ctx) is null)
             {
-                await ctx.RespondAsync($"You haven't started your adventure! Use `{Storage.GetPrefix(ctx)}rpg start` to create a character.");
+                await ctx.ReplyAsync($"You haven't started your adventure! Use `{Storage.GetPrefix(ctx)}rpg start` to create a character.");
                 return;
             }
 
@@ -185,18 +185,18 @@ namespace PacManBot.Commands.Modules
         {
             if (Game(ctx) is null)
             {
-                await ctx.RespondAsync($"You haven't started your adventure! Use `{Storage.GetPrefix(ctx)}rpg start` to create a character.");
+                await ctx.ReplyAsync($"You haven't started your adventure! Use `{Storage.GetPrefix(ctx)}rpg start` to create a character.");
                 return;
             }
 
             if (Game(ctx).lastHeal > Game(ctx).lastBattle && Game(ctx).State == GameState.Active)
             {
-                await ctx.RespondAsync($"{CustomEmoji.Cross} You already healed during this battle.");
+                await ctx.ReplyAsync($"{CustomEmoji.Cross} You already healed during this battle.");
                 return;
             }
             else if (Game(ctx).IsPvp && Game(ctx).PvpBattleConfirmed)
             {
-                await ctx.RespondAsync($"{CustomEmoji.Cross} You can't heal in a PVP battle.");
+                await ctx.ReplyAsync($"{CustomEmoji.Cross} You can't heal in a PVP battle.");
                 return;
             }
 
@@ -204,7 +204,7 @@ namespace PacManBot.Commands.Modules
 
             if (timeLeft > TimeSpan.Zero)
             {
-                await ctx.RespondAsync($"{CustomEmoji.Cross} You may heal again in {timeLeft.Humanized(empty: "1 second")}");
+                await ctx.ReplyAsync($"{CustomEmoji.Cross} You may heal again in {timeLeft.Humanized(empty: "1 second")}");
                 return;
             }
 
@@ -214,7 +214,7 @@ namespace PacManBot.Commands.Modules
             Game(ctx).player.Buffs.Clear();
             await SaveGameAsync(ctx);
 
-            await ctx.RespondAsync($"💟 Fully restored!");
+            await ctx.ReplyAsync($"💟 Fully restored!");
 
             if (Game(ctx).State == GameState.Active)
             {
@@ -240,13 +240,13 @@ namespace PacManBot.Commands.Modules
         {
             if (Game(ctx) is null)
             {
-                await ctx.RespondAsync($"You haven't started your adventure! Use `{Storage.GetPrefix(ctx)}rpg start` to create a character.");
+                await ctx.ReplyAsync($"You haven't started your adventure! Use `{Storage.GetPrefix(ctx)}rpg start` to create a character.");
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(itemName))
             {
-                await ctx.RespondAsync("You must specify an item from your inventory.");
+                await ctx.ReplyAsync("You must specify an item from your inventory.");
                 return;
             }
 
@@ -265,18 +265,18 @@ namespace PacManBot.Commands.Modules
 
             if (bestPercent < 0.69)
             {
-                await ctx.RespondAsync($"Can't find a weapon with that name in your inventory." +
+                await ctx.ReplyAsync($"Can't find a weapon with that name in your inventory." +
                     $" Did you mean `{bestMatch}`?".If(bestPercent > 0.39));
                 return;
             }
             if (bestMatch is Armor && Game(ctx).State == GameState.Active)
             {
-                await ctx.RespondAsync("You can't switch armors mid-battle (but you can switch weapons).");
+                await ctx.ReplyAsync("You can't switch armors mid-battle (but you can switch weapons).");
             }
 
             Game(ctx).player.EquipItem(bestMatch.Key);
             await SaveGameAsync(ctx);
-            await ctx.RespondAsync($"⚔ Equipped `{bestMatch}`.");
+            await ctx.ReplyAsync($"⚔ Equipped `{bestMatch}`.");
 
             if (Game(ctx).State == GameState.Active && !Game(ctx).IsPvp)
             {
@@ -298,23 +298,23 @@ namespace PacManBot.Commands.Modules
         {
             if (Game(ctx) is null)
             {
-                await ctx.RespondAsync($"You haven't started your adventure! Use `{Storage.GetPrefix(ctx)}rpg start` to create a character.");
+                await ctx.ReplyAsync($"You haven't started your adventure! Use `{Storage.GetPrefix(ctx)}rpg start` to create a character.");
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(skill))
             {
-                await ctx.RespondAsync("Please specify a skill and amount to spend.");
+                await ctx.ReplyAsync("Please specify a skill and amount to spend.");
                 return;
             }
             if (amount < 1)
             {
-                await ctx.RespondAsync("Please specify a valid amount of skill points to spend.");
+                await ctx.ReplyAsync("Please specify a valid amount of skill points to spend.");
                 return;
             }
             if (amount > Game(ctx).player.skillPoints)
             {
-                await ctx.RespondAsync("You don't have that many skill points!");
+                await ctx.ReplyAsync("You don't have that many skill points!");
                 return;
             }
 
@@ -333,13 +333,13 @@ namespace PacManBot.Commands.Modules
                     type = SkillType.Crit;
                     break;
                 default:
-                    await ctx.RespondAsync("That's not a valid skill name! You can choose power, grit or focus.");
+                    await ctx.ReplyAsync("That's not a valid skill name! You can choose power, grit or focus.");
                     return;
             }
 
             if (Game(ctx).player.spentSkill[type] + amount > RpgPlayer.SkillMax)
             {
-                await ctx.RespondAsync($"A skill line can only have {RpgPlayer.SkillMax} skill points invested.");
+                await ctx.ReplyAsync($"A skill line can only have {RpgPlayer.SkillMax} skill points invested.");
             }
 
             int oldValue = Game(ctx).player.spentSkill[type];
@@ -375,7 +375,7 @@ namespace PacManBot.Commands.Modules
         {
             if (Game(ctx) is null)
             {
-                await ctx.RespondAsync($"You haven't started your adventure! Use `{Storage.GetPrefix(ctx)}rpg start` to create a character.");
+                await ctx.ReplyAsync($"You haven't started your adventure! Use `{Storage.GetPrefix(ctx)}rpg start` to create a character.");
                 return;
             }
 
@@ -383,12 +383,12 @@ namespace PacManBot.Commands.Modules
 
             if (string.IsNullOrWhiteSpace(name))
             {
-                await ctx.RespondAsync("Say your hero's new name:");
+                await ctx.ReplyAsync("Say your hero's new name:");
 
                 msg = await ctx.GetResponseAsync();
                 if (msg is null)
                 {
-                    await ctx.RespondAsync("Timed out 💨");
+                    await ctx.ReplyAsync("Timed out 💨");
                     return;
                 }
 
@@ -398,7 +398,7 @@ namespace PacManBot.Commands.Modules
 
             if (name.Length > RpgGame.NameCharLimit)
             {
-                await ctx.RespondAsync("Your name can't be longer than 32 characters.");
+                await ctx.ReplyAsync("Your name can't be longer than 32 characters.");
                 return;
             };
 
@@ -414,18 +414,18 @@ namespace PacManBot.Commands.Modules
         {
             if (Game(ctx) is null)
             {
-                await ctx.RespondAsync($"You haven't started your adventure! Use `{Storage.GetPrefix(ctx)}rpg start` to create a character.");
+                await ctx.ReplyAsync($"You haven't started your adventure! Use `{Storage.GetPrefix(ctx)}rpg start` to create a character.");
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(colorString))
             {
-                await ctx.RespondAsync("Say the name or hex code of your new color:");
+                await ctx.ReplyAsync("Say the name or hex code of your new color:");
 
                 var response = await ctx.GetResponseAsync(60);
                 if (response is null)
                 {
-                    await ctx.RespondAsync("Timed out 💨");
+                    await ctx.ReplyAsync("Timed out 💨");
                     return;
                 }
 
@@ -437,7 +437,7 @@ namespace PacManBot.Commands.Modules
 
             if (color is null)
             {
-                await ctx.RespondAsync($"{CustomEmoji.Cross} That is neither a valid color name or hex code. Example: `red` or `#FF0000`");
+                await ctx.ReplyAsync($"{CustomEmoji.Cross} That is neither a valid color name or hex code. Example: `red` or `#FF0000`");
                 return;
             }
 
@@ -459,13 +459,13 @@ namespace PacManBot.Commands.Modules
         {
             if (Game(ctx) is null)
             {
-                await ctx.RespondAsync($"You haven't started your adventure! Use `{Storage.GetPrefix(ctx)}rpg start` to create a character.");
+                await ctx.ReplyAsync($"You haven't started your adventure! Use `{Storage.GetPrefix(ctx)}rpg start` to create a character.");
                 return;
             }
 
             if (Game(ctx).State != GameState.Active)
             {
-                await ctx.RespondAsync("You're not fighting anything.");
+                await ctx.ReplyAsync("You're not fighting anything.");
             }
 
             string reply;
@@ -495,36 +495,36 @@ namespace PacManBot.Commands.Modules
         {
             if (Game(ctx) is null)
             {
-                await ctx.RespondAsync($"You haven't started your adventure! Use `{Storage.GetPrefix(ctx)}rpg start` to create a character.");
+                await ctx.ReplyAsync($"You haven't started your adventure! Use `{Storage.GetPrefix(ctx)}rpg start` to create a character.");
                 return;
             }
 
             if (Game(ctx).State == GameState.Active)
             {
-                await ctx.RespondAsync("You're already busy fighting.");
+                await ctx.ReplyAsync("You're already busy fighting.");
                 return;
             }
 
             if (otherMember is null)
             {
-                await ctx.RespondAsync("Can't find that user to challenge!");
+                await ctx.ReplyAsync("Can't find that user to challenge!");
                 return;
             }
             if (otherMember.Id == ctx.User.Id)
             {
-                await ctx.RespondAsync("You can't battle yourself, smart guy.");
+                await ctx.ReplyAsync("You can't battle yourself, smart guy.");
                 return;
             }
 
             var otherGame = Games.GetForUser<RpgGame>(otherMember.Id);
             if (otherGame is null)
             {
-                await ctx.RespondAsync("This person doesn't have a hero.");
+                await ctx.ReplyAsync("This person doesn't have a hero.");
                 return;
             }
             if (otherGame.State == GameState.Active)
             {
-                await ctx.RespondAsync("This person is already busy fighting.");
+                await ctx.ReplyAsync("This person is already busy fighting.");
                 return;
             }
 
@@ -549,14 +549,14 @@ namespace PacManBot.Commands.Modules
                 Game(ctx).ResetBattle(GameState.Cancelled);
 
                 try { await msg.ModifyAsync("Timed out 💨", null); }
-                catch (NotFoundException) { await ctx.RespondAsync("Timed out 💨"); }
+                catch (NotFoundException) { await ctx.ReplyAsync("Timed out 💨"); }
             }
             else if (response.Content.Equals("cancel", StringComparison.OrdinalIgnoreCase))
             {
                 Game(ctx).ResetBattle(GameState.Cancelled);
 
                 try { await msg.ModifyAsync("Battle cancelled ⚔", null); }
-                catch (NotFoundException) { await ctx.RespondAsync("Battle cancelled ⚔"); }
+                catch (NotFoundException) { await ctx.ReplyAsync("Battle cancelled ⚔"); }
 
                 await response.AutoReactAsync();
             }
@@ -602,20 +602,20 @@ namespace PacManBot.Commands.Modules
         {
             if (Game(ctx) is null)
             {
-                await ctx.RespondAsync($"You haven't started your adventure! Use `{Storage.GetPrefix(ctx)}rpg start` to create a character.");
+                await ctx.ReplyAsync($"You haven't started your adventure! Use `{Storage.GetPrefix(ctx)}rpg start` to create a character.");
                 return;
             }
 
-            await ctx.RespondAsync(
+            await ctx.ReplyAsync(
                 $"❗ You're about to completely delete your progress in ReactionRPG.\n" +
                 $"Are you sure you want to delete your level {Game(ctx).player.Level} hero? (Yes/No)");
 
             if (await ctx.GetYesResponseAsync() ?? false)
             {
                 EndGame(ctx);
-                await ctx.RespondAsync("Hero deleted 💀");
+                await ctx.ReplyAsync("Hero deleted 💀");
             }
-            else await ctx.RespondAsync("Hero not deleted ⚔");
+            else await ctx.ReplyAsync("Hero not deleted ⚔");
         }
 
 

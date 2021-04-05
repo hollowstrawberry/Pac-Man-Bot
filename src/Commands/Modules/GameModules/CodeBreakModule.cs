@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
+using PacManBot.Extensions;
 using PacManBot.Games.Concrete;
 
 namespace PacManBot.Commands.Modules
@@ -24,7 +25,7 @@ namespace PacManBot.Commands.Modules
 
             if (digits < 2 || digits > 10)
             {
-                await ctx.RespondAsync("The amount of digits must be between 2 and 10.");
+                await ctx.ReplyAsync("The amount of digits must be between 2 and 10.");
                 return;
             }
 

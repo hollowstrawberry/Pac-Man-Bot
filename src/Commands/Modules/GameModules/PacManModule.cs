@@ -69,7 +69,7 @@ namespace PacManBot.Commands.Modules
             }
             catch (InvalidMapException e)
             {
-                await ctx.RespondAsync(
+                await ctx.ReplyAsync(
                     $"That's not a valid map!: {e.Message}.\n" +
                     $"Use `{Storage.GetPrefix(ctx)}custompacman` by itself for a guide on custom maps.");
                 return;
@@ -89,7 +89,7 @@ namespace PacManBot.Commands.Modules
         {
             if (Game(ctx) is null)
             {
-                await ctx.RespondAsync("There is no active Pac-Man game in this channel!");
+                await ctx.ReplyAsync("There is no active Pac-Man game in this channel!");
                 return;
             }
 

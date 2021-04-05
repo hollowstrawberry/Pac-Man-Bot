@@ -29,7 +29,7 @@ namespace PacManBot.Commands.Modules
             var game = Game(ctx);
             if (game is null)
             {
-                await ctx.RespondAsync("There is no active game in this channel!");
+                await ctx.ReplyAsync("There is no active game in this channel!");
                 return;
             }
 
@@ -54,7 +54,7 @@ namespace PacManBot.Commands.Modules
             var game = Game(ctx);
             if (game is null)
             {
-                await ctx.RespondAsync("There is no active game in this channel!");
+                await ctx.ReplyAsync("There is no active game in this channel!");
                 return;
             }
 
@@ -95,11 +95,11 @@ namespace PacManBot.Commands.Modules
         {
             if (faces < 2 || faces > 100)
             {
-                await ctx.RespondAsync("The dice must have between 2 and 100 faces.");
+                await ctx.ReplyAsync("The dice must have between 2 and 100 faces.");
                 return;
             }
             int dice = Program.Random.Next(1, faces + 1);
-            await ctx.RespondAsync($"🎲{dice.ToString().Select(x => CustomEmoji.Number[x - '0']).JoinString()}");
+            await ctx.ReplyAsync($"🎲{dice.ToString().Select(x => CustomEmoji.Number[x - '0']).JoinString()}");
         }
 
 
@@ -107,7 +107,7 @@ namespace PacManBot.Commands.Modules
         [Description("Flip a coin, heads or tails.")]
         public async Task CoinFlip(CommandContext ctx)
         {
-            await ctx.RespondAsync(Program.Random.OneIn(2) ? "🤴 **Heads!**" : "⚖️ **Tails!**");
+            await ctx.ReplyAsync(Program.Random.OneIn(2) ? "🤴 **Heads!**" : "⚖️ **Tails!**");
         }
 
 
@@ -117,8 +117,8 @@ namespace PacManBot.Commands.Modules
         public async Task BlobDance(CommandContext ctx, ulong number = 0)
         {
             if (number < 1) await ctx.Message.CreateReactionAsync(CustomEmoji.EBlobDance);
-            else if (number <= 5) await ctx.RespondAsync(CustomEmoji.BlobDance.Repeat((int)number));
-            else if (number <= 1000000) await ctx.RespondAsync("That's too many.");
+            else if (number <= 5) await ctx.ReplyAsync(CustomEmoji.BlobDance.Repeat((int)number));
+            else if (number <= 1000000) await ctx.ReplyAsync("That's too many.");
             else if (ctx.UserCan(Permissions.ManageMessages)) // Message ID
             {
                 if (await ctx.Channel.GetMessageAsync(number) is DiscordMessage message)

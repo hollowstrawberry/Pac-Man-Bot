@@ -60,7 +60,7 @@ namespace PacManBot.Commands.Modules
             DiscordChannel dm;
             try
             {
-                dm = Input.CreateDmChannelAsync(await ctx.Member.CreateDmChannelAsync());
+                dm = await Input.CreateDmChannelAsync(ctx.Member);
                 await dm.SendMessageAsync(
                     $"Send the secret word or phrase for the {Game(ctx).GameName} game in {ctx.Channel.Mention}:");
             }

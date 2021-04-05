@@ -53,7 +53,7 @@ namespace PacManBot.Commands.Modules
                 embed.AddField(name, desc, true);
             }
 
-            await ctx.RespondAsync(embed);
+            await ctx.ReplyAsync(embed);
         }
 
 
@@ -79,7 +79,7 @@ namespace PacManBot.Commands.Modules
 
                 .AddField("Uptime", (DateTime.Now - process.StartTime).Humanized(3), false);
 
-            await ctx.RespondAsync(embed);
+            await ctx.ReplyAsync(embed);
         }
 
 
@@ -98,7 +98,7 @@ namespace PacManBot.Commands.Modules
                 content += $" **|** `Shard {ctx.Client.ShardId + 1}/{ctx.Client.ShardCount}`";
             }
 
-            await message.ModifyAsync(content);                   
+            await message.ReplyAsync(content);                   
         }
 
 
@@ -117,7 +117,7 @@ namespace PacManBot.Commands.Modules
                 embed.AddField(name, Games.AllGames.Where(g => g.GameName == name).Count().ToString(), true);
             }
 
-            await ctx.RespondAsync(embed);
+            await ctx.ReplyAsync(embed);
         }
 
 
@@ -144,7 +144,7 @@ namespace PacManBot.Commands.Modules
                 }
             }
 
-            await ctx.RespondAsync(message);
+            await ctx.ReplyAsync(message);
         }
 
 
@@ -160,7 +160,7 @@ namespace PacManBot.Commands.Modules
                 .WithUrl(Content.inviteLink)
                 .AddField($"➡ <{Content.inviteLink}>", "Thanks for inviting Pac-Man Bot!");
 
-            await ctx.RespondAsync(embed);
+            await ctx.ReplyAsync(embed);
         }
 
 
@@ -175,7 +175,7 @@ namespace PacManBot.Commands.Modules
                 .WithColor(Colors.PacManYellow)
                 .WithThumbnail("https://cdn.discordapp.com/icons/409803292219277313/d41cc5c5674ff9be45615b73738b85e2.jpg");
 
-            await ctx.RespondAsync(embed);
+            await ctx.ReplyAsync(embed);
         }
 
 
@@ -190,7 +190,7 @@ namespace PacManBot.Commands.Modules
                 .WithColor(Colors.PacManYellow)
                 .WithThumbnail("https://cdn.discordapp.com/attachments/541768631445618689/541768699929952257/GitHub.png");
 
-            await ctx.RespondAsync(embed);
+            await ctx.ReplyAsync(embed);
         }
 
 
@@ -208,7 +208,7 @@ namespace PacManBot.Commands.Modules
                     $"Donations support development and pay the hosting costs of the bot.\n" +
                     $"[Click here to go to my PayPal](http://paypal.me/samrux)");
 
-            await ctx.RespondAsync(embed);
+            await ctx.ReplyAsync(embed);
         }
 
 
@@ -221,7 +221,7 @@ namespace PacManBot.Commands.Modules
             {
                 if (string.IsNullOrWhiteSpace(message))
                 {
-                    await ctx.RespondAsync("You may use this command to send a message to the bot's developer.");
+                    await ctx.ReplyAsync("You may use this command to send a message to the bot's developer.");
                     return;
                 }
 
@@ -235,7 +235,7 @@ namespace PacManBot.Commands.Modules
                         {
                             string content = $"```diff\n+Feedback received: {ctx.User.DebugName()}```\n{message}".Truncate(2000);
                             await ownerMember.SendMessageAsync(content);
-                            await ctx.RespondAsync($"{CustomEmoji.Check} Message sent. Thank you!");
+                            await ctx.ReplyAsync($"{CustomEmoji.Check} Message sent. Thank you!");
                             return;
                         }
                 throw new InvalidOperationException("Couldn't find owner member");
@@ -243,7 +243,7 @@ namespace PacManBot.Commands.Modules
             catch (Exception e)
             {
                 Log.Exception($"Sending feedback from {ctx.User.DebugName()} at {ctx.Channel.DebugName()}", e);
-                await ctx.RespondAsync("Oops, I didn't catch that, please try again. " +
+                await ctx.ReplyAsync("Oops, I didn't catch that, please try again. " +
                     "If this keeps happening join the support server to let my owner know.");
             }
         }

@@ -99,7 +99,7 @@ namespace PacManBot.Commands
             if (existing is not null)
             {
                 string prefix = Storage.GetPrefix(ctx.Channel);
-                await ctx.RespondAsync(existing.UserId.Contains(ctx.User.Id)
+                await ctx.ReplyAsync(existing.UserId.Contains(ctx.User.Id)
                     ? $"You're already playing a game in this channel!\nUse `{prefix}cancel` if you want to cancel it."
                     : $"There is already a different game in this channel!\nWait until it's finished or try doing `{prefix}cancel`");
                 return true;

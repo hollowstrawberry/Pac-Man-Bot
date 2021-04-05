@@ -40,12 +40,12 @@ namespace PacManBot.Commands.Modules
         {
             if (size < 5 || size > 14)
             {
-                await ctx.RespondAsync("The board size must range between 5 and 14");
+                await ctx.ReplyAsync("The board size must range between 5 and 14");
                 return;
             }
             if (difficulty < 1 || difficulty > 9)
             {
-                await ctx.RespondAsync("The difficulty must range between 1 and 9");
+                await ctx.ReplyAsync("The difficulty must range between 1 and 9");
                 return;
             }
 

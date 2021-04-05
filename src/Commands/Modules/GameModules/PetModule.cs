@@ -48,14 +48,14 @@ namespace PacManBot.Commands.Modules
                 pet = Games.GetForUser<PetGame>(member.Id);
                 if (pet is null)
                 {
-                    await ctx.RespondAsync("This person doesn't have a pet :(");
+                    await ctx.ReplyAsync("This person doesn't have a pet :(");
                     return;
                 }
             }
 
             if (pet is null)
             {
-                await ctx.RespondAsync(AdoptPetMessage(ctx));
+                await ctx.ReplyAsync(AdoptPetMessage(ctx));
                 return;
             }
 
@@ -76,14 +76,14 @@ namespace PacManBot.Commands.Modules
                 pet = Games.GetForUser<PetGame>(member.Id);
                 if (pet is null)
                 {
-                    await ctx.RespondAsync("This person doesn't have a pet :(");
+                    await ctx.ReplyAsync("This person doesn't have a pet :(");
                     return;
                 }
             }
 
             if (pet is null)
             {
-                await ctx.RespondAsync(AdoptPetMessage(ctx));
+                await ctx.ReplyAsync(AdoptPetMessage(ctx));
                 return;
             }
 
@@ -97,13 +97,13 @@ namespace PacManBot.Commands.Modules
         {
             if (Game(ctx) is null)
             {
-                await ctx.RespondAsync(AdoptPetMessage(ctx));
+                await ctx.ReplyAsync(AdoptPetMessage(ctx));
                 return;
             }
 
             if (!await Game(ctx).TryFeedAsync())
             {
-                await ctx.RespondAsync($"{CustomEmoji.Cross} Your pet is already full! (-1 energy)");
+                await ctx.ReplyAsync($"{CustomEmoji.Cross} Your pet is already full! (-1 energy)");
                 return;
             }
             await ctx.Message.CreateReactionAsync(Program.Random.Choose(Content.petFoodEmotes).ToEmoji());
@@ -116,13 +116,13 @@ namespace PacManBot.Commands.Modules
         {
             if (Game(ctx) is null)
             {
-                await ctx.RespondAsync(AdoptPetMessage(ctx));
+                await ctx.ReplyAsync(AdoptPetMessage(ctx));
                 return;
             }
 
             if (!await Game(ctx).TryCleanAsync())
             {
-                await ctx.RespondAsync($"{CustomEmoji.Cross} Your pet is already clean! (-1 energy)");
+                await ctx.ReplyAsync($"{CustomEmoji.Cross} Your pet is already clean! (-1 energy)");
                 return;
             }
             await ctx.Message.CreateReactionAsync(Program.Random.Choose(Content.petCleanEmotes).ToEmoji());
@@ -136,7 +136,7 @@ namespace PacManBot.Commands.Modules
         {
             if (Game(ctx) is null)
             {
-                await ctx.RespondAsync(AdoptPetMessage(ctx));
+                await ctx.ReplyAsync(AdoptPetMessage(ctx));
                 return;
             }
 
@@ -145,7 +145,7 @@ namespace PacManBot.Commands.Modules
             {
                 if ((otherPet = Games.GetForUser<PetGame>(otherMember.Id)) is null)
                 {
-                    await ctx.RespondAsync("This person doesn't have a pet :(");
+                    await ctx.ReplyAsync("This person doesn't have a pet :(");
                     return;
                 }
                 
@@ -153,7 +153,7 @@ namespace PacManBot.Commands.Modules
 
                 if (otherPet.happiness.Ceiling() == PetGame.MaxStat)
                 {
-                    await ctx.RespondAsync("This person's pet doesn't want to play right now!");
+                    await ctx.ReplyAsync("This person's pet doesn't want to play right now!");
                     return;
                 }
             }
@@ -178,7 +178,7 @@ namespace PacManBot.Commands.Modules
                     ? "Your pet doesn't want to play anymore! (-1 energy)"
                     : "Your pet is too tired! It needs 5 energy, or for someone else's pet to encourage it to play.";
 
-                await ctx.RespondAsync($"{CustomEmoji.Cross} {message}");
+                await ctx.ReplyAsync($"{CustomEmoji.Cross} {message}");
             }
         }
 
@@ -189,7 +189,7 @@ namespace PacManBot.Commands.Modules
         {
             if (Game(ctx) is null)
             {
-                await ctx.RespondAsync(AdoptPetMessage(ctx));
+                await ctx.ReplyAsync(AdoptPetMessage(ctx));
                 return;
             }
 
@@ -198,12 +198,12 @@ namespace PacManBot.Commands.Modules
             {
                 Game(ctx).happiness = Math.Max(0, Game(ctx).happiness - 1);
                 await SaveGameAsync(ctx);
-                await ctx.RespondAsync($"{CustomEmoji.Cross} Your pet is not tired! (-1 happiness)");
+                await ctx.ReplyAsync($"{CustomEmoji.Cross} Your pet is not tired! (-1 happiness)");
             }
 
             string message = Game(ctx).asleep ? "Your pet is already sleeping." : "Your pet is now asleep.";
             if (!Game(ctx).asleep) await Game(ctx).ToggleSleepAsync();
-            await ctx.RespondAsync($"{Program.Random.Choose(Content.petSleepEmotes)} {message}");
+            await ctx.ReplyAsync($"{Program.Random.Choose(Content.petSleepEmotes)} {message}");
         }
 
 
@@ -213,14 +213,14 @@ namespace PacManBot.Commands.Modules
         {
             if (Game(ctx) is null)
             {
-                await ctx.RespondAsync(AdoptPetMessage(ctx));
+                await ctx.ReplyAsync(AdoptPetMessage(ctx));
                 return;
             }
 
             Game(ctx).UpdateStats();
             var message = Game(ctx).asleep ? "🌅 You wake up your pet." : "🌅 Your pet is already awake.";
             if (Game(ctx).asleep) await Game(ctx).ToggleSleepAsync();
-            await ctx.RespondAsync(message);
+            await ctx.ReplyAsync(message);
         }
 
 
@@ -230,7 +230,7 @@ namespace PacManBot.Commands.Modules
         {
             if (Game(ctx) is null)
             {
-                await ctx.RespondAsync(AdoptPetMessage(ctx));
+                await ctx.ReplyAsync(AdoptPetMessage(ctx));
                 return;
             }
 
@@ -238,12 +238,12 @@ namespace PacManBot.Commands.Modules
 
             if (string.IsNullOrWhiteSpace(name))
             {
-                await ctx.RespondAsync("Say your pet's new name:");
+                await ctx.ReplyAsync("Say your pet's new name:");
 
                 msg = await ctx.GetResponseAsync();
                 if (msg is null)
                 {
-                    await ctx.RespondAsync("Timed out 💨");
+                    await ctx.ReplyAsync("Timed out 💨");
                     return;
                 }
 
@@ -253,7 +253,7 @@ namespace PacManBot.Commands.Modules
 
             if (name.Length > PetGame.NameCharLimit)
             {
-                await ctx.RespondAsync($"{CustomEmoji.Cross} Pet name can't go above 32 characters!");
+                await ctx.ReplyAsync($"{CustomEmoji.Cross} Your pet's name can't be longer than 32 characters!");
                 return;
             }
 
@@ -269,7 +269,7 @@ namespace PacManBot.Commands.Modules
         {
             if (Game(ctx) is null)
             {
-                await ctx.RespondAsync(AdoptPetMessage(ctx));
+                await ctx.ReplyAsync(AdoptPetMessage(ctx));
                 return;
             }
 
@@ -278,12 +278,12 @@ namespace PacManBot.Commands.Modules
 
             if (string.IsNullOrWhiteSpace(url))
             {
-                await ctx.RespondAsync("Send your pet's new image or image URL, or \"reset\" to reset it.");
+                await ctx.ReplyAsync("Send your pet's new image or image URL, or \"reset\" to reset it.");
 
                 msg = await ctx.GetResponseAsync(120);
                 if (msg is null)
                 {
-                    await ctx.RespondAsync("Timed out 💨");
+                    await ctx.ReplyAsync("Timed out 💨");
                     return;
                 }
 
@@ -294,12 +294,12 @@ namespace PacManBot.Commands.Modules
             if (url.ToLowerInvariant() == "reset")
             {
                 await Game(ctx).TrySetImageUrlAsync(null);
-                await ctx.RespondAsync($"{CustomEmoji.Check} Pet image reset!");
+                await ctx.ReplyAsync($"{CustomEmoji.Check} Pet image reset!");
             }
 
             if (!await Game(ctx).TrySetImageUrlAsync(url))
             {
-                await ctx.RespondAsync($"{CustomEmoji.Cross} Invalid image!");
+                await ctx.ReplyAsync($"{CustomEmoji.Cross} Invalid image!");
                 return;
             }
 
@@ -313,7 +313,7 @@ namespace PacManBot.Commands.Modules
         {
             if (Game(ctx) is null)
             {
-                await ctx.RespondAsync(AdoptPetMessage(ctx));
+                await ctx.ReplyAsync(AdoptPetMessage(ctx));
                 return;
             }
 
@@ -337,13 +337,13 @@ namespace PacManBot.Commands.Modules
                         ? $"{CustomEmoji.Cross} That's enough petting! {60 - (int)passed.TotalSeconds} seconds left."
                         : $"{CustomEmoji.Cross} You may pet once a minute in guilds. You can pet more in DMs with the bot.";
                         
-                    await ctx.RespondAsync(response);
+                    await ctx.ReplyAsync(response);
                 }
             }
             else
             {
                 Game(ctx).timesPetSinceTimerStart += 1;
-                await ctx.RespondAsync(await Game(ctx).DoPetAsync());
+                await ctx.ReplyAsync(await Game(ctx).DoPetAsync());
             }
         }
 
@@ -353,13 +353,13 @@ namespace PacManBot.Commands.Modules
         {
             if (Game(ctx) is null)
             {
-                await ctx.RespondAsync(AdoptPetMessage(ctx));
+                await ctx.ReplyAsync(AdoptPetMessage(ctx));
                 return;
             }
 
             if (Game(ctx).timesPetSinceTimerStart > 0) return;
             Game(ctx).timesPetSinceTimerStart = 10;
-            await ctx.RespondAsync("no");
+            await ctx.ReplyAsync("no");
         }
 
 
@@ -370,7 +370,7 @@ namespace PacManBot.Commands.Modules
             var pet = Games.GetForUser<PetGame>(member.Id);
             if (pet is null)
             {
-                await ctx.RespondAsync("This person doesn't have a pet :(");
+                await ctx.ReplyAsync("This person doesn't have a pet :(");
                 return;
             }
 
@@ -384,7 +384,7 @@ namespace PacManBot.Commands.Modules
         {
             if (Game(ctx) is not null)
             {
-                await ctx.RespondAsync($"You already have a pet!");
+                await ctx.ReplyAsync($"You already have a pet!");
                 return;
             }
 
@@ -401,7 +401,7 @@ namespace PacManBot.Commands.Modules
             var pet = Game(ctx);
             if (pet is null)
             {
-                await ctx.RespondAsync(AdoptPetMessage(ctx));
+                await ctx.ReplyAsync(AdoptPetMessage(ctx));
                 return;
             }
 
@@ -412,7 +412,7 @@ namespace PacManBot.Commands.Modules
                 return;
             }
 
-            await ctx.RespondAsync(
+            await ctx.ReplyAsync(
                 $"❗ Are you sure you want to release **{pet.PetName}**?\n" +
                 $"It will be gone forever, along with your stats and achievements, and you can't get it back.\n" +
                 $"Release your pet? (Yes/No)");

@@ -114,12 +114,12 @@ namespace PacManBot.Commands.Modules
             var game = Game(ctx);
             if (game is null)
             {
-                await ctx.RespondAsync($"There's no Uno game in this channel! Use `uno` to start.");
+                await ctx.ReplyAsync($"There's no Uno game in this channel! Use `uno` to start.");
                 return;
             }
             if (!game.UserId.Contains(ctx.User.Id))
             {
-                await ctx.RespondAsync($"You're not in the game.");
+                await ctx.ReplyAsync($"You're not in the game.");
                 return;
             }
 
@@ -148,22 +148,22 @@ namespace PacManBot.Commands.Modules
             var game = Game(ctx);
             if (game is null)
             {
-                await ctx.RespondAsync($"There's no Uno game in this channel! Use `{ctx.Prefix}uno` to start.");
+                await ctx.ReplyAsync($"There's no Uno game in this channel! Use `{ctx.Prefix}uno` to start.");
                 return;
             }
             if (member is null)
             {
-                await ctx.RespondAsync($"You must specify a user to kick from the game.");
+                await ctx.ReplyAsync($"You must specify a user to kick from the game.");
                 return;
             }
             if (!game.UserId.Contains(member.Id))
             {
-                await ctx.RespondAsync($"That user is not in the game.");
+                await ctx.ReplyAsync($"That user is not in the game.");
                 return;
             }
             if (!member.IsBot && (game.UserId[Game(ctx).Turn] != member.Id || (DateTime.Now - game.LastPlayed) < TimeSpan.FromMinutes(1)))
             {
-                await ctx.RespondAsync("To remove another user they must be inactive for at least 1 minute during their turn.");
+                await ctx.ReplyAsync("To remove another user they must be inactive for at least 1 minute during their turn.");
             }
 
             await game.RemovePlayerAsync(member);

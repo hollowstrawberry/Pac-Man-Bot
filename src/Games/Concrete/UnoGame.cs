@@ -717,8 +717,7 @@ namespace PacManBot.Games.Concrete
             {
                 try
                 {
-                    var member = await player.GetUserAsync() as DiscordMember;
-                    var dm = Input.CreateDmChannelAsync(await member.CreateDmChannelAsync());
+                    var dm = await Input.CreateDmChannelAsync(await player.GetUserAsync() as DiscordMember);
                     player.message = await dm.SendMessageAsync(embed: embed.Build());
                 }
                 catch (UnauthorizedException)
