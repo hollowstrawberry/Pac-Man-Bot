@@ -33,12 +33,12 @@ namespace PacManBot.Games.Concrete
 
 
         public static readonly IReadOnlyDictionary<string, PacManInput> GameInputs = new Dictionary<string, PacManInput>() {
-            { "⬅", PacManInput.Left },
-            { "⬆", PacManInput.Up },
-            { "⬇", PacManInput.Down },
-            { "➡", PacManInput.Right },
+            { "⬅️", PacManInput.Left },
+            { "⬆️", PacManInput.Up },
+            { "⬇️", PacManInput.Down },
+            { "➡️", PacManInput.Right },
             { CustomEmoji.Help, PacManInput.Help },
-            { "⏭", PacManInput.Fast }
+            { "⏭️", PacManInput.Fast }
         };
 
         private static readonly IReadOnlyList<char> NonSolidChars = new[] {
@@ -257,6 +257,8 @@ namespace PacManBot.Games.Concrete
 
         public ValueTask<bool> IsInputAsync(DiscordEmoji emote, ulong userId = 1)
         {
+            var e = emote.ToString();
+            var list = GameInputs.Keys.ToList();
             return new ValueTask<bool>(GameInputs.ContainsKey(emote.ToString()));
         }
 

@@ -147,6 +147,7 @@ namespace PacManBot
 
             _shardsReady.TryAdd(shard.ShardId, shard);
             _input.StartListening(shard);
+
             if (_shardsReady.Count == shard.ShardCount)
             {
                 _schedule.StartTimers();

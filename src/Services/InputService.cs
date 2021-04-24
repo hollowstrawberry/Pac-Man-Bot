@@ -287,21 +287,21 @@ namespace PacManBot.Services
         /// <summary>Tries to find and execute a command. Returns whether it is successful.</summary>
         private bool Command(DiscordMessage message, DiscordClient client)
         {
-            string prefix = _storage.GetGuildPrefix(message.Channel?.Guild);
             bool requiresPrefix = _storage.RequiresPrefix(message.Channel);
 
             int? selfMentionPos = message.GetMentionCommandPos(this);
             int pos = selfMentionPos
-                ?? message.GetCommandPos(prefix)
+                ?? message.GetCommandPos(_storage.GetGuildPrefix(message.Channel?.Guild))
                 ?? (requiresPrefix ? -1 : 0);
 
             // I added a check for non-self mentions as the default prefix is < which is also the first character of discord mentions
             if (pos >= 0 && (selfMentionPos is not null || !StartsWithAnyMention.IsMatch(message.Content)))
             {
                 var commands = client.GetCommandsNext();
-                var command = commands.FindCommand(message.Content[pos..], out string rawArguments);
+                string prefix = message.Content[pos..];
+                var command = commands.FindCommand(prefix, out string rawArguments);
                 if (command is null) return false;
-                var context = commands.CreateContext(message, pos == 0 ? "" : prefix, command, rawArguments);
+                var context = commands.CreateContext(message, prefix, command, rawArguments);
                 Task.Run(() => commands.ExecuteCommandAsync(context));
                 return true;
             }
