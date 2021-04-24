@@ -152,12 +152,11 @@ namespace PacManBot
             {
                 _schedule.StartTimers();
                 await _client.UpdateStatusAsync(new DiscordActivity(_config.status, _config.statusType), UserStatus.Online, DateTime.Now);
-                if (!string.IsNullOrWhiteSpace(_config.ownerStartupMessage) && _client.GetGuild(_config.ownerGuild) is DiscordGuild guild)
+                if (!string.IsNullOrWhiteSpace(_config.ownerStartupMessage))
                 {
                     foreach (var owner in _client.CurrentApplication.Owners)
                     {
-                        var member = await guild.GetMemberAsync(owner.Id);
-                        await member.SendMessageAsync(_config.ownerStartupMessage);
+                        await _client.DmUserAsync(owner.Id, _config.ownerStartupMessage);
                     }
                 }
                 _log.Info($"All shards ready. Logged in as {_client.CurrentUser.NameandDisc()}");

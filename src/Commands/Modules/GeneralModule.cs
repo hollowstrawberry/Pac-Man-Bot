@@ -235,10 +235,10 @@ namespace PacManBot.Commands.Modules
 
                 File.AppendAllText(Files.FeedbackLog, $"[{ctx.User.DebugName()}] {message}\n\n");
 
-                foreach (var owner in ShardedClient.CurrentApplication.Owners.Select(x => ShardedClient.GetMember(x.Id)))
+                foreach (var owner in ShardedClient.CurrentApplication.Owners)
                 {
                     string content = $"```diff\n+Feedback received: {ctx.User.DebugName()}```\n{message}".Truncate(2000);
-                    await owner.SendMessageAsync(content);
+                    await ShardedClient.DmUserAsync(owner.Id, content);
                     await ctx.ReplyAsync($"{CustomEmoji.Check} Message sent. Thank you!");
                     return;
                 }

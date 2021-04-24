@@ -245,16 +245,8 @@ namespace PacManBot.Commands.Modules
                 string pre = "```diff\n+The following message was sent to you by this bot's owner." +
                              "\n-To reply to this message, use the 'feedback' command.```\n";
 
-                var member = ShardedClient.GetMember(userId);
-                if (member is null)
-                {
-                    await ctx.AutoReactAsync(false);
-                }
-                else
-                {
-                    await member.SendMessageAsync(pre + message);
-                    await ctx.AutoReactAsync();
-                }
+                await ShardedClient.DmUserAsync(userId, pre + message);
+                await ctx.AutoReactAsync();
             }
             catch (Exception e)
             {

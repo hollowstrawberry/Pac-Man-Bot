@@ -53,9 +53,6 @@ namespace PacManBot
         /// <summary>Until a long-term solution to command spam attacks is found, I can just ban channels from using the bot.</summary>
         [DataMember] public readonly ulong[] bannedChannels = Array.Empty<ulong>();
 
-        /// <summary>The support server for this bot and whereits owner can be found.</summary>
-        [DataMember] public readonly ulong ownerGuild = 409803292219277313;
-
         /// <summary>A message to DM to the bot's owner on startup.</summary>
         [DataMember] public readonly string ownerStartupMessage = "";
 

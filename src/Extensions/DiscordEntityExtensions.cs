@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
+using DSharpPlus.Net;
 using PacManBot.Constants;
 using PacManBot.Services;
 
@@ -56,6 +58,16 @@ namespace PacManBot.Extensions
         /// <summary>Deletes another user's reaction.</summary>
         public static Task DeleteReactionAsync(this DiscordMessage message, string emoji, DiscordUser user, string reason = null)
             => message.DeleteReactionAsync(emoji.ToEmoji(), user, reason);
+
+
+        /// <summary>Sends a direct message to a user given its ID</summary>
+        public static async Task DmUserAsync(this DiscordShardedClient client, ulong id, string content, DiscordEmbedBuilder embed = null)
+        {
+            var flags = BindingFlags.NonPublic | BindingFlags.Instance;
+            var api = typeof(DiscordClient).GetProperty("ApiClient", flags).GetValue(client.ShardClients.Values.First());
+            var channel = await typeof(DiscordApiClient).GetMethod("CreateDmAsync", flags).Invoke<Task<DiscordDmChannel>>(api, id);
+            await channel.SendMessageAsync(content, embed);
+        }
 
 
 
