@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Runtime.Serialization;
 using DSharpPlus;
+using DSharpPlus.Entities;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using PacManBot.Constants;
@@ -28,9 +29,6 @@ namespace PacManBot
         /// <summary>The string that defines the connection to the SQLite database in <see cref="DatabaseService"/>.</summary>
         [DataMember] public readonly string dbConnectionString = $"Data Source={Files.DefaultDatabase};";
 
-        /// <summary>Number of shards to divide the bot into. 1 shard per 1000 guilds is enough.</summary>
-        [DataMember] public readonly int shardCount = 1;
-
         /// <summary>Whether the bot should close at midnight, in order for the OS to handle its restart.</summary>
         [DataMember] public readonly bool scheduledRestart = false;
 
@@ -55,8 +53,17 @@ namespace PacManBot
         /// <summary>Until a long-term solution to command spam attacks is found, I can just ban channels from using the bot.</summary>
         [DataMember] public readonly ulong[] bannedChannels = Array.Empty<ulong>();
 
-        /// <summary>Whether to send a DM to the owner of the bot's Application on startup.</summary>
-        [DataMember] public readonly bool messageOwnerOnStartup = true;
+        /// <summary>The support server for this bot and whereits owner can be found.</summary>
+        [DataMember] public readonly ulong ownerGuild = 409803292219277313;
+
+        /// <summary>A message to DM to the bot's owner on startup.</summary>
+        [DataMember] public readonly string ownerStartupMessage = "";
+
+        /// <summary>What message to show as a status from the moment the bot starts.</summary>
+        [DataMember] public readonly ActivityType statusType = ActivityType.Playing;
+
+        /// <summary>What message to show as a status from the moment the bot starts.</summary>
+        [DataMember] public readonly string status = "with you!";
 
 
 

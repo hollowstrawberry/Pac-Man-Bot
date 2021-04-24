@@ -32,9 +32,6 @@ namespace PacManBot.Commands.Modules
         [Description("Shows relevant information, data and links about Pac-Man Bot.")]
         public async Task SendBotInfo(CommandContext ctx)
         {
-            var app = await ctx.Client.GetCurrentApplicationAsync();
-            var dsp = typeof(DiscordClient).Assembly.GetName().Version;
-
             int guilds = ShardedClient.ShardClients.Values.Select(x => x.Guilds.Count).Aggregate((a, b) => a + b);
 
             var embed = new DiscordEmbedBuilder()
@@ -44,9 +41,9 @@ namespace PacManBot.Commands.Modules
                 .AddField("Total guilds", $"{guilds}", true)
                 .AddField("Total games", $"{Games.AllGames.Count()}", true)
                 .AddField("Host", Environment.MachineName, true)
-                .AddField("Owner", app.Owners.Select(x => x.NameandDisc()).JoinString(", "), true)
+                .AddField("Owner", ShardedClient.CurrentApplication.Owners.Select(x => x.NameandDisc()).JoinString(", "), true)
                 .AddField("Bot version", Program.Version, true)
-                .AddField("Library", $"DSharpPlus {dsp.Major}.{dsp.Minor}-{dsp.Revision}", true);
+                .AddField("Library", $"DSharpPlus {typeof(DiscordClient).Assembly.GetName().Version}", true);
 
             foreach (var (name, desc) in Content.aboutFields)
             {
@@ -118,6 +115,17 @@ namespace PacManBot.Commands.Modules
             }
 
             await ctx.RespondAsync(embed);
+        }
+
+
+        [Command("games"), Aliases("game")]
+        [Description("Shows a list of commands")]
+        public Task Help(CommandContext ctx, [RemainingText]string nothing="")
+        {
+            var cmds = ctx.Client.GetCommandsNext();
+            var help = cmds.FindCommand("help", out nothing);
+            var helpctx = cmds.CreateContext(ctx.Message, "", help, nothing);
+            return cmds.ExecuteCommandAsync(helpctx);
         }
 
 
@@ -227,17 +235,13 @@ namespace PacManBot.Commands.Modules
 
                 File.AppendAllText(Files.FeedbackLog, $"[{ctx.User.DebugName()}] {message}\n\n");
 
-                // this shouldn't be this complicated
-                var app = await ctx.Client.GetCurrentApplicationAsync();
-                foreach (var owner in app.Owners)
-                    foreach (var guild in ShardedClient.ShardClients.Values.SelectMany(x => x.Guilds.Values))
-                        if (guild.Members.TryGetValue(owner.Id, out var ownerMember))
-                        {
-                            string content = $"```diff\n+Feedback received: {ctx.User.DebugName()}```\n{message}".Truncate(2000);
-                            await ownerMember.SendMessageAsync(content);
-                            await ctx.ReplyAsync($"{CustomEmoji.Check} Message sent. Thank you!");
-                            return;
-                        }
+                foreach (var owner in ShardedClient.CurrentApplication.Owners.Select(x => ShardedClient.GetMember(x.Id)))
+                {
+                    string content = $"```diff\n+Feedback received: {ctx.User.DebugName()}```\n{message}".Truncate(2000);
+                    await owner.SendMessageAsync(content);
+                    await ctx.ReplyAsync($"{CustomEmoji.Check} Message sent. Thank you!");
+                    return;
+                }
                 throw new InvalidOperationException("Couldn't find owner member");
             }
             catch (Exception e)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using DSharpPlus;
@@ -133,5 +134,66 @@ namespace PacManBot.Extensions
         /// <summary>Returns the name and ID of a guild.</summary>
         public static string DebugName(this DiscordGuild guild)
             => $"{guild.Name} ({guild.Id})";
+
+
+
+        /// <summary>Grabs a guild object in cache from an ID.</summary>
+        public static DiscordGuild GetGuild(this DiscordShardedClient client, ulong id)
+        {
+            foreach (var shard in client.ShardClients.Values)
+            {
+                if (shard.Guilds.TryGetValue(id, out var guild)) return guild;
+            }
+            return null;
+        }
+
+        /// <summary>Grabs a channel object in cache from an ID.</summary>
+        public static DiscordChannel GetChannel(this DiscordShardedClient client, ulong id, InputService inp = null)
+        {
+            if (inp is not null && inp.GetDmChannel(id) is DiscordChannel ch) return ch;
+
+            foreach (var shard in client.ShardClients.Values)
+            {
+                if (shard.PrivateChannels.TryGetValue(id, out var channel)) return channel;
+            }
+            foreach (var guild in client.ShardClients.Values.SelectMany(x => x.Guilds.Values))
+            {
+                if (guild.Channels.TryGetValue(id, out var channel)) return channel;
+            }
+            return null;
+        }
+
+        /// <summary>Grabs a channel object in cache from an ID.</summary>
+        public static DiscordChannel GetChannel(this DiscordClient shard, ulong id, InputService inp = null)
+        {
+            if (inp is not null && inp.GetDmChannel(id) is DiscordChannel ch) return ch;
+            if (shard.PrivateChannels.TryGetValue(id, out var cha)) return cha;
+
+            foreach (var guild in shard.Guilds.Values)
+            {
+                if (guild.Channels.TryGetValue(id, out var channel)) return channel;
+            }
+            return null;
+        }
+
+        /// <summary>Grabs a member object in cache from an ID.</summary>
+        public static DiscordMember GetMember(this DiscordShardedClient client, ulong id)
+        {
+            foreach (var guild in client.ShardClients.Values.SelectMany(x => x.Guilds.Values))
+            {
+                if (guild.Members.TryGetValue(id, out var member)) return member;
+            }
+            return null;
+        }
+
+        /// <summary>Grabs a member object in cache from an ID.</summary>
+        public static DiscordMember GetMember(this DiscordClient shard, ulong id)
+        {
+            foreach (var guild in shard.Guilds.Values)
+            {
+                if (guild.Members.TryGetValue(id, out var member)) return member;
+            }
+            return null;
+        }
     }
 }

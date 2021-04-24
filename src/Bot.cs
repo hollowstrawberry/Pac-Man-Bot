@@ -146,17 +146,20 @@ namespace PacManBot
             if (_shardsReady.ContainsKey(shard.ShardId)) return;
 
             _shardsReady.TryAdd(shard.ShardId, shard);
-
-            if (_shardsReady.Count <= shard.ShardCount)
-            {
-                _input.StartListening(shard);
-            }
+            _input.StartListening(shard);
             if (_shardsReady.Count == shard.ShardCount)
             {
                 _schedule.StartTimers();
-                await _client.UpdateStatusAsync(
-                    new DiscordActivity($"with you!", ActivityType.Playing), UserStatus.Online, DateTime.Now);
-                _log.Info($"All Shards ready");
+                await _client.UpdateStatusAsync(new DiscordActivity(_config.status, _config.statusType), UserStatus.Online, DateTime.Now);
+                if (!string.IsNullOrWhiteSpace(_config.ownerStartupMessage) && _client.GetGuild(_config.ownerGuild) is DiscordGuild guild)
+                {
+                    foreach (var owner in _client.CurrentApplication.Owners)
+                    {
+                        var member = await guild.GetMemberAsync(owner.Id);
+                        await member.SendMessageAsync(_config.ownerStartupMessage);
+                    }
+                }
+                _log.Info($"All shards ready. Logged in as {_client.CurrentUser.NameandDisc()}");
             }
 
             if (File.Exists(Files.ManualRestart))
