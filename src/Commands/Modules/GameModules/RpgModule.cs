@@ -670,7 +670,7 @@ namespace PacManBot.Commands.Modules
         {
             if (game.IsPvp)
             {
-                try { await message.CreateReactionAsync(RpgGame.PvpEmote.ToEmoji()); }
+                try { await message.CreateReactionAsync(RpgGame.PvpEmote); }
                 catch (NotFoundException) { }
                 return;
             }
@@ -683,7 +683,7 @@ namespace PacManBot.Commands.Modules
             {
                 foreach (var emote in emotes)
                 {
-                    await message.CreateReactionAsync(emote.ToEmoji());
+                    await message.CreateReactionAsync(emote);
                 }
             }
             catch (NotFoundException) { }

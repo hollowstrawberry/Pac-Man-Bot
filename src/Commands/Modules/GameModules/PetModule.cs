@@ -106,7 +106,7 @@ namespace PacManBot.Commands.Modules
                 await ctx.ReplyAsync($"{CustomEmoji.Cross} Your pet is already full! (-1 energy)");
                 return;
             }
-            await ctx.Message.CreateReactionAsync(Program.Random.Choose(Content.petFoodEmotes).ToEmoji());
+            await ctx.Message.CreateReactionAsync(Program.Random.Choose(Content.petFoodEmotes));
         }
 
 
@@ -125,7 +125,7 @@ namespace PacManBot.Commands.Modules
                 await ctx.ReplyAsync($"{CustomEmoji.Cross} Your pet is already clean! (-1 energy)");
                 return;
             }
-            await ctx.Message.CreateReactionAsync(Program.Random.Choose(Content.petCleanEmotes).ToEmoji());
+            await ctx.Message.CreateReactionAsync(Program.Random.Choose(Content.petCleanEmotes));
         }
 
 
@@ -160,7 +160,7 @@ namespace PacManBot.Commands.Modules
 
             if (await Game(ctx).TryPlayAsync())
             {
-                var playEmote = Program.Random.Choose(Content.petPlayEmotes).ToEmoji();
+                var playEmote = Program.Random.Choose(Content.petPlayEmotes);
 
                 if (otherPet is null) await ctx.Message.CreateReactionAsync(playEmote);
                 else

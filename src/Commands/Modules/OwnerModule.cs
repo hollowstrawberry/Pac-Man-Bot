@@ -120,7 +120,7 @@ namespace PacManBot.Commands.Modules
         {
             code = code.ExtractCode();
             this.ctx = ctx;
-            await ctx.Message.CreateReactionAsync(CustomEmoji.ELoading);
+            await ctx.Message.CreateReactionAsync(CustomEmoji.Loading);
 
             try
             {
@@ -143,7 +143,7 @@ namespace PacManBot.Commands.Modules
                 GC.Collect();
             }
 
-            await ctx.Message.DeleteOwnReactionAsync(CustomEmoji.ELoading);
+            await ctx.Message.DeleteOwnReactionAsync(CustomEmoji.Loading);
         }
 
 
@@ -196,7 +196,7 @@ namespace PacManBot.Commands.Modules
         [Description("Run a program in the Brainfuck language. Separate code and input with an exclamation point. Developer only.")]
         public async Task RunBrainf(CommandContext ctx, [RemainingText]string userInput)
         {
-            await ctx.Message.CreateReactionAsync(CustomEmoji.ELoading);
+            await ctx.Message.CreateReactionAsync(CustomEmoji.Loading);
 
             var slice = userInput.ExtractCode().Split('!', 2);
             string program = slice[0];
@@ -231,7 +231,7 @@ namespace PacManBot.Commands.Modules
                 await ctx.AutoReactAsync(false);
             }
 
-            await ctx.Message.DeleteOwnReactionAsync(CustomEmoji.ELoading);
+            await ctx.Message.DeleteOwnReactionAsync(CustomEmoji.Loading);
             await ctx.RespondAsync(message.Length == 0 ? "*No output*" : $"```\n{message.ToString().Truncate(1990)}```");
         }
 

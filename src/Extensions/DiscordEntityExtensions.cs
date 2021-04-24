@@ -41,6 +41,24 @@ namespace PacManBot.Extensions
         public static Task<DiscordMessage> ReplyAsync(this CommandContext ctx, DiscordEmbedBuilder embed, bool ping = true)
             => ctx.Message.ReplyAsync(embed, ping);
 
+        /// <summary>Creates a reaction to this message from an emoji mention.</summary>
+        public static Task CreateReactionAsync(this DiscordMessage message, string emoji)
+            => message.CreateReactionAsync(emoji.ToEmoji());
+
+        /// <summary>Deletes your own reaction.</summary>
+        public static Task DeleteOwnReactionAsync(this DiscordMessage message, string emoji)
+            => message.DeleteOwnReactionAsync(emoji.ToEmoji());
+
+        /// <summary>Deletes all reactions of a specific reaction to this message.</summary>
+        public static Task DeleteReactionsEmojiAsync(this DiscordMessage message, string emoji)
+            => message.DeleteReactionsEmojiAsync(emoji.ToEmoji());
+
+        /// <summary>Deletes another user's reaction.</summary>
+        public static Task DeleteReactionAsync(this DiscordMessage message, string emoji, DiscordUser user, string reason = null)
+            => message.DeleteReactionAsync(emoji.ToEmoji(), user, reason);
+
+
+
 
         /// <summary>Returns whether the next message by the user in this context is equivalent to "yes".</summary>
         public static async Task<bool?> GetYesResponseAsync(this CommandContext ctx, int timeout = 30)
@@ -48,7 +66,6 @@ namespace PacManBot.Extensions
             var response = await ctx.GetResponseAsync(x => YesNoRegex.IsMatch(x.Content), timeout);
             return response?.Content.StartsWith("y", StringComparison.OrdinalIgnoreCase);
         }
-
 
         /// <summary>Returns the first new message from the user in this context,
         /// or null if no message is received within the timeout in seconds.</summary>
@@ -65,6 +82,14 @@ namespace PacManBot.Extensions
             return await ctx.Services.Get<InputService>().GetResponseAsync(
                 x => x.Channel.Id == ctx.Channel.Id && x.Author.Id == ctx.User.Id && extraConditions(x), timeout);
         }
+
+        /// <summary>Attempts to react to a given message using custom cross and check emojis depending on the condition.</summary>
+        public static Task AutoReactAsync(this DiscordMessage message, bool success = true)
+            => message.CreateReactionAsync(success ? CustomEmoji.Check : CustomEmoji.Cross);
+
+        /// <summary>Reacts to the command's calling message with a check or cross.</summary>
+        public static Task AutoReactAsync(this CommandContext ctx, bool success = true)
+            => ctx.Message.AutoReactAsync(success);
 
 
 
@@ -94,14 +119,6 @@ namespace PacManBot.Extensions
         }
 
 
-        /// <summary>Attempts to react to a given message using custom cross and check emojis depending on the condition.</summary>
-        public static Task AutoReactAsync(this DiscordMessage message, bool success = true)
-            => message.CreateReactionAsync(success ? CustomEmoji.ECheck : CustomEmoji.ECross);
-
-
-        /// <summary>Reacts to the command's calling message with a check or cross.</summary>
-        public static Task AutoReactAsync(this CommandContext ctx, bool success = true)
-            => ctx.Message.AutoReactAsync(success);
 
 
         /// <summary>The nickname of this user if it has one, otherwise its username.</summary>
@@ -112,16 +129,13 @@ namespace PacManBot.Extensions
                 : user.Username;
         }
 
-
         /// <summary>Returns the name of a channel, including its guild if it is a <see cref="IGuildChannel"/>.</summary>
         public static string NameAndGuild(this DiscordChannel channel)
             => $"{(channel.Guild is null ? "" : $"{channel.Guild.Name}/")}{channel.Name}";
 
-
         /// <summary>Returns the name and discriminator of a user.</summary>
         public static string NameandDisc(this DiscordUser user)
             => $"{user.Username}#{user.Discriminator}";
-
 
         /// <summary>Returns the name, discriminator and ID of a user.</summary>
         public static string DebugName(this DiscordUser user)
@@ -134,6 +148,7 @@ namespace PacManBot.Extensions
         /// <summary>Returns the name and ID of a guild.</summary>
         public static string DebugName(this DiscordGuild guild)
             => $"{guild.Name} ({guild.Id})";
+
 
 
 

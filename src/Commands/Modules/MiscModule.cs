@@ -116,14 +116,14 @@ namespace PacManBot.Commands.Modules
                  "Reacts to the command by default.")]
         public async Task BlobDance(CommandContext ctx, ulong number = 0)
         {
-            if (number < 1) await ctx.Message.CreateReactionAsync(CustomEmoji.EBlobDance);
+            if (number < 1) await ctx.Message.CreateReactionAsync(CustomEmoji.BlobDance);
             else if (number <= 5) await ctx.ReplyAsync(CustomEmoji.BlobDance.Repeat((int)number));
             else if (number <= 1000000) await ctx.ReplyAsync("That's too many.");
             else if (ctx.UserCan(Permissions.ManageMessages)) // Message ID
             {
                 if (await ctx.Channel.GetMessageAsync(number) is DiscordMessage message)
                 {
-                    await message.CreateReactionAsync(CustomEmoji.EBlobDance);
+                    await message.CreateReactionAsync(CustomEmoji.BlobDance);
                 }
                 else await ctx.AutoReactAsync(false);
             }

@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Text.RegularExpressions;
 using DSharpPlus.Entities;
+using Newtonsoft.Json;
 using PacManBot.Services;
 
 namespace PacManBot.Extensions
@@ -10,6 +11,7 @@ namespace PacManBot.Extensions
     {
         /// <summary>Invisible character that Discord will accept where pure whitespace is otherwise not allowed.</summary>
         public const string Empty = "ᅠ";
+
 
 
         /// <summary>Returns the starting position of a command in a message, given a prefix.
@@ -61,8 +63,12 @@ namespace PacManBot.Extensions
         /// <summary>Attempts to parse a unicode or guild emoji from its mention</summary>
         public static DiscordEmoji ToEmoji(this string text)
         {
-            var match = Regex.Match(text.Trim(), @"^<?a?:?([a-zA-Z0-9_]+:[0-9]+)>?$");
-            return DiscordEmoji.FromUnicode(match.Success ? match.Groups[1].Value : text.Trim());
+            text = text.Trim();
+            var match = Regex.Match(text, @"^<?a?:?([a-zA-Z0-9_]+):([0-9]+)>?$");
+            if (!match.Success) return DiscordEmoji.TryFromUnicode(text, out var emoji) ? emoji : null;
+            string json = $"{{\"name\":\"{match.Groups[1].Value}\", \"id\":{match.Groups[2].Value}," +
+                $"\"animated\":{text.StartsWith("<a:").ToString().ToLower()}, \"require_colons\":true, \"available\":true}}";
+            return JsonConvert.DeserializeObject<DiscordEmoji>(json);
         }
 
 

@@ -11,15 +11,6 @@ namespace PacManBot.Constants
     /// </summary>
     public static class CustomEmoji
     {
-        public static readonly DiscordEmoji
-            ECheck = Check.ToEmoji(),
-            ECross = Cross.ToEmoji(),
-            ELoading = Loading.ToEmoji(),
-            EHelp = Help.ToEmoji(),
-            EGitHub = GitHub.ToEmoji(),
-            EBlobDance = BlobDance.ToEmoji();
-
-
         public static readonly IReadOnlyList<string> Number =
             new Range(10).Select(x => x.ToString() + "️⃣").ToArray();
 
