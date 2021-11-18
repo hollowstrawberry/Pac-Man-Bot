@@ -2,7 +2,11 @@
   "discordToken": "",
   
   "defaultPrefix": "<",
-  "messageCacheSize": 100,
+  "messageCacheSize": 0,
+  "logLevel": "Verbose",
   "clientLogLevel": "Verbose",
-  "commandLogLevel": "Info"
+  "logExclude": [],
+  "ownerStartupMessage": "hi papa, I'm alive",
+  "statusType": "Playing",
+  "status": "with you!"
 }
