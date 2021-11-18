@@ -3,8 +3,8 @@
   
   "defaultPrefix": "<",
   "messageCacheSize": 0,
-  "logLevel": "Verbose",
-  "clientLogLevel": "Verbose",
+  "logLevel": "Information",
+  "clientLogLevel": "Information",
   "logExclude": [],
   "ownerStartupMessage": "hi papa, I'm alive",
   "statusType": "Playing",
