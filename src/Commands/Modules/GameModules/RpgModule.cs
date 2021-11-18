@@ -548,14 +548,14 @@ namespace PacManBot.Commands.Modules
             {
                 Game(ctx).ResetBattle(GameState.Cancelled);
 
-                try { await msg.ModifyAsync("Timed out 💨", null); }
+                try { await msg.ModifyAsync("Timed out 💨", (DiscordEmbed)null); }
                 catch (NotFoundException) { await ctx.ReplyAsync("Timed out 💨"); }
             }
             else if (response.Content.Equals("cancel", StringComparison.OrdinalIgnoreCase))
             {
                 Game(ctx).ResetBattle(GameState.Cancelled);
 
-                try { await msg.ModifyAsync("Battle cancelled ⚔", null); }
+                try { await msg.ModifyAsync("Battle cancelled ⚔", (DiscordEmbed)null); }
                 catch (NotFoundException) { await ctx.ReplyAsync("Battle cancelled ⚔"); }
 
                 await response.AutoReactAsync();
