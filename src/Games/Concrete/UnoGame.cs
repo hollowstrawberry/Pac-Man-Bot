@@ -709,7 +709,7 @@ namespace PacManBot.Games.Concrete
             if (player.message is null) resend = true;
             else
             {
-                try { await player.message.ModifyAsync(embed: embed.Build()); }
+                try { await player.message.ModifyAsync(m => m.WithEmbed(embed.Build())); }
                 catch (NotFoundException) { resend = true; }
             }
 

@@ -136,7 +136,7 @@ namespace PacManBot.Commands.Modules
             else
             {
                 await SaveGameAsync(ctx);
-                try { await msg.ModifyAsync(default, Game(ctx).fightEmbed?.Build()); }
+                try { await msg.ModifyAsync(m => m.WithContent(default).WithEmbed(Game(ctx).fightEmbed?.Build())); }
                 catch (NotFoundException) { }
             }
 
@@ -548,14 +548,14 @@ namespace PacManBot.Commands.Modules
             {
                 Game(ctx).ResetBattle(GameState.Cancelled);
 
-                try { await msg.ModifyAsync("Timed out 💨", (DiscordEmbed)null); }
+                try { await msg.ModifyAsync(m => m.WithContent("Timed out 💨").WithEmbed(null)); }
                 catch (NotFoundException) { await ctx.ReplyAsync("Timed out 💨"); }
             }
             else if (response.Content.Equals("cancel", StringComparison.OrdinalIgnoreCase))
             {
                 Game(ctx).ResetBattle(GameState.Cancelled);
 
-                try { await msg.ModifyAsync("Battle cancelled ⚔", (DiscordEmbed)null); }
+                try { await msg.ModifyAsync(m => m.WithContent("Battle cancelled ⚔").WithEmbed(null)); }
                 catch (NotFoundException) { await ctx.ReplyAsync("Battle cancelled ⚔"); }
 
                 await response.AutoReactAsync();

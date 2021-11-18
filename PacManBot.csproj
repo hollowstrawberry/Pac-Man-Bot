@@ -56,7 +56,7 @@
 
   <ItemGroup>
     <PackageReference Include="DiscordBotsList.Api" Version="1.5.0" />
-    <PackageReference Include="DSharpPlus" Version="4.1.0" />
+    <PackageReference Include="DSharpPlus" Version="4.2.0-nightly-01044" />
     <PackageReference Include="DSharpPlus.CommandsNext" Version="4.1.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.9.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.Scripting" Version="3.9.0" />

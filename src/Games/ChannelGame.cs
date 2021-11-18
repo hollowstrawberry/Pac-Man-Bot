@@ -175,7 +175,9 @@ namespace PacManBot.Games
 
             if (gameMessage is not null && (this is IReactionsGame || Channel.BotCan(Permissions.ManageMessages)))
             {
-                await gameMessage.ModifyAsync(await GetContentAsync(), (await GetEmbedAsync())?.Build());
+                var content = await GetContentAsync();
+                var embed = await GetEmbedAsync();
+                await gameMessage.ModifyAsync(m => m.WithContent(content).WithEmbed(embed?.Build()));
 
                 if (Channel is not null)
                 {
