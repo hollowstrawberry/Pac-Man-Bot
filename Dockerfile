@@ -17,4 +17,11 @@ RUN dotnet publish "PacManBot.csproj" -c Release -o /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+COPY contents.json .
+COPY config.json .
+
+# This was to get the old data from Pacman
+#COPY games ./games/
+#COPY database.sqlite .
+
 ENTRYPOINT ["dotnet", "Pacman.dll"]
