@@ -45,9 +45,9 @@ The objective is to bring the most entertainment to you and your group, with the
 ",
 
 "aboutFields": [
-    {"Item1":"<:discord:409811304103149569> Bot invite", "Item2":"[Click here](https://discordapp.com/oauth2/authorize?client_id=398127484983443468&scope=bot&permissions=355392 \"https://discordapp.com/oauth2/authorize?client_id=398127484983443468&scope=bot&permissions=355392\")"},
+    {"Item1":"<:discord:409811304103149569> Bot invite", "Item2":"[Click here](https://bit.ly/pacmanx \"https://bit.ly/pacmanx\")"},
     {"Item1":"<:staff:412019879772815361> Support server", "Item2":"[Click here](https://discord.gg/hGHnfda \"https://discord.gg/hGHnfda\")"},
-    {"Item1":"<:github:409803419717599234> GitHub", "Item2":"[Click here](https://github.com/Samrux/Pac-Man-Bot \"https://github.com/Samrux/Pac-Man-Bot\")"}
+    {"Item1":"<:github:409803419717599234> GitHub", "Item2":"[Click here](https://github.com/OrchidAlloy/Pac-Man-Bot \"https://github.com/OrchidAlloy/Pac-Man-Bot\")"}
 ],
 
 
@@ -60,7 +60,7 @@ Send **{prefix}help** to see a list of commands you can use. Send **{prefix}help
 
 "welcomeFields": [
     {"Item1":"<:staff:412019879772815361> Support server", "Item2":"[Click here](https://discord.gg/hGHnfda \"https://discord.gg/hGHnfda\")"},
-    {"Item1":"<:github:409803419717599234> GitHub", "Item2":"[Click here](https://github.com/Samrux/Pac-Man-Bot \"https://github.com/Samrux/Pac-Man-Bot\")"}
+    {"Item1":"<:github:409803419717599234> GitHub", "Item2":"[Click here](https://github.com/OrchidAlloy/Pac-Man-Bot \"https://github.com/OrchidAlloy/Pac-Man-Bot\")"}
 ],
 
 
@@ -101,7 +101,7 @@ List of special characters:
  `_`: Empty, but ghosts can't move here from below",
 
 "customLinks": [
-    {"Item1":"Custom map examples", "Item2":"https://raw.githubusercontent.com/Samrux/Pac-Man-Bot/master/Example%20custom%20maps.txt"}
+    {"Item1":"Custom map examples", "Item2":"https://raw.githubusercontent.com/OrchidAlloy/Pac-Man-Bot/master/Example%20custom%20maps.txt"}
 ],
 
 
