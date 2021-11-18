@@ -72,8 +72,7 @@
     <PackageReference Include="System.Diagnostics.Process" Version="4.3.0" />
   </ItemGroup>
 
-  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="copy &quot;bin\contents.json&quot; &quot;bin/Debug/net5.0/contents.json&quot;&#xD;&#xA;copy &quot;bin\contents.json&quot; &quot;bin/Release/net5.0/contents.json&quot;" />
-  </Target>
+
+
 
 </Project>
