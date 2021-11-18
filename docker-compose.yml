@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  pacman-docker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    volumes:
+      - .:/app/publish
+      - ./games:/app/games
+      - ./database.sqlite:/app/database.sqlite
+    container_name: pacman-docker
+    #command: dotnet app/publish/Pacman.dll
