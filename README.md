@@ -36,7 +36,7 @@ To compile, use the `Publish.bat` which contains a command such as this one:
 
 Where `%RUNTIME%` is the system you'll be building for, like `linux-x64` or `win-x64`. For a Raspberry Pi, use `linux-arm`.  
 The command will generate a `bin/Release/net5.0/%RUNTIME%/publish/` folder containing the entire program.  
-The bot can be executed from `Pacman.exe`/`./Pacman` or otherwise by running `dotnet Pacman.dll`. It requires that `contents.json` and `config.json` are in the same folder, and the console output will inform you if this is not fulfilled.  
+The bot can be executed from `Pacman.exe`/`./Pacman` or otherwise by running `dotnet Pacman.dll`. It requires that `contents.json` and `config.json` are in the same folder (you can find them in [bin/](https://github.com/OrchidAlloy/Pac-Man-Bot/tree/master/bin), and the console output will inform you if this is not fulfilled.  
 
 
 ### Using different emotes
